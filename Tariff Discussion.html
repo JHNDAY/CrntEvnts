@@ -791,3 +791,1933 @@
     </script>
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Current Events Discussion Topics</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 15px;
+            color: white;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .date-info {
+            font-size: 1.2em;
+            opacity: 0.9;
+            margin: 10px 0;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 4px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: #ffd700;
+            width: 11.6%;
+            border-radius: 4px;
+            animation: progressGlow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes progressGlow {
+            from { box-shadow: 0 0 5px rgba(255, 215, 0, 0.5); }
+            to { box-shadow: 0 0 20px rgba(255, 215, 0, 0.8); }
+        }
+        
+        .filter-section {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border: 2px solid #e0e0e0;
+        }
+        
+        .filter-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #2c3e50;
+            text-align: center;
+        }
+        
+        .filter-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .dropdown-container {
+            position: relative;
+            min-width: 250px;
+        }
+        
+        .dropdown-toggle {
+            background: linear-gradient(145deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            width: 100%;
+            text-align: left;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .dropdown-toggle:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        .dropdown-arrow {
+            transition: transform 0.3s ease;
+        }
+        
+        .dropdown-toggle.active .dropdown-arrow {
+            transform: rotate(180deg);
+        }
+        
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            max-height: 300px;
+            overflow-y: auto;
+            display: none;
+            margin-top: 5px;
+        }
+        
+        .dropdown-menu.show {
+            display: block;
+        }
+        
+        .dropdown-item {
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+        
+        .dropdown-item:hover {
+            background: rgba(102, 126, 234, 0.1);
+        }
+        
+        .dropdown-item input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+        
+        .category-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+        
+        .reset-btn {
+            background: linear-gradient(145deg, #e74c3c, #c0392b);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .reset-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+        
+        .selected-count {
+            background: rgba(102, 126, 234, 0.1);
+            padding: 8px 15px;
+            border-radius: 15px;
+            font-size: 0.9em;
+            color: #667eea;
+            font-weight: bold;
+        }
+        
+        .topics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+        
+        .topic-card {
+            background: linear-gradient(145deg, #ffffff, #f0f0f0);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .topic-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: inherit;
+            opacity: 0.3;
+        }
+        
+        .topic-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+        
+        .topic-card.hidden {
+            display: none;
+        }
+        
+        .topic-card.fiscal { border-left-color: #e74c3c; }
+        .topic-card.trade { border-left-color: #f39c12; }
+        .topic-card.political { border-left-color: #3498db; }
+        .topic-card.governance { border-left-color: #9b59b6; }
+        .topic-card.justice { border-left-color: #e67e22; }
+        .topic-card.social { border-left-color: #27ae60; }
+        .topic-card.foreign { border-left-color: #34495e; }
+        .topic-card.health { border-left-color: #1abc9c; }
+        
+        .topic-number {
+            display: inline-block;
+            width: 35px;
+            height: 35px;
+            background: linear-gradient(145deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 35px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .topic-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #2c3e50;
+            line-height: 1.3;
+        }
+        
+        .topic-subtitle {
+            font-style: italic;
+            color: #7f8c8d;
+            margin-bottom: 15px;
+            font-size: 0.95em;
+        }
+        
+        .shakespeare-quote {
+            background: rgba(108, 92, 231, 0.1);
+            padding: 12px;
+            border-radius: 8px;
+            font-style: italic;
+            color: #5a5a5a;
+            margin-bottom: 15px;
+            border-left: 3px solid #6c5ce7;
+            font-size: 0.9em;
+        }
+        
+        .key-points {
+            list-style: none;
+            margin-top: 15px;
+        }
+        
+        .key-points li {
+            padding: 8px 0;
+            color: #555;
+            position: relative;
+            padding-left: 20px;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+        
+        .key-points li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: #6c5ce7;
+            font-weight: bold;
+        }
+        
+        .cost-highlight {
+            background: rgba(231, 76, 60, 0.1);
+            padding: 10px;
+            border-radius: 6px;
+            margin: 10px 0;
+            border-left: 3px solid #e74c3c;
+        }
+        
+        .cost-number {
+            font-weight: bold;
+            color: #e74c3c;
+            font-size: 1.1em;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            background: rgba(108, 92, 231, 0.1);
+            border-radius: 10px;
+            color: #555;
+        }
+        
+        .no-results {
+            text-align: center;
+            padding: 40px;
+            color: #7f8c8d;
+            font-size: 1.2em;
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .topics-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .container {
+                padding: 20px;
+            }
+            
+            .filter-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .dropdown-container {
+                min-width: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Current Events Discussion Topics</h1>
+            <div class="date-info">Session Date: July 9, 2025</div>
+            <div class="date-info">Day 170 of Trump's Second Term</div>
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+            <div class="date-info">1,291 days remaining in term</div>
+        </div>
+        
+        <div class="filter-section">
+            <div class="filter-title">Filter Discussion Topics</div>
+            <div class="filter-controls">
+                <div class="dropdown-container">
+                    <button class="dropdown-toggle" id="topicDropdown">
+                        Select Topics to Display
+                        <span class="dropdown-arrow">▼</span>
+                    </button>
+                    <div class="dropdown-menu" id="dropdownMenu">
+                        <div class="dropdown-item">
+                            <input type="checkbox" id="fiscal" value="fiscal" checked>
+                            <div class="category-indicator" style="background-color: #e74c3c;"></div>
+                            <label for="fiscal">Fiscal Policy (BBB)</label>
+                        </div>
+                        <div class="dropdown-item">
+                            <input type="checkbox" id="trade" value="trade" checked>
+                            <div class="category-indicator" style="background-color: #f39c12;"></div>
+                            <label for="trade">Trade Policy (Tariffs)</label>
+                        </div>
+                        <div class="dropdown-item">
+                            <input type="checkbox" id="political" value="political" checked>
+                            <div class="category-indicator" style="background-color: #3498db;"></div>
+                            <label for="political">Elections & Politics</label>
+                        </div>
+                        <div class="dropdown-item">
+                            <input type="checkbox" id="governance" value="governance" checked>
+                            <div class="category-indicator" style="background-color: #9b59b6;"></div>
+                            <label for="governance">Governance & Authoritarianism</label>
+                        </div>
+                        <div class="dropdown-item">
+                            <input type="checkbox" id="justice" value="justice" checked>
+                            <div class="category-indicator" style="background-color: #e67e22;"></div>
+                            <label for="justice">Justice & Retribution</label>
+                        </div>
+                        <div class="dropdown-item">
+                            <input type="checkbox" id="social" value="social" checked>
+                            <div class="category-indicator" style="background-color: #27ae60;"></div>
+                            <label for="social">Immigration & Social Policy</label>
+                        </div>
+                        <div class="dropdown-item">
+                            <input type="checkbox" id="foreign" value="foreign" checked>
+                            <div class="category-indicator" style="background-color: #34495e;"></div>
+                            <label for="foreign">Foreign Policy</label>
+                        </div>
+                        <div class="dropdown-item">
+                            <input type="checkbox" id="health" value="health" checked>
+                            <div class="category-indicator" style="background-color: #1abc9c;"></div>
+                            <label for="health">Health Care Policy</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="selected-count" id="selectedCount">8 of 8 topics selected</div>
+                <button class="reset-btn" id="toggleBtn">Select All</button>
+            </div>
+        </div>
+        
+        <div class="topics-grid" id="topicsGrid">
+            <div class="topic-card fiscal" data-category="fiscal">
+                <div class="topic-number">1</div>
+                <div class="topic-title">The Big Beautiful Bill (BBB)</div>
+                <div class="topic-subtitle">Brutal Budget Bill or Billionaire Betterment Bill</div>
+                <div class="shakespeare-quote">
+                    "If it were done when 'tis done, then t'were well it were done quickly." - Macbeth
+                </div>
+                <div class="cost-highlight">
+                    <div class="cost-number">Net Cost: $3.4 Trillion over 10 years</div>
+                </div>
+                <ul class="key-points">
+                    <li>Extended 2017 tax cuts permanently ($4.7T)</li>
+                    <li>Top 10% of earners get 80% of tax savings</li>
+                    <li>12-17 million may lose medical coverage</li>
+                    <li>Passed by razor-thin margins in both chambers</li>
+                </ul>
+            </div>
+            
+            <div class="topic-card trade" data-category="trade">
+                <div class="topic-number">2</div>
+                <div class="topic-title">Tariffs</div>
+                <div class="topic-subtitle">A Tale of Sound and Fury</div>
+                <div class="shakespeare-quote">
+                    "It is a tale told by an idiot, full of sound and fury, signifying nothing." - Macbeth
+                </div>
+                <ul class="key-points">
+                    <li>10% tariff floor imposed since Liberation Day (4/02)</li>
+                    <li>Letters with rates up to 70% for 170+ countries (7/09)</li>
+                    <li>Framework deals announced but details lacking</li>
+                    <li>Functions as regressive tax on consumers</li>
+                    <li>Equal trade balance concept inherently flawed</li>
+                </ul>
+            </div>
+            
+            <div class="topic-card political" data-category="political">
+                <div class="topic-number">3</div>
+                <div class="topic-title">Election Retrospective & 2026 Midterms</div>
+                <div class="topic-subtitle">The Reality Behind the "Mandate"</div>
+                <div class="shakespeare-quote">
+                    "Elections have consequences." - Barack Obama
+                </div>
+                <ul class="key-points">
+                    <li>Trump won by 2.3M votes (1.48% margin)</li>
+                    <li>Turnout decreased by 3.2M from 2020</li>
+                    <li>Republican 5-seat House edge vulnerable</li>
+                    <li>2026: Only 6 of 33 Senate races competitive</li>
+                    <li>Democrats need 3 House seats to regain control</li>
+                </ul>
+            </div>
+            
+            <div class="topic-card governance" data-category="governance">
+                <div class="topic-number">4</div>
+                <div class="topic-title">Rising Authoritarianism</div>
+                <div class="topic-subtitle">The Erosion of Guardrails</div>
+                <div class="shakespeare-quote">
+                    "L'État, c'est moi." - Louis XIV
+                </div>
+                <ul class="key-points">
+                    <li>Supreme Court immunity ruling provides carte blanche</li>
+                    <li>Surrounded by loyalists, no internal constraints</li>
+                    <li>Plans to impound congressionally approved funds</li>
+                    <li>Schedule F reclassification of federal employees</li>
+                    <li>Threats to ignore unfavorable judicial decisions</li>
+                </ul>
+            </div>
+            
+            <div class="topic-card justice" data-category="justice">
+                <div class="topic-number">5</div>
+                <div class="topic-title">Retribution</div>
+                <div class="topic-subtitle">Settling Scores</div>
+                <div class="shakespeare-quote">
+                    "When someone shows you who they are, believe them the first time." - Maya Angelou
+                </div>
+                <ul class="key-points">
+                    <li>Pardoned all January 6th defendants on Day 1</li>
+                    <li>Fired DOJ employees from Trump prosecutions</li>
+                    <li>Threatened law firms with security clearance revocation</li>
+                    <li>Media settlements: ABC ($15M), CBS ($16M)</li>
+                    <li>Actions against elite universities (Harvard, etc.)</li>
+                </ul>
+            </div>
+            
+            <div class="topic-card social" data-category="social">
+                <div class="topic-number">6</div>
+                <div class="topic-title">Immigration</div>
+                <div class="topic-subtitle">The Crackdown Intensifies</div>
+                <div class="shakespeare-quote">
+                    "Be kind whenever possible. It is always possible." - Dalai Lama
+                </div>
+                <ul class="key-points">
+                    <li>Goal: 3,000 arrests per day (Stephen Miller)</li>
+                    <li>Kilmer Abrego Garcia case study in overreach</li>
+                    <li>500k parole recipients had status revoked</li>
+                    <li>$45B over 10 years for detention facilities</li>
+                    <li>"Alligator Alcatraz" in the Everglades</li>
+                </ul>
+            </div>
+            
+            <div class="topic-card foreign" data-category="foreign">
+                <div class="topic-number">7</div>
+                <div class="topic-title">Foreign Policy</div>
+                <div class="topic-subtitle">Disrupting the Post-WWII Order</div>
+                <div class="shakespeare-quote">
+                    "Power tends to corrupt, and absolute power corrupts absolutely." - Lord Acton
+                </div>
+                <ul class="key-points">
+                    <li>Ukraine support withering; weapons shipments halted</li>
+                    <li>Iran nuclear facilities bombed without Congress</li>
+                    <li>NATO Article 5 commitment hedged</li>
+                    <li>Supports Russia's return to G8</li>
+                    <li>Antagonized Canada and Denmark over territorial claims</li>
+                </ul>
+            </div>
+            
+            <div class="topic-card health" data-category="health">
+                <div class="topic-number">8</div>
+                <div class="topic-title">Health Care</div>
+                <div class="topic-subtitle">RFK Jr.'s Radical Restructuring</div>
+                <div class="shakespeare-quote">
+                    "Do no harm." - Hippocrates
+                </div>
+                <ul class="key-points">
+                    <li>25% CDC staff reduction planned (20k employees)</li>
+                    <li>28 HHS divisions consolidated to 15</li>
+                    <li>Billions in university grants cancelled</li>
+                    <li>CDC vaccine-autism study planned</li>
+                    <li>Flu shot advisory meeting cancelled</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="no-results" id="noResults">
+            <h3>No topics match your current filter selection.</h3>
+            <p>Try selecting different topics or reset the filter to see all topics.</p>
+        </div>
+        
+        <div class="footer">
+            <strong>Discussion Framework:</strong> Each topic includes key data points, policy implications, and potential long-term consequences for substantive debate and analysis.
+        </div>
+    </div>
+
+    <script>
+        // DOM elements
+        const dropdown = document.getElementById('topicDropdown');
+        const dropdownMenu = document.getElementById('dropdownMenu');
+        const selectedCount = document.getElementById('selectedCount');
+        const toggleBtn = document.getElementById('toggleBtn');
+        const topicsGrid = document.getElementById('topicsGrid');
+        const noResults = document.getElementById('noResults');
+        const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+        
+        // Toggle dropdown menu
+        dropdown.addEventListener('click', function() {
+            dropdownMenu.classList.toggle('show');
+            dropdown.classList.toggle('active');
+        });
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!dropdown.contains(event.target) && !dropdownMenu.contains(event.target)) {
+                dropdownMenu.classList.remove('show');
+                dropdown.classList.remove('active');
+            }
+        });
+        
+        // Filter topics based on selected checkboxes
+        function filterTopics() {
+            const selectedCategories = Array.from(checkboxes)
+                .filter(checkbox => checkbox.checked)
+                .map(checkbox => checkbox.value);
+            
+            const topicCards = document.querySelectorAll('.topic-card');
+            let visibleCount = 0;
+            
+            topicCards.forEach(card => {
+                const category = card.getAttribute('data-category');
+                if (selectedCategories.includes(category)) {
+                    card.classList.remove('hidden');
+                    visibleCount++;
+                } else {
+                    card.classList.add('hidden');
+                }
+            });
+            
+            // Update selected count
+            selectedCount.textContent = `${selectedCategories.length} of 8 topics selected`;
+            
+            // Update toggle button text
+            updateToggleButton();
+            
+            // Show/hide no results message
+            if (visibleCount === 0) {
+                noResults.style.display = 'block';
+                topicsGrid.style.display = 'none';
+            } else {
+                noResults.style.display = 'none';
+                topicsGrid.style.display = 'grid';
+            }
+        }
+        
+        // Update toggle button text based on current state
+        function updateToggleButton() {
+            const checkedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
+            
+            if (checkedCount === 0) {
+                toggleBtn.textContent = 'Select All';
+            } else if (checkedCount === checkboxes.length) {
+                toggleBtn.textContent = 'Select None';
+            } else {
+                toggleBtn.textContent = 'Select All';
+            }
+        }
+        
+        // Add event listeners to checkboxes
+        checkboxes.forEach(checkbox => {
+            checkbox.addEventListener('change', filterTopics);
+        });
+        
+        // Toggle between Select All and Select None
+        toggleBtn.addEventListener('click', function() {
+            const checkedCount = Array.from(checkboxes).filter(cb => cb.checked).length;
+            
+            if (checkedCount === checkboxes.length) {
+                // All are selected, so deselect all
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = false;
+                });
+            } else {
+                // Not all are selected, so select all
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = true;
+                });
+            }
+            
+            filterTopics();
+            
+            // Close dropdown
+            dropdownMenu.classList.remove('show');
+            dropdown.classList.remove('active');
+        });
+        
+        // Prevent dropdown from closing when clicking on menu items
+        dropdownMenu.addEventListener('click', function(event) {
+            event.stopPropagation();
+        });
+        
+        // Initialize filter on page load
+        filterTopics();
+    </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meeting Discussion Flow</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 40px;
+            font-size: 2.5em;
+            background: linear-gradient(45deg, #3498db, #8e44ad);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .timeline {
+            position: relative;
+            margin: 40px 0;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(to bottom, #3498db, #8e44ad);
+            transform: translateX(-50%);
+        }
+        
+        .timeline-item {
+            margin: 30px 0;
+            position: relative;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 20px;
+            width: 16px;
+            height: 16px;
+            background: #fff;
+            border: 4px solid #3498db;
+            border-radius: 50%;
+            transform: translateX(-50%);
+            z-index: 1;
+        }
+        
+        .timeline-content {
+            width: 45%;
+            padding: 20px;
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+        
+        .timeline-item:nth-child(odd) .timeline-content {
+            margin-left: 55%;
+        }
+        
+        .timeline-item:nth-child(even) .timeline-content {
+            margin-right: 55%;
+        }
+        
+        .timeline-content::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            width: 0;
+            height: 0;
+            border: 10px solid transparent;
+        }
+        
+        .timeline-item:nth-child(odd) .timeline-content::before {
+            left: -20px;
+            border-right-color: #fff;
+        }
+        
+        .timeline-item:nth-child(even) .timeline-content::before {
+            right: -20px;
+            border-left-color: #fff;
+        }
+        
+        .participants-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+        
+        .participant-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            transform: translateY(0);
+            transition: all 0.3s ease;
+        }
+        
+        .participant-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .participant-name {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .participant-role {
+            font-size: 1.1em;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+        
+        .themes-section {
+            margin: 50px 0;
+        }
+        
+        .themes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        
+        .theme-card {
+            background: #fff;
+            padding: 25px;
+            border-radius: 15px;
+            border-left: 5px solid;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .theme-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+        
+        .theme-card.structure { border-left-color: #e74c3c; }
+        .theme-card.tech { border-left-color: #3498db; }
+        .theme-card.dynamics { border-left-color: #f39c12; }
+        .theme-card.implementation { border-left-color: #27ae60; }
+        
+        .theme-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+        
+        .theme-points {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .theme-points li {
+            padding: 8px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .theme-points li::before {
+            content: '▶';
+            position: absolute;
+            left: 0;
+            color: #3498db;
+        }
+        
+        .section-title {
+            font-size: 2em;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(45deg, #3498db, #8e44ad);
+        }
+        
+        .key-outcomes {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 40px 0;
+        }
+        
+        .outcomes-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .outcomes-list li {
+            padding: 10px 0;
+            padding-left: 25px;
+            position: relative;
+            font-size: 1.1em;
+        }
+        
+        .outcomes-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #2ecc71;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        
+        @media (max-width: 768px) {
+            .timeline::before {
+                left: 20px;
+            }
+            
+            .timeline-content {
+                width: calc(100% - 60px);
+                margin-left: 60px !important;
+                margin-right: 0 !important;
+            }
+            
+            .timeline-content::before {
+                left: -20px !important;
+                right: auto !important;
+                border-right-color: #fff !important;
+                border-left-color: transparent !important;
+            }
+            
+            .timeline-item::before {
+                left: 20px;
+                transform: translateX(-50%);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Meeting Discussion Flow Analysis</h1>
+        
+        <div class="section-title">Key Participants</div>
+        <div class="participants-grid">
+            <div class="participant-card">
+                <div class="participant-name">GEORGE</div>
+                <div class="participant-role">Content Creator</div>
+                <div>Created 8-category framework for political discussions</div>
+            </div>
+            <div class="participant-card">
+                <div class="participant-name">JOHN</div>
+                <div class="participant-role">Technical Lead</div>
+                <div>AI implementation and visualization expert</div>
+            </div>
+            <div class="participant-card">
+                <div class="participant-name">HAL</div>
+                <div class="participant-role">Strategic Advisor</div>
+                <div>Project 2025 collaborator and process advocate</div>
+            </div>
+        </div>
+        
+        <div class="section-title">Discussion Timeline</div>
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <h3>Opening & Setup (07:33-09:00)</h3>
+                    <p>Technical issues with summary slide distribution. Discussion of meeting preparation and screen sharing setup.</p>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <h3>Framework Overview (09:00-12:00)</h3>
+                    <p>George explains genesis of 8-category system: Beautiful Bill, Tariffs, Authoritarianism, and 5 other topics. Focus on making discussions more structured.</p>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <h3>AI Visualization Demo (13:00-27:00)</h3>
+                    <p>John demonstrates launch pad website and AI-generated summaries. Extended technical troubleshooting with screen sharing and bookmarking.</p>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <h3>Presentation Strategy (28:00-42:00)</h3>
+                    <p>Planning tomorrow's meeting: 3-minute overviews followed by group discussions. Focus on topics 1, 2, and 4 with interactive elements.</p>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <h3>Group Dynamics Discussion (42:00-55:00)</h3>
+                    <p>Analysis of core group vs. larger group needs. Discussion of recording meetings for AI analysis and participant consent issues.</p>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <h3>AI Capabilities Deep Dive (55:00-65:00)</h3>
+                    <p>John explains evolution from generative AI to retrieval-augmented generation (RAG). Discussion of AI's role as enhancement tool, not replacement.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section-title">Major Themes</div>
+        <div class="themes-grid">
+            <div class="theme-card structure">
+                <div class="theme-title">🏗️ Structured Discussion Framework</div>
+                <ul class="theme-points">
+                    <li>8-category system for political topics</li>
+                    <li>Moving from "venting" to organized analysis</li>
+                    <li>Visual summaries replace dense text</li>
+                    <li>Interactive discussion format</li>
+                </ul>
+            </div>
+            
+            <div class="theme-card tech">
+                <div class="theme-title">🤖 AI Integration Strategy</div>
+                <ul class="theme-points">
+                    <li>AI as presentation enhancement tool</li>
+                    <li>Transcript analysis capabilities</li>
+                    <li>RAG vs. generative AI explained</li>
+                    <li>Human curation remains primary</li>
+                </ul>
+            </div>
+            
+            <div class="theme-card dynamics">
+                <div class="theme-title">👥 Group Participation Dynamics</div>
+                <ul class="theme-points">
+                    <li>Core group vs. broader membership</li>
+                    <li>Technical comfort level variations</li>
+                    <li>Engagement vs. entertainment balance</li>
+                    <li>Recording and consent considerations</li>
+                </ul>
+            </div>
+            
+            <div class="theme-card implementation">
+                <div class="theme-title">⚙️ Implementation Challenges</div>
+                <ul class="theme-points">
+                    <li>Technical support requirements</li>
+                    <li>Platform limitations (Beth's Zoom)</li>
+                    <li>User training and adoption</li>
+                    <li>Pilot meeting preparation</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="key-outcomes">
+            <div class="section-title" style="color: white; margin-bottom: 25px;">Key Outcomes & Next Steps</div>
+            <ul class="outcomes-list">
+                <li>Pilot presentation approved for topics 1, 2, and 4</li>
+                <li>AI transcript analysis demonstration planned</li>
+                <li>Summer series using structured approach proposed</li>
+                <li>Launch pad website model for resource organization</li>
+                <li>Recognition of AI as enhancement, not replacement tool</li>
+                <li>Need for technical support infrastructure identified</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meeting Perspectives by Participant</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 40px;
+            font-size: 2.5em;
+            background: linear-gradient(45deg, #3498db, #8e44ad);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .participants-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+        
+        .participant-section {
+            background: #fff;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .participant-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+        }
+        
+        .george-section::before { background: linear-gradient(45deg, #e74c3c, #c0392b); }
+        .john-section::before { background: linear-gradient(45deg, #3498db, #2980b9); }
+        .hal-section::before { background: linear-gradient(45deg, #f39c12, #d68910); }
+        
+        .participant-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #ecf0f1;
+        }
+        
+        .participant-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            font-weight: bold;
+            color: white;
+            margin-right: 20px;
+        }
+        
+        .george-avatar { background: linear-gradient(45deg, #e74c3c, #c0392b); }
+        .john-avatar { background: linear-gradient(45deg, #3498db, #2980b9); }
+        .hal-avatar { background: linear-gradient(45deg, #f39c12, #d68910); }
+        
+        .participant-info h2 {
+            margin: 0 0 5px 0;
+            color: #2c3e50;
+            font-size: 1.8em;
+        }
+        
+        .participant-role {
+            color: #7f8c8d;
+            font-size: 1.1em;
+            margin: 0;
+        }
+        
+        .perspective-section {
+            margin: 25px 0;
+        }
+        
+        .perspective-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .perspective-title::before {
+            content: '';
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            border-radius: 50%;
+        }
+        
+        .george-section .perspective-title::before { background: #e74c3c; }
+        .john-section .perspective-title::before { background: #3498db; }
+        .hal-section .perspective-title::before { background: #f39c12; }
+        
+        .concerns-list, .contributions-list, .quotes-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .concerns-list li, .contributions-list li {
+            padding: 12px 0;
+            padding-left: 25px;
+            position: relative;
+            font-size: 1.05em;
+            line-height: 1.5;
+        }
+        
+        .concerns-list li::before {
+            content: '⚠️';
+            position: absolute;
+            left: 0;
+            font-size: 1.1em;
+        }
+        
+        .contributions-list li::before {
+            content: '💡';
+            position: absolute;
+            left: 0;
+            font-size: 1.1em;
+        }
+        
+        .quote-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            position: relative;
+            border-left: 4px solid;
+        }
+        
+        .george-section .quote-item { border-left-color: #e74c3c; }
+        .john-section .quote-item { border-left-color: #3498db; }
+        .hal-section .quote-item { border-left-color: #f39c12; }
+        
+        .quote-text {
+            font-style: italic;
+            color: #2c3e50;
+            line-height: 1.4;
+        }
+        
+        .quote-context {
+            font-size: 0.9em;
+            color: #7f8c8d;
+            margin-top: 8px;
+        }
+        
+        .interaction-matrix {
+            margin: 50px 0;
+            background: #fff;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+        
+        .matrix-title {
+            font-size: 2em;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        
+        .interaction-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .interaction-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+        }
+        
+        .interaction-card h3 {
+            margin: 0 0 15px 0;
+            font-size: 1.3em;
+        }
+        
+        .priorities-comparison {
+            margin: 50px 0;
+            background: #fff;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+        
+        .priority-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .priority-column {
+            text-align: center;
+        }
+        
+        .priority-header {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            color: white;
+        }
+        
+        .george-priority { background: linear-gradient(45deg, #e74c3c, #c0392b); }
+        .john-priority { background: linear-gradient(45deg, #3498db, #2980b9); }
+        .hal-priority { background: linear-gradient(45deg, #f39c12, #d68910); }
+        
+        .priority-item {
+            background: #f8f9fa;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+            border-left: 4px solid;
+        }
+        
+        .george-column .priority-item { border-left-color: #e74c3c; }
+        .john-column .priority-item { border-left-color: #3498db; }
+        .hal-column .priority-item { border-left-color: #f39c12; }
+        
+        @media (max-width: 768px) {
+            .participants-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .priority-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .participant-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .participant-avatar {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Meeting Perspectives by Participant</h1>
+        
+        <div class="participants-container">
+            <!-- GEORGE'S PERSPECTIVE -->
+            <div class="participant-section george-section">
+                <div class="participant-header">
+                    <div class="participant-avatar george-avatar">G</div>
+                    <div class="participant-info">
+                        <h2>GEORGE</h2>
+                        <p class="participant-role">Content Expert & Framework Creator</p>
+                    </div>
+                </div>
+                
+                <div class="perspective-section">
+                    <div class="perspective-title">🎯 Primary Concerns</div>
+                    <ul class="concerns-list">
+                        <li>Making discussions more structured than just "venting"</li>
+                        <li>Technical challenges with distribution and access</li>
+                        <li>Group dynamics - engaging passive vs. active participants</li>
+                        <li>Time management - covering multiple topics effectively</li>
+                    </ul>
+                </div>
+                
+                <div class="perspective-section">
+                    <div class="perspective-title">💡 Key Contributions</div>
+                    <ul class="contributions-list">
+                        <li>Created comprehensive 8-category framework for political discussions</li>
+                        <li>Provided detailed 6-page analysis as foundation</li>
+                        <li>Advocated for interactive format over "information dumps"</li>
+                        <li>Recognized different audience needs (core vs. broader group)</li>
+                    </ul>
+                </div>
+                
+                <div class="perspective-section">
+                    <div class="perspective-title">💬 Key Quotes</div>
+                    <div class="quotes-list">
+                        <div class="quote-item">
+                            <div class="quote-text">"We're if we talk about authoritarianism... we could be flexible."</div>
+                            <div class="quote-context">Showing willingness to adapt framework to group interests</div>
+                        </div>
+                        <div class="quote-item">
+                            <div class="quote-text">"I'm a little burnt out from all the time I spent on this, and then there's always the anxiety that Beth won't get anything out."</div>
+                            <div class="quote-context">Expressing frustration with technical/distribution challenges</div>
+                        </div>
+                        <div class="quote-item">
+                            <div class="quote-text">"For those of us who are very... detailed oriented people who want to be more entertained or just want to listen. They may get turned off."</div>
+                            <div class="quote-context">Recognizing diverse participant needs and engagement styles</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- JOHN'S PERSPECTIVE -->
+            <div class="participant-section john-section">
+                <div class="participant-header">
+                    <div class="participant-avatar john-avatar">J</div>
+                    <div class="participant-info">
+                        <h2>JOHN</h2>
+                        <p class="participant-role">Technical Lead & AI Integration Expert</p>
+                    </div>
+                </div>
+                
+                <div class="perspective-section">
+                    <div class="perspective-title">🎯 Primary Concerns</div>
+                    <ul class="concerns-list">
+                        <li>Technical infrastructure limitations (Beth's Zoom setup)</li>
+                        <li>User adoption and technical comfort levels</li>
+                        <li>Balancing AI capabilities with human-centered approach</li>
+                        <li>Capturing and analyzing group discussions effectively</li>
+                    </ul>
+                </div>
+                
+                <div class="perspective-section">
+                    <div class="perspective-title">💡 Key Contributions</div>
+                    <ul class="contributions-list">
+                        <li>AI-powered visualization of George's framework</li>
+                        <li>Launch pad website model for resource organization</li>
+                        <li>Technical solutions for recording and transcript analysis</li>
+                        <li>Bridge between human curation and AI enhancement</li>
+                    </ul>
+                </div>
+                
+                <div class="perspective-section">
+                    <div class="perspective-title">💬 Key Quotes</div>
+                    <div class="quotes-list">
+                        <div class="quote-item">
+                            <div class="quote-text">"This is much more comprehensive than we can manage in one session. This is a multiple session... discussion. But I think it's a really good foundation."</div>
+                            <div class="quote-context">Recognizing scope and planning long-term approach</div>
+                        </div>
+                        <div class="quote-item">
+                            <div class="quote-text">"The value that these people bring is not that they know a lot about AI... What's important is to capture the diverse points of view that people have."</div>
+                            <div class="quote-context">Emphasizing human-centered approach to AI integration</div>
+                        </div>
+                        <div class="quote-item">
+                            <div class="quote-text">"We used AI to cast it in a way that is more convenient. I think that that will be acceptable."</div>
+                            <div class="quote-context">Positioning AI as enhancement tool, not replacement</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- HAL'S PERSPECTIVE -->
+            <div class="participant-section hal-section">
+                <div class="participant-header">
+                    <div class="participant-avatar hal-avatar">H</div>
+                    <div class="participant-info">
+                        <h2>HAL</h2>
+                        <p class="participant-role">Strategic Advisor & Process Advocate</p>
+                    </div>
+                </div>
+                
+                <div class="perspective-section">
+                    <div class="perspective-title">🎯 Primary Concerns</div>
+                    <ul class="concerns-list">
+                        <li>Long-term sustainability and evolution of the process</li>
+                        <li>Proper framing and communication to group members</li>
+                        <li>Integration with existing Project 2025 work</li>
+                        <li>Avoiding overwhelming participants with complexity</li>
+                    </ul>
+                </div>
+                
+                <div class="perspective-section">
+                    <div class="perspective-title">💡 Key Contributions</div>
+                    <ul class="contributions-list">
+                        <li>Strategic perspective from Project 2025 experience</li>
+                        <li>Process refinement suggestions (discussion points vs. questions)</li>
+                        <li>Advocacy for iterative, recorded sessions</li>
+                        <li>Bridge between technical capabilities and group needs</li>
+                    </ul>
+                </div>
+                
+                <div class="perspective-section">
+                    <div class="perspective-title">💬 Key Quotes</div>
+                    <div class="quotes-list">
+                        <div class="quote-item">
+                            <div class="quote-text">"We shouldn't talk about question. We should talk about discussion points."</div>
+                            <div class="quote-context">Refining language to encourage participation</div>
+                        </div>
+                        <div class="quote-item">
+                            <div class="quote-text">"This discussion will take place every week, and it will be it has to be updated because things are gonna change."</div>
+                            <div class="quote-context">Emphasizing dynamic, evolving nature of the framework</div>
+                        </div>
+                        <div class="quote-item">
+                            <div class="quote-text">"We have to make sure that the intro makes clear that this is all... just kind of working this through to make the discussion a little more structured and organized."</div>
+                            <div class="quote-context">Focusing on proper communication and expectations</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="interaction-matrix">
+            <div class="matrix-title">Key Interactions & Collaborations</div>
+            <div class="interaction-grid">
+                <div class="interaction-card">
+                    <h3>George ↔ John</h3>
+                    <p>Content creation partnership: George provides expert analysis, John transforms it into accessible visual formats using AI</p>
+                </div>
+                <div class="interaction-card">
+                    <h3>John ↔ Hal</h3>
+                    <p>Technical collaboration: Shared Project 2025 experience, both advocate for AI-enhanced analysis and recording capabilities</p>
+                </div>
+                <div class="interaction-card">
+                    <h3>George ↔ Hal</h3>
+                    <p>Strategic alignment: Both focused on group dynamics, sustainable processes, and effective communication strategies</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="priorities-comparison">
+            <div class="matrix-title">Participant Priorities Comparison</div>
+            <div class="priority-grid">
+                <div class="priority-column george-column">
+                    <div class="priority-header george-priority">GEORGE'S PRIORITIES</div>
+                    <div class="priority-item">
+                        <strong>Content Quality</strong><br>
+                        Comprehensive, well-researched political analysis
+                    </div>
+                    <div class="priority-item">
+                        <strong>Engagement</strong><br>
+                        Interactive discussions vs. passive consumption
+                    </div>
+                    <div class="priority-item">
+                        <strong>Accessibility</strong><br>
+                        Making complex topics digestible for diverse audiences
+                    </div>
+                    <div class="priority-item">
+                        <strong>Practical Concerns</strong><br>
+                        Distribution challenges and time management
+                    </div>
+                </div>
+                
+                <div class="priority-column john-column">
+                    <div class="priority-header john-priority">JOHN'S PRIORITIES</div>
+                    <div class="priority-item">
+                        <strong>Technical Innovation</strong><br>
+                        AI-enhanced visualization and analysis tools
+                    </div>
+                    <div class="priority-item">
+                        <strong>Infrastructure</strong><br>
+                        Recording, transcription, and analysis capabilities
+                    </div>
+                    <div class="priority-item">
+                        <strong>User Experience</strong><br>
+                        Intuitive interfaces and accessible technology
+                    </div>
+                    <div class="priority-item">
+                        <strong>Human-Centered AI</strong><br>
+                        Technology as enhancement, not replacement
+                    </div>
+                </div>
+                
+                <div class="priority-column hal-column">
+                    <div class="priority-header hal-priority">HAL'S PRIORITIES</div>
+                    <div class="priority-item">
+                        <strong>Process Design</strong><br>
+                        Sustainable, iterative discussion frameworks
+                    </div>
+                    <div class="priority-item">
+                        <strong>Communication Strategy</strong><br>
+                        Proper framing and expectation management
+                    </div>
+                    <div class="priority-item">
+                        <strong>Integration</strong><br>
+                        Connection with broader Project 2025 work
+                    </div>
+                    <div class="priority-item">
+                        <strong>Evolution</strong><br>
+                        Adaptive system that improves over time
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Current Events Summary</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            padding: 15px;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.97);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            height: calc(100vh - 30px);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            color: white;
+            flex-shrink: 0;
+        }
+        
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 8px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .date-info {
+            font-size: 1em;
+            opacity: 0.9;
+            margin: 5px 0;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: #ffd700;
+            width: 11.6%;
+            border-radius: 3px;
+            animation: progressGlow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes progressGlow {
+            from { box-shadow: 0 0 3px rgba(255, 215, 0, 0.5); }
+            to { box-shadow: 0 0 15px rgba(255, 215, 0, 0.8); }
+        }
+        
+        .topics-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 15px;
+            flex: 1;
+            min-height: 0;
+        }
+        
+        .topic-card {
+            background: linear-gradient(145deg, #ffffff, #f8f9fa);
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .topic-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .topic-card.fiscal { border-left-color: #e74c3c; }
+        .topic-card.trade { border-left-color: #f39c12; }
+        .topic-card.political { border-left-color: #3498db; }
+        .topic-card.governance { border-left-color: #9b59b6; }
+        .topic-card.justice { border-left-color: #e67e22; }
+        .topic-card.social { border-left-color: #27ae60; }
+        .topic-card.foreign { border-left-color: #34495e; }
+        .topic-card.health { border-left-color: #1abc9c; }
+        
+        .topic-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .topic-number {
+            display: inline-block;
+            width: 25px;
+            height: 25px;
+            background: linear-gradient(145deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 25px;
+            font-weight: bold;
+            font-size: 0.8em;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+        
+        .topic-title {
+            font-size: 1em;
+            font-weight: bold;
+            color: #2c3e50;
+            line-height: 1.2;
+            flex: 1;
+        }
+        
+        .topic-subtitle {
+            font-style: italic;
+            color: #7f8c8d;
+            margin-bottom: 8px;
+            font-size: 0.75em;
+            line-height: 1.1;
+        }
+        
+        .summary {
+            background: rgba(52, 73, 94, 0.08);
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 0.7em;
+            line-height: 1.3;
+            color: #2c3e50;
+            border-left: 2px solid #34495e;
+            flex: 1;
+            overflow-y: auto;
+        }
+        
+        .key-stat {
+            background: rgba(231, 76, 60, 0.1);
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin: 4px 0;
+            font-weight: bold;
+            color: #e74c3c;
+            font-size: 0.65em;
+            text-align: center;
+        }
+        
+        .shakespeare-quote {
+            background: rgba(108, 92, 231, 0.08);
+            padding: 6px;
+            border-radius: 4px;
+            font-style: italic;
+            color: #5a5a5a;
+            margin-bottom: 6px;
+            font-size: 0.65em;
+            line-height: 1.2;
+            text-align: center;
+        }
+        
+        @media (max-width: 1200px) {
+            .topics-grid {
+                grid-template-columns: repeat(2, 1fr);
+                grid-template-rows: repeat(4, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .topics-grid {
+                grid-template-columns: 1fr;
+                grid-template-rows: repeat(8, 1fr);
+            }
+            
+            .container {
+                height: auto;
+                min-height: calc(100vh - 30px);
+            }
+            
+            .header h1 {
+                font-size: 1.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Current Events Discussion Topics</h1>
+            <div class="date-info">Session: July 9, 2025 • Day 170 of Trump's Second Term</div>
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+            <div class="date-info">1,291 days remaining</div>
+        </div>
+        
+        <div class="topics-grid">
+            <div class="topic-card fiscal">
+                <div class="topic-header">
+                    <div class="topic-number">1</div>
+                    <div class="topic-title">The Big Beautiful Bill</div>
+                </div>
+                <div class="topic-subtitle">Brutal Budget Bill or Billionaire Betterment Bill</div>
+                <div class="shakespeare-quote">"If it were done when 'tis done, then t'were well it were done quickly."</div>
+                <div class="key-stat">Net Cost: $3.4 Trillion</div>
+                <div class="summary">
+                    The BBB permanently extends tax cuts benefiting wealthy Americans while cutting social programs, creating a $3.4T deficit funded by reduced healthcare access for millions.
+                </div>
+            </div>
+            
+            <div class="topic-card trade">
+                <div class="topic-header">
+                    <div class="topic-number">2</div>
+                    <div class="topic-title">Tariffs</div>
+                </div>
+                <div class="topic-subtitle">A Tale of Sound and Fury</div>
+                <div class="shakespeare-quote">"A tale told by an idiot, full of sound and fury, signifying nothing."</div>
+                <div class="key-stat">Up to 70% on 170+ Countries</div>
+                <div class="summary">
+                    Despite promises of revenue generation, tariffs function as regressive taxes on consumers while trade negotiations remain stalled with only vague framework agreements.
+                </div>
+            </div>
+            
+            <div class="topic-card political">
+                <div class="topic-header">
+                    <div class="topic-number">3</div>
+                    <div class="topic-title">Elections & 2026 Midterms</div>
+                </div>
+                <div class="topic-subtitle">The Reality Behind the "Mandate"</div>
+                <div class="shakespeare-quote">"Elections have consequences."</div>
+                <div class="key-stat">1.48% Margin of Victory</div>
+                <div class="summary">
+                    Trump's narrow victory margin was amplified by Biden's late exit and decreased turnout, but 2026 midterms favor Republicans in Senate while House control remains competitive.
+                </div>
+            </div>
+            
+            <div class="topic-card governance">
+                <div class="topic-header">
+                    <div class="topic-number">4</div>
+                    <div class="topic-title">Rising Authoritarianism</div>
+                </div>
+                <div class="topic-subtitle">The Erosion of Guardrails</div>
+                <div class="shakespeare-quote">"L'État, c'est moi."</div>
+                <div class="key-stat">Supreme Court Immunity</div>
+                <div class="summary">
+                    Constitutional guardrails have collapsed as Trump consolidates power through loyal appointees, threatens judicial independence, and plans to restructure federal employment.
+                </div>
+            </div>
+            
+            <div class="topic-card justice">
+                <div class="topic-header">
+                    <div class="topic-number">5</div>
+                    <div class="topic-title">Retribution</div>
+                </div>
+                <div class="topic-subtitle">Settling Scores</div>
+                <div class="shakespeare-quote">"When someone shows you who they are, believe them the first time."</div>
+                <div class="key-stat">All Jan 6 Pardoned Day 1</div>
+                <div class="summary">
+                    Trump systematically targets perceived enemies through pardons for January 6th participants, firing federal prosecutors, threatening media outlets, and pursuing legal action against universities.
+                </div>
+            </div>
+            
+            <div class="topic-card social">
+                <div class="topic-header">
+                    <div class="topic-number">6</div>
+                    <div class="topic-title">Immigration</div>
+                </div>
+                <div class="topic-subtitle">The Crackdown Intensifies</div>
+                <div class="shakespeare-quote">"Be kind whenever possible. It is always possible."</div>
+                <div class="key-stat">3,000 Arrests/Day Goal</div>
+                <div class="summary">
+                    Mass deportation operations target both illegal and legal immigrants indiscriminately, prioritizing arrest numbers over actual criminals while expanding detention infrastructure.
+                </div>
+            </div>
+            
+            <div class="topic-card foreign">
+                <div class="topic-header">
+                    <div class="topic-number">7</div>
+                    <div class="topic-title">Foreign Policy</div>
+                </div>
+                <div class="topic-subtitle">Disrupting the Post-WWII Order</div>
+                <div class="shakespeare-quote">"Power tends to corrupt, and absolute power corrupts absolutely."</div>
+                <div class="key-stat">Ukraine Support Halted</div>
+                <div class="summary">
+                    Trump undermines 75 years of post-WWII international order by withdrawing Ukraine support, bombing Iran unilaterally, and hedging NATO commitments.
+                </div>
+            </div>
+            
+            <div class="topic-card health">
+                <div class="topic-header">
+                    <div class="topic-number">8</div>
+                    <div class="topic-title">Health Care</div>
+                </div>
+                <div class="topic-subtitle">RFK Jr.'s Radical Restructuring</div>
+                <div class="shakespeare-quote">"Do no harm."</div>
+                <div class="key-stat">25% CDC Staff Cuts</div>
+                <div class="summary">
+                    RFK Jr. dismantles public health infrastructure through massive staff cuts and promotes vaccine skepticism despite limited medical credentials.
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
