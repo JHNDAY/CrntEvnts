@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Meeting Perspectives by Participant</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 40px;
+            font-size: 2.5em;
+            background: linear-gradient(45deg, #3498db, #8e44ad);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .participants-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+        
+        .participant-section {
+            background: #fff;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .participant-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 6px;
+        }
+        
+        .george-section::before { background: linear-gradient(45deg, #e74c3c, #c0392b); }
+        .john-section::before { background: linear-gradient(45deg, #3498db, #2980b9); }
+        .hal-section::before { background: linear-gradient(45deg, #f39c12, #d68910); }
+        
+        .participant-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #ecf0f1;
+        }
+        
+        .participant-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            font-weight: bold;
+            color: white;
+            margin-right: 20px;
+        }
+        
+        .george-avatar { background: linear-gradient(45deg, #e74c3c, #c0392b); }
+        .john-avatar { background: linear-gradient(45deg, #3498db, #2980b9); }
+        .hal-avatar { background: linear-gradient(45deg, #f39c12, #d68910); }
+        
+        .participant-info h2 {
+            margin: 0 0 5px 0;
+            color: #2c3e50;
+            font-size: 1.8em;
+        }
+        
+        .participant-role {
+            color: #7f8c8d;
+            font-size: 1.1em;
+            margin: 0;
+        }
+        
+        .perspective-section {
+            margin: 25px 0;
+        }
+        
+        .perspective-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .perspective-title::before {
+            content: '';
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            border-radius: 50%;
+        }
+        
+        .george-section .perspective-title::before { background: #e74c3c; }
+        .john-section .perspective-title::before { background: #3498db; }
+        .hal-section .perspective-title::before { background: #f39c12; }
+        
+        .concerns-list, .contributions-list, .quotes-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .concerns-list li, .contributions-list li {
+            padding: 12px 0;
+            padding-left: 25px;
+            position: relative;
+            font-size: 1.05em;
+            line-height: 1.5;
+        }
+        
+        .concerns-list li::before {
+            content: '⚠️';
+            position: absolute;
+            left: 0;
+            font-size: 1.1em;
+        }
+        
+        .contributions-list li::before {
+            content: '💡';
+            position: absolute;
+            left: 0;
+            font-size: 1.1em;
+        }
+        
+        .quote-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            position: relative;
+            border-left: 4px solid;
+        }
+        
+        .george-section .quote-item { border-left-color: #e74c3c; }
+        .john-section .quote-item { border-left-color: #3498db; }
+        .hal-section .quote-item { border-left-color: #f39c12; }
+        
+        .quote-text {
+            font-style: italic;
+            color: #2c3e50;
+            line-height: 1.4;
+        }
+        
+        .quote-context {
+            font-size: 0.9em;
+            color: #7f8c8d;
+            margin-top: 8px;
+        }
+        
+        .interaction-matrix {
+            margin: 50px 0;
+            background: #fff;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+        
+        .matrix-title {
+            font-size: 2em;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+        
+        .interaction-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .interaction-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+        }
+        
+        .interaction-card h3 {
+            margin: 0 0 15px 0;
+            font-size: 1.3em;
+        }
+        
+        .priorities-comparison {
+            margin: 50px 0;
+            background: #fff;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+        
+        .priority-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .priority-column {
+            text-align: center;
+        }
+        
+        .priority-header {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            color: white;
+        }
+        
+        .george-priority { background: linear-gradient(45deg, #e74c3c, #c0392b); }
+        .john-priority { background: linear-gradient(45deg, #3498db, #2980b9); }
+        .hal-priority { background: linear-gradient(45deg, #f39c12, #d68910); }
+        
+        .priority-item {
+            background: #f8f9fa;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+            border-left: 4px solid;
+        }
+        
+        .george-column .priority-item { border-left-color: #e74c3c; }
+        .john-column .priority-item { border-left-color: #3498db; }
+        .hal-column .priority-item { border-left-color: #f39c12; }
+        
+        @media (max-width: 768px) {
+            .participants-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .priority-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .participant-header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .participant-avatar {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Meeting Perspectives by Participant</h1>
+        
+        <div class="participants-container">
+            <!-- GEORGE'S PERSPECTIVE -->
+            <div class="participant-section george-section">
+                <div class="participant-header">
+                    <div class="participant-avatar george-avatar">G</div>
+                    <div class="participant-info">
+                        <h2>GEORGE</h2>
+                        <p class="participant-role">Content Expert & Framework Creator</p>
+                    </div>
+                </div>
+                
+                <div class="perspective-section">
+                    <div class="perspective-title">🎯 Primary Concerns</div>
+                    <ul class="concerns-list">
+                        <li>Making discussions more structured than just "venting"</li>
+                        <li>Technical challenges with distribution and access</li>
+                        <li>Group dynamics - engaging passive vs. active participants</li>
+                        <li>Time management - covering multiple topics effectively</li>
+                    </ul>
+                </div>
+                
+                <div class="perspective-section">
+                    <div class="perspective-title">💡 Key Contributions</div>
+                    <ul class="contributions-list">
+                        <li>Created comprehensive 8-category framework for political discussions</li>
+                        <li>Provided detailed 6-page analysis as foundation</li>
+                        <li>Advocated for interactive format over "information dumps"</li>
+                        <li>Recognized different audience needs (core vs. broader group)</li>
+                    </ul>
+                </div>
+                
+                <div class="perspective-section">
+                    <div class="perspective-title">💬 Key Quotes</div>
+                    <div class="quotes-list">
+                        <div class="quote-item">
+                            <div class="quote-text">"We're if we talk about authoritarianism... we could be flexible."</div>
+                            <div class="quote-context">Showing willingness to adapt framework to group interests</div>
+                        </div>
+                        <div class="quote-item">
+                            <div class="quote-text">"I'm a little burnt out from all the time I spent on this, and then there's always the anxiety that Beth won't get anything out."</div>
+                            <div class="quote-context">Expressing frustration with technical/distribution challenges</div>
+                        </div>
+                        <div class="quote-item">
+                            <div class="quote-text">"For those of us who are very... detailed oriented people who want to be more entertained or just want to listen. They may get turned off."</div>
+                            <div class="quote-context">Recognizing diverse participant needs and engagement styles</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- JOHN'S PERSPECTIVE -->
+            <div class="participant-section john-section">
+                <div class="participant-header">
+                    <div class="participant-avatar john-avatar">J</div>
+                    <div class="participant-info">
+                        <h2>JOHN</h2>
+                        <p class="participant-role">Technical Lead & AI Integration Expert</p>
+                    </div>
+                </div>
+                
+                <div class="perspective-section">
+                    <div class="perspective-title">🎯 Primary Concerns</div>
+                    <ul class="concerns-list">
+                        <li>Technical infrastructure limitations (Beth's Zoom setup)</li>
+                        <li>User adoption and technical comfort levels</li>
+                        <li>Balancing AI capabilities with human-centered approach</li>
+                        <li>Capturing and analyzing group discussions effectively</li>
+                    </ul>
+                </div>
+                
+                <div class="perspective-section">
+                    <div class="perspective-title">💡 Key Contributions</div>
+                    <ul class="contributions-list">
+                        <li>AI-powered visualization of George's framework</li>
+                        <li>Launch pad website model for resource organization</li>
+                        <li>Technical solutions for recording and transcript analysis</li>
+                        <li>Bridge between human curation and AI enhancement</li>
+                    </ul>
+                </div>
+                
+                <div class="perspective-section">
+                    <div class="perspective-title">💬 Key Quotes</div>
+                    <div class="quotes-list">
+                        <div class="quote-item">
+                            <div class="quote-text">"This is much more comprehensive than we can manage in one session. This is a multiple session... discussion. But I think it's a really good foundation."</div>
+                            <div class="quote-context">Recognizing scope and planning long-term approach</div>
+                        </div>
+                        <div class="quote-item">
+                            <div class="quote-text">"The value that these people bring is not that they know a lot about AI... What's important is to capture the diverse points of view that people have."</div>
+                            <div class="quote-context">Emphasizing human-centered approach to AI integration</div>
+                        </div>
+                        <div class="quote-item">
+                            <div class="quote-text">"We used AI to cast it in a way that is more convenient. I think that that will be acceptable."</div>
+                            <div class="quote-context">Positioning AI as enhancement tool, not replacement</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- HAL'S PERSPECTIVE -->
+            <div class="participant-section hal-section">
+                <div class="participant-header">
+                    <div class="participant-avatar hal-avatar">H</div>
+                    <div class="participant-info">
+                        <h2>HAL</h2>
+                        <p class="participant-role">Strategic Advisor & Process Advocate</p>
+                    </div>
+                </div>
+                
+                <div class="perspective-section">
+                    <div class="perspective-title">🎯 Primary Concerns</div>
+                    <ul class="concerns-list">
+                        <li>Long-term sustainability and evolution of the process</li>
+                        <li>Proper framing and communication to group members</li>
+                        <li>Integration with existing Project 2025 work</li>
+                        <li>Avoiding overwhelming participants with complexity</li>
+                    </ul>
+                </div>
+                
+                <div class="perspective-section">
+                    <div class="perspective-title">💡 Key Contributions</div>
+                    <ul class="contributions-list">
+                        <li>Strategic perspective from Project 2025 experience</li>
+                        <li>Process refinement suggestions (discussion points vs. questions)</li>
+                        <li>Advocacy for iterative, recorded sessions</li>
+                        <li>Bridge between technical capabilities and group needs</li>
+                    </ul>
+                </div>
+                
+                <div class="perspective-section">
+                    <div class="perspective-title">💬 Key Quotes</div>
+                    <div class="quotes-list">
+                        <div class="quote-item">
+                            <div class="quote-text">"We shouldn't talk about question. We should talk about discussion points."</div>
+                            <div class="quote-context">Refining language to encourage participation</div>
+                        </div>
+                        <div class="quote-item">
+                            <div class="quote-text">"This discussion will take place every week, and it will be it has to be updated because things are gonna change."</div>
+                            <div class="quote-context">Emphasizing dynamic, evolving nature of the framework</div>
+                        </div>
+                        <div class="quote-item">
+                            <div class="quote-text">"We have to make sure that the intro makes clear that this is all... just kind of working this through to make the discussion a little more structured and organized."</div>
+                            <div class="quote-context">Focusing on proper communication and expectations</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="interaction-matrix">
+            <div class="matrix-title">Key Interactions & Collaborations</div>
+            <div class="interaction-grid">
+                <div class="interaction-card">
+                    <h3>George ↔ John</h3>
+                    <p>Content creation partnership: George provides expert analysis, John transforms it into accessible visual formats using AI</p>
+                </div>
+                <div class="interaction-card">
+                    <h3>John ↔ Hal</h3>
+                    <p>Technical collaboration: Shared Project 2025 experience, both advocate for AI-enhanced analysis and recording capabilities</p>
+                </div>
+                <div class="interaction-card">
+                    <h3>George ↔ Hal</h3>
+                    <p>Strategic alignment: Both focused on group dynamics, sustainable processes, and effective communication strategies</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="priorities-comparison">
+            <div class="matrix-title">Participant Priorities Comparison</div>
+            <div class="priority-grid">
+                <div class="priority-column george-column">
+                    <div class="priority-header george-priority">GEORGE'S PRIORITIES</div>
+                    <div class="priority-item">
+                        <strong>Content Quality</strong><br>
+                        Comprehensive, well-researched political analysis
+                    </div>
+                    <div class="priority-item">
+                        <strong>Engagement</strong><br>
+                        Interactive discussions vs. passive consumption
+                    </div>
+                    <div class="priority-item">
+                        <strong>Accessibility</strong><br>
+                        Making complex topics digestible for diverse audiences
+                    </div>
+                    <div class="priority-item">
+                        <strong>Practical Concerns</strong><br>
+                        Distribution challenges and time management
+                    </div>
+                </div>
+                
+                <div class="priority-column john-column">
+                    <div class="priority-header john-priority">JOHN'S PRIORITIES</div>
+                    <div class="priority-item">
+                        <strong>Technical Innovation</strong><br>
+                        AI-enhanced visualization and analysis tools
+                    </div>
+                    <div class="priority-item">
+                        <strong>Infrastructure</strong><br>
+                        Recording, transcription, and analysis capabilities
+                    </div>
+                    <div class="priority-item">
+                        <strong>User Experience</strong><br>
+                        Intuitive interfaces and accessible technology
+                    </div>
+                    <div class="priority-item">
+                        <strong>Human-Centered AI</strong><br>
+                        Technology as enhancement, not replacement
+                    </div>
+                </div>
+                
+                <div class="priority-column hal-column">
+                    <div class="priority-header hal-priority">HAL'S PRIORITIES</div>
+                    <div class="priority-item">
+                        <strong>Process Design</strong><br>
+                        Sustainable, iterative discussion frameworks
+                    </div>
+                    <div class="priority-item">
+                        <strong>Communication Strategy</strong><br>
+                        Proper framing and expectation management
+                    </div>
+                    <div class="priority-item">
+                        <strong>Integration</strong><br>
+                        Connection with broader Project 2025 work
+                    </div>
+                    <div class="priority-item">
+                        <strong>Evolution</strong><br>
+                        Adaptive system that improves over time
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

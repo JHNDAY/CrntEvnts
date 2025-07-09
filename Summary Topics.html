@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Current Events Summary</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            padding: 15px;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.97);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            height: calc(100vh - 30px);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            color: white;
+            flex-shrink: 0;
+        }
+        
+        .header h1 {
+            font-size: 2em;
+            margin-bottom: 8px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .date-info {
+            font-size: 1em;
+            opacity: 0.9;
+            margin: 5px 0;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 3px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: #ffd700;
+            width: 11.6%;
+            border-radius: 3px;
+            animation: progressGlow 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes progressGlow {
+            from { box-shadow: 0 0 3px rgba(255, 215, 0, 0.5); }
+            to { box-shadow: 0 0 15px rgba(255, 215, 0, 0.8); }
+        }
+        
+        .topics-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(2, 1fr);
+            gap: 15px;
+            flex: 1;
+            min-height: 0;
+        }
+        
+        .topic-card {
+            background: linear-gradient(145deg, #ffffff, #f8f9fa);
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .topic-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .topic-card.fiscal { border-left-color: #e74c3c; }
+        .topic-card.trade { border-left-color: #f39c12; }
+        .topic-card.political { border-left-color: #3498db; }
+        .topic-card.governance { border-left-color: #9b59b6; }
+        .topic-card.justice { border-left-color: #e67e22; }
+        .topic-card.social { border-left-color: #27ae60; }
+        .topic-card.foreign { border-left-color: #34495e; }
+        .topic-card.health { border-left-color: #1abc9c; }
+        
+        .topic-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .topic-number {
+            display: inline-block;
+            width: 25px;
+            height: 25px;
+            background: linear-gradient(145deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 25px;
+            font-weight: bold;
+            font-size: 0.8em;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+        
+        .topic-title {
+            font-size: 1em;
+            font-weight: bold;
+            color: #2c3e50;
+            line-height: 1.2;
+            flex: 1;
+        }
+        
+        .topic-subtitle {
+            font-style: italic;
+            color: #7f8c8d;
+            margin-bottom: 8px;
+            font-size: 0.75em;
+            line-height: 1.1;
+        }
+        
+        .summary {
+            background: rgba(52, 73, 94, 0.08);
+            padding: 8px;
+            border-radius: 6px;
+            font-size: 0.7em;
+            line-height: 1.3;
+            color: #2c3e50;
+            border-left: 2px solid #34495e;
+            flex: 1;
+            overflow-y: auto;
+        }
+        
+        .key-stat {
+            background: rgba(231, 76, 60, 0.1);
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin: 4px 0;
+            font-weight: bold;
+            color: #e74c3c;
+            font-size: 0.65em;
+            text-align: center;
+        }
+        
+        .shakespeare-quote {
+            background: rgba(108, 92, 231, 0.08);
+            padding: 6px;
+            border-radius: 4px;
+            font-style: italic;
+            color: #5a5a5a;
+            margin-bottom: 6px;
+            font-size: 0.65em;
+            line-height: 1.2;
+            text-align: center;
+        }
+        
+        @media (max-width: 1200px) {
+            .topics-grid {
+                grid-template-columns: repeat(2, 1fr);
+                grid-template-rows: repeat(4, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .topics-grid {
+                grid-template-columns: 1fr;
+                grid-template-rows: repeat(8, 1fr);
+            }
+            
+            .container {
+                height: auto;
+                min-height: calc(100vh - 30px);
+            }
+            
+            .header h1 {
+                font-size: 1.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Current Events Discussion Topics</h1>
+            <div class="date-info">Session: July 9, 2025 • Day 170 of Trump's Second Term</div>
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+            <div class="date-info">1,291 days remaining</div>
+        </div>
+        
+        <div class="topics-grid">
+            <div class="topic-card fiscal">
+                <div class="topic-header">
+                    <div class="topic-number">1</div>
+                    <div class="topic-title">The Big Beautiful Bill</div>
+                </div>
+                <div class="topic-subtitle">Brutal Budget Bill or Billionaire Betterment Bill</div>
+                <div class="shakespeare-quote">"If it were done when 'tis done, then t'were well it were done quickly."</div>
+                <div class="key-stat">Net Cost: $3.4 Trillion</div>
+                <div class="summary">
+                    The BBB permanently extends tax cuts benefiting wealthy Americans while cutting social programs, creating a $3.4T deficit funded by reduced healthcare access for millions.
+                </div>
+            </div>
+            
+            <div class="topic-card trade">
+                <div class="topic-header">
+                    <div class="topic-number">2</div>
+                    <div class="topic-title">Tariffs</div>
+                </div>
+                <div class="topic-subtitle">A Tale of Sound and Fury</div>
+                <div class="shakespeare-quote">"A tale told by an idiot, full of sound and fury, signifying nothing."</div>
+                <div class="key-stat">Up to 70% on 170+ Countries</div>
+                <div class="summary">
+                    Despite promises of revenue generation, tariffs function as regressive taxes on consumers while trade negotiations remain stalled with only vague framework agreements.
+                </div>
+            </div>
+            
+            <div class="topic-card political">
+                <div class="topic-header">
+                    <div class="topic-number">3</div>
+                    <div class="topic-title">Elections & 2026 Midterms</div>
+                </div>
+                <div class="topic-subtitle">The Reality Behind the "Mandate"</div>
+                <div class="shakespeare-quote">"Elections have consequences."</div>
+                <div class="key-stat">1.48% Margin of Victory</div>
+                <div class="summary">
+                    Trump's narrow victory margin was amplified by Biden's late exit and decreased turnout, but 2026 midterms favor Republicans in Senate while House control remains competitive.
+                </div>
+            </div>
+            
+            <div class="topic-card governance">
+                <div class="topic-header">
+                    <div class="topic-number">4</div>
+                    <div class="topic-title">Rising Authoritarianism</div>
+                </div>
+                <div class="topic-subtitle">The Erosion of Guardrails</div>
+                <div class="shakespeare-quote">"L'État, c'est moi."</div>
+                <div class="key-stat">Supreme Court Immunity</div>
+                <div class="summary">
+                    Constitutional guardrails have collapsed as Trump consolidates power through loyal appointees, threatens judicial independence, and plans to restructure federal employment.
+                </div>
+            </div>
+            
+            <div class="topic-card justice">
+                <div class="topic-header">
+                    <div class="topic-number">5</div>
+                    <div class="topic-title">Retribution</div>
+                </div>
+                <div class="topic-subtitle">Settling Scores</div>
+                <div class="shakespeare-quote">"When someone shows you who they are, believe them the first time."</div>
+                <div class="key-stat">All Jan 6 Pardoned Day 1</div>
+                <div class="summary">
+                    Trump systematically targets perceived enemies through pardons for January 6th participants, firing federal prosecutors, threatening media outlets, and pursuing legal action against universities.
+                </div>
+            </div>
+            
+            <div class="topic-card social">
+                <div class="topic-header">
+                    <div class="topic-number">6</div>
+                    <div class="topic-title">Immigration</div>
+                </div>
+                <div class="topic-subtitle">The Crackdown Intensifies</div>
+                <div class="shakespeare-quote">"Be kind whenever possible. It is always possible."</div>
+                <div class="key-stat">3,000 Arrests/Day Goal</div>
+                <div class="summary">
+                    Mass deportation operations target both illegal and legal immigrants indiscriminately, prioritizing arrest numbers over actual criminals while expanding detention infrastructure.
+                </div>
+            </div>
+            
+            <div class="topic-card foreign">
+                <div class="topic-header">
+                    <div class="topic-number">7</div>
+                    <div class="topic-title">Foreign Policy</div>
+                </div>
+                <div class="topic-subtitle">Disrupting the Post-WWII Order</div>
+                <div class="shakespeare-quote">"Power tends to corrupt, and absolute power corrupts absolutely."</div>
+                <div class="key-stat">Ukraine Support Halted</div>
+                <div class="summary">
+                    Trump undermines 75 years of post-WWII international order by withdrawing Ukraine support, bombing Iran unilaterally, and hedging NATO commitments.
+                </div>
+            </div>
+            
+            <div class="topic-card health">
+                <div class="topic-header">
+                    <div class="topic-number">8</div>
+                    <div class="topic-title">Health Care</div>
+                </div>
+                <div class="topic-subtitle">RFK Jr.'s Radical Restructuring</div>
+                <div class="shakespeare-quote">"Do no harm."</div>
+                <div class="key-stat">25% CDC Staff Cuts</div>
+                <div class="summary">
+                    RFK Jr. dismantles public health infrastructure through massive staff cuts and promotes vaccine skepticism despite limited medical credentials.
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

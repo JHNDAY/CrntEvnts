@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trump Tariffs Discussion Questions</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .header h1 {
+            font-size: 2.8em;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            font-size: 1.3em;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+        
+        .control-btn {
+            padding: 12px 24px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            border-radius: 25px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            font-size: 0.95em;
+            font-weight: 500;
+        }
+        
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+        
+        .control-btn.active {
+            background: linear-gradient(45deg, #ff6b6b, #ffa726);
+            box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+        }
+        
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .category-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 25px;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.4s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .category-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .category-card:hover::before {
+            left: 100%;
+        }
+        
+        .category-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .category-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .category-icon {
+            font-size: 2.5em;
+            margin-right: 15px;
+            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
+        }
+        
+        .category-title {
+            font-size: 1.4em;
+            font-weight: 600;
+            color: #ffd700;
+        }
+        
+        .category-count {
+            background: rgba(255, 107, 107, 0.8);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            margin-left: auto;
+            font-weight: bold;
+        }
+        
+        .questions-container {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .questions-container.active {
+            display: block;
+        }
+        
+        .question-card {
+            background: rgba(255, 255, 255, 0.08);
+            margin: 15px 0;
+            border-radius: 15px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .question-header {
+            padding: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: all 0.3s ease;
+        }
+        
+        .question-header:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .question-number {
+            background: linear-gradient(45deg, #ff6b6b, #ffa726);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-right: 15px;
+            min-width: 40px;
+            text-align: center;
+        }
+        
+        .question-title {
+            flex: 1;
+            font-size: 1.1em;
+            font-weight: 500;
+        }
+        
+        .expand-icon {
+            font-size: 1.2em;
+            transition: transform 0.3s ease;
+            color: #ffd700;
+        }
+        
+        .question-content {
+            padding: 0 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+        
+        .question-content.expanded {
+            padding: 0 20px 20px 20px;
+            max-height: 200px;
+        }
+        
+        .question-text {
+            font-size: 1.05em;
+            line-height: 1.6;
+            opacity: 0.9;
+            margin-left: 55px;
+        }
+        
+        .facilitator-tips {
+            background: rgba(255, 215, 0, 0.1);
+            border: 2px solid rgba(255, 215, 0, 0.3);
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 30px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .tips-title {
+            font-size: 1.4em;
+            color: #ffd700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .tips-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .tip-section {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px;
+            border-radius: 10px;
+        }
+        
+        .tip-header {
+            font-weight: 600;
+            color: #ffd700;
+            margin-bottom: 10px;
+        }
+        
+        .random-question-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ff6b6b, #ffa726);
+            border: none;
+            color: white;
+            font-size: 1.5em;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.4);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .random-question-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 40px rgba(255, 107, 107, 0.6);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+            z-index: 2000;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.15);
+            padding: 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            max-width: 600px;
+            width: 90%;
+        }
+        
+        .modal-header {
+            font-size: 1.3em;
+            color: #ffd700;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .modal-question {
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+        
+        .modal-close {
+            background: rgba(255, 107, 107, 0.8);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            display: block;
+            margin: 0 auto;
+        }
+        
+        .modal-close:hover {
+            background: rgba(255, 107, 107, 1);
+            transform: translateY(-2px);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @media (max-width: 768px) {
+            .category-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .controls {
+                justify-content: center;
+            }
+            
+            .control-btn {
+                font-size: 0.9em;
+                padding: 10px 16px;
+            }
+            
+            .question-text {
+                margin-left: 0;
+            }
+            
+            .random-question-btn {
+                bottom: 20px;
+                right: 20px;
+                width: 60px;
+                height: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Trump Tariffs Discussion</h1>
+            <div class="subtitle">Interactive Guide for Current Events Groups</div>
+            
+            <div class="controls">
+                <button class="control-btn active" onclick="showView('categories')">📋 Categories</button>
+                <button class="control-btn" onclick="showView('all')">📝 All Questions</button>
+                <button class="control-btn" onclick="showView('tips')">💡 Facilitator Tips</button>
+            </div>
+        </div>
+        
+        <div id="categories-view">
+            <div class="category-grid">
+                <div class="category-card" onclick="showCategory('policy')">
+                    <div class="category-header">
+                        <div class="category-icon">🎯</div>
+                        <div class="category-title">Policy Design</div>
+                        <div class="category-count">3</div>
+                    </div>
+                    <p>Strategic intent, emergency powers, and implementation reality</p>
+                </div>
+                
+                <div class="category-card" onclick="showCategory('economic')">
+                    <div class="category-header">
+                        <div class="category-icon">💰</div>
+                        <div class="category-title">Economic Impact</div>
+                        <div class="category-count">3</div>
+                    </div>
+                    <p>Who pays, regressive effects, and revenue contradictions</p>
+                </div>
+                
+                <div class="category-card" onclick="showCategory('international')">
+                    <div class="category-header">
+                        <div class="category-icon">🌍</div>
+                        <div class="category-title">International Relations</div>
+                        <div class="category-count">3</div>
+                    </div>
+                    <p>Ally treatment, China strategy, and WTO implications</p>
+                </div>
+                
+                <div class="category-card" onclick="showCategory('theory')">
+                    <div class="category-header">
+                        <div class="category-icon">🏭</div>
+                        <div class="category-title">Economic Theory</div>
+                        <div class="category-count">3</div>
+                    </div>
+                    <p>Trade deficit myths, manufacturing reality, inflation trade-offs</p>
+                </div>
+                
+                <div class="category-card" onclick="showCategory('political')">
+                    <div class="category-header">
+                        <div class="category-icon">🎲</div>
+                        <div class="category-title">Political Strategy</div>
+                        <div class="category-count">3</div>
+                    </div>
+                    <p>Election timing, negotiation theater, congressional oversight</p>
+                </div>
+                
+                <div class="category-card" onclick="showCategory('longterm')">
+                    <div class="category-header">
+                        <div class="category-icon">🔮</div>
+                        <div class="category-title">Long-term Impact</div>
+                        <div class="category-count">3</div>
+                    </div>
+                    <p>Precedents, supply chains, and global trade evolution</p>
+                </div>
+            </div>
+        </div>
+        
+        <div id="questions-view" style="display: none;">
+            <!-- Policy Design Questions -->
+            <div class="questions-container" id="policy-questions">
+                <div class="question-card">
+                    <div class="question-header" onclick="toggleQuestion(this)">
+                        <div class="question-number">1</div>
+                        <div class="question-title">Strategic Intent vs. Reality</div>
+                        <div class="expand-icon">▼</div>
+                    </div>
+                    <div class="question-content">
+                        <div class="question-text">If tariffs are meant to be "reciprocal," why do they often exceed what other countries charge the US? Is this a negotiating tactic or flawed economic logic?</div>
+                    </div>
+                </div>
+                
+                <div class="question-card">
+                    <div class="question-header" onclick="toggleQuestion(this)">
+                        <div class="question-number">2</div>
+                        <div class="question-title">The "Liberation Day" Framing</div>
+                        <div class="expand-icon">▼</div>
+                    </div>
+                    <div class="question-content">
+                        <div class="question-text">What does calling April 2nd "Liberation Day" reveal about how the administration views trade relationships? Is this rhetoric helpful or inflammatory for diplomacy?</div>
+                    </div>
+                </div>
+                
+                <div class="question-card">
+                    <div class="question-header" onclick="toggleQuestion(this)">
+                        <div class="question-number">3</div>
+                        <div class="question-title">Emergency Powers Usage</div>
+                        <div class="expand-icon">▼</div>
+                    </div>
+                    <div class="question-content">
+                        <div class="question-text">Trump invoked the International Emergency Economic Powers Act (IEEPA) to justify these tariffs. Do trade deficits truly constitute a "national emergency," or is this an overreach of executive power?</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Economic Impact Questions -->
+            <div class="questions-container" id="economic-questions">
+                <div class="question-card">
+                    <div class="question-header" onclick="toggleQuestion(this)">
+                        <div class="question-number">4</div>
+                        <div class="question-title">Who Really Pays?</div>
+                        <div class="expand-icon">▼</div>
+                    </div>
+                    <div class="question-content">
+                        <div class="question-text">If research shows only 0.7% of tariff costs were absorbed by Chinese exporters, with 99.3% passed to US consumers, how can the administration claim foreign countries are paying?</div>
+                    </div>
+                </div>
+                
+                <div class="question-card">
+                    <div class="question-header" onclick="toggleQuestion(this)">
+                        <div class="question-number">5</div>
+                        <div class="question-title">Regressive Tax Paradox</div>
+                        <div class="expand-icon">▼</div>
+                    </div>
+                    <div class="question-content">
+                        <div class="question-text">Tariffs disproportionately hurt lower-income Americans who spend more on goods. How does this align with Trump's populist messaging about helping working-class Americans?</div>
+                    </div>
+                </div>
+                
+                <div class="question-card">
+                    <div class="question-header" onclick="toggleQuestion(this)">
+                        <div class="question-number">6</div>
+                        <div class="question-title">Revenue vs. Behavior Change</div>
+                        <div class="expand-icon">▼</div>
+                    </div>
+                    <div class="question-content">
+                        <div class="question-text">Trump claims tariffs will generate $600 billion annually, but also says they'll bring manufacturing back to the US. Can you have both high tariff revenue AND successful reshoring? Aren't these goals contradictory?</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- International Relations Questions -->
+            <div class="questions-container" id="international-questions">
+                <div class="question-card">
+                    <div class="question-header" onclick="toggleQuestion(this)">
+                        <div class="question-number">7</div>
+                        <div class="question-title">Ally vs. Adversary Treatment</div>
+                        <div class="expand-icon">▼</div>
+                    </div>
+                    <div class="question-content">
+                        <div class="question-text">Why are close allies like the UK and Japan facing significant tariffs while some countries get lower rates? What message does this send about US alliance priorities?</div>
+                    </div>
+                </div>
+                
+                <div class="question-card">
+                    <div class="question-header" onclick="toggleQuestion(this)">
+                        <div class="question-number">8</div>
+                        <div class="question-title">The China Exception</div>
+                        <div class="expand-icon">▼</div>
+                    </div>
+                    <div class="question-content">
+                        <div class="question-text">China faces the highest rates (up to 125%), but the US is still heavily dependent on Chinese goods. Is this sustainable, or will it force uncomfortable economic adjustments?</div>
+                    </div>
+                </div>
+                
+                <div class="question-card">
+                    <div class="question-header" onclick="toggleQuestion(this)">
+                        <div class="question-number">9</div>
+                        <div class="question-title">WTO Paralysis</div>
+                        <div class="expand-icon">▼</div>
+                    </div>
+                    <div class="question-content">
+                        <div class="question-text">The US has effectively disabled the World Trade Organization's dispute resolution since 2019. Without international arbitration, how should trade disputes be resolved?</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Economic Theory Questions -->
+            <div class="questions-container" id="theory-questions">
+                <div class="question-card">
+                    <div class="question-header" onclick="toggleQuestion(this)">
+                        <div class="question-number">10</div>
+                        <div class="question-title">Trade Deficit Obsession</div>
+                        <div class="expand-icon">▼</div>
+                    </div>
+                    <div class="question-content">
+                        <div class="question-text">Why does the Trump administration view all trade deficits as inherently bad? Can you think of examples where trade deficits might actually benefit the importing country?</div>
+                    </div>
+                </div>
+                
+                <div class="question-card">
+                    <div class="question-header" onclick="toggleQuestion(this)">
+                        <div class="question-number">11</div>
+                        <div class="question-title">Manufacturing Renaissance Reality Check</div>
+                        <div class="expand-icon">▼</div>
+                    </div>
+                    <div class="question-content">
+                        <div class="question-text">If tariffs successfully bring manufacturing back to the US, won't that likely mean higher prices AND potentially lower productivity compared to global supply chains?</div>
+                    </div>
+                </div>
+                
+                <div class="question-card">
+                    <div class="question-header" onclick="toggleQuestion(this)">
+                        <div class="question-number">12</div>
+                        <div class="question-title">Inflation vs. Growth Trade-off</div>
+                        <div class="expand-icon">▼</div>
+                    </div>
+                    <div class="question-content">
+                        <div class="question-text">How do you balance the administration's growth promises against economists' warnings about stagflation (high inflation + slow growth)?</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Political Strategy Questions -->
+            <div class="questions-container" id="political-questions">
+                <div class="question-card">
+                    <div class="question-header" onclick="toggleQuestion(this)">
+                        <div class="question-number">13</div>
+                        <div class="question-title">Midterm Election Calculus</div>
+                        <div class="expand-icon">▼</div>
+                    </div>
+                    <div class="question-content">
+                        <div class="question-text">Consumer prices typically rise 6-12 months after tariff implementation. Could this timing impact the 2026 midterm elections?</div>
+                    </div>
+                </div>
+                
+                <div class="question-card">
+                    <div class="question-header" onclick="toggleQuestion(this)">
+                        <div class="question-number">14</div>
+                        <div class="question-title">Negotiation Theater</div>
+                        <div class="expand-icon">▼</div>
+                    </div>
+                    <div class="question-content">
+                        <div class="question-text">Are the constantly shifting deadlines and rates genuine policy changes, or calculated pressure tactics? What does this unpredictability cost in terms of business planning?</div>
+                    </div>
+                </div>
+                
+                <div class="question-card">
+                    <div class="question-header" onclick="toggleQuestion(this)">
+                        <div class="question-number">15</div>
+                        <div class="question-title">Congressional Override</div>
+                        <div class="expand-icon">▼</div>
+                    </div>
+                    <div class="question-content">
+                        <div class="question-text">Democratic resolutions to end the tariff emergencies were blocked by Republican majorities. Should Congress have more oversight over trade policy, or is this properly executive domain?</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Long-term Consequences Questions -->
+            <div class="questions-container" id="longterm-questions">
+                <div class="question-card">
+                    <div class="question-header" onclick="toggleQuestion(this)">
+                        <div class="question-number">16</div>
+                        <div class="question-title">Precedent Setting</div>
+                        <div class="expand-icon">▼</div>
+                    </div>
+                    <div class="question-content">
+                        <div class="question-text">If Trump can use emergency powers for trade deficits, what stops future presidents from using similar powers for climate change, inequality, or other broad issues?</div>
+                    </div>
+                </div>
+                
+                <div class="question-card">
+                    <div class="question-header" onclick="toggleQuestion(this)">
+                        <div class="question-number">17</div>
+                        <div class="question-title">Supply Chain Resilience</div>
+                        <div class="expand-icon">▼</div>
+                    </div>
+                    <div class="question-content">
+                        <div class="question-text">Beyond costs, could these tariffs actually improve US economic security by reducing dependence on potentially hostile nations?</div>
+                    </div>
+                </div>
+                
+                <div class="question-card">
+                    <div class="question-header" onclick="toggleQuestion(this)">
+                        <div class="question-number">18</div>
+                        <div class="question-title">Global Trade System Evolution</div>
+                        <div class="expand-icon">▼</div>
+                    </div>
+                    <div class="question-content">
+                        <div class="question-text">Are we witnessing the end of the post-WWII free trade consensus? What might replace it, and would that be better or worse for global prosperity?</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="facilitator-tips" id="tips-view" style="display: none;">
+            <div class="tips-title">💡 Facilitator Guidelines</div>
+            <div class="tips-content">
+                <div class="tip-section">
+                    <div class="tip-header">For Moderators:</div>
+                    <ul>
+                        <li>Start with factual clarification before opinions</li>
+                        <li>Encourage citing specific examples or data</li>
+                        <li>Ask "What evidence would change your mind?"</li>
+                        <li>Focus on policy impacts, not personalities</li>
+                    </ul>
+                </div>
+                <div class="tip-section">
+                    <div class="tip-header">Ground Rules:</div>
+                    <ul>
+                        <li>Distinguish administration claims vs. research findings</li>
+                        <li>Consider both short-term and long-term effects</li>
+                        <li>Think beyond "US vs. other countries"</li>
+                        <li>Examine winners and losers in each scenario</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <button class="random-question-btn" onclick="showRandomQuestion()" title="Random Question">🎲</button>
+    
+    <div class="modal" id="random-modal">
+        <div class="modal-content">
+            <div class="modal-header">Random Discussion Question</div>
+            <div class="modal-question" id="random-question-text"></div>
+            <button class="modal-close" onclick="closeModal()">Close</button>
+        </div>
+    </div>
+    
+    <script>
+        const questions = [
+            "If tariffs are meant to be 'reciprocal,' why do they often exceed what other countries charge the US?",
+            "What does calling April 2nd 'Liberation Day' reveal about trade relationship views?",
+            "Do trade deficits truly constitute a 'national emergency' for IEEPA use?",
+            "If only 0.7% of tariff costs were absorbed by exporters, how can the administration claim foreign countries are paying?",
+            "How do tariffs align with populist messaging when they hurt lower-income Americans most?",
+            "Can you have both high tariff revenue AND successful reshoring? Aren't these contradictory?",
+            "Why do close allies face significant tariffs while some countries get lower rates?",
+            "Is targeting China with 125% tariffs sustainable given US dependence on Chinese goods?",
+            "Without WTO dispute resolution, how should trade disputes be resolved?",
+            "Why does the administration view all trade deficits as inherently bad?",
+            "If tariffs bring manufacturing back, won't that mean higher prices AND lower productivity?",
+            "How do you balance growth promises against stagflation warnings?",
+            "Could tariff timing impact 2026 midterm elections when prices rise?",
+            "Are shifting deadlines genuine policy or calculated pressure tactics?",
+            "Should Congress have more oversight over trade policy using emergency powers?",
+            "What stops future presidents from using emergency powers for other broad issues?",
+            "Could tariffs improve US economic security despite costs?",
+            "Are we witnessing the end of the post-WWII free trade consensus?",
+            "Is there a middle ground between free trade and aggressive protectionism?",
+            "Should broad economic policies require Congressional approval rather than executive orders?"
+        ];
+        
+        function showView(view) {
+            // Update button states
+            document.querySelectorAll('.control-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Show/hide sections
+            document.getElementById('categories-view').style.display = view === 'categories' ? 'block' : 'none';
+            document.getElementById('questions-view').style.display = view === 'all' ? 'block' : 'none';
+            document.getElementById('tips-view').style.display = view === 'tips' ? 'block' : 'none';
+            
+            if (view === 'all') {
+                showAllQuestions();
+            }
+        }
+        
+        function showCategory(category) {
+            document.getElementById('categories-view').style.display = 'none';
+            document.getElementById('questions-view').style.display = 'block';
+            
+            // Hide all question containers
+            document.querySelectorAll('.questions-container').forEach(container => {
+                container.classList.remove('active');
+            });
+            
+            // Show selected category
+            document.getElementById(category + '-questions').classList.add('active');
+            
+            // Update control buttons
+            document.querySelectorAll('.control-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector('.control-btn[onclick="showView(\'all\')"]').classList.add('active');
+        }
+        
+        function showAllQuestions() {
+            document.querySelectorAll('.questions-container').forEach(container => {
+                container.classList.add('active');
+            });
+        }
+        
+        function toggleQuestion(header) {
+            const content = header.nextElementSibling;
+            const icon = header.querySelector('.expand-icon');
+            
+            if (content.classList.contains('expanded')) {
+                content.classList.remove('expanded');
+                icon.textContent = '▼';
+            } else {
+                content.classList.add('expanded');
+                icon.textContent = '▲';
+            }
+        }
+        
+        function showRandomQuestion() {
+            const randomIndex = Math.floor(Math.random() * questions.length);
+            document.getElementById('random-question-text').textContent = questions[randomIndex];
+            document.getElementById('random-modal').style.display = 'block';
+        }
+        
+        function closeModal() {
+            document.getElementById('random-modal').style.display = 'none';
+        }
+        
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('random-modal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
