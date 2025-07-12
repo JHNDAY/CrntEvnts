@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"="width=device-width, initial-scale=1.0">
+    <title>Make America America Again Rally</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            overflow-x: hidden;
+            color: white;
+        }
+
+        .rally-container {
+            position: relative;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .stage {
+            position: relative;
+            background: linear-gradient(45deg, #c41e3a, #ffffff, #002868);
+            background-size: 300% 300%;
+            animation: patrioticWave 8s ease-in-out infinite;
+            height: 40vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        @keyframes patrioticWave {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .podium {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+            text-align: center;
+            border: 5px solid #c41e3a;
+            position: relative;
+            z-index: 10;
+        }
+
+        .logo {
+            font-size: 4rem;
+            font-weight: 900;
+            color: #c41e3a;
+            text-shadow: 3px 3px 0px #002868;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .tagline {
+            font-size: 1.8rem;
+            color: #002868;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #333;
+            font-style: italic;
+        }
+
+        .crowd {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 60vh;
+            background: linear-gradient(to top, #000 0%, transparent 100%);
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            padding: 0 5%;
+        }
+
+        .person {
+            width: 8px;
+            background: linear-gradient(to top, 
+                #4a4a4a 0%, 
+                #666 30%, 
+                #888 60%, 
+                #aaa 100%);
+            border-radius: 4px 4px 0 0;
+            animation: cheer 3s infinite;
+            transform-origin: bottom;
+        }
+
+        .person:nth-child(odd) {
+            animation-delay: -1s;
+        }
+
+        .person:nth-child(3n) {
+            animation-delay: -2s;
+        }
+
+        @keyframes cheer {
+            0%, 100% { 
+                transform: scaleY(1) rotate(0deg);
+                height: 60px;
+            }
+            50% { 
+                transform: scaleY(1.2) rotate(2deg);
+                height: 80px;
+            }
+        }
+
+        .rally-points {
+            position: absolute;
+            left: 50%;
+            top: 42%;
+            width: 600px;
+            z-index: 20;
+            transform: translateX(-50%);
+        }
+
+        .rally-point {
+            background: #c41e3a;
+            color: white;
+            padding: 15px 25px;
+            margin: 8px 0;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 0 25px 25px 0;
+            box-shadow: 5px 5px 20px rgba(0,0,0,0.6);
+            border-left: 6px solid #ffffff;
+            position: relative;
+            min-height: 65px;
+            display: flex;
+            align-items: center;
+            /* Start visible for testing */
+            opacity: 1;
+            transform: translateX(0%);
+        }
+
+        .rally-point::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+        }
+
+        .rally-point:hover::before {
+            transform: translateX(100%);
+        }
+
+        .rally-point.visible {
+            animation: slideInAndStay 1.2s ease-out forwards;
+        }
+
+        .rally-point.building {
+            animation: buildUp 1s ease-out forwards;
+        }
+
+        @keyframes slideInAndStay {
+            0% { 
+                transform: translateX(-120%); 
+                opacity: 0; 
+            }
+            100% { 
+                transform: translateX(0%); 
+                opacity: 1; 
+            }
+        }
+
+        @keyframes buildUp {
+            0% { 
+                transform: translateX(0%) scale(1); 
+                filter: brightness(1);
+            }
+            50% { 
+                transform: translateX(0%) scale(1.08);
+                box-shadow: 8px 8px 25px rgba(255,255,255,0.3);
+                filter: brightness(1.2);
+            }
+            100% { 
+                transform: translateX(0%) scale(1);
+                box-shadow: 5px 5px 15px rgba(0,0,0,0.4);
+                filter: brightness(1);
+            }
+        }
+
+        .rally-point .icon {
+            font-size: 1.5rem;
+            margin-right: 10px;
+            display: inline-block;
+            animation: iconPulse 2s infinite;
+        }
+
+        @keyframes iconPulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .rally-point .point-title {
+            font-size: 1.3rem;
+            font-weight: 900;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .rally-point .point-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            font-style: italic;
+        }
+
+        .energy-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 15;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #ffffff;
+            border-radius: 50%;
+            animation: float 4s infinite linear;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) scale(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-10vh) scale(1);
+                opacity: 0;
+            }
+        }
+
+        .hashtag {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ffffff;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            animation: glow 2s infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 2px 2px 4px rgba(0,0,0,0.8), 0 0 10px #c41e3a; }
+            to { text-shadow: 2px 2px 4px rgba(0,0,0,0.8), 0 0 20px #c41e3a, 0 0 30px #c41e3a; }
+        }
+
+        .speaker-silhouette {
+            position: absolute;
+            right: 10%;
+            top: 20%;
+            width: 80px;
+            height: 120px;
+            background: linear-gradient(45deg, #000 30%, #333 70%);
+            border-radius: 40px 40px 0 0;
+            animation: gesture 4s infinite;
+            z-index: 12;
+        }
+
+        .speaker-silhouette::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 30px;
+            background: #333;
+            border-radius: 50%;
+        }
+
+        .speaker-silhouette::after {
+            content: '';
+            position: absolute;
+            top: 30px;
+            right: -25px;
+            width: 20px;
+            height: 40px;
+            background: #333;
+            border-radius: 10px;
+            animation: wave 2s infinite;
+        }
+
+        @keyframes gesture {
+            0%, 100% { transform: rotate(-2deg); }
+            50% { transform: rotate(2deg); }
+        }
+
+        @keyframes wave {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(-30deg); }
+        }
+
+        .connection-lines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 18;
+            pointer-events: none;
+        }
+
+        .connection-line {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #ffffff, transparent);
+            opacity: 0;
+            animation: connectionPulse 3s infinite;
+        }
+
+        @keyframes connectionPulse {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 0.6; }
+        }
+    </style>
+</head>
+<body>
+    <div class="rally-container">
+        <div class="stage">
+            <div class="podium">
+                <div class="logo">MAAA</div>
+                <div class="tagline">Make America America Again</div>
+                <div class="subtitle">"Reclaiming Our Values, Rebuilding Our Future"</div>
+            </div>
+            <div class="speaker-silhouette"></div>
+        </div>
+
+        <div class="rally-points">
+            <div class="rally-point" data-point="1">
+                <span class="icon">🇺🇸</span>
+                <div class="content">
+                    <div class="point-title">Fair Shot America</div>
+                    <div class="point-subtitle">Economic justice for working families</div>
+                </div>
+            </div>
+            <div class="rally-point" data-point="2">
+                <span class="icon">🤝</span>
+                <div class="content">
+                    <div class="point-title">Care For Our Own</div>
+                    <div class="point-subtitle">Universal healthcare & strong safety net</div>
+                </div>
+            </div>
+            <div class="rally-point" data-point="3">
+                <span class="icon">⚖️</span>
+                <div class="content">
+                    <div class="point-title">Liberty & Justice For ALL</div>
+                    <div class="point-subtitle">Civil rights & voting protection</div>
+                </div>
+            </div>
+            <div class="rally-point" data-point="4">
+                <span class="icon">🌍</span>
+                <div class="content">
+                    <div class="point-title">Lead By Example</div>
+                    <div class="point-subtitle">International cooperation, not force</div>
+                </div>
+            </div>
+            <div class="rally-point" data-point="5">
+                <span class="icon">💪</span>
+                <div class="content">
+                    <div class="point-title">Workers Over Billionaires</div>
+                    <div class="point-subtitle">Tax fairness & corporate accountability</div>
+                </div>
+            </div>
+            <div class="rally-point" data-point="6">
+                <span class="icon">🗳️</span>
+                <div class="content">
+                    <div class="point-title">Democracy Over Autocracy</div>
+                    <div class="point-subtitle">Protecting institutions & the rule of law</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="connection-lines"></div>
+
+        <div class="crowd">
+            <!-- Generate crowd dynamically -->
+        </div>
+
+        <div class="energy-particles">
+            <!-- Particles will be generated by JavaScript -->
+        </div>
+
+        <div class="hashtag">#MAAA2024</div>
+    </div>
+
+    <script>
+        // Generate crowd
+        const crowd = document.querySelector('.crowd');
+        for (let i = 0; i < 200; i++) {
+            const person = document.createElement('div');
+            person.className = 'person';
+            person.style.left = Math.random() * 100 + '%';
+            person.style.height = (40 + Math.random() * 40) + 'px';
+            person.style.animationDelay = Math.random() * 3 + 's';
+            crowd.appendChild(person);
+        }
+
+        // Generate floating particles
+        const particleContainer = document.querySelector('.energy-particles');
+        function createParticle() {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 2 + 's';
+            particle.style.animationDuration = (3 + Math.random() * 2) + 's';
+            
+            // Random colors for energy
+            const colors = ['#ffffff', '#c41e3a', '#002868'];
+            particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+            
+            particleContainer.appendChild(particle);
+            
+            setTimeout(() => {
+                particle.remove();
+            }, 5000);
+        }
+
+        // Create particles continuously
+        setInterval(createParticle, 200);
+
+        // TEST: Start with all points visible to debug
+        function testShowAllPoints() {
+            rallyPoints.forEach((point, index) => {
+                point.style.opacity = '1';
+                point.style.transform = 'translateX(0%)';
+                point.style.background = index % 2 === 0 ? '#c41e3a' : '#002868';
+                // Offset each point to the right (increased by 20%)
+                point.style.marginLeft = (index * 36) + 'px';
+            });
+        }
+
+        // Rally Points Animation Sequence
+        const rallyPoints = document.querySelectorAll('.rally-point');
+        const connectionLines = document.querySelector('.connection-lines');
+        
+        // Show all points immediately for testing
+        testShowAllPoints();
+        
+        function showRallyPoints() {
+            rallyPoints.forEach((point, index) => {
+                // Reset to hidden first
+                point.style.opacity = '0';
+                point.style.transform = 'translateX(-100%)';
+                point.style.marginLeft = (index * 36) + 'px'; // 20% increase: 30 * 1.2 = 36
+                
+                setTimeout(() => {
+                    console.log(`Showing point ${index + 1}`);
+                    point.style.transition = 'all 1s ease-out';
+                    point.style.opacity = '1';
+                    point.style.transform = 'translateX(0%)';
+                    
+                    // Add building effect after initial show
+                    setTimeout(() => {
+                        point.style.transform = 'translateX(0%) scale(1.1)';
+                        setTimeout(() => {
+                            point.style.transform = 'translateX(0%) scale(1)';
+                        }, 300);
+                    }, 500);
+                    
+                }, index * 1500);
+            });
+        }
+
+        function createConnectionLine(fromIndex) {
+            const line = document.createElement('div');
+            line.className = 'connection-line';
+            
+            const startY = 52 + (fromIndex * 8); // Approximate position based on rally point spacing
+            const endY = 52 + ((fromIndex + 1) * 8);
+            
+            line.style.left = '420px'; // Position at the end of rally points
+            line.style.top = startY + '%';
+            line.style.width = '50px';
+            line.style.animationDelay = '0s';
+            
+            connectionLines.appendChild(line);
+        }
+
+        // Continuous rally point emphasis
+        function emphasizePoints() {
+            rallyPoints.forEach((point, index) => {
+                if (point.classList.contains('visible')) {
+                    setTimeout(() => {
+                        point.classList.remove('building');
+                        setTimeout(() => {
+                            point.classList.add('building');
+                        }, 50);
+                    }, index * 800);
+                }
+            });
+        }
+
+        // Start the sequence immediately and make it more obvious
+        setTimeout(showRallyPoints, 1000);
+        
+        // Also trigger on page load
+        window.addEventListener('load', () => {
+            setTimeout(showRallyPoints, 500);
+        });
+        
+        // Emphasize points every 10 seconds
+        setInterval(emphasizePoints, 10000);
+
+        // Add click interactions
+        rallyPoints.forEach(point => {
+            point.addEventListener('click', () => {
+                point.classList.remove('building');
+                setTimeout(() => {
+                    point.classList.add('building');
+                }, 50);
+            });
+        });
+    </script>
+</body>
+</html>
