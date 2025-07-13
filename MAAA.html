@@ -746,27 +746,30 @@
             // Show the title first
             rejectTitle.style.opacity = '1';
             
-            rejectPoints.forEach((point, index) => {
-                // Set initial positioning (offset to the right)
-                point.style.marginLeft = (index * 36) + 'px';
-                
-                setTimeout(() => {
-                    console.log(`Showing reject point ${index + 1}`);
-                    point.style.transition = 'all 1s ease-out';
-                    point.style.opacity = '1';
-                    point.style.transform = 'translateX(0%)';
-                    point.style.background = index % 2 === 0 ? '#c41e3a' : '#002868';
+            // Wait 2 seconds before showing the points
+            setTimeout(() => {
+                rejectPoints.forEach((point, index) => {
+                    // Set initial positioning (offset to the right)
+                    point.style.marginLeft = (index * 36) + 'px';
                     
-                    // Add building effect after initial show
                     setTimeout(() => {
-                        point.style.transform = 'translateX(0%) scale(1.1)';
+                        console.log(`Showing reject point ${index + 1}`);
+                        point.style.transition = 'all 1.5s ease-out';
+                        point.style.opacity = '1';
+                        point.style.transform = 'translateX(0%)';
+                        point.style.background = index % 2 === 0 ? '#c41e3a' : '#002868';
+                        
+                        // Add building effect after initial show
                         setTimeout(() => {
-                            point.style.transform = 'translateX(0%) scale(1)';
-                        }, 300);
-                    }, 500);
-                    
-                }, index * 1200);
-            });
+                            point.style.transform = 'translateX(0%) scale(1.1)';
+                            setTimeout(() => {
+                                point.style.transform = 'translateX(0%) scale(1)';
+                            }, 300);
+                        }, 1000);
+                        
+                    }, index * 3500); // Changed from 2000 to 3500 (3.5 seconds between each)
+                });
+            }, 2000); // 2 second pause after title appears
         }
         
         function hideRejectPoints() {
@@ -786,27 +789,30 @@
             // Show the title first
             rallyTitle.style.opacity = '1';
             
-            rallyPoints.forEach((point, index) => {
-                // Set initial positioning
-                point.style.marginLeft = (index * 36) + 'px';
-                
-                setTimeout(() => {
-                    console.log(`Showing rally point ${index + 1}`);
-                    point.style.transition = 'all 1s ease-out';
-                    point.style.opacity = '1';
-                    point.style.transform = 'translateX(0%)';
-                    point.style.background = index % 2 === 0 ? '#c41e3a' : '#002868';
+            // Wait 2 seconds before showing the points
+            setTimeout(() => {
+                rallyPoints.forEach((point, index) => {
+                    // Set initial positioning
+                    point.style.marginLeft = (index * 36) + 'px';
                     
-                    // Add building effect after initial show
                     setTimeout(() => {
-                        point.style.transform = 'translateX(0%) scale(1.1)';
+                        console.log(`Showing rally point ${index + 1}`);
+                        point.style.transition = 'all 1.5s ease-out';
+                        point.style.opacity = '1';
+                        point.style.transform = 'translateX(0%)';
+                        point.style.background = index % 2 === 0 ? '#c41e3a' : '#002868';
+                        
+                        // Add building effect after initial show
                         setTimeout(() => {
-                            point.style.transform = 'translateX(0%) scale(1)';
-                        }, 300);
-                    }, 500);
-                    
-                }, index * 1500);
-            });
+                            point.style.transform = 'translateX(0%) scale(1.1)';
+                            setTimeout(() => {
+                                point.style.transform = 'translateX(0%) scale(1)';
+                            }, 300);
+                        }, 1000);
+                        
+                    }, index * 3500); // Changed from 2000 to 3500 (3.5 seconds between each)
+                });
+            }, 2000); // 2 second pause after title appears
         }
 
         function createConnectionLine(fromIndex) {
@@ -847,19 +853,19 @@
         setTimeout(() => {
             console.log("Hiding reject points");
             hideRejectPoints();
-        }, 14200); // Hide reject points after all are shown + 5 second pause (2000 + 6*1200 + 5000)
+        }, 29500); // Hide reject points after: 2000 (title pause) + 21000 (6 points × 3.5 sec) + 5000 (final pause) + 1500 (buffer)
         
         setTimeout(() => {
             console.log("Starting rally points");
             showRallyPoints();
-        }, 16200); // Start rally points after reject sequence completes (14200 + 2000 transition)
+        }, 31500); // Start rally points after reject sequence completes
         
         // Also trigger on page load as backup
         window.addEventListener('load', () => {
             setTimeout(() => {
                 showRejectPoints();
-                setTimeout(hideRejectPoints, 12200); // All points shown (6*1200) + 5 second pause
-                setTimeout(showRallyPoints, 14200); // Start rally points after transition
+                setTimeout(hideRejectPoints, 28000); // 2000 (title pause) + 21000 (6 points × 3.5 sec) + 5000 (final pause)
+                setTimeout(showRallyPoints, 30000);
             }, 2500);
         });
         
