@@ -521,8 +521,22 @@
     </div>
 
     <script>
+        // Calculate days since January 20, 2025 (Trump's inauguration)
+        const inaugurationDate = new Date('2025-01-20');
+        const currentDate = new Date();
+        const daysSinceInauguration = Math.floor((currentDate - inaugurationDate) / (1000 * 60 * 60 * 24));
+        const daysRemaining = (4 * 365 + 1) - daysSinceInauguration; // 4 years + 1 leap day
+        const percentComplete = (daysSinceInauguration / (4 * 365 + 1) * 100).toFixed(1);
+
         // Wait for Chart.js to load before creating charts
         document.addEventListener('DOMContentLoaded', function() {
+            // Update the dashboard with calculated values
+            document.querySelector('.stat-number').textContent = daysSinceInauguration;
+            document.querySelectorAll('.stat-number')[1].textContent = daysRemaining.toLocaleString();
+            document.querySelector('.progress-fill').style.width = percentComplete + '%';
+            document.querySelector('p').textContent = percentComplete + '% Complete';
+            document.querySelector('.subtitle').textContent = `Current Events Analysis • Day ${daysSinceInauguration} of Trump's Second Term`;
+            
             // Check if Chart.js loaded properly
             if (typeof Chart === 'undefined') {
                 console.error('Chart.js failed to load');
