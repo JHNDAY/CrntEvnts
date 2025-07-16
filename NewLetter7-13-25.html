@@ -274,17 +274,17 @@
         <div class="card">
             <h2><span class="icon"></span>Presidential Term Progress</h2>
             <div class="stat-box">
-                <div class="stat-number">170</div>
+                <div class="stat-number" id="days-completed">177</div>
                 <div class="stat-label">Days Completed</div>
             </div>
             <div class="stat-box" style="background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);">
-                <div class="stat-number">1,291</div>
+                <div class="stat-number" id="days-remaining">1,284</div>
                 <div class="stat-label">Days Remaining</div>
             </div>
             <div class="progress-bar">
-                <div class="progress-fill approval" style="width: 11.7%"></div>
+                <div class="progress-fill approval" id="progress-bar" style="width: 12.1%"></div>
             </div>
-            <p style="text-align: center; margin-top: 10px; color: #666;">11.7% Complete</p>
+            <p id="progress-text" style="text-align: center; margin-top: 10px; color: #666;">12.1% Complete</p>
         </div>
 
         <!-- Big Beautiful Bill Breakdown -->
@@ -521,20 +521,26 @@
     </div>
 
     <script>
-        // Calculate days since January 20, 2025 (Trump's inauguration)
-        const inaugurationDate = new Date('2025-01-20');
-        const currentDate = new Date();
+        // Calculate days since January 20, 2025 (Trump's inauguration) - REAL TIME
+        const inaugurationDate = new Date('2025-01-20T00:00:00'); // Set to midnight for consistency
+        const currentDate = new Date(); // Gets the actual current date when viewing
         const daysSinceInauguration = Math.floor((currentDate - inaugurationDate) / (1000 * 60 * 60 * 24));
-        const daysRemaining = (4 * 365 + 1) - daysSinceInauguration; // 4 years + 1 leap day
-        const percentComplete = (daysSinceInauguration / (4 * 365 + 1) * 100).toFixed(1);
+        const totalTermDays = 1461; // 4 years + 1 leap day = 1461 days
+        const daysRemaining = totalTermDays - daysSinceInauguration;
+        const percentComplete = (daysSinceInauguration / totalTermDays * 100).toFixed(1);
+
+        // Debug info (you can remove this later)
+        console.log('Current viewing date:', currentDate.toDateString());
+        console.log('Days since inauguration:', daysSinceInauguration);
+        console.log('Percent complete:', percentComplete + '%');
 
         // Wait for Chart.js to load before creating charts
         document.addEventListener('DOMContentLoaded', function() {
-            // Update the dashboard with calculated values
-            document.querySelector('.stat-number').textContent = daysSinceInauguration;
-            document.querySelectorAll('.stat-number')[1].textContent = daysRemaining.toLocaleString();
-            document.querySelector('.progress-fill').style.width = percentComplete + '%';
-            document.querySelector('p').textContent = percentComplete + '% Complete';
+            // Update the dashboard with REAL-TIME calculated values using specific IDs
+            document.getElementById('days-completed').textContent = daysSinceInauguration;
+            document.getElementById('days-remaining').textContent = daysRemaining.toLocaleString();
+            document.getElementById('progress-bar').style.width = percentComplete + '%';
+            document.getElementById('progress-text').textContent = percentComplete + '% Complete';
             document.querySelector('.subtitle').textContent = `Current Events Analysis • Day ${daysSinceInauguration} of Trump's Second Term`;
             
             // Check if Chart.js loaded properly
