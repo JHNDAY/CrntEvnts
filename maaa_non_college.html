@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Make America America Again Rally</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            overflow-x: hidden;
+            color: white;
+            min-height: 100vh;
+        }
+
+        .rally-container {
+            position: relative;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .stage {
+            position: relative;
+            background: linear-gradient(45deg, #c41e3a, #ffffff, #002868);
+            background-size: 300% 300%;
+            animation: patrioticWave 8s ease-in-out infinite;
+            height: 40vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        @keyframes patrioticWave {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .podium {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+            text-align: center;
+            border: 5px solid #c41e3a;
+            position: relative;
+            z-index: 10;
+        }
+
+        .logo {
+            font-size: 4rem;
+            font-weight: 900;
+            color: #c41e3a;
+            text-shadow: 3px 3px 0px #002868;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .tagline {
+            font-size: 1.8rem;
+            color: #002868;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #333;
+            font-style: italic;
+        }
+
+        .control-button {
+            position: absolute;
+            bottom: 10px;
+            left: 20px;
+            background: rgba(196,30,58,0.7);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            border-radius: 15px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            z-index: 25;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.2);
+            backdrop-filter: blur(5px);
+        }
+
+        .control-button:hover {
+            background: rgba(196,30,58,0.9);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(196,30,58,0.3);
+        }
+
+        .control-button.paused {
+            background: rgba(255,107,107,0.7);
+        }
+
+        .control-button.paused:hover {
+            background: rgba(255,107,107,0.9);
+        }
+
+        .content-area {
+            position: absolute;
+            top: 45vh;
+            left: 50%;
+            transform: translate(-50%, 0);
+            width: 90%;
+            max-width: 900px;
+            z-index: 20;
+            padding-top: 20px;
+        }
+
+        .sequence-title {
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: #ffffff;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            margin-bottom: 30px;
+            opacity: 0;
+            transition: opacity 1s ease;
+            position: relative;
+            z-index: 25;
+        }
+
+        .points-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            position: relative;
+        }
+
+        .point {
+            background: #c41e3a;
+            color: white;
+            padding: 15px 25px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 0 25px 25px 0;
+            box-shadow: 5px 5px 20px rgba(0,0,0,0.6);
+            border-left: 6px solid #ffffff;
+            opacity: 0;
+            transform: translateX(-100%);
+            transition: all 1s ease;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+            min-height: 65px;
+            max-width: 600px;
+        }
+
+        .point.blue {
+            background: #002868;
+        }
+
+        .point.visible {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .point.emphasis {
+            transform: translateX(0) scale(1.05);
+            box-shadow: 8px 8px 25px rgba(255,255,255,0.3);
+        }
+
+        .point-icon {
+            font-size: 1.5rem;
+            min-width: 30px;
+        }
+
+        .point-content {
+            flex: 1;
+        }
+
+        .point-title {
+            font-size: 1.1rem;
+            font-weight: 900;
+            margin-bottom: 3px;
+            text-transform: uppercase;
+        }
+
+        .point-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            font-style: italic;
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: white;
+            border-radius: 50%;
+            bottom: 0;
+            animation: floatUp 4s linear infinite;
+        }
+
+        @keyframes floatUp {
+            0% {
+                transform: translateY(0) scale(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100vh) scale(1);
+                opacity: 0;
+            }
+        }
+
+        .crowd {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(to top, #000 0%, transparent 100%);
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            padding: 0 5%;
+        }
+
+        .person {
+            width: 8px;
+            background: linear-gradient(to top, #4a4a4a 0%, #888 100%);
+            border-radius: 4px 4px 0 0;
+            animation: cheer 3s infinite;
+            transform-origin: bottom;
+        }
+
+        @keyframes cheer {
+            0%, 100% { 
+                transform: scaleY(1);
+                height: 60px;
+            }
+            50% { 
+                transform: scaleY(1.2);
+                height: 80px;
+            }
+        }
+
+        .hashtag {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ffffff;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            animation: glow 2s infinite alternate;
+        }
+
+        @keyframes glow {
+            from { text-shadow: 2px 2px 4px rgba(0,0,0,0.8), 0 0 10px #c41e3a; }
+            to { text-shadow: 2px 2px 4px rgba(0,0,0,0.8), 0 0 20px #c41e3a; }
+        }
+
+        .animation-paused * {
+            animation-play-state: paused !important;
+        }
+    </style>
+</head>
+<body>
+    <button class="control-button" id="pauseBtn">⏸️ Pause</button>
+    
+    <div class="rally-container">
+        <div class="stage">
+            <div class="podium">
+                <div class="logo">MAAA</div>
+                <div class="tagline">Make America America Again</div>
+                <div class="subtitle">"Reclaiming Our Values, Rebuilding Our Future"</div>
+            </div>
+        </div>
+
+        <div class="content-area">
+            <div class="sequence-title" id="sequenceTitle">What's Not Working</div>
+            <div class="points-container" id="pointsContainer">
+                <!-- Points will be dynamically inserted here -->
+            </div>
+        </div>
+
+        <div class="particles" id="particles"></div>
+
+        <div class="crowd" id="crowd">
+            <!-- Crowd will be generated -->
+        </div>
+
+        <div class="hashtag">Workers Not Elites</div>
+    </div>
+
+    <script>
+        // Simple global state
+        let isPaused = false;
+        let activeTimeouts = [];
+        let particleInterval = null;
+        let currentSequenceStep = 0;
+        let animationState = {
+            phase: 'initial', // 'initial', 'reject', 'transition', 'rally'
+            currentPointIndex: 0
+        };
+
+        // Data for the sequences
+        const rejectSequence = {
+            title: "What's Been Done to Us",
+            points: [
+                { icon: "🏭", title: "Jobs Shipped Away", subtitle: "Factories closed, sent to China and Mexico" },
+                { icon: "🎓", title: "College Scam", subtitle: "Told we're not good enough without degrees" },
+                { icon: "💸", title: "Wages Stagnant", subtitle: "Working harder for less, can't get ahead" },
+                { icon: "🏛️", title: "Elites Look Down", subtitle: "Politicians who think we're stupid" },
+                { icon: "🌎", title: "Globalization Betrayal", subtitle: "Trade deals that sold out American workers" },
+                { icon: "🤖", title: "Automation Threat", subtitle: "Robots replacing us, no plan to help" }
+            ]
+        };
+
+        const rallySequence = {
+            title: "What We're Taking Back",
+            points: [
+                { icon: "🔨", title: "Good Paying Jobs", subtitle: "Manufacturing, construction, skilled trades" },
+                { icon: "🇺🇸", title: "America First Trade", subtitle: "End bad deals, bring work back home" },
+                { icon: "💪", title: "Working Class Pride", subtitle: "Respect for people who build America" },
+                { icon: "🏘️", title: "Strong Communities", subtitle: "Revive small towns, support local business" },
+                { icon: "📈", title: "Economic Growth", subtitle: "Policies that help workers, not Wall Street" },
+                { icon: "🛡️", title: "Secure Future", subtitle: "Retirement, healthcare, dignity for all" }
+            ]
+        };
+
+        // DOM elements
+        const pauseBtn = document.getElementById('pauseBtn');
+        const body = document.body;
+        const sequenceTitle = document.getElementById('sequenceTitle');
+        const pointsContainer = document.getElementById('pointsContainer');
+        const particles = document.getElementById('particles');
+        const crowd = document.getElementById('crowd');
+
+        // Pause/Resume functionality
+        pauseBtn.addEventListener('click', () => {
+            if (isPaused) {
+                resume();
+            } else {
+                pause();
+            }
+        });
+
+        function pause() {
+            isPaused = true;
+            body.classList.add('animation-paused');
+            pauseBtn.textContent = '▶️ Resume';
+            pauseBtn.classList.add('paused');
+            
+            // Clear timeouts
+            activeTimeouts.forEach(id => clearTimeout(id));
+            activeTimeouts = [];
+            
+            // Clear particle interval
+            if (particleInterval) {
+                clearInterval(particleInterval);
+                particleInterval = null;
+            }
+        }
+
+        function resume() {
+            isPaused = false;
+            body.classList.remove('animation-paused');
+            pauseBtn.textContent = '⏸️ Pause';
+            pauseBtn.classList.remove('paused');
+            
+            // Restart particles
+            startParticles();
+            
+            // Continue animation based on current state
+            continueAnimation();
+        }
+
+        function continueAnimation() {
+            console.log(`Continuing animation from phase: ${animationState.phase}`);
+            
+            switch(animationState.phase) {
+                case 'initial':
+                    // Restart the main sequence
+                    startMainSequence();
+                    break;
+                case 'reject':
+                    // Continue showing reject points if not all shown
+                    continueSequence(rejectSequence, () => {
+                        animationState.phase = 'transition';
+                        hideSequence(() => {
+                            animationState.phase = 'rally';
+                            showSequence(rallySequence);
+                        });
+                    });
+                    break;
+                case 'rally':
+                    // Continue showing rally points if not all shown
+                    continueSequence(rallySequence);
+                    break;
+            }
+        }
+
+        // Safe timeout function
+        function safeTimeout(callback, delay) {
+            if (isPaused) return;
+            const id = setTimeout(() => {
+                if (!isPaused) callback();
+            }, delay);
+            activeTimeouts.push(id);
+            return id;
+        }
+
+        // Generate crowd
+        function generateCrowd() {
+            for (let i = 0; i < 100; i++) {
+                const person = document.createElement('div');
+                person.className = 'person';
+                person.style.animationDelay = Math.random() * 3 + 's';
+                crowd.appendChild(person);
+            }
+        }
+
+        // Particle system
+        function createParticle() {
+            if (isPaused) return;
+            
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDelay = Math.random() * 2 + 's';
+            
+            const colors = ['#ffffff', '#c41e3a', '#002868'];
+            particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+            
+            particles.appendChild(particle);
+            
+            // Remove after animation
+            setTimeout(() => {
+                if (particle.parentNode) particle.remove();
+            }, 4000);
+        }
+
+        function startParticles() {
+            if (particleInterval) clearInterval(particleInterval);
+            particleInterval = setInterval(createParticle, 300);
+        }
+
+        // Show sequence
+        function showSequence(sequence, onComplete) {
+            console.log(`Starting sequence: ${sequence.title}`);
+            animationState.phase = sequence === rejectSequence ? 'reject' : 'rally';
+            animationState.currentPointIndex = 0;
+            
+            // Clear container
+            pointsContainer.innerHTML = '';
+            
+            // Show title
+            sequenceTitle.textContent = sequence.title;
+            sequenceTitle.style.opacity = '1';
+            
+            // Create and show points
+            sequence.points.forEach((pointData, index) => {
+                const point = document.createElement('div');
+                point.className = 'point';
+                
+                // Add blue class for alternating colors
+                if (index % 2 === 1) {
+                    point.classList.add('blue');
+                }
+                
+                // Add staggered margin for the right-offset effect
+                point.style.marginLeft = (index * 40) + 'px';
+                
+                point.innerHTML = `
+                    <div class="point-icon">${pointData.icon}</div>
+                    <div class="point-content">
+                        <div class="point-title">${pointData.title}</div>
+                        <div class="point-subtitle">${pointData.subtitle}</div>
+                    </div>
+                `;
+                pointsContainer.appendChild(point);
+                
+                // Show point with delay
+                safeTimeout(() => {
+                    console.log(`Showing point: ${pointData.title}`);
+                    point.classList.add('visible');
+                    animationState.currentPointIndex = index + 1;
+                    
+                    // Add emphasis effect
+                    safeTimeout(() => {
+                        point.classList.add('emphasis');
+                        safeTimeout(() => {
+                            point.classList.remove('emphasis');
+                        }, 500);
+                    }, 800);
+                    
+                }, (index + 1) * 1000);
+            });
+            
+            // Call completion callback
+            if (onComplete) {
+                safeTimeout(onComplete, sequence.points.length * 1000 + 3000);
+            }
+        }
+
+        // Continue showing remaining points in a sequence
+        function continueSequence(sequence, onComplete) {
+            const remainingPoints = sequence.points.slice(animationState.currentPointIndex);
+            if (remainingPoints.length === 0) {
+                if (onComplete) onComplete();
+                return;
+            }
+            
+            remainingPoints.forEach((pointData, index) => {
+                const actualIndex = animationState.currentPointIndex + index;
+                const existingPoint = pointsContainer.children[actualIndex];
+                
+                if (existingPoint && !existingPoint.classList.contains('visible')) {
+                    safeTimeout(() => {
+                        console.log(`Continuing point: ${pointData.title}`);
+                        existingPoint.classList.add('visible');
+                        animationState.currentPointIndex = actualIndex + 1;
+                        
+                        // Add emphasis effect
+                        safeTimeout(() => {
+                            existingPoint.classList.add('emphasis');
+                            safeTimeout(() => {
+                                existingPoint.classList.remove('emphasis');
+                            }, 500);
+                        }, 800);
+                        
+                    }, (index + 1) * 1000);
+                }
+            });
+            
+            if (onComplete) {
+                safeTimeout(onComplete, remainingPoints.length * 1000 + 3000);
+            }
+        }
+
+        // Hide current sequence
+        function hideSequence(onComplete) {
+            console.log("Hiding current sequence");
+            sequenceTitle.style.opacity = '0';
+            
+            const points = pointsContainer.querySelectorAll('.point');
+            points.forEach((point, index) => {
+                safeTimeout(() => {
+                    point.style.opacity = '0';
+                    point.style.transform = 'translateX(-100%)';
+                }, index * 100);
+            });
+            
+            if (onComplete) {
+                safeTimeout(onComplete, points.length * 100 + 1000);
+            }
+        }
+
+        // Main animation sequence
+        function startMainSequence() {
+            console.log("Starting main animation sequence");
+            animationState.phase = 'initial';
+            
+            // Show reject sequence first
+            safeTimeout(() => {
+                showSequence(rejectSequence, () => {
+                    animationState.phase = 'transition';
+                    // Hide reject and show rally
+                    hideSequence(() => {
+                        animationState.phase = 'rally';
+                        showSequence(rallySequence);
+                    });
+                });
+            }, 2000);
+        }
+
+        // Initialize everything
+        function init() {
+            console.log("Initializing MAAA Rally");
+            
+            // Generate crowd
+            generateCrowd();
+            
+            // Start particles
+            startParticles();
+            
+            // Start main sequence
+            startMainSequence();
+            
+            console.log("Initialization complete - animation should start in 2 seconds");
+        }
+
+        // Start when ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+    </script>
+</body>
+</html>
