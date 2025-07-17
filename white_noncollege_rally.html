@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Make America Work Again Rally</title>
+    <title>Make America America Again Rally</title>
     <style>
         * {
             margin: 0;
@@ -16,6 +16,7 @@
             background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
             overflow-x: hidden;
             color: white;
+            min-height: 100vh;
         }
 
         .rally-container {
@@ -53,7 +54,7 @@
         }
 
         .logo {
-            font-size: 3.5rem;
+            font-size: 4rem;
             font-weight: 900;
             color: #c41e3a;
             text-shadow: 3px 3px 0px #002868;
@@ -79,248 +80,149 @@
             font-style: italic;
         }
 
-        .crowd {
+        .control-button {
             position: absolute;
-            bottom: 0;
-            width: 100%;
-            height: 60vh;
-            background: linear-gradient(to top, #000 0%, transparent 100%);
-            display: flex;
-            align-items: flex-end;
-            justify-content: space-around;
-            padding: 0 5%;
-        }
-
-        .person {
-            width: 8px;
-            background: linear-gradient(to top, 
-                #4a4a4a 0%, 
-                #666 30%, 
-                #888 60%, 
-                #aaa 100%);
-            border-radius: 4px 4px 0 0;
-            animation: cheer 3s infinite;
-            transform-origin: bottom;
-        }
-
-        .person:nth-child(odd) {
-            animation-delay: -1s;
-        }
-
-        .person:nth-child(3n) {
-            animation-delay: -2s;
-        }
-
-        @keyframes cheer {
-            0%, 100% { 
-                transform: scaleY(1) rotate(0deg);
-                height: 60px;
-            }
-            50% { 
-                transform: scaleY(1.2) rotate(2deg);
-                height: 80px;
-            }
-        }
-
-        .rally-points {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            width: 600px;
-            z-index: 20;
-            transform: translateX(-50%);
-        }
-
-        .concerns-points {
-            position: absolute;
-            left: 50%;
-            top: 50%;
-            width: 600px;
-            z-index: 20;
-            transform: translateX(-50%);
-        }
-
-        .concerns-title {
-            position: absolute;
-            left: 50%;
-            top: 44%;
-            transform: translateX(-50%);
-            font-size: 1.8rem;
-            font-weight: 900;
-            color: #ffffff;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
-            text-align: center;
-            z-index: 25;
-            opacity: 0;
-            transition: opacity 1s ease-out;
-        }
-
-        .rally-title {
-            position: absolute;
-            left: 50%;
-            top: 44%;
-            transform: translateX(-50%);
-            font-size: 1.8rem;
-            font-weight: 900;
-            color: #ffffff;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
-            text-align: center;
-            z-index: 25;
-            opacity: 0;
-            transition: opacity 1s ease-out;
-        }
-
-        .concerns-point {
-            background: #8B4513;
+            bottom: 10px;
+            left: 20px;
+            background: rgba(196,30,58,0.7);
             color: white;
-            padding: 15px 25px;
-            margin: 8px 0;
-            font-size: 1.2rem;
+            border: none;
+            padding: 8px 15px;
+            font-size: 0.9rem;
             font-weight: bold;
-            border-radius: 0 25px 25px 0;
-            box-shadow: 5px 5px 20px rgba(0,0,0,0.6);
-            border-left: 6px solid #DAA520;
-            position: relative;
-            min-height: 65px;
-            display: flex;
-            align-items: center;
-            opacity: 0;
-            transform: translateX(100%);
+            border-radius: 15px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+            z-index: 25;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.2);
+            backdrop-filter: blur(5px);
         }
 
-        .rally-point {
-            background: #1E6091;
+        .control-button:hover {
+            background: rgba(196,30,58,0.9);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(196,30,58,0.3);
+        }
+
+        .control-button.paused {
+            background: rgba(255,107,107,0.7);
+        }
+
+        .control-button.paused:hover {
+            background: rgba(255,107,107,0.9);
+        }
+
+        .content-area {
+            position: absolute;
+            top: 45vh;
+            left: 50%;
+            transform: translate(-50%, 0);
+            width: 90%;
+            max-width: 900px;
+            z-index: 20;
+            padding-top: 20px;
+        }
+
+        .sequence-title {
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: #ffffff;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            margin-bottom: 30px;
+            opacity: 0;
+            transition: opacity 1s ease;
+            position: relative;
+            z-index: 25;
+        }
+
+        .points-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            position: relative;
+        }
+
+        .point {
+            background: #c41e3a;
             color: white;
             padding: 15px 25px;
-            margin: 8px 0;
             font-size: 1.1rem;
             font-weight: bold;
             border-radius: 0 25px 25px 0;
             box-shadow: 5px 5px 20px rgba(0,0,0,0.6);
-            border-left: 6px solid #87CEEB;
-            position: relative;
-            min-height: 65px;
-            display: flex;
-            align-items: center;
+            border-left: 6px solid #ffffff;
             opacity: 0;
             transform: translateX(-100%);
+            transition: all 1s ease;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+            min-height: 65px;
+            max-width: 600px;
         }
 
-        .rally-point::before, .concerns-point::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-            transform: translateX(-100%);
-            transition: transform 0.6s;
+        .point.blue {
+            background: #002868;
         }
 
-        .rally-point:hover::before, .concerns-point:hover::before {
-            transform: translateX(100%);
+        .point.visible {
+            opacity: 1;
+            transform: translateX(0);
         }
 
-        .rally-point.visible, .concerns-point.visible {
-            animation: slideInAndStay 1.2s ease-out forwards;
+        .point.emphasis {
+            transform: translateX(0) scale(1.05);
+            box-shadow: 8px 8px 25px rgba(255,255,255,0.3);
         }
 
-        .rally-point.building, .concerns-point.building {
-            animation: buildUp 1s ease-out forwards;
-        }
-
-        @keyframes slideInAndStay {
-            0% { 
-                transform: translateX(-120%); 
-                opacity: 0; 
-            }
-            100% { 
-                transform: translateX(0%); 
-                opacity: 1; 
-            }
-        }
-
-        .concerns-point.visible {
-            animation: slideInFromRight 1.2s ease-out forwards;
-        }
-
-        @keyframes slideInFromRight {
-            0% { 
-                transform: translateX(120%); 
-                opacity: 0; 
-            }
-            100% { 
-                transform: translateX(0%); 
-                opacity: 1; 
-            }
-        }
-
-        @keyframes buildUp {
-            0% { 
-                transform: translateX(0%) scale(1); 
-                filter: brightness(1);
-            }
-            50% { 
-                transform: translateX(0%) scale(1.08);
-                box-shadow: 8px 8px 25px rgba(255,255,255,0.3);
-                filter: brightness(1.2);
-            }
-            100% { 
-                transform: translateX(0%) scale(1);
-                box-shadow: 5px 5px 15px rgba(0,0,0,0.4);
-                filter: brightness(1);
-            }
-        }
-
-        .rally-point .icon, .concerns-point .icon {
+        .point-icon {
             font-size: 1.5rem;
-            margin-right: 10px;
-            display: inline-block;
-            animation: iconPulse 2s infinite;
+            min-width: 30px;
         }
 
-        @keyframes iconPulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.1); }
+        .point-content {
+            flex: 1;
         }
 
-        .rally-point .point-title, .concerns-point .point-title {
-            font-size: 1.3rem;
+        .point-title {
+            font-size: 1.1rem;
             font-weight: 900;
-            margin-bottom: 5px;
+            margin-bottom: 3px;
             text-transform: uppercase;
-            letter-spacing: 1px;
         }
 
-        .rally-point .point-subtitle, .concerns-point .point-subtitle {
+        .point-subtitle {
             font-size: 0.9rem;
             opacity: 0.9;
             font-style: italic;
         }
 
-        .energy-particles {
-            position: absolute;
+        .particles {
+            position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: 15;
+            z-index: 5;
         }
 
         .particle {
             position: absolute;
             width: 4px;
             height: 4px;
-            background: #ffffff;
+            background: white;
             border-radius: 50%;
-            animation: float 4s infinite linear;
+            bottom: 0;
+            animation: floatUp 4s linear infinite;
         }
 
-        @keyframes float {
+        @keyframes floatUp {
             0% {
-                transform: translateY(100vh) scale(0);
+                transform: translateY(0) scale(0);
                 opacity: 0;
             }
             10% {
@@ -330,8 +232,39 @@
                 opacity: 1;
             }
             100% {
-                transform: translateY(-10vh) scale(1);
+                transform: translateY(-100vh) scale(1);
                 opacity: 0;
+            }
+        }
+
+        .crowd {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(to top, #000 0%, transparent 100%);
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+            padding: 0 5%;
+        }
+
+        .person {
+            width: 8px;
+            background: linear-gradient(to top, #4a4a4a 0%, #888 100%);
+            border-radius: 4px 4px 0 0;
+            animation: cheer 3s infinite;
+            transform-origin: bottom;
+        }
+
+        @keyframes cheer {
+            0%, 100% { 
+                transform: scaleY(1);
+                height: 60px;
+            }
+            50% { 
+                transform: scaleY(1.2);
+                height: 80px;
             }
         }
 
@@ -339,7 +272,7 @@
             position: absolute;
             bottom: 20px;
             right: 20px;
-            font-size: 2rem;
+            font-size: 1.5rem;
             font-weight: bold;
             color: #ffffff;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
@@ -348,521 +281,346 @@
 
         @keyframes glow {
             from { text-shadow: 2px 2px 4px rgba(0,0,0,0.8), 0 0 10px #c41e3a; }
-            to { text-shadow: 2px 2px 4px rgba(0,0,0,0.8), 0 0 20px #c41e3a, 0 0 30px #c41e3a; }
+            to { text-shadow: 2px 2px 4px rgba(0,0,0,0.8), 0 0 20px #c41e3a; }
         }
 
-        .american-flag {
-            position: absolute;
-            top: 15%;
-            width: 160px;
-            height: 110px;
-            z-index: 12;
-            border: 2px solid #333;
-            box-shadow: 5px 5px 15px rgba(0,0,0,0.5);
-            transform-origin: left center;
-            animation: flagWaveMotion 3s infinite ease-in-out;
-        }
-
-        .american-flag.left {
-            left: 15%;
-        }
-
-        .american-flag.right {
-            right: 15%;
-        }
-
-        .flag-stripes {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            transform-origin: left center;
-        }
-
-        .flag-stripe {
-            flex: 1;
-            transform-origin: left center;
-            animation: stripeWave 3s infinite ease-in-out;
-        }
-
-        .flag-stripe:nth-child(1) { animation-delay: 0s; }
-        .flag-stripe:nth-child(2) { animation-delay: 0.1s; }
-        .flag-stripe:nth-child(3) { animation-delay: 0.2s; }
-        .flag-stripe:nth-child(4) { animation-delay: 0.3s; }
-        .flag-stripe:nth-child(5) { animation-delay: 0.4s; }
-        .flag-stripe:nth-child(6) { animation-delay: 0.5s; }
-        .flag-stripe:nth-child(7) { animation-delay: 0.6s; }
-        .flag-stripe:nth-child(8) { animation-delay: 0.7s; }
-        .flag-stripe:nth-child(9) { animation-delay: 0.8s; }
-        .flag-stripe:nth-child(10) { animation-delay: 0.9s; }
-        .flag-stripe:nth-child(11) { animation-delay: 1.0s; }
-        .flag-stripe:nth-child(12) { animation-delay: 1.1s; }
-        .flag-stripe:nth-child(13) { animation-delay: 1.2s; }
-
-        .flag-stripe:nth-child(odd) {
-            background: #B22234;
-        }
-
-        .flag-stripe:nth-child(even) {
-            background: #FFFFFF;
-        }
-
-        .flag-canton {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 40%;
-            height: 53.8%;
-            background: #3C3B6E;
-            display: grid;
-            grid-template-columns: repeat(6, 1fr);
-            grid-template-rows: repeat(5, 1fr);
-            gap: 1px;
-            padding: 2px;
-            animation: cantonWave 3s infinite ease-in-out;
-        }
-
-        .flag-star {
-            color: white;
-            font-size: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            animation: starTwinkle 2s infinite alternate;
-        }
-
-        @keyframes flagWaveMotion {
-            0%, 100% { 
-                transform: rotateY(0deg) rotateX(0deg);
-            }
-            25% { 
-                transform: rotateY(2deg) rotateX(1deg);
-            }
-            50% { 
-                transform: rotateY(0deg) rotateX(-1deg);
-            }
-            75% { 
-                transform: rotateY(-2deg) rotateX(1deg);
-            }
-        }
-
-        @keyframes stripeWave {
-            0%, 100% { 
-                transform: scaleX(1) skewX(0deg);
-            }
-            25% { 
-                transform: scaleX(1.02) skewX(1deg);
-            }
-            50% { 
-                transform: scaleX(1) skewX(0deg);
-            }
-            75% { 
-                transform: scaleX(0.98) skewX(-1deg);
-            }
-        }
-
-        @keyframes cantonWave {
-            0%, 100% { 
-                transform: scale(1);
-            }
-            50% { 
-                transform: scale(1.02);
-            }
-        }
-
-        @keyframes starTwinkle {
-            0% { opacity: 0.8; transform: scale(1); }
-            100% { opacity: 1; transform: scale(1.1); }
+        .animation-paused * {
+            animation-play-state: paused !important;
         }
     </style>
 </head>
 <body>
+    <button class="control-button" id="pauseBtn">⏸️ Pause</button>
+    
     <div class="rally-container">
         <div class="stage">
             <div class="podium">
-                <div class="logo">MAWA</div>
-                <div class="tagline">Make America Work Again</div>
-                <div class="subtitle">"For the Forgotten Workers of America"</div>
-            </div>
-            <div class="american-flag left">
-                <div class="flag-stripes">
-                    <div class="flag-stripe"></div>
-                    <div class="flag-stripe"></div>
-                    <div class="flag-stripe"></div>
-                    <div class="flag-stripe"></div>
-                    <div class="flag-stripe"></div>
-                    <div class="flag-stripe"></div>
-                    <div class="flag-stripe"></div>
-                    <div class="flag-stripe"></div>
-                    <div class="flag-stripe"></div>
-                    <div class="flag-stripe"></div>
-                    <div class="flag-stripe"></div>
-                    <div class="flag-stripe"></div>
-                    <div class="flag-stripe"></div>
-                </div>
-                <div class="flag-canton">
-                    <div class="flag-star">★</div>
-                    <div class="flag-star">★</div>
-                    <div class="flag-star">★</div>
-                    <div class="flag-star">★</div>
-                    <div class="flag-star">★</div>
-                    <div class="flag-star">★</div>
-                    <div class="flag-star">★</div>
-                    <div class="flag-star">★</div>
-                    <div class="flag-star">★</div>
-                    <div class="flag-star">★</div>
-                    <div class="flag-star">★</div>
-                    <div class="flag-star">★</div>
-                    <div class="flag-star">★</div>
-                    <div class="flag-star">★</div>
-                    <div class="flag-star">★</div>
-                    <div class="flag-star">★</div>
-                    <div class="flag-star">★</div>
-                    <div class="flag-star">★</div>
-                    <div class="flag-star">★</div>
-                    <div class="flag-star">★</div>
-                    <div class="flag-star">★</div>
-                    <div class="flag-star">★</div>
-                    <div class="flag-star">★</div>
-                    <div class="flag-star">★</div>
-                    <div class="flag-star">★</div>
-                    <div class="flag-star">★</div>
-                    <div class="flag-star">★</div>
-                    <div class="flag-star">★</div>
-                    <div class="flag-star">★</div>
-                    <div class="flag-star">★</div>
-                </div>
-            </div>
-            <div class="american-flag right">
-                <div class="flag-stripes">
-                    <div class="flag-stripe"></div>
-                    <div class="flag-stripe"></div>
-                    <div class="flag-stripe"></div>
-                    <div class="flag-stripe"></div>
-                    <div class="flag-stripe"></div>
-                    <div class="flag-stripe"></div>
-                    <div class="flag-stripe"></div>
-                    <div class="flag-stripe"></div>
-                    <div class="flag-stripe"></div>
-                    <div class="flag-stripe"></div>
-                    <div class="flag-stripe"></div>
-                    <div class="flag-stripe"></div>
-                    <div class="flag-stripe"></div>
-                </div>
-                <div class="flag-canton">
-                    <div class="flag-star">★</div>
-                    <div class="flag-star">★</div>
-                    <div class="flag-star">★</div>
-                    <div class="flag-star">★</div>
-                    <div class="flag-star">★</div>
-                    <div class="flag-star">★</div>
-                    <div class="flag-star">★</div>
-                    <div class="flag-star">★</div>
-                    <div class="flag-star">★</div>
-                    <div class="flag-star">★</div>
-                    <div class="flag-star">★</div>
-                    <div class="flag-star">★</div>
-                    <div class="flag-star">★</div>
-                    <div class="flag-star">★</div>
-                    <div class="flag-star">★</div>
-                    <div class="flag-star">★</div>
-                    <div class="flag-star">★</div>
-                    <div class="flag-star">★</div>
-                    <div class="flag-star">★</div>
-                    <div class="flag-star">★</div>
-                    <div class="flag-star">★</div>
-                    <div class="flag-star">★</div>
-                    <div class="flag-star">★</div>
-                    <div class="flag-star">★</div>
-                    <div class="flag-star">★</div>
-                    <div class="flag-star">★</div>
-                    <div class="flag-star">★</div>
-                    <div class="flag-star">★</div>
-                    <div class="flag-star">★</div>
-                    <div class="flag-star">★</div>
-                </div>
+                <div class="logo">MAAA</div>
+                <div class="tagline">Make America America Again</div>
+                <div class="subtitle">"Reclaiming Our Values, Rebuilding Our Future"</div>
             </div>
         </div>
 
-        <div class="concerns-title">What We're Fighting Against</div>
-        <div class="rally-title">What We're Fighting For</div>
-
-        <div class="concerns-points">
-            <div class="concerns-point" data-point="1">
-                <span class="icon">🏭</span>
-                <div class="content">
-                    <div class="point-title">Factory Closures</div>
-                    <div class="point-subtitle">Plants moving overseas, jobs disappearing</div>
-                </div>
-            </div>
-            <div class="concerns-point" data-point="2">
-                <span class="icon">💸</span>
-                <div class="content">
-                    <div class="point-title">Rising Cost of Living</div>
-                    <div class="point-subtitle">Can't afford groceries, gas, housing</div>
-                </div>
-            </div>
-            <div class="concerns-point" data-point="3">
-                <span class="icon">🎓</span>
-                <div class="content">
-                    <div class="point-title">College Elite Condescension</div>
-                    <div class="point-subtitle">Looked down on for honest work</div>
-                </div>
-            </div>
-            <div class="concerns-point" data-point="4">
-                <span class="icon">🏥</span>
-                <div class="content">
-                    <div class="point-title">Healthcare Bankruptcy</div>
-                    <div class="point-subtitle">One illness away from losing everything</div>
-                </div>
-            </div>
-            <div class="concerns-point" data-point="5">
-                <span class="icon">🌊</span>
-                <div class="content">
-                    <div class="point-title">Communities Declining</div>
-                    <div class="point-subtitle">Small towns forgotten by politicians</div>
-                </div>
-            </div>
-            <div class="concerns-point" data-point="6">
-                <span class="icon">⚖️</span>
-                <div class="content">
-                    <div class="point-title">Rigged System</div>
-                    <div class="point-subtitle">Rules favor the wealthy & connected</div>
-                </div>
+        <div class="content-area">
+            <div class="sequence-title" id="sequenceTitle">What We Reject</div>
+            <div class="points-container" id="pointsContainer">
+                <!-- Points will be dynamically inserted here -->
             </div>
         </div>
 
-        <div class="rally-points">
-            <div class="rally-point" data-point="1">
-                <span class="icon">🔨</span>
-                <div class="content">
-                    <div class="point-title">Bring Manufacturing Home</div>
-                    <div class="point-subtitle">Good-paying factory jobs in America</div>
-                </div>
-            </div>
-            <div class="rally-point" data-point="2">
-                <span class="icon">🛠️</span>
-                <div class="content">
-                    <div class="point-title">Respect for Skilled Trades</div>
-                    <div class="point-subtitle">Honor construction, mechanics, welders</div>
-                </div>
-            </div>
-            <div class="rally-point" data-point="3">
-                <span class="icon">🏠</span>
-                <div class="content">
-                    <div class="point-title">Affordable Housing</div>
-                    <div class="point-subtitle">Every worker deserves homeownership</div>
-                </div>
-            </div>
-            <div class="rally-point" data-point="4">
-                <span class="icon">🩺</span>
-                <div class="content">
-                    <div class="point-title">Healthcare for All Workers</div>
-                    <div class="point-subtitle">No medical bankruptcies for families</div>
-                </div>
-            </div>
-            <div class="rally-point" data-point="5">
-                <span class="icon">🌾</span>
-                <div class="content">
-                    <div class="point-title">Revitalize Rural America</div>
-                    <div class="point-subtitle">Invest in small towns & farming communities</div>
-                </div>
-            </div>
-            <div class="rally-point" data-point="6">
-                <span class="icon">💪</span>
-                <div class="content">
-                    <div class="point-title">Workers Over Wall Street</div>
-                    <div class="point-subtitle">Put working families first</div>
-                </div>
-            </div>
+        <div class="particles" id="particles"></div>
+
+        <div class="crowd" id="crowd">
+            <!-- Crowd will be generated -->
         </div>
 
-        <div class="crowd">
-            <!-- Generate crowd dynamically -->
-        </div>
-
-        <div class="energy-particles">
-            <!-- Particles will be generated by JavaScript -->
-        </div>
-
-        <div class="hashtag">#WorkingClassFirst</div>
+        <div class="hashtag">Our Future Beyond 2025</div>
     </div>
 
     <script>
-        // Generate crowd
-        const crowd = document.querySelector('.crowd');
-        for (let i = 0; i < 200; i++) {
-            const person = document.createElement('div');
-            person.className = 'person';
-            person.style.left = Math.random() * 100 + '%';
-            person.style.height = (40 + Math.random() * 40) + 'px';
-            person.style.animationDelay = Math.random() * 3 + 's';
-            crowd.appendChild(person);
+        // Simple global state
+        let isPaused = false;
+        let activeTimeouts = [];
+        let particleInterval = null;
+        let currentSequenceStep = 0;
+        let animationState = {
+            phase: 'initial', // 'initial', 'reject', 'transition', 'rally'
+            currentPointIndex: 0
+        };
+
+        // Data for the sequences
+        const rejectSequence = {
+            title: "What We Reject",
+            points: [
+                { icon: "🚫", title: "Division", subtitle: "No more us vs them politics" },
+                { icon: "❌", title: "Corruption", subtitle: "End billionaire handouts & cronyism" },
+                { icon: "⛔", title: "Authoritarianism", subtitle: "Defend democratic institutions" },
+                { icon: "🔇", title: "Fear-Mongering", subtitle: "Stop scapegoating immigrants & minorities" },
+                { icon: "💸", title: "Corporate Control", subtitle: "End oligarchy & concentrated wealth" },
+                { icon: "🚪", title: "Isolationism", subtitle: "America leads through cooperation" }
+            ]
+        };
+
+        const rallySequence = {
+            title: "What We Choose",
+            points: [
+                { icon: "🇺🇸", title: "Fair Shot America", subtitle: "Economic justice for working families" },
+                { icon: "🤝", title: "Care For Our Own", subtitle: "Universal healthcare & strong safety net" },
+                { icon: "⚖️", title: "Liberty & Justice For ALL", subtitle: "Civil rights & voting protection" },
+                { icon: "🌍", title: "Lead By Example", subtitle: "International cooperation, not force" },
+                { icon: "💪", title: "Workers Over Billionaires", subtitle: "Tax fairness & corporate accountability" },
+                { icon: "🗳️", title: "Democracy Over Autocracy", subtitle: "Protecting institutions & the rule of law" }
+            ]
+        };
+
+        // DOM elements
+        const pauseBtn = document.getElementById('pauseBtn');
+        const body = document.body;
+        const sequenceTitle = document.getElementById('sequenceTitle');
+        const pointsContainer = document.getElementById('pointsContainer');
+        const particles = document.getElementById('particles');
+        const crowd = document.getElementById('crowd');
+
+        // Pause/Resume functionality
+        pauseBtn.addEventListener('click', () => {
+            if (isPaused) {
+                resume();
+            } else {
+                pause();
+            }
+        });
+
+        function pause() {
+            isPaused = true;
+            body.classList.add('animation-paused');
+            pauseBtn.textContent = '▶️ Resume';
+            pauseBtn.classList.add('paused');
+            
+            // Clear timeouts
+            activeTimeouts.forEach(id => clearTimeout(id));
+            activeTimeouts = [];
+            
+            // Clear particle interval
+            if (particleInterval) {
+                clearInterval(particleInterval);
+                particleInterval = null;
+            }
         }
 
-        // Generate floating particles
-        const particleContainer = document.querySelector('.energy-particles');
+        function resume() {
+            isPaused = false;
+            body.classList.remove('animation-paused');
+            pauseBtn.textContent = '⏸️ Pause';
+            pauseBtn.classList.remove('paused');
+            
+            // Restart particles
+            startParticles();
+            
+            // Continue animation based on current state
+            continueAnimation();
+        }
+
+        function continueAnimation() {
+            console.log(`Continuing animation from phase: ${animationState.phase}`);
+            
+            switch(animationState.phase) {
+                case 'initial':
+                    // Restart the main sequence
+                    startMainSequence();
+                    break;
+                case 'reject':
+                    // Continue showing reject points if not all shown
+                    continueSequence(rejectSequence, () => {
+                        animationState.phase = 'transition';
+                        hideSequence(() => {
+                            animationState.phase = 'rally';
+                            showSequence(rallySequence);
+                        });
+                    });
+                    break;
+                case 'rally':
+                    // Continue showing rally points if not all shown
+                    continueSequence(rallySequence);
+                    break;
+            }
+        }
+
+        // Safe timeout function
+        function safeTimeout(callback, delay) {
+            if (isPaused) return;
+            const id = setTimeout(() => {
+                if (!isPaused) callback();
+            }, delay);
+            activeTimeouts.push(id);
+            return id;
+        }
+
+        // Generate crowd
+        function generateCrowd() {
+            for (let i = 0; i < 100; i++) {
+                const person = document.createElement('div');
+                person.className = 'person';
+                person.style.animationDelay = Math.random() * 3 + 's';
+                crowd.appendChild(person);
+            }
+        }
+
+        // Particle system
         function createParticle() {
+            if (isPaused) return;
+            
             const particle = document.createElement('div');
             particle.className = 'particle';
             particle.style.left = Math.random() * 100 + '%';
             particle.style.animationDelay = Math.random() * 2 + 's';
-            particle.style.animationDuration = (3 + Math.random() * 2) + 's';
             
-            // Colors representing working class themes
-            const colors = ['#ffffff', '#DAA520', '#8B4513', '#1E6091'];
+            const colors = ['#ffffff', '#c41e3a', '#002868'];
             particle.style.background = colors[Math.floor(Math.random() * colors.length)];
             
-            particleContainer.appendChild(particle);
+            particles.appendChild(particle);
             
+            // Remove after animation
             setTimeout(() => {
-                particle.remove();
-            }, 5000);
+                if (particle.parentNode) particle.remove();
+            }, 4000);
         }
 
-        // Create particles continuously
-        setInterval(createParticle, 200);
+        function startParticles() {
+            if (particleInterval) clearInterval(particleInterval);
+            particleInterval = setInterval(createParticle, 300);
+        }
 
-        // Rally Points Animation Sequence
-        const rallyPoints = document.querySelectorAll('.rally-point');
-        const concernsPoints = document.querySelectorAll('.concerns-point');
-        const concernsTitle = document.querySelector('.concerns-title');
-        const rallyTitle = document.querySelector('.rally-title');
-        
-        function showConcernsPoints() {
-            // Show the title first
-            concernsTitle.style.opacity = '1';
+        // Show sequence
+        function showSequence(sequence, onComplete) {
+            console.log(`Starting sequence: ${sequence.title}`);
+            animationState.phase = sequence === rejectSequence ? 'reject' : 'rally';
+            animationState.currentPointIndex = 0;
             
-            // Wait 2 seconds before showing the points
-            setTimeout(() => {
-                concernsPoints.forEach((point, index) => {
-                    // Set initial positioning (offset to the right)
-                    point.style.marginLeft = (index * 36) + 'px';
+            // Clear container
+            pointsContainer.innerHTML = '';
+            
+            // Show title
+            sequenceTitle.textContent = sequence.title;
+            sequenceTitle.style.opacity = '1';
+            
+            // Create and show points
+            sequence.points.forEach((pointData, index) => {
+                const point = document.createElement('div');
+                point.className = 'point';
+                
+                // Add blue class for alternating colors
+                if (index % 2 === 1) {
+                    point.classList.add('blue');
+                }
+                
+                // Add staggered margin for the right-offset effect
+                point.style.marginLeft = (index * 40) + 'px';
+                
+                point.innerHTML = `
+                    <div class="point-icon">${pointData.icon}</div>
+                    <div class="point-content">
+                        <div class="point-title">${pointData.title}</div>
+                        <div class="point-subtitle">${pointData.subtitle}</div>
+                    </div>
+                `;
+                pointsContainer.appendChild(point);
+                
+                // Show point with delay
+                safeTimeout(() => {
+                    console.log(`Showing point: ${pointData.title}`);
+                    point.classList.add('visible');
+                    animationState.currentPointIndex = index + 1;
                     
-                    setTimeout(() => {
-                        console.log(`Showing concerns point ${index + 1}`);
-                        point.style.transition = 'all 1.5s ease-out';
-                        point.style.opacity = '1';
-                        point.style.transform = 'translateX(0%)';
-                        point.style.background = index % 2 === 0 ? '#8B4513' : '#A0522D';
-                        
-                        // Add building effect after initial show
-                        setTimeout(() => {
-                            point.style.transform = 'translateX(0%) scale(1.1)';
-                            setTimeout(() => {
-                                point.style.transform = 'translateX(0%) scale(1)';
-                            }, 300);
-                        }, 1000);
-                        
-                    }, index * 3000); // 3 seconds between each point
-                });
-            }, 2000); // 2 second pause after title appears
-        }
-        
-        function hideConcernsPoints() {
-            // Hide the title first
-            concernsTitle.style.opacity = '0';
-            
-            concernsPoints.forEach((point, index) => {
-                setTimeout(() => {
-                    point.style.transition = 'all 0.8s ease-in';
-                    point.style.opacity = '0';
-                    point.style.transform = 'translateX(100%)';
-                }, index * 200);
+                    // Add emphasis effect
+                    safeTimeout(() => {
+                        point.classList.add('emphasis');
+                        safeTimeout(() => {
+                            point.classList.remove('emphasis');
+                        }, 500);
+                    }, 800);
+                    
+                }, (index + 1) * 1000);
             });
-        }
-        
-        function showRallyPoints() {
-            // Show the title first
-            rallyTitle.style.opacity = '1';
             
-            // Wait 2 seconds before showing the points
-            setTimeout(() => {
-                rallyPoints.forEach((point, index) => {
-                    // Set initial positioning
-                    point.style.marginLeft = (index * 36) + 'px';
-                    
-                    setTimeout(() => {
-                        console.log(`Showing rally point ${index + 1}`);
-                        point.style.transition = 'all 1.5s ease-out';
-                        point.style.opacity = '1';
-                        point.style.transform = 'translateX(0%)';
-                        point.style.background = index % 2 === 0 ? '#1E6091' : '#4682B4';
-                        
-                        // Add building effect after initial show
-                        setTimeout(() => {
-                            point.style.transform = 'translateX(0%) scale(1.1)';
-                            setTimeout(() => {
-                                point.style.transform = 'translateX(0%) scale(1)';
-                            }, 300);
-                        }, 1000);
-                        
-                    }, index * 3000); // 3 seconds between each point
-                });
-            }, 2000); // 2 second pause after title appears
+            // Call completion callback
+            if (onComplete) {
+                safeTimeout(onComplete, sequence.points.length * 1000 + 3000);
+            }
         }
 
-        // Continuous rally point emphasis
-        function emphasizePoints() {
-            rallyPoints.forEach((point, index) => {
-                if (point.style.opacity === '1') {
-                    setTimeout(() => {
-                        point.style.transform = 'translateX(0%) scale(1.1)';
-                        setTimeout(() => {
-                            point.style.transform = 'translateX(0%) scale(1)';
-                        }, 300);
-                    }, index * 800);
+        // Continue showing remaining points in a sequence
+        function continueSequence(sequence, onComplete) {
+            const remainingPoints = sequence.points.slice(animationState.currentPointIndex);
+            if (remainingPoints.length === 0) {
+                if (onComplete) onComplete();
+                return;
+            }
+            
+            remainingPoints.forEach((pointData, index) => {
+                const actualIndex = animationState.currentPointIndex + index;
+                const existingPoint = pointsContainer.children[actualIndex];
+                
+                if (existingPoint && !existingPoint.classList.contains('visible')) {
+                    safeTimeout(() => {
+                        console.log(`Continuing point: ${pointData.title}`);
+                        existingPoint.classList.add('visible');
+                        animationState.currentPointIndex = actualIndex + 1;
+                        
+                        // Add emphasis effect
+                        safeTimeout(() => {
+                            existingPoint.classList.add('emphasis');
+                            safeTimeout(() => {
+                                existingPoint.classList.remove('emphasis');
+                            }, 500);
+                        }, 800);
+                        
+                    }, (index + 1) * 1000);
                 }
             });
+            
+            if (onComplete) {
+                safeTimeout(onComplete, remainingPoints.length * 1000 + 3000);
+            }
         }
 
-        // Start the sequence: First show concerns, then show solutions
-        setTimeout(() => {
-            console.log("Starting concerns sequence");
-            showConcernsPoints();
-        }, 2000); // Start concerns points after 2 seconds
-        
-        setTimeout(() => {
-            console.log("Hiding concerns points");
-            hideConcernsPoints();
-        }, 22000); // Hide concerns points after: 2000 (title pause) + 18000 (6 points × 3 sec) + 2000 (final pause)
-        
-        setTimeout(() => {
-            console.log("Starting rally points");
-            showRallyPoints();
-        }, 24000); // Start rally points after concerns sequence completes
-        
-        // Also trigger on page load as backup
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                showConcernsPoints();
-                setTimeout(hideConcernsPoints, 20000); // 2000 (title pause) + 18000 (6 points × 3 sec)
-                setTimeout(showRallyPoints, 22000);
-            }, 2500);
-        });
-        
-        // Emphasize points every 10 seconds
-        setInterval(emphasizePoints, 10000);
-
-        // Add click interactions
-        rallyPoints.forEach(point => {
-            point.addEventListener('click', () => {
-                point.style.transform = 'translateX(0%) scale(1.1)';
-                setTimeout(() => {
-                    point.style.transform = 'translateX(0%) scale(1)';
-                }, 300);
+        // Hide current sequence
+        function hideSequence(onComplete) {
+            console.log("Hiding current sequence");
+            sequenceTitle.style.opacity = '0';
+            
+            const points = pointsContainer.querySelectorAll('.point');
+            points.forEach((point, index) => {
+                safeTimeout(() => {
+                    point.style.opacity = '0';
+                    point.style.transform = 'translateX(-100%)';
+                }, index * 100);
             });
-        });
+            
+            if (onComplete) {
+                safeTimeout(onComplete, points.length * 100 + 1000);
+            }
+        }
 
-        concernsPoints.forEach(point => {
-            point.addEventListener('click', () => {
-                point.style.transform = 'translateX(0%) scale(1.1)';
-                setTimeout(() => {
-                    point.style.transform = 'translateX(0%) scale(1)';
-                }, 300);
-            });
-        });
+        // Main animation sequence
+        function startMainSequence() {
+            console.log("Starting main animation sequence");
+            animationState.phase = 'initial';
+            
+            // Show reject sequence first
+            safeTimeout(() => {
+                showSequence(rejectSequence, () => {
+                    animationState.phase = 'transition';
+                    // Hide reject and show rally
+                    hideSequence(() => {
+                        animationState.phase = 'rally';
+                        showSequence(rallySequence);
+                    });
+                });
+            }, 2000);
+        }
+
+        // Initialize everything
+        function init() {
+            console.log("Initializing MAAA Rally");
+            
+            // Generate crowd
+            generateCrowd();
+            
+            // Start particles
+            startParticles();
+            
+            // Start main sequence
+            startMainSequence();
+            
+            console.log("Initialization complete - animation should start in 2 seconds");
+        }
+
+        // Start when ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
     </script>
 </body>
 </html>
-                
