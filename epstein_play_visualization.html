@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Epstein Files: A Presidential Farce</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        .playbill {
+            max-width: 800px;
+            margin: 20px auto;
+            background: linear-gradient(45deg, #8B0000, #B22222, #DC143C);
+            border: 8px solid #FFD700;
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .playbill::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="stars" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23stars)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .playbill-content {
+            position: relative;
+            z-index: 1;
+            padding: 30px;
+        }
+
+        .theater-name {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: #FFD700;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+        }
+
+        .main-title {
+            text-align: center;
+            font-size: 42px;
+            font-weight: bold;
+            color: #FFFFFF;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.9);
+            margin: 20px 0;
+            line-height: 1.1;
+        }
+
+        .subtitle {
+            text-align: center;
+            font-size: 24px;
+            color: #FFD700;
+            font-style: italic;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+        }
+
+        .author {
+            text-align: center;
+            font-size: 16px;
+            color: #FFFFFF;
+            margin-bottom: 30px;
+        }
+
+        .cast-section {
+            background: rgba(0,0,0,0.3);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border: 2px solid #FFD700;
+        }
+
+        .cast-title {
+            font-size: 24px;
+            color: #FFD700;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .cast-member {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px dotted rgba(255,255,255,0.3);
+        }
+
+        .cast-member:last-child {
+            border-bottom: none;
+        }
+
+        .character-name {
+            font-weight: bold;
+            color: #FFD700;
+            font-size: 16px;
+        }
+
+        .actor-description {
+            color: #FFFFFF;
+            font-style: italic;
+            text-align: right;
+            font-size: 14px;
+            max-width: 60%;
+        }
+
+        .warning-box {
+            background: rgba(255,0,0,0.2);
+            border: 2px dashed #FFD700;
+            padding: 15px;
+            margin: 20px 0;
+            text-align: center;
+            border-radius: 8px;
+        }
+
+        .warning-text {
+            color: #FFD700;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .venue-info {
+            text-align: center;
+            margin: 20px 0;
+            font-size: 14px;
+            color: #FFFFFF;
+        }
+
+        .quote-box {
+            background: rgba(0,0,0,0.5);
+            padding: 15px;
+            margin: 20px 0;
+            border-left: 4px solid #FFD700;
+            font-style: italic;
+            color: #FFFFFF;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .nav-btn {
+            background: linear-gradient(45deg, #FFD700, #FFA500);
+            color: #8B0000;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 215, 0, 0.5);
+        }
+
+        .scene-viewer {
+            display: none;
+            background: rgba(0,0,0,0.8);
+            padding: 30px;
+            margin: 20px 0;
+            border-radius: 15px;
+            border: 2px solid #FFD700;
+        }
+
+        .scene-viewer.active {
+            display: block;
+        }
+
+        .scene-title {
+            color: #FFD700;
+            font-size: 28px;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
+
+        .stage-directions {
+            color: #87CEEB;
+            font-style: italic;
+            margin: 10px 0;
+        }
+
+        .dialogue {
+            margin: 15px 0;
+        }
+
+        .speaker {
+            color: #FFD700;
+            font-weight: bold;
+            display: inline-block;
+            min-width: 120px;
+        }
+
+        .speech {
+            color: #FFFFFF;
+            margin-left: 20px;
+        }
+
+        .reviews-section {
+            background: rgba(0,0,0,0.4);
+            padding: 25px;
+            border-radius: 10px;
+            margin: 25px 0;
+            border: 2px solid #FFD700;
+        }
+
+        .review-intro {
+            color: #FFFFFF;
+            font-style: italic;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 16px;
+            line-height: 1.5;
+        }
+
+        .review-item {
+            margin: 15px 0;
+            padding: 12px;
+            background: rgba(255,255,255,0.05);
+            border-left: 3px solid #FFD700;
+            border-radius: 5px;
+        }
+
+        .review-item.stars {
+            background: rgba(255,215,0,0.1);
+            border-left: 3px solid #FFA500;
+        }
+
+        .reviewer-name {
+            color: #FFD700;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+        }
+
+        .review-text {
+            color: #FFFFFF;
+            font-style: italic;
+            line-height: 1.4;
+            font-size: 14px;
+        }
+
+        .credits {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            border-top: 2px solid #FFD700;
+            font-size: 12px;
+            color: #CCCCCC;
+        }
+
+        .spotlight {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: spotlight 8s ease-in-out infinite;
+            pointer-events: none;
+        }
+
+        @keyframes spotlight {
+            0%, 100% { transform: translate(-50px, -50px); }
+            50% { transform: translate(calc(100vw - 150px), calc(100vh - 150px)); }
+        }
+
+        .curtain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                #8B0000 0%, #8B0000 45%, 
+                transparent 45%, transparent 55%, 
+                #8B0000 55%, #8B0000 100%);
+            z-index: 1000;
+            display: none;
+            animation: curtainRise 3s ease-out forwards;
+        }
+
+        @keyframes curtainRise {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-100%); }
+        }
+
+        .hidden-content {
+            opacity: 0;
+            animation: fadeIn 2s ease-in 3s forwards;
+        }
+
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="spotlight"></div>
+    
+    <div class="playbill">
+        <div class="playbill-content">
+            <div class="theater-name">THE WHITE HOUSE THEATER PRESENTS</div>
+            
+            <h1 class="main-title">THE EPSTEIN FILES</h1>
+            <div class="subtitle">A Presidential Farce in Three Acts</div>
+            <div class="author">By George Model<br><em>(With an assist from Shakespeare)</em></div>
+            
+            <div class="warning-box">
+                <div class="warning-text">
+                    ⚠️ CONTAINS POLITICAL SATIRE ⚠️<br>
+                    May cause uncontrollable laughter, existential dread,<br>
+                    or sudden urge to fact-check everything
+                </div>
+            </div>
+            
+            <div class="venue-info">
+                <strong>📍 1600 Pennsylvania Avenue Theater</strong><br>
+                (All action occurs stage right, naturally)
+            </div>
+            
+            <div class="cast-section">
+                <h2 class="cast-title">★ DRAMATIS PERSONAE ★</h2>
+                
+                <div class="cast-member">
+                    <span class="character-name">PRESIDENT TRUMP</span>
+                    <span class="actor-description">The man who believes winning excuses everything</span>
+                </div>
+                
+                <div class="cast-member">
+                    <span class="character-name">PAM BONDI</span>
+                    <span class="actor-description">Attorney General, devoted to Fox News appearances</span>
+                </div>
+                
+                <div class="cast-member">
+                    <span class="character-name">TULSI GABBARD</span>
+                    <span class="actor-description">DNI, former Democrat turned conspiracy theorist</span>
+                </div>
+                
+                <div class="cast-member">
+                    <span class="character-name">TODD BLANCHE</span>
+                    <span class="actor-description">Deputy AG, perpetual defender of the indefensible</span>
+                </div>
+                
+                <div class="cast-member">
+                    <span class="character-name">GHISLAINE MAXWELL</span>
+                    <span class="actor-description">The woman who knows too much</span>
+                </div>
+                
+                <div class="cast-member">
+                    <span class="character-name">MARCO RUBIO</span>
+                    <span class="actor-description">Secretary of Everything, master of strategic silence</span>
+                </div>
+                
+                <div class="cast-member">
+                    <span class="character-name">KAROLINE LEAVITT</span>
+                    <span class="actor-description">Press Secretary, fierce as a chihuahua</span>
+                </div>
+                
+                <div class="cast-member">
+                    <span class="character-name">MIKE JOHNSON</span>
+                    <span class="actor-description">Speaker of the House, professional doormat</span>
+                </div>
+            </div>
+            
+            <div class="quote-box">
+                "All the world's a stage, and all the men and women merely players..."<br>
+                <strong>— As You Like It</strong><br><br>
+                "Some are born great, some achieve greatness, and some have greatness thrust upon them..."<br>
+                <strong>— Twelfth Night</strong>
+            </div>
+            
+            <div class="navigation">
+                <button class="nav-btn" onclick="showScene('act1')">ACT I</button>
+                <button class="nav-btn" onclick="showScene('act2')">ACT II</button>
+                <button class="nav-btn" onclick="showScene('act3')">ACT III</button>
+                <button class="nav-btn" onclick="showScene('playbill')">PLAYBILL</button>
+            </div>
+            
+            <div id="act1" class="scene-viewer">
+                <h2 class="scene-title">ACT I: The Beautiful Disaster</h2>
+                <div class="stage-directions">Scene: The Oval Office, newly redecorated in gold leaf and velvet</div>
+                
+                <div class="dialogue">
+                    <span class="speaker">TRUMP:</span>
+                    <span class="speech"><em>(admiring his décor)</em> Look at this office! Beautiful! The most beautiful office in the history of offices, maybe ever. <em>(picks up phone)</em> Get me Bondi. And make it snappy!</span>
+                </div>
+                
+                <div class="stage-directions"><em>(Enter BONDI, slightly out of breath from rushing from a Fox News interview)</em></div>
+                
+                <div class="dialogue">
+                    <span class="speaker">BONDI:</span>
+                    <span class="speech">Mr. President! I just finished explaining to Tucker how the Deep State—</span>
+                </div>
+                
+                <div class="dialogue">
+                    <span class="speaker">TRUMP:</span>
+                    <span class="speech">Never mind that. Where are my Epstein files? My base is going crazy! They want blood!</span>
+                </div>
+                
+                <div class="dialogue">
+                    <span class="speaker">BONDI:</span>
+                    <span class="speech"><em>(nervously)</em> Well, sir, about that... <em>(pulls out a folder)</em> I've been reviewing them personally, and there's a small problem—</span>
+                </div>
+                
+                <div class="dialogue">
+                    <span class="speaker">TRUMP:</span>
+                    <span class="speech">Small? SMALL? Nothing about me is small, Pam. What's the problem?</span>
+                </div>
+                
+                <div class="dialogue">
+                    <span class="speaker">BONDI:</span>
+                    <span class="speech">Your name appears... frequently.</span>
+                </div>
+                
+                <div class="dialogue">
+                    <span class="speaker">TRUMP:</span>
+                    <span class="speech"><em>(freezing)</em> Define frequently.</span>
+                </div>
+                
+                <div class="dialogue">
+                    <span class="speaker">BONDI:</span>
+                    <span class="speech">More than Hillary's emails.</span>
+                </div>
+                
+                <div class="dialogue">
+                    <span class="speaker">TRUMP:</span>
+                    <span class="speech"><em>(exploding)</em> That's impossible! Get me a thousand FBI agents! Scour every document! Find me some Hillary emails to distract with!</span>
+                </div>
+                
+                <div class="stage-directions"><em>(Enter GABBARD, carrying a stack of classified folders)</em></div>
+                
+                <div class="dialogue">
+                    <span class="speaker">GABBARD:</span>
+                    <span class="speech">Mr. President, I have excellent news! I've discovered the real conspiracy!</span>
+                </div>
+                
+                <div class="dialogue">
+                    <span class="speaker">TRUMP:</span>
+                    <span class="speech">Finally! Someone with solutions! What conspiracy?</span>
+                </div>
+                
+                <div class="dialogue">
+                    <span class="speaker">GABBARD:</span>
+                    <span class="speech">Obama. It's always been Obama. He's the puppet master behind everything—the Russia investigation, your legal troubles, probably the weather!</span>
+                </div>
+                
+                <div class="dialogue">
+                    <span class="speaker">TRUMP:</span>
+                    <span class="speech"><em>(clapping)</em> Brilliant! Beautiful! You see, Pam? This is 4D chess! We blame Obama for everything!</span>
+                </div>
+                
+                <div class="dialogue">
+                    <span class="speaker">BONDI:</span>
+                    <span class="speech">But sir, what about the actual files?</span>
+                </div>
+                
+                <div class="dialogue">
+                    <span class="speaker">TRUMP:</span>
+                    <span class="speech">What files? <em>(winks at GABBARD)</em> There are no files. Are there, Tulsi?</span>
+                </div>
+                
+                <div class="dialogue">
+                    <span class="speaker">GABBARD:</span>
+                    <span class="speech">No files. Only Obama's treasonous conspiracy.</span>
+                </div>
+                
+                <div class="stage-directions"><em>(Enter LEAVITT, running)</em></div>
+                
+                <div class="dialogue">
+                    <span class="speaker">LEAVITT:</span>
+                    <span class="speech">Mr. President! The press is asking about—</span>
+                </div>
+                
+                <div class="dialogue">
+                    <span class="speaker">TRUMP:</span>
+                    <span class="speech">Obama's treason! Tell them about Obama's treason!</span>
+                </div>
+                
+                <div class="dialogue">
+                    <span class="speaker">LEAVITT:</span>
+                    <span class="speech"><em>(confused but loyal)</em> Of course! Obama's... treason! <em>(exits, muttering)</em> I can work with this.</span>
+                </div>
+                
+                <div class="stage-directions"><strong>CURTAIN</strong></div>
+            </div>
+            
+            <div id="act2" class="scene-viewer">
+                <h2 class="scene-title">ACT II: Let's Make a Deal</h2>
+                <div class="stage-directions">Scene: DOJ Conference Room. BLANCHE sits across from MAXWELL</div>
+                
+                <div class="dialogue">
+                    <span class="speaker">BLANCHE:</span>
+                    <span class="speech">Ms. Maxwell, thank you for agreeing to this... interview.</span>
+                </div>
+                
+                <div class="dialogue">
+                    <span class="speaker">MAXWELL:</span>
+                    <span class="speech"><em>(sardonic)</em> Interview? Is that what we're calling it? How delightfully euphemistic.</span>
+                </div>
+                
+                <div class="dialogue">
+                    <span class="speaker">BLANCHE:</span>
+                    <span class="speech">The President is very interested in your... perspective on recent events.</span>
+                </div>
+                
+                <div class="dialogue">
+                    <span class="speaker">MAXWELL:</span>
+                    <span class="speech">Which events? The ones where he promised to release everything, or the ones where he's now pretending those documents don't exist?</span>
+                </div>
+                
+                <div class="dialogue">
+                    <span class="speaker">BLANCHE:</span>
+                    <span class="speech"><em>(sweating)</em> We're exploring all avenues to, uh, clarify the situation.</span>
+                </div>
+                
+                <div class="dialogue">
+                    <span class="speaker">MAXWELL:</span>
+                    <span class="speech">Clarify? <em>(laughs)</em> Oh, Todd. Sweet, naive Todd. Let me clarify something for you—I kept very detailed records.</span>
+                </div>
+                
+                <div class="dialogue">
+                    <span class="speaker">BLANCHE:</span>
+                    <span class="speech"><em>(panicking)</em> Records of what, exactly?</span>
+                </div>
+                
+                <div class="dialogue">
+                    <span class="speaker">MAXWELL:</span>
+                    <span class="speech">Everything. Everyone. Every party, every plane ride, every... transaction.</span>
+                </div>
+                
+                <div class="stage-directions"><em>(Enter BONDI, bursting through the door)</em></div>
+                
+                <div class="dialogue">
+                    <span class="speaker">BONDI:</span>
+                    <span class="speech">The President wants to know—<em>(sees MAXWELL)</em>—oh. Hello, Ghislaine.</span>
+                </div>
+                
+                <div class="dialogue">
+                    <span class="speaker">MAXWELL:</span>
+                    <span class="speech">Pamela. Lovely to see you. How's the Fox News circuit treating you?</span>
+                </div>
+                
+                <div class="dialogue">
+                    <span class="speaker">BONDI:</span>
+                    <span class="speech"><em>(to BLANCHE)</em> We need to wrap this up. The press is getting suspicious.</span>
+                </div>
+                
+                <div class="dialogue">
+                    <span class="speaker">MAXWELL:</span>
+                    <span class="speech">Suspicious of what? The truth?</span>
+                </div>
+                
+                <div class="dialogue">
+                    <span class="speaker">BLANCHE:</span>
+                    <span class="speech"><em>(desperately)</em> What would it take for you to... remember things differently?</span>
+                </div>
+                
+                <div class="dialogue">
+                    <span class="speaker">MAXWELL:</span>
+                    <span class="speech"><em>(thoughtful)</em> Well, my prison conditions could be improved. And I do miss good champagne...</span>
+                </div>
+                
+                <div class="stage-directions"><em>(Enter RUBIO, looking harried)</em></div>
+                
+                <div class="dialogue">
+                    <span class="speaker">RUBIO:</span>
+                    <span class="speech">Has anyone seen my National Security briefing? I'm supposed to be three different cabinet members today and I've lost track—<em>(notices MAXWELL)</em>—oh, hello there.</span>
+                </div>
+                
+                <div class="dialogue">
+                    <span class="speaker">MAXWELL:</span>
+                    <span class="speech">Marco! How lovely. Still playing multiple roles, I see.</span>
+                </div>
+                
+                <div class="dialogue">
+                    <span class="speaker">RUBIO:</span>
+                    <span class="speech"><em>(backing toward the door)</em> I should go. I'm late for my State Department/USAID/Archive meeting with myself.</span>
+                </div>
+                
+                <div class="dialogue">
+                    <span class="speaker">BONDI:</span>
+                    <span class="speech"><em>(calling after him)</em> Marco! What do we do about the Obama treason allegations?</span>
+                </div>
+                
+                <div class="dialogue">
+                    <span class="speaker">RUBIO:</span>
+                    <span class="speech"><em>(from the doorway)</em> I'm Switzerland on this one! <em>(exits quickly)</em></span>
+                </div>
+                
+                <div class="stage-directions"><strong>CURTAIN</strong></div>
+            </div>
+            
+            <div id="act3" class="scene-viewer">
+                <h2 class="scene-title">ACT III: The Beautiful Chaos</h2>
+                <div class="stage-directions">Scene: The Oval Office, several weeks later. TRUMP paces frantically.</div>
+                
+                <div class="dialogue">
+                    <span class="speaker">TRUMP:</span>
+                    <span class="speech">Where is everybody? This is a disaster! A complete disaster!</span>
+                </div>
+                
+                <div class="stage-directions"><em>(Enter JOHNSON, looking defeated)</em></div>
+                
+                <div class="dialogue">
+                    <span class="speaker">JOHNSON:</span>
+                    <span class="speech">Mr. President, I had to adjourn Congress early. They were about to vote on releasing the documents.</span>
+                </div>
+                
+                <div class="dialogue">
+                    <span class="speaker">TRUMP:</span>
+                    <span class="speech">Good! Great move! Very smart!</span>
+                </div>
+                
+                <div class="dialogue">
+                    <span class="speaker">JOHNSON:</span>
+                    <span class="speech">But sir, they're calling it a cover-up.</span>
+                </div>
+                
+                <div class="dialogue">
+                    <span class="speaker">TRUMP:</span>
+                    <span class="speech">Cover-up? Cover-up?! There's nothing to cover up! Right, Pam?</span>
+                </div>
+                
+                <div class="stage-directions"><em>(Enter BONDI)</em></div>
+                
+                <div class="dialogue">
+                    <span class="speaker">BONDI:</span>
+                    <span class="speech">About that, sir... Fox News is asking some difficult questions.</span>
+                </div>
+                
+                <div class="dialogue">
+                    <span class="speaker">TRUMP:</span>
+                    <span class="speech">Fox News doesn't ask difficult questions! They ask beautiful questions! Perfect questions!</span>
+                </div>
+                
+                <div class="stage-directions"><em>(Enter LEAVITT, frazzled)</em></div>
+                
+                <div class="dialogue">
+                    <span class="speaker">LEAVITT:</span>
+                    <span class="speech">Mr. President, the press wants to know why you promised to release the files but now say they don't exist.</span>
+                </div>
+                
+                <div class="dialogue">
+                    <span class="speaker">TRUMP:</span>
+                    <span class="speech">Because Obama! It's all Obama's fault! Tell them about the treason!</span>
+                </div>
+                
+                <div class="dialogue">
+                    <span class="speaker">LEAVITT:</span>
+                    <span class="speech">I've been telling them about treason for weeks! They want specifics!</span>
+                </div>
+                
+                <div class="dialogue">
+                    <span class="speaker">GABBARD:</span>
+                    <span class="speech"><em>(entering)</em> I have specifics! Obama used the intelligence community to... <em>(pauses)</em> ...intelligently conspire!</span>
+                </div>
+                
+                <div class="dialogue">
+                    <span class="speaker">BONDI:</span>
+                    <span class="speech">That's not actually a crime, Tulsi.</span>
+                </div>
+                
+                <div class="dialogue">
+                    <span class="speaker">GABBARD:</span>
+                    <span class="speech">Then we'll make it one!</span>
+                </div>
+                
+                <div class="stage-directions"><em>(Enter BLANCHE, looking shell-shocked)</em></div>
+                
+                <div class="dialogue">
+                    <span class="speaker">BLANCHE:</span>
+                    <span class="speech">Mr. President, Maxwell wants to make a deal.</span>
+                </div>
+                
+                <div class="dialogue">
+                    <span class="speaker">TRUMP:</span>
+                    <span class="speech">What kind of deal?</span>
+                </div>
+                
+                <div class="dialogue">
+                    <span class="speaker">BLANCHE:</span>
+                    <span class="speech">The kind where she doesn't tell everyone what she told me.</span>
+                </div>
+                
+                <div class="dialogue">
+                    <span class="speaker">TRUMP:</span>
+                    <span class="speech">And what did she tell you?</span>
+                </div>
+                
+                <div class="dialogue">
+                    <span class="speaker">BLANCHE:</span>
+                    <span class="speech">Everything.</span>
+                </div>
+                
+                <div class="stage-directions"><em>(Long pause. Everyone stares at BLANCHE)</em></div>
+                
+                <div class="dialogue">
+                    <span class="speaker">TRUMP:</span>
+                    <span class="speech"><em>(suddenly brightening)</em> You know what? I just remembered—I never met Epstein! Never heard of him! Who's Epstein?</span>
+                </div>
+                
+                <div class="dialogue">
+                    <span class="speaker">BONDI:</span>
+                    <span class="speech">Sir, there are photographs—</span>
+                </div>
+                
+                <div class="dialogue">
+                    <span class="speaker">TRUMP:</span>
+                    <span class="speech">Fake news! Deep fakes! Obama probably made them!</span>
+                </div>
+                
+                <div class="dialogue">
+                    <span class="speaker">GABBARD:</span>
+                    <span class="speech">Yes! Obama's digital conspiracy!</span>
+                </div>
+                
+                <div class="dialogue">
+                    <span class="speaker">JOHNSON:</span>
+                    <span class="speech">Should I call another recess?</span>
+                </div>
+                
+                <div class="dialogue">
+                    <span class="speaker">LEAVITT:</span>
+                    <span class="speech">I can't keep saying "Obama's treason" forever!</span>
+                </div>
+                
+                <div class="dialogue">
+                    <span class="speaker">TRUMP:</span>
+                    <span class="speech">Why not? It's working great! Beautiful strategy! <em>(to audience)</em> Isn't it, folks?</span>
+                </div>
+                
+                <div class="stage-directions"><em>(All characters freeze as RUBIO enters, carrying multiple briefcases)</em></div>
+                
+                <div class="dialogue">
+                    <span class="speaker">RUBIO:</span>
+                    <span class="speech">Has anyone seen my dignity? I think I left it in the Senate...</span>
+                </div>
+                
+                <div class="stage-directions"><em>(RUBIO trips, briefcases explode open, papers fly everywhere. Everyone scrambles to collect them as the lights dim)</em></div>
+                
+                <div class="dialogue">
+                    <span class="speaker">TRUMP:</span>
+                    <span class="speech"><em>(as papers swirl around him)</em> This is all going according to plan! Perfect plan! The most beautiful plan you've ever seen!</span>
+                </div>
+                
+                <div class="stage-directions"><em>(Blackout as papers continue to fall like snow)</em></div>
+                
+                <div class="stage-directions"><strong>CURTAIN</strong></div>
+                
+                <h3 style="color: #FFD700; text-align: center; margin-top: 30px;">EPILOGUE</h3>
+                
+                <div class="stage-directions"><em>A CHORUS of POLLSTERS enters</em></div>
+                
+                <div class="dialogue">
+                    <span class="speaker">CHORUS:</span>
+                    <span class="speech">And thus we learn that in this age of spin,<br>
+                    When truth and lies dance their eternal jig,<br>
+                    The only constant is the constant din<br>
+                    Of those who'd make a farce of democracy's rig.<br>
+                    For 16% approved, 51% did not,<br>
+                    And 33% knew not what to think—<br>
+                    A perfect mirror of our modern plot:<br>
+                    Where facts and fiction share the same dark ink.</span>
+                </div>
+                
+                <div class="stage-directions"><em>Exeunt omnes, pursued by a bear (or perhaps a subpoena)</em></div>
+                
+                <div class="stage-directions"><strong>FINIS</strong></div>
+            </div>
+            
+            <div class="reviews-section">
+                <h2 class="cast-title">★ FIRST NIGHT REVIEWS ★</h2>
+                <div class="review-intro">
+                    A common refrain among the critics was that the storyline was so far-fetched and dystopian that it lacked plausibility. Here are some more specific comments from them:
+                </div>
+                
+                <div class="review-item">
+                    <span class="reviewer-name">Jennifer Rubin:</span>
+                    <span class="review-text">"If the Jeffrey Epstein scandal proves anything, it is that what insiders deem as trivial may reveal and expand serious cracks in the MAGA base. It is a unifying message across the political spectrum."</span>
+                </div>
+                
+                <div class="review-item">
+                    <span class="reviewer-name">Bill Kristol:</span>
+                    <span class="review-text">"The Epstein coverup will be an indicator of how far down we are on the road to authoritarianism."</span>
+                </div>
+                
+                <div class="review-item">
+                    <span class="reviewer-name">Christopher Bates:</span>
+                    <span class="review-text">"Dead men tell no tales, but a live woman might tell one or two...desperate appears to be an increasingly on-point description of Donald Trump."</span>
+                </div>
+                
+                <div class="review-item">
+                    <span class="reviewer-name">Alan Dershowitz:</span>
+                    <span class="review-text">Representative of MAGA world's and conspiracy theorist's hopes that Maxwell can be the key to uncovering an extensive cabal of (presumably liberal) pedophiles: "She is the Rosetta Stone. She knows everything".</span>
+                </div>
+                
+                <div class="review-item">
+                    <span class="reviewer-name">Karl Rove:</span>
+                    <span class="review-text">Article entitled "Trump Learns the Political Price of Conspiracy Theories".</span>
+                </div>
+                
+                <div class="review-item">
+                    <span class="reviewer-name">Thomas Massie (R-KY):</span>
+                    <span class="review-text">"Who's he gonna pick? Is he going to stand with the pedophiles...Or is he gonna pick the American people and justice for the victims?" Today on <em>Meet the Press</em> appearing with Ro Khanna (D-CA), he said that transparency should not be "politically painful".</span>
+                </div>
+                
+                <div class="review-item">
+                    <span class="reviewer-name">New York Times:</span>
+                    <span class="review-text">"Ms. Gabbard was acting as little more than a proxy for a president demanding action on his vengeance agenda."</span>
+                </div>
+                
+                <div class="review-item">
+                    <span class="reviewer-name">Mark Epstein (Jeffrey's brother):</span>
+                    <span class="review-text">"They were very close. They were good friends."</span>
+                </div>
+                
+                <div class="review-item">
+                    <span class="reviewer-name">Teresa Helm, Epstein victim:</span>
+                    <span class="review-text">Commented on the possibility of a Maxwell pardon: "It would mean the complete crumbling of this justice system that should first stand for, fight for and protect survivors."</span>
+                </div>
+                
+                <div class="review-item">
+                    <span class="reviewer-name">Maureen Dowd:</span>
+                    <span class="review-text">"We haven't heard this much talk about the presidential anatomy (re <em>South Park</em> season opener) since the <em>other guy</em> was in the Oval."</span>
+                </div>
+                
+                <div class="review-item stars">
+                    <span class="reviewer-name">Stephen Colbert:</span>
+                    <span class="review-text">"All the king's horses and all the king's men couldn't hide who Dumpty humped with his friend" ★★★★★</span>
+                </div>
+            </div>
+
+            <div class="credits">
+                <strong>PRODUCTION NOTES</strong><br>
+                Polling by Emerson College: 16% approval, 51% disapproval, 33% confused<br>
+                No actual politicians were harmed in the making of this farce<br>
+                Any resemblance to actual events is purely coincidental and/or inevitable<br><br>
+                <em>"Heat not a furnace for your foe so hot that it do singe yourself"</em><br>
+                — Henry VIII
+            </div>
+        </div>
+    </div>
+    
+    <div class="curtain" id="curtain"></div>
+    
+    <script>
+        function showScene(sceneId) {
+            // Hide all scenes
+            const scenes = document.querySelectorAll('.scene-viewer');
+            scenes.forEach(scene => scene.classList.remove('active'));
+            
+            // Show selected scene
+            if (sceneId !== 'playbill') {
+                document.getElementById(sceneId).classList.add('active');
+                
+                // Scroll to scene
+                document.getElementById(sceneId).scrollIntoView({ 
+                    behavior: 'smooth', 
+                    block: 'start' 
+                });
+            } else {
+                // Scroll to top for playbill
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+        
+        // Add some theatrical flair
+        document.addEventListener('DOMContentLoaded', function() {
+            // Raise curtain effect on load
+            setTimeout(() => {
+                document.getElementById('curtain').style.display = 'block';
+                setTimeout(() => {
+                    document.getElementById('curtain').style.display = 'none';
+                }, 3000);
+            }, 500);
+            
+            // Add click sound effect to buttons
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = '';
+                    }, 150);
+                });
+            });
+        });
+        
+        // Easter egg: Konami code for special effect
+        let konamiCode = [];
+        const konamiSequence = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'KeyB', 'KeyA'];
+        
+        document.addEventListener('keydown', function(e) {
+            konamiCode.push(e.code);
+            if (konamiCode.length > konamiSequence.length) {
+                konamiCode.shift();
+            }
+            
+            if (JSON.stringify(konamiCode) === JSON.stringify(konamiSequence)) {
+                // Special effect
+                document.body.style.animation = 'rainbow 2s infinite';
+                setTimeout(() => {
+                    document.body.style.animation = '';
+                }, 10000);
+            }
+        });
+    </script>
+    
+    <style>
+        @keyframes rainbow {
+            0% { filter: hue-rotate(0deg); }
+            100% { filter: hue-rotate(360deg); }
+        }
+    </style>
+</body>
+</html>
