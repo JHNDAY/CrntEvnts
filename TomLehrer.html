@@ -3,6 +3,592 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tom Lehrer's Greatest Hits</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap');
+        
+        body {
+            background: linear-gradient(135deg, #2c1810 0%, #1a0f08 100%);
+            font-family: 'Crimson Text', serif;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            color: #f4f1eb;
+            overflow-x: hidden;
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .title-section {
+            text-align: center;
+            margin-bottom: 50px;
+            position: relative;
+        }
+
+        .main-title {
+            font-size: 3.5rem;
+            font-weight: 600;
+            color: #d4af37;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.7);
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            color: #b8860b;
+            font-style: italic;
+            margin-bottom: 30px;
+        }
+
+        .piano-keys {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0;
+            position: relative;
+            height: 80px;
+        }
+
+        .white-key {
+            width: 40px;
+            height: 80px;
+            background: linear-gradient(to bottom, #ffffff 0%, #f0f0f0 100%);
+            border: 2px solid #333;
+            margin: 0 1px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            transition: transform 0.1s ease;
+        }
+
+        .black-key {
+            width: 25px;
+            height: 50px;
+            background: linear-gradient(to bottom, #333 0%, #111 100%);
+            position: absolute;
+            z-index: 2;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+            transition: transform 0.1s ease;
+        }
+
+        .black-key:nth-child(1) { left: 27px; }
+        .black-key:nth-child(2) { left: 68px; }
+        .black-key:nth-child(3) { left: 150px; }
+        .black-key:nth-child(4) { left: 191px; }
+        .black-key:nth-child(5) { left: 232px; }
+
+        .songs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .song-card {
+            background: linear-gradient(145deg, #3d2f1f 0%, #2a1f15 100%);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+            border: 2px solid #8b4513;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .song-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(212, 175, 55, 0.2);
+            border-color: #d4af37;
+        }
+
+        .song-card::before {
+            content: '♪';
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            font-size: 4rem;
+            color: rgba(212, 175, 55, 0.1);
+            transform: rotate(15deg);
+        }
+
+        .song-title {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #d4af37;
+            margin-bottom: 15px;
+            text-align: center;
+            text-decoration: underline;
+            text-decoration-color: rgba(212, 175, 55, 0.3);
+        }
+
+        .song-analysis {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: #e6d7c3;
+            margin-bottom: 20px;
+        }
+
+        .lehrer-techniques {
+            background: rgba(212, 175, 55, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #d4af37;
+            margin: 15px 0;
+        }
+
+        .technique-title {
+            font-weight: 600;
+            color: #d4af37;
+            margin-bottom: 8px;
+        }
+
+        .satirical-elements {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .element-tag {
+            background: rgba(212, 175, 55, 0.2);
+            color: #d4af37;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .quote-section {
+            text-align: center;
+            margin: 60px 0;
+            padding: 30px;
+            background: rgba(212, 175, 55, 0.1);
+            border-radius: 15px;
+            border-left: 5px solid #d4af37;
+        }
+
+        .quote {
+            font-size: 1.4rem;
+            font-style: italic;
+            color: #f4f1eb;
+            margin-bottom: 15px;
+        }
+
+        .quote-author {
+            font-size: 1.1rem;
+            color: #b8860b;
+        }
+
+        .style-analysis {
+            background: rgba(139, 69, 19, 0.2);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 40px 0;
+            border: 2px solid rgba(139, 69, 19, 0.3);
+        }
+
+        .style-title {
+            font-size: 1.8rem;
+            color: #d4af37;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .style-points {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .style-point {
+            background: rgba(212, 175, 55, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .point-title {
+            font-weight: 600;
+            color: #d4af37;
+            margin-bottom: 8px;
+        }
+
+        .musical-notes {
+            position: fixed;
+            pointer-events: none;
+            font-size: 2rem;
+            color: rgba(212, 175, 55, 0.3);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .note-1 { top: 10%; left: 5%; animation-delay: 0s; }
+        .note-2 { top: 20%; right: 10%; animation-delay: 2s; }
+        .note-3 { bottom: 30%; left: 15%; animation-delay: 4s; }
+        .note-4 { bottom: 15%; right: 5%; animation-delay: 1s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        .interactive-piano {
+            margin: 40px 0;
+            text-align: center;
+        }
+
+        .piano-instruction {
+            color: #b8860b;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        .key:hover {
+            transform: translateY(2px);
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 2.5rem;
+            }
+            
+            .songs-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .piano-keys {
+                transform: scale(0.8);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="musical-notes note-1">♫</div>
+    <div class="musical-notes note-2">♪</div>
+    <div class="musical-notes note-3">♬</div>
+    <div class="musical-notes note-4">♩</div>
+
+    <div class="main-container">
+        <div class="title-section">
+            <h1 class="main-title">Tom Lehrer's Greatest Hits</h1>
+            <p class="subtitle">Mathematical Precision Meets Satirical Genius</p>
+            
+            <div class="interactive-piano">
+                <p class="piano-instruction">Click the keys to explore Lehrer's wit</p>
+                <div class="piano-keys">
+                    <div class="white-key key" onclick="playNote('Vatican')"></div>
+                    <div class="white-key key" onclick="playNote('Folk')"></div>
+                    <div class="white-key key" onclick="playNote('Braun')"></div>
+                    <div class="white-key key" onclick="playNote('Math')"></div>
+                    <div class="white-key key" onclick="playNote('Poison')"></div>
+                    <div class="white-key key" onclick="playNote('Elements')"></div>
+                    <div class="white-key key" onclick="playNote('MLF')"></div>
+                    <div class="black-key key" onclick="playNote('Satire')"></div>
+                    <div class="black-key key" onclick="playNote('Harvard')"></div>
+                    <div class="black-key key" onclick="playNote('Irreverent')"></div>
+                    <div class="black-key key" onclick="playNote('Clever')"></div>
+                    <div class="black-key key" onclick="playNote('Witty')"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="style-analysis">
+            <h2 class="style-title">The Lehrer Formula: Satirical Mastery</h2>
+            <div class="style-points">
+                <div class="style-point">
+                    <div class="point-title">Mathematical Precision</div>
+                    Perfect meter, rhyme schemes that seem effortless but are mathematically calculated for maximum comedic impact.
+                </div>
+                <div class="style-point">
+                    <div class="point-title">Academic Irreverence</div>
+                    Uses his Harvard credentials to mock the very institutions and subjects he knows intimately.
+                </div>
+                <div class="style-point">
+                    <div class="point-title">Dark Comedy</div>
+                    Finds humor in taboo subjects - war, death, religion, politics - with surgical precision.
+                </div>
+                <div class="style-point">
+                    <div class="point-title">Intellectual Accessibility</div>
+                    Complex ideas delivered through catchy, simple melodies that stick in your head for decades.
+                </div>
+            </div>
+        </div>
+
+        <div class="songs-grid">
+            <div class="song-card">
+                <h3 class="song-title">The Vatican Rag</h3>
+                <p class="song-analysis">
+                    Lehrer's masterful send-up of Catholic ritual transforms religious ceremony into a dance craze. His genius lies in maintaining respect for the faithful while mercilessly mocking the pomp and circumstance.
+                </p>
+                <div class="lehrer-techniques">
+                    <div class="technique-title">Signature Techniques:</div>
+                    • Rhythmic repetition ("genuflect, genuflect, genuflect!")<br>
+                    • Sacred/secular juxtaposition<br>
+                    • Mathematical counting within religious context<br>
+                    • Infectious melody that makes the irreverence irresistible
+                </div>
+                <div class="satirical-elements">
+                    <span class="element-tag">Religious Satire</span>
+                    <span class="element-tag">Ritual Mockery</span>
+                    <span class="element-tag">Dance Parody</span>
+                </div>
+                <div style="text-align: center; margin-top: 15px;">
+                    <a href="https://www.youtube.com/watch?v=pvhYqeGp_Do" target="_blank" style="color: #d4af37; text-decoration: none; font-weight: 600; border: 1px solid #d4af37; padding: 8px 16px; border-radius: 20px; transition: all 0.3s ease;">
+                        ▶ Watch Performance
+                    </a>
+                </div>
+            </div>
+
+            <div class="song-card">
+                <h3 class="song-title">The Folk Song Army</h3>
+                <p class="song-analysis">
+                    A devastating critique of the 1960s folk music movement's self-righteousness. Lehrer skewers the pretensions of protest singers who believe strumming guitars can solve the world's problems.
+                </p>
+                <div class="lehrer-techniques">
+                    <div class="technique-title">Signature Techniques:</div>
+                    • Self-aware hypocrisy (criticizing while participating)<br>
+                    • Genre pastiche (sounds like what it's mocking)<br>
+                    • Historical references that age like fine wine<br>
+                    • Weaponizing the very form he's critiquing
+                </div>
+                <div class="satirical-elements">
+                    <span class="element-tag">Musical Meta-Commentary</span>
+                    <span class="element-tag">Social Movement Critique</span>
+                    <span class="element-tag">Self-Referential Irony</span>
+                </div>
+                <div style="text-align: center; margin-top: 15px;">
+                    <a href="https://www.youtube.com/watch?v=9tDZ5lriIIc" target="_blank" style="color: #d4af37; text-decoration: none; font-weight: 600; border: 1px solid #d4af37; padding: 8px 16px; border-radius: 20px; transition: all 0.3s ease;">
+                        ▶ Watch Performance
+                    </a>
+                </div>
+            </div>
+
+            <div class="song-card">
+                <h3 class="song-title">Wernher von Braun</h3>
+                <p class="song-analysis">
+                    Perhaps Lehrer's darkest and most brilliant piece, examining the moral ambiguity of scientific progress. The Nazi rocket scientist who helped America reach the moon becomes a study in expedient ethics.
+                </p>
+                <div class="lehrer-techniques">
+                    <div class="technique-title">Signature Techniques:</div>
+                    • Moral relativism presented cheerfully<br>
+                    • Historical irony layered thick<br>
+                    • Compartmentalization of ethics<br>
+                    • Upbeat melody delivering devastating critique
+                </div>
+                <div class="satirical-elements">
+                    <span class="element-tag">Historical Irony</span>
+                    <span class="element-tag">Moral Ambiguity</span>
+                    <span class="element-tag">Scientific Ethics</span>
+                    <span class="element-tag">Dark Humor</span>
+                </div>
+                <div style="text-align: center; margin-top: 15px;">
+                    <a href="https://www.youtube.com/watch?v=TjDEsGZLbio" target="_blank" style="color: #d4af37; text-decoration: none; font-weight: 600; border: 1px solid #d4af37; padding: 8px 16px; border-radius: 20px; transition: all 0.3s ease;">
+                        ▶ Watch Performance
+                    </a>
+                </div>
+            </div>
+
+            <div class="song-card">
+                <h3 class="song-title">The Elements</h3>
+                <p class="song-analysis">
+                    Lehrer's tour de force of memory and melody - the entire periodic table set to Gilbert and Sullivan's "Major-General's Song." A perfect fusion of his mathematical mind and musical talent, creating educational entertainment that's virtually impossible to forget.
+                </p>
+                <div class="lehrer-techniques">
+                    <div class="technique-title">Signature Techniques:</div>
+                    • Breathtaking verbal dexterity and memorization<br>
+                    • Educational content disguised as entertainment<br>
+                    • Classical musical pastiche (Gilbert & Sullivan)<br>
+                    • Making the mundane magnificent through sheer virtuosity
+                </div>
+                <div class="satirical-elements">
+                    <span class="element-tag">Educational Parody</span>
+                    <span class="element-tag">Virtuoso Performance</span>
+                    <span class="element-tag">Scientific Literacy</span>
+                    <span class="element-tag">Classical Reference</span>
+                </div>
+                <div style="text-align: center; margin-top: 15px;">
+                    <a href="https://www.youtube.com/watch?v=AcS3NOQnsQM" target="_blank" style="color: #d4af37; text-decoration: none; font-weight: 600; border: 1px solid #d4af37; padding: 8px 16px; border-radius: 20px; transition: all 0.3s ease;">
+                        ▶ Watch Performance
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="quote-section">
+            <div class="quote">"I wish people who have trouble communicating would just shut up."</div>
+            <div class="quote-author">— Tom Lehrer</div>
+        </div>
+
+        <div class="style-analysis">
+            <h2 class="style-title">What Makes Lehrer Timeless</h2>
+            <div class="style-points">
+                <div class="style-point">
+                    <div class="point-title">Universal Human Folly</div>
+                    While his references are dated, the human behaviors he skewers are eternal - hypocrisy, self-importance, moral flexibility.
+                </div>
+                <div class="style-point">
+                    <div class="point-title">Fearless Targets</div>
+                    Nothing was off-limits - religion, science, politics, social movements. His equal-opportunity irreverence was revolutionary.
+                </div>
+                <div class="style-point">
+                    <div class="point-title">Scholarly Wit</div>
+                    His academic background gave him credibility to mock intellectualism while demonstrating genuine intelligence.
+                </div>
+                <div class="style-point">
+                    <div class="point-title">Perfect Timing</div>
+                    Knew exactly when to quit - retired at his peak, leaving audiences wanting more rather than outstaying his welcome.
+                </div>
+            </div>
+        </div>
+
+        <div class="quote-section">
+            <div class="quote">"Political satire became obsolete when they awarded Henry Kissinger the Nobel Peace Prize."</div>
+            <div class="quote-author">— Tom Lehrer</div>
+        </div>
+
+        <div class="style-analysis">
+            <h2 class="style-title">The Man Behind the Music: Tom Lehrer</h2>
+            <div class="song-analysis" style="font-size: 1.2rem; line-height: 1.8; max-width: 900px; margin: 0 auto;">
+                <p style="margin-bottom: 20px;">
+                    Born Thomas Andrew Lehrer in 1928 to a Jewish family in New York City, Tom Lehrer's path from mathematician to satirical legend was as precisely calculated as his lyrics. Growing up in a household that valued both intellectual rigor and cultural engagement, young Tom showed early promise in both mathematics and music—a combination that would prove explosive.
+                </p>
+                
+                <p style="margin-bottom: 20px;">
+                    Lehrer's academic credentials were impeccable: he entered Harvard at just 15, earning his bachelor's degree in mathematics in 1946 and his master's in 1947. His education was briefly interrupted by military service from 1955-1957, where he worked as a researcher at the National Security Agency—an experience that likely sharpened his eye for the absurdities of bureaucracy and gave him insider knowledge of the military-industrial complex he would later satirize. Teaching mathematics at Harvard and later at MIT, he discovered that his gift for making complex mathematical concepts accessible through humor translated perfectly into social commentary.
+                </p>
+                
+                <p style="margin-bottom: 20px;">
+                    The transition from serious academic to witty satirist wasn't sudden—it was a natural evolution of someone who saw the absurdities in both academic ivory towers and the wider world. His Jewish identity, with its tradition of humor as social commentary and survival mechanism, provided a cultural foundation for his fearless approach to sacred cows. Whether skewering the pretensions of his Harvard colleagues or the hypocrisies of American foreign policy, Lehrer brought the same analytical precision to satire that he applied to differential equations.
+                </p>
+                
+                <p style="margin-bottom: 20px;">
+                    What made Lehrer unique was his insider's perspective—he wasn't an outsider throwing stones, but a consummate insider with the credentials to critique the very institutions he inhabited. His mathematical background gave him the structural precision that made his songs so memorable, while his musical training (he was an accomplished pianist) provided the melodic hooks that made his savage wit irresistibly singable.
+                </p>
+                
+                <p>
+                    In the end, Tom Lehrer proved that the sharpest satire comes not from anger or bitterness, but from a deep understanding of human nature combined with the intellectual tools to dissect it with surgical precision. His legacy reminds us that sometimes the most profound truths come wrapped in the most deceptively simple melodies.
+                </p>
+            </div>
+        </div>
+
+        <div class="style-analysis">
+            <h2 class="style-title">Starting Point: Tribute to Tom Lehrer</h2>
+            <div class="song-analysis" style="font-size: 1.1rem; line-height: 1.7; max-width: 900px; margin: 0 auto;">
+                <p style="margin-bottom: 20px; font-style: italic; color: #b8860b;">
+                    Tom Lehrer passed away in Cambridge on Saturday at age 97, leaving behind a legacy that continues to captivate new generations of listeners.
+                </p>
+                
+                <p style="margin-bottom: 20px;">
+                    There's something magical about discovering Tom Lehrer in high school—that moment when a nerdy teenager stumbles upon someone who transforms the mundane into the magnificent. Whether through a chemistry teacher raving about "The Elements" or an English class encounter with his irreverent "Oedipus Rex" parody, Lehrer had a unique ability to bridge the gap between academic rigor and rebellious wit.
+                </p>
+                
+                <p style="margin-bottom: 20px;">
+                    What connected a 21st-century student to this Harvard-educated math prodigy from the 1950s? Perhaps it was the recognition that intelligence and irreverence make perfect partners. Lehrer's music offered everything a thoughtful young mind craved: piano skills transformed from chore to social commentary vehicle, dark historical parodies that both educated and entertained, and the moral clarity that appeals to idealistic youth discovering the world's absurdities.
+                </p>
+                
+                <p style="margin-bottom: 20px;">
+                    His transgressive nature was part of the appeal—wielding black humor against taboo subjects, twisting innocent-sounding premises into sharp satire. Songs like "My Home Town" would wax nostalgic about "super-special just plain folks" before describing a succession of sadists. This wasn't frontal assault; it was a knife in the back, delivered with deft wordplay and playful keystrokes.
+                </p>
+                
+                <p style="margin-bottom: 20px;">
+                    Lehrer understood his youthful appeal early on. Starting his career performing free around Cambridge after matriculating to Harvard at 15, his schoolboy affect became an asset. "I could get away with that stuff because I was this clean-cut college kid in a bow tie and horn-rimmed glasses," he later reflected. This persona allowed him to deliver devastating social commentary while maintaining an air of academic respectability.
+                </p>
+                
+                <p style="margin-bottom: 20px;">
+                    Decades later, his satire remains startlingly relevant. As fears grow about nuclear proliferation, Lehrer's 1965 "Who's Next," which imagined Luxembourg and Alabama joining the atomic arms race, still resonates. "Pollution" continues to hit in our era of climate change, skewering cities' smog with the observation that you could "just go out for a breath of air and you'll be ready for Medicare."
+                </p>
+                
+                <p style="margin-bottom: 20px;">
+                    The best way to experience Lehrer remains through the black-and-white video recordings from the 1960s, now freely available since he released his music into the public domain in 2020. These recordings capture not just his smooth finger work and comedic timing, but the audience reactions that hint at how subversive his lyrics were. During a 1967 rendition of "Wernher von Braun," as he affects a German accent to mock the former Nazi's disregard for civilian life, you can hear someone let out "something between a guffaw and a gasp."
+                </p>
+                
+                <p>
+                    Perhaps most remarkably, Lehrer took an almost dilettantish approach to his musical career, later expressing surprise that his work had endured. "You always got the sense that Lehrer was primarily interested in amusing himself." Fortunately for us, he let us in on the joke—and that joke continues to find new audiences, generation after generation, proving that truly sharp wit is indeed timeless.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const lehrerQuotes = {
+            'Vatican': "Combining sacred ritual with popular dance - only Lehrer could make genuflection feel like a cha-cha!",
+            'Folk': "The Folk Song Army: where guitars are weapons and self-righteousness is ammunition.",
+            'Braun': "Wernher von Braun - proof that moral flexibility and rocket science go hand in hand.",
+            'Math': "A mathematician who understood that comedy, like calculus, requires perfect timing and precision.",
+            'Poison': "From 'Poisoning Pigeons in the Park' - finding joy in the darkly absurd corners of life.",
+            'Elements': "The Periodic Table as show tune - only Lehrer could make chemistry catchy.",
+            'MLF': "The MLF Lullaby - making nuclear war sound as cozy as a bedtime story.",
+            'Satire': "Satire is tragedy plus time, divided by mathematical precision.",
+            'Harvard': "A Harvard professor who taught us that education and irreverence make perfect partners.",
+            'Irreverent': "Irreverence is the last refuge of the intelligent - and Lehrer was its king.",
+            'Clever': "Clever enough to quit while ahead - the mark of true genius.",
+            'Witty': "Wit so sharp it could split an atom - and probably make a song about it."
+        };
+        
+        function playNote(theme) {
+            const quote = lehrerQuotes[theme] || "Tom Lehrer: where mathematics meets mischief!";
+            
+            const tooltip = document.createElement('div');
+            tooltip.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: rgba(212, 175, 55, 0.95);
+                color: #2c1810;
+                padding: 25px;
+                border-radius: 15px;
+                font-size: 1.3rem;
+                font-style: italic;
+                max-width: 500px;
+                text-align: center;
+                z-index: 1000;
+                box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+                border: 3px solid #8b4513;
+                animation: fadeIn 0.4s ease;
+            `;
+            
+            tooltip.innerHTML = `"${quote}"`;
+            document.body.appendChild(tooltip);
+            
+            setTimeout(() => {
+                tooltip.style.animation = 'fadeOut 0.4s ease';
+                setTimeout(() => document.body.removeChild(tooltip), 400);
+            }, 4000);
+        }
+
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translate(-50%, -50%) scale(0.7) rotate(-2deg); }
+                to { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+            }
+            @keyframes fadeOut {
+                from { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+                to { opacity: 0; transform: translate(-50%, -50%) scale(0.7) rotate(2deg); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        document.querySelectorAll('.song-card').forEach(card => {
+            card.addEventListener('click', function() {
+                this.style.transform = 'translateY(-5px) scale(1.02) rotate(0.5deg)';
+                setTimeout(() => {
+                    this.style.transform = 'translateY(-5px)';
+                }, 300);
+            });
+        });
+    </script>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>All The News We Can Bear</title>
     <style>
         * {
@@ -330,5 +916,554 @@
             </div>
         </footer>
     </div>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tom Lehrer's Greatest Hits</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap');
+        
+        body {
+            background: linear-gradient(135deg, #2c1810 0%, #1a0f08 100%);
+            font-family: 'Crimson Text', serif;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            color: #f4f1eb;
+            overflow-x: hidden;
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .title-section {
+            text-align: center;
+            margin-bottom: 50px;
+            position: relative;
+        }
+
+        .main-title {
+            font-size: 3.5rem;
+            font-weight: 600;
+            color: #d4af37;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.7);
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            color: #b8860b;
+            font-style: italic;
+            margin-bottom: 30px;
+        }
+
+        .piano-keys {
+            display: flex;
+            justify-content: center;
+            margin: 30px 0;
+            position: relative;
+            height: 80px;
+        }
+
+        .white-key {
+            width: 40px;
+            height: 80px;
+            background: linear-gradient(to bottom, #ffffff 0%, #f0f0f0 100%);
+            border: 2px solid #333;
+            margin: 0 1px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            transition: transform 0.1s ease;
+        }
+
+        .black-key {
+            width: 25px;
+            height: 50px;
+            background: linear-gradient(to bottom, #333 0%, #111 100%);
+            position: absolute;
+            z-index: 2;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+            transition: transform 0.1s ease;
+        }
+
+        .black-key:nth-child(1) { left: 27px; }
+        .black-key:nth-child(2) { left: 68px; }
+        .black-key:nth-child(3) { left: 150px; }
+        .black-key:nth-child(4) { left: 191px; }
+        .black-key:nth-child(5) { left: 232px; }
+
+        .songs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .song-card {
+            background: linear-gradient(145deg, #3d2f1f 0%, #2a1f15 100%);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+            border: 2px solid #8b4513;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .song-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(212, 175, 55, 0.2);
+            border-color: #d4af37;
+        }
+
+        .song-card::before {
+            content: '♪';
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            font-size: 4rem;
+            color: rgba(212, 175, 55, 0.1);
+            transform: rotate(15deg);
+        }
+
+        .song-title {
+            font-size: 2rem;
+            font-weight: 600;
+            color: #d4af37;
+            margin-bottom: 15px;
+            text-align: center;
+            text-decoration: underline;
+            text-decoration-color: rgba(212, 175, 55, 0.3);
+        }
+
+        .song-analysis {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: #e6d7c3;
+            margin-bottom: 20px;
+        }
+
+        .lehrer-techniques {
+            background: rgba(212, 175, 55, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #d4af37;
+            margin: 15px 0;
+        }
+
+        .technique-title {
+            font-weight: 600;
+            color: #d4af37;
+            margin-bottom: 8px;
+        }
+
+        .satirical-elements {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .element-tag {
+            background: rgba(212, 175, 55, 0.2);
+            color: #d4af37;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+        }
+
+        .quote-section {
+            text-align: center;
+            margin: 60px 0;
+            padding: 30px;
+            background: rgba(212, 175, 55, 0.1);
+            border-radius: 15px;
+            border-left: 5px solid #d4af37;
+        }
+
+        .quote {
+            font-size: 1.4rem;
+            font-style: italic;
+            color: #f4f1eb;
+            margin-bottom: 15px;
+        }
+
+        .quote-author {
+            font-size: 1.1rem;
+            color: #b8860b;
+        }
+
+        .style-analysis {
+            background: rgba(139, 69, 19, 0.2);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 40px 0;
+            border: 2px solid rgba(139, 69, 19, 0.3);
+        }
+
+        .style-title {
+            font-size: 1.8rem;
+            color: #d4af37;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .style-points {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .style-point {
+            background: rgba(212, 175, 55, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+        }
+
+        .point-title {
+            font-weight: 600;
+            color: #d4af37;
+            margin-bottom: 8px;
+        }
+
+        .musical-notes {
+            position: fixed;
+            pointer-events: none;
+            font-size: 2rem;
+            color: rgba(212, 175, 55, 0.3);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .note-1 { top: 10%; left: 5%; animation-delay: 0s; }
+        .note-2 { top: 20%; right: 10%; animation-delay: 2s; }
+        .note-3 { bottom: 30%; left: 15%; animation-delay: 4s; }
+        .note-4 { bottom: 15%; right: 5%; animation-delay: 1s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        .interactive-piano {
+            margin: 40px 0;
+            text-align: center;
+        }
+
+        .piano-instruction {
+            color: #b8860b;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        .key:hover {
+            transform: translateY(2px);
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 2.5rem;
+            }
+            
+            .songs-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .piano-keys {
+                transform: scale(0.8);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="musical-notes note-1">♫</div>
+    <div class="musical-notes note-2">♪</div>
+    <div class="musical-notes note-3">♬</div>
+    <div class="musical-notes note-4">♩</div>
+
+    <div class="main-container">
+        <div class="title-section">
+            <h1 class="main-title">Tom Lehrer's Greatest Hits</h1>
+            <p class="subtitle">Mathematical Precision Meets Satirical Genius</p>
+            
+            <div class="interactive-piano">
+                <p class="piano-instruction">Click the keys to explore Lehrer's wit</p>
+                <div class="piano-keys">
+                    <div class="white-key key" onclick="playNote('Vatican')"></div>
+                    <div class="white-key key" onclick="playNote('Folk')"></div>
+                    <div class="white-key key" onclick="playNote('Braun')"></div>
+                    <div class="white-key key" onclick="playNote('Math')"></div>
+                    <div class="white-key key" onclick="playNote('Poison')"></div>
+                    <div class="white-key key" onclick="playNote('Elements')"></div>
+                    <div class="white-key key" onclick="playNote('MLF')"></div>
+                    <div class="black-key key" onclick="playNote('Satire')"></div>
+                    <div class="black-key key" onclick="playNote('Harvard')"></div>
+                    <div class="black-key key" onclick="playNote('Irreverent')"></div>
+                    <div class="black-key key" onclick="playNote('Clever')"></div>
+                    <div class="black-key key" onclick="playNote('Witty')"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="style-analysis">
+            <h2 class="style-title">The Lehrer Formula: Satirical Mastery</h2>
+            <div class="style-points">
+                <div class="style-point">
+                    <div class="point-title">Mathematical Precision</div>
+                    Perfect meter, rhyme schemes that seem effortless but are mathematically calculated for maximum comedic impact.
+                </div>
+                <div class="style-point">
+                    <div class="point-title">Academic Irreverence</div>
+                    Uses his Harvard credentials to mock the very institutions and subjects he knows intimately.
+                </div>
+                <div class="style-point">
+                    <div class="point-title">Dark Comedy</div>
+                    Finds humor in taboo subjects - war, death, religion, politics - with surgical precision.
+                </div>
+                <div class="style-point">
+                    <div class="point-title">Intellectual Accessibility</div>
+                    Complex ideas delivered through catchy, simple melodies that stick in your head for decades.
+                </div>
+            </div>
+        </div>
+
+        <div class="songs-grid">
+            <div class="song-card">
+                <h3 class="song-title">The Vatican Rag</h3>
+                <p class="song-analysis">
+                    Lehrer's masterful send-up of Catholic ritual transforms religious ceremony into a dance craze. His genius lies in maintaining respect for the faithful while mercilessly mocking the pomp and circumstance.
+                </p>
+                <div class="lehrer-techniques">
+                    <div class="technique-title">Signature Techniques:</div>
+                    • Rhythmic repetition ("genuflect, genuflect, genuflect!")<br>
+                    • Sacred/secular juxtaposition<br>
+                    • Mathematical counting within religious context<br>
+                    • Infectious melody that makes the irreverence irresistible
+                </div>
+                <div class="satirical-elements">
+                    <span class="element-tag">Religious Satire</span>
+                    <span class="element-tag">Ritual Mockery</span>
+                    <span class="element-tag">Dance Parody</span>
+                </div>
+                <div style="text-align: center; margin-top: 15px;">
+                    <a href="https://www.youtube.com/watch?v=w5kBDt6G_h4" target="_blank" style="color: #d4af37; text-decoration: none; font-weight: 600; border: 1px solid #d4af37; padding: 8px 16px; border-radius: 20px; transition: all 0.3s ease;">
+                        ▶ Watch Performance
+                    </a>
+                </div>
+            </div>
+
+            <div class="song-card">
+                <h3 class="song-title">The Folk Song Army</h3>
+                <p class="song-analysis">
+                    A devastating critique of the 1960s folk music movement's self-righteousness. Lehrer skewers the pretensions of protest singers who believe strumming guitars can solve the world's problems.
+                </p>
+                <div class="lehrer-techniques">
+                    <div class="technique-title">Signature Techniques:</div>
+                    • Self-aware hypocrisy (criticizing while participating)<br>
+                    • Genre pastiche (sounds like what it's mocking)<br>
+                    • Historical references that age like fine wine<br>
+                    • Weaponizing the very form he's critiquing
+                </div>
+                <div class="satirical-elements">
+                    <span class="element-tag">Musical Meta-Commentary</span>
+                    <span class="element-tag">Social Movement Critique</span>
+                    <span class="element-tag">Self-Referential Irony</span>
+                </div>
+                <div style="text-align: center; margin-top: 15px;">
+                    <a href="https://www.youtube.com/watch?v=9tDZ5lriIIc" target="_blank" style="color: #d4af37; text-decoration: none; font-weight: 600; border: 1px solid #d4af37; padding: 8px 16px; border-radius: 20px; transition: all 0.3s ease;">
+                        ▶ Watch Performance
+                    </a>
+                </div>
+            </div>
+
+            <div class="song-card">
+                <h3 class="song-title">Wernher von Braun</h3>
+                <p class="song-analysis">
+                    Perhaps Lehrer's darkest and most brilliant piece, examining the moral ambiguity of scientific progress. The Nazi rocket scientist who helped America reach the moon becomes a study in expedient ethics.
+                </p>
+                <div class="lehrer-techniques">
+                    <div class="technique-title">Signature Techniques:</div>
+                    • Moral relativism presented cheerfully<br>
+                    • Historical irony layered thick<br>
+                    • Compartmentalization of ethics<br>
+                    • Upbeat melody delivering devastating critique
+                </div>
+                <div class="satirical-elements">
+                    <span class="element-tag">Historical Irony</span>
+                    <span class="element-tag">Moral Ambiguity</span>
+                    <span class="element-tag">Scientific Ethics</span>
+                    <span class="element-tag">Dark Humor</span>
+                </div>
+                <div style="text-align: center; margin-top: 15px;">
+                    <a href="https://www.youtube.com/watch?v=TjDEsGZLbio" target="_blank" style="color: #d4af37; text-decoration: none; font-weight: 600; border: 1px solid #d4af37; padding: 8px 16px; border-radius: 20px; transition: all 0.3s ease;">
+                        ▶ Watch Performance
+                    </a>
+                </div>
+            </div>
+
+            <div class="song-card">
+                <h3 class="song-title">The Elements</h3>
+                <p class="song-analysis">
+                    Lehrer's tour de force of memory and melody - the entire periodic table set to Gilbert and Sullivan's "Major-General's Song." A perfect fusion of his mathematical mind and musical talent, creating educational entertainment that's virtually impossible to forget.
+                </p>
+                <div class="lehrer-techniques">
+                    <div class="technique-title">Signature Techniques:</div>
+                    • Breathtaking verbal dexterity and memorization<br>
+                    • Educational content disguised as entertainment<br>
+                    • Classical musical pastiche (Gilbert & Sullivan)<br>
+                    • Making the mundane magnificent through sheer virtuosity
+                </div>
+                <div class="satirical-elements">
+                    <span class="element-tag">Educational Parody</span>
+                    <span class="element-tag">Virtuoso Performance</span>
+                    <span class="element-tag">Scientific Literacy</span>
+                    <span class="element-tag">Classical Reference</span>
+                </div>
+                <div style="text-align: center; margin-top: 15px;">
+                    <a href="https://www.youtube.com/watch?v=AcS3NOQnsQM" target="_blank" style="color: #d4af37; text-decoration: none; font-weight: 600; border: 1px solid #d4af37; padding: 8px 16px; border-radius: 20px; transition: all 0.3s ease;">
+                        ▶ Watch Performance
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="quote-section">
+            <div class="quote">"I wish people who have trouble communicating would just shut up."</div>
+            <div class="quote-author">— Tom Lehrer</div>
+        </div>
+
+        <div class="style-analysis">
+            <h2 class="style-title">What Makes Lehrer Timeless</h2>
+            <div class="style-points">
+                <div class="style-point">
+                    <div class="point-title">Universal Human Folly</div>
+                    While his references are dated, the human behaviors he skewers are eternal - hypocrisy, self-importance, moral flexibility.
+                </div>
+                <div class="style-point">
+                    <div class="point-title">Fearless Targets</div>
+                    Nothing was off-limits - religion, science, politics, social movements. His equal-opportunity irreverence was revolutionary.
+                </div>
+                <div class="style-point">
+                    <div class="point-title">Scholarly Wit</div>
+                    His academic background gave him credibility to mock intellectualism while demonstrating genuine intelligence.
+                </div>
+                <div class="style-point">
+                    <div class="point-title">Perfect Timing</div>
+                    Knew exactly when to quit - retired at his peak, leaving audiences wanting more rather than outstaying his welcome.
+                </div>
+            </div>
+        </div>
+
+        <div class="quote-section">
+            <div class="quote">"Political satire became obsolete when they awarded Henry Kissinger the Nobel Peace Prize."</div>
+            <div class="quote-author">— Tom Lehrer</div>
+        </div>
+
+        <div class="style-analysis">
+            <h2 class="style-title">The Man Behind the Music: Tom Lehrer</h2>
+            <div class="song-analysis" style="font-size: 1.2rem; line-height: 1.8; max-width: 900px; margin: 0 auto;">
+                <p style="margin-bottom: 20px;">
+                    Born Thomas Andrew Lehrer in 1928 to a Jewish family in New York City, Tom Lehrer's path from mathematician to satirical legend was as precisely calculated as his lyrics. Growing up in a household that valued both intellectual rigor and cultural engagement, young Tom showed early promise in both mathematics and music—a combination that would prove explosive.
+                </p>
+                
+                <p style="margin-bottom: 20px;">
+                    Lehrer's academic credentials were impeccable: he entered Harvard at just 15, earning his bachelor's degree in mathematics in 1946 and his master's in 1947. His education was briefly interrupted by military service from 1955-1957, where he worked as a researcher at the National Security Agency—an experience that likely sharpened his eye for the absurdities of bureaucracy and gave him insider knowledge of the military-industrial complex he would later satirize. Teaching mathematics at Harvard and later at MIT, he discovered that his gift for making complex mathematical concepts accessible through humor translated perfectly into social commentary.
+                </p>
+                
+                <p style="margin-bottom: 20px;">
+                    The transition from serious academic to witty satirist wasn't sudden—it was a natural evolution of someone who saw the absurdities in both academic ivory towers and the wider world. His Jewish identity, with its tradition of humor as social commentary and survival mechanism, provided a cultural foundation for his fearless approach to sacred cows. Whether skewering the pretensions of his Harvard colleagues or the hypocrisies of American foreign policy, Lehrer brought the same analytical precision to satire that he applied to differential equations.
+                </p>
+                
+                <p style="margin-bottom: 20px;">
+                    What made Lehrer unique was his insider's perspective—he wasn't an outsider throwing stones, but a consummate insider with the credentials to critique the very institutions he inhabited. His mathematical background gave him the structural precision that made his songs so memorable, while his musical training (he was an accomplished pianist) provided the melodic hooks that made his savage wit irresistibly singable.
+                </p>
+                
+                <p>
+                    In the end, Tom Lehrer proved that the sharpest satire comes not from anger or bitterness, but from a deep understanding of human nature combined with the intellectual tools to dissect it with surgical precision. His legacy reminds us that sometimes the most profound truths come wrapped in the most deceptively simple melodies.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const lehrerQuotes = {
+            'Vatican': "Combining sacred ritual with popular dance - only Lehrer could make genuflection feel like a cha-cha!",
+            'Folk': "The Folk Song Army: where guitars are weapons and self-righteousness is ammunition.",
+            'Braun': "Wernher von Braun - proof that moral flexibility and rocket science go hand in hand.",
+            'Math': "A mathematician who understood that comedy, like calculus, requires perfect timing and precision.",
+            'Poison': "From 'Poisoning Pigeons in the Park' - finding joy in the darkly absurd corners of life.",
+            'Elements': "The Periodic Table as show tune - only Lehrer could make chemistry catchy.",
+            'MLF': "The MLF Lullaby - making nuclear war sound as cozy as a bedtime story.",
+            'Satire': "Satire is tragedy plus time, divided by mathematical precision.",
+            'Harvard': "A Harvard professor who taught us that education and irreverence make perfect partners.",
+            'Irreverent': "Irreverence is the last refuge of the intelligent - and Lehrer was its king.",
+            'Clever': "Clever enough to quit while ahead - the mark of true genius.",
+            'Witty': "Wit so sharp it could split an atom - and probably make a song about it."
+        };
+        
+        function playNote(theme) {
+            const quote = lehrerQuotes[theme] || "Tom Lehrer: where mathematics meets mischief!";
+            
+            const tooltip = document.createElement('div');
+            tooltip.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: rgba(212, 175, 55, 0.95);
+                color: #2c1810;
+                padding: 25px;
+                border-radius: 15px;
+                font-size: 1.3rem;
+                font-style: italic;
+                max-width: 500px;
+                text-align: center;
+                z-index: 1000;
+                box-shadow: 0 15px 40px rgba(0,0,0,0.6);
+                border: 3px solid #8b4513;
+                animation: fadeIn 0.4s ease;
+            `;
+            
+            tooltip.innerHTML = `"${quote}"`;
+            document.body.appendChild(tooltip);
+            
+            setTimeout(() => {
+                tooltip.style.animation = 'fadeOut 0.4s ease';
+                setTimeout(() => document.body.removeChild(tooltip), 400);
+            }, 4000);
+        }
+
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translate(-50%, -50%) scale(0.7) rotate(-2deg); }
+                to { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+            }
+            @keyframes fadeOut {
+                from { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+                to { opacity: 0; transform: translate(-50%, -50%) scale(0.7) rotate(2deg); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        document.querySelectorAll('.song-card').forEach(card => {
+            card.addEventListener('click', function() {
+                this.style.transform = 'translateY(-5px) scale(1.02) rotate(0.5deg)';
+                setTimeout(() => {
+                    this.style.transform = 'translateY(-5px)';
+                }, 300);
+            });
+        });
+    </script>
 </body>
 </html>
