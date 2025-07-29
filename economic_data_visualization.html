@@ -1,0 +1,1152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>U.S. Economic & Political Landscape Analysis</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-adapter-date-fns/2.0.0/chartjs-adapter-date-fns.bundle.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            color: white;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            padding: 24px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: bold;
+            background: linear-gradient(135deg, #3b82f6, #06b6d4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 16px;
+        }
+
+        .header p {
+            font-size: 1.25rem;
+            color: #cbd5e1;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .tabs {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 32px;
+            background: rgba(30, 41, 59, 0.5);
+            border-radius: 12px;
+            padding: 8px;
+            backdrop-filter: blur(10px);
+        }
+
+        .tab {
+            padding: 12px 24px;
+            margin: 4px 8px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            background: #475569;
+            color: #cbd5e1;
+        }
+
+        .tab.active {
+            background: #2563eb;
+            color: white;
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
+        }
+
+        .tab:hover:not(.active) {
+            background: #64748b;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .card {
+            background: rgba(30, 41, 59, 0.5);
+            border-radius: 16px;
+            padding: 24px;
+            backdrop-filter: blur(10px);
+            border: 1px solid #475569;
+            margin-bottom: 24px;
+        }
+
+        .card h2 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 24px;
+            text-align: center;
+        }
+
+        .grid {
+            display: grid;
+            gap: 32px;
+        }
+
+        .grid-2 {
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+        }
+
+        .grid-4 {
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        }
+
+        .chart-container {
+            position: relative;
+            height: 350px;
+            margin-bottom: 16px;
+        }
+
+        .chart-small {
+            height: 250px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        .stat-card {
+            background: rgba(15, 23, 42, 0.5);
+            padding: 16px;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px solid #64748b;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: #cbd5e1;
+        }
+
+        .risk-high { color: #ef4444; }
+        .risk-medium { color: #f59e0b; }
+        .risk-low { color: #22c55e; }
+
+        .vulnerability-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+            margin-top: 24px;
+        }
+
+        .vulnerability-card {
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid;
+        }
+
+        .immigration-risk {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: #dc2626;
+        }
+
+        .trade-risk {
+            background: rgba(245, 158, 11, 0.1);
+            border-color: #d97706;
+        }
+
+        .healthcare-risk {
+            background: rgba(147, 51, 234, 0.1);
+            border-color: #9333ea;
+        }
+
+        .manufacturing-risk {
+            background: rgba(59, 130, 246, 0.1);
+            border-color: #3b82f6;
+        }
+
+        .section-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .data-source {
+            font-size: 0.75rem;
+            color: #94a3b8;
+            margin-top: 8px;
+            font-style: italic;
+        }
+
+        @media (max-width: 768px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+            
+            .chart-container {
+                height: 300px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>U.S. Economic & Political Landscape Analysis</h1>
+            <p>Comprehensive analysis integrating employment patterns, agricultural economies, swing state vulnerabilities, and political implications</p>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="showTab('employers')">
+                👥 Employment Patterns
+            </button>
+            <button class="tab" onclick="showTab('agriculture')">
+                🌾 Agricultural Economy
+            </button>
+            <button class="tab" onclick="showTab('swing-states')">
+                🗳️ Swing State Analysis
+            </button>
+            <button class="tab" onclick="showTab('vulnerabilities')">
+                ⚠️ Economic Vulnerabilities
+            </button>
+            <button class="tab" onclick="showTab('data-viz-description')">
+                📋 Data Viz Description
+            </button>
+        </div>
+
+        <!-- Employment Patterns Tab -->
+        <div id="employers" class="tab-content active">
+            <div class="card">
+                <h2>America's Employment Landscape</h2>
+                <div class="grid grid-2">
+                    <div>
+                        <h3 class="section-title">Walmart's Dominance Across States</h3>
+                        <div class="chart-container">
+                            <canvas id="walmartChart"></canvas>
+                        </div>
+                        <p class="data-source">Data: Largest Employer.xlsx - Walmart employment by state</p>
+                    </div>
+                    <div>
+                        <h3 class="section-title">Employment Distribution by Sector</h3>
+                        <div class="chart-container">
+                            <canvas id="employmentSectorChart"></canvas>
+                        </div>
+                        <p class="data-source">Data: Swing State Economies analysis across all states</p>
+                    </div>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value risk-high">22</div>
+                        <div class="stat-label">States where Walmart is #1 employer</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value risk-medium">15.3M</div>
+                        <div class="stat-label">Total jobs across swing states</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value risk-low">2.7M</div>
+                        <div class="stat-label">Government jobs across swing states</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Agricultural Economy Tab -->
+        <div id="agriculture" class="tab-content">
+            <div class="card">
+                <h2>Agricultural Economic Powerhouses</h2>
+                <div class="grid grid-2">
+                    <div>
+                        <h3 class="section-title">Market Value vs. GDP Dependence</h3>
+                        <div class="chart-container">
+                            <canvas id="agriScatterChart"></canvas>
+                        </div>
+                        <p class="data-source">Data: TOP 20 US AGRICULTURAL STATES 2024</p>
+                    </div>
+                    <div>
+                        <h3 class="section-title">Top Agricultural States Output</h3>
+                        <div class="chart-container">
+                            <canvas id="agriBarChart"></canvas>
+                        </div>
+                        <p class="data-source">Market value in billions of dollars</p>
+                    </div>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value risk-high">$59.01B</div>
+                        <div class="stat-label">California's agricultural output</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value risk-medium">17.09%</div>
+                        <div class="stat-label">Iowa's agriculture as % of GDP</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value risk-low">$281.8B</div>
+                        <div class="stat-label">Total top 10 states output</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Swing State Analysis Tab -->
+        <div id="swing-states" class="tab-content">
+            <div class="card">
+                <h2>Swing State Economic Vulnerabilities</h2>
+                <div class="grid grid-2">
+                    <div>
+                        <h3 class="section-title">Employment by Sector Across Swing States</h3>
+                        <div class="chart-container">
+                            <canvas id="swingStateChart"></canvas>
+                        </div>
+                        <p class="data-source">Data: Swing State Economies by Sector June 2025</p>
+                    </div>
+                    <div>
+                        <h3 class="section-title">Political Vulnerability Analysis</h3>
+                        <div class="chart-container">
+                            <canvas id="politicalChart"></canvas>
+                        </div>
+                        <p class="data-source">Agriculture dependency vs. political representation</p>
+                    </div>
+                </div>
+                
+                <div class="vulnerability-grid">
+                    <div class="vulnerability-card immigration-risk">
+                        <h4 class="risk-high">Immigration-Dependent Sectors</h4>
+                        <div class="stat-value">1,830k</div>
+                        <p>Jobs at risk from immigration policy changes in farming, construction, and hospitality sectors</p>
+                    </div>
+                    <div class="vulnerability-card trade-risk">
+                        <h4 class="risk-medium">Trade-Sensitive Sectors</h4>
+                        <div class="stat-value">3,073k</div>
+                        <p>Transportation and trade jobs vulnerable to tariff policies</p>
+                    </div>
+                    <div class="vulnerability-card healthcare-risk">
+                        <h4 class="risk-medium">Healthcare Policy Risk</h4>
+                        <div class="stat-value">3,439k</div>
+                        <p>Education and health jobs affected by Medicare/Medicaid cuts</p>
+                    </div>
+                    <div class="vulnerability-card manufacturing-risk">
+                        <h4 class="risk-high">Manufacturing Risk</h4>
+                        <div class="stat-value">1,213k</div>
+                        <p>Manufacturing jobs vulnerable to plant closures and trade policies</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Data Viz Description Tab -->
+        <div id="data-viz-description" class="tab-content">
+            <div class="space-y-8">
+                <!-- Key Features Section -->
+                <div class="bg-slate-800/50 rounded-xl p-6 backdrop-blur-sm border border-slate-700">
+                    <h2 class="text-2xl font-bold mb-6 text-center">Key Features of the Visualization</h2>
+                    
+                    <!-- Data Integration from All Sources -->
+                    <div class="mb-8">
+                        <h3 class="text-xl font-bold mb-4 text-blue-400">Data Integration from All Sources:</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="bg-slate-900/50 p-4 rounded-lg border-l-4 border-red-500">
+                                <div class="flex items-start">
+                                    <span class="text-red-400 font-bold mr-2">1.</span>
+                                    <div>
+                                        <span class="font-bold text-red-400">Largest Employer.xlsx</span>
+                                        <p class="text-sm text-slate-300 mt-1">Walmart employment data across 22 states</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-slate-900/50 p-4 rounded-lg border-l-4 border-orange-500">
+                                <div class="flex items-start">
+                                    <span class="text-orange-400 font-bold mr-2">2.</span>
+                                    <div>
+                                        <span class="font-bold text-orange-400">Swing State Economies CSV</span>
+                                        <p class="text-sm text-slate-300 mt-1">Detailed sector employment analysis across swing states</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-slate-900/50 p-4 rounded-lg border-l-4 border-green-500">
+                                <div class="flex items-start">
+                                    <span class="text-green-400 font-bold mr-2">3.</span>
+                                    <div>
+                                        <span class="font-bold text-green-400">Agricultural States CSV</span>
+                                        <p class="text-sm text-slate-300 mt-1">Top 20 agricultural states with market values, GDP data, and political representation</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-slate-900/50 p-4 rounded-lg border-l-4 border-blue-500">
+                                <div class="flex items-start">
+                                    <span class="text-blue-400 font-bold mr-2">4.</span>
+                                    <div>
+                                        <span class="font-bold text-blue-400">Swing State Metrics XLS</span>
+                                        <p class="text-sm text-slate-300 mt-1">Economic and political metrics for swing states</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Four Interactive Tabs -->
+                    <div class="mb-8">
+                        <h3 class="text-xl font-bold mb-4 text-blue-400">Four Interactive Tabs:</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="bg-slate-900/50 p-4 rounded-lg border-l-4 border-blue-500">
+                                <div class="flex items-start">
+                                    <span class="text-blue-400 font-bold mr-2">1.</span>
+                                    <div>
+                                        <div class="flex items-center mb-2">
+                                            <span class="text-xl mr-2">👥</span>
+                                            <span class="font-bold text-blue-400">Employment Patterns</span>
+                                        </div>
+                                        <p class="text-sm text-slate-300">Shows Walmart's dominance and overall employment distribution</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-slate-900/50 p-4 rounded-lg border-l-4 border-green-500">
+                                <div class="flex items-start">
+                                    <span class="text-green-400 font-bold mr-2">2.</span>
+                                    <div>
+                                        <div class="flex items-center mb-2">
+                                            <span class="text-xl mr-2">🌾</span>
+                                            <span class="font-bold text-green-400">Agricultural Economy</span>
+                                        </div>
+                                        <p class="text-sm text-slate-300">Scatter plots and bar charts of agricultural market values vs GDP dependence</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-slate-900/50 p-4 rounded-lg border-l-4 border-orange-500">
+                                <div class="flex items-start">
+                                    <span class="text-orange-400 font-bold mr-2">3.</span>
+                                    <div>
+                                        <div class="flex items-center mb-2">
+                                            <span class="text-xl mr-2">🗳️</span>
+                                            <span class="font-bold text-orange-400">Swing State Analysis</span>
+                                        </div>
+                                        <p class="text-sm text-slate-300">Employment vulnerability analysis with political implications</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="bg-slate-900/50 p-4 rounded-lg border-l-4 border-red-500">
+                                <div class="flex items-start">
+                                    <span class="text-red-400 font-bold mr-2">4.</span>
+                                    <div>
+                                        <div class="flex items-center mb-2">
+                                            <span class="text-xl mr-2">⚠️</span>
+                                            <span class="font-bold text-red-400">Economic Vulnerabilities</span>
+                                        </div>
+                                        <p class="text-sm text-slate-300">Risk assessment across different policy scenarios</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Key Insights Visualized -->
+                    <div>
+                        <h3 class="text-xl font-bold mb-4 text-blue-400">Key Insights Visualized:</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                            <div class="bg-red-900/30 p-4 rounded-lg border border-red-700/50">
+                                <div class="flex items-center mb-2">
+                                    <span class="text-red-400 mr-2">•</span>
+                                    <span class="font-bold text-red-300">9.6 million jobs</span>
+                                </div>
+                                <p class="text-sm text-slate-300">at high risk from policy changes</p>
+                            </div>
+                            <div class="bg-blue-900/30 p-4 rounded-lg border border-blue-700/50">
+                                <div class="flex items-center mb-2">
+                                    <span class="text-blue-400 mr-2">•</span>
+                                    <span class="font-bold text-blue-300">Walmart dominates</span>
+                                </div>
+                                <p class="text-sm text-slate-300">as the largest employer in 22 states</p>
+                            </div>
+                            <div class="bg-green-900/30 p-4 rounded-lg border border-green-700/50">
+                                <div class="flex items-center mb-2">
+                                    <span class="text-green-400 mr-2">•</span>
+                                    <span class="font-bold text-green-300">California leads</span>
+                                </div>
+                                <p class="text-sm text-slate-300">agricultural output at $59.01B</p>
+                            </div>
+                            <div class="bg-orange-900/30 p-4 rounded-lg border border-orange-700/50">
+                                <div class="flex items-center mb-2">
+                                    <span class="text-orange-400 mr-2">•</span>
+                                    <span class="font-bold text-orange-300">Iowa shows highest</span>
+                                </div>
+                                <p class="text-sm text-slate-300">agricultural GDP dependence at 17.09%</p>
+                            </div>
+                            <div class="bg-red-900/30 p-4 rounded-lg border border-red-700/50">
+                                <div class="flex items-center mb-2">
+                                    <span class="text-red-400 mr-2">•</span>
+                                    <span class="font-bold text-red-300">Immigration policy risks</span>
+                                </div>
+                                <p class="text-sm text-slate-300">affect 4.7 million jobs (farming, construction, hospitality)</p>
+                            </div>
+                            <div class="bg-orange-900/30 p-4 rounded-lg border border-orange-700/50">
+                                <div class="flex items-center mb-2">
+                                    <span class="text-orange-400 mr-2">•</span>
+                                    <span class="font-bold text-orange-300">Trade policies</span>
+                                </div>
+                                <p class="text-sm text-slate-300">could impact 3.1 million transportation/trade jobs</p>
+                            </div>
+                            <div class="bg-purple-900/30 p-4 rounded-lg border border-purple-700/50 md:col-span-2 lg:col-span-1">
+                                <div class="flex items-center mb-2">
+                                    <span class="text-purple-400 mr-2">•</span>
+                                    <span class="font-bold text-purple-300">Healthcare cuts</span>
+                                </div>
+                                <p class="text-sm text-slate-300">threaten 3.4 million education/health jobs</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-green-400 mr-2">•</span>
+                                    <span><strong>Triangulation</strong> of economic, political, and corporate data</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-green-400 mr-2">•</span>
+                                    <span><strong>Complete coverage</strong> from micro to macro perspectives</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-green-400 mr-2">•</span>
+                                    <span><strong>Actionable insights</strong> for policy impact assessment</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-yellow-400 mb-3">⚠️ Risk Assessment Integration</h4>
+                            <ul class="space-y-2 text-sm">
+                                <li class="flex items-start">
+                                    <span class="text-red-400 mr-2">•</span>
+                                    <span><strong>Corporate risk</strong> from single employer dependency</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-orange-400 mr-2">•</span>
+                                    <span><strong>Policy risk</strong> from sector vulnerability analysis</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-green-400 mr-2">•</span>
+                                    <span><strong>Economic risk</strong> from agricultural dependency</span>
+                                </li>
+                                <li class="flex items-start">
+                                    <span class="text-blue-400 mr-2">•</span>
+                                    <span><strong>Political risk</strong> from electoral volatility</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Economic Vulnerabilities Tab -->
+        <div id="vulnerabilities" class="tab-content">
+            <div class="card">
+                <h2>Economic Vulnerability Analysis</h2>
+                <div class="grid grid-2">
+                    <div>
+                        <h3 class="section-title">Risk Categories by Employment</h3>
+                        <div class="chart-container">
+                            <canvas id="riskChart"></canvas>
+                        </div>
+                        <p class="data-source">Aggregated vulnerability analysis across all data sources</p>
+                    </div>
+                    <div>
+                        <h3 class="section-title">State Comparison: Agriculture vs Politics</h3>
+                        <div class="chart-container">
+                            <canvas id="stateComparisonChart"></canvas>
+                        </div>
+                        <p class="data-source">Agricultural dependency vs. voter turnout patterns</p>
+                    </div>
+                </div>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value risk-high">9.6M</div>
+                        <div class="stat-label">Total jobs at high risk</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value risk-medium">7</div>
+                        <div class="stat-label">Key swing states analyzed</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value risk-low">62.5%</div>
+                        <div class="stat-label">Average voter turnout in agricultural states</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value risk-medium">$4.1T</div>
+                        <div class="stat-label">Combined GDP of analyzed states</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data from all sources
+        const walmartData = {
+            states: ['Alabama', 'Arizona', 'Arkansas', 'Florida', 'Georgia', 'Illinois', 'Indiana', 'Kansas', 'Kentucky'],
+            employees: [38010, 33910, 53310, 108321, 59371, 54698, 39667, 20938, 30181]
+        };
+
+        const agricultureData = [
+            { state: 'California', marketValue: 59.01, agriPercent: 1.24, gdp: 4103.12, democrats: 43, republicans: 9, turnout: 62.1 },
+            { state: 'Iowa', marketValue: 43.93, agriPercent: 17.09, gdp: 257.02, democrats: 0, republicans: 4, turnout: 70.8 },
+            { state: 'Nebraska', marketValue: 29.41, agriPercent: 15.86, gdp: 185.41, democrats: 0, republicans: 3, turnout: 68.0 },
+            { state: 'Texas', marketValue: 32.17, agriPercent: 1.18, gdp: 2709.39, democrats: 5, republicans: 22, turnout: 56.6 },
+            { state: 'Minnesota', marketValue: 28.48, agriPercent: 5.69, gdp: 500.85, democrats: 4, republicans: 4, turnout: 76.4 },
+            { state: 'Illinois', marketValue: 26.42, agriPercent: 2.32, gdp: 1137.24, democrats: 14, republicans: 3, turnout: 62.6 },
+            { state: 'Kansas', marketValue: 23.99, agriPercent: 10.22, gdp: 234.67, democrats: 1, republicans: 3, turnout: 63.3 },
+            { state: 'Indiana', marketValue: 18.03, agriPercent: 3.43, gdp: 527.38, democrats: 2, republicans: 7, turnout: 58.6 },
+            { state: 'N. Carolina', marketValue: 18.69, agriPercent: 2.23, gdp: 839.12, democrats: 4, republicans: 10, turnout: 70.3 },
+            { state: 'Wisconsin', marketValue: 16.70, agriPercent: 3.70, gdp: 451.29, democrats: 2, republicans: 6, turnout: 76.9 }
+        ];
+
+        const swingStateData = {
+            sectors: ['Farming', 'Construction', 'Manufacturing', 'Trade & Transport', 'Education & Health', 'Leisure & Hospitality', 'Government'],
+            employment: [1829.7, 902.7, 1212.6, 3073.1, 3438.6, 2012.6, 2710.1]
+        };
+
+        const vulnerabilityData = [
+            { category: 'Immigration Risk', employment: 4742.3, risk: 'High' },
+            { category: 'Trade Risk', employment: 3073.1, risk: 'Medium' },
+            { category: 'Healthcare Risk', employment: 3438.6, risk: 'Medium' },
+            { category: 'Manufacturing Risk', employment: 1212.6, risk: 'High' }
+        ];
+
+        // Chart configurations
+        Chart.defaults.color = '#cbd5e1';
+        Chart.defaults.borderColor = '#475569';
+
+        let charts = {};
+
+        function createWalmartChart() {
+            const ctx = document.getElementById('walmartChart').getContext('2d');
+            charts.walmart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: walmartData.states,
+                    datasets: [{
+                        label: 'Walmart Employees',
+                        data: walmartData.employees,
+                        backgroundColor: 'rgba(59, 130, 246, 0.8)',
+                        borderColor: 'rgba(59, 130, 246, 1)',
+                        borderWidth: 1,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(71, 85, 105, 0.3)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: 'rgba(71, 85, 105, 0.3)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function createEmploymentSectorChart() {
+            const ctx = document.getElementById('employmentSectorChart').getContext('2d');
+            charts.employment = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: swingStateData.sectors,
+                    datasets: [{
+                        data: swingStateData.employment,
+                        backgroundColor: [
+                            'rgba(34, 197, 94, 0.8)',
+                            'rgba(245, 158, 11, 0.8)',
+                            'rgba(239, 68, 68, 0.8)',
+                            'rgba(59, 130, 246, 0.8)',
+                            'rgba(147, 51, 234, 0.8)',
+                            'rgba(236, 72, 153, 0.8)',
+                            'rgba(14, 165, 233, 0.8)'
+                        ],
+                        borderWidth: 2,
+                        borderColor: 'rgba(15, 23, 42, 1)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right'
+                        }
+                    }
+                }
+            });
+        }
+
+        function showTab(tabName) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(content => content.classList.remove('active'));
+            
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+
+        function createAgriScatterChart() {
+            const ctx = document.getElementById('agriScatterChart').getContext('2d');
+            charts.agriScatter = new Chart(ctx, {
+                type: 'scatter',
+                data: {
+                    datasets: [{
+                        label: 'Agricultural States',
+                        data: agricultureData.map(d => ({
+                            x: d.marketValue,
+                            y: d.agriPercent,
+                            state: d.state
+                        })),
+                        backgroundColor: 'rgba(34, 197, 94, 0.8)',
+                        borderColor: 'rgba(34, 197, 94, 1)',
+                        pointRadius: 8,
+                        pointHoverRadius: 10
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                title: function(context) {
+                                    return agricultureData[context[0].dataIndex].state;
+                                },
+                                label: function(context) {
+                                    const data = agricultureData[context.dataIndex];
+                                    return [
+                                        `Market Value: ${data.marketValue}B`,
+                                        `% of GDP: ${data.agriPercent}%`
+                                    ];
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Agricultural Market Value ($B)'
+                            },
+                            grid: {
+                                color: 'rgba(71, 85, 105, 0.3)'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Agriculture as % of GDP'
+                            },
+                            grid: {
+                                color: 'rgba(71, 85, 105, 0.3)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function createAgriBarChart() {
+            const ctx = document.getElementById('agriBarChart').getContext('2d');
+            charts.agriBar = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: agricultureData.slice(0, 8).map(d => d.state),
+                    datasets: [{
+                        label: 'Market Value ($B)',
+                        data: agricultureData.slice(0, 8).map(d => d.marketValue),
+                        backgroundColor: 'rgba(16, 185, 129, 0.8)',
+                        borderColor: 'rgba(16, 185, 129, 1)',
+                        borderWidth: 1,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    indexAxis: 'y',
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(71, 85, 105, 0.3)'
+                            }
+                        },
+                        y: {
+                            grid: {
+                                color: 'rgba(71, 85, 105, 0.3)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function createSwingStateChart() {
+            const ctx = document.getElementById('swingStateChart').getContext('2d');
+            charts.swingState = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: swingStateData.sectors,
+                    datasets: [{
+                        label: 'Employment (thousands)',
+                        data: swingStateData.employment,
+                        backgroundColor: [
+                            'rgba(239, 68, 68, 0.8)',   // Farming - High risk
+                            'rgba(245, 158, 11, 0.8)',  // Construction - Medium risk
+                            'rgba(59, 130, 246, 0.8)',  // Manufacturing - High risk
+                            'rgba(245, 158, 11, 0.8)',  // Trade - Medium risk
+                            'rgba(147, 51, 234, 0.8)',  // Healthcare - Medium risk
+                            'rgba(239, 68, 68, 0.8)',   // Hospitality - High risk
+                            'rgba(14, 165, 233, 0.8)'   // Government - Policy risk
+                        ],
+                        borderWidth: 1,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Employment (thousands)'
+                            },
+                            grid: {
+                                color: 'rgba(71, 85, 105, 0.3)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: 'rgba(71, 85, 105, 0.3)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function createPoliticalChart() {
+            const ctx = document.getElementById('politicalChart').getContext('2d');
+            charts.political = new Chart(ctx, {
+                type: 'bubble',
+                data: {
+                    datasets: [{
+                        label: 'Agricultural States',
+                        data: agricultureData.map(d => ({
+                            x: d.agriPercent,
+                            y: d.turnout,
+                            r: Math.sqrt(d.marketValue) * 2,
+                            state: d.state,
+                            republicans: d.republicans,
+                            democrats: d.democrats
+                        })),
+                        backgroundColor: agricultureData.map(d => 
+                            d.republicans > d.democrats ? 'rgba(239, 68, 68, 0.6)' : 'rgba(59, 130, 246, 0.6)'
+                        ),
+                        borderColor: agricultureData.map(d => 
+                            d.republicans > d.democrats ? 'rgba(239, 68, 68, 1)' : 'rgba(59, 130, 246, 1)'
+                        ),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                title: function(context) {
+                                    return agricultureData[context[0].dataIndex].state;
+                                },
+                                label: function(context) {
+                                    const data = agricultureData[context.dataIndex];
+                                    return [
+                                        `Agri % of GDP: ${data.agriPercent}%`,
+                                        `Voter Turnout: ${data.turnout}%`,
+                                        `Market Value: ${data.marketValue}B`,
+                                        `Political: ${data.republicans}R, ${data.democrats}D`
+                                    ];
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Agriculture as % of GDP'
+                            },
+                            grid: {
+                                color: 'rgba(71, 85, 105, 0.3)'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Voter Turnout %'
+                            },
+                            grid: {
+                                color: 'rgba(71, 85, 105, 0.3)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function createRiskChart() {
+            const ctx = document.getElementById('riskChart').getContext('2d');
+            charts.risk = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: vulnerabilityData.map(d => d.category),
+                    datasets: [{
+                        label: 'Employment at Risk (thousands)',
+                        data: vulnerabilityData.map(d => d.employment),
+                        backgroundColor: [
+                            'rgba(239, 68, 68, 0.8)',   // Immigration - High
+                            'rgba(245, 158, 11, 0.8)',  // Trade - Medium
+                            'rgba(147, 51, 234, 0.8)',  // Healthcare - Medium
+                            'rgba(59, 130, 246, 0.8)'   // Manufacturing - High
+                        ],
+                        borderWidth: 1,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Employment (thousands)'
+                            },
+                            grid: {
+                                color: 'rgba(71, 85, 105, 0.3)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: 'rgba(71, 85, 105, 0.3)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function createStateComparisonChart() {
+            const ctx = document.getElementById('stateComparisonChart').getContext('2d');
+            charts.stateComparison = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: agricultureData.map(d => d.state),
+                    datasets: [{
+                        label: 'Agriculture % of GDP',
+                        data: agricultureData.map(d => d.agriPercent),
+                        borderColor: 'rgba(34, 197, 94, 1)',
+                        backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                        yAxisID: 'y'
+                    }, {
+                        label: 'Voter Turnout %',
+                        data: agricultureData.map(d => d.turnout),
+                        borderColor: 'rgba(59, 130, 246, 1)',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        yAxisID: 'y1'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    scales: {
+                        x: {
+                            display: true,
+                            grid: {
+                                color: 'rgba(71, 85, 105, 0.3)'
+                            }
+                        },
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            title: {
+                                display: true,
+                                text: 'Agriculture % of GDP'
+                            },
+                            grid: {
+                                color: 'rgba(71, 85, 105, 0.3)'
+                            }
+                        },
+                        y1: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            title: {
+                                display: true,
+                                text: 'Voter Turnout %'
+                            },
+                            grid: {
+                                drawOnChartArea: false,
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function createDataIntegrationChart() {
+            const ctx = document.getElementById('dataIntegrationChart').getContext('2d');
+            charts.dataIntegration = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: [
+                        'Corporate Employment (22 states)',
+                        'Agricultural Economics (20 states)', 
+                        'Sectoral Analysis (9 swing states)',
+                        'Political Demographics (9 swing states)'
+                    ],
+                    datasets: [{
+                        data: [22, 20, 9, 9],
+                        backgroundColor: [
+                            'rgba(239, 68, 68, 0.8)',
+                            'rgba(34, 197, 94, 0.8)',
+                            'rgba(245, 158, 11, 0.8)',
+                            'rgba(59, 130, 246, 0.8)'
+                        ],
+                        borderColor: [
+                            '#ef4444',
+                            '#22c55e',
+                            '#f59e0b',
+                            '#3b82f6'
+                        ],
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: '#cbd5e1',
+                                padding: 15,
+                                usePointStyle: true,
+                                font: {
+                                    size: 11
+                                }
+                            }
+                        },
+                        title: {
+                            display: true,
+                            text: 'Geographic Coverage by Dataset',
+                            color: '#e2e8f0',
+                            font: {
+                                size: 14,
+                                weight: 'bold'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Initialize all charts when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            createWalmartChart();
+            createEmploymentSectorChart();
+            createAgriScatterChart();
+            createAgriBarChart();
+            createSwingStateChart();
+            createPoliticalChart();
+            createRiskChart();
+            createStateComparisonChart();
+        });
+    </script>
+</body>
+</html>
