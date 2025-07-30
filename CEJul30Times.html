@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Political Session Time Analysis</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .summary-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            background: #f8f9fa;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-number {
+            font-size: 2.2em;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .dialogue-card .stat-number { color: #e74c3c; }
+        .presentation-card .stat-number { color: #3498db; }
+        .total-card .stat-number { color: #2c3e50; }
+        
+        .main-content {
+            padding: 30px;
+        }
+        
+        .pie-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 40px 0;
+            position: relative;
+        }
+        
+        .pie-chart {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: conic-gradient(
+                #e74c3c 0deg 188.64deg,
+                #3498db 188.64deg 360deg
+            );
+            position: relative;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+        
+        .pie-center {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .pie-center .total-time {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .pie-center .total-label {
+            font-size: 0.8em;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin: 30px 0;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 3px;
+        }
+        
+        .dialogue-color { background: #e74c3c; }
+        .presentation-color { background: #3498db; }
+        
+        .timeline {
+            margin: 40px 0;
+            position: relative;
+        }
+        
+        .timeline h2 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 1.8em;
+        }
+        
+        .timeline-container {
+            position: relative;
+            max-width: 100%;
+            overflow-x: auto;
+            padding: 20px 0;
+        }
+        
+        .timeline-track {
+            display: flex;
+            height: 80px;
+            background: #ecf0f1;
+            border-radius: 40px;
+            position: relative;
+            margin: 20px 0;
+            box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.1);
+            min-width: 800px;
+        }
+        
+        .timeline-segment {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.8em;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .timeline-segment:hover {
+            transform: scale(1.05);
+            z-index: 10;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .timeline-segment.dialogue {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+        }
+        
+        .timeline-segment.presentation {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+        }
+        
+        .timeline-segment:first-child {
+            border-top-left-radius: 40px;
+            border-bottom-left-radius: 40px;
+        }
+        
+        .timeline-segment:last-child {
+            border-top-right-radius: 40px;
+            border-bottom-right-radius: 40px;
+        }
+        
+        .segment-tooltip {
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.7em;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            z-index: 20;
+        }
+        
+        .timeline-segment:hover .segment-tooltip {
+            opacity: 1;
+        }
+        
+        .detailed-breakdown {
+            margin: 40px 0;
+        }
+        
+        .detailed-breakdown h2 {
+            color: #2c3e50;
+            margin-bottom: 25px;
+            text-align: center;
+            font-size: 1.8em;
+        }
+        
+        .segment-list {
+            display: grid;
+            gap: 15px;
+        }
+        
+        .segment-item {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid;
+            transition: transform 0.3s ease;
+        }
+        
+        .segment-item:hover {
+            transform: translateX(5px);
+        }
+        
+        .segment-item.dialogue {
+            border-left-color: #e74c3c;
+        }
+        
+        .segment-item.presentation {
+            border-left-color: #3498db;
+        }
+        
+        .segment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .segment-time {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .segment-duration {
+            background: #ecf0f1;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            color: #666;
+        }
+        
+        .segment-type {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 0.7em;
+            text-transform: uppercase;
+            font-weight: bold;
+            color: white;
+            margin-right: 10px;
+        }
+        
+        .segment-type.dialogue {
+            background: #e74c3c;
+        }
+        
+        .segment-type.presentation {
+            background: #3498db;
+        }
+        
+        .segment-description {
+            color: #555;
+            line-height: 1.5;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .summary-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .legend {
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
+            }
+            
+            .pie-chart {
+                width: 250px;
+                height: 250px;
+            }
+            
+            .timeline-track {
+                min-width: 600px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Session Time Partition Analysis</h1>
+            <p>Dialogue vs Presentation Segments • July 30, 2025</p>
+        </div>
+        
+        <div class="summary-stats">
+            <div class="stat-card total-card">
+                <div class="stat-number">104:28</div>
+                <div class="stat-label">Total Time</div>
+            </div>
+            <div class="stat-card dialogue-card">
+                <div class="stat-number">54:43</div>
+                <div class="stat-label">Dialogue (52.4%)</div>
+            </div>
+            <div class="stat-card presentation-card">
+                <div class="stat-number">49:45</div>
+                <div class="stat-label">Presentation (47.6%)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">12</div>
+                <div class="stat-label">Total Segments</div>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <div class="pie-container">
+                <div class="pie-chart">
+                    <div class="pie-center">
+                        <div class="total-time">104m</div>
+                        <div class="total-label">Total</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color dialogue-color"></div>
+                    <span><strong>Dialogue:</strong> Open discussion between participants</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color presentation-color"></div>
+                    <span><strong>Presentation:</strong> Facilitated content with visuals/structure</span>
+                </div>
+            </div>
+            
+            <div class="timeline">
+                <h2>⏱️ Session Timeline Visualization</h2>
+                <div class="timeline-container">
+                    <div class="timeline-track" id="timelineTrack">
+                        <!-- Timeline segments will be generated by JavaScript -->
+                    </div>
+                </div>
+            </div>
+            
+            <div class="detailed-breakdown">
+                <h2>📋 Detailed Segment Breakdown</h2>
+                <div class="segment-list" id="segmentList">
+                    <!-- Segments will be generated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const segments = [
+            { time: "03:41-19:28", type: "dialogue", duration: 947, description: "Technical setup, introductions, casual discussion" },
+            { time: "19:28-20:54", type: "presentation", duration: 86, description: "John explains Claude Shannon and information theory" },
+            { time: "20:54-22:26", type: "presentation", duration: 92, description: "George introduces Medicare anniversary and newsletter format" },
+            { time: "22:26-28:12", type: "presentation", duration: 346, description: "George's political newsletter with visual aids - shakedowns and authoritarianism" },
+            { time: "28:12-30:15", type: "dialogue", duration: 123, description: "Discussion about Harvard Trump settlement" },
+            { time: "30:15-35:14", type: "presentation", duration: 299, description: "Epstein play setup and dramatic reading by Mark and Sally" },
+            { time: "35:14-42:00", type: "dialogue", duration: 406, description: "Play commentary and discussion about judicial appointments" },
+            { time: "42:00-60:33", type: "dialogue", duration: 1113, description: "Extended discussion on Emil Bovais, Mondami, NYC politics" },
+            { time: "60:33-84:47", type: "presentation", duration: 1454, description: "Larry's 2026 election strategy with slides and data analysis" },
+            { time: "84:47-87:58", type: "dialogue", duration: 191, description: "Sally introduces Tom Lehrer memorial discussion" },
+            { time: "87:58-99:46", type: "presentation", duration: 708, description: "Tom Lehrer song performances (Vatican Rag, Werner von Braun)" },
+            { time: "99:46-108:09", type: "dialogue", duration: 503, description: "Sally's weekly tidbits, cat stories, voting registration discussion" }
+        ];
+        
+        const totalDuration = segments.reduce((sum, seg) => sum + seg.duration, 0);
+        
+        function formatDuration(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const secs = seconds % 60;
+            return `${minutes}:${secs.toString().padStart(2, '0')}`;
+        }
+        
+        function generateTimeline() {
+            const timelineTrack = document.getElementById('timelineTrack');
+            
+            segments.forEach((segment, index) => {
+                const segmentDiv = document.createElement('div');
+                const widthPercent = (segment.duration / totalDuration) * 100;
+                
+                segmentDiv.className = `timeline-segment ${segment.type}`;
+                segmentDiv.style.width = `${widthPercent}%`;
+                
+                // Add segment number for larger segments
+                if (segment.duration > 200) {
+                    segmentDiv.textContent = `${index + 1}`;
+                }
+                
+                // Add tooltip
+                const tooltip = document.createElement('div');
+                tooltip.className = 'segment-tooltip';
+                tooltip.textContent = `${segment.time} (${formatDuration(segment.duration)}) - ${segment.description}`;
+                segmentDiv.appendChild(tooltip);
+                
+                timelineTrack.appendChild(segmentDiv);
+            });
+        }
+        
+        function generateSegmentList() {
+            const segmentList = document.getElementById('segmentList');
+            
+            segments.forEach((segment, index) => {
+                const segmentDiv = document.createElement('div');
+                segmentDiv.className = `segment-item ${segment.type}`;
+                
+                segmentDiv.innerHTML = `
+                    <div class="segment-header">
+                        <div>
+                            <span class="segment-type ${segment.type}">${segment.type}</span>
+                            <span class="segment-time">${segment.time}</span>
+                        </div>
+                        <div class="segment-duration">${formatDuration(segment.duration)}</div>
+                    </div>
+                    <div class="segment-description">${segment.description}</div>
+                `;
+                
+                segmentList.appendChild(segmentDiv);
+            });
+        }
+        
+        // Initialize the visualization
+        document.addEventListener('DOMContentLoaded', function() {
+            generateTimeline();
+            generateSegmentList();
+            
+            // Add some interactive effects
+            const statCards = document.querySelectorAll('.stat-card');
+            statCards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-8px) scale(1.02)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(-5px) scale(1)';
+                });
+            });
+        });
+    </script>
+</body>
+</html>
