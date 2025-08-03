@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tom Lehrer's Songs and Their Political Relevance</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path d="M0,0 Q50,50 100,0 T200,0 V100 H0 Z" fill="rgba(255,255,255,0.1)"/></svg>');
+            animation: wave 10s ease-in-out infinite;
+        }
+
+        @keyframes wave {
+            0%, 100% { transform: rotate(0deg); }
+            50% { transform: rotate(5deg); }
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 1;
+        }
+
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .filter-section {
+            padding: 30px 40px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .filter-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .filter-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .filter-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .filter-btn.active {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a24 100%);
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .songs-grid {
+            padding: 40px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 25px;
+        }
+
+        .song-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            border-left: 5px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .song-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .song-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .song-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        .song-card.high-political {
+            border-left-color: #e74c3c;
+        }
+
+        .song-card.medium-political {
+            border-left-color: #f39c12;
+        }
+
+        .song-card.low-political {
+            border-left-color: #3498db;
+        }
+
+        .song-card.non-political {
+            border-left-color: #95a5a6;
+        }
+
+        .song-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .political-badge {
+            font-size: 0.6em;
+            padding: 4px 8px;
+            border-radius: 10px;
+            color: white;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .badge-high { background: #e74c3c; }
+        .badge-medium { background: #f39c12; }
+        .badge-low { background: #3498db; }
+        .badge-none { background: #95a5a6; }
+
+        .song-year {
+            color: #7f8c8d;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+        }
+
+        .song-description {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .political-context {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            font-style: italic;
+            color: #6c757d;
+        }
+
+        .stats-section {
+            background: #2c3e50;
+            color: white;
+            padding: 30px 40px;
+            text-align: center;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-top: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #667eea;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 1.1em;
+            opacity: 0.9;
+            margin-top: 5px;
+        }
+
+        .memorial-note {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 40px;
+            text-align: center;
+            font-style: italic;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .songs-grid {
+                grid-template-columns: 1fr;
+                padding: 20px;
+            }
+            
+            .filter-section {
+                padding: 20px;
+            }
+            
+            .song-card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎵 Tom Lehrer's Songs</h1>
+            <p>A Mathematical Satirist's Political Commentary (1928-2025)</p>
+        </div>
+
+        <div class="memorial-note">
+            <p>In memory of Tom Lehrer, who passed away July 26, 2025, at age 97. His wit and mathematical precision made political satire an art form.</p>
+        </div>
+
+        <div class="filter-section">
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">All Songs</button>
+                <button class="filter-btn" data-filter="high-political">Highly Political</button>
+                <button class="filter-btn" data-filter="medium-political">Moderately Political</button>
+                <button class="filter-btn" data-filter="low-political">Mildly Political</button>
+                <button class="filter-btn" data-filter="non-political">Non-Political</button>
+            </div>
+        </div>
+
+        <div class="songs-grid" id="songsGrid">
+            <!-- Songs will be populated by JavaScript -->
+        </div>
+
+        <div class="stats-section">
+            <h2>Song Statistics</h2>
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <span class="stat-number" id="totalSongs">29</span>
+                    <div class="stat-label">Total Songs</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="politicalSongs">15</span>
+                    <div class="stat-label">Political Songs</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="peakYears">1964-1965</span>
+                    <div class="stat-label">Peak Political Years</div>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="activeYears">1953-1973</span>
+                    <div class="stat-label">Active Songwriting</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const songs = [
+            // Highly Political Songs
+            {
+                title: "National Brotherhood Week",
+                year: "1965",
+                category: "high-political",
+                description: "A biting satire of American racial hypocrisy during the Civil Rights era.",
+                context: "Written during the height of the Civil Rights Movement, mocking superficial attempts at racial reconciliation while violence raged in the South."
+            },
+            {
+                title: "Wernher von Braun",
+                year: "1965",
+                category: "high-political",
+                description: "Satirizes the moral flexibility of recruiting Nazi scientists for the US space program.",
+                context: "Critiques Operation Paperclip and America's willingness to overlook war crimes for strategic advantage during the Cold War."
+            },
+            {
+                title: "Who's Next?",
+                year: "1965",
+                category: "high-political",
+                description: "Dark comedy about nuclear proliferation and which countries might acquire the bomb.",
+                context: "Written during Cold War nuclear tensions, predicting the spread of nuclear weapons with disturbing accuracy."
+            },
+            {
+                title: "MLF Lullaby",
+                year: "1965",
+                category: "high-political",
+                description: "Mocks the NATO Multilateral Force proposal for shared nuclear weapons.",
+                context: "Satirizes complex Cold War military alliances and nuclear sharing arrangements that seemed absurd to civilians."
+            },
+            {
+                title: "Send the Marines",
+                year: "1965",
+                category: "high-political",
+                description: "Critiques American military interventionism and foreign policy.",
+                context: "Written as US involvement in Vietnam escalated, questioning America's role as global policeman."
+            },
+            {
+                title: "So Long, Mom (A Song for World War III)",
+                year: "1965",
+                category: "high-political",
+                description: "Cheerfully macabre song about nuclear warfare and global destruction.",
+                context: "Peak Cold War paranoia transformed into upbeat musical theater, making the unthinkable seem routine."
+            },
+            {
+                title: "We Will All Go Together When We Go",
+                year: "1959",
+                category: "high-political",
+                description: "Upbeat song about global nuclear annihilation.",
+                context: "Classic Cold War anxiety transformed into cheerful musical optimism about mutual assured destruction."
+            },
+            // Moderately Political Songs
+            {
+                title: "Pollution",
+                year: "1965",
+                category: "medium-political",
+                description: "Early environmental anthem about air and water pollution.",
+                context: "Prescient environmental commentary before the mainstream environmental movement, highlighting industrial damage."
+            },
+            {
+                title: "The Vatican Rag",
+                year: "1965",
+                category: "medium-political",
+                description: "Satirizes changes in Catholic liturgy during Vatican II reforms.",
+                context: "Comments on religious modernization and the Church's attempts to seem more contemporary and accessible."
+            },
+            {
+                title: "New Math",
+                year: "1965",
+                category: "medium-political",
+                description: "Mocks educational reform movements and new teaching methods.",
+                context: "Critiques 1960s educational reforms and the sometimes confusing nature of progressive pedagogy."
+            },
+            {
+                title: "The Folk Song Army",
+                year: "1965",
+                category: "medium-political",
+                description: "Satirizes the earnest protest song movement and folk music activists.",
+                context: "Pokes fun at the self-righteousness of the folk revival and protest music scene of the early 1960s."
+            },
+            {
+                title: "George Murphy",
+                year: "1965",
+                category: "medium-political",
+                description: "Mocks the election of actor George Murphy to the US Senate.",
+                context: "Early commentary on celebrity politicians and the blurring of entertainment and politics."
+            },
+            {
+                title: "Whatever Became of Hubert?",
+                year: "1965",
+                category: "medium-political",
+                description: "Satirizes Vice President Hubert Humphrey's perceived political compromises.",
+                context: "Comments on how political office can change idealistic politicians, referring to Humphrey's liberal reputation."
+            },
+            {
+                title: "It Makes a Fellow Proud to Be a Soldier",
+                year: "1959",
+                category: "medium-political",
+                description: "Satirizes military bureaucracy and Army life.",
+                context: "Based on Lehrer's own Army service, mocking military inefficiency and absurd regulations."
+            },
+            {
+                title: "I Wanna Go Back to Dixie",
+                year: "1953",
+                category: "medium-political",
+                description: "Satirizes romanticized views of the Old South and segregation.",
+                context: "Early civil rights era commentary exposing the ugly reality behind Southern nostalgia."
+            },
+            // Mildly Political Songs
+            {
+                title: "Fight Fiercely, Harvard",
+                year: "1953",
+                category: "low-political",
+                description: "Parodies Ivy League elitism and genteel college culture.",
+                context: "Social satire of upper-class academic culture and the contrast between refined manners and competitive sports."
+            },
+            {
+                title: "Be Prepared",
+                year: "1953",
+                category: "low-political",
+                description: "Subversive take on Boy Scout values and American wholesomeness.",
+                context: "Challenges idealized American institutions and suggests darker interpretations of youth organizations."
+            },
+            {
+                title: "Smut",
+                year: "1965",
+                category: "low-political",
+                description: "Satirizes moral panic about pornography and censorship.",
+                context: "Addresses 1960s debates about obscenity, free speech, and moral standards in a permissive society."
+            },
+            {
+                title: "My Home Town",
+                year: "1959",
+                category: "low-political",
+                description: "Satirizes small-town American life and its hidden scandals.",
+                context: "Social satire exposing hypocrisy in idealized American communities without specific political agenda."
+            },
+            {
+                title: "Selling Out",
+                year: "1965",
+                category: "low-political",
+                description: "Self-referential song about commercializing artistic integrity.",
+                context: "Meta-commentary on the tension between artistic purity and commercial success."
+            },
+            // Non-Political Songs
+            {
+                title: "The Elements",
+                year: "1959",
+                category: "non-political",
+                description: "Periodic table set to Gilbert & Sullivan's 'Major-General's Song.'",
+                context: "Educational entertainment demonstrating Lehrer's mathematical background and musical theater influences."
+            },
+            {
+                title: "Lobachevsky",
+                year: "1953",
+                category: "non-political",
+                description: "Song about academic plagiarism in mathematics.",
+                context: "Academic humor based on Lehrer's mathematical background, satirizing scholarly misconduct."
+            },
+            {
+                title: "Poisoning Pigeons in the Park",
+                year: "1953",
+                category: "non-political",
+                description: "Dark comedy song about a springtime activity with macabre twist.",
+                context: "Pure black humor with no political message, showcasing Lehrer's talent for subverting expectations."
+            },
+            {
+                title: "I Hold Your Hand in Mine",
+                year: "1953",
+                category: "non-political",
+                description: "Romantic ballad with a gruesome necrophilic twist.",
+                context: "Black humor subverting conventional love songs, showcasing Lehrer's talent for dark comedy."
+            },
+            {
+                title: "The Masochism Tango",
+                year: "1959",
+                category: "non-political",
+                description: "A tango about a dysfunctional romantic relationship.",
+                context: "Sexual humor and relationship satire with Latin dance rhythms, no political content."
+            },
+            {
+                title: "The Old Dope Peddler",
+                year: "1953",
+                category: "non-political",
+                description: "Cheerful song about a friendly neighborhood drug dealer.",
+                context: "Dark humor about addiction and crime, predating serious drug policy debates."
+            },
+            {
+                title: "The Wiener Schnitzel Waltz",
+                year: "1959",
+                category: "non-political",
+                description: "A waltz incorporating German and food themes.",
+                context: "Light entertainment with cultural themes but no political commentary."
+            },
+            {
+                title: "When You Are Old and Gray",
+                year: "1953",
+                category: "non-political",
+                description: "Mock-romantic song about aging and fading beauty.",
+                context: "Relationship humor subverting romantic conventions with no political content."
+            },
+            {
+                title: "The Wild West Is Where I Want to Be",
+                year: "1959",
+                category: "non-political",
+                description: "Parody of Western songs and cowboy mythology.",
+                context: "Genre parody of Western entertainment without political commentary."
+            }
+        ];
+
+        function createSongCard(song) {
+            const badgeClass = {
+                'high-political': 'badge-high',
+                'medium-political': 'badge-medium',
+                'low-political': 'badge-low',
+                'non-political': 'badge-none'
+            }[song.category];
+
+            const badgeText = {
+                'high-political': 'Highly Political',
+                'medium-political': 'Moderately Political',
+                'low-political': 'Mildly Political',
+                'non-political': 'Non-Political'
+            }[song.category];
+
+            return `
+                <div class="song-card ${song.category}" data-category="${song.category}">
+                    <div class="song-title">
+                        "${song.title}"
+                        <span class="political-badge ${badgeClass}">${badgeText}</span>
+                    </div>
+                    <div class="song-year">Released: ${song.year}</div>
+                    <div class="song-description">${song.description}</div>
+                    <div class="political-context">
+                        <strong>Political Context:</strong> ${song.context}
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderSongs(filter = 'all') {
+            const grid = document.getElementById('songsGrid');
+            let filteredSongs = songs;
+            
+            if (filter !== 'all') {
+                filteredSongs = songs.filter(song => song.category === filter);
+            }
+            
+            grid.innerHTML = filteredSongs.map(createSongCard).join('');
+        }
+
+        function updateStats() {
+            const political = songs.filter(s => s.category !== 'non-political').length;
+            document.getElementById('totalSongs').textContent = songs.length;
+            document.getElementById('politicalSongs').textContent = political;
+        }
+
+        function updateFilterCounts() {
+            const counts = {
+                'all': songs.length,
+                'high-political': songs.filter(s => s.category === 'high-political').length,
+                'medium-political': songs.filter(s => s.category === 'medium-political').length,
+                'low-political': songs.filter(s => s.category === 'low-political').length,
+                'non-political': songs.filter(s => s.category === 'non-political').length
+            };
+
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                const filter = btn.dataset.filter;
+                const count = counts[filter];
+                const originalText = btn.textContent.split(' (')[0];
+                btn.textContent = `${originalText} (${count})`;
+            });
+        }
+
+        // Initialize
+        renderSongs();
+        updateStats();
+        updateFilterCounts();
+
+        // Filter functionality
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                renderSongs(btn.dataset.filter);
+            });
+        });
+    </script>
+</body>
+</html>
