@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I Coulda Made a Better Deal - Paul Krugman</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Georgia', serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+            animation: slideIn 0.8s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 40px 40px 60px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+        
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 2;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header h2 {
+            font-size: 1.3rem;
+            font-weight: normal;
+            margin-bottom: 20px;
+            opacity: 0.9;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .author-info {
+            display: flex;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ff6b6b, #ffd93d);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-right: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        
+        .author-details h3 {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+        
+        .author-details p {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .primers-section {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 25px rgba(240, 147, 251, 0.3);
+        }
+        
+        .primers-section h3 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+        
+        .primers-list {
+            list-style: none;
+        }
+        
+        .primers-list li {
+            margin-bottom: 8px;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .primers-list li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+            color: rgba(255,255,255,0.8);
+        }
+        
+        .primers-list a {
+            color: white;
+            text-decoration: none;
+            border-bottom: 1px solid rgba(255,255,255,0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .primers-list a:hover {
+            border-bottom-color: white;
+            text-shadow: 0 0 8px rgba(255,255,255,0.8);
+        }
+        
+        .main-content p {
+            margin-bottom: 20px;
+            font-size: 1.1rem;
+            text-align: justify;
+        }
+        
+        .quote-highlight {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            padding: 20px;
+            border-left: 4px solid #ff8c42;
+            border-radius: 8px;
+            margin: 25px 0;
+            font-style: italic;
+            box-shadow: 0 4px 15px rgba(255, 140, 66, 0.2);
+        }
+        
+        .deal-comparison {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            padding: 25px;
+            border-radius: 12px;
+            margin: 30px 0;
+            box-shadow: 0 8px 25px rgba(168, 237, 234, 0.3);
+        }
+        
+        .deal-comparison h4 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+        
+        .deal-points {
+            list-style: none;
+        }
+        
+        .deal-points li {
+            margin-bottom: 10px;
+            padding-left: 25px;
+            position: relative;
+            color: #34495e;
+        }
+        
+        .deal-points li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #27ae60;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        
+        .chart-container {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin: 30px 0;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            position: relative;
+        }
+        
+        .chart-title {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        
+        .data-table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: bold;
+        }
+        
+        .data-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .data-table tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+        
+        .data-table tr:hover {
+            background: #e3f2fd;
+            transform: scale(1.01);
+            transition: all 0.2s ease;
+        }
+        
+        .impact-section {
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+            padding: 25px;
+            border-radius: 12px;
+            margin: 30px 0;
+            box-shadow: 0 8px 25px rgba(255, 154, 158, 0.3);
+        }
+        
+        .impact-section h4 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+        
+        .impact-points {
+            counter-reset: impact-counter;
+            list-style: none;
+        }
+        
+        .impact-points li {
+            counter-increment: impact-counter;
+            margin-bottom: 15px;
+            padding-left: 35px;
+            position: relative;
+            color: #2c3e50;
+        }
+        
+        .impact-points li::before {
+            content: counter(impact-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: #e74c3c;
+            color: white;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+        
+        .conclusion {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-top: 40px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+        }
+        
+        .conclusion h4 {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+        
+        .footer {
+            background: #2c3e50;
+            color: white;
+            padding: 20px 40px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        
+        .interactive-element {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .interactive-element:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                margin: 10px;
+                border-radius: 10px;
+            }
+            
+            .header {
+                padding: 30px 20px 40px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .main-content p {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>I Coulda Made a Better Deal</h1>
+            <h2>What, exactly, did Trump get from Europe?</h2>
+            <div class="author-info">
+                <div class="author-avatar">PK</div>
+                <div class="author-details">
+                    <h3>Paul Krugman</h3>
+                    <p>Jul 29, 2025</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="content">
+            <div class="primers-section interactive-element">
+                <h3>📘 Inequality Primers Now Available</h3>
+                <ul class="primers-list">
+                    <li><a href="#">Why did the rich pull away from the rest?</a></li>
+                    <li><a href="#">The importance of worker power</a></li>
+                    <li><a href="#">A Trumpian diversion</a></li>
+                    <li><a href="#">Oligarchs and the rise of mega-fortunes</a></li>
+                </ul>
+            </div>
+            
+            <div class="main-content">
+                <p>Trump has now announced a trade "deal" with the European Union that looks a lot like the "deal" he made with Japan. I use scare quotes because there is little sign of a quid pro quo. The United States is imposing a 15 percent tariff that is lower than previously threatened, but still vastly higher than we had before Trump. Overall U.S. tariffs seem likely to settle roughly at the level that prevailed after the infamous Smoot-Hawley tariff of 1930.</p>
+                
+                <div class="chart-container interactive-element">
+                    <div class="chart-title">📊 Tariff Rate Comparison</div>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Period</th>
+                                <th>Tariff Rate</th>
+                                <th>Context</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Pre-Trump (2024)</td>
+                                <td><strong>1%</strong></td>
+                                <td>EU tariffs on US goods</td>
+                            </tr>
+                            <tr>
+                                <td>Trump Deal (2025)</td>
+                                <td><strong>15%</strong></td>
+                                <td>US tariffs on EU goods</td>
+                            </tr>
+                            <tr>
+                                <td>Smoot-Hawley (1930)</td>
+                                <td><strong>~15%</strong></td>
+                                <td>Great Depression era</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <p>In return we got a vague promise of higher European investment in the United States. When Japan made a similar promise last week, administration officials asserted that this would mean hundreds of billions flowing into rebuilding U.S. industry. Japanese officials, however, say that the money will consist almost entirely of loans and loan guarantees. This strongly suggests that Japan will, if it does anything at all, simply be sticking Trump's name on money flows that would have happened anyway.</p>
+                
+                <div class="quote-highlight interactive-element">
+                    <p>"Oh, yeah? If you're such an expert on trade negotiations, tell me what deal you think you could have made."</p>
+                </div>
+                
+                <p>OK, I can answer that. If I had been in charge of negotiating with the European Union, I would have been able to get a deal with the following components:</p>
+                
+                <div class="deal-comparison interactive-element">
+                    <h4>🤝 Krugman's "Better Deal" (2024 Status Quo)</h4>
+                    <ul class="deal-points">
+                        <li>Very low tariffs on U.S. exports to Europe (~1%)</li>
+                        <li>Near balance in bilateral trade (90% ratio)</li>
+                        <li>U.S. companies earning hundreds of billions in EU profits</li>
+                        <li>European corporations investing $150+ billion annually in real investment</li>
+                    </ul>
+                </div>
+                
+                <p>Why do I believe that I could have negotiated a deal like that? Because that's what U.S.-EU international transactions actually looked like in 2024. So that's what we could have gotten by doing nothing.</p>
+                
+                <div class="chart-container interactive-element">
+                    <div class="chart-title">💰 US-EU Trade Relationship (2024)</div>
+                    <canvas id="tradeChart" width="400" height="200"></canvas>
+                </div>
+                
+                <p>If the trade imbalance looks smaller than the numbers you may have heard, that's because Trump likes to talk about trade balances in goods, but ignores the fact that America runs a substantial trade surplus in services. If you include both goods and services — and why wouldn't you? — U.S.-Europe trade is fairly close to balance.</p>
+                
+                <p>But if the US-EU trade relationship was more or less OK last year, why did Trump impose huge tariffs and leave many of them in place even after the so-called deal? Because he felt like it. You won't get anywhere in understanding the trade war if you insist on believing that Trump's tariffs are a response to any legitimate grievances. And he failed to gain any significant concessions, mainly because Europe was already behaving well and had nothing to concede.</p>
+                
+                <p>So was the US-EU trade deal basically a nothingburger? No, it was a bad thing, but mainly for political reasons.</p>
+                
+                <div class="impact-section interactive-element">
+                    <h4>🚨 Why This Deal Hurts America</h4>
+                    <ol class="impact-points">
+                        <li><strong>Encourages More Trade Wars:</strong> Trump probably believes he won, which will just encourage him to persist with his trade war.</li>
+                        <li><strong>Economic Damage:</strong> This will hurt the world economy, with the burden falling mainly on lower-income Americans. The Yale Budget Lab estimates that Trump's tariffs will leave the U.S. economy 0.4 percent poorer in the long run.</li>
+                        <li><strong>Regressive Tax Effect:</strong> The tariffs are basically a sales tax that will reduce real income for poor and working-class families by about 1.5 percent, even as cuts in other taxes raise income for the wealthy.</li>
+                        <li><strong>EU Looks Weak:</strong> European negotiators didn't make many substantive concessions, but they pretended to give ground — and they didn't retaliate. This makes the EU look weak, which is a bad omen for its ability to deal with real challenges, starting with helping Ukraine.</li>
+                    </ol>
+                </div>
+                
+                <div class="chart-container interactive-element">
+                    <div class="chart-title">📉 Economic Impact Distribution</div>
+                    <canvas id="impactChart" width="400" height="200"></canvas>
+                </div>
+                
+                <p>Two less discouraging aspects of what just happened: First, Trump appears to have backed down on the idea of treating European value-added taxes as an unfair barrier to U.S. exports (which they aren't, but facts don't matter here.) So that's one potentially awful confrontation avoided, at least for now.</p>
+                
+                <p>Second, if this trade deal was in part an attempt to drive Epstein from the top of the news, my sense of the news flow is that it has been a complete flop.</p>
+                
+                <div class="conclusion interactive-element">
+                    <h4>🎯 The Bottom Line</h4>
+                    <p>If I were a European I'd be very angry at anything that even looks like Trump appeasement. The EU is an economic superpower, especially if it allies itself with the UK. It needs to start acting like it.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>© 2025 Paul Krugman | Article Analysis Visualization</p>
+        </div>
+    </div>
+
+    <script>
+        // Trade Chart
+        const tradeCtx = document.getElementById('tradeChart').getContext('2d');
+        new Chart(tradeCtx, {
+            type: 'bar',
+            data: {
+                labels: ['US Exports to EU', 'US Imports from EU', 'Trade Deficit'],
+                datasets: [{
+                    label: 'Billions USD',
+                    data: [350, 390, 40],
+                    backgroundColor: [
+                        'rgba(54, 162, 235, 0.8)',
+                        'rgba(255, 99, 132, 0.8)',
+                        'rgba(255, 206, 86, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(255, 206, 86, 1)'
+                    ],
+                    borderWidth: 2,
+                    borderRadius: 8,
+                    borderSkipped: false,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Billions USD'
+                        }
+                    }
+                },
+                animation: {
+                    duration: 1500,
+                    easing: 'easeInOutQuart'
+                }
+            }
+        });
+
+        // Economic Impact Chart
+        const impactCtx = document.getElementById('impactChart').getContext('2d');
+        new Chart(impactCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Wealthy Americans', 'Poor/Working Class', 'Overall US Economy'],
+                datasets: [{
+                    label: 'Income Change (%)',
+                    data: [2.0, -1.5, -0.4],
+                    backgroundColor: [
+                        'rgba(75, 192, 192, 0.8)',
+                        'rgba(255, 99, 132, 0.8)',
+                        'rgba(255, 159, 64, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgba(75, 192, 192, 1)',
+                        'rgba(255, 99, 132, 1)',
+                        'rgba(255, 159, 64, 1)'
+                    ],
+                    borderWidth: 2,
+                    borderRadius: 8,
+                    borderSkipped: false,
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Percentage Change'
+                        }
+                    }
+                },
+                animation: {
+                    duration: 1500,
+                    easing: 'easeInOutQuart'
+                }
+            }
+        });
+
+        // Add interactive hover effects
+        document.querySelectorAll('.interactive-element').forEach(element => {
+            element.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px) scale(1.02)';
+            });
+            
+            element.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // Smooth scroll animation for data tables
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animation = 'slideIn 0.8s ease-out';
+                }
+            });
+        });
+
+        document.querySelectorAll('.chart-container, .deal-comparison, .impact-section').forEach(el => {
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
