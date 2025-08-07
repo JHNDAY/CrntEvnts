@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Political Session - Socializing Moments Analysis</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .social-summary {
+            padding: 30px;
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            text-align: center;
+        }
+        
+        .summary-text {
+            font-size: 1.2em;
+            color: #2c3e50;
+            max-width: 900px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        .main-content {
+            padding: 30px;
+        }
+        
+        .social-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #2a5298;
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .social-moments {
+            margin-bottom: 40px;
+        }
+        
+        .social-moments h2 {
+            color: #1e3c72;
+            margin-bottom: 25px;
+            font-size: 1.8em;
+            text-align: center;
+            border-bottom: 3px solid #2a5298;
+            padding-bottom: 15px;
+        }
+        
+        .moments-timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+        
+        .moments-timeline::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(to bottom, #ffecd2, #fcb69f);
+        }
+        
+        .social-moment {
+            position: relative;
+            margin-bottom: 30px;
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-left: 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .social-moment:hover {
+            transform: translateX(10px);
+        }
+        
+        .social-moment::before {
+            content: '';
+            position: absolute;
+            left: -35px;
+            top: 30px;
+            width: 15px;
+            height: 15px;
+            background: #fcb69f;
+            border-radius: 50%;
+            border: 3px solid white;
+        }
+        
+        .moment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .moment-time {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            color: #2c3e50;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+        
+        .moment-type {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+        
+        .moment-title {
+            color: #1e3c72;
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .participants-involved {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .participant-tag {
+            background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+            color: #2c3e50;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            font-weight: 500;
+        }
+        
+        .moment-description {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        
+        .social-quotes {
+            background: linear-gradient(135deg, #e8f5e8 0%, #d4e8d4 100%);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+        
+        .social-quotes h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1em;
+        }
+        
+        .quote-item {
+            margin-bottom: 8px;
+            padding-left: 15px;
+            border-left: 3px solid #43e97b;
+            font-style: italic;
+            color: #555;
+        }
+        
+        .quote-speaker {
+            font-weight: bold;
+            color: #2c3e50;
+            font-style: normal;
+        }
+        
+        .social-patterns {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 30px;
+        }
+        
+        .social-patterns h2 {
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+        
+        .patterns-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .pattern-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .pattern-card h3 {
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+        
+        .pattern-card p {
+            opacity: 0.9;
+            line-height: 1.5;
+        }
+        
+        .participant-dynamics {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin: 30px 0;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .participant-dynamics h2 {
+            color: #1e3c72;
+            margin-bottom: 25px;
+            font-size: 1.8em;
+            text-align: center;
+        }
+        
+        .dynamics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        
+        .participant-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .participant-name {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #1e3c72;
+            margin-bottom: 10px;
+        }
+        
+        .social-role {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            color: #2c3e50;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8em;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+        
+        .social-contributions {
+            font-size: 0.9em;
+            line-height: 1.5;
+            color: #555;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .social-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .moment-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🤝 Socializing Moments Analysis</h1>
+            <p>August 6, 2025 - Mapping the human connections within political discourse</p>
+        </div>
+        
+        <div class="social-summary">
+            <div class="summary-text">
+                <strong>Key Finding:</strong> Despite the formal political discussion format, 20 minutes (18% of the session) involved genuine socializing, relationship-building, and personal connection among participants. These moments often served as bridges between more intense political topics.
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <div class="social-stats">
+                <div class="stat-card">
+                    <div class="stat-number">20</div>
+                    <div class="stat-label">Minutes Socializing</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">18%</div>
+                    <div class="stat-label">of Session</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">7</div>
+                    <div class="stat-label">Social Moments</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">12</div>
+                    <div class="stat-label">Active Socializers</div>
+                </div>
+            </div>
+            
+            <div class="social-moments">
+                <h2>🕐 Timeline of Social Moments</h2>
+                <div class="moments-timeline">
+                    
+                    <div class="social-moment">
+                        <div class="moment-header">
+                            <div class="moment-time">00:30-07:40</div>
+                            <div class="moment-type">Opening Chat</div>
+                        </div>
+                        <div class="moment-title">Roof Construction & Life Updates</div>
+                        <div class="participants-involved">
+                            <div class="participant-tag">George</div>
+                            <div class="participant-tag">John</div>
+                            <div class="participant-tag">Ferne</div>
+                            <div class="participant-tag">Beth</div>
+                        </div>
+                        <div class="moment-description">
+                            George shares details about his townhome roof replacement project, discussing the logistics of 20 workers doing 4 units per day. The conversation includes practical concerns about nails on the ground due to having a dog, and personal experiences with roof contractors.
+                        </div>
+                        <div class="social-quotes">
+                            <h4>💬 Social Exchanges:</h4>
+                            <div class="quote-item"><span class="quote-speaker">George:</span> "They've been remarkably good that way, and having that dog we're sensitive to that."</div>
+                            <div class="quote-item"><span class="quote-speaker">John:</span> "Yeah, I hope they're careful and don't leave any nails on the ground."</div>
+                            <div class="quote-item"><span class="quote-speaker">Ferne:</span> "Well pretty pretty nice" (about contractors repairing screen window)</div>
+                        </div>
+                    </div>
+                    
+                    <div class="social-moment">
+                        <div class="moment-header">
+                            <div class="moment-time">10:45-11:35</div>
+                            <div class="moment-type">Warm Welcome</div>
+                        </div>
+                        <div class="moment-title">Steven's Enthusiastic Arrival</div>
+                        <div class="participants-involved">
+                            <div class="participant-tag">Steven</div>
+                            <div class="participant-tag">George</div>
+                            <div class="participant-tag">John</div>
+                        </div>
+                        <div class="moment-description">
+                            Steven joins with characteristic enthusiasm, expressing genuine appreciation for the Current Events Central platform. The exchange shows the supportive dynamic of the group and acknowledgment of collaborative roles.
+                        </div>
+                        <div class="social-quotes">
+                            <h4>💬 Social Exchanges:</h4>
+                            <div class="quote-item"><span class="quote-speaker">Steven:</span> "I'm overwhelmed. I'm hyperventilating at the richness of this current event central or whatever you're calling it."</div>
+                            <div class="quote-item"><span class="quote-speaker">George:</span> "Give John the credit. I'm just one of his writers."</div>
+                        </div>
+                    </div>
+                    
+                    <div class="social-moment">
+                        <div class="moment-header">
+                            <div class="moment-time">17:00-19:36</div>
+                            <div class="moment-type">Professional Stories</div>
+                        </div>
+                        <div class="moment-title">Actuarial Career Stories & Humor</div>
+                        <div class="participants-involved">
+                            <div class="participant-tag">George</div>
+                            <div class="participant-tag">Mark</div>
+                            <div class="participant-tag">Ronald</div>
+                        </div>
+                        <div class="moment-description">
+                            George shares the origin story of his actuarial career from a high school interview, leading to Mark's humorous perspective on being an actuary vs. actor. The conversation reveals personal history and professional identity with gentle humor.
+                        </div>
+                        <div class="social-quotes">
+                            <h4>💬 Social Exchanges:</h4>
+                            <div class="quote-item"><span class="quote-speaker">George:</span> "I had no idea. So I just said actuary. I wasn't even quite sure what it was, and I wound up doing it."</div>
+                            <div class="quote-item"><span class="quote-speaker">Ronald:</span> "You're lucky you knew how to spell it."</div>
+                            <div class="quote-item"><span class="quote-speaker">Mark:</span> "I sometimes say that I write lyrics to songs and actuary was my sort of my part time job."</div>
+                        </div>
+                    </div>
+                    
+                    <div class="social-moment">
+                        <div class="moment-header">
+                            <div class="moment-time">19:36-21:50</div>
+                            <div class="moment-type">Personal Finance</div>
+                        </div>
+                        <div class="moment-title">Sally's Insurance Story & Professional Advice</div>
+                        <div class="participants-involved">
+                            <div class="participant-tag">Sally</div>
+                            <div class="participant-tag">Mark</div>
+                            <div class="participant-tag">George</div>
+                            <div class="participant-tag">Steven</div>
+                        </div>
+                        <div class="moment-description">
+                            Sally shares a personal frustration with long-term care insurance rate increases, leading to professional insights from Mark and George. The conversation shows how group members support each other with expertise and personal experiences.
+                        </div>
+                        <div class="social-quotes">
+                            <h4>💬 Social Exchanges:</h4>
+                            <div class="quote-item"><span class="quote-speaker">Sally:</span> "weren't they supposed to be predicting this?"</div>
+                            <div class="quote-item"><span class="quote-speaker">Mark:</span> "They lied. They lied to you."</div>
+                            <div class="quote-item"><span class="quote-speaker">Steven:</span> "they don't do that, Sally, but I've had it raised a couple of times. It is what it is."</div>
+                        </div>
+                    </div>
+                    
+
+                    
+                    <div class="social-moment">
+                        <div class="moment-header">
+                            <div class="moment-time">48:53-50:20</div>
+                            <div class="moment-type">Professional Recognition</div>
+                        </div>
+                        <div class="moment-title">Sally's Law Firm Connection & Mark's Theater Background</div>
+                        <div class="participants-involved">
+                            <div class="participant-tag">Sally</div>
+                            <div class="participant-tag">George</div>
+                            <div class="participant-tag">John</div>
+                            <div class="participant-tag">Mark</div>
+                        </div>
+                        <div class="moment-description">
+                            Sally reveals her personal connection to the Hale and Dorr law firm discussed in the McCarthy segment, while the group acknowledges Mark's acting experience from the previous week's play reading.
+                        </div>
+                        <div class="social-quotes">
+                            <h4>💬 Social Exchanges:</h4>
+                            <div class="quote-item"><span class="quote-speaker">Sally:</span> "I worked as a student at Hale and Dorr, and I worked for this young guy wasn't young anymore."</div>
+                            <div class="quote-item"><span class="quote-speaker">John:</span> "I was very impressed with this reading in the play last week I thought it was great."</div>
+                            <div class="quote-item"><span class="quote-speaker">George:</span> "Well, he a seasoned a seasoned Bali, Chespian."</div>
+                        </div>
+                    </div>
+                    
+                    <div class="social-moment">
+                        <div class="moment-header">
+                            <div class="moment-time">78:39-82:12</div>
+                            <div class="moment-type">Cultural Sharing</div>
+                        </div>
+                        <div class="moment-title">Tom Lehrer Favorites & Personal Memories</div>
+                        <div class="participants-involved">
+                            <div class="participant-tag">Sally</div>
+                            <div class="participant-tag">Steven</div>
+                            <div class="participant-tag">George</div>
+                            <div class="participant-tag">John</div>
+                            <div class="participant-tag">Geoffrey</div>
+                        </div>
+                        <div class="moment-description">
+                            Group members share their favorite Tom Lehrer songs, with Sally leading the discussion about "The Vatican Rag" and others chiming in with personal preferences. The conversation reveals shared cultural experiences and nostalgia.
+                        </div>
+                        <div class="social-quotes">
+                            <h4>💬 Social Exchanges:</h4>
+                            <div class="quote-item"><span class="quote-speaker">Sally:</span> "somehow the one that keeps going around in my head is the Vatican rag. Yeah, but I'm curious what other people."</div>
+                            <div class="quote-item"><span class="quote-speaker">Steven:</span> "That's my favorite" and "Taught me the meaning of genuflect"</div>
+                            <div class="quote-item"><span class="quote-speaker">George:</span> "I like Bertolt Brecht"</div>
+                        </div>
+                    </div>
+                    
+                    <div class="social-moment">
+                        <div class="moment-header">
+                            <div class="moment-time">106:06-108:47</div>
+                            <div class="moment-type">Closing Humor</div>
+                        </div>
+                        <div class="moment-title">Sally's Belgian Romance Scam Story & Geoffrey's Car Situation</div>
+                        <div class="participants-involved">
+                            <div class="participant-tag">Sally</div>
+                            <div class="participant-tag">Geoffrey</div>
+                            <div class="participant-tag">Francesca</div>
+                        </div>
+                        <div class="moment-description">
+                            Sally delivers her weekly humorous news story about a Belgian man's romance scam, while Geoffrey's participation from his car leads to playful banter about his unusual audio situation.
+                        </div>
+                        <div class="social-quotes">
+                            <h4>💬 Social Exchanges:</h4>
+                            <div class="quote-item"><span class="quote-speaker">Sally:</span> "I am an imbecile, he said. which I guess he was."</div>
+                            <div class="quote-item"><span class="quote-speaker">Sally:</span> "Like you're lying down in the back seat, or something."</div>
+                            <div class="quote-item"><span class="quote-speaker">Sally:</span> "Tied up in the trunk."</div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <div class="participant-dynamics">
+                <h2>👥 Participant Social Dynamics</h2>
+                <div class="dynamics-grid">
+                    <div class="participant-card">
+                        <div class="participant-name">Sally Fleschner</div>
+                        <div class="social-role">Social Connector & Storyteller</div>
+                        <div class="social-contributions">Shares personal insurance story and weekly humor segment, initiates cultural discussions about Tom Lehrer favorites, and maintains engaging storytelling presence throughout.</div>
+                    </div>
+                    
+                    <div class="participant-card">
+                        <div class="participant-name">George (GeorgeModel)</div>
+                        <div class="social-role">Community Anchor & Life Sharer</div>
+                        <div class="social-contributions">Opens with personal roof construction story, shares career origin tales, provides professional insurance insights, and maintains welcoming atmosphere throughout.</div>
+                    </div>
+                    
+                    <div class="participant-card">
+                        <div class="participant-name">John Day</div>
+                        <div class="social-role">Gracious Host & Cultural Guide</div>
+                        <div class="social-contributions">Responds warmly to personal stories, shares Missouri cultural knowledge, acknowledges participants' contributions, and maintains inclusive atmosphere.</div>
+                    </div>
+                    
+                    <div class="participant-card">
+                        <div class="participant-name">Steven Ostrow</div>
+                        <div class="social-role">Enthusiastic Supporter</div>
+                        <div class="social-contributions">Arrives with genuine appreciation for the group's work, shares personal insurance experiences, and contributes to cultural discussions with enthusiasm.</div>
+                    </div>
+                    
+                    <div class="participant-card">
+                        <div class="participant-name">Mark Seliber</div>
+                        <div class="social-role">Humble Professional & Artist</div>
+                        <div class="social-contributions">Shares career perspective with humor, provides professional insurance advice, and is acknowledged for previous creative contributions to the group.</div>
+                    </div>
+                    
+                    <div class="participant-card">
+                        <div class="participant-name">Francesca Nannetti</div>
+                        <div class="social-role">Supportive Questioner</div>
+                        <div class="social-contributions">Participates in problem-solving for access issues, engages with closing humor, and maintains supportive presence throughout social moments.</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="social-patterns">
+                <h2>🔍 Social Interaction Patterns</h2>
+                <div class="patterns-grid">
+                    <div class="pattern-card">
+                        <h3>🏠 Personal Life Integration</h3>
+                        <p>Participants naturally weave personal experiences (roof construction, insurance issues, career stories) into the political discussion, creating authentic human connections beyond ideology.</p>
+                    </div>
+                    
+                    <div class="pattern-card">
+                        <h3>🤝 Mutual Support Network</h3>
+                        <p>The group functions as a supportive community, offering professional advice and acknowledging each other's contributions and expertise in both personal and professional matters.</p>
+                    </div>
+                    
+                    <div class="pattern-card">
+                        <h3>😄 Humor as Social Glue</h3>
+                        <p>Gentle humor and playful banter (actuarial jokes, Sally's closing stories) serve as social lubricant, easing transitions between serious political topics.</p>
+                    </div>
+                    
+                    <div class="pattern-card">
+                        <h3>🎭 Cultural Bonding</h3>
+                        <p>Shared cultural references (Tom Lehrer songs, professional experiences) create generational and educational bonds that transcend political differences.</p>
+                    </div>
+                    
+                    <div class="pattern-card">
+                        <h3>📞 Inclusive Problem-Solving</h3>
+                        <p>When technical or access issues arise, multiple participants collaborate to ensure everyone can participate, demonstrating genuine care for community inclusion.</p>
+                    </div>
+                    
+                    <div class="pattern-card">
+                        <h3>🏆 Recognition Culture</h3>
+                        <p>Participants actively acknowledge each other's expertise, contributions, and talents, creating a culture of mutual appreciation and validation.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

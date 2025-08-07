@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Political Session - Topic Engagement Analysis</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .engagement-summary {
+            padding: 30px;
+            background: #f8f9fa;
+            text-align: center;
+        }
+        
+        .summary-text {
+            font-size: 1.2em;
+            color: #2c3e50;
+            max-width: 800px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        .main-content {
+            padding: 30px;
+        }
+        
+        .ranking-section {
+            margin-bottom: 40px;
+        }
+        
+        .ranking-section h2 {
+            color: #1e3c72;
+            margin-bottom: 25px;
+            font-size: 1.8em;
+            text-align: center;
+        }
+        
+        .topic-ranking {
+            display: grid;
+            gap: 20px;
+        }
+        
+        .topic-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .topic-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .topic-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+        
+        .topic-card.rank-1::before { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .topic-card.rank-2::before { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .topic-card.rank-3::before { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+        .topic-card.rank-4::before { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+        .topic-card.rank-5::before { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); }
+        
+        .topic-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+        
+        .topic-rank {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .rank-1 .topic-rank { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .rank-2 .topic-rank { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .rank-3 .topic-rank { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+        .rank-4 .topic-rank { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+        .rank-5 .topic-rank { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); }
+        
+        .topic-title {
+            flex: 1;
+            margin-left: 20px;
+        }
+        
+        .topic-title h3 {
+            color: #2c3e50;
+            font-size: 1.4em;
+            margin-bottom: 8px;
+        }
+        
+        .topic-subtitle {
+            color: #666;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .engagement-score {
+            text-align: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            margin-left: 20px;
+        }
+        
+        .score-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .score-label {
+            font-size: 0.8em;
+            color: #666;
+            text-transform: uppercase;
+        }
+        
+        .topic-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .detail-item {
+            text-align: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .detail-value {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .detail-label {
+            font-size: 0.8em;
+            color: #666;
+            text-transform: uppercase;
+        }
+        
+        .topic-description {
+            background: #ecf0f1;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .emotional-tone {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            margin-bottom: 15px;
+        }
+        
+        .engagement-indicators {
+            margin-top: 15px;
+        }
+        
+        .engagement-indicators h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1em;
+        }
+        
+        .indicator-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 8px;
+        }
+        
+        .indicator-item {
+            background: white;
+            padding: 8px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            color: #555;
+            border-left: 3px solid #667eea;
+        }
+        
+        .notable-quotes {
+            margin-top: 15px;
+            padding: 15px;
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            border-radius: 8px;
+        }
+        
+        .notable-quotes h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1em;
+        }
+        
+        .quote {
+            font-style: italic;
+            color: #555;
+            margin-bottom: 8px;
+            padding-left: 15px;
+            border-left: 3px solid #f5576c;
+        }
+        
+        .insights-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 30px;
+        }
+        
+        .insights-section h2 {
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+        
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .insight-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .insight-card h3 {
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+        
+        .insight-card p {
+            opacity: 0.9;
+            line-height: 1.5;
+        }
+        
+        .visualization-analysis {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin: 30px 0;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .visualization-analysis h2 {
+            color: #1e3c72;
+            margin-bottom: 25px;
+            font-size: 1.8em;
+            text-align: center;
+            border-bottom: 3px solid #2a5298;
+            padding-bottom: 15px;
+        }
+        
+        .viz-comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .viz-section {
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .conversation-only {
+            background: linear-gradient(135deg, #e8f5e8 0%, #d4e8d4 100%);
+            border-left: 5px solid #43e97b;
+        }
+        
+        .visual-assisted {
+            background: linear-gradient(135deg, #e8f0ff 0%, #d4e4ff 100%);
+            border-left: 5px solid #4facfe;
+        }
+        
+        .viz-section h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+        }
+        
+        .viz-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+        
+        .viz-stat {
+            text-align: center;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.7);
+            border-radius: 10px;
+            min-width: 80px;
+        }
+        
+        .viz-number {
+            font-size: 2.2em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .viz-label {
+            font-size: 0.9em;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .conversation-segments, .visual-segments {
+            margin-bottom: 20px;
+        }
+        
+        .segment-item {
+            background: rgba(255, 255, 255, 0.5);
+            padding: 12px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+        
+        .conversation-characteristics, .visual-characteristics {
+            background: rgba(255, 255, 255, 0.7);
+            padding: 15px;
+            border-radius: 10px;
+        }
+        
+        .conversation-characteristics h4, .visual-characteristics h4 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 1em;
+        }
+        
+        .conversation-characteristics ul, .visual-characteristics ul {
+            margin-left: 15px;
+        }
+        
+        .conversation-characteristics li, .visual-characteristics li {
+            margin-bottom: 5px;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+        
+        .engagement-comparison {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+        
+        .engagement-comparison h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+            text-align: center;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            gap: 20px;
+        }
+        
+        .comparison-item {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .comparison-item h4 {
+            color: #1e3c72;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+        
+        .engagement-split {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        .conv-only, .visual-assist {
+            padding: 15px;
+            border-radius: 8px;
+        }
+        
+        .conv-only {
+            background: linear-gradient(135deg, #e8f5e8 0%, #d4e8d4 100%);
+        }
+        
+        .visual-assist {
+            background: linear-gradient(135deg, #e8f0ff 0%, #d4e4ff 100%);
+        }
+        
+        .conv-only ul, .visual-assist ul {
+            margin-left: 15px;
+            margin-top: 8px;
+        }
+        
+        .conv-only li, .visual-assist li {
+            font-size: 0.9em;
+            margin-bottom: 4px;
+        }
+        
+        .attention-analysis, .participation-analysis {
+            line-height: 1.6;
+        }
+        
+        .attention-analysis p, .participation-analysis p {
+            margin-bottom: 10px;
+            font-size: 0.95em;
+        }
+        
+        .effectiveness-insights {
+            background: linear-gradient(135deg, #fff5e6 0%, #ffe6cc 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+        
+        .effectiveness-insights h3 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            font-size: 1.4em;
+            text-align: center;
+        }
+        
+        .insights-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .insight-visual, .insight-conversation {
+            background: rgba(255, 255, 255, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+        }
+        
+        .insight-visual h4, .insight-conversation h4 {
+            color: #1e3c72;
+            margin-bottom: 15px;
+            font-size: 1.1em;
+        }
+        
+        .insight-visual ul, .insight-conversation ul {
+            margin-left: 15px;
+        }
+        
+        .insight-visual li, .insight-conversation li {
+            margin-bottom: 8px;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+        
+        @media (max-width: 768px) {
+            .viz-comparison-grid, .engagement-split, .insights-comparison {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 Topic Engagement Analysis</h1>
+            <p>August 6, 2025 - Which topics captured the most attention and participation?</p>
+        </div>
+        
+        <div class="engagement-summary">
+            <div class="summary-text">
+                <strong>Key Finding:</strong> Historical reflection combined with contemporary analysis generated the strongest engagement, particularly when topics allowed for personal connection, creative participation, or systematic examination of opposing viewpoints.
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <div class="ranking-section">
+                <h2>🏆 Topic Engagement Ranking</h2>
+                <div class="topic-ranking">
+                    
+                    <div class="topic-card rank-1">
+                        <div class="topic-header">
+                            <div class="topic-rank">1</div>
+                            <div class="topic-title">
+                                <h3>Political Divide Analysis & Understanding</h3>
+                                <div class="topic-subtitle">Bridge-Building Discussion</div>
+                            </div>
+                            <div class="engagement-score">
+                                <div class="score-number">47</div>
+                                <div class="score-label">Score</div>
+                            </div>
+                        </div>
+                        
+                        <div class="emotional-tone">Thoughtful, introspective, bridge-building</div>
+                        
+                        <div class="topic-details">
+                            <div class="detail-item">
+                                <div class="detail-value">18 min</div>
+                                <div class="detail-label">Time Investment</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-value">7</div>
+                                <div class="detail-label">Participants</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-value">8</div>
+                                <div class="detail-label">Engagement Signals</div>
+                            </div>
+                        </div>
+                        
+                        <div class="topic-description">
+                            John's systematic analysis of what drives each political side "crazy" about the other, examining elite condescension, working-class resentments, and seeking common ground through understanding different perspectives.
+                        </div>
+                        
+                        <div class="engagement-indicators">
+                            <h4>🎯 Why It Was So Engaging:</h4>
+                            <div class="indicator-list">
+                                <div class="indicator-item">Multiple participants shared personal anecdotes</div>
+                                <div class="indicator-item">Steven's passionate defense of neglected working class</div>
+                                <div class="indicator-item">Francesca's nuanced analysis of academic condescension</div>
+                                <div class="indicator-item">Sally's stories about Trump-supporting relatives</div>
+                                <div class="indicator-item">Larry's farmer perspective and resentment analysis</div>
+                                <div class="indicator-item">Request to revisit topic next week</div>
+                                <div class="indicator-item">George's strategic messaging questions</div>
+                                <div class="indicator-item">Self-reflective examination of own biases</div>
+                            </div>
+                        </div>
+                        
+                        <div class="notable-quotes">
+                            <h4>💬 Notable Quotes:</h4>
+                            <div class="quote">"They think they're so much smarter than us, but they've never worked a real job in their lives" - examining MAGA perspective</div>
+                            <div class="quote">"I think the Left has more or less systematically neglected the needs of unemployed or underemployed Americans" - Steven</div>
+                            <div class="quote">"This stuff is emotional when I hear people who are not necessarily stupid saying stupid things" - Sally</div>
+                        </div>
+                    </div>
+                    
+                    <div class="topic-card rank-2">
+                        <div class="topic-header">
+                            <div class="topic-rank">2</div>
+                            <div class="topic-title">
+                                <h3>Truman White House vs Trump Ballroom</h3>
+                                <div class="topic-subtitle">Historical Comparison & Values</div>
+                            </div>
+                            <div class="engagement-score">
+                                <div class="score-number">43</div>
+                                <div class="score-label">Score</div>
+                            </div>
+                        </div>
+                        
+                        <div class="emotional-tone">Nostalgic, educational, contrasting, respectful</div>
+                        
+                        <div class="topic-details">
+                            <div class="detail-item">
+                                <div class="detail-value">16 min</div>
+                                <div class="detail-label">Time Investment</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-value">6</div>
+                                <div class="detail-label">Participants</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-value">6</div>
+                                <div class="detail-label">Engagement Signals</div>
+                            </div>
+                        </div>
+                        
+                        <div class="topic-description">
+                            Extended viewing of Truman's 1952 White House tour contrasted with Trump's planned $200M ballroom, featuring John's historical expertise and commentary on presidential dignity and communication styles.
+                        </div>
+                        
+                        <div class="engagement-indicators">
+                            <h4>🎯 Why It Was So Engaging:</h4>
+                            <div class="indicator-list">
+                                <div class="indicator-item">Rare historical footage held attention throughout</div>
+                                <div class="indicator-item">John's personal Missouri connection and cultural knowledge</div>
+                                <div class="indicator-item">George's respectful commentary on Truman's dignity</div>
+                                <div class="indicator-item">Detailed historical context about White House renovation</div>
+                                <div class="indicator-item">Powerful visual contrast between leadership styles</div>
+                                <div class="indicator-item">Educational value with entertainment</div>
+                            </div>
+                        </div>
+                        
+                        <div class="notable-quotes">
+                            <h4>💬 Notable Quotes:</h4>
+                            <div class="quote">"Watching this video there was no flash and dash. I think Frank Holster was very respectful. I wish we had interactions like this today" - George</div>
+                            <div class="quote">"He was the best read president of the 20th century" - John on Truman</div>
+                            <div class="quote">"It's Missouri if you're there, not Missouri" - John's cultural correction</div>
+                        </div>
+                    </div>
+                    
+                    <div class="topic-card rank-3">
+                        <div class="topic-header">
+                            <div class="topic-rank">3</div>
+                            <div class="topic-title">
+                                <h3>Tom Lehrer Tribute & Fabricating Rag</h3>
+                                <div class="topic-subtitle">Musical Satire & Memory</div>
+                            </div>
+                            <div class="engagement-score">
+                                <div class="score-number">39</div>
+                                <div class="score-label">Score</div>
+                            </div>
+                        </div>
+                        
+                        <div class="emotional-tone">Nostalgic, creative, collaborative, playful</div>
+                        
+                        <div class="topic-details">
+                            <div class="detail-item">
+                                <div class="detail-value">15 min</div>
+                                <div class="detail-label">Time Investment</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-label">Participants</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-value">6</div>
+                                <div class="detail-label">Engagement Signals</div>
+                            </div>
+                        </div>
+                        
+                        <div class="topic-description">
+                            Comprehensive Tom Lehrer song catalog presentation combined with John's AI-generated "Fabricating Rag" parody, featuring personal memories, favorite songs discussion, and creative political satire.
+                        </div>
+                        
+                        <div class="engagement-indicators">
+                            <h4>🎯 Why It Was So Engaging:</h4>
+                            <div class="indicator-list">
+                                <div class="indicator-item">Interactive catalog with multiple viewing modes</div>
+                                <div class="indicator-item">Personal favorite songs sharing by multiple participants</div>
+                                <div class="indicator-item">Sally's extensive childhood memories</div>
+                                <div class="indicator-item">Creative AI collaboration demonstration</div>
+                                <div class="indicator-item">Mark volunteering for next week's performance</div>
+                                <div class="indicator-item">Discussion of Lehrer's mysterious private life</div>
+                            </div>
+                        </div>
+                        
+                        <div class="notable-quotes">
+                            <h4>💬 Notable Quotes:</h4>
+                            <div class="quote">"The Vatican Rag" - multiple participants' favorite</div>
+                            <div class="quote">"First you sell your soul to trump, and then you fabricate, fabricate" - John's parody verse</div>
+                            <div class="quote">"He got tired of entertaining and he liked relating to students" - Sally on Lehrer's career change</div>
+                        </div>
+                    </div>
+                    
+                    <div class="topic-card rank-4">
+                        <div class="topic-header">
+                            <div class="topic-rank">4</div>
+                            <div class="topic-title">
+                                <h3>Supreme Court Shadow Docket & Tariffs</h3>
+                                <div class="topic-subtitle">Legal System Analysis</div>
+                            </div>
+                            <div class="engagement-score">
+                                <div class="score-number">35</div>
+                                <div class="score-label">Score</div>
+                            </div>
+                        </div>
+                        
+                        <div class="emotional-tone">Concerned, analytical, procedural, frustrated</div>
+                        
+                        <div class="topic-details">
+                            <div class="detail-item">
+                                <div class="detail-value">22 min</div>
+                                <div class="detail-label">Time Investment</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-value">6</div>
+                                <div class="detail-label">Participants</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-value">5</div>
+                                <div class="detail-label">Engagement Signals</div>
+                            </div>
+                        </div>
+                        
+                        <div class="topic-description">
+                            Complex discussion of Supreme Court procedures, tariff legality, shadow docket decisions, and birthright citizenship, featuring detailed legal analysis and procedural questions.
+                        </div>
+                        
+                        <div class="engagement-indicators">
+                            <h4>🎯 Why It Was So Engaging:</h4>
+                            <div class="indicator-list">
+                                <div class="indicator-item">Multiple clarification questions about court procedures</div>
+                                <div class="indicator-item">Geoffrey's detailed legal knowledge sharing</div>
+                                <div class="indicator-item">Sally's persistent questioning about enforcement</div>
+                                <div class="indicator-item">Francesca's concerns about court compliance</div>
+                                <div class="indicator-item">Real-time impact discussion (tariffs being collected)</div>
+                                <div class="indicator-item">Steven's practical questions about birthright citizenship</div>
+                            </div>
+                        </div>
+                        
+                        <div class="notable-quotes">
+                            <h4>💬 Notable Quotes:</h4>
+                            <div class="quote">"In the meantime, are there tariffs, or aren't there" - Sally's direct question</div>
+                            <div class="quote">"Money flowing into the US Treasury" - Larry confirming tariff collection</div>
+                            <div class="quote">"How long can they stall? Can they stall for years?" - Francesca on shadow docket</div>
+                        </div>
+                    </div>
+                    
+                    <div class="topic-card rank-5">
+                        <div class="topic-header">
+                            <div class="topic-rank">5</div>
+                            <div class="topic-title">
+                                <h3>Putin Analysis & Oligarch Predictions</h3>
+                                <div class="topic-subtitle">Geopolitical Speculation</div>
+                            </div>
+                            <div class="engagement-score">
+                                <div class="score-number">32</div>
+                                <div class="score-label">Score</div>
+                            </div>
+                        </div>
+                        
+                        <div class="emotional-tone">Skeptical, analytical, speculative</div>
+                        
+                        <div class="topic-details">
+                            <div class="detail-item">
+                                <div class="detail-value">12 min</div>
+                                <div class="detail-label">Time Investment</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-value">5</div>
+                                <div class="detail-label">Participants</div>
+                            </div>
+                            <div class="detail-item">
+                                <div class="detail-value">4</div>
+                                <div class="detail-label">Engagement Signals</div>
+                            </div>
+                        </div>
+                        
+                        <div class="topic-description">
+                            Sally's presentation of George Friedman's predictions about Putin's downfall through oligarch action, met with skeptical analysis from other participants about the practicality of such scenarios.
+                        </div>
+                        
+                        <div class="engagement-indicators">
+                            <h4>🎯 Why It Was So Engaging:</h4>
+                            <div class="indicator-list">
+                                <div class="indicator-item">Sally's detailed presentation of Friedman's theory</div>
+                                <div class="indicator-item">Francesca's logical skepticism about coordination</div>
+                                <div class="indicator-item">Historical assassination comparisons</div>
+                                <div class="indicator-item">Steven's questions about Trump's changed Putin stance</div>
+                                <div class="indicator-item">George's strategic questioning about facades</div>
+                                <div class="indicator-item">Parallels drawn to Netanyahu situation</div>
+                            </div>
+                        </div>
+                        
+                        <div class="notable-quotes">
+                            <h4>💬 Notable Quotes:</h4>
+                            <div class="quote">"He's like a dog with a bone" - Sally on Friedman's persistence</div>
+                            <div class="quote">"Assassination is pretty easy" - Sally's blunt assessment</div>
+                            <div class="quote">"Why do you think Trump has changed his perspective on Putin?" - Steven's strategic question</div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            
+            <div class="visualization-analysis">
+                <h2>📊 Conversation vs. Visual-Assisted Discussion Analysis</h2>
+                
+                <div class="viz-comparison-grid">
+                    <div class="viz-section conversation-only">
+                        <h3>💬 Pure Conversation Segments</h3>
+                        <div class="viz-stats">
+                            <div class="viz-stat">
+                                <div class="viz-number">62</div>
+                                <div class="viz-label">Minutes</div>
+                            </div>
+                            <div class="viz-stat">
+                                <div class="viz-number">57%</div>
+                                <div class="viz-label">of Session</div>
+                            </div>
+                        </div>
+                        
+                        <div class="conversation-segments">
+                            <div class="segment-item">
+                                <strong>Opening & Setup (6 min):</strong> Technical issues, personal updates, roof construction discussion
+                            </div>
+                            <div class="segment-item">
+                                <strong>Historical Context (8 min):</strong> Hiroshima/Voting Rights anniversaries, Shelby v. Holder discussion
+                            </div>
+                            <div class="segment-item">
+                                <strong>Putin Analysis (12 min):</strong> George Friedman predictions, oligarch speculation, Trump's changing stance
+                            </div>
+                            <div class="segment-item">
+                                <strong>Legal Procedures (22 min):</strong> Supreme Court shadow docket, tariff legality, birthright citizenship
+                            </div>
+                            <div class="segment-item">
+                                <strong>Political Divide Discussion (18 min):</strong> What frustrates each side, personal anecdotes, bridge-building attempts
+                            </div>
+                        </div>
+                        
+                        <div class="conversation-characteristics">
+                            <h4>Characteristics of Pure Conversation:</h4>
+                            <ul>
+                                <li><strong>More Personal:</strong> Participants shared individual stories and experiences</li>
+                                <li><strong>Deeper Reflection:</strong> Complex philosophical and procedural discussions</li>
+                                <li><strong>Higher Interruptions:</strong> More natural back-and-forth dialogue</li>
+                                <li><strong>Emotional Expression:</strong> Frustration, concern, and passion more evident</li>
+                                <li><strong>Question-Heavy:</strong> Clarification requests and probing questions</li>
+                            </ul>
+                        </div>
+                    </div>
+                    
+                    <div class="viz-section visual-assisted">
+                        <h3>🖼️ Visual-Assisted Segments</h3>
+                        <div class="viz-stats">
+                            <div class="viz-stat">
+                                <div class="viz-number">46</div>
+                                <div class="viz-label">Minutes</div>
+                            </div>
+                            <div class="viz-stat">
+                                <div class="viz-number">43%</div>
+                                <div class="viz-label">of Session</div>
+                            </div>
+                        </div>
+                        
+                        <div class="visual-segments">
+                            <div class="segment-item">
+                                <strong>Current Events Portal Demo (8 min):</strong> John's technical presentation of new platform features
+                            </div>
+                            <div class="segment-item">
+                                <strong>Trump Ballroom vs. Biden Images (6 min):</strong> Business Insider photo comparisons, visual contrasts
+                            </div>
+                            <div class="segment-item">
+                                <strong>Truman White House Tour (16 min):</strong> 1952 historical footage viewing with commentary
+                            </div>
+                            <div class="segment-item">
+                                <strong>Tom Lehrer Song Catalog (8 min):</strong> Interactive database browsing, categorized songs
+                            </div>
+                            <div class="segment-item">
+                                <strong>Political Divide Framework (8 min):</strong> Structured comparison charts, systematic analysis
+                            </div>
+                        </div>
+                        
+                        <div class="visual-characteristics">
+                            <h4>Characteristics of Visual-Assisted Discussion:</h4>
+                            <ul>
+                                <li><strong>More Structured:</strong> Organized around visual elements and frameworks</li>
+                                <li><strong>Educational Focus:</strong> Information delivery and historical context</li>
+                                <li><strong>Presenter-Led:</strong> John typically guiding through visual materials</li>
+                                <li><strong>Concrete Examples:</strong> Visual evidence supporting abstract concepts</li>
+                                <li><strong>Shared Focus:</strong> All participants viewing same material simultaneously</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="engagement-comparison">
+                    <h3>📈 Engagement Pattern Differences</h3>
+                    <div class="comparison-grid">
+                        <div class="comparison-item">
+                            <h4>🔥 Highest Engagement Topics</h4>
+                            <div class="engagement-split">
+                                <div class="conv-only">
+                                    <strong>Pure Conversation:</strong>
+                                    <ul>
+                                        <li>Political Divide Analysis (47 pts)</li>
+                                        <li>Putin Speculation (32 pts)</li>
+                                        <li>Legal Procedures (35 pts)</li>
+                                    </ul>
+                                </div>
+                                <div class="visual-assist">
+                                    <strong>Visual-Assisted:</strong>
+                                    <ul>
+                                        <li>Truman White House (43 pts)</li>
+                                        <li>Tom Lehrer Catalog (39 pts)</li>
+                                        <li>Current Events Demo (25 pts)</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="comparison-item">
+                            <h4>⏱️ Attention Span Patterns</h4>
+                            <div class="attention-analysis">
+                                <p><strong>Pure Conversation:</strong> Sustained attention for complex topics (up to 22 min on legal procedures), but more prone to tangents and off-topic discussions</p>
+                                <p><strong>Visual-Assisted:</strong> More focused attention spans, structured progression through materials, less deviation from planned topics</p>
+                            </div>
+                        </div>
+                        
+                        <div class="comparison-item">
+                            <h4>🗣️ Participation Patterns</h4>
+                            <div class="participation-analysis">
+                                <p><strong>Pure Conversation:</strong> More democratic participation, frequent interruptions, personal story-sharing, emotional responses</p>
+                                <p><strong>Visual-Assisted:</strong> More presenter-audience dynamic, questions directed to visual content, structured turn-taking</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="effectiveness-insights">
+                    <h3>💡 Effectiveness Insights</h3>
+                    <div class="insights-comparison">
+                        <div class="insight-visual">
+                            <h4>🖼️ When Visuals Enhance Engagement:</h4>
+                            <ul>
+                                <li><strong>Historical Context:</strong> Truman footage brought 1950s alive</li>
+                                <li><strong>Complex Information:</strong> Song catalog made 57 songs browsable</li>
+                                <li><strong>Comparative Analysis:</strong> Photo contrasts emphasized points effectively</li>
+                                <li><strong>Systematic Thinking:</strong> Frameworks helped organize complex political analysis</li>
+                            </ul>
+                        </div>
+                        
+                        <div class="insight-conversation">
+                            <h4>💬 When Pure Conversation Works Better:</h4>
+                            <ul>
+                                <li><strong>Personal Reflection:</strong> Political divide required individual introspection</li>
+                                <li><strong>Emotional Processing:</strong> Legal concerns needed immediate dialogue</li>
+                                <li><strong>Speculative Discussion:</strong> Putin analysis benefited from multiple perspectives</li>
+                                <li><strong>Relationship Building:</strong> Personal stories created stronger connections</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="insights-section">
+                <h2>🔍 Key Engagement Insights</h2>
+                <div class="insights-grid">
+                    <div class="insight-card">
+                        <h3>🤝 Self-Reflection Drives Deep Engagement</h3>
+                        <p>The political divide analysis topped engagement because it required participants to examine their own biases and genuinely consider opposing viewpoints, creating uncomfortable but valuable conversations.</p>
+                    </div>
+                    
+                    <div class="insight-card">
+                        <h3>📚 Historical Context Enhances Understanding</h3>
+                        <p>The Truman White House comparison provided concrete historical grounding that made contemporary issues more tangible and emotionally resonant for participants.</p>
+                    </div>
+                    
+                    <div class="insight-card">
+                        <h3>🎭 Creative Expression Builds Connection</h3>
+                        <p>The Tom Lehrer tribute combined nostalgia, creativity, and shared cultural references, allowing participants to connect through personal memories and collaborative play.</p>
+                    </div>
+                    
+                    <div class="insight-card">
+                        <h3>⚖️ Complex Systems Generate Questions</h3>
+                        <p>Legal and procedural topics like the Supreme Court shadow docket sparked engagement through their complexity, requiring clarification and generating practical concerns.</p>
+                    </div>
+                    
+                    <div class="insight-card">
+                        <h3>🌍 Geopolitical Predictions Invite Skepticism</h3>
+                        <p>Speculative topics like Putin's future generated moderate engagement through analytical discussion, but lacked the personal connection of higher-ranking topics.</p>
+                    </div>
+                    
+                    <div class="insight-card">
+                        <h3>💭 Personal Stakes Increase Investment</h3>
+                        <p>Topics that connected to participants' personal experiences, values, or relationships generated more passionate and sustained engagement than abstract policy discussions.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
