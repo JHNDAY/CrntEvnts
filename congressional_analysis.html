@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026 Congressional Election - House Districts in Play</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(45deg, #1a237e, #303f9f);
+            color: white;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 2px,
+                rgba(255,255,255,0.05) 2px,
+                rgba(255,255,255,0.05) 4px
+            );
+            animation: slide 20s linear infinite;
+        }
+        
+        @keyframes slide {
+            0% { transform: translateX(-50px) translateY(-50px); }
+            100% { transform: translateX(50px) translateY(50px); }
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .header .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .dashboard {
+            padding: 40px;
+        }
+        
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            border-left: 5px solid #667eea;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+        }
+        
+        .card.republican {
+            border-left-color: #d32f2f;
+        }
+        
+        .card.democratic {
+            border-left-color: #1976d2;
+        }
+        
+        .card.competitive {
+            border-left-color: #f57c00;
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, rgba(102,126,234,0.5), transparent);
+        }
+        
+        .card-title {
+            font-size: 0.9em;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .card-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        
+        .card-subtitle {
+            color: #888;
+            font-size: 0.9em;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .section h2 {
+            color: #1a237e;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        .competitiveness-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .competitive-section {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            border-top: 4px solid #f57c00;
+        }
+        
+        .competitive-section.very {
+            border-top-color: #d32f2f;
+        }
+        
+        .competitive-section.moderate {
+            border-top-color: #f57c00;
+        }
+        
+        .competitive-section.safe {
+            border-top-color: #388e3c;
+        }
+        
+        .state-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .state-card {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s ease;
+        }
+        
+        .state-card:hover {
+            transform: scale(1.02);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .state-name {
+            font-weight: bold;
+            color: #1a237e;
+            margin-bottom: 5px;
+        }
+        
+        .state-details {
+            font-size: 0.9em;
+            color: #666;
+        }
+        
+        .party-split {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .party-indicator {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .republican-indicator {
+            background-color: #d32f2f;
+        }
+        
+        .democratic-indicator {
+            background-color: #1976d2;
+        }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .highlight-box h3 {
+            margin-bottom: 10px;
+            font-size: 1.4em;
+        }
+        
+        .member-highlight {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 5px 10px;
+            border-radius: 20px;
+            margin: 5px;
+            font-size: 0.9em;
+        }
+        
+        .progress-bar {
+            background: #e0e0e0;
+            border-radius: 10px;
+            height: 20px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #1976d2, #d32f2f);
+            border-radius: 10px;
+            transition: width 0.6s ease;
+        }
+        
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .legend-color {
+            width: 15px;
+            height: 15px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>2026 Congressional Elections</h1>
+            <p class="subtitle">House Districts in Play - Competitive Races Analysis</p>
+        </div>
+        
+        <div class="dashboard">
+            <!-- Summary Cards -->
+            <div class="summary-cards">
+                <div class="card">
+                    <div class="card-title">Total Districts</div>
+                    <div class="card-value">62</div>
+                    <div class="card-subtitle">Competitive races to watch</div>
+                </div>
+                
+                <div class="card republican">
+                    <div class="card-title">Republican-Held</div>
+                    <div class="card-value">25</div>
+                    <div class="card-subtitle">40.3% of competitive seats</div>
+                </div>
+                
+                <div class="card democratic">
+                    <div class="card-title">Democratic-Held</div>
+                    <div class="card-value">26</div>
+                    <div class="card-subtitle">41.9% of competitive seats</div>
+                </div>
+                
+                <div class="card competitive">
+                    <div class="card-title">Very Competitive</div>
+                    <div class="card-value">34</div>
+                    <div class="card-subtitle">Margin under 5%</div>
+                </div>
+            </div>
+            
+            <!-- Party Balance Visualization -->
+            <div class="highlight-box">
+                <h3>Current Party Balance in Competitive Districts</h3>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 41.9%"></div>
+                </div>
+                <div class="legend">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #1976d2;"></div>
+                        <span>26 Democratic (41.9%)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #d32f2f;"></div>
+                        <span>25 Republican (40.3%)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background: #757575;"></div>
+                        <span>11 Vacant/Other (17.7%)</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Competitiveness Analysis -->
+            <div class="section">
+                <h2>🏁 Competitiveness Analysis</h2>
+                <p style="margin-bottom: 20px; color: #666; font-size: 1.1em;">Districts categorized by 2024 election margins</p>
+                
+                <div class="competitiveness-grid">
+                    <div class="competitive-section very">
+                        <h3 style="color: #d32f2f; margin-bottom: 15px;">🔥 Very Competitive</h3>
+                        <div style="font-size: 2em; font-weight: bold; color: #d32f2f; margin-bottom: 10px;">34 districts</div>
+                        <p style="color: #666;">Margin under 5% - These are the true toss-ups that could determine control of the House</p>
+                        <div style="margin-top: 10px;">
+                            <div class="party-split">
+                                <span class="party-indicator republican-indicator">18R</span>
+                                <span class="party-indicator democratic-indicator">16D</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="competitive-section moderate">
+                        <h3 style="color: #f57c00; margin-bottom: 15px;">⚡ Competitive</h3>
+                        <div style="font-size: 2em; font-weight: bold; color: #f57c00; margin-bottom: 10px;">13 districts</div>
+                        <p style="color: #666;">5-10% margin - Winnable with strong campaigns and favorable conditions</p>
+                        <div style="margin-top: 10px;">
+                            <div class="party-split">
+                                <span class="party-indicator republican-indicator">4R</span>
+                                <span class="party-indicator democratic-indicator">9D</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="competitive-section safe">
+                        <h3 style="color: #388e3c; margin-bottom: 15px;">🛡️ Leaning Safe</h3>
+                        <div style="font-size: 2em; font-weight: bold; color: #388e3c; margin-bottom: 10px;">15 districts</div>
+                        <p style="color: #666;">10%+ margin - Safer seats but still worth monitoring</p>
+                        <div style="margin-top: 10px;">
+                            <div class="party-split">
+                                <span class="party-indicator republican-indicator">3R</span>
+                                <span class="party-indicator democratic-indicator">1D</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Key Demographics -->
+            <div class="section">
+                <h2>👥 Member Demographics</h2>
+                
+                <div class="summary-cards">
+                    <div class="card">
+                        <div class="card-title">Average Age</div>
+                        <div class="card-value">58.7</div>
+                        <div class="card-subtitle">years old</div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-title">Freshman Members</div>
+                        <div class="card-value">8</div>
+                        <div class="card-subtitle">First-term representatives</div>
+                    </div>
+                </div>
+                
+                <div class="highlight-box">
+                    <h3>Age Extremes</h3>
+                    <div style="display: flex; justify-content: space-around; flex-wrap: wrap; gap: 20px; margin-top: 15px;">
+                        <div class="member-highlight">
+                            <strong>Oldest:</strong> Jim Costa (CA-21) - 73 years
+                        </div>
+                        <div class="member-highlight">
+                            <strong>Youngest:</strong> Raul Ruiz (CA-25) - 52 years
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- States with Most Districts in Play -->
+            <div class="section">
+                <h2>🗺️ States with Most Competitive Districts</h2>
+                
+                <div class="state-grid">
+                    <div class="state-card">
+                        <div class="state-name">California</div>
+                        <div class="state-details">11 districts</div>
+                        <div class="party-split">
+                            <span class="party-indicator republican-indicator">2R</span>
+                            <span class="party-indicator democratic-indicator">9D</span>
+                        </div>
+                    </div>
+                    
+                    <div class="state-card">
+                        <div class="state-name">New York</div>
+                        <div class="state-details">6 districts</div>
+                        <div class="party-split">
+                            <span class="party-indicator republican-indicator">4R</span>
+                            <span class="party-indicator democratic-indicator">2D</span>
+                        </div>
+                    </div>
+                    
+                    <div class="state-card">
+                        <div class="state-name">Arizona</div>
+                        <div class="state-details">5 districts</div>
+                        <div class="party-split">
+                            <span class="party-indicator republican-indicator">3R</span>
+                            <span class="party-indicator democratic-indicator">2D</span>
+                        </div>
+                    </div>
+                    
+                    <div class="state-card">
+                        <div class="state-name">Florida</div>
+                        <div class="state-details">4 districts</div>
+                        <div class="party-split">
+                            <span class="party-indicator republican-indicator">2R</span>
+                            <span class="party-indicator democratic-indicator">2D</span>
+                        </div>
+                    </div>
+                    
+                    <div class="state-card">
+                        <div class="state-name">Texas</div>
+                        <div class="state-details">3 districts</div>
+                        <div class="party-split">
+                            <span class="party-indicator republican-indicator">1R</span>
+                            <span class="party-indicator democratic-indicator">2D</span>
+                        </div>
+                    </div>
+                    
+                    <div class="state-card">
+                        <div class="state-name">Pennsylvania</div>
+                        <div class="state-details">3 districts</div>
+                        <div class="party-split">
+                            <span class="party-indicator republican-indicator">1R</span>
+                            <span class="party-indicator democratic-indicator">2D</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Key Insights -->
+            <div class="section">
+                <h2>🔍 Key Insights for 2026</h2>
+                
+                <div style="display: grid; gap: 20px; margin-top: 20px;">
+                    <div style="background: white; padding: 20px; border-radius: 10px; border-left: 4px solid #1976d2;">
+                        <h3 style="color: #1976d2; margin-bottom: 10px;">💡 Battle for Control</h3>
+                        <p style="color: #666; line-height: 1.6;">With 34 districts having margins under 5%, the 2026 midterms will be decided by razor-thin margins. The nearly even split between parties (26D vs 25R) means every competitive race matters.</p>
+                    </div>
+                    
+                    <div style="background: white; padding: 20px; border-radius: 10px; border-left: 4px solid #f57c00;">
+                        <h3 style="color: #f57c00; margin-bottom: 10px;">🏖️ California is Key</h3>
+                        <p style="color: #666; line-height: 1.6;">California leads with 11 competitive districts, mostly held by Democrats. These seats could be crucial for maintaining Democratic control or enabling a Republican takeover.</p>
+                    </div>
+                    
+                    <div style="background: white; padding: 20px; border-radius: 10px; border-left: 4px solid #d32f2f;">
+                        <h3 style="color: #d32f2f; margin-bottom: 10px;">🆕 Freshman Vulnerability</h3>
+                        <p style="color: #666; line-height: 1.6;">8 freshman members are in competitive districts, making them potentially vulnerable as they haven't had time to build strong incumbent advantages.</p>
+                    </div>
+                    
+                    <div style="background: white; padding: 20px; border-radius: 10px; border-left: 4px solid #388e3c;">
+                        <h3 style="color: #388e3c; margin-bottom: 10px;">🎯 Geographic Spread</h3>
+                        <p style="color: #666; line-height: 1.6;">Competitive districts span 37 states, indicating nationalized political trends will be crucial. Local factors may matter less than national political environment.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Most Vulnerable Seats -->
+            <div class="section">
+                <h2>⚠️ Most Vulnerable Seats (Under 2% Margin)</h2>
+                
+                <div style="background: white; border-radius: 10px; padding: 20px; margin-top: 20px;">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 15px;">
+                        <div style="padding: 15px; border: 2px solid #ffebee; border-radius: 8px; background: #fce4ec;">
+                            <div style="font-weight: bold; color: #c62828; margin-bottom: 5px;">CA-13: Adam Gray (D)</div>
+                            <div style="color: #666; font-size: 0.9em;">Won by just 187 votes (0.09% margin)</div>
+                            <div style="color: #666; font-size: 0.9em;">Freshman • 210,921 total votes</div>
+                        </div>
+                        
+                        <div style="padding: 15px; border: 2px solid #ffebee; border-radius: 8px; background: #fce4ec;">
+                            <div style="font-weight: bold; color: #c62828; margin-bottom: 5px;">CA-27: George Whitesides (D)</div>
+                            <div style="color: #666; font-size: 0.9em;">Won by 7,990 votes (2.7% margin)</div>
+                            <div style="color: #666; font-size: 0.9em;">Freshman • 300,090 total votes</div>
+                        </div>
+                        
+                        <div style="padding: 15px; border: 2px solid #ffebee; border-radius: 8px; background: #fce4ec;">
+                            <div style="font-weight: bold; color: #c62828; margin-bottom: 5px;">CA-9: Josh Harder (D)</div>
+                            <div style="color: #666; font-size: 0.9em;">Won by 9,009 votes (3.6% margin)</div>
+                            <div style="color: #666; font-size: 0.9em;">4th term • 251,357 total votes</div>
+                        </div>
+                        
+                        <div style="padding: 15px; border: 2px solid #ffebee; border-radius: 8px; background: #fff3e0;">
+                            <div style="font-weight: bold; color: #e65100; margin-bottom: 5px;">AZ-6: Juan Ciscomani (R)</div>
+                            <div style="color: #666; font-size: 0.9em;">Won by 10,882 votes (2.5% margin)</div>
+                            <div style="color: #666; font-size: 0.9em;">2nd term • 431,129 total votes</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Footer -->
+            <div style="text-align: center; margin-top: 40px; padding: 20px; color: #888; border-top: 1px solid #eee;">
+                <p style="margin-bottom: 10px;">📊 Analysis based on 2024 election results</p>
+                <p style="font-size: 0.9em;">62 competitive House districts across 37 states will shape the 2026 midterm elections</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add some interactive animations
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate progress bar
+            const progressBar = document.querySelector('.progress-fill');
+            setTimeout(() => {
+                progressBar.style.width = '41.9%';
+            }, 500);
+            
+            // Add hover effects to cards
+            const cards = document.querySelectorAll('.card, .state-card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px) scale(1.02)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+            });
+            
+            // Animate number counting effect
+            const valueElements = document.querySelectorAll('.card-value');
+            valueElements.forEach(element => {
+                const finalValue = element.textContent;
+                if (!isNaN(parseFloat(finalValue))) {
+                    element.textContent = '0';
+                    animateValue(element, 0, parseFloat(finalValue), 1000);
+                }
+            });
+        });
+        
+        function animateValue(element, start, end, duration) {
+            const startTime = performance.now();
+            const startValue = start;
+            const endValue = end;
+            
+            function updateValue(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const current = startValue + (endValue - startValue) * easeOutCubic(progress);
+                
+                if (endValue % 1 === 0) {
+                    element.textContent = Math.floor(current);
+                } else {
+                    element.textContent = current.toFixed(1);
+                }
+                
+                if (progress < 1) {
+                    requestAnimationFrame(updateValue);
+                }
+            }
+            
+            requestAnimationFrame(updateValue);
+        }
+        
+        function easeOutCubic(t) {
+            return 1 - Math.pow(1 - t, 3);
+        }
+    </script>
+</body>
+</html>
