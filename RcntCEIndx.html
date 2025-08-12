@@ -1,0 +1,914 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Repository Index - JHNDAY/CrntEvnts</title>
+    <style>
+        :root {
+            --primary-color: #0366d6;
+            --secondary-color: #586069;
+            --background-color: #f6f8fa;
+            --card-background: #ffffff;
+            --border-color: #e1e4e8;
+            --hover-color: #f6f8fa;
+            --text-color: #24292e;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: var(--background-color);
+        }
+
+        .header {
+            background: var(--card-background);
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .repo-title {
+            margin: 0 0 10px 0;
+            color: var(--primary-color);
+            font-size: 2em;
+            font-weight: 600;
+        }
+
+        .stats {
+            background: var(--card-background);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 10px;
+            background: var(--background-color);
+            border-radius: 6px;
+        }
+
+        .stat-number {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: var(--primary-color);
+            display: block;
+        }
+
+        .controls {
+            background: var(--card-background);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .search-container {
+            display: grid;
+            grid-template-columns: 1fr auto auto;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .search-box {
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 1em;
+        }
+
+        .filter-controls {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .view-controls, .sort-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .view-button, .sort-button, .sort-select {
+            padding: 8px 16px;
+            border: 1px solid var(--border-color);
+            background: var(--card-background);
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.2s;
+        }
+
+        .view-button:hover, .view-button.active, .sort-button:hover, .sort-button.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .file-list {
+            background: var(--card-background);
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .file-list-header {
+            background: var(--background-color);
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border-color);
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .file-item {
+            display: grid;
+            grid-template-columns: auto 1fr auto auto auto;
+            gap: 15px;
+            padding: 12px 20px;
+            border-bottom: 1px solid var(--border-color);
+            align-items: start;
+            transition: background-color 0.2s ease;
+        }
+
+        .file-item:hover { background-color: var(--hover-color); }
+
+        .file-name {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 500;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .file-name:hover { text-decoration: underline; }
+
+        .file-path {
+            color: var(--secondary-color);
+            font-size: 0.9em;
+            font-family: monospace;
+            margin-bottom: 4px;
+        }
+
+        .file-description {
+            color: #6a737d;
+            font-size: 0.85em;
+            font-style: italic;
+            line-height: 1.3;
+        }
+
+        .file-type {
+            background: var(--border-color);
+            color: var(--secondary-color);
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            white-space: nowrap;
+        }
+
+        .file-size {
+            color: var(--secondary-color);
+            font-size: 0.9em;
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        .file-card {
+            background: var(--card-background);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 15px;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .file-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transform: translateY(-2px);
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+            color: var(--secondary-color);
+            font-size: 0.9em;
+        }
+
+        @media (max-width: 768px) {
+            .file-item { grid-template-columns: auto 1fr; gap: 10px; }
+            .file-type, .file-size { display: none; }
+            .search-container { grid-template-columns: 1fr; }
+            .filter-controls { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>    <div class="header">
+        <h1 class="repo-title">📁 CrntEvnts Repository Index</h1>        <p>Current Events</p>        <p><strong>📅 Date Filter:</strong> Showing files posted after 2025-08-07</p>    </div>
+    <div class="stats">
+        <div class="stat-item">
+            <span class="stat-number">30</span>
+            <span class="stat-label">Total Files</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-number">30</span>
+            <span class="stat-label">HTML Files</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-number">30</span>
+            <span class="stat-label">Files with Dates</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-number">1</span>
+            <span class="stat-label">File Types</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-number">611.8 KB</span>
+            <span class="stat-label">Total Size</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-number">2025-08-12</span>
+            <span class="stat-label">Generated</span>
+        </div>
+    </div>
+
+    <div class="controls">
+        <div class="search-container">
+            <input type="text" class="search-box" id="searchBox" placeholder="Search files, descriptions, authors, keywords...">
+            <button class="view-button" onclick="clearFilters()">Clear Filters</button>
+            <button class="view-button" onclick="toggleAdvancedSearch()">Advanced Search</button>
+        </div>
+
+        <div class="filter-controls">
+            <div class="view-controls">
+                <span>View:</span>
+                <button class="view-button active" id="listView" onclick="switchToListView()">List</button>
+                <button class="view-button" id="cardView" onclick="switchToCardView()">Cards</button>
+            </div>
+            <div class="sort-controls">
+                <span>Sort by:</span>
+                <select class="sort-select" id="sortField" onchange="applySorting()">
+                    <option value="name">File Name</option>
+                    <option value="posting_date">Posting Date</option>
+                    <option value="size">File Size</option>
+                    <option value="type">File Type</option>
+                </select>
+                <button class="sort-button" id="sortOrder" onclick="toggleSortOrder()">Ascending ↑</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="file-list">
+        <div class="file-list-header">
+            <span>📋 Repository Files</span>
+            <span class="results-count" id="resultsCount">30 files</span>
+        </div>
+        <div id="fileContainer">
+            <div>Loading files...</div>
+        </div>
+    </div>
+
+    <div class="footer">
+        Generated on August 12, 2025 at 05:07 AM |
+        <a href="https://github.com/JHNDAY/CrntEvnts" target="_blank">JHNDAY/CrntEvnts</a>
+    </div>
+
+    <script>
+        const allFiles = [
+  {
+    "name": "CrntEvnts_index.html",
+    "path": "CrntEvnts_index.html",
+    "size": 70852,
+    "download_url": "https://raw.githubusercontent.com/JHNDAY/CrntEvnts/main/CrntEvnts_index.html",
+    "html_url": "https://github.com/JHNDAY/CrntEvnts/blob/main/CrntEvnts_index.html",
+    "sha": "2f1535f67a79003b2714111c15dcda1fa7f9a674",
+    "type": "HTML",
+    "description": "Political analysis and current events content examining CrntEvnts index, including policy implications and electoral significance.",
+    "posting_date": "2025-08-10",
+    "author": "JHNDAY",
+    "keywords": [],
+    "title": "Crnt Evnts Index"
+  },
+  {
+    "name": "Newsletter_aug8.html",
+    "path": "Newsletter_aug8.html",
+    "size": 25311,
+    "download_url": "https://raw.githubusercontent.com/JHNDAY/CrntEvnts/main/Newsletter_aug8.html",
+    "html_url": "https://github.com/JHNDAY/CrntEvnts/blob/main/Newsletter_aug8.html",
+    "sha": "0113d88b22573bae275f0fcda1248da858a96f0a",
+    "type": "HTML",
+    "description": "Current events newsletter covering major political developments, policy analysis, and emerging trends in governance and elections with expert commentary.",
+    "posting_date": "2025-08-11",
+    "author": "JHNDAY",
+    "keywords": [],
+    "title": "Newsletter Aug8"
+  },
+  {
+    "name": "american_fitna_visualization.html",
+    "path": "american_fitna_visualization.html",
+    "size": 12035,
+    "download_url": "https://raw.githubusercontent.com/JHNDAY/CrntEvnts/main/american_fitna_visualization.html",
+    "html_url": "https://github.com/JHNDAY/CrntEvnts/blob/main/american_fitna_visualization.html",
+    "sha": "ef1f337c035559723a97f684c1751d0427726084",
+    "type": "HTML",
+    "description": "Political analysis and current events content examining american fitna visualization, including policy implications and electoral significance.",
+    "posting_date": "2025-08-08",
+    "author": "JHNDAY",
+    "keywords": [],
+    "title": "American Fitna Visualization"
+  },
+  {
+    "name": "authoritarian_rag.html",
+    "path": "authoritarian_rag.html",
+    "size": 6199,
+    "download_url": "https://raw.githubusercontent.com/JHNDAY/CrntEvnts/main/authoritarian_rag.html",
+    "html_url": "https://github.com/JHNDAY/CrntEvnts/blob/main/authoritarian_rag.html",
+    "sha": "ff361c69c04ec748a3d5ccf28221e5e1577d78b7",
+    "type": "HTML",
+    "description": "Political analysis and current events content examining authoritarian rag, including policy implications and electoral significance.",
+    "posting_date": "2025-08-10",
+    "author": "JHNDAY",
+    "keywords": [],
+    "title": "Authoritarian Rag"
+  },
+  {
+    "name": "ceaug06.html",
+    "path": "ceaug06.html",
+    "size": 25362,
+    "download_url": "https://raw.githubusercontent.com/JHNDAY/CrntEvnts/main/ceaug06.html",
+    "html_url": "https://github.com/JHNDAY/CrntEvnts/blob/main/ceaug06.html",
+    "sha": "99449c988d1a72e989d919551a3b635daf69299a",
+    "type": "HTML",
+    "description": "Political analysis and current events content examining ceaug06, including policy implications and electoral significance.",
+    "posting_date": "2025-08-07",
+    "author": "JHNDAY",
+    "keywords": [],
+    "title": "Ceaug06"
+  },
+  {
+    "name": "ceaug06_socializing_analysis.html",
+    "path": "ceaug06_socializing_analysis.html",
+    "size": 28218,
+    "download_url": "https://raw.githubusercontent.com/JHNDAY/CrntEvnts/main/ceaug06_socializing_analysis.html",
+    "html_url": "https://github.com/JHNDAY/CrntEvnts/blob/main/ceaug06_socializing_analysis.html",
+    "sha": "7f4fdd0801f07a1bb8887eb4c3f2d97842805946",
+    "type": "HTML",
+    "description": "Political analysis and current events content examining ceaug06 socializing analysis, including policy implications and electoral significance.",
+    "posting_date": "2025-08-07",
+    "author": "JHNDAY",
+    "keywords": [],
+    "title": "Ceaug06 Socializing Analysis"
+  },
+  {
+    "name": "ceaug06_topic_engagement.html",
+    "path": "ceaug06_topic_engagement.html",
+    "size": 46284,
+    "download_url": "https://raw.githubusercontent.com/JHNDAY/CrntEvnts/main/ceaug06_topic_engagement.html",
+    "html_url": "https://github.com/JHNDAY/CrntEvnts/blob/main/ceaug06_topic_engagement.html",
+    "sha": "c2a1974b4b0258532e35b144e8272df79c7cbe18",
+    "type": "HTML",
+    "description": "Analysis of political discussion engagement patterns and participant interaction metrics, examining topic popularity and community participation data.",
+    "posting_date": "2025-08-07",
+    "author": "JHNDAY",
+    "keywords": [],
+    "title": "Ceaug06 Topic Engagement"
+  },
+  {
+    "name": "cllpsbl_political_newsletter_aug8.html",
+    "path": "cllpsbl_political_newsletter_aug8.html",
+    "size": 32583,
+    "download_url": "https://raw.githubusercontent.com/JHNDAY/CrntEvnts/main/cllpsbl_political_newsletter_aug8.html",
+    "html_url": "https://github.com/JHNDAY/CrntEvnts/blob/main/cllpsbl_political_newsletter_aug8.html",
+    "sha": "2348c8e1f65607c3cecad7bb647a91cd719c6073",
+    "type": "HTML",
+    "description": "Current events newsletter covering major political developments, policy analysis, and emerging trends in governance and elections with expert commentary.",
+    "posting_date": "2025-08-11",
+    "author": "JHNDAY",
+    "keywords": [],
+    "title": "Cllpsbl Political Newsletter Aug8"
+  },
+  {
+    "name": "congressional_analysis.html",
+    "path": "congressional_analysis.html",
+    "size": 25343,
+    "download_url": "https://raw.githubusercontent.com/JHNDAY/CrntEvnts/main/congressional_analysis.html",
+    "html_url": "https://github.com/JHNDAY/CrntEvnts/blob/main/congressional_analysis.html",
+    "sha": "a6ab22f778f1ae56c644111195a17b51fc388854",
+    "type": "HTML",
+    "description": "Political analysis and current events content examining congressional analysis, including policy implications and electoral significance.",
+    "posting_date": "2025-08-08",
+    "author": "JHNDAY",
+    "keywords": [],
+    "title": "Congressional Analysis"
+  },
+  {
+    "name": "current_affairs_central.html",
+    "path": "current_affairs_central.html",
+    "size": 28223,
+    "download_url": "https://raw.githubusercontent.com/JHNDAY/CrntEvnts/main/current_affairs_central.html",
+    "html_url": "https://github.com/JHNDAY/CrntEvnts/blob/main/current_affairs_central.html",
+    "sha": "4fdb8f4e4e26dcf29103bc7bc733762b245572c6",
+    "type": "HTML",
+    "description": "Political analysis and current events content examining current affairs central, including policy implications and electoral significance.",
+    "posting_date": "2025-08-11",
+    "author": "JHNDAY",
+    "keywords": [],
+    "title": "Current Affairs Central"
+  },
+  {
+    "name": "fight_for_right_harvard.html",
+    "path": "fight_for_right_harvard.html",
+    "size": 4574,
+    "download_url": "https://raw.githubusercontent.com/JHNDAY/CrntEvnts/main/fight_for_right_harvard.html",
+    "html_url": "https://github.com/JHNDAY/CrntEvnts/blob/main/fight_for_right_harvard.html",
+    "sha": "876fdcebe0e5ff93c2eecc669bd07bc3d4e5ddec",
+    "type": "HTML",
+    "description": "Political analysis and current events content examining fight for right harvard, including policy implications and electoral significance.",
+    "posting_date": "2025-08-10",
+    "author": "JHNDAY",
+    "keywords": [],
+    "title": "Fight For Right Harvard"
+  },
+  {
+    "name": "gaza_articles_highlights.html",
+    "path": "gaza_articles_highlights.html",
+    "size": 10665,
+    "download_url": "https://raw.githubusercontent.com/JHNDAY/CrntEvnts/main/gaza_articles_highlights.html",
+    "html_url": "https://github.com/JHNDAY/CrntEvnts/blob/main/gaza_articles_highlights.html",
+    "sha": "80bb4221cafd0ba52cf43290dc46ca3ceaa357d9",
+    "type": "HTML",
+    "description": "Political analysis and current events content examining gaza articles highlights, including policy implications and electoral significance.",
+    "posting_date": "2025-08-09",
+    "author": "JHNDAY",
+    "keywords": [],
+    "title": "Gaza Articles Highlights"
+  },
+  {
+    "name": "good_things_visualization.html",
+    "path": "good_things_visualization.html",
+    "size": 16749,
+    "download_url": "https://raw.githubusercontent.com/JHNDAY/CrntEvnts/main/good_things_visualization.html",
+    "html_url": "https://github.com/JHNDAY/CrntEvnts/blob/main/good_things_visualization.html",
+    "sha": "0c84bccbe1be7ef5005d1082429e6786d3d48015",
+    "type": "HTML",
+    "description": "Political analysis and current events content examining good things visualization, including policy implications and electoral significance.",
+    "posting_date": "2025-08-08",
+    "author": "JHNDAY",
+    "keywords": [],
+    "title": "Good Things Visualization"
+  },
+  {
+    "name": "israel_gaza_presentation.html",
+    "path": "israel_gaza_presentation.html",
+    "size": 16256,
+    "download_url": "https://raw.githubusercontent.com/JHNDAY/CrntEvnts/main/israel_gaza_presentation.html",
+    "html_url": "https://github.com/JHNDAY/CrntEvnts/blob/main/israel_gaza_presentation.html",
+    "sha": "e40e1db15491c2f6b0116437abfc2af26d9d02f9",
+    "type": "HTML",
+    "description": "Political analysis and current events content examining israel gaza presentation, including policy implications and electoral significance.",
+    "posting_date": "2025-08-09",
+    "author": "JHNDAY",
+    "keywords": [],
+    "title": "Israel Gaza Presentation"
+  },
+  {
+    "name": "kaplan_article_visualization.html",
+    "path": "kaplan_article_visualization.html",
+    "size": 16308,
+    "download_url": "https://raw.githubusercontent.com/JHNDAY/CrntEvnts/main/kaplan_article_visualization.html",
+    "html_url": "https://github.com/JHNDAY/CrntEvnts/blob/main/kaplan_article_visualization.html",
+    "sha": "d071d63ef0677a69d58e1ed08eeb75bcd1d8e699",
+    "type": "HTML",
+    "description": "Political analysis and current events content examining kaplan article visualization, including policy implications and electoral significance.",
+    "posting_date": "2025-08-10",
+    "author": "JHNDAY",
+    "keywords": [],
+    "title": "Kaplan Article Visualization"
+  },
+  {
+    "name": "maga_progressive_evolution.html",
+    "path": "maga_progressive_evolution.html",
+    "size": 30770,
+    "download_url": "https://raw.githubusercontent.com/JHNDAY/CrntEvnts/main/maga_progressive_evolution.html",
+    "html_url": "https://github.com/JHNDAY/CrntEvnts/blob/main/maga_progressive_evolution.html",
+    "sha": "1414104e687fff05072b7332f3e1cbe2c6225641",
+    "type": "HTML",
+    "description": "Political analysis and current events content examining maga progressive evolution, including policy implications and electoral significance.",
+    "posting_date": "2025-08-10",
+    "author": "JHNDAY",
+    "keywords": [],
+    "title": "Maga Progressive Evolution"
+  },
+  {
+    "name": "more_it_changes.html",
+    "path": "more_it_changes.html",
+    "size": 8761,
+    "download_url": "https://raw.githubusercontent.com/JHNDAY/CrntEvnts/main/more_it_changes.html",
+    "html_url": "https://github.com/JHNDAY/CrntEvnts/blob/main/more_it_changes.html",
+    "sha": "15b3c16715a74e96b223ff98055d218692fdc0ec",
+    "type": "HTML",
+    "description": "Political analysis and current events content examining more it changes, including policy implications and electoral significance.",
+    "posting_date": "2025-08-11",
+    "author": "JHNDAY",
+    "keywords": [],
+    "title": "More It Changes"
+  },
+  {
+    "name": "mpr.html",
+    "path": "mpr.html",
+    "size": 3843,
+    "download_url": "https://raw.githubusercontent.com/JHNDAY/CrntEvnts/main/mpr.html",
+    "html_url": "https://github.com/JHNDAY/CrntEvnts/blob/main/mpr.html",
+    "sha": "b1847c9205b72c2823a927f3a56d0447bd8870d0",
+    "type": "HTML",
+    "description": "Political analysis and current events content examining mpr, including policy implications and electoral significance.",
+    "posting_date": "2025-08-07",
+    "author": "JHNDAY",
+    "keywords": [],
+    "title": "Mpr"
+  },
+  {
+    "name": "mtg_gaza_statements.html",
+    "path": "mtg_gaza_statements.html",
+    "size": 14618,
+    "download_url": "https://raw.githubusercontent.com/JHNDAY/CrntEvnts/main/mtg_gaza_statements.html",
+    "html_url": "https://github.com/JHNDAY/CrntEvnts/blob/main/mtg_gaza_statements.html",
+    "sha": "32dc3d621d877d600ad6e95e7329ddb2908fba5b",
+    "type": "HTML",
+    "description": "Political analysis and current events content examining mtg gaza statements, including policy implications and electoral significance.",
+    "posting_date": "2025-08-11",
+    "author": "JHNDAY",
+    "keywords": [],
+    "title": "Mtg Gaza Statements"
+  },
+  {
+    "name": "muted_political_anger_comparison.html",
+    "path": "muted_political_anger_comparison.html",
+    "size": 22453,
+    "download_url": "https://raw.githubusercontent.com/JHNDAY/CrntEvnts/main/muted_political_anger_comparison.html",
+    "html_url": "https://github.com/JHNDAY/CrntEvnts/blob/main/muted_political_anger_comparison.html",
+    "sha": "4181261a0599f316dddb256f88aec9174f856776",
+    "type": "HTML",
+    "description": "Political analysis and current events content examining muted political anger comparison, including policy implications and electoral significance.",
+    "posting_date": "2025-08-10",
+    "author": "JHNDAY",
+    "keywords": [],
+    "title": "Muted Political Anger Comparison"
+  },
+  {
+    "name": "netanyahu_analysis_viz.html",
+    "path": "netanyahu_analysis_viz.html",
+    "size": 16655,
+    "download_url": "https://raw.githubusercontent.com/JHNDAY/CrntEvnts/main/netanyahu_analysis_viz.html",
+    "html_url": "https://github.com/JHNDAY/CrntEvnts/blob/main/netanyahu_analysis_viz.html",
+    "sha": "f7ac54ab5a46352f72d591d1657adf111431454d",
+    "type": "HTML",
+    "description": "Political analysis and current events content examining netanyahu analysis viz, including policy implications and electoral significance.",
+    "posting_date": "2025-08-09",
+    "author": "JHNDAY",
+    "keywords": [],
+    "title": "Netanyahu Analysis Viz"
+  },
+  {
+    "name": "netanyahu_gaza_accountability.html",
+    "path": "netanyahu_gaza_accountability.html",
+    "size": 15502,
+    "download_url": "https://raw.githubusercontent.com/JHNDAY/CrntEvnts/main/netanyahu_gaza_accountability.html",
+    "html_url": "https://github.com/JHNDAY/CrntEvnts/blob/main/netanyahu_gaza_accountability.html",
+    "sha": "63ebe285a6be5d56f1a3ab097f108301a4ac8e16",
+    "type": "HTML",
+    "description": "Political analysis and current events content examining netanyahu gaza accountability, including policy implications and electoral significance.",
+    "posting_date": "2025-08-09",
+    "author": "JHNDAY",
+    "keywords": [],
+    "title": "Netanyahu Gaza Accountability"
+  },
+  {
+    "name": "newsletter_issues_viz_aug8.html",
+    "path": "newsletter_issues_viz_aug8.html",
+    "size": 11843,
+    "download_url": "https://raw.githubusercontent.com/JHNDAY/CrntEvnts/main/newsletter_issues_viz_aug8.html",
+    "html_url": "https://github.com/JHNDAY/CrntEvnts/blob/main/newsletter_issues_viz_aug8.html",
+    "sha": "c864d4fa1d573461d586a929f5a5d01ec4ae9e30",
+    "type": "HTML",
+    "description": "Current events newsletter covering major political developments, policy analysis, and emerging trends in governance and elections with expert commentary.",
+    "posting_date": "2025-08-08",
+    "author": "JHNDAY",
+    "keywords": [],
+    "title": "Newsletter Issues Viz Aug8"
+  },
+  {
+    "name": "newsworthy_talking_points_aug8.html",
+    "path": "newsworthy_talking_points_aug8.html",
+    "size": 25310,
+    "download_url": "https://raw.githubusercontent.com/JHNDAY/CrntEvnts/main/newsworthy_talking_points_aug8.html",
+    "html_url": "https://github.com/JHNDAY/CrntEvnts/blob/main/newsworthy_talking_points_aug8.html",
+    "sha": "6bfc1a77e2ae609fdc7f430ff5c139046a8ae805",
+    "type": "HTML",
+    "description": "Political analysis and current events content examining newsworthy talking points aug8, including policy implications and electoral significance.",
+    "posting_date": "2025-08-11",
+    "author": "JHNDAY",
+    "keywords": [],
+    "title": "Newsworthy Talking Points Aug8"
+  },
+  {
+    "name": "npr_funding_visualization.html",
+    "path": "npr_funding_visualization.html",
+    "size": 18133,
+    "download_url": "https://raw.githubusercontent.com/JHNDAY/CrntEvnts/main/npr_funding_visualization.html",
+    "html_url": "https://github.com/JHNDAY/CrntEvnts/blob/main/npr_funding_visualization.html",
+    "sha": "7dbdd45ff6905522c581085fe861c950960e2a97",
+    "type": "HTML",
+    "description": "Political analysis and current events content examining npr funding visualization, including policy implications and electoral significance.",
+    "posting_date": "2025-08-07",
+    "author": "JHNDAY",
+    "keywords": [],
+    "title": "Npr Funding Visualization"
+  },
+  {
+    "name": "npr_history_visualization.html",
+    "path": "npr_history_visualization.html",
+    "size": 29725,
+    "download_url": "https://raw.githubusercontent.com/JHNDAY/CrntEvnts/main/npr_history_visualization.html",
+    "html_url": "https://github.com/JHNDAY/CrntEvnts/blob/main/npr_history_visualization.html",
+    "sha": "3bc72ef7ca21c5595c4624d21f563118a5729e81",
+    "type": "HTML",
+    "description": "Political analysis and current events content examining npr history visualization, including policy implications and electoral significance.",
+    "posting_date": "2025-08-07",
+    "author": "JHNDAY",
+    "keywords": [],
+    "title": "Npr History Visualization"
+  },
+  {
+    "name": "stephens_opinion_visual.html",
+    "path": "stephens_opinion_visual.html",
+    "size": 14903,
+    "download_url": "https://raw.githubusercontent.com/JHNDAY/CrntEvnts/main/stephens_opinion_visual.html",
+    "html_url": "https://github.com/JHNDAY/CrntEvnts/blob/main/stephens_opinion_visual.html",
+    "sha": "9d3cd86b029db2e2adeac93281f8d84e73c950b7",
+    "type": "HTML",
+    "description": "Political analysis and current events content examining stephens opinion visual, including policy implications and electoral significance.",
+    "posting_date": "2025-08-11",
+    "author": "JHNDAY",
+    "keywords": [],
+    "title": "Stephens Opinion Visual"
+  },
+  {
+    "name": "talking_points_Aug08.html",
+    "path": "talking_points_Aug08.html",
+    "size": 11974,
+    "download_url": "https://raw.githubusercontent.com/JHNDAY/CrntEvnts/main/talking_points_Aug08.html",
+    "html_url": "https://github.com/JHNDAY/CrntEvnts/blob/main/talking_points_Aug08.html",
+    "sha": "67ea397640535e82d74aa86b475f4a7345639dba",
+    "type": "HTML",
+    "description": "Political analysis and current events content examining talking points Aug08, including policy implications and electoral significance.",
+    "posting_date": "2025-08-11",
+    "author": "JHNDAY",
+    "keywords": [],
+    "title": "Talking Points Aug08"
+  },
+  {
+    "name": "unity_barbecue_parody.html",
+    "path": "unity_barbecue_parody.html",
+    "size": 22178,
+    "download_url": "https://raw.githubusercontent.com/JHNDAY/CrntEvnts/main/unity_barbecue_parody.html",
+    "html_url": "https://github.com/JHNDAY/CrntEvnts/blob/main/unity_barbecue_parody.html",
+    "sha": "6d5c2601c30db74a52333aaf388e4911f2399fd8",
+    "type": "HTML",
+    "description": "Political analysis and current events content examining unity barbecue parody, including policy implications and electoral significance.",
+    "posting_date": "2025-08-10",
+    "author": "JHNDAY",
+    "keywords": [],
+    "title": "Unity Barbecue Parody"
+  },
+  {
+    "name": "xyz.html",
+    "path": "xyz.html",
+    "size": 14903,
+    "download_url": "https://raw.githubusercontent.com/JHNDAY/CrntEvnts/main/xyz.html",
+    "html_url": "https://github.com/JHNDAY/CrntEvnts/blob/main/xyz.html",
+    "sha": "9d3cd86b029db2e2adeac93281f8d84e73c950b7",
+    "type": "HTML",
+    "description": "Political analysis and current events content examining xyz, including policy implications and electoral significance.",
+    "posting_date": "2025-08-11",
+    "author": "JHNDAY",
+    "keywords": [],
+    "title": "Xyz"
+  }
+];
+        let filteredFiles = [...allFiles];
+        let currentView = 'list';
+        let currentSortField = 'name';
+        let currentSortOrder = 'asc';
+
+        function performSearch() {
+            const searchTerm = document.getElementById('searchBox').value.toLowerCase().trim();
+
+            if (!searchTerm) {
+                filteredFiles = [...allFiles];
+            } else {
+                filteredFiles = allFiles.filter(file => {
+                    return file.name.toLowerCase().includes(searchTerm) ||
+                           file.path.toLowerCase().includes(searchTerm) ||
+                           file.description.toLowerCase().includes(searchTerm) ||
+                           file.type.toLowerCase().includes(searchTerm) ||
+                           file.author.toLowerCase().includes(searchTerm) ||
+                           file.title.toLowerCase().includes(searchTerm);
+                });
+            }
+
+            applySorting();
+            renderFiles();
+        }
+
+        function applySorting() {
+            const field = currentSortField;
+            const order = currentSortOrder;
+
+            filteredFiles.sort((a, b) => {
+                let aVal = a[field];
+                let bVal = b[field];
+
+                if (field === 'posting_date') {
+                    if (aVal === 'Unknown') aVal = '0000-00-00';
+                    if (bVal === 'Unknown') bVal = '0000-00-00';
+                }
+
+                if (field === 'size') {
+                    aVal = parseInt(aVal) || 0;
+                    bVal = parseInt(bVal) || 0;
+                }
+
+                if (typeof aVal === 'string' && typeof bVal === 'string') {
+                    aVal = aVal.toLowerCase();
+                    bVal = bVal.toLowerCase();
+                }
+
+                let comparison = 0;
+                if (aVal < bVal) comparison = -1;
+                else if (aVal > bVal) comparison = 1;
+
+                return order === 'asc' ? comparison : -comparison;
+            });
+        }
+
+        function toggleSortOrder() {
+            currentSortOrder = currentSortOrder === 'asc' ? 'desc' : 'asc';
+            const button = document.getElementById('sortOrder');
+            button.textContent = currentSortOrder === 'asc' ? 'Ascending ↑' : 'Descending ↓';
+            button.classList.toggle('active');
+
+            applySorting();
+            renderFiles();
+        }
+
+        function clearFilters() {
+            document.getElementById('searchBox').value = '';
+            document.getElementById('sortField').value = 'name';
+            currentSortField = 'name';
+            currentSortOrder = 'asc';
+            document.getElementById('sortOrder').textContent = 'Ascending ↑';
+            document.getElementById('sortOrder').classList.remove('active');
+
+            filteredFiles = [...allFiles];
+            applySorting();
+            renderFiles();
+        }
+
+        function toggleAdvancedSearch() {
+            alert('Advanced search supports: file names, paths, descriptions, types, authors, and titles.');
+        }
+
+        function switchToListView() {
+            currentView = 'list';
+            document.getElementById('listView').classList.add('active');
+            document.getElementById('cardView').classList.remove('active');
+            renderFiles();
+        }
+
+        function switchToCardView() {
+            currentView = 'card';
+            document.getElementById('cardView').classList.add('active');
+            document.getElementById('listView').classList.remove('active');
+            renderFiles();
+        }
+
+        function renderFiles() {
+            const container = document.getElementById('fileContainer');
+            const resultsCount = document.getElementById('resultsCount');
+
+            resultsCount.textContent = filteredFiles.length + ' files';
+
+            if (filteredFiles.length === 0) {
+                container.innerHTML = '<div style="text-align: center; padding: 40px; color: #586069;">No files found matching your search criteria.</div>';
+                return;
+            }
+
+            if (currentView === 'card') {
+                let cardHTML = '';
+                filteredFiles.forEach(function(file) {
+                    const postingDate = file.posting_date !== 'Unknown' ? file.posting_date : '';
+                    const authorInfo = file.author !== 'Unknown' ? file.author : '';
+                    cardHTML += '<div class="file-card">' +
+                        '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">' +
+                            '<div style="display: flex; align-items: center; gap: 8px;">' +
+                                '<div>🌐</div>' +
+                                (postingDate ? '<div style="color: #586069; font-size: 0.75em; background: #f1f3f4; padding: 2px 6px; border-radius: 3px;">📅 ' + postingDate + '</div>' : '') +
+                            '</div>' +
+                            '<div class="file-type">' + file.type + '</div>' +
+                        '</div>' +
+                        '<div style="margin-bottom: 15px;">' +
+                            '<a href="https://jhnday.github.io/CrntEvnts/' + file.path + '" class="file-name" target="_blank">' + file.name + '</a>' +
+                            '<div class="file-path">' + file.path + '</div>' +
+                            (authorInfo ? '<div style="color: #586069; font-size: 0.8em; margin: 4px 0;">👤 ' + authorInfo + '</div>' : '') +
+                            '<div class="file-description">' + file.description + '</div>' +
+                        '</div>' +
+                        '<div style="display: flex; justify-content: space-between; align-items: center; padding-top: 10px; border-top: 1px solid var(--border-color);">' +
+                            '<div style="font-size: 0.8em; color: #586069;">' + formatFileSize(file.size) + '</div>' +
+                            '<div><a href="' + file.download_url + '" target="_blank" title="Download" style="color: var(--primary-color); text-decoration: none; padding: 4px 8px; border-radius: 4px; transition: background-color 0.2s;">⬇️</a></div>' +
+                        '</div>' +
+                    '</div>';
+                });
+                container.innerHTML = cardHTML;
+                container.style.display = 'grid';
+                container.style.gridTemplateColumns = 'repeat(auto-fill, minmax(350px, 1fr))';
+                container.style.gap = '20px';
+                container.style.padding = '20px';
+            } else {
+                let listHTML = '';
+                filteredFiles.forEach(function(file) {
+                    const postingDate = file.posting_date !== 'Unknown' ? file.posting_date : '';
+                    const authorInfo = file.author !== 'Unknown' ? file.author : '';
+                    listHTML += '<div class="file-item">' +
+                        '<div style="display: flex; align-items: center; gap: 8px;">' +
+                            '<div>🌐</div>' +
+                            (postingDate ? '<div style="color: #586069; font-size: 0.75em; background: #f1f3f4; padding: 2px 6px; border-radius: 3px; white-space: nowrap;">📅 ' + postingDate + '</div>' : '') +
+                        '</div>' +
+                        '<div>' +
+                            '<div style="display: flex; align-items: center; gap: 10px; margin-bottom: 4px;">' +
+                                '<a href="https://jhnday.github.io/CrntEvnts/' + file.path + '" class="file-name" target="_blank">' + file.name + '</a>' +
+                                (authorInfo ? '<div style="color: #586069; font-size: 0.75em; background: #e3f2fd; padding: 2px 6px; border-radius: 3px;">👤 ' + authorInfo + '</div>' : '') +
+                            '</div>' +
+                            '<div class="file-path">' + file.path + '</div>' +
+                            '<div class="file-description">' + file.description + '</div>' +
+                        '</div>' +
+                        '<div class="file-type">' + file.type + '</div>' +
+                        '<div class="file-size">' + formatFileSize(file.size) + '</div>' +
+                        '<div><a href="' + file.download_url + '" target="_blank" title="Download" style="color: var(--primary-color); text-decoration: none; padding: 4px 8px; border-radius: 4px; transition: background-color 0.2s;">⬇️</a></div>' +
+                    '</div>';
+                });
+                container.innerHTML = listHTML;
+                container.style.display = 'block';
+                container.style.gridTemplateColumns = '';
+                container.style.gap = '';
+                container.style.padding = '';
+            }
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 B';
+            const units = ['B', 'KB', 'MB', 'GB'];
+            let size = bytes;
+            let unitIndex = 0;
+            while (size >= 1024 && unitIndex < units.length - 1) {
+                size /= 1024;
+                unitIndex++;
+            }
+            return size.toFixed(1) + ' ' + units[unitIndex];
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchBox = document.getElementById('searchBox');
+            searchBox.addEventListener('input', performSearch);
+            searchBox.addEventListener('keyup', function(e) {
+                if (e.key === 'Enter') {
+                    performSearch();
+                }
+            });
+
+            document.getElementById('sortField').addEventListener('change', function() {
+                currentSortField = this.value;
+                applySorting();
+                renderFiles();
+            });
+
+            renderFiles();
+        });
+    </script>
+</body>
+</html>
