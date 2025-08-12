@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>USAID Impact Visualization</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 3px solid #e74c3c;
+            padding-bottom: 20px;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            color: #2c3e50;
+            margin: 0 0 10px 0;
+            font-weight: 700;
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            color: #7f8c8d;
+            margin: 0;
+        }
+        
+        .key-stat {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            margin: 20px 0;
+            box-shadow: 0 10px 20px rgba(231, 76, 60, 0.2);
+        }
+        
+        .key-stat h2 {
+            font-size: 3em;
+            margin: 0;
+            font-weight: 800;
+        }
+        
+        .key-stat p {
+            font-size: 1.3em;
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+        }
+        
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 40px 0;
+        }
+        
+        .chart-container {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.05);
+        }
+        
+        .chart-title {
+            font-size: 1.4em;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #2c3e50;
+            text-align: center;
+        }
+        
+        .full-width {
+            grid-column: 1 / -1;
+        }
+        
+        .timeline-section {
+            background: #fff;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+            border-left: 5px solid #3498db;
+        }
+        
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            margin: 15px 0;
+            padding: 15px;
+            background: #ecf0f1;
+            border-radius: 10px;
+        }
+        
+        .timeline-year {
+            background: #3498db;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-weight: bold;
+            margin-right: 20px;
+            min-width: 80px;
+            text-align: center;
+        }
+        
+        .timeline-text {
+            flex: 1;
+            font-size: 1.1em;
+        }
+        
+        .source-note {
+            background: #f1f2f6;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+            font-size: 0.9em;
+            color: #666;
+            border-left: 4px solid #95a5a6;
+            line-height: 1.6;
+        }
+        
+        .source-note a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .source-note a:hover {
+            color: #2980b9;
+            text-decoration: underline;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .comparison-card {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            box-shadow: 0 8px 16px rgba(238, 90, 111, 0.2);
+        }
+        
+        .comparison-card h3 {
+            font-size: 2em;
+            margin: 0 0 10px 0;
+            font-weight: 700;
+        }
+        
+        .comparison-card p {
+            margin: 0;
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>USAID Termination Impact</h1>
+            <p>Estimated Deaths from Program Cuts (2025-2030)</p>
+        </div>
+        
+        <div class="key-stat">
+            <h2>14.1 Million</h2>
+            <p>Estimated total deaths by 2030 if cuts continue</p>
+        </div>
+        
+        <div class="charts-grid">
+            <div class="chart-container">
+                <div class="chart-title">Deaths by Age Group (2030)</div>
+                <canvas id="ageChart" width="400" height="300"></canvas>
+            </div>
+            
+            <div class="chart-container">
+                <div class="chart-title">Current Impact (2025 YTD)</div>
+                <canvas id="currentChart" width="400" height="300"></canvas>
+            </div>
+            
+            <div class="chart-container full-width">
+                <div class="chart-title">Disease-Specific Death Estimates by 2025</div>
+                <canvas id="diseaseChart" width="800" height="300"></canvas>
+            </div>
+            
+            <div class="chart-container full-width">
+                <div class="chart-title">Projected Timeline of Deaths (2025-2030)</div>
+                <canvas id="timelineChart" width="800" height="300"></canvas>
+            </div>
+        </div>
+        
+        <div class="comparison-grid">
+            <div class="comparison-card">
+                <h3>1 Death</h3>
+                <p>Every 18 minutes<br>(current rate)</p>
+            </div>
+            <div class="comparison-card">
+                <h3>103</h3>
+                <p>Deaths per hour<br>(average)</p>
+            </div>
+            <div class="comparison-card">
+                <h3>4.5M</h3>
+                <p>Children under 5<br>by 2030</p>
+            </div>
+            <div class="comparison-card">
+                <h3>700K</h3>
+                <p>Child deaths<br>per year</p>
+            </div>
+        </div>
+        
+        <div class="timeline-section">
+            <h2 style="color: #2c3e50; margin-bottom: 25px;">Key Timeline & Impact</h2>
+            
+            <div class="timeline-item">
+                <div class="timeline-year">2025</div>
+                <div class="timeline-text">
+                    <strong>176,000 HIV deaths</strong> + <strong>62,000 TB deaths</strong> if funding not restored by year-end
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-year">Mid-2025</div>
+                <div class="timeline-text">
+                    <strong>193,092 total deaths</strong> already estimated (62,557 adults + 130,535 children)
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-year">2030</div>
+                <div class="timeline-text">
+                    <strong>14.1 million total deaths</strong> projected if current cuts continue (range: 8-19 million)
+                </div>
+            </div>
+        </div>
+        
+        <div class="source-note">
+            <strong>Sources & Links:</strong><br>
+            • <a href="https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(25)01186-9/fulltext" target="_blank">The Lancet medical journal peer-reviewed study</a><br>
+            • <a href="https://www.bu.edu/sph/news/articles/2025/tracking-anticipated-deaths-from-usaid-funding-cuts/" target="_blank">Boston University School of Public Health research</a><br>
+            • <a href="https://newsroom.ucla.edu/stories/USAID-cuts-global-impact-14-million-deaths" target="_blank">UCLA Fielding School analysis</a><br>
+            • <a href="https://www.npr.org/sections/goats-and-soda/2025/07/01/nx-s1-5452513/trump-usaid-foreign-aid-deaths" target="_blank">NPR Global Health reporting</a><br>
+            • <a href="https://www.cnn.com/2025/07/01/politics/us-aid-elimination-study-14-million-deaths" target="_blank">CNN Politics coverage</a><br>
+            • <a href="https://www.washingtonpost.com/world/2025/07/01/usaid-cuts-aid-14-million-deaths/" target="_blank">Washington Post analysis</a><br>
+            • <a href="https://www.democracynow.org/2025/6/13/us_aid_cuts_international_impact" target="_blank">Democracy Now investigation</a><br>
+            • <a href="https://www.americamagazine.org/politics-society/2025/07/02/usaid-lancet-humanitarian-aid-hunger-disease-14-million-deaths-251050" target="_blank">America Magazine coverage</a><br><br>
+            Data based on analysis of 133 countries receiving USAID funding between 2001-2021, showing USAID programs prevented 91+ million deaths over two decades.
+        </div>
+    </div>
+
+    <script>
+        // Age Group Deaths Chart
+        const ageCtx = document.getElementById('ageChart').getContext('2d');
+        new Chart(ageCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Children Under 5', 'Adults & Older Children'],
+                datasets: [{
+                    data: [4.5, 9.6],
+                    backgroundColor: ['#e74c3c', '#c0392b'],
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 20,
+                            font: { size: 12 }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Current Impact Chart
+        const currentCtx = document.getElementById('currentChart').getContext('2d');
+        new Chart(currentCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Adults', 'Children'],
+                datasets: [{
+                    label: 'Deaths (Mid-2025)',
+                    data: [62557, 130535],
+                    backgroundColor: ['#3498db', '#e74c3c'],
+                    borderWidth: 0,
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return value.toLocaleString();
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+
+        // Disease-Specific Chart
+        const diseaseCtx = document.getElementById('diseaseChart').getContext('2d');
+        new Chart(diseaseCtx, {
+            type: 'bar',
+            data: {
+                labels: ['HIV/AIDS', 'Tuberculosis'],
+                datasets: [{
+                    label: 'Estimated Deaths by End 2025',
+                    data: [176000, 62000],
+                    backgroundColor: ['#e67e22', '#d35400'],
+                    borderWidth: 0,
+                    borderRadius: 10
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return value.toLocaleString();
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+
+        // Timeline Projection Chart
+        const timelineCtx = document.getElementById('timelineChart').getContext('2d');
+        new Chart(timelineCtx, {
+            type: 'line',
+            data: {
+                labels: ['2025', '2026', '2027', '2028', '2029', '2030'],
+                datasets: [{
+                    label: 'Cumulative Deaths (Millions)',
+                    data: [0.24, 2.8, 5.6, 8.4, 11.2, 14.1],
+                    borderColor: '#e74c3c',
+                    backgroundColor: 'rgba(231, 76, 60, 0.1)',
+                    borderWidth: 4,
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: '#e74c3c',
+                    pointBorderWidth: 2,
+                    pointRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Cumulative Deaths (Millions)'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Year'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
