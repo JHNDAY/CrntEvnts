@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>It Hada Be Me</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #0f0f23, #1a1a2e, #2c2c54);
+            color: #fff;
+            font-family: 'Georgia', serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .military-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(139, 69, 19, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(255, 215, 0, 0.05) 0%, transparent 50%),
+                linear-gradient(45deg, rgba(0, 100, 0, 0.05) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .pentagon-shape {
+            position: absolute;
+            top: 15%;
+            right: 10%;
+            width: 200px;
+            height: 200px;
+            opacity: 0.15;
+            z-index: 1;
+        }
+
+        .pentagon {
+            width: 200px;
+            height: 200px;
+            background: #8B4513;
+            clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
+            animation: slowRotate 20s infinite linear;
+            box-shadow: 0 0 30px rgba(139, 69, 19, 0.5);
+        }
+
+        .container {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            z-index: 10;
+        }
+
+        .title {
+            font-size: 3.5rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 1rem;
+            text-shadow: 3px 3px 10px rgba(0,0,0,0.7);
+            animation: fadeInGlow 3s ease-in;
+            background: linear-gradient(45deg, #8B4513, #DAA520, #8B4513);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.3rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            opacity: 0.9;
+            font-style: italic;
+            color: #DAA520;
+        }
+
+        .lyrics-container {
+            max-width: 1000px;
+            width: 100%;
+            background: rgba(139, 69, 19, 0.1);
+            border: 2px solid rgba(218, 165, 32, 0.4);
+            border-radius: 25px;
+            padding: 40px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 15px 40px rgba(218, 165, 32, 0.3);
+            animation: slideUpLyrics 2s ease-out;
+        }
+
+        .song-section {
+            margin-bottom: 30px;
+            padding: 25px;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .verse-1, .verse-2, .verse-3, .verse-4 {
+            background: rgba(139, 69, 19, 0.15);
+            border-left: 4px solid #8B4513;
+        }
+
+        .chorus, .final-chorus {
+            background: rgba(218, 165, 32, 0.2);
+            border-left: 4px solid #DAA520;
+            font-weight: bold;
+        }
+
+        .outro {
+            background: rgba(0, 100, 0, 0.1);
+            border-left: 4px solid #006400;
+            text-align: center;
+            font-style: italic;
+            font-size: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #DAA520;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .section-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            font-family: 'Georgia', serif;
+        }
+
+        .song-section::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(218, 165, 32, 0.1), transparent);
+            transform: rotate(45deg);
+            animation: shimmer 5s infinite;
+        }
+
+        .song-section:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 30px rgba(218, 165, 32, 0.4);
+        }
+
+        .lyrics-container:hover {
+            box-shadow: 0 20px 50px rgba(218, 165, 32, 0.5);
+        }
+
+        .military-stars {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .star {
+            position: absolute;
+            color: rgba(218, 165, 32, 0.3);
+            font-size: 1.5rem;
+            animation: march 8s infinite linear;
+        }
+
+        .rank-insignia {
+            position: absolute;
+            top: 10%;
+            left: 10%;
+            width: 100px;
+            height: 60px;
+            opacity: 0.2;
+            background: repeating-linear-gradient(
+                45deg,
+                #DAA520,
+                #DAA520 10px,
+                #8B4513 10px,
+                #8B4513 20px
+            );
+            clip-path: polygon(0 0, 100% 0, 90% 100%, 10% 100%);
+            animation: pulse 3s infinite;
+        }
+
+        @keyframes fadeInGlow {
+            from { 
+                opacity: 0; 
+                transform: translateY(-50px);
+                text-shadow: 0 0 0 rgba(218,165,32,0);
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0);
+                text-shadow: 0 0 20px rgba(218,165,32,0.8), 3px 3px 10px rgba(0,0,0,0.7);
+            }
+        }
+
+        @keyframes slideUpLyrics {
+            from { 
+                opacity: 0;
+                transform: translateY(50px) scale(0.95);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes slowRotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        @keyframes march {
+            from { 
+                transform: translateX(-100px) translateY(100vh);
+                opacity: 0;
+            }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            to { 
+                transform: translateX(100px) translateY(-100px);
+                opacity: 0;
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.2; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(1.05); }
+        }
+    </style>
+</head>
+<body>
+    <div class="military-bg"></div>
+    <div class="container">
+        <div class="military-stars" id="stars"></div>
+        
+        <div class="pentagon-shape">
+            <div class="pentagon"></div>
+        </div>
+        
+        <div class="rank-insignia"></div>
+        
+        <h1 class="title">It Hada Be Me</h1>
+        <p class="subtitle">"His loyal sword I'll always be" • A Political Satire</p>
+        
+        <div class="lyrics-container">
+            <div class="song-section verse-1">
+                <div class="section-title">Verse 1</div>
+                <div class="section-text">
+                    The Pentagon! The Pentagon!<br>
+                    I heard King Donald's royal call<br>
+                    The Pentagon! The Pentagon!<br>
+                    And here I stand to serve through all<br>
+                    I know exactly what he wants from me<br>
+                    His loyal sword I'll always be
+                </div>
+            </div>
+
+            <div class="song-section chorus">
+                <div class="section-title">Chorus</div>
+                <div class="section-text">
+                    A knight should crush the weak and small<br>
+                    Make common people learn to crawl<br>
+                    Purge the ranks of those who doubt<br>
+                    Throw the "woke" generals right out<br>
+                    With iron fist and steely nerve<br>
+                    I'll make the military serve!
+                </div>
+            </div>
+
+            <div class="song-section verse-2">
+                <div class="section-title">Verse 2</div>
+                <div class="section-text">
+                    It's me! It's me! I must confess<br>
+                    The one to bring this righteousness<br>
+                    That warrior who'll gladly do<br>
+                    What others find too harsh, too cruel<br>
+                    It's me! It's me! The chosen one!<br><br>
+                    I've never backed down from a fight<br>
+                    I'll wage the culture war with might<br>
+                    When orders come from up on high<br>
+                    I ask no questions, wonder why<br>
+                    It's me! It's me! The faithful knight!
+                </div>
+            </div>
+
+            <div class="song-section verse-3">
+                <div class="section-title">Verse 3</div>
+                <div class="section-text">
+                    They say a knight should be a beacon bright<br>
+                    His conscience pure, his moral compass true<br>
+                    But I believe that might alone makes right<br>
+                    And loyalty's the only virtue I pursue<br>
+                    While others speak of honor, truth, and justice fair<br>
+                    I'll gladly be the King's enforcer anywhere
+                </div>
+            </div>
+
+            <div class="song-section verse-4">
+                <div class="section-title">Verse 4</div>
+                <div class="section-text">
+                    A true knight's duty, pure and clear<br>
+                    Is crushing those the King holds dear<br>
+                    With discipline like tempered steel<br>
+                    I'll make the doubters kneel and heel<br>
+                    The brass will learn their proper place<br>
+                    When I bring order to this space
+                </div>
+            </div>
+
+            <div class="song-section final-chorus">
+                <div class="section-title">Final Chorus</div>
+                <div class="section-text">
+                    It's me! It's me! I proudly say<br>
+                    The one to sweep dissent away<br>
+                    That loyal man who'll never shirk<br>
+                    From doing Donald's hardest work<br>
+                    It's me! It's me! His faithful sword<br>
+                    To serve my one and only lord!
+                </div>
+            </div>
+
+            <div class="song-section outro">
+                <div class="section-title">Outro</div>
+                <div class="section-text">
+                    It's me!
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function createMilitaryStar() {
+            const stars = ['★', '☆', '✦', '✧'];
+            const star = document.createElement('div');
+            star.className = 'star';
+            star.textContent = stars[Math.floor(Math.random() * stars.length)];
+            star.style.left = Math.random() * 100 + '%';
+            star.style.animationDuration = (Math.random() * 4 + 6) + 's';
+            star.style.animationDelay = Math.random() * 2 + 's';
+            
+            document.getElementById('stars').appendChild(star);
+            
+            setTimeout(() => {
+                star.remove();
+            }, 10000);
+        }
+
+        // Create military stars periodically
+        setInterval(createMilitaryStar, 1500);
+        
+        // Create initial stars
+        for(let i = 0; i < 6; i++) {
+            setTimeout(createMilitaryStar, i * 300);
+        }
+
+        // Add interactive effects on hover
+        document.querySelector('.lyrics-container').addEventListener('mouseenter', () => {
+            for(let i = 0; i < 5; i++) {
+                setTimeout(createMilitaryStar, i * 150);
+            }
+        });
+    </script>
+</body>
+</html>

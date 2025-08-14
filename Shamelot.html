@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shamelot</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #2c1810, #8b4513, #daa520);
+            color: #fff;
+            font-family: 'Georgia', serif;
+            overflow-x: hidden;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        .container {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .castle-silhouette {
+            position: absolute;
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 400px;
+            height: 300px;
+            opacity: 0.3;
+            z-index: 1;
+        }
+
+        .castle-tower {
+            position: absolute;
+            background: #4a4a4a;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .tower1 { width: 60px; height: 150px; left: 0; bottom: 0; }
+        .tower2 { width: 80px; height: 200px; left: 60px; bottom: 0; }
+        .tower3 { width: 100px; height: 250px; left: 140px; bottom: 0; }
+        .tower4 { width: 80px; height: 200px; left: 240px; bottom: 0; }
+        .tower5 { width: 60px; height: 150px; left: 320px; bottom: 0; }
+
+        .flag {
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 20px;
+            background: #dc143c;
+            animation: wave 2s infinite ease-in-out;
+        }
+
+        .crumbling {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .crumbling::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                -45deg,
+                transparent,
+                transparent 5px,
+                rgba(139, 69, 19, 0.3) 5px,
+                rgba(139, 69, 19, 0.3) 10px
+            );
+            animation: crumble 4s infinite;
+        }
+
+        .title {
+            font-size: 4rem;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 1rem;
+            text-shadow: 3px 3px 10px rgba(0,0,0,0.7);
+            animation: fadeInGlow 3s ease-in;
+            z-index: 10;
+            position: relative;
+            background: linear-gradient(45deg, #ffd700, #ffed4e, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            font-size: 1.4rem;
+            text-align: center;
+            margin-bottom: 3rem;
+            opacity: 0.9;
+            font-style: italic;
+            z-index: 10;
+            position: relative;
+        }
+
+        .lyrics-container {
+            max-width: 1000px;
+            z-index: 10;
+            position: relative;
+            background: rgba(255, 215, 0, 0.1);
+            border: 2px solid rgba(255, 215, 0, 0.4);
+            border-radius: 25px;
+            padding: 40px;
+            backdrop-filter: blur(15px);
+            box-shadow: 0 15px 40px rgba(255, 215, 0, 0.3);
+            animation: fadeInLyrics 3s ease-out;
+        }
+
+        .verse-section, .chorus-section, .bridge-section, .final-chorus-section, .outro-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .verse-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-left: 4px solid #ffd700;
+        }
+
+        .chorus-section, .final-chorus-section {
+            background: rgba(255, 215, 0, 0.15);
+            border-left: 4px solid #ff6b6b;
+            font-weight: bold;
+        }
+
+        .bridge-section {
+            background: rgba(255, 140, 0, 0.1);
+            border-left: 4px solid #ff8c00;
+            font-style: italic;
+        }
+
+        .outro-section {
+            background: rgba(139, 69, 19, 0.2);
+            border-left: 4px solid #8b4513;
+            text-align: center;
+            font-style: italic;
+        }
+
+        .verse-title, .chorus-title, .bridge-title, .final-chorus-title, .outro-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #ffd700;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .verse-text, .chorus-text, .bridge-text, .final-chorus-text, .outro-text {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            font-family: 'Georgia', serif;
+        }
+
+        .lyrics-container:hover {
+            transform: scale(1.02);
+            box-shadow: 0 20px 50px rgba(255, 215, 0, 0.4);
+        }
+
+        .golden-particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #ffd700;
+            border-radius: 50%;
+            animation: sparkle 4s infinite linear;
+        }
+
+        .nostalgia-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at center, transparent 40%, rgba(139, 69, 19, 0.3) 100%);
+            pointer-events: none;
+        }
+
+        @keyframes fadeInGlow {
+            from { 
+                opacity: 0; 
+                transform: translateY(-50px);
+                text-shadow: 0 0 0 rgba(255,215,0,0);
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0);
+                text-shadow: 0 0 20px rgba(255,215,0,0.8), 3px 3px 10px rgba(0,0,0,0.7);
+            }
+        }
+
+        @keyframes fadeInLyrics {
+            from { 
+                opacity: 0; 
+                transform: translateY(50px) scale(0.95);
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes wave {
+            0%, 100% { transform: translateX(-50%) rotate(0deg); }
+            50% { transform: translateX(-50%) rotate(15deg); }
+        }
+
+        @keyframes crumble {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.7; }
+        }
+
+        @keyframes sparkle {
+            from { 
+                transform: translateY(100vh) rotate(0deg) scale(0);
+                opacity: 0;
+            }
+            10% { opacity: 1; scale: 1; }
+            90% { opacity: 1; }
+            to { 
+                transform: translateY(-100px) rotate(360deg) scale(0);
+                opacity: 0;
+            }
+        }
+
+        .memory-bubble:nth-child(1) { animation-delay: 0.2s; }
+        .memory-bubble:nth-child(2) { animation-delay: 0.4s; }
+        .memory-bubble:nth-child(3) { animation-delay: 0.6s; }
+        .memory-bubble:nth-child(4) { animation-delay: 0.8s; }
+        .memory-bubble:nth-child(5) { animation-delay: 1.0s; }
+        .memory-bubble:nth-child(6) { animation-delay: 1.2s; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nostalgia-overlay"></div>
+        <div class="golden-particles" id="particles"></div>
+        
+        <div class="castle-silhouette">
+            <div class="castle-tower tower1 crumbling">
+                <div class="flag"></div>
+            </div>
+            <div class="castle-tower tower2 crumbling"></div>
+            <div class="castle-tower tower3 crumbling">
+                <div class="flag"></div>
+            </div>
+            <div class="castle-tower tower4 crumbling"></div>
+            <div class="castle-tower tower5 crumbling"></div>
+        </div>
+        
+        <h1 class="title">Shamelot</h1>
+        <p class="subtitle">"One brief and shining reign..." • A Nostalgic Lament</p>
+        
+        <div class="lyrics-container">
+            <div class="verse-section">
+                <div class="verse-title">Verse 1</div>
+                <div class="verse-text">
+                    In distant days of Shamelot<br>
+                    When tweets flew forth at dawn<br>
+                    Each word I spoke was gospel truth<br>
+                    And critics were all gone<br>
+                    The press would bow, the crowds would cheer<br>
+                    My wisdom none could doubt<br>
+                    Oh, how I long for Shamelot<br>
+                    Before they voted me out
+                </div>
+            </div>
+
+            <div class="chorus-section">
+                <div class="chorus-title">Chorus</div>
+                <div class="chorus-text">
+                    Shamelot! Shamelot!<br>
+                    Where my word was always law<br>
+                    Shamelot! Shamelot!<br>
+                    Where no one questioned what they saw<br>
+                    Those golden days when I was king<br>
+                    And everyone would sing my praise<br>
+                    Oh, how I miss those Shamelot days
+                </div>
+            </div>
+
+            <div class="verse-section">
+                <div class="verse-title">Verse 2</div>
+                <div class="verse-text">
+                    In those bright days of Shamelot<br>
+                    No subpoena could appear<br>
+                    The courts would never dare to call<br>
+                    When executive privilege was near<br>
+                    My loyal knights would circle 'round<br>
+                    And shield me from all blame<br>
+                    Oh, sweet return to Shamelot<br>
+                    And presidential fame!
+                </div>
+            </div>
+
+            <div class="chorus-section">
+                <div class="chorus-title">Chorus</div>
+                <div class="chorus-text">
+                    Shamelot! Shamelot!<br>
+                    Where pardons flowed like wine<br>
+                    Shamelot! Shamelot!<br>
+                    Where every victory was mine<br>
+                    Those glorious days when I held sway<br>
+                    And history bent to my will<br>
+                    Oh, I dream of Shamelot still
+                </div>
+            </div>
+
+            <div class="bridge-section">
+                <div class="bridge-title">Bridge</div>
+                <div class="bridge-text">
+                    They say that power corrupts the soul<br>
+                    And absolute power more<br>
+                    But in my heart I know the truth—<br>
+                    I was perfect to the core!<br>
+                    The swamp was drained, the wall was built<br>
+                    (At least that's how I recall)<br>
+                    In legendary Shamelot<br>
+                    I was the greatest of them all
+                </div>
+            </div>
+
+            <div class="final-chorus-section">
+                <div class="final-chorus-title">Final Chorus</div>
+                <div class="final-chorus-text">
+                    Shamelot! Shamelot!<br>
+                    One brief and shining reign<br>
+                    Shamelot! Shamelot!<br>
+                    Will I see your likes again?<br>
+                    Those fleeting years when I was crowned<br>
+                    The king of all I surveyed<br>
+                    Oh, bring me back to Shamelot days!
+                </div>
+            </div>
+
+            <div class="outro-section">
+                <div class="outro-title">Outro</div>
+                <div class="outro-text">
+                    Yes, once there was a spot<br>
+                    Called Shamelot...
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function createGoldenParticle() {
+            const particle = document.createElement('div');
+            particle.className = 'particle';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.animationDuration = (Math.random() * 3 + 3) + 's';
+            particle.style.animationDelay = Math.random() * 2 + 's';
+            
+            document.getElementById('particles').appendChild(particle);
+            
+            setTimeout(() => {
+                particle.remove();
+            }, 6000);
+        }
+
+        // Create golden particles periodically
+        setInterval(createGoldenParticle, 300);
+        
+        // Create initial particles
+        for(let i = 0; i < 10; i++) {
+            setTimeout(createGoldenParticle, i * 100);
+        }
+
+        // Add some interactive sparkle on hover
+        document.querySelector('.lyrics-container').addEventListener('mouseenter', () => {
+            for(let i = 0; i < 8; i++) {
+                setTimeout(createGoldenParticle, i * 75);
+            }
+        });
+    </script>
+</body>
+</html>
