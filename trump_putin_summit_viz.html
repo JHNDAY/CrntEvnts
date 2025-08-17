@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trump-Putin Alaska Summit: Visual Analysis</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f1419 0%, #1a2332 50%, #2d3748 100%);
+            color: #e2e8f0;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .header {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid #4a5568;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(45deg, #ff6b6b, #feca57, #48cae4);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 5px rgba(255,107,107,0.3)); }
+            to { filter: drop-shadow(0 0 20px rgba(255,107,107,0.6)); }
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #a0aec0;
+            font-style: italic;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .summit-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .stat-card {
+            background: rgba(26, 32, 44, 0.8);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            border: 1px solid #4a5568;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #feca57;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 1.1rem;
+            color: #cbd5e0;
+        }
+
+        .timeline {
+            background: rgba(26, 32, 44, 0.8);
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 3rem 0;
+            border: 1px solid #4a5568;
+        }
+
+        .timeline h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #feca57;
+            font-size: 2rem;
+        }
+
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: rgba(45, 55, 72, 0.6);
+            border-radius: 15px;
+            border-left: 4px solid #ff6b6b;
+            transition: transform 0.3s ease;
+        }
+
+        .timeline-item:hover {
+            transform: translateX(10px);
+        }
+
+        .timeline-time {
+            font-weight: 700;
+            color: #feca57;
+            min-width: 120px;
+            font-size: 1.1rem;
+        }
+
+        .timeline-content {
+            flex: 1;
+            margin-left: 1rem;
+        }
+
+        .timeline-title {
+            font-weight: 600;
+            color: #e2e8f0;
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-description {
+            color: #a0aec0;
+            font-size: 0.95rem;
+        }
+
+        .quote-section {
+            background: linear-gradient(135deg, rgba(255,107,107,0.1), rgba(254,202,87,0.1));
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 3rem 0;
+            border: 1px solid rgba(255,107,107,0.3);
+        }
+
+        .quote-section h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #ff6b6b;
+            font-size: 2rem;
+        }
+
+        .quote {
+            font-size: 1.3rem;
+            font-style: italic;
+            color: #e2e8f0;
+            text-align: center;
+            margin-bottom: 1rem;
+            line-height: 1.8;
+        }
+
+        .quote-author {
+            text-align: center;
+            color: #feca57;
+            font-weight: 600;
+        }
+
+        .comparison-chart {
+            background: rgba(26, 32, 44, 0.8);
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 3rem 0;
+            border: 1px solid #4a5568;
+        }
+
+        .comparison-chart h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #48cae4;
+            font-size: 2rem;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .leader-profile {
+            background: rgba(45, 55, 72, 0.8);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .leader-profile:hover {
+            transform: scale(1.05);
+        }
+
+        .leader-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .trump-profile {
+            border: 2px solid #ff6b6b;
+        }
+
+        .trump-profile .leader-name {
+            color: #ff6b6b;
+        }
+
+        .putin-profile {
+            border: 2px solid #48cae4;
+        }
+
+        .putin-profile .leader-name {
+            color: #48cae4;
+        }
+
+        .leader-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 1rem;
+        }
+
+        .leader-stat {
+            text-align: center;
+        }
+
+        .leader-stat-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #feca57;
+        }
+
+        .leader-stat-label {
+            font-size: 0.9rem;
+            color: #a0aec0;
+        }
+
+        .impact-section {
+            background: rgba(26, 32, 44, 0.8);
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 3rem 0;
+            border: 1px solid #4a5568;
+        }
+
+        .impact-section h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+            color: #ff6b6b;
+            font-size: 2rem;
+        }
+
+        .impact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .impact-card {
+            background: rgba(45, 55, 72, 0.6);
+            border-radius: 15px;
+            padding: 1.5rem;
+            border-left: 4px solid #feca57;
+        }
+
+        .impact-title {
+            font-weight: 600;
+            color: #feca57;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+        }
+
+        .impact-description {
+            color: #cbd5e0;
+            line-height: 1.6;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            background: rgba(0,0,0,0.3);
+            margin-top: 3rem;
+            border-top: 1px solid #4a5568;
+        }
+
+        .footer p {
+            color: #a0aec0;
+            font-style: italic;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+        }
+
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Love in a Cold Climate</h1>
+        <p class="subtitle">Trump-Putin Alaska Summit: August 16, 2025</p>
+    </div>
+
+    <div class="container">
+        <div class="summit-stats">
+            <div class="stat-card">
+                <div class="stat-number">12</div>
+                <div class="stat-label">Minutes Press Conference</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">3</div>
+                <div class="stat-label">Hours of Meetings</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">100+</div>
+                <div class="stat-label">Countries Where Putin Would Be Arrested</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">10</div>
+                <div class="stat-label">Years Since Putin's Last US Visit</div>
+            </div>
+        </div>
+
+        <div class="timeline">
+            <h2>Summit Timeline</h2>
+            <div class="timeline-item">
+                <div class="timeline-time">Arrival</div>
+                <div class="timeline-content">
+                    <div class="timeline-title">Red Carpet Welcome</div>
+                    <div class="timeline-description">Trump rolls out red carpet for Putin at Joint Base Elmendorf-Richardson, Alaska. Long handshake and ride in presidential limousine "the Beast".</div>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-time">3 Hours Later</div>
+                <div class="timeline-content">
+                    <div class="timeline-title">Joint Press Conference</div>
+                    <div class="timeline-description">12-minute anticlimactic press conference. Putin speaks first and longer, despite US hosting. No questions from reporters.</div>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-time">Immediately After</div>
+                <div class="timeline-content">
+                    <div class="timeline-title">Fox News Exclusive</div>
+                    <div class="timeline-description">Trump sits with Sean Hannity, reveals Putin's comments about rigged 2020 election and Ukraine war causation.</div>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-time">Departure</div>
+                <div class="timeline-content">
+                    <div class="timeline-title">"Next Time in Moscow"</div>
+                    <div class="timeline-description">Putin invites Trump to Moscow in English. Trump responds positively despite potential "heat" from critics.</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="quote-section">
+            <h2>Key Quote</h2>
+            <div class="quote">
+                "Today President Trump was saying that if he was president back then, there would be no war, and I'm quite sure that it would indeed be so. I can confirm that."
+            </div>
+            <div class="quote-author">— Vladimir Putin</div>
+        </div>
+
+        <div class="comparison-chart">
+            <h2>Leaders Face-Off</h2>
+            <div class="comparison-grid">
+                <div class="leader-profile trump-profile">
+                    <div class="leader-name">Donald Trump</div>
+                    <div class="leader-stats">
+                        <div class="leader-stat">
+                            <div class="leader-stat-value">79</div>
+                            <div class="leader-stat-label">Years Old</div>
+                        </div>
+                        <div class="leader-stat">
+                            <div class="leader-stat-value">6'3"</div>
+                            <div class="leader-stat-label">Height</div>
+                        </div>
+                        <div class="leader-stat">
+                            <div class="leader-stat-value">Host</div>
+                            <div class="leader-stat-label">Role</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="leader-profile putin-profile">
+                    <div class="leader-name">Vladimir Putin</div>
+                    <div class="leader-stats">
+                        <div class="leader-stat">
+                            <div class="leader-stat-value">72</div>
+                            <div class="leader-stat-label">Years Old</div>
+                        </div>
+                        <div class="leader-stat">
+                            <div class="leader-stat-value">5'7"</div>
+                            <div class="leader-stat-label">Height</div>
+                        </div>
+                        <div class="leader-stat">
+                            <div class="leader-stat-value">Guest</div>
+                            <div class="leader-stat-label">Role</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="impact-section">
+            <h2>Summit Impact Analysis</h2>
+            <div class="impact-grid">
+                <div class="impact-card">
+                    <div class="impact-title">🎭 PR Victory for Putin</div>
+                    <div class="impact-description">Putin achieved his goal of being welcomed back on the world stage as an equal to the US president, despite war crimes indictment.</div>
+                </div>
+                <div class="impact-card">
+                    <div class="impact-title">📰 Media Strategy</div>
+                    <div class="impact-description">Trump avoided world media questions but gave exclusive interview to friendly Fox News host Sean Hannity.</div>
+                </div>
+                <div class="impact-card">
+                    <div class="impact-title">🗳️ Election Narrative</div>
+                    <div class="impact-description">Putin reinforced Trump's false claims about 2020 election being "rigged" through mail-in voting.</div>
+                </div>
+                <div class="impact-card">
+                    <div class="impact-title">🌍 Global Implications</div>
+                    <div class="impact-description">Summit compared unfavorably to historical appeasement, with critics saying it was "worse than Chamberlain and Hitler."</div>
+                </div>
+                <div class="impact-card">
+                    <div class="impact-title">🤝 Personal Dynamics</div>
+                    <div class="impact-description">Despite height advantage, Trump appeared deferential while Putin dominated the narrative and speaking time.</div>
+                </div>
+                <div class="impact-card">
+                    <div class="impact-title">🇺🇦 Ukraine Outcome</div>
+                    <div class="impact-description">No concrete progress on Ukraine ceasefire, but Putin secured validation of his historical revisionism about the war's causes.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>Analysis based on reporting by David Smith, The Guardian | August 16, 2025</p>
+    </div>
+
+    <script>
+        // Add some interactive animations
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate stat numbers
+            const statNumbers = document.querySelectorAll('.stat-number');
+            statNumbers.forEach(stat => {
+                const finalValue = stat.textContent;
+                let currentValue = 0;
+                const increment = finalValue.includes('+') ? 5 : 1;
+                const target = parseInt(finalValue.replace(/\D/g, ''));
+                
+                const timer = setInterval(() => {
+                    currentValue += increment;
+                    if (currentValue >= target) {
+                        stat.textContent = finalValue;
+                        clearInterval(timer);
+                    } else {
+                        stat.textContent = currentValue + (finalValue.includes('+') ? '+' : '');
+                    }
+                }, 50);
+            });
+
+            // Add hover effects to timeline items
+            const timelineItems = document.querySelectorAll('.timeline-item');
+            timelineItems.forEach(item => {
+                item.addEventListener('mouseenter', function() {
+                    this.style.backgroundColor = 'rgba(255, 107, 107, 0.1)';
+                });
+                item.addEventListener('mouseleave', function() {
+                    this.style.backgroundColor = 'rgba(45, 55, 72, 0.6)';
+                });
+            });
+
+            // Pulse effect for key stats
+            setTimeout(() => {
+                document.querySelector('.stat-card:first-child').classList.add('pulse');
+            }, 2000);
+        });
+    </script>
+</body>
+</html>
