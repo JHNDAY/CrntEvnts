@@ -3,493 +3,610 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trump Administration Analysis: 15% Review</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    <title>Trump Administration Analysis - 15% Through Second Term</title>
+    
+    <script>
+        // Define function immediately at page start
+        window.handleClick = function(sectionId, action) {
+            var section = document.getElementById(sectionId);
+            var btn = document.getElementById(sectionId.replace('-section', '-btn'));
+            
+            if (action === 'toggle') {
+                if (section.classList.contains('expanded')) {
+                    section.classList.remove('expanded');
+                    if (!btn.classList.contains('read')) {
+                        btn.classList.add('collapsed');
+                        btn.innerHTML = '▼';
+                    }
+                } else {
+                    section.classList.add('expanded');
+                    btn.classList.remove('collapsed');
+                    btn.innerHTML = '▲';
+                }
+            } else if (action === 'read') {
+                btn.classList.add('read');
+                btn.classList.remove('collapsed');
+                btn.innerHTML = '✓';
+                section.classList.remove('expanded');
+            }
+        };
         
+        // Also create direct global reference
+        handleClick = window.handleClick;
+    </script>
+    
+    <style>
         body {
-            font-family: 'Georgia', 'Times New Roman', serif;
+            font-family: Georgia, serif;
             line-height: 1.6;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
             color: #333;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            min-height: 100vh;
+            background-color: #fafafa;
         }
         
         .container {
-            max-width: 1200px;
-            margin: 0 auto;
             background: white;
-            box-shadow: 0 0 30px rgba(0,0,0,0.1);
-            border-radius: 10px;
-            overflow: hidden;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
         
-        .header {
-            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
-            color: white;
-            padding: 2rem;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+            font-size: 2.2em;
         }
         
-        .header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" patternUnits="userSpaceOnUse" width="100" height="100"><circle cx="50" cy="50" r="1" fill="rgba(255,255,255,0.05)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
-            opacity: 0.3;
+        h2 {
+            color: #34495e;
+            margin-top: 40px;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            border-left: 4px solid #3498db;
+            padding-left: 15px;
         }
         
-        .header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .header .subtitle {
-            font-size: 1.2rem;
-            opacity: 0.9;
-            position: relative;
-            z-index: 1;
-        }
-        
-        .content {
-            padding: 2rem;
+        h3 {
+            color: #2c3e50;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            font-size: 1.2em;
         }
         
         .intro {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 1.5rem;
-            border-radius: 10px;
-            margin-bottom: 2rem;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            background: #ecf0f1;
+            padding: 20px;
+            border-left: 4px solid #e74c3c;
+            margin-bottom: 30px;
+            border-radius: 4px;
         }
         
-        .section {
-            margin-bottom: 3rem;
-            background: #f8f9fa;
-            padding: 1.5rem;
-            border-radius: 10px;
-            border-left: 5px solid #3498db;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        .cabinet-list {
+            background: #fff5f5;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
         }
         
-        .section:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        .cabinet-list ul {
+            margin: 0;
+            padding-left: 20px;
         }
         
-        .section h2 {
-            color: #2c3e50;
-            font-size: 1.8rem;
-            margin-bottom: 1rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 2px solid #3498db;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-        
-        .section-icon {
-            width: 30px;
-            height: 30px;
-            background: linear-gradient(135deg, #3498db, #2980b9);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-        }
-        
-        .appointee-list {
-            background: white;
-            padding: 1rem;
-            border-radius: 8px;
-            margin: 1rem 0;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
-        
-        .appointee-item {
-            padding: 0.5rem 0;
-            border-bottom: 1px solid #eee;
-        }
-        
-        .appointee-item:last-child {
-            border-bottom: none;
-        }
-        
-        .vote-count {
-            background: #e74c3c;
-            color: white;
-            padding: 0.2rem 0.5rem;
-            border-radius: 15px;
-            font-size: 0.9rem;
-            font-weight: bold;
-            margin-left: 0.5rem;
+        .cabinet-list li {
+            margin-bottom: 8px;
         }
         
         .quote {
-            background: #fff;
-            border-left: 4px solid #f39c12;
-            padding: 1rem;
-            margin: 1rem 0;
-            border-radius: 0 8px 8px 0;
+            background: #f8f9fa;
+            border-left: 4px solid #6c757d;
+            padding: 15px;
+            margin: 15px 0;
             font-style: italic;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
         
-        .quote-author {
-            font-weight: bold;
-            margin-top: 0.5rem;
-            color: #2c3e50;
+        .statistics {
+            background: #e8f5e8;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 15px 0;
         }
         
-        .news-item {
-            background: white;
-            padding: 1rem;
-            margin: 0.5rem 0;
+        .highlight {
+            background-color: #fff3cd;
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+            border: 1px solid #e0e0e0;
             border-radius: 8px;
-            border-left: 3px solid #27ae60;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            overflow: hidden;
         }
         
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1rem;
-            margin: 1rem 0;
-        }
-        
-        .stat-card {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        .section-header {
+            background: linear-gradient(135deg, #3498db, #2980b9);
             color: white;
-            padding: 1rem;
-            border-radius: 10px;
-            text-align: center;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            padding: 15px 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background 0.3s ease;
+            user-select: none;
         }
         
-        .stat-number {
-            font-size: 2rem;
-            font-weight: bold;
+        .section-header:hover {
+            background: linear-gradient(135deg, #2980b9, #3498db);
+        }
+        
+        .section-header h2 {
+            margin: 0;
+            border: none;
+            padding: 0;
+            color: white;
+            font-size: 1.4em;
+        }
+        
+        .collapse-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            padding: 5px;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .collapse-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .collapse-btn.collapsed {
+            transform: rotate(0deg);
+        }
+        
+        .collapse-btn.read {
+            background: rgba(46, 204, 113, 0.8);
+            transform: scale(1.1);
+        }
+        
+        .collapse-btn.read:hover {
+            background: rgba(46, 204, 113, 1);
+        }
+        
+        .section-content {
+            padding: 20px;
+            display: none;
+            transition: all 0.3s ease;
+        }
+        
+        .section-content.expanded {
             display: block;
         }
         
-        .emphasis {
-            background: linear-gradient(120deg, #f093fb 0%, #f5576c 100%);
-            color: white;
-            padding: 0.2rem 0.5rem;
-            border-radius: 5px;
-            font-weight: bold;
-        }
-        
-        .warning {
-            background: #ffe6e6;
-            border: 1px solid #ffb3b3;
-            color: #d63031;
-            padding: 1rem;
-            border-radius: 8px;
-            margin: 1rem 0;
-        }
-        
-        .footer {
-            background: #2c3e50;
-            color: white;
+        .section-footer {
             text-align: center;
-            padding: 1rem;
-            margin-top: 2rem;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
         }
         
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 1.8rem;
-            }
-            
-            .content {
-                padding: 1rem;
-            }
-            
-            .section {
-                padding: 1rem;
-            }
-            
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
+        .footer-collapse-btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-right: 10px;
+        }
+        
+        .footer-collapse-btn:hover {
+            background: #2980b9;
+            transform: translateY(-1px);
+        }
+        
+        .mark-read-btn {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .mark-read-btn:hover {
+            background: #229954;
+            transform: translateY(-1px);
+        }
+        
+        .section-summary {
+            background: #f8f9fa;
+            padding: 10px 15px;
+            margin: 10px 20px;
+            border-left: 4px solid #3498db;
+            font-style: italic;
+            color: #666;
+        }
+        
+        strong {
+            color: #2c3e50;
+        }
+        
+        p {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+        
+        ul {
+            margin-bottom: 15px;
+        }
+        
+        li {
+            margin-bottom: 5px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>Trump Administration Analysis</h1>
-            <div class="subtitle">15% Review of the Second Term</div>
-        </div>
+        <h1>Trump Administration Analysis: 15% Through Second Term</h1>
         
-        <div class="content">
-            <div class="intro">
-                <p>Now that we're 15% of the way through the second Trump administration, this comprehensive analysis examines the most controversial cabinet appointments and their impact on American governance, public health, civil liberties, and democratic institutions.</p>
+        <div class="intro">
+            <p>Now that we're 15% of the way through the second Trump administration, let's take a look back at his cabinet level appointees who generated the most controversy during the confirmation process (with their votes from the 53R-47D Senate in parentheses):</p>
+        </div>
+
+        <div class="cabinet-list">
+            <ul>
+                <li><strong>Pete Hegseth</strong>, Secretary of Defense (51-50)</li>
+                <li><strong>Kash Patel</strong>, FBI Director (51-49)</li>
+                <li><strong>Tulsi Gabbard</strong>, Director National Intelligence (52-48)</li>
+                <li><strong>Robert F Kennedy Jr.</strong>, Secretary of HHS (52-48)</li>
+            </ul>
+        </div>
+
+        <p>From the point-of-view of Trump, his closest advisers and Project 2025, all of these appointees have lived up to their expectations; for many of the rest of us, they have performed dismally.</p>
+
+        <p>I'd like to give dishonorable mention to two more cabinet appointees:</p>
+
+        <div class="cabinet-list">
+            <ul>
+                <li><strong>Pam Bondi</strong>, Attorney General (54-46)</li>
+                <li><strong>Kristi Noem</strong>, Secretary of DHS (59-34)</li>
+            </ul>
+        </div>
+
+        <p>Bondi has succeeded in weaponizing the DOJ and is effectively serving as Trump's personal attorney and has proved to be a "worthy" successor to first choice Matt Gaetz. John Fetterman was the only Democrat who voted to confirm her. Noem, who may have impressed Trump with her twin shootings of a dog and a goat as well as her telegenic qualities, has shown that this cruelty was not an aberration in her role as <span class="highlight">ICE Barbie</span>. You have to wonder how the seven Democrats who voted for her, including Fetterman, and the six who abstained feel about their decisions now.</p>
+
+        <p>As we delve into this week's national news, all six of these individuals played a prominent role, but RFK Jr. especially stands out for the damage that he did.</p>
+
+        <p><strong>Here are the national news items which caught my attention this week:</strong></p>
+
+        <div class="section">
+            <div class="section-header">
+                <h2>Decapitation of CDC</h2>
+                <button class="collapse-btn collapsed" id="cdc-btn" onclick="handleClick('cdc-section', 'toggle')">▼</button>
             </div>
-            
-            <div class="section">
-                <h2><span class="section-icon">👥</span>Controversial Cabinet Appointments</h2>
-                <p>The following cabinet-level appointees generated the most controversy during the confirmation process in the 53R-47D Senate:</p>
-                
-                <div class="appointee-list">
-                    <div class="appointee-item">
-                        <strong>Pete Hegseth</strong>, Secretary of Defense <span class="vote-count">51-50</span>
-                    </div>
-                    <div class="appointee-item">
-                        <strong>Kash Patel</strong>, FBI Director <span class="vote-count">51-49</span>
-                    </div>
-                    <div class="appointee-item">
-                        <strong>Tulsi Gabbard</strong>, Director National Intelligence <span class="vote-count">52-48</span>
-                    </div>
-                    <div class="appointee-item">
-                        <strong>Robert F Kennedy Jr.</strong>, Secretary of HHS <span class="vote-count">52-48</span>
-                    </div>
-                </div>
-                
-                <p>From the perspective of Trump, his closest advisers and Project 2025, all of these appointees have lived up to their expectations; for many of the rest of us, they have performed dismally.</p>
-                
-                <h3>Dishonorable Mentions</h3>
-                <div class="appointee-list">
-                    <div class="appointee-item">
-                        <strong>Pam Bondi</strong>, Attorney General <span class="vote-count">54-46</span>
-                        <p>Has succeeded in weaponizing the DOJ and is effectively serving as Trump's personal attorney. John Fetterman was the only Democrat who voted to confirm her.</p>
-                    </div>
-                    <div class="appointee-item">
-                        <strong>Kristi Noem</strong>, Secretary of DHS <span class="vote-count">59-34</span>
-                        <p>Known as "ICE Barbie," has shown that her cruelty was not an aberration. Seven Democrats voted for her, and six abstained.</p>
-                    </div>
-                </div>
+            <div class="section-summary">
+                RFK Jr. fires CDC Director, mass resignations follow, non-medical deputy appointed as replacement
             </div>
+            <div class="section-content" id="cdc-section">
             
-            <div class="section">
-                <h2><span class="section-icon">🏥</span>Decapitation of CDC</h2>
-                <p>In an administration pursuing the Project 2025 scheme, HHS Secretary RFK Jr. stands out for his antipathy toward the CDC, founded over 70 years ago.</p>
-                
-                <div class="warning">
-                    <strong>Crisis Point:</strong> RFK Jr. precipitated a crisis by firing Dr. Susan Monarez (confirmed just a month ago) after she refused to endorse vaccine restrictions. Four senior officials resigned in protest.
-                </div>
-                
-                <p>To replace Monarez, RFK Jr. appointed <strong>Jim O'Neill</strong> as Acting Director—despite having no medical or vaccine science background and supporting Ivermectin and Hydroxychloroquine for COVID treatment.</p>
-                
-                <h3>Expert Reactions</h3>
-                <div class="quote">
-                    "This is not about one official. It is about the systematic dismantling of public health institutions, the silencing of experts, and the dangerous politicization of science."
-                    <div class="quote-author">— Monarez's lawyers</div>
-                </div>
-                
-                <div class="quote">
-                    "The CDC you knew is over. Unless someone takes radical action, there is nothing there that can be salvaged."
-                    <div class="quote-author">— Dr. Demetre Daskalakis (resigned in protest)</div>
-                </div>
-                
-                <div class="quote">
-                    "When we didn't have scientific leadership, that was it (for me)."
-                    <div class="quote-author">— Chief Medical Officer Dr. Debra Houry</div>
-                </div>
-                
-                <h3>Other Health-Related Actions</h3>
-                <div class="news-item">
-                    FDA approved updated COVID vaccines for fall season, but restricted to people over 65 and those with medical conditions
-                </div>
-                <div class="news-item">
-                    Kennedy cancelled <span class="emphasis">$500 million</span> in funding for mRNA vaccine development
-                </div>
-                <div class="news-item">
-                    Supreme Court allowed NIH to cut <span class="emphasis">$783 million</span> in DEI-linked grants by 5-4 vote
-                </div>
-                <div class="news-item">
-                    RFK Jr. suggested SSRIs may have caused Minnesota Catholic school shootings
-                </div>
+            <p>In an administration which has diligently pursued the Project 2025 scheme for reducing government and increasing the power of the executive, HHS Secretary RFK Jr. stands out for his antipathy toward the goals and processes of an agency which was founded over 70 years ago. This week, he precipitated a crisis by firing (finalized by Trump) Dr. Susan Monarez, who was confirmed just a month ago, apparently because she refused to endorse the strictures placed on vaccines by Kennedy's panel of non-vaccine-experts and to fire several high-ranking officials at the agency. In response, four of her most senior direct reports tendered their resignations. To replace Monarez, RFK Jr. appointed his close deputy Jim O'neill, who has no medical or vaccine science background and supported the use of Ivermectin and Hydroxychloroquine to treat Covid, to serve as Acting Director of the CDC.</p>
+
+            <h3>Comments on what happened:</h3>
+            
+            <div class="quote">
+                <p><strong>Monarez's lawyers:</strong> "This is not about one official. It is about the systematic dismantling of public health institutions, the silencing of experts, and the dangerous politicization of science".</p>
             </div>
-            
-            <div class="section">
-                <h2><span class="section-icon">⚖️</span>Authoritarianism</h2>
-                <p>The domination and dismantling of government extends beyond RFK Jr. as Trump moves to concentrate power in the executive branch.</p>
-                
-                <h3>Federal Reserve Under Attack</h3>
-                <div class="quote">
-                    "An independent Federal Reserve is essential for a stable economy, as other short-term interests of a president often clash with sound monetary policy."
-                    <div class="quote-author">— Lisa Cook's lawyers</div>
-                </div>
-                
-                <div class="quote">
-                    "If Lisa Cook is fired, the implications will be profound and disastrous...the U.S. will be well on its way to becoming Turkey."
-                    <div class="quote-author">— Paul Krugman</div>
-                </div>
-                
-                <h3>Militarization of Domestic Policy</h3>
-                <div class="news-item">
-                    Trump signed EO creating specialized National Guard units in all 50 states to "quell civil disturbances"
-                </div>
-                <div class="news-item">
-                    Washington DC National Guard deployment estimated to cost <span class="emphasis">$1.0 million per day</span>
-                </div>
-                <div class="news-item">
-                    Plans for military incursions into Blue cities with Black mayors continue
-                </div>
-                
-                <div class="quote">
-                    "This is the militarization of America...our military used against us."
-                    <div class="quote-author">— Retired Major Gen. Randy Manner</div>
-                </div>
-                
-                <h3>State Resistance</h3>
-                <div class="quote">
-                    "It takes one to know one on the weight question...and his personal attacks on me are evidence of a guy who is still living in fifth grade."
-                    <div class="quote-author">— Governor JB Pritzker responding to Trump</div>
-                </div>
-                
-                <div class="quote">
-                    "President Bone Spurs will do anything to get out of walking."
-                    <div class="quote-author">— Governor Wes Moore offering Trump a golf cart</div>
-                </div>
+
+            <div class="quote">
+                <p><strong>Dr. Demetre Daskalakis</strong>, who directed the CDC's National Center for Immunization and Respiratory Diseases and resigned in protest: "The CDC you knew is over. Unless someone takes radical action, there is nothing there that can be salvaged". In his resignation letter he wrote "I am not sure who the Secretary is listening to, but it's not us".</p>
             </div>
-            
-            <div class="section">
-                <h2><span class="section-icon">🎯</span>Retribution</h2>
-                <p>Other than the presidency's trappings and opportunities for monetization, Trump's favorite activity may be exacting vengeance on opponents.</p>
-                
-                <div class="quote">
-                    "This is a retribution presidency."
-                    <div class="quote-author">— John Bolton</div>
-                </div>
-                
-                <h3>Recent Retributive Actions</h3>
-                <div class="news-item">
-                    Called for federal racketeering charges against George Soros and his son
-                </div>
-                <div class="news-item">
-                    FEMA suspended 36 individuals who signed the "Katrina Declaration"
-                </div>
-                <div class="news-item">
-                    Revoked Kamala Harris' Secret Service protection during her book tour
-                </div>
-                <div class="news-item">
-                    Continued harassment of federal workers as "retribution" rather than "reform"
-                </div>
-                
-                <div class="quote">
-                    "When I was expelled from Russia, at least Putin gave me six days to leave."
-                    <div class="quote-author">— Former CIA Director William Burns</div>
-                </div>
+
+            <div class="quote">
+                <p><strong>Chief Medical Officer Dr. Debra Houry</strong> wrote in her resignation letter: "When we didn't have scientific leadership, that was it (for me)".</p>
             </div>
-            
-            <div class="section">
-                <h2><span class="section-icon">🌎</span>Immigration Crackdown</h2>
-                <p>As programs founder, Trump positions himself as tough on crime, especially targeting immigrants as "the other."</p>
-                
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <span class="stat-number">350k</span>
-                        Total deportees in 7 months
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-number">600k</span>
-                        Projected annual rate
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-number">75%</span>
-                        ICE detainees with no criminal convictions
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-number">36%</span>
-                        DC restaurant workers who are immigrants
-                    </div>
-                </div>
-                
-                <h3>Notable Cases</h3>
-                <div class="news-item">
-                    Catalina Santiago (DACA recipient) arrested at El Paso Airport
-                </div>
-                <div class="news-item">
-                    Two firefighters battling Bear Gulch fire arrested by Border Patrol
-                </div>
-                <div class="news-item">
-                    600 Guatemalan children planned for "repatriation" (emergency halt ordered)
-                </div>
-                <div class="news-item">
-                    Growing restaurant worker shortage in DC due to fear and arrests
-                </div>
+
+            <div class="quote">
+                <p><strong>MA Public Health Commissioner and former CDC employee Dr. Robbie Goldstein:</strong> "What we're seeing here is not politics gone awry....(It) is the scientific process being corrupted".</p>
             </div>
-            
-            <div class="section">
-                <h2><span class="section-icon">🗳️</span>Elections & Political Strategy</h2>
-                <p>Republicans likely to campaign on crime/immigration, while Democrats must decide how to respond to Trump's malfeasance.</p>
-                
-                <h3>Doug Sosnik's Three-Pronged Approach for Democrats</h3>
-                <div class="news-item">
-                    <strong>1.</strong> Develop a narrative defining Trump and Republicans for what they're doing or not doing to help people
-                </div>
-                <div class="news-item">
-                    <strong>2.</strong> Articulate a coherent narrative about the future, appealing to the middle class and the 70% without four-year college degrees
-                </div>
-                <div class="news-item">
-                    <strong>3.</strong> The long-term solution depends on who Democrats nominate for president and whether they win
-                </div>
-                
-                <h3>Key Electoral Dynamics</h3>
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <span class="stat-number">60M</span>
-                        New swing voters (voted in only 2020 OR 2024)
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-number">2.3%</span>
-                        National House vote margin needed for Dem control
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-number">2.5%</span>
-                        Current Democratic polling lead (RCP average)
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-number">5%</span>
-                        Democratic lead in CNBC polling
-                    </div>
-                </div>
+
+            <div class="quote">
+                <p><strong>An anonymous former high ranking official</strong> opined that they could see the "CDC going the way of USAID".</p>
             </div>
+
+            <div class="quote">
+                <p><strong>Andrew Egger of The Bulwark</strong> likened "Kennedy and MAHA" to "the dog that caught the car".</p>
+            </div>
+
+            <div class="quote">
+                <p><strong>Maureen Dowd</strong> excoriated RFK Jr. in an opinion piece entitled "Vax Quack Lacks Facts". In the piece, she characterizes LA Senator Bill Cassidy, a gastroenterologist who cast the key vote for Kennedy's confirmation, as having "swapped the Hippocratic oath for the Hypocritic(al) oath".</p>
+            </div>
+
+            <h3>Other health-related news under Kennedy's watch:</h3>
+            <ul>
+                <li>The FDA approved updated covid vaccines for the fall season, but restricted them to people over age 65, those with one or more medical conditions which could put them at risk, and possibly children under age 18 after a medical provider is consulted.</li>
+                <li>MA is one of 16 states which require pharmacists to have clearance from the CDC's Advisory Committee on Vaccine Practices (ACIP) before they can administer the shots. However, the ACIP is not scheduled to meet for another three weeks.</li>
+                <li>The week before this, Kennedy cancelled $500 MM of funding for mRNA vaccine development.</li>
+                <li>That same week, the Supreme Court allowed the NIH to cut $783 MM in grants linked to DEI initiatives by a 5-4 vote.</li>
+                <li>RFK Jr. suggested that the use of SSRIs may have caused the MN Catholic school shootings conducted by a shooter who may have been transgender.</li>
+                <li>The Center for Medicare and Medicaid Services is launching a pilot program in six states next year which will use AI to require preauthorization for certain services under traditional Medicare.</li>
+            </ul>
             
-            <div class="section">
-                <h2><span class="section-icon">📊</span>Miscellaneous Key Statistics</h2>
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <span class="stat-number">120</span>
-                        Guns per 100 Americans (highest in world)
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-number">46%</span>
-                        Share of world's civilian guns owned by Americans
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-number">300k</span>
-                        Expected federal employee reduction by December
-                    </div>
-                    <div class="stat-card">
-                        <span class="stat-number">15%</span>
-                        Export tax on Nvidia chips
-                    </div>
-                </div>
+            <div class="section-footer">
+                <button class="mark-read-btn" onclick="handleClick('cdc-section', 'read')">
+                    <span>✓</span> Mark as Read
+                </button>
+            </div>
             </div>
         </div>
-        
-        <div class="footer">
-            <p>Analysis of Trump Administration activities through the first 15% of the second term</p>
+
+        <div class="section">
+            <div class="section-header">
+                <h2>Authoritarianism</h2>
+                <button class="collapse-btn collapsed" id="auth-btn" onclick="handleClick('auth-section', 'toggle')">▼</button>
+            </div>
+            <div class="section-summary">
+                Federal Reserve independence threatened, military deployments to blue cities, massive government downsizing
+            </div>
+            <div class="section-content" id="auth-section">
+            
+            <p>The domination and dismantling of government is hardly confined to RFK Jr. as Trump and his cronies move to concentrate power in the executive branch and to dismantle programs and agencies on a continuous basis.</p>
+
+            <p>In particular, Trump's recent efforts to gain control of the Federal Reserve by coercing Chairman Jerome Powell to lower interest rates or resign and remove Governor Lisa Cook on highly dubious grounds threaten the independence of the Board. In this regard, in a suit to prevent her firing, Cook's lawyers wrote <em>"An independent Federal Reserve is essential for a stable economy, as other short-term interests of a president often clash with sound monetary policy"</em>. Paul Krugman commented that if Lisa Cook is fired the <em>"implications will be profound and disastrous...the U.S. will be well on its way to becoming Turkey"</em>. Jennifer Rubin concluded <em>"Trump has signaled that there are no limits to his dictatorial ambitions"</em>.</p>
+
+            <p>Meanwhile, the administration is continuing to plan armed incursions into Blue cities in Blue states. To this end, Trump signed an EO to create specialized National Guard units in all fifty states and the District to quell civil disturbances and, purportedly "ensuring the public safety and order". Retired Major Gen. Randy Manner commented <em>"This is the militarization of America...our military used against us"</em>.</p>
+
+            <p>As the Washington DC National Guard deployment, which has been estimated to cost $1.0 MM per day, is winding down, Trump declared the District was "SAFE AGAIN" and signed another EO entitled "Making Federal Architecture Beautiful Again" which may be an entree into the "Adventures in Bad Taste" which he relishes so much.</p>
+
+            <p>When the new ACELA trains were introduced this week, Secretary of Transportation Sean Duffy and his deputy Steven Bradbury delivered speeches at the Union Station and South Station ends of the ACELA route announcing plans to take over these stations and NYC's Penn Station which are all conveniently located in Blue cities with Black or Asian mayors.</p>
+
+            <p>Turning to the administration's plans for further military incursions into Blue Cities with Black mayors in Blue states, Chicago appears to be the next target. As was the case with Governor Newsom in CA, Trump faces a formidable adversary there in Governor JB Pritzker who characterized the plan as an "invasion" and said that Trump is <em>"attempting to manufacture a crisis, politicize Americans in uniform, and continue abusing his power to distract from the poor job he is doing for American families"</em>. When Trump retaliated saying that Pritzker <em>"ought to spend more time in the gym"</em>, Pritzker responded <em>"It takes one to know one on the weight question...and his personal attacks on me are evidence of a guy who is still living in fifth grade"</em>. Just today, Sunday, mayor Brandon Johnson, who accused the president of being "reckless and out of control" signed an EO which prevents the Chicago Police Department from collaborating with federal authorities on patrols, immigration enforcement or traffic stops.</p>
+
+            <p>In another contentious interaction, this time with Wes Moore, the Black governor of nearby Blue Maryland, Trump took umbrage at Moore's offer to take a walk with him in Baltimore, a city with a Black mayor, he conflated himself with the federal government saying <em>"I gave him a lot of money to fix his demolished bridge"</em> and added for good measure that Moore had lied about receiving a Bronze Star for his deployment in Afghanistan. In response, Moore offered to provide Trump with a golf cart for the walk, saying <em>"President Bone Spurs will do anything to get out of walking"</em>.</p>
+
+            <h3>Other authoritarian and dismantling of government activities this week:</h3>
+            <ul>
+                <li>The Department of the Interior ordered a stop-work order on the Revolution Wind project off of the RI and CT coasts even though the federally supported work is 80% complete and due to be finished in 2026. The project, which involved more than 1,000 workers, was partially funded by the Danish multinational company Orsted which has invested $20B in 40 states related to energy and infrastructure projects. In this context, The Board of Directors of the Chamber of Commerce for Eastern CT wrote <em>"it sends a message to investors around the world that they may want to rethink investing in America"</em>.</li>
+                <li>Andrew Tanenbaum commented <em>"In the Trump administration, coal is king and oil is queen"</em>. As if to validate Tanenbaum's remark, Secretary of Energy Chris Wright called net-zero a "sinister goal".</li>
+            </ul>
+            
+            <div class="statistics">
+                <p><strong>Energy Employment Statistics:</strong> In 2023, 3.5 MM Americans worked in jobs related to renewable energy compared to 40k working in the coal industry.</p>
+            </div>
+
+            <ul>
+                <li>A federal appeals court vote struck down Trump's tariffs by a 7-4 vote for unlawfully leaning on emergency powers, but delayed implementation until October to allow for an appeal.</li>
+                <li>Trump is looking to claw back $4.9 B of congressionally approved funding for foreign aid programs allocated to the State Department and USAID. This rescission maneuver hasn't been used since 1977.</li>
+                <li>Trump has threatened to file a lawsuit to stop the "blue slip" process which enables senators from a judicial nominee's home state to block their confirmation process.</li>
+                <li>An EO was issued ending collective bargaining at NASA and the National Weather Service.</li>
+                <li>Ja'Han Jones characterized the lowered FBI recruiting standards in response to the many firings and resignations at the agency as "a deeply ironic twist".</li>
+                <li>A federal judge has barred Voice of America head Kari Lake from firing the agency's director Michael Abramowicz.</li>
+                <li>OPM Director Scott Kupor expects that there will be 300k fewer federal employees in December than there were in January, a 1/8 reduction from the 2.4 million employees, excluding the military and Postal Service, on hand in January which matched the federal employee count in 1969.</li>
+            </ul>
+
+            <div class="statistics">
+                <p><strong>Federal Spending on Personnel:</strong> Before the 2025 cuts, the U.S. spent $270 B annually paying federal employees versus $478 B for contractors.</p>
+            </div>
+
+            <p>Trump has become sensitive to suggestions that he is a would-be dictator and on several occasions this week he said <em>"I am not a dictator"</em>, but then at this week's Cabinet meeting he said <em>"a lot"</em> of people <em>"would rather have a dictator"</em> and that with regard to national guard deployments in Chicago, <em>"I have the right to do anything I want"</em>. And a few weeks ago he expressed his admiration for authoritarians saying <em>"If you have a smart president, they're not enemies"</em>.</p>
+
+            <h3>Comments from politicians and pundits on Trump's dictatorial proclivities:</h3>
+            <div class="quote">
+                <p><strong>Kimberly Wehle of the University of Baltimore:</strong> "It's unrealistic to think that he's bluffing when he makes authoritarian statements anymore".</p>
+            </div>
+
+            <div class="quote">
+                <p><strong>Jennifer Rubin</strong> (regarding Trump's attempts to force out Lisa Cook): "Trump has signaled that there are no limits to his dictatorial ambitions".</p>
+            </div>
+
+            <div class="quote">
+                <p><strong>Jennifer Rubin</strong> (speaking more broadly): "Trump and his ilk pose a bigger threat to Americans' health, safety and lives than any foreign foe or domestic disaster".</p>
+            </div>
+
+            <div class="quote">
+                <p><strong>Princeton's Kim Lane Scheppele:</strong> Trump's "everything, everywhere all at once" approach was straight out of "the authoritarian playbook".</p>
+            </div>
+            
+            <div class="section-footer">
+                <button class="mark-read-btn" onclick="handleClick('auth-section', 'read')">
+                    <span>✓</span> Mark as Read
+                </button>
+            </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <h2>Retribution</h2>
+                <button class="collapse-btn collapsed" id="retribution-btn" onclick="handleClick('retribution-section', 'toggle')">▼</button>
+            </div>
+            <div class="section-summary">
+                Trump targets political enemies, revokes Harris protection, threatens Soros with racketeering charges
+            </div>
+            <div class="section-content" id="retribution-section">
+            
+            <p>Other than the trappings of the presidency, sycophantic adulation, and opportunities to monetize his office, Donald Trump's favorite thing may well be exacting vengeance on people who have opposed or slighted him. He has staffed his administration, especially the DOJ, with individuals who maximize his ability to achieve his retributive goals. It seems especially gratifying for him to accuse his enemies of commiting crimes he was indicted for like fomenting violence, commiting real estate fraud, sexual improprieties, retaining classified documents and not supporting free and fair elections. John Bolton was on-the-mark a week ago when he called this a <em>"retribution presidency"</em>.</p>
+
+            <h3>Retributive activities this week (in addition to harassment of Lisa Cook, contretemps with Wes Moore, attacks on Blue cities, and reversal of Biden policies):</h3>
+            <ul>
+                <li>Perhaps subconsciously thinking back to the 1970s sitcom <em>Sanford and Son</em>, Trump called on Truth Social for George Soros and his son to face federal racketeering charges because of their support for "Violent Protests". He added <em>"Soros and his group of psychopaths have caused great damage to our country...Be careful, we're watching you!"</em>.</li>
+                <li>Casting a broader net, Trump said of Joe Biden's inner circle <em>"they're evil people, and they're going to be brought down...'cause they really hurt our country"</em>.</li>
+                <li>FEMA put on leave all or most of the 36 individuals who signed the "Katrina Declaration" which warned Congress that the sweeping changes at DHS under Kristi Noem's leadership severely compromised FEMA's ability to respond to future disasters.</li>
+                <li>A grand jury failed to indict former DOJ employee Sean Dunn on a felony charge for having thrown a Subway sandwich at a Customs and Border Patrol agent in the District. Federal prosecutors responded by filing a misdemeanor charge. The felony charge was filed in the wake of U.S. Attorney Jeanine Pirro having told her prosecutors to seek the harshest possible criminal charges for federal arrests in Washington D.C..</li>
+                <li>Trump revoked Kamala Harris' Secret Service protection on Thursday as she is soon to depart on a national book tour. The minimum 6-month protection period for a vice president had expired in July, but Biden extended it by a year before he left office.</li>
+                <li>Former CIA Director and long-time diplomat William Burns wrote a letter scathing the Trump administration for <em>"waging a war on public service and expertise"</em> by firing State Department and other federal workers as part of a campaign of <em>"retribution"</em> rather than genuine <em>"reform"</em>. He added <em>"When I was expelled from Russia, at least Putin gave me six days to leave"</em>.</li>
+            </ul>
+
+            <div class="quote">
+                <p><strong>Barbara McQuade:</strong> "In light of all the threats the Trump administration has made to target its enemies, they have lost any presumption of good faith".</p>
+            </div>
+            
+            <div class="section-footer">
+                <button class="mark-read-btn" onclick="handleClick('retribution-section', 'read')">
+                    <span>✓</span> Mark as Read
+                </button>
+            </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <h2>Immigration</h2>
+                <button class="collapse-btn collapsed" id="immigration-btn" onclick="handleClick('immigration-section', 'toggle')">▼</button>
+            </div>
+            <div class="section-summary">
+                350k deportations in 7 months, DACA recipients targeted, children's deportation halted by federal judge
+            </div>
+            <div class="section-content" id="immigration-section">
+            
+            <p>As many of the administration's programs are foundering, it's becoming clear that Trump is positioning himself to appear tough on crime as he looks to retain control of the House in the midterm elections. Cracking down on brown and black skinned immigrants as "the other" especially plays into this narrative.</p>
+
+            <h3>Immigration-related news and commentary for this week:</h3>
+
+            <div class="statistics">
+                <p><strong>Deportation Statistics:</strong> During the first seven months of Trump's term, ICE has deported 200k individuals and another 150k have been deported by another agency or have self-deported. The 350k total equates to 600k deportees per year, barely half of Stephen Miller's goal of 1.1 MM which may have been confined to ICE deportments.</p>
+                <p><strong>ICE Detainee Profile:</strong> 75% of ICE detainees have no convictions which are not immigration or traffic-related.</p>
+            </div>
+
+            <ul>
+                <li>As expected, Kilmar Abrego Garcia was arrested when he reported to ICE in Baltimore on Monday and threatened with deportation to Uganda. Federal Judge Paula Xinis subsequently ruled that KAG couldn't be deported before an evidentiary hearing scheduled for October 6. Amber Phillips wrote in the WAPO <em>"This whole episode shows that this administration cannot admit mistakes"</em>.</li>
+                <li>A Guardian article reports on an undocumented ICE detainee who has lived in the U.S. for 30 years who was denied bail under a new DHS policy which denies bond to any detainee who has entered the country illegally. The article says this case shows how the administration is <em>"ratcheting up every aspect of the immigration system"</em> for people who are here illegally regardless of their circumstances.</li>
+                <li>Catalina Santiago, one of 538k DACA recipients with protected status, was arrested at El Paso Airport and has been detained since then pending a hearing next week before an immigration judge. DHS Assistant Secretary Patricia McLauglin incorrectly said <em>"DACA does not confer any form of legal status in this country"</em>.</li>
+            </ul>
+
+            <div class="statistics">
+                <p><strong>Restaurant Worker Impact:</strong> 36% of Washington D.C. restaurant workers are immigrants and as they fear going to work or are arrested, there has been a growing shortage of workers which threatens the future viability of many restaurants.</p>
+            </div>
+
+            <ul>
+                <li>DHS is barring states and organizations which receive government funding from helping undocumented immigrants in the aftermath of a disaster.</li>
+                <li>Border Patrol agents arrested two firefighters who were involved in battling the Bear Gulch fire in Washington state. The agents had lined up 44 firefighters to verify that they were legal residents.</li>
+                <li>The administration had planned to begin "repatriation" today of 600 Guatemalan children who arrived in the U.S. unaccompanied and are in the custody of the Department of Health and Human Services. However U.S. District Judge Sparkle Sooknanan ordered an emergency halt at 4:00 AM this morning due to the <em>"exigent circumstances to maintain the status quo until a hearing can be set"</em>.</li>
+            </ul>
+
+            <p><strong>When looking at these news items collectively, the underlying cruelty is astounding.</strong></p>
+            
+            <div class="section-footer">
+                <button class="mark-read-btn" onclick="handleClick('immigration-section', 'read')">
+                    <span>✓</span> Mark as Read
+                </button>
+            </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <h2>Elections</h2>
+                <button class="collapse-btn collapsed" id="elections-btn" onclick="handleClick('elections-section', 'toggle')">▼</button>
+            </div>
+            <div class="section-summary">
+                Democratic strategy for 2026/2028, gerrymandering effects, polling shows Democrats ahead by 2.5-5%
+            </div>
+            <div class="section-content" id="elections-section">
+            
+            <p>In addition to campaigning on crime/immigration issues, the Republicans surely will also attack wokeness, DEI and other issues which play to their base. The Democrats must decide how to best respond to the Trump administration's malfeasance and rebut their attack lines without overdoing their criticism or getting too defensive. To this end, former Clinton adviser Doug Sosnik suggested a three-pronged approach for winning in 2026 and 2028:</p>
+
+            <ol>
+                <li>(Develop) a narrative of defining Trump and the Republicans for what they're doing or not doing to help the people in this country;</li>
+                <li>Articulate a coherent narrative about the future and appeal to the middle class and particularly people in this country, the 70% who don't have a four-year college degree;</li>
+                <li>(T)he long-term solution for our party is going to sink-or-swim based on who we nominate for president and whether or not they win".</li>
+            </ol>
+
+            <p>Getting down to mechanics, in looking back at the 2020 and 2024 elections, Ron Brownstein characterized the new swing voters to be the 60 MM people who voted in either 2020 (158 MM total presidential votes) or 2024 (155 MM total presidential votes), but not both times. Even allowing for newly eligible voters in 2024 who couldn't vote in 2020, 60 MM is still a formidable number. In this regard and echoing Doug Sosnik, Andrew Tanenbaum wrote <em>"Trump won in 2024 by making big gains among low-propensity, low-information, working-class voters"</em>.</p>
+
+            <p>A complicating factor in the House elections is the Republican gerrymander in TX, which has been finalized, and potential Republican gerrymanders in IN, MO (Where the governor has convened a special session), OH and possibly FL (which may have already reached its gerrymander saturation point). Although the TX gerrymander should net 3-5 seats for the Republicans, it could be negated by the CA gerrymander, which needs approval as a ballot initiative and leads by 16% and 22% in the two early polls. Nate Cohn has estimated that if all of the above five gerrymanders go through without any further offsetting Democratic gerrymanders, the Democrats would have to win the national 2026 House vote by 2.3% or more to regain control. This is certainly achievable as the Real Clear Politics polling average, which may have a small Republican bias, currently has the Democrats ahead by 2.5% and CNBC has them ahead by 5%.</p>
+
+            <p>Looking forward to the 2030 census, it has been estimated that the Republicans could net seven additional seats due to population shifts. This may be overstated because of transplants from other states who may retain their party preference as has notably been the case in GA as it is becoming a purple state.</p>
+
+            <p>Although it is little talked about, there already is a national gerrymander in the Senate because the Republicans have more low population states, each of which gets two Electoral Votes for its senators as do the more populous states.</p>
+
+            <h3>More election related news from this week:</h3>
+            <ul>
+                <li>It is expected that Joni Ernst, who infamously said <em>"We are all going to die"</em>, will announce that she is not running for re-election. Given her declining popularity, this may not necessarily be favorable for the Democrats.</li>
+                <li>Former AK Democratic Representative Mary Peltola, the most popular politician in the state with 10% net favorability, may run for the Senate against incumbent Republican Dan Sullivan, who has 3% net favorability. Further polling indicates that AK voters are equally divided between the two of them.</li>
+                <li>50 House members are 75 or older, 35 of whom are Democrats; 70% of them have announced their intention to run in 2026.</li>
+                <li>Democrat Catelin Drey won a special election for the IA State Senate, breaking a Republican supermajority. She won by 10.4% after Trump won her district by 11.5% in 2024.</li>
+            </ul>
+            
+            <div class="section-footer">
+                <button class="mark-read-btn" onclick="handleClick('elections-section', 'read')">
+                    <span>✓</span> Mark as Read
+                </button>
+            </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <div class="section-header">
+                <h2>Miscellaneous</h2>
+                <button class="collapse-btn collapsed" id="misc-btn" onclick="handleClick('misc-section', 'toggle')">▼</button>
+            </div>
+            <div class="section-summary">
+                New tariffs on Nvidia chips and India, Americans own 46% of world's civilian guns
+            </div>
+            <div class="section-content" id="misc-section">
+            <ul>
+                <li>Continuing its shakedowns, the administration will be imposing a 15% export tax on Nvidia chips a week after it obtained 10% of Intel's stock.</li>
+                <li>Trump doubled the tariff on India from 25% to 50% because of its extensive purchases of Russian oil.</li>
+                <li>The administration is ending the tariff exemption for de minimis shipments valued at $800 or less which will especially hit small businesses hard.</li>
+            </ul>
+
+            <div class="statistics">
+                <p><strong>Global Gun Ownership Statistics:</strong> There are 120 guns per 100 Americans, the highest ratio in the world, compared to 4.9 in the UK, 12.9 in Mexico, 14.4 in Italy, 17.6 in Germany, 19.6 in France and 34.7 in Canada. Americans own an astonishing 46% of the world's civilian guns.</p>
+            </div>
+            
+            <div class="section-footer">
+                <button class="mark-read-btn" onclick="handleClick('misc-section', 'read')">
+                    <span>✓</span> Mark as Read
+                </button>
+            </div>
+            </div>
         </div>
     </div>
+
+    <script>
+        function toggleSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            const btn = document.getElementById(sectionId.replace('-section', '-btn'));
+            
+            if (section.classList.contains('expanded')) {
+                section.classList.remove('expanded');
+                btn.classList.add('collapsed');
+                btn.innerHTML = '▶';
+            } else {
+                section.classList.add('expanded');
+                btn.classList.remove('collapsed');
+                btn.innerHTML = '▼';
+            }
+        }
+
+        // Initialize all sections as collapsed
+        document.addEventListener('DOMContentLoaded', function() {
+            // All sections start collapsed by default - no action needed
+        });
+    </script>
 </body>
 </html>
