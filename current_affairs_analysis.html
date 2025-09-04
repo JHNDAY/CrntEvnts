@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Current Affairs Group Analysis</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .nav-tabs {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+            overflow-x: auto;
+        }
+        
+        .nav-tab {
+            padding: 15px 25px;
+            cursor: pointer;
+            border: none;
+            background: transparent;
+            font-size: 16px;
+            color: #666;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            min-width: fit-content;
+        }
+        
+        .nav-tab:hover {
+            background: #e9ecef;
+        }
+        
+        .nav-tab.active {
+            background: white;
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            font-weight: 600;
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 30px;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .session-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .session-card {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .session-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        
+        .session-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .session-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .themes-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+        
+        .theme-card {
+            background: white;
+            border-left: 5px solid #3498db;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+        
+        .theme-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .theme-icon {
+            font-size: 1.5em;
+        }
+        
+        .topic-list {
+            list-style: none;
+            margin-bottom: 15px;
+        }
+        
+        .topic-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+            font-size: 0.95em;
+        }
+        
+        .topic-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .insight-card {
+            background: linear-gradient(135deg, #74b9ff, #0984e3);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .insight-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 200%;
+            background: rgba(255,255,255,0.1);
+            transform: rotate(45deg);
+        }
+        
+        .insight-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .insight-text {
+            position: relative;
+            z-index: 1;
+            line-height: 1.6;
+        }
+        
+        .evolution-timeline {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+        
+        .timeline-number {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 20px;
+            flex-shrink: 0;
+        }
+        
+        .participants-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .participant-card {
+            background: linear-gradient(135deg, #a29bfe, #6c5ce7);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .participant-card:hover {
+            transform: scale(1.05);
+        }
+        
+        .tech-feature {
+            background: linear-gradient(135deg, #00b894, #00a085);
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .quote-box {
+            background: #fff5f5;
+            border-left: 4px solid #e53e3e;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 10px 10px 0;
+            font-style: italic;
+        }
+        
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            text-align: center;
+            background: white;
+            padding: 25px 15px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            transition: transform 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-3px);
+        }
+        
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #3498db;
+            margin-bottom: 10px;
+        }
+        
+        .stat-label {
+            font-size: 0.9em;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Current Affairs Group Analysis</h1>
+            <p>Five Session Deep Dive (Jul 30 - Aug 27): Major Themes, Topics & Key Insights</p>
+        </div>
+        
+        <div class="nav-tabs">
+            <button class="nav-tab active" data-tab="overview">📈 Overview</button>
+            <button class="nav-tab" data-tab="themes">🎯 Major Themes</button>
+            <button class="nav-tab" data-tab="sessions">📋 Session Details</button>
+            <button class="nav-tab" data-tab="insights">💡 Key Insights</button>
+            <button class="nav-tab" data-tab="evolution">🔄 Evolution</button>
+            <button class="nav-tab" data-tab="technology">🤖 AI Integration</button>
+        </div>
+
+        <div id="overview" class="tab-content active">
+            <h2>📊 Session Overview & Statistics</h2>
+            
+            <div class="stat-grid">
+                <div class="stat-card">
+                    <div class="stat-number">5</div>
+                    <div class="stat-label">Total Sessions</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">15+</div>
+                    <div class="stat-label">Regular Participants</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">50+</div>
+                    <div class="stat-label">Topics Covered</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">3</div>
+                    <div class="stat-label">AI Innovations</div>
+                </div>
+            </div>
+
+            <div class="session-grid">
+                <div class="session-card">
+                    <div class="session-title">
+                        <div class="session-icon">1</div>
+                        Session 1: Foundation
+                    </div>
+                    <p><strong>Focus:</strong> Shakedowns, Authoritarianism, Medicare Anniversary</p>
+                    <p><strong>Innovation:</strong> Epstein farce play by Claude AI</p>
+                    <p><strong>Key Moment:</strong> Introduction of "Make America America Again"</p>
+                </div>
+                
+                <div class="session-card">
+                    <div class="session-title">
+                        <div class="session-icon">2</div>
+                        Session 2: Integration
+                    </div>
+                    <p><strong>Focus:</strong> Tariffs, Institutional Attacks, Aviation Issues</p>
+                    <p><strong>Innovation:</strong> Current Events Central portal launch</p>
+                    <p><strong>Key Moment:</strong> Mark's musical performances</p>
+                </div>
+                
+                <div class="session-card">
+                    <div class="session-title">
+                        <div class="session-icon">3</div>
+                        Session 3: Analysis
+                    </div>
+                    <p><strong>Focus:</strong> Immigration, Political Revenge, International Law</p>
+                    <p><strong>Innovation:</strong> Comprehensive visualization system</p>
+                    <p><strong>Key Moment:</strong> Sally's genocide convention analysis</p>
+                </div>
+                
+                <div class="session-card">
+                    <div class="session-title">
+                        <div class="session-icon">4</div>
+                        Session 4: Strategy
+                    </div>
+                    <p><strong>Focus:</strong> Congressional Elections, Political Divide, Gaza</p>
+                    <p><strong>Innovation:</strong> Larry's detailed electoral analysis</p>
+                    <p><strong>Key Moment:</strong> Fran's discussion on political polarization</p>
+                </div>
+                
+                <div class="session-card">
+                    <div class="session-title">
+                        <div class="session-icon">5</div>
+                        Session 5: Innovation
+                    </div>
+                    <p><strong>Focus:</strong> Women's Suffrage, Ukraine, Congressional Maps</p>
+                    <p><strong>Innovation:</strong> Claude Shannon AI chatbot integration</p>
+                    <p><strong>Key Moment:</strong> Aaron's connection to Claude Shannon</p>
+                </div>
+            </div>
+
+            <div class="quote-box">
+                <strong>Collective Purpose:</strong> Building on a strong foundation of thoughtful discussion, the group has advanced to the next level - becoming a dynamic forum that integrates rigorous analysis with innovative technology to create lasting resources for informed civic engagement and democratic participation.
+            </div>
+        </div>
+
+        <div id="themes" class="tab-content">
+            <h2>🎯 Major Recurring Themes</h2>
+            
+            <div class="themes-container">
+                <div class="theme-card">
+                    <div class="theme-title">
+                        <span class="theme-icon">🏛️</span>
+                        Authoritarianism & Democracy
+                    </div>
+                    <ul class="topic-list">
+                        <li>Four Horsemen of Calumny (fear, ignorance, bigotry, smear)</li>
+                        <li>Roy Cohn doctrine influence on Trump</li>
+                        <li>Constitutional challenges and court decisions</li>
+                        <li>National Guard deployment as control mechanism</li>
+                        <li>Shadow docket concerns</li>
+                        <li>Institutional capture and erosion</li>
+                    </ul>
+                </div>
+                
+                <div class="theme-card">
+                    <div class="theme-title">
+                        <span class="theme-icon">💰</span>
+                        Economic Policy & Impact
+                    </div>
+                    <ul class="topic-list">
+                        <li>Tariff effects ($2,400 average household impact)</li>
+                        <li>GDP analysis by state (Larry's research)</li>
+                        <li>Working class economic pain</li>
+                        <li>Regressive taxation through tariffs</li>
+                        <li>State-by-state economic comparisons</li>
+                        <li>EU trade negotiations and outcomes</li>
+                    </ul>
+                </div>
+                
+                <div class="theme-card">
+                    <div class="theme-title">
+                        <span class="theme-icon">🗳️</span>
+                        Electoral Strategy & Gerrymandering
+                    </div>
+                    <ul class="topic-list">
+                        <li>Congressional district vulnerability analysis</li>
+                        <li>Texas-California gerrymandering tit-for-tat</li>
+                        <li>Senate control possibilities (Roy Cooper, Sherrod Brown)</li>
+                        <li>Latino vote analysis and targeting</li>
+                        <li>Special elections as indicators</li>
+                        <li>Demographic mapping and strategy</li>
+                    </ul>
+                </div>
+                
+                <div class="theme-card">
+                    <div class="theme-title">
+                        <span class="theme-icon">🌍</span>
+                        International Relations
+                    </div>
+                    <ul class="topic-list">
+                        <li>Ukraine-Russia negotiations and outcomes</li>
+                        <li>Israeli-Palestinian conflict analysis</li>
+                        <li>International law and genocide conventions</li>
+                        <li>ICC vs ICJ jurisdictions</li>
+                        <li>NATO and alliance relationships</li>
+                        <li>Global trade and diplomatic relations</li>
+                    </ul>
+                </div>
+                
+                <div class="theme-card">
+                    <div class="theme-title">
+                        <span class="theme-icon">🤖</span>
+                        Technology & Innovation
+                    </div>
+                    <ul class="topic-list">
+                        <li>AI-generated content and analysis</li>
+                        <li>Current Events Central portal development</li>
+                        <li>Interactive visualization tools</li>
+                        <li>Claude Shannon chatbot integration</li>
+                        <li>Democratic engagement through technology</li>
+                        <li>Information curation and fact-checking</li>
+                    </ul>
+                </div>
+                
+                <div class="theme-card">
+                    <div class="theme-title">
+                        <span class="theme-icon">🎭</span>
+                        Cultural & Social Commentary
+                    </div>
+                    <ul class="topic-list">
+                        <li>Political divide and polarization analysis</li>
+                        <li>Tom Lehrer tribute and musical satire</li>
+                        <li>Adventures in Bad Taste series</li>
+                        <li>Historical parallels and "rhyming"</li>
+                        <li>Media literacy and source evaluation</li>
+                        <li>Generational perspectives on politics</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="sessions" class="tab-content">
+            <h2>📋 Detailed Session Breakdown</h2>
+            
+            <div class="session-card" style="margin-bottom: 25px;">
+                <div class="session-title">
+                    <div class="session-icon">1</div>
+                    Session 1: Establishing Foundation
+                </div>
+                <p><strong>Major Topics:</strong></p>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>Shakedowns analysis (Paramount, Columbia, Harvard settlements)</li>
+                    <li>Medicare 60th anniversary commemoration</li>
+                    <li>Authoritarianism emergence and Roy Cohn connections</li>
+                    <li>Congressional election dynamics and gerrymandering</li>
+                    <li>Tom Lehrer musical tributes</li>
+                </ul>
+                <p><strong>Key Innovation:</strong> Claude AI wrote and produced "Epstein farce play" based on George's playbill concept</p>
+                <p><strong>Participant Highlights:</strong> Mark's dramatic reading, Larry's "Make America America Again" concept introduction</p>
+            </div>
+            
+            <div class="session-card" style="margin-bottom: 25px;">
+                <div class="session-title">
+                    <div class="session-icon">2</div>
+                    Session 2: System Integration
+                </div>
+                <p><strong>Major Topics:</strong></p>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>Tariff economic impact analysis ($2,400 household burden)</li>
+                    <li>Institutional attacks (BLS Commissioner firing)</li>
+                    <li>Aviation system failures and infrastructure</li>
+                    <li>Immigration enforcement and detention conditions</li>
+                    <li>Presidential approval ratings breakdown</li>
+                </ul>
+                <p><strong>Key Innovation:</strong> Launch of Current Events Central portal for session archiving and reference</p>
+                <p><strong>Participant Highlights:</strong> Mark's "Fabricating Rag" performance, group discussion on elite condescension</p>
+            </div>
+            
+            <div class="session-card" style="margin-bottom: 25px;">
+                <div class="session-title">
+                    <div class="session-icon">3</div>
+                    Session 3: Deep Analysis
+                </div>
+                <p><strong>Major Topics:</strong></p>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>Immigration detention conditions and shackling</li>
+                    <li>Political revenge campaign against prosecutors</li>
+                    <li>Gaza conflict and international law</li>
+                    <li>Genocide conventions and ICC vs ICJ jurisdictions</li>
+                    <li>Mark's "Authoritarian Rag" composition</li>
+                </ul>
+                <p><strong>Key Innovation:</strong> Comprehensive visualization system with live links to sources</p>
+                <p><strong>Participant Highlights:</strong> Sally's detailed analysis of genocide conventions, Hal's Gaza presentation</p>
+            </div>
+            
+            <div class="session-card" style="margin-bottom: 25px;">
+                <div class="session-title">
+                    <div class="session-icon">4</div>
+                    Session 4: Strategic Focus
+                </div>
+                <p><strong>Major Topics:</strong></p>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>Congressional election vulnerability analysis</li>
+                    <li>GDP by state economic comparisons</li>
+                    <li>Political divide: progressive vs MAGA dynamics</li>
+                    <li>Newt Gingrich's historical impact on political discourse</li>
+                    <li>Tom Lehrer catalog and musical performances</li>
+                </ul>
+                <p><strong>Key Innovation:</strong> Larry's detailed 53-district vulnerability spreadsheet</p>
+                <p><strong>Participant Highlights:</strong> Fran's political polarization analysis, Larry's economic research presentations</p>
+            </div>
+            
+            <div class="session-card" style="margin-bottom: 25px;">
+                <div class="session-title">
+                    <div class="session-icon">5</div>
+                    Session 5: Technical Innovation
+                </div>
+                <p><strong>Major Topics:</strong></p>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>Women's suffrage 105th anniversary (Heather Cox Richardson video)</li>
+                    <li>Ukraine peace talks analysis</li>
+                    <li>Congressional map visualization with demographic overlays</li>
+                    <li>Political divide continued: common ground exploration</li>
+                    <li>"Past Imperfect" satirical history timeline</li>
+                </ul>
+                <p><strong>Key Innovation:</strong> Claude Shannon AI chatbot integration for real-time interaction</p>
+                <p><strong>Participant Highlights:</strong> Aaron's personal connection to Claude Shannon, interactive AI demonstration</p>
+            </div>
+        </div>
+
+        <div id="insights" class="tab-content">
+            <h2>💡 Key Insights & Revelations</h2>
+            
+            <div class="insight-card">
+                <div class="insight-title">🎯 Democratic Strategy Insights</div>
+                <div class="insight-text">
+                    The group identified that Democrats need only 3 House seats to regain control, with Larry's analysis showing 53 vulnerable districts (28 Democratic, 25 Republican). Key opportunities include Roy Cooper in North Carolina and Sherrod Brown in Ohio for Senate control.
+                </div>
+            </div>
+            
+            <div class="insight-card">
+                <div class="insight-title">📊 Economic Impact Analysis</div>
+                <div class="insight-text">
+                    Tariffs create a regressive tax averaging $2,400 per household, with blue states having significantly higher GDP per capita ($96,775 vs $75,236 for red states). This economic disparity reveals structural inequalities in political representation.
+                </div>
+            </div>
+            
+            <div class="insight-card">
+                <div class="insight-title">⚖️ International Law Complexity</div>
+                <div class="insight-text">
+                    Sally's analysis revealed the nuanced differences between war crimes, crimes against humanity, and genocide, with intent being the crucial differentiator. The ICC vs ICJ jurisdictional distinctions highlight the complexity of international justice.
+                </div>
+            </div>
+            
+            <div class="insight-card">
+                <div class="insight-title">🤖 Technology as Democratic Tool</div>
+                <div class="insight-text">
+                    John's integration of AI tools (Claude for content creation, interactive visualizations, chatbot integration) demonstrates how technology can enhance civic engagement and make complex political analysis more accessible and engaging.
+                </div>
+            </div>
+            
+            <div class="insight-card">
+                <div class="insight-title">🎭 Historical Patterns Recognition</div>
+                <div class="insight-text">
+                    The group consistently identified historical parallels: Roy Cohn's influence on Trump, McCarthyism's echo in current tactics, and the "rhyming" of history as described by Mark Twain. Past authoritarian playbooks are being actively implemented.
+                </div>
+            </div>
+            
+            <div class="insight-card">
+                <div class="insight-title">🗳️ Gerrymandering Arms Race</div>
+                <div class="insight-text">
+                    The Texas-California gerrymandering escalation represents a dangerous tit-for-tat that could fundamentally undermine democratic representation. Both sides acknowledge the necessity while recognizing the harm to democratic principles.
+                </div>
+            </div>
+        </div>
+
+        <div id="evolution" class="tab-content">
+            <h2>🔄 Group Evolution & Development</h2>
+            
+            <div class="evolution-timeline">
+                <div class="timeline-item">
+                    <div class="timeline-number">1</div>
+                    <div>
+                        <strong>Traditional Discussion Format:</strong> Sessions began as typical current events discussions with George providing written summaries that were too lengthy for screen presentation.
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-number">2</div>
+                    <div>
+                        <strong>AI Content Integration:</strong> Introduction of Claude AI to generate creative content (Epstein play) and synthesize talking points from George's comprehensive analyses.
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-number">3</div>
+                    <div>
+                        <strong>Portal Development:</strong> Launch of Current Events Central as a permanent repository for sessions, visualizations, and reference materials, transforming ephemeral discussions into lasting resources.
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-number">4</div>
+                    <div>
+                        <strong>Data-Driven Analysis:</strong> Evolution toward sophisticated data analysis with Larry's congressional research, economic comparisons, and strategic electoral planning.
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-number">5</div>
+                    <div>
+                        <strong>Interactive Technology:</strong> Integration of real-time AI interaction, dynamic visualizations, and multimedia content (videos, interactive maps) creating an immersive learning environment.
+                    </div>
+                </div>
+            </div>
+            
+            <div class="quote-box">
+                <strong>Collaborative Philosophy:</strong> The group operates on a principle of continuous learning and adaptation, with content creators and technology integrators working together to transform comprehensive research into accessible, engaging formats for democratic discourse.
+            </div>
+            
+            <h3>Methodological Innovations</h3>
+            <div class="themes-container">
+                <div class="theme-card">
+                    <div class="theme-title">📊 Data Visualization</div>
+                    <p>Congressional maps with demographic overlays, economic data by state, and interactive electoral analysis tools</p>
+                </div>
+                
+                <div class="theme-card">
+                    <div class="theme-title">🎭 Creative Integration</div>
+                    <p>Musical performances, satirical content, and AI-generated creative works to make political analysis engaging</p>
+                </div>
+                
+                <div class="theme-card">
+                    <div class="theme-title">📚 Permanent Repository</div>
+                    <p>Transformation from ephemeral discussions to archived, searchable, and referenceable content</p>
+                </div>
+                
+                <div class="theme-card">
+                    <div class="theme-title">🔄 Iterative Improvement</div>
+                    <p>Continuous refinement of format, technology integration, and participant engagement methods</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="technology" class="tab-content">
+            <h2>🤖 AI & Technology Integration</h2>
+            
+            <div class="tech-feature">
+                <h3>🎭 Claude AI Creative Content Generation</h3>
+                <p><strong>Innovation:</strong> AI-generated theatrical content based on participant concepts</p>
+                <p><strong>Example:</strong> Epstein farce play written by Claude from George's playbill concept</p>
+                <p><strong>Impact:</strong> Transforms complex political analysis into engaging, memorable formats</p>
+            </div>
+            
+            <div class="tech-feature">
+                <h3>📊 Current Events Central Portal</h3>
+                <p><strong>Innovation:</strong> Permanent repository with session recordings, visualizations, and reference materials</p>
+                <p><strong>Features:</strong> Zoom recordings, AI-generated summaries, interactive visualizations, source linking</p>
+                <p><strong>Impact:</strong> Converts ephemeral discussions into lasting educational resources</p>
+            </div>
+            
+            <div class="tech-feature">
+                <h3>🗺️ Interactive Visualization Systems</h3>
+                <p><strong>Innovation:</strong> Dynamic maps, demographic overlays, and data-driven analysis tools</p>
+                <p><strong>Features:</strong> Congressional district analysis, economic data by state, gerrymandering visualization</p>
+                <p><strong>Impact:</strong> Makes complex political data accessible and actionable</p>
+            </div>
+            
+            <div class="tech-feature">
+                <h3>🤖 Real-Time AI Interaction</h3>
+                <p><strong>Innovation:</strong> Claude Shannon chatbot integration for live session enhancement</p>
+                <p><strong>Features:</strong> Conversational AI with persona, fact-checking capabilities, real-time information retrieval</p>
+                <p><strong>Impact:</strong> Demonstrates future potential for AI-enhanced democratic engagement</p>
+            </div>
+            
+            <h3>Technical Architecture Insights</h3>
+            <div class="themes-container">
+                <div class="theme-card">
+                    <div class="theme-title">🔧 Integration Approach</div>
+                    <p>Seamless blending of AI capabilities with human expertise, maintaining participant agency while enhancing analytical power</p>
+                </div>
+                
+                <div class="theme-card">
+                    <div class="theme-title">📱 User Experience</div>
+                    <p>Focus on accessibility and engagement, making complex political data digestible through interactive interfaces</p>
+                </div>
+                
+                <div class="theme-card">
+                    <div class="theme-title">🔄 Iterative Development</div>
+                    <p>Continuous improvement based on participant feedback and technological capabilities advancement</p>
+                </div>
+                
+                <div class="theme-card">
+                    <div class="theme-title">🎯 Democratic Impact</div>
+                    <p>Technology serving civic engagement rather than replacing human judgment, enhancing informed participation</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabs = document.querySelectorAll('.nav-tab');
+            const contents = document.querySelectorAll('.tab-content');
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const targetTab = this.getAttribute('data-tab');
+                    
+                    // Remove active class from all tabs and contents
+                    tabs.forEach(t => t.classList.remove('active'));
+                    contents.forEach(c => c.classList.remove('active'));
+                    
+                    // Add active class to clicked tab and corresponding content
+                    this.classList.add('active');
+                    document.getElementById(targetTab).classList.add('active');
+                });
+            });
+            
+            // Add smooth scrolling for better UX
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    setTimeout(() => {
+                        document.querySelector('.container').scrollIntoView({ 
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }, 100);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
