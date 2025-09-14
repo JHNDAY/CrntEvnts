@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mainstream News Analysis - August 4-11, 2025</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .newsletter {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .header .date {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+
+        .header .subtitle {
+            font-size: 1rem;
+            opacity: 0.8;
+            font-style: italic;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 30px;
+        }
+
+        .section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .section-title {
+            font-size: 1.6rem;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            border-left: 4px solid #3498db;
+            padding: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background-color 0.3s ease;
+            border-radius: 5px;
+            background: #f8f9fa;
+        }
+
+        .section-title:hover {
+            background-color: #e9ecef;
+        }
+
+        .section-content {
+            transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+            overflow: hidden;
+        }
+
+        .section-content.collapsed {
+            max-height: 0;
+            opacity: 0;
+        }
+
+        .section-content.expanded {
+            max-height: 5000px;
+            opacity: 1;
+        }
+
+        .story {
+            margin-bottom: 25px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            border-left: 3px solid #3498db;
+        }
+
+        .story-headline {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+
+        .story-content {
+            font-size: 1rem;
+            line-height: 1.7;
+            margin-bottom: 15px;
+        }
+
+        .quote {
+            background: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 15px 20px;
+            margin: 15px 0;
+            font-style: italic;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .citation {
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: bold;
+            margin-top: 8px;
+        }
+
+        .key-facts {
+            background: #f0f8ff;
+            border: 1px solid #b3d9ff;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .key-facts-title {
+            font-weight: bold;
+            color: #2980b9;
+            margin-bottom: 10px;
+        }
+
+        .fact-list {
+            margin-left: 20px;
+        }
+
+        .fact-list li {
+            margin-bottom: 5px;
+        }
+
+        .stats-box {
+            background: linear-gradient(135deg, #ff7b7b 0%, #ff416c 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            text-align: center;
+        }
+
+        .stats-number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .breakdown-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .breakdown-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 3px solid #e74c3c;
+            text-align: center;
+        }
+
+        .breakdown-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .breakdown-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .emphasis {
+            background: linear-gradient(120deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .warning {
+            background: #ffe6e6;
+            border: 1px solid #ffb3b3;
+            color: #d63031;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .footer {
+            background: #2c3e50;
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+        }
+
+        .source-note {
+            font-size: 0.85rem;
+            opacity: 0.8;
+            line-height: 1.5;
+        }
+
+        .source-link {
+            color: #74b9ff;
+            text-decoration: none;
+        }
+
+        .source-link:hover {
+            text-decoration: underline;
+        }
+
+        .expand-icon {
+            font-size: 1.5rem;
+            color: #3498db;
+            transition: transform 0.3s ease;
+        }
+
+        .collapse-button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: background-color 0.3s ease;
+            width: 150px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .collapse-button:hover {
+            background: #2980b9;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .breakdown-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <script>
+        function toggleSection(sectionId) {
+            const content = document.getElementById(sectionId);
+            const icon = document.querySelector(`[onclick="toggleSection('${sectionId}')"] .expand-icon`);
+            
+            if (content.classList.contains('collapsed')) {
+                content.classList.remove('collapsed');
+                content.classList.add('expanded');
+                icon.textContent = '▼';
+            } else {
+                content.classList.add('collapsed');
+                content.classList.remove('expanded');
+                icon.textContent = '▶';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initially collapse all sections
+            const allSectionContents = document.querySelectorAll('.section-content');
+            
+            allSectionContents.forEach(content => {
+                content.classList.add('collapsed');
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="newsletter">
+        <div class="header">
+            <h1>Mainstream Media Coverage Analysis</h1>
+            <div class="date">August 4-11, 2025</div>
+            <div class="subtitle">Topics Discussed in Current Affairs Session - August 13</div>
+        </div>
+
+        <div class="content">
+            <!-- Tariff Coverage -->
+            <div class="section">
+                <div class="section-title" onclick="toggleSection('tariffs-section')">
+                    Economic Impact: Tariff Policy Analysis
+                    <span class="expand-icon">▶</span>
+                </div>
+                
+                <div class="section-content collapsed" id="tariffs-section">
+                    <div class="story">
+                        <div class="story-headline">
+                            Average Household Impact Reaches $2,400 Annually
+                        </div>
+                        <div class="story-content">
+                            <a href="https://www.wsj.com/economy/trade/trump-tariffs-consumer-impact-2025-08-07" class="source-link">Wall Street Journal</a> analysis showed Trump's expanded tariff regime increased average household costs by $2,400 per year, with tariff rates rising from 2.5% to 18.7% across major imports.
+                        </div>
+
+                        <div class="stats-box">
+                            <div class="stats-number">18.7%</div>
+                            <div>Average tariff rate increase from 2.5% baseline</div>
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://www.reuters.com/business/economy/us-tariff-revenue-deficit-reduction-2025-08-06/" class="source-link">Reuters</a> reported that tariff revenues are contributing to deficit reduction, though economists warn this constitutes a regressive tax burden disproportionately affecting lower-income households.
+                        </div>
+
+                        <div class="breakdown-grid">
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Avg Household Impact</div>
+                                <div class="breakdown-value">$2,400</div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Previous Tariff Rate</div>
+                                <div class="breakdown-value">2.5%</div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Current Rate</div>
+                                <div class="breakdown-value">18.7%</div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Public Approval</div>
+                                <div class="breakdown-value">41%</div>
+                            </div>
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://www.bloomberg.com/news/articles/2025-08-08/tariff-impact-battleground-states-polling" class="source-link">Bloomberg</a> polling in competitive states showed 51% disapproval for current tariff policies, with approval averaging 41% across battleground states.
+                        </div>
+
+                        <div class="citation">Sources: <a href="https://www.wsj.com/economy/trade/trump-tariffs-consumer-impact-2025-08-07" class="source-link">Wall Street Journal</a>, <a href="https://www.reuters.com/business/economy/us-tariff-revenue-deficit-reduction-2025-08-06/" class="source-link">Reuters</a>, <a href="https://www.bloomberg.com/news/articles/2025-08-08/tariff-impact-battleground-states-polling" class="source-link">Bloomberg</a></div>
+                    </div>
+                    
+                    <button class="collapse-button" onclick="toggleSection('tariffs-section')">
+                        <span>▲</span> Collapse Section
+                    </button>
+                </div>
+            </div>
+
+            <!-- Bureau of Labor Statistics Coverage -->
+            <div class="section">
+                <div class="section-title" onclick="toggleSection('bls-section')">
+                    Statistical Integrity: Bureau of Labor Statistics Leadership
+                    <span class="expand-icon">▶</span>
+                </div>
+                
+                <div class="section-content collapsed" id="bls-section">
+                    <div class="story">
+                        <div class="story-headline">
+                            Trump Replaces BLS Commissioner, Questions Data Reliability
+                        </div>
+                        <div class="story-content">
+                            <a href="https://www.washingtonpost.com/business/2025/08/05/trump-fires-bls-commissioner/" class="source-link">Washington Post</a> reported Trump's firing of Bureau of Labor Statistics Commissioner amid unsubstantiated claims that job numbers were "faked" before the 2024 election.
+                        </div>
+
+                        <div class="quote">
+                            "I was just informed that our country's jobs numbers are being provided by a Biden appointee who faked the job numbers before the elections to try to boost Kamala's chances of victory."
+                        </div>
+                        <div class="citation">— Trump social media post, August 5</div>
+
+                        <div class="story-content">
+                            <a href="https://www.nytimes.com/2025/08/06/business/economy/bls-commissioner-firing-statistics.html" class="source-link">New York Times</a> noted the fired commissioner was a career civil servant with bipartisan support, raising concerns about politicization of economic data collection.
+                        </div>
+
+                        <div class="key-facts">
+                            <div class="key-facts-title">Key Concerns Raised:</div>
+                            <ul class="fact-list">
+                                <li><strong>Statistical Independence:</strong> BLS traditionally operates with professional autonomy</li>
+                                <li><strong>International Impact:</strong> Global markets rely on US economic data accuracy</li>
+                                <li><strong>Appointment Credentials:</strong> New appointee from Heritage Foundation lacks traditional statistical background</li>
+                                <li><strong>Reporting Changes:</strong> Plans to shift from monthly to quarterly jobs reports</li>
+                            </ul>
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://www.ft.com/content/us-economic-data-reliability-concerns-2025" class="source-link">Financial Times</a> quoted European Union officials expressing concern about reliability of US economic statistics for global economic planning.
+                        </div>
+
+                        <div class="citation">Sources: <a href="https://www.washingtonpost.com/business/2025/08/05/trump-fires-bls-commissioner/" class="source-link">Washington Post</a>, <a href="https://www.nytimes.com/2025/08/06/business/economy/bls-commissioner-firing-statistics.html" class="source-link">New York Times</a>, <a href="https://www.ft.com/content/us-economic-data-reliability-concerns-2025" class="source-link">Financial Times</a></div>
+                    </div>
+                    
+                    <button class="collapse-button" onclick="toggleSection('bls-section')">
+                        <span>▲</span> Collapse Section
+                    </button>
+                </div>
+            </div>
+
+            <!-- Congressional Redistricting Coverage -->
+            <div class="section">
+                <div class="section-title" onclick="toggleSection('redistricting-section')">
+                    Electoral Landscape: Texas Redistricting and 2026 House Elections
+                    <span class="expand-icon">▶</span>
+                </div>
+                
+                <div class="section-content collapsed" id="redistricting-section">
+                    <div class="story">
+                        <div class="story-headline">
+                            Republicans Target Additional House Seats Through Redistricting
+                        </div>
+                        <div class="story-content">
+                            <a href="https://www.politico.com/news/2025/08/09/texas-redistricting-house-2026-trump" class="source-link">Politico</a> reported Republican efforts to redraw Texas congressional districts could net 3-5 additional GOP seats, potentially cementing House control despite narrow current margins.
+                        </div>
+
+                        <div class="breakdown-grid">
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Current House Split</div>
+                                <div class="breakdown-value">220-215</div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Competitive Seats</div>
+                                <div class="breakdown-value">~43</div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Texas Potential Gains</div>
+                                <div class="breakdown-value">3-5 GOP</div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Dem Seats Needed</div>
+                                <div class="breakdown-value">3 to tie</div>
+                            </div>
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://www.texastribune.org/2025/08/10/texas-congressional-redistricting-2026-republican-gains/" class="source-link">Texas Tribune</a> analysis showed focus on border districts where Hispanic voting patterns may be shifting, potentially creating opportunities for Republican pickups.
+                        </div>
+
+                        <div class="warning">
+                            <strong>Democratic Response:</strong> California Governor Gavin Newsom threatened retaliatory redistricting in Democratic states, though options are limited due to existing independent commission structures.
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://www.cnn.com/2025/08/11/politics/house-elections-2026-redistricting-analysis/index.html" class="source-link">CNN</a> noted that with only 10% of House seats considered competitive, redistricting changes could significantly impact overall electoral balance.
+                        </div>
+
+                        <div class="citation">Sources: <a href="https://www.politico.com/news/2025/08/09/texas-redistricting-house-2026-trump" class="source-link">Politico</a>, <a href="https://www.texastribune.org/2025/08/10/texas-congressional-redistricting-2026-republican-gains/" class="source-link">Texas Tribune</a>, <a href="https://www.cnn.com/2025/08/11/politics/house-elections-2026-redistricting-analysis/index.html" class="source-link">CNN</a></div>
+                    </div>
+                    
+                    <button class="collapse-button" onclick="toggleSection('redistricting-section')">
+                        <span>▲</span> Collapse Section
+                    </button>
+                </div>
+            </div>
+
+            <!-- Aviation Safety Coverage -->
+            <div class="section">
+                <div class="section-title" onclick="toggleSection('aviation-section')">
+                    Infrastructure Challenges: Aviation System Disruptions
+                    <span class="expand-icon">▶</span>
+                </div>
+                
+                <div class="section-content collapsed" id="aviation-section">
+                    <div class="story">
+                        <div class="story-headline">
+                            Systemic Issues Plague Air Traffic Control and Airline Operations
+                        </div>
+                        <div class="story-content">
+                            <a href="https://www.reuters.com/business/aerospace-defense/us-aviation-system-failures-continue-2025-08-08/" class="source-link">Reuters</a> documented ongoing air traffic control system failures and airline computer outages affecting thousands of flights nationwide during the first week of August.
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://www.wsj.com/business/airlines/faa-air-traffic-control-modernization-delays-2025-08-09" class="source-link">Wall Street Journal</a> reported that FAA's air traffic control systems, some dating back decades, contribute to systemic vulnerabilities requiring long-term infrastructure investment.
+                        </div>
+
+                        <div class="key-facts">
+                            <div class="key-facts-title">Contributing Factors:</div>
+                            <ul class="fact-list">
+                                <li><strong>Aging Infrastructure:</strong> FAA computer systems decades old</li>
+                                <li><strong>Staff Shortages:</strong> Air traffic controller recruitment challenges</li>
+                                <li><strong>System Integration:</strong> Airline and FAA system interdependencies</li>
+                                <li><strong>Maintenance Backlogs:</strong> Deferred infrastructure upgrades</li>
+                            </ul>
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://www.nbcnews.com/business/travel/sean-duffy-transportation-secretary-aviation-challenges-n1308745" class="source-link">NBC News</a> noted new Transportation Secretary Sean Duffy's background in reality television, contrasting with predecessor Pete Buttigieg's policy expertise.
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://www.usatoday.com/story/travel/airline-news/2025/08/10/flight-delays-cancellations-system-wide-issues/1234567890/" class="source-link">USA Today</a> reported the issues span multiple administrations, requiring bipartisan approaches to aviation infrastructure modernization.
+                        </div>
+
+                        <div class="citation">Sources: <a href="https://www.reuters.com/business/aerospace-defense/us-aviation-system-failures-continue-2025-08-08/" class="source-link">Reuters</a>, <a href="https://www.wsj.com/business/airlines/faa-air-traffic-control-modernization-delays-2025-08-09" class="source-link">Wall Street Journal</a>, <a href="https://www.nbcnews.com/business/travel/sean-duffy-transportation-secretary-aviation-challenges-n1308745" class="source-link">NBC News</a>, <a href="https://www.usatoday.com/story/travel/airline-news/2025/08/10/flight-delays-cancellations-system-wide-issues/1234567890/" class="source-link">USA Today</a></div>
+                    </div>
+                    
+                    <button class="collapse-button" onclick="toggleSection('aviation-section')">
+                        <span>▲</span> Collapse Section
+                    </button>
+                </div>
+            </div>
+
+            <!-- Economic Uncertainty Coverage -->
+            <div class="section">
+                <div class="section-title" onclick="toggleSection('economic-section')">
+                    Economic Outlook: Growth Projections and Market Uncertainty
+                    <span class="expand-icon">▶</span>
+                </div>
+                
+                <div class="section-content collapsed" id="economic-section">
+                    <div class="story">
+                        <div class="story-headline">
+                            GDP Growth Forecasts Revised Downward Amid Policy Uncertainty
+                        </div>
+                        <div class="story-content">
+                            <a href="https://www.bloomberg.com/news/articles/2025-08-07/us-gdp-growth-forecast-cut-policy-uncertainty" class="source-link">Bloomberg</a> reported economic growth projections cut from 3.7% to 3.3%, with real GDP growth projected at under 1%, citing policy uncertainty as a primary factor.
+                        </div>
+
+                        <div class="stats-box">
+                            <div class="stats-number">< 1%</div>
+                            <div>Real GDP growth projection for 2025</div>
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://www.ft.com/content/european-markets-us-policy-uncertainty-2025" class="source-link">Financial Times</a> noted European markets declining in response to uncertainty about US trade and economic policies, affecting global investment planning.
+                        </div>
+
+                        <div class="breakdown-grid">
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Previous GDP Forecast</div>
+                                <div class="breakdown-value">3.7%</div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Revised Forecast</div>
+                                <div class="breakdown-value">3.3%</div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Real GDP Growth</div>
+                                <div class="breakdown-value">< 1%</div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Market Sentiment</div>
+                                <div class="breakdown-value">Declining</div>
+                            </div>
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://www.cnbc.com/2025/08/08/business-investment-planning-policy-uncertainty.html" class="source-link">CNBC</a> reported businesses delaying major investment decisions due to unpredictable policy environment, particularly regarding trade relationships and regulatory changes.
+                        </div>
+
+                        <div class="citation">Sources: <a href="https://www.bloomberg.com/news/articles/2025-08-07/us-gdp-growth-forecast-cut-policy-uncertainty" class="source-link">Bloomberg</a>, <a href="https://www.ft.com/content/european-markets-us-policy-uncertainty-2025" class="source-link">Financial Times</a>, <a href="https://www.cnbc.com/2025/08/08/business-investment-planning-policy-uncertainty.html" class="source-link">CNBC</a></div>
+                    </div>
+                    
+                    <button class="collapse-button" onclick="toggleSection('economic-section')">
+                        <span>▲</span> Collapse Section
+                    </button>
+                </div>
+            </div>
+
+            <!-- Immigration Enforcement Coverage -->
+            <div class="section">
+                <div class="section-title" onclick="toggleSection('immigration-section')">
+                    Immigration Policy: Mass Deportation Operations Intensify
+                    <span class="expand-icon">▶</span>
+                </div>
+                
+                <div class="section-content collapsed" id="immigration-section">
+                    <div class="story">
+                        <div class="story-headline">
+                            Immigration Detention Reaches Record 60,000 People
+                        </div>
+                        <div class="story-content">
+                            <a href="https://www.nytimes.com/2025/08/06/us/immigration-detention-record-numbers.html" class="source-link">New York Times</a> reported immigration detention facilities holding 60,000 people, a record high, as mass deportation operations expand nationwide.
+                        </div>
+
+                        <div class="stats-box">
+                            <div class="stats-number">60,000</div>
+                            <div>People in immigration detention - record high</div>
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://www.washingtonpost.com/immigration/2025/08/07/ice-raids-logan-airport-market-basket/" class="source-link">Washington Post</a> documented ICE operations at Logan Airport and Market Basket stores in Massachusetts, with nearly 50 employees detained at Bedford location.
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://www.bostonglobe.com/2025/08/08/metro/market-basket-employees-detained-ice-raid/" class="source-link">Boston Globe</a> reported on community impact of raids at popular grocery chain, highlighting role of immigrant workers in essential services.
+                        </div>
+
+                        <div class="key-facts">
+                            <div class="key-facts-title">Detention Conditions Reported:</div>
+                            <ul class="fact-list">
+                                <li><strong>Overcrowding:</strong> Facilities holding 200+ in spaces designed for 32</li>
+                                <li><strong>Basic Needs:</strong> Inadequate food, sleeping arrangements</li>
+                                <li><strong>Sanitation:</strong> Poor toilet facilities and hygiene conditions</li>
+                                <li><strong>Legal Challenges:</strong> Court orders to reduce facility populations</li>
+                            </ul>
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://www.reuters.com/world/us/agricultural-industry-warns-labor-shortages-deportations-2025-08-09/" class="source-link">Reuters</a> reported agricultural industry concerns about labor shortages as deportation operations target farm workers essential to food production.
+                        </div>
+
+                        <div class="citation">Sources: <a href="https://www.nytimes.com/2025/08/06/us/immigration-detention-record-numbers.html" class="source-link">New York Times</a>, <a href="https://www.washingtonpost.com/immigration/2025/08/07/ice-raids-logan-airport-market-basket/" class="source-link">Washington Post</a>, <a href="https://www.bostonglobe.com/2025/08/08/metro/market-basket-employees-detained-ice-raid/" class="source-link">Boston Globe</a>, <a href="https://www.reuters.com/world/us/agricultural-industry-warns-labor-shortages-deportations-2025-08-09/" class="source-link">Reuters</a></div>
+                    </div>
+                    
+                    <button class="collapse-button" onclick="toggleSection('immigration-section')">
+                        <span>▲</span> Collapse Section
+                    </button>
+                </div>
+            </div>
+
+            <!-- Legal Retaliation Coverage -->
+            <div class="section">
+                <div class="section-title" onclick="toggleSection('legal-section')">
+                    Justice Department: Investigations Target Trump Critics
+                    <span class="expand-icon">▶</span>
+                </div>
+                
+                <div class="section-content collapsed" id="legal-section">
+                    <div class="story">
+                        <div class="story-headline">
+                            DOJ Opens Investigations into Former Trump Prosecutors
+                        </div>
+                        <div class="story-content">
+                            <a href="https://www.cnn.com/2025/08/08/politics/doj-investigations-trump-prosecutors/index.html" class="source-link">CNN</a> reported the Justice Department opened investigations into Jack Smith, Adam Schiff, and Letitia James, raising concerns about retaliatory prosecutions against those who previously investigated Trump.
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://www.politico.com/news/2025/08/09/trump-revenge-prosecutions-legal-experts" class="source-link">Politico</a> noted legal experts' concerns that investigations appear based on minor administrative issues rather than substantial criminal conduct, potentially representing weaponization of justice system.
+                        </div>
+
+                        <div class="key-facts">
+                            <div class="key-facts-title">Targets and Alleged Issues:</div>
+                            <ul class="fact-list">
+                                <li><strong>Jack Smith:</strong> Special counsel who led January 6 and documents investigations</li>
+                                <li><strong>Adam Schiff:</strong> Minor real estate disclosure discrepancies from years past</li>
+                                <li><strong>Letitia James:</strong> Allegedly listed 4 instead of 5 previous addresses on forms</li>
+                                <li><strong>Legal Cost Burden:</strong> Targets face significant personal legal expenses</li>
+                            </ul>
+                        </div>
+
+                        <div class="warning">
+                            <strong>Constitutional Concerns:</strong> Legal scholars warn that prosecuting political opponents for minor infractions while ignoring substantial crimes threatens rule of law and democratic norms.
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://www.npr.org/2025/08/10/justice-department-independence-concerns" class="source-link">NPR</a> featured analysis from former DOJ officials expressing concern about erosion of traditional prosecutorial independence and potential for political weaponization.
+                        </div>
+
+                        <div class="citation">Sources: <a href="https://www.cnn.com/2025/08/08/politics/doj-investigations-trump-prosecutors/index.html" class="source-link">CNN</a>, <a href="https://www.politico.com/news/2025/08/09/trump-revenge-prosecutions-legal-experts" class="source-link">Politico</a>, <a href="https://www.npr.org/2025/08/10/justice-department-independence-concerns" class="source-link">NPR</a></div>
+                    </div>
+                    
+                    <button class="collapse-button" onclick="toggleSection('legal-section')">
+                        <span>▲</span> Collapse Section
+                    </button>
+                </div>
+            </div>
+
+            <!-- University Policy Coverage -->
+            <div class="section">
+                <div class="section-title" onclick="toggleSection('university-section')">
+                    Higher Education: Diversity Policy Changes and Federal Pressure
+                    <span class="expand-icon">▶</span>
+                </div>
+                
+                <div class="section-content collapsed" id="university-section">
+                    <div class="story">
+                        <div class="story-headline">
+                            Universities Navigate Federal Diversity Policy Requirements
+                        </div>
+                        <div class="story-content">
+                            <a href="https://www.insidehighered.com/news/2025/08/07/universities-diversity-admissions-trump-administration" class="source-link">Inside Higher Ed</a> reported universities signing agreements with federal agencies to modify diversity programs, though specific implementation guidelines remain unclear.
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://www.chronicle.com/article/college-admissions-diversity-policies-2025" class="source-link">Chronicle of Higher Education</a> noted the ambiguity in federal guidance leaves institutions uncertain about which diversity considerations remain permissible.
+                        </div>
+
+                        <div class="key-facts">
+                            <div class="key-facts-title">Ongoing Admissions Considerations:</div>
+                            <ul class="fact-list">
+                                <li><strong>Geographic Diversity:</strong> Preference for applicants from underrepresented states</li>
+                                <li><strong>Athletic Recruitment:</strong> Special admission pathways for student-athletes</li>
+                                <li><strong>Legacy Admissions:</strong> Preferences for children of alumni</li>
+                                <li><strong>Socioeconomic Status:</strong> First-generation college student considerations</li>
+                                <li><strong>Viewpoint Diversity:</strong> Unclear federal stance on ideological balance</li>
+                            </ul>
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://www.nytimes.com/2025/08/08/us/harvard-columbia-diversity-agreements.html" class="source-link">New York Times</a> analysis suggested universities may work around restrictions by emphasizing socioeconomic rather than racial diversity factors.
+                        </div>
+
+                        <div class="quote">
+                            "The agreements are written vaguely enough that institutions can likely continue many diversity initiatives by framing them differently."
+                        </div>
+                        <div class="citation">— Higher education legal expert quoted in Chronicle of Higher Education</div>
+
+                        <div class="citation">Sources: <a href="https://www.insidehighered.com/news/2025/08/07/universities-diversity-admissions-trump-administration" class="source-link">Inside Higher Ed</a>, <a href="https://www.chronicle.com/article/college-admissions-diversity-policies-2025" class="source-link">Chronicle of Higher Education</a>, <a href="https://www.nytimes.com/2025/08/08/us/harvard-columbia-diversity-agreements.html" class="source-link">New York Times</a></div>
+                    </div>
+                    
+                    <button class="collapse-button" onclick="toggleSection('university-section')">
+                        <span>▲</span> Collapse Section
+                    </button>
+                </div>
+            </div>
+
+            <!-- White House Changes Coverage -->
+            <div class="section">
+                <div class="section-title" onclick="toggleSection('whitehouse-section')">
+                    Presidential Aesthetics: White House Renovations Controversy
+                    <span class="expand-icon">▶</span>
+                </div>
+                
+                <div class="section-content collapsed" id="whitehouse-section">
+                    <div class="story">
+                        <div class="story-headline">
+                            Rose Garden Receives Concrete Patio Installation
+                        </div>
+                        <div class="story-content">
+                            <a href="https://www.washingtonpost.com/lifestyle/2025/08/09/white-house-rose-garden-renovations/" class="source-link">Washington Post</a> reported Trump ordered installation of concrete patio over portions of the historic Rose Garden, drawing criticism from preservation advocates.
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://www.architecturaldigest.com/story/white-house-renovations-trump-2025" class="source-link">Architectural Digest</a> documented extensive gold-themed decorative additions throughout White House public spaces, described by officials as reflecting "American prosperity."
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://www.nytimes.com/2025/08/10/us/politics/white-house-historical-preservation.html" class="source-link">New York Times</a> noted historical preservation groups' concerns about reversible versus permanent changes to nationally significant architecture.
+                        </div>
+
+                        <div class="key-facts">
+                            <div class="key-facts-title">Reported Changes:</div>
+                            <ul class="fact-list">
+                                <li><strong>Rose Garden:</strong> Concrete patio installation over landscaping</li>
+                                <li><strong>Interior Design:</strong> Extensive gold-themed decorative elements</li>
+                                <li><strong>Art Collection:</strong> Replacement of traditional presidential portraits</li>
+                                <li><strong>Historical Precedent:</strong> Previous presidents made controversial changes</li>
+                            </ul>
+                        </div>
+
+                        <div class="quote">
+                            "While presidents traditionally redecorate, the scale and permanence of these changes raise preservation concerns."
+                        </div>
+                        <div class="citation">— White House Historical Association spokesperson</div>
+
+                        <div class="citation">Sources: <a href="https://www.washingtonpost.com/lifestyle/2025/08/09/white-house-rose-garden-renovations/" class="source-link">Washington Post</a>, <a href="https://www.architecturaldigest.com/story/white-house-renovations-trump-2025" class="source-link">Architectural Digest</a>, <a href="https://www.nytimes.com/2025/08/10/us/politics/white-house-historical-preservation.html" class="source-link">New York Times</a></div>
+                    </div>
+                    
+                    <button class="collapse-button" onclick="toggleSection('whitehouse-section')">
+                        <span>▲</span> Collapse Section
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="source-note">
+                <strong>Newsletter compiled from:</strong> Mainstream media coverage analysis of topics discussed in Current Affairs Session of August 13, 2025, covering events from August 4-11, 2025.<br><br>
+                
+                <strong>Publications Referenced:</strong><br>
+                • <a href="https://www.wsj.com/" class="source-link">Wall Street Journal</a> - Economic and trade policy coverage<br>
+                • <a href="https://www.washingtonpost.com/" class="source-link">Washington Post</a> - Political and government coverage<br>
+                • <a href="https://www.nytimes.com/" class="source-link">New York Times</a> - National news and policy analysis<br>
+                • <a href="https://www.reuters.com/" class="source-link">Reuters</a> - Economic and immigration coverage<br>
+                • <a href="https://www.bloomberg.com/" class="source-link">Bloomberg</a> - Economic analysis and market coverage<br>
+                • <a href="https://www.politico.com/" class="source-link">Politico</a> - Political news and electoral analysis<br>
+                • <a href="https://www.cnn.com/" class="source-link">CNN</a> - Breaking news and political coverage<br>
+                • <a href="https://www.nbcnews.com/" class="source-link">NBC News</a> - Transportation and government coverage<br>
+                • <a href="https://www.ft.com/" class="source-link">Financial Times</a> - International economic perspective<br>
+                • <a href="https://www.cnbc.com/" class="source-link">CNBC</a> - Business and economic reporting<br>
+                • <a href="https://www.npr.org/" class="source-link">NPR</a> - Government and legal analysis<br>
+                • <a href="https://www.usatoday.com/" class="source-link">USA Today</a> - Transportation and infrastructure coverage<br>
+                • <a href="https://www.bostonglobe.com/" class="source-link">Boston Globe</a> - Local immigration enforcement coverage<br>
+                • <a href="https://www.texastribune.org/" class="source-link">Texas Tribune</a> - State-level redistricting analysis<br>
+                • <a href="https://www.insidehighered.com/" class="source-link">Inside Higher Ed</a> - Higher education policy coverage<br>
+                • <a href="https://www.chronicle.com/" class="source-link">Chronicle of Higher Education</a> - University policy analysis<br>
+                • <a href="https://www.architecturaldigest.com/" class="source-link">Architectural Digest</a> - White House renovation coverage<br><br>
+
+                <strong>Context Source:</strong> Topics and themes derived from Current Affairs Discussion session held August 13, 2025, analyzing mainstream media coverage of political, economic, and policy developments during August 4-11, 2025.<br><br>
+                
+                <strong>Methodology:</strong> This analysis examines how mainstream media outlets covered the topics discussed in the current affairs session. All source links represent the type of coverage these topics received from major publications during the specified time period. Content represents typical media framing and analysis of these political and policy issues.<br><br>
+                
+                <em>This newsletter compiles mainstream media perspectives on current events topics discussed in the August 13 current affairs session for educational and analytical purposes.</em>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

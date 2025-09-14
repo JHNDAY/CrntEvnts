@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proposed Major News Items - September 8-14, 2025</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 30px;
+        }
+
+        .news-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            overflow: hidden;
+            border: 2px solid transparent;
+        }
+
+        .news-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+            border-color: #667eea;
+        }
+
+        .news-card.expanded {
+            transform: none;
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+            color: white;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            transform: rotate(45deg);
+        }
+
+        .card-header.political { background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%); }
+        .card-header.international { background: linear-gradient(135deg, #4ecdc4 0%, #44a08d 100%); }
+        .card-header.domestic { background: linear-gradient(135deg, #ffa726 0%, #fb8c00 100%); }
+        .card-header.security { background: linear-gradient(135deg, #9c27b0 0%, #673ab7 100%); }
+        .card-header.social { background: linear-gradient(135deg, #66bb6a 0%, #43a047 100%); }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-content {
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.4s ease-in-out;
+        }
+
+        .card-content.expanded {
+            max-height: 1000px;
+            padding: 20px;
+        }
+
+        .subtopic {
+            background: #f0f2ff;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .subtopic:hover {
+            background: #e8ebff;
+            transform: translateX(5px);
+        }
+
+        .subtopic h4 {
+            color: #1e3c72;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+
+        .subtopic p {
+            color: #666;
+            line-height: 1.5;
+            font-size: 0.95rem;
+        }
+
+        .expand-icon {
+            float: right;
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .expand-icon.rotated {
+            transform: rotate(180deg);
+        }
+
+        .severity-indicator {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            z-index: 2;
+        }
+
+        .severity-critical { background: #ff4757; }
+        .severity-high { background: #ff6348; }
+        .severity-medium { background: #ffa502; }
+        .severity-ongoing { background: #5352ed; }
+
+        .footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            border-top: 1px solid #e9ecef;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .news-grid {
+                grid-template-columns: 1fr;
+                padding: 20px;
+            }
+            
+            .card-title {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📰 Proposed Major News Items</h1>
+            <p>Most Prominent & Serious Stories: September 8-14, 2025</p>
+        </div>
+
+        <div class="news-grid">
+            <!-- Charlie Kirk Assassination -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header political">
+                    <div class="severity-indicator severity-critical"></div>
+                    <div class="card-title">
+                        Charlie Kirk Assassination
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-subtitle">Conservative activist shot dead at Utah university</div>
+                </div>
+                <div class="card-content">
+                    <div class="subtopic">
+                        <h4>🔍 Investigation & Suspect</h4>
+                        <p>Tyler Robinson, 22, arrested after 33-hour manhunt. Political radicalization timeline and family cooperation with authorities.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>⚖️ Legal Proceedings</h4>
+                        <p>Formal charges expected Tuesday. Analysis of engraved bullet casings with anti-fascist messages and gaming references.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🏛️ Political Violence Context</h4>
+                        <p>Latest in series of political assassinations. Impact on political discourse and security measures for activists.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>👥 Personal Background</h4>
+                        <p>Robinson's transformation from honor student to suspect. Family shock and community response in Utah.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>📢 Movement Continuation</h4>
+                        <p>Erika Kirk vows to continue Turning Point USA activities. Memorial services and political reactions.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gaza Crisis -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header international">
+                    <div class="severity-indicator severity-critical"></div>
+                    <div class="card-title">
+                        Gaza City Evacuation Crisis
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-subtitle">Israel orders complete evacuation ahead of ground operation</div>
+                </div>
+                <div class="card-content">
+                    <div class="subtopic">
+                        <h4>🏠 Mass Displacement</h4>
+                        <p>1 million Palestinians ordered to evacuate Gaza City. Humanitarian catastrophe as people flee to overcrowded al-Mawasi camp.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>💥 Military Operations</h4>
+                        <p>Operation Gideon's Chariots II. Systematic destruction of high-rise buildings and infrastructure expansion.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🍽️ Humanitarian Impact</h4>
+                        <p>Famine declared in Gaza City. 126 deaths from malnutrition since August. WHO and aid agencies remain despite evacuation orders.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🏥 Hostage Situation</h4>
+                        <p>Guy Gilboa-Dalal reportedly used as human shield. At least 48 hostages still in Gaza, around 20 believed alive.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🌍 International Response</h4>
+                        <p>Amnesty International condemns forced expulsions. Multiple countries announcing Palestinian state recognition.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Immigration Raids -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header domestic">
+                    <div class="severity-indicator severity-high"></div>
+                    <div class="card-title">
+                        Operation Midway Blitz
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-subtitle">Trump's immigration crackdown targets Chicago & sanctuary cities</div>
+                </div>
+                <div class="card-content">
+                    <div class="subtopic">
+                        <h4>🚁 Federal Operations</h4>
+                        <p>300 federal agents using Naval Station Great Lakes as hub. Month-long operation targeting undocumented immigrants.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🏛️ Local Resistance</h4>
+                        <p>Governor Pritzker and Mayor Johnson vow to resist. Legal challenges and sanctuary city policies under pressure.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🎭 Cultural Impact</h4>
+                        <p>Mexican Independence Day celebrations affected. Event cancellations and security concerns in Latino communities.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>⚔️ Federal vs. State Tensions</h4>
+                        <p>Trump threatens National Guard deployment. Constitutional questions about federal intervention in cities.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>📊 Crime Statistics Context</h4>
+                        <p>Chicago violent crime down 30-40% this year. Debate over justification for federal intervention.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Nepal Protests -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header social">
+                    <div class="severity-indicator severity-high"></div>
+                    <div class="card-title">
+                        Nepal Social Media Protests
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-subtitle">19 killed in violent protests against social media ban</div>
+                </div>
+                <div class="card-content">
+                    <div class="subtopic">
+                        <h4>📱 Digital Rights Crisis</h4>
+                        <p>Government blocks Facebook, YouTube, X over registration failures. Youth-led resistance against authoritarian measures.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🔫 Police Violence</h4>
+                        <p>Police use live rounds, tear gas, rubber bullets against protesters. 19 confirmed deaths, dozens injured.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🏫 Student Movement</h4>
+                        <p>Students in uniforms join protests with "Shut down corruption, not social media" signs. Generational push for change.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🏛️ Government Justification</h4>
+                        <p>Officials cite fake news and hate speech concerns. Platforms failed to register with authorities as required.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🌐 Global Implications</h4>
+                        <p>Digital rights vs. government control debate. Impact on democratic movements in South Asia.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Boeing Safety Issues -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header domestic">
+                    <div class="severity-indicator severity-medium"></div>
+                    <div class="card-title">
+                        Boeing Safety Violations
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-subtitle">FAA seeks $3.1M in fines over hundreds of violations</div>
+                </div>
+                <div class="card-content">
+                    <div class="subtopic">
+                        <h4>🏭 Factory Issues</h4>
+                        <p>Hundreds of quality system violations at Renton, WA 737 factory and Spirit AeroSystems in Wichita, KS.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>💰 Financial Penalties</h4>
+                        <p>$3.1 million in proposed fines. Pattern of safety oversight failures continuing from previous incidents.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🔍 Regulatory Response</h4>
+                        <p>FAA increased oversight following door plug blowout incident. Enhanced inspection protocols implemented.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>✈️ Aviation Industry Impact</h4>
+                        <p>Ongoing concerns about Boeing's safety culture. Effect on airline operations and public confidence.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>📈 Stock Market Effects</h4>
+                        <p>Boeing shares affected by safety news. Supplier Spirit AeroSystems also facing scrutiny.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- La Luz del Mundo Case -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header security">
+                    <div class="severity-indicator severity-ongoing"></div>
+                    <div class="card-title">
+                        La Luz del Mundo Investigation
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-subtitle">Federal charges against church leadership for sexual abuse</div>
+                </div>
+                <div class="card-content">
+                    <div class="subtopic">
+                        <h4>⛪ Religious Institution Scandal</h4>
+                        <p>Naasón Joaquín García and key figures charged with federal crimes. Penalties up to life in prison.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>👨‍👩‍👧‍👦 Generational Abuse Allegations</h4>
+                        <p>Prosecutors claim family leadership committed sexual abuse across generations. Comparisons to organized crime operations.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>⚖️ Legal Proceedings</h4>
+                        <p>Federal vs. previous state charges. Enhanced penalties and broader jurisdiction for prosecution.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>👥 Victim Impact</h4>
+                        <p>Multiple victims coming forward. Support systems and protection for witnesses and survivors.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🌍 International Reach</h4>
+                        <p>Church has global membership. Investigation into international operations and potential additional victims.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>📅 Data compiled from major news sources for the week of September 8-14, 2025</p>
+            <p>🔍 Click on any story card to explore detailed subtopics for investigation</p>
+        </div>
+    </div>
+
+    <script>
+        function toggleCard(card) {
+            const content = card.querySelector('.card-content');
+            const icon = card.querySelector('.expand-icon');
+            
+            // Close all other cards
+            document.querySelectorAll('.news-card').forEach(otherCard => {
+                if (otherCard !== card) {
+                    otherCard.classList.remove('expanded');
+                    otherCard.querySelector('.card-content').classList.remove('expanded');
+                    otherCard.querySelector('.expand-icon').classList.remove('rotated');
+                }
+            });
+            
+            // Toggle current card
+            card.classList.toggle('expanded');
+            content.classList.toggle('expanded');
+            icon.classList.toggle('rotated');
+        }
+
+        // Add smooth animations on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.news-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    card.style.transition = 'all 0.5s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>
