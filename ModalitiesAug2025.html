@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session Modality Analysis</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+            font-weight: 300;
+        }
+
+        .header p {
+            color: #7f8c8d;
+            font-size: 1.1em;
+        }
+
+        .charts-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .chart-section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .chart-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin-bottom: 20px;
+        }
+
+        .stacked-chart {
+            grid-column: 1 / -1;
+        }
+
+        .stacked-chart .chart-container {
+            height: 300px;
+        }
+
+        .session-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .session-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .session-header {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .session-duration {
+            color: #7f8c8d;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+        }
+
+        .modality-bar {
+            margin-bottom: 12px;
+        }
+
+        .modality-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 5px;
+            font-size: 0.85em;
+        }
+
+        .modality-name {
+            font-weight: 500;
+            color: #2c3e50;
+        }
+
+        .modality-percentage {
+            font-weight: 600;
+            color: #7f8c8d;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: #ecf0f1;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 0.8s ease-in-out;
+        }
+
+        .insights-section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        .insights-title {
+            font-size: 1.4em;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        .insight-item {
+            background: #f8f9fa;
+            border-left: 4px solid #3498db;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .insight-title {
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .insight-text {
+            color: #5d6d7e;
+            line-height: 1.5;
+        }
+
+        .legend {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+
+        .legend-label {
+            font-size: 0.9em;
+            color: #2c3e50;
+        }
+
+        @media (max-width: 768px) {
+            .charts-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 15px;
+                margin: 10px;
+            }
+            
+            .session-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Session Modality Analysis</h1>
+            <p>Time distribution across conversational modes in group discussions</p>
+        </div>
+
+        <div class="charts-container">
+            <div class="chart-section">
+                <div class="chart-title">Average Modality Distribution</div>
+                <div class="chart-container">
+                    <canvas id="averageChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-section">
+                <div class="chart-title">Session Duration Comparison</div>
+                <div class="chart-container">
+                    <canvas id="durationChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-section stacked-chart">
+                <div class="chart-title">Modality Evolution Across Sessions</div>
+                <div class="chart-container">
+                    <canvas id="stackedChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="session-grid" id="sessionGrid"></div>
+
+        <div class="insights-section">
+            <div class="insights-title">Key Insights</div>
+            
+            <div class="insight-item">
+                <div class="insight-title">Structured Discussion Dominance</div>
+                <div class="insight-text">Structured facilitated discussion consistently represents 20-32% of session time, showing the group's commitment to organized agenda-driven conversation.</div>
+            </div>
+
+            <div class="insight-item">
+                <div class="insight-title">Expert Knowledge Sharing</div>
+                <div class="insight-text">Expert presentations peaked at 29% in Session 3 (genocide law discussion) and averaged 23% across sessions, indicating high value placed on deep knowledge sharing.</div>
+            </div>
+
+            <div class="insight-item">
+                <div class="insight-title">Growing Innovation</div>
+                <div class="insight-text">Experimental/innovative activities grew from 2% to 11-15%, showing increasing comfort with new technologies like AI integration.</div>
+            </div>
+
+            <div class="insight-item">
+                <div class="insight-title">Social Cohesion Priority</div>
+                <div class="insight-text">Social maintenance activities consistently occupy 10-18% of time, demonstrating the importance of relationship building in virtual groups.</div>
+            </div>
+
+            <div class="insight-item">
+                <div class="insight-title">Technical Challenges Decreasing</div>
+                <div class="insight-text">Technical problem-solving time decreased from 11% to 3% over sessions, showing improved group familiarity with virtual meeting platforms.</div>
+            </div>
+        </div>
+
+        <div class="legend" id="legend"></div>
+    </div>
+
+    <script>
+        // Data from the analysis
+        const sessions = [
+            {
+                name: "Session 1",
+                date: "Week 1",
+                totalDuration: 108,
+                percentages: {
+                    structured: 32, expert: 23, creative: 7, technical: 11,
+                    social: 14, spontaneous: 7, ritual: 3, experimental: 2
+                }
+            },
+            {
+                name: "Session 2", 
+                date: "Week 2",
+                totalDuration: 99,
+                percentages: {
+                    structured: 28, expert: 20, creative: 12, technical: 8,
+                    social: 18, spontaneous: 10, ritual: 3, experimental: 0
+                }
+            },
+            {
+                name: "Session 3",
+                date: "Week 3", 
+                totalDuration: 120,
+                percentages: {
+                    structured: 25, expert: 29, creative: 4, technical: 8,
+                    social: 10, spontaneous: 17, ritual: 4, experimental: 3
+                }
+            },
+            {
+                name: "Session 4",
+                date: "Week 4",
+                totalDuration: 123,
+                percentages: {
+                    structured: 20, expert: 24, creative: 12, technical: 7,
+                    social: 10, spontaneous: 12, ritual: 4, experimental: 11
+                }
+            },
+            {
+                name: "Session 5",
+                date: "Week 5", 
+                totalDuration: 146,
+                percentages: {
+                    structured: 27, expert: 17, creative: 14, technical: 3,
+                    social: 14, spontaneous: 10, ritual: 4, experimental: 10
+                }
+            }
+        ];
+
+        const modalityColors = {
+            structured: '#e74c3c',
+            expert: '#3498db', 
+            creative: '#f39c12',
+            technical: '#9b59b6',
+            social: '#2ecc71',
+            spontaneous: '#e67e22',
+            ritual: '#34495e',
+            experimental: '#1abc9c'
+        };
+
+        const modalityNames = {
+            structured: 'Structured Facilitated',
+            expert: 'Expert Presentations',
+            creative: 'Creative/Performative', 
+            technical: 'Technical Problem-Solving',
+            social: 'Social Maintenance',
+            spontaneous: 'Spontaneous Thematic',
+            ritual: 'Ritual/Traditional',
+            experimental: 'Experimental/Innovative'
+        };
+
+        // Calculate averages
+        const averages = {};
+        Object.keys(modalityNames).forEach(modality => {
+            const sum = sessions.reduce((total, session) => total + session.percentages[modality], 0);
+            averages[modality] = Math.round(sum / sessions.length);
+        });
+
+        // Create average pie chart
+        const avgCtx = document.getElementById('averageChart').getContext('2d');
+        new Chart(avgCtx, {
+            type: 'doughnut',
+            data: {
+                labels: Object.values(modalityNames),
+                datasets: [{
+                    data: Object.values(averages),
+                    backgroundColor: Object.values(modalityColors),
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+
+        // Create duration bar chart
+        const durationCtx = document.getElementById('durationChart').getContext('2d');
+        new Chart(durationCtx, {
+            type: 'bar',
+            data: {
+                labels: sessions.map(s => s.name),
+                datasets: [{
+                    label: 'Duration (minutes)',
+                    data: sessions.map(s => s.totalDuration),
+                    backgroundColor: '#3498db',
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Minutes'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Create stacked area chart
+        const stackedCtx = document.getElementById('stackedChart').getContext('2d');
+        const datasets = Object.keys(modalityNames).map(modality => ({
+            label: modalityNames[modality],
+            data: sessions.map(s => s.percentages[modality]),
+            backgroundColor: modalityColors[modality],
+            borderColor: modalityColors[modality],
+            borderWidth: 1
+        }));
+
+        new Chart(stackedCtx, {
+            type: 'line',
+            data: {
+                labels: sessions.map(s => s.name),
+                datasets: datasets
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 35,
+                        title: {
+                            display: true,
+                            text: 'Percentage (%)'
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                elements: {
+                    line: {
+                        tension: 0.3
+                    },
+                    point: {
+                        radius: 4
+                    }
+                }
+            }
+        });
+
+        // Create session cards
+        const sessionGrid = document.getElementById('sessionGrid');
+        sessions.forEach(session => {
+            const card = document.createElement('div');
+            card.className = 'session-card';
+            
+            let barsHTML = '';
+            Object.entries(session.percentages).forEach(([modality, percentage]) => {
+                barsHTML += `
+                    <div class="modality-bar">
+                        <div class="modality-label">
+                            <span class="modality-name">${modalityNames[modality]}</span>
+                            <span class="modality-percentage">${percentage}%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${percentage}%; background-color: ${modalityColors[modality]};"></div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            card.innerHTML = `
+                <div class="session-header">${session.name}</div>
+                <div class="session-duration">${session.totalDuration} minutes total</div>
+                ${barsHTML}
+            `;
+            
+            sessionGrid.appendChild(card);
+        });
+
+        // Create legend
+        const legend = document.getElementById('legend');
+        Object.entries(modalityNames).forEach(([key, name]) => {
+            const item = document.createElement('div');
+            item.className = 'legend-item';
+            item.innerHTML = `
+                <div class="legend-color" style="background-color: ${modalityColors[key]};"></div>
+                <div class="legend-label">${name}</div>
+            `;
+            legend.appendChild(item);
+        });
+
+        // Animate progress bars
+        setTimeout(() => {
+            document.querySelectorAll('.progress-fill').forEach(bar => {
+                bar.style.width = bar.style.width;
+            });
+        }, 500);
+    </script>
+</body>
+</html>
