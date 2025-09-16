@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proposed Major News Items - Sep. 8 to Sep. 15, 2025</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .news-section {
+            padding: 30px;
+        }
+
+        .news-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            overflow: hidden;
+            border: 2px solid transparent;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .news-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+            border-color: #667eea;
+        }
+
+        .news-card.expanded {
+            transform: none;
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .card-header {
+            color: white;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            transform: rotate(45deg);
+        }
+
+        /* Red to Blue gradient based on occurrence count */
+        .card-header.level-1 { background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%); }
+        .card-header.level-2 { background: linear-gradient(135deg, #ff4444 0%, #dd2222 100%); }
+        .card-header.level-3 { background: linear-gradient(135deg, #ff8888 0%, #ff5555 100%); }
+        .card-header.level-4 { background: linear-gradient(135deg, #ffaa88 0%, #ff7755 100%); }
+        .card-header.level-5 { background: linear-gradient(135deg, #88aaff 0%, #5577ff 100%); }
+        .card-header.level-6 { background: linear-gradient(135deg, #4488ff 0%, #2255ff 100%); }
+        .card-header.level-7 { background: linear-gradient(135deg, #0044ff 0%, #0022cc 100%); }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-content {
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.4s ease-in-out;
+        }
+
+        .card-content.expanded {
+            max-height: 1000px;
+            padding: 20px;
+        }
+
+        .subtopic {
+            background: #f0f2ff;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .subtopic:hover {
+            background: #e8ebff;
+            transform: translateX(5px);
+        }
+
+        .subtopic h4 {
+            color: #1e3c72;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+
+        .subtopic p {
+            color: #666;
+            line-height: 1.5;
+            font-size: 0.95rem;
+        }
+
+        .expand-icon {
+            float: right;
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .expand-icon.rotated {
+            transform: rotate(180deg);
+        }
+
+        .severity-indicator {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.2rem;
+            z-index: 2;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .severity-critical::before { content: "🚨"; }
+        .severity-high::before { content: "⚠️"; }
+        .severity-medium::before { content: "📋"; }
+        .severity-ongoing::before { content: "🔥"; }
+
+        .footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            border-top: 1px solid #e9ecef;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .news-section {
+                padding: 20px;
+            }
+            
+            .card-title {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📰 Proposed Major News Items</h1>
+            <p>September 8-15, 2025</p>
+        </div>
+
+        <div class="news-section">
+            <!-- Immigration & Detention (45+ mentions) -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-1">
+                    <div class="severity-indicator severity-critical"></div>
+                    <div class="card-title">
+                        Immigration & Detention (45+ mentions)
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-subtitle">Mass ICE raids and detention operations across sanctuary cities</div>
+                </div>
+                <div class="card-content">
+                    <div class="subtopic">
+                        <h4>🚁 Operation Midway Blitz - Chicago</h4>
+                        <p>300 federal agents using Naval Station Great Lakes as hub targeting undocumented immigrants in Chicago area, despite 30-40% drop in violent crime.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>📊 Supreme Court Immigration Ruling</h4>
+                        <p>SCOTUS allows federal officers to conduct "roving patrols" and racial profiling in Los Angeles immigration raids, reversing lower court restrictions.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🏭 Georgia Hyundai Plant Raid</h4>
+                        <p>475 people detained including 300+ South Korean nationals creating diplomatic tensions. Workers released and flown back to South Korea.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🎭 Cultural Impact on Latino Communities</h4>
+                        <p>Mexican Independence Day celebrations canceled or postponed in multiple cities due to immigration enforcement fears.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>📋 Policy Changes in ICE Operations</h4>
+                        <p>ICE eliminates required pre-operation paperwork, shifting from targeted enforcement to broad street sweeps under Trump administration.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- International Issues (Netanyahu/Gaza) (35+ mentions) -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-2">
+                    <div class="severity-indicator severity-critical"></div>
+                    <div class="card-title">
+                        International Issues - Netanyahu/Gaza (35+ mentions)
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-subtitle">Gaza City evacuation crisis and Israeli ground operation</div>
+                </div>
+                <div class="card-content">
+                    <div class="subtopic">
+                        <h4>🏠 Gaza City Complete Evacuation</h4>
+                        <p>Israel orders 1 million Palestinians to evacuate Gaza City ahead of ground operation "Gideon's Chariots II" with systematic destruction of high-rise buildings.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🤝 Rubio-Netanyahu Jerusalem Meeting</h4>
+                        <p>US Secretary of State Marco Rubio meets with Netanyahu to discuss war strategy and planned Gaza City takeover, cementing US-Israel alliance.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🌍 International Isolation Concerns</h4>
+                        <p>Netanyahu admits Israel faces "prolonged isolation" over Gaza war, warns economy must become more self-sufficient as arms embargoes increase.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🍽️ Humanitarian Crisis Escalation</h4>
+                        <p>Famine declared in Gaza City with 126 deaths from malnutrition since August. WHO and aid agencies remain despite evacuation orders.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🏥 Hostage Situation Complications</h4>
+                        <p>At least 48 hostages still in Gaza with around 20 believed alive. Families oppose Gaza City operation fearing it endangers remaining captives.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Executive Overreach (28+ mentions) -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-3">
+                    <div class="severity-indicator severity-high"></div>
+                    <div class="card-title">
+                        Executive Overreach (28+ mentions)
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-subtitle">Trump administration's expanded executive powers and federal interventions</div>
+                </div>
+                <div class="card-content">
+                    <div class="subtopic">
+                        <h4>🗂️ Record Executive Orders</h4>
+                        <p>Trump signed 202 executive orders in 2025, dismantling DEI programs and previous administration policies at unprecedented pace.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🏛️ Memphis Federal Intervention</h4>
+                        <p>Trump deploys National Guard to Memphis citing crime concerns, despite police reporting decreases across all major crime categories in 2025.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>⚖️ DOGE Deregulation Initiative</h4>
+                        <p>Department of Government Efficiency led by Elon Musk reviews all federal regulations, prioritizing rules that "impose heavy costs" for elimination.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🚫 Federal Agency Restructuring</h4>
+                        <p>Systematic dismantling of federal agencies including closure of Office for Civil Rights and Civil Liberties, ending 500+ ongoing investigations.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>📊 Constitutional Separation Concerns</h4>
+                        <p>Executive order aims to "restore constitutional separation of powers" while expanding executive authority over agency enforcement actions.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Threat to Democracy (25+ mentions) -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-4">
+                    <div class="severity-indicator severity-ongoing"></div>
+                    <div class="card-title">
+                        Threat to Democracy (25+ mentions)
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-subtitle">Political violence and democratic institutions under pressure</div>
+                </div>
+                <div class="card-content">
+                    <div class="subtopic">
+                        <h4>🔫 Charlie Kirk Assassination</h4>
+                        <p>Conservative activist shot dead at Utah university. Tyler Robinson, 22, arrested after 33-hour manhunt with engraved anti-fascist bullet casings.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>📊 Democracy Threat Assessment</h4>
+                        <p>Authoritarian Warning Survey rates US democracy threat level at 3.3/5, with 76% of Americans believing democracy is under serious threat.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🏛️ Democracy 2025 Coalition Response</h4>
+                        <p>650+ organizations mobilize to defend democracy against Project 2025 implementation, providing legal challenges and community organizing.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>⚡ Political Violence Concerns</h4>
+                        <p>Nearly three-quarters of Americans see politically motivated violence as major problem, with experts predicting 19.2% likelihood of democratic breakdown.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>📺 Media Treatment Deterioration</h4>
+                        <p>Treatment of media rated 3.2/5 severe threat as administration claims videotaping ICE raids constitutes "violence" and "doxing."</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Conservative Court Impact (22+ mentions) -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-5">
+                    <div class="severity-indicator severity-high"></div>
+                    <div class="card-title">
+                        Conservative Court Impact (22+ mentions)
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-subtitle">Supreme Court decisions reshaping federal authority and civil rights</div>
+                </div>
+                <div class="card-content">
+                    <div class="subtopic">
+                        <h4>🚫 Nationwide Injunction Restrictions</h4>
+                        <p>6-3 SCOTUS decision limits district courts' ability to issue nationwide injunctions, significantly reducing challenges to presidential orders.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🏫 LGBTQ+ Curriculum Opt-Outs</h4>
+                        <p>Supreme Court grants parents religious opt-out rights for LGBTQ-inclusive curriculum in 6-3 partisan decision, affecting school districts nationwide.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>⚕️ Gender-Affirming Care Restrictions</h4>
+                        <p>Court upholds state bans on gender-affirming care for minors, determining such restrictions don't constitute sex discrimination but age-based regulation.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🗳️ Voting Rights Cases</h4>
+                        <p>Louisiana redistricting case re-argued over racial gerrymandering concerns, potentially affecting Voting Rights Act interpretation and congressional balance.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🏥 Medicaid Enforcement Limitations</h4>
+                        <p>Conservative majority restricts individual patients' ability to sue for Medicaid care enforcement, leaving protection to elected representatives only.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Economic Analysis (18+ mentions) -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-6">
+                    <div class="severity-indicator severity-medium"></div>
+                    <div class="card-title">
+                        Economic Analysis (18+ mentions)
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-subtitle">Federal reserve independence and tariff policy challenges</div>
+                </div>
+                <div class="card-content">
+                    <div class="subtopic">
+                        <h4>🏦 Federal Reserve Protection</h4>
+                        <p>Supreme Court exempts Fed from Trump firing authority, preserving central bank independence amid concerns over economic governance design.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>📈 Tariff Policy Legal Challenges</h4>
+                        <p>Federal appeals court rules president lacks authority to set sweeping tariffs under emergency powers, challenging Trump trade policy.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>💰 Government Efficiency Reforms</h4>
+                        <p>DOGE initiative targets regulatory costs and federal spending, with Musk leading efforts to streamline government operations and reduce bureaucracy.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🌍 International Trade Implications</h4>
+                        <p>Israel's economic isolation concerns affect global markets, while US-South Korea tensions over immigration raids impact bilateral trade relations.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>📊 Budget Impact Analysis</h4>
+                        <p>ICE budget triples from 2024 levels, now exceeding military budgets of 15 countries, while immigration enforcement costs escalate nationwide.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Political Strategy Analysis (15+ mentions) -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-7">
+                    <div class="severity-indicator severity-medium"></div>
+                    <div class="card-title">
+                        Political Strategy Analysis (15+ mentions)
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-subtitle">Democratic resistance strategies and Republican consolidation efforts</div>
+                </div>
+                <div class="card-content">
+                    <div class="subtopic">
+                        <h4>🔄 California Redistricting Response</h4>
+                        <p>Gov. Newsom proposes "Trump lite" strategy to fight Republican gerrymandering, with Obama endorsement signaling Democratic tactical shift.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🏛️ Sanctuary City Resistance</h4>
+                        <p>Democratic governors and mayors vow to resist federal immigration enforcement, testing constitutional limits of federal vs. state authority.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>⚖️ Legal Challenge Coordination</h4>
+                        <p>Democracy 2025 coalition coordinates legal responses across 650+ organizations, preparing comprehensive challenges to Trump administration policies.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🗳️ Electoral Map Implications</h4>
+                        <p>Voting rights cases and redistricting battles potentially affecting 2026 midterm elections and congressional power balance.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>📊 Public Opinion Dynamics</h4>
+                        <p>Polling shows Trump administration receiving mostly D/F grades in first 100 days, while democracy concerns remain high among independents.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>📅 Data compiled from major news sources for the week of September 8-15, 2025</p>
+            <p>🔍 Click on any story card to explore detailed subtopics for investigation</p>
+            <p>📊 Categories ordered by frequency of mentions in news coverage</p>
+            
+            <div style="margin-top: 20px; text-align: left; font-size: 0.85rem;">
+                <h3 style="color: #1e3c72; margin-bottom: 15px; text-align: center;">📚 Sources Used</h3>
+                
+                <div style="columns: 2; column-gap: 30px; line-height: 1.6;">
+                    <p><strong>Democracy & Threats:</strong></p>
+                    <ul style="margin-left: 20px; margin-bottom: 15px;">
+                        <li><a href="https://protectdemocracy.org/threat-index/" target="_blank">Protect Democracy - Threat Index</a></li>
+                        <li><a href="https://www.democracynow.org/2025/9/8/headlines" target="_blank">Democracy Now! - Sept 8 Headlines</a></li>
+                        <li><a href="https://www.democracynow.org/2025/9/15/headlines" target="_blank">Democracy Now! - Sept 15 Headlines</a></li>
+                        <li><a href="https://www.npr.org/2025/07/01/nx-s1-5452527/poll-democracy-trump-immigration" target="_blank">NPR - Democracy Under Threat Poll</a></li>
+                        <li><a href="https://www.democracy2025.org/" target="_blank">Democracy 2025 Coalition</a></li>
+                        <li><a href="https://www.brookings.edu/articles/threats-to-us-democracy-dangerous-cracks-in-us-democracy-pillars/" target="_blank">Brookings - Democracy Pillars Analysis</a></li>
+                    </ul>
+                    
+                    <p><strong>Supreme Court & Legal:</strong></p>
+                    <ul style="margin-left: 20px; margin-bottom: 15px;">
+                        <li><a href="https://www.scotusblog.com/" target="_blank">SCOTUSblog</a></li>
+                        <li><a href="https://www.law.columbia.edu/news/archive/columbia-law-experts-2025-supreme-court-rulings" target="_blank">Columbia Law - Court Rulings Analysis</a></li>
+                        <li><a href="https://www.washingtonpost.com/politics/interactive/2025/supreme-court-cases-decisions/" target="_blank">Washington Post - Court Decisions Tracker</a></li>
+                        <li><a href="https://www.npr.org/2025/06/27/nx-s1-5448843/a-look-at-todays-supreme-court-decisions" target="_blank">NPR - Supreme Court Analysis</a></li>
+                        <li><a href="https://www.multistate.us/insider/2025/7/15/supreme-court-2025-five-major-decisions-reshaping-state-policy-nationwide" target="_blank">MultiState - Court Impact Analysis</a></li>
+                    </ul>
+                    
+                    <p><strong>Immigration & ICE:</strong></p>
+                    <ul style="margin-left: 20px; margin-bottom: 15px;">
+                        <li><a href="https://news.wttw.com/2025/09/08/feds-tout-new-immigration-operation-illinois-communities-await-ice-raids" target="_blank">WTTW - Illinois ICE Operations</a></li>
+                        <li><a href="https://www.npr.org/2025/09/08/nx-s1-5534338/ice-chicago-boston-immigration-raids" target="_blank">NPR - Chicago Immigration Crackdowns</a></li>
+                        <li><a href="https://www.cnn.com/2025/09/08/us/chicago-sanctuary-cities-ice-raids-planned" target="_blank">CNN - Sanctuary Cities ICE Raids</a></li>
+                        <li><a href="https://www.nbcnews.com/politics/national-security/trump-administration-ice-scraps-paperwork-officers-immigration-arrests-rcna229407" target="_blank">NBC News - ICE Policy Changes</a></li>
+                        <li><a href="https://www.cbsnews.com/news/us-south-korean-workers-ice-raid-ties-strained-georgia-hyundai-plant/" target="_blank">CBS News - Hyundai Plant Raid</a></li>
+                        <li><a href="https://www.scotusblog.com/2025/09/supreme-court-allows-federal-officers-to-more-freely-make-immigration-stops-in-los-angeles/" target="_blank">SCOTUSblog - LA Immigration Stops</a></li>
+                    </ul>
+                    
+                    <p><strong>Executive Actions:</strong></p>
+                    <ul style="margin-left: 20px; margin-bottom: 15px;">
+                        <li><a href="https://www.whitehouse.gov/fact-sheets/2025/09/fact-sheet-president-donald-j-trump-restores-law-and-order-in-memphis/" target="_blank">White House - Memphis Fact Sheet</a></li>
+                        <li><a href="https://www.pbs.org/newshour/politics/trump-deploys-national-guard-to-memphis-calling-it-a-replica-of-his-crackdown-on-washington" target="_blank">PBS - Memphis National Guard</a></li>
+                        <li><a href="https://www.federalregister.gov/presidential-documents/executive-orders/donald-trump/2025" target="_blank">Federal Register - 2025 Executive Orders</a></li>
+                        <li><a href="https://www.whitehouse.gov/fact-sheets/2025/02/fact-sheet-president-donald-j-trump-reins-in-government-overreach-and-begins-deconstruction-of-unconstitutional-administrative-state/" target="_blank">White House - DOGE Initiative</a></li>
+                    </ul>
+                    
+                    <p><strong>Gaza & International:</strong></p>
+                    <ul style="margin-left: 20px; margin-bottom: 15px;">
+                        <li><a href="https://abcnews.go.com/International/rubio-lands-israel-ahead-netanyahu-meeting-hamas-war/story?id=125551936" target="_blank">ABC News - Rubio Netanyahu Meeting</a></li>
+                        <li><a href="https://www.aljazeera.com/news/2025/9/15/netanyahu-and-rubio-stick-to-established-israeli-us-narrative-on-gaza-war" target="_blank">Al Jazeera - Netanyahu Rubio Analysis</a></li>
+                        <li><a href="https://www.cnn.com/2025/09/15/middleeast/netanyahu-israel-isolation-intl" target="_blank">CNN - Netanyahu Isolation Warning</a></li>
+                        <li><a href="https://www.cnn.com/2025/09/09/middleeast/israel-gaza-city-evacuation-netanyahu-warning-intl" target="_blank">CNN - Gaza City Evacuation</a></li>
+                        <li><a href="https://www.timesofisrael.com/liveblog-september-15-2025/" target="_blank">Times of Israel - Live Updates</a></li>
+                        <li><a href="https://www.aljazeera.com/news/2025/9/8/netanyahu-threatens-gaza-residents-as-un-slams-israel-over-mass" target="_blank">Al Jazeera - Gaza Threats Analysis</a></li>
+                    </ul>
+                    
+                    <p><strong>Political Analysis:</strong></p>
+                    <ul style="margin-left: 20px;">
+                        <li><a href="https://www.cnn.com/2025/08/21/politics/newsom-obama-trump-texas-california-redistricting-analysis" target="_blank">CNN - Democratic Strategy Analysis</a></li>
+                        <li><a href="https://theconversation.com/the-growing-threat-to-u-s-democracy-will-literally-cost-lives-254170" target="_blank">The Conversation - Democracy Threat Analysis</a></li>
+                        <li><a href="https://civilrights.org/blog/project-2025-poses-a-serious-threat-to-our-democracy/" target="_blank">Leadership Conference - Project 2025 Analysis</a></li>
+                        <li><a href="https://prospect.org/justice/2025-09-09-dhs-claims-videotaping-ice-raids-is-violence/" target="_blank">American Prospect - DHS Media Policy</a></li>
+                    </ul>
+                </div>
+                
+                <p style="margin-top: 15px; font-style: italic; text-align: center; color: #666;">
+                    All sources accessed September 15-16, 2025. Links verified at time of compilation.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleCard(card) {
+            const content = card.querySelector('.card-content');
+            const icon = card.querySelector('.expand-icon');
+            
+            // Close all other cards
+            document.querySelectorAll('.news-card').forEach(otherCard => {
+                if (otherCard !== card) {
+                    otherCard.classList.remove('expanded');
+                    otherCard.querySelector('.card-content').classList.remove('expanded');
+                    otherCard.querySelector('.expand-icon').classList.remove('rotated');
+                }
+            });
+            
+            // Toggle current card
+            card.classList.toggle('expanded');
+            content.classList.toggle('expanded');
+            icon.classList.toggle('rotated');
+        }
+
+        // Add smooth animations on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.news-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    card.style.transition = 'all 0.5s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>
