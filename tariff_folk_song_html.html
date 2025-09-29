@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Country's in the Very Best of Hands/Tariffs</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Abril+Fatface&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #8B4513 0%, #D2691E 50%, #CD853F 100%);
+            min-height: 100vh;
+            font-family: 'Crimson Text', serif;
+            color: #2F1B14;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle at 20% 20%, rgba(139, 69, 19, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(205, 133, 63, 0.1) 0%, transparent 50%),
+                linear-gradient(45deg, transparent 49%, rgba(160, 82, 45, 0.05) 50%, transparent 51%);
+            pointer-events: none;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+        
+        .toggle-container {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .toggle-btn {
+            font-family: 'Abril Fatface', serif;
+            font-size: 1.3rem;
+            padding: 1rem 2.5rem;
+            margin: 0 0.5rem;
+            border: 3px solid #8B4513;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: rgba(245, 245, 220, 0.9);
+            color: #8B4513;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .toggle-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .toggle-btn.active {
+            background: linear-gradient(135deg, #8B0000 0%, #B22222 100%);
+            color: #F5F5DC;
+            transform: translateY(-3px);
+        }
+        
+        .songbook {
+            background: rgba(245, 245, 220, 0.95);
+            border-radius: 15px;
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            padding: 3rem;
+            border: 3px solid #8B4513;
+            position: relative;
+            backdrop-filter: blur(10px);
+        }
+        
+        .songbook::before {
+            content: '';
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            border: 2px dashed #A0522D;
+            border-radius: 10px;
+            pointer-events: none;
+        }
+        
+        .song-version {
+            display: none;
+        }
+        
+        .song-version.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .title {
+            font-family: 'Abril Fatface', serif;
+            font-size: 2.5rem;
+            text-align: center;
+            color: #8B0000;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            letter-spacing: -1px;
+        }
+        
+        .subtitle {
+            text-align: center;
+            font-style: italic;
+            font-size: 1.2rem;
+            color: #A0522D;
+            margin-bottom: 2rem;
+            font-weight: 600;
+        }
+        
+        .verse {
+            margin-bottom: 1.8rem;
+            line-height: 1.6;
+            font-size: 1.1rem;
+        }
+        
+        .verse-line {
+            margin-bottom: 0.3rem;
+            transition: all 0.3s ease;
+        }
+        
+        .verse-line:hover {
+            color: #8B0000;
+            transform: translateX(5px);
+        }
+        
+        .chorus {
+            background: linear-gradient(135deg, #F4A460 0%, #DEB887 100%);
+            padding: 1rem;
+            border-radius: 10px;
+            border-left: 5px solid #8B4513;
+            margin: 1.5rem 0;
+            font-weight: 600;
+            font-style: italic;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .bones-section {
+            background: linear-gradient(45deg, #CD853F 0%, #D2691E 100%);
+            padding: 1.2rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+            text-align: center;
+            color: #F5F5DC;
+            font-weight: 600;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+            border: 2px solid #8B4513;
+        }
+        
+        .outro {
+            text-align: center;
+            font-style: italic;
+            font-size: 1.1rem;
+            color: #8B0000;
+            margin-top: 2rem;
+            padding-top: 1rem;
+            border-top: 2px dotted #A0522D;
+        }
+        
+        .musical-note {
+            display: inline-block;
+            font-size: 1.5rem;
+            color: #8B4513;
+            margin: 0 10px;
+            animation: bounce 2s infinite ease-in-out;
+        }
+        
+        .musical-note:nth-child(2) {
+            animation-delay: 0.3s;
+        }
+        
+        .musical-note:nth-child(3) {
+            animation-delay: 0.6s;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+        
+        .decorative-border {
+            text-align: center;
+            margin: 2rem 0;
+            font-size: 1.5rem;
+            color: #A0522D;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .songbook {
+                padding: 2rem;
+            }
+            
+            .title {
+                font-size: 2rem;
+            }
+            
+            .verse {
+                font-size: 1rem;
+            }
+            
+            .toggle-btn {
+                font-size: 1rem;
+                padding: 0.8rem 1.5rem;
+                margin: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="toggle-container">
+            <button class="toggle-btn active" onclick="showVersion('dogpatch')">Dog Patch</button>
+            <button class="toggle-btn" onclick="showVersion('maga')">MAGA Town</button>
+        </div>
+        
+        <div class="songbook">
+            <!-- Original Version -->
+            <div id="dogpatch" class="song-version active">
+                <div class="decorative-border">
+                    <span class="musical-note">♪</span>
+                    <span class="musical-note">♫</span>
+                    <span class="musical-note">♪</span>
+                </div>
+                
+                <h1 class="title">The Country's in the Very Best of Hands</h1>
+                
+                <div class="verse">
+                    <div class="verse-line">Them city folks and we-uns</div>
+                    <div class="verse-line">Are pretty much alike</div>
+                    <div class="verse-line">Though they ain't used to living in the sticks</div>
+                    <div class="verse-line">We don't like stone or cement</div>
+                    <div class="verse-line">But we is in agreement</div>
+                    <div class="verse-line">When we get started talking politics</div>
+                </div>
+                
+                <div class="chorus">
+                    The country's in the very best of hands<br>
+                    The best of hands<br>
+                    The best of hands
+                </div>
+                
+                <div class="verse">
+                    <div class="verse-line">The treasury says the national debt</div>
+                    <div class="verse-line">Is climbing to the sky</div>
+                    <div class="verse-line">And government expenditures</div>
+                    <div class="verse-line">Have never been so high</div>
+                    <div class="verse-line">It makes a fellow get a</div>
+                    <div class="verse-line">Gleam of pride within his eye,</div>
+                    <div class="verse-line">To see how our economy expands</div>
+                    <div class="verse-line">The country's in the very best of hands</div>
+                </div>
+                
+                <div class="chorus">
+                    The country's in the very best of hands<br>
+                    The best of hands<br>
+                    The best of hands
+                </div>
+                
+                <div class="verse">
+                    <div class="verse-line">You oughtta hear the senate</div>
+                    <div class="verse-line">When they're drawing up a bill</div>
+                    <div class="verse-line">Whereases and Towits are crowded in each codicil</div>
+                    <div class="verse-line">Such legal terminology</div>
+                    <div class="verse-line">Would give your heart a thrill</div>
+                    <div class="verse-line">There's phrases there that no one understands</div>
+                    <div class="verse-line">The country's in the very best of hands</div>
+                </div>
+                
+                <div class="verse">
+                    <div class="verse-line">The building boom, they say</div>
+                    <div class="verse-line">Is getting bigger every day</div>
+                    <div class="verse-line">And when I asked a feller</div>
+                    <div class="verse-line">How could everybody pay</div>
+                    <div class="verse-line">He come up with an answer</div>
+                    <div class="verse-line">That made everything okay</div>
+                    <div class="verse-line">Supplies are getting greater than demands</div>
+                    <div class="verse-line">The country's in the very best of hands</div>
+                </div>
+                
+                <div class="verse">
+                    <div class="verse-line">Don't you believe them congressmen</div>
+                    <div class="verse-line">And senators are dumb</div>
+                    <div class="verse-line">When they run into problems</div>
+                    <div class="verse-line">That is tough to overcome</div>
+                    <div class="verse-line">They just declare a thing</div>
+                    <div class="verse-line">They calls a moratorium</div>
+                    <div class="verse-line">The upper and the lower house disbands</div>
+                    <div class="verse-line">The country's in the very best of hands</div>
+                </div>
+                
+                <div class="bones-section">
+                    <div>The voters is connected to the nominee</div>
+                    <div>The nominee's connected to the treasury</div>
+                    <div>When he ain't connected to the treasury</div>
+                    <div>He sits around on his thigh bone</div>
+                    <br>
+                    <div>He sits around in this place they got,</div>
+                    <div>This big congressional parking lot</div>
+                    <div>Just sits around on the you know what</div>
+                    <div>Up there they calls 'em their thigh bone</div>
+                    <br>
+                    <div>Them bones, them bones</div>
+                    <div>Gonna rise again</div>
+                    <div>Gonna excercise a franchise again</div>
+                    <div>Gonna tax us up to our eyes again</div>
+                    <div>When he gets them off of their thigh bone</div>
+                </div>
+                
+                <div class="chorus">
+                    The country's in the very best of hands<br>
+                    The best of hands<br>
+                    The best of hands
+                </div>
+                
+                <div class="verse">
+                    <div class="verse-line">The farm bill should be</div>
+                    <div class="verse-line">Eight-nine percent parity</div>
+                    <div class="verse-line">Another fellow recommends</div>
+                    <div class="verse-line">It should be ninety-three.</div>
+                    <div class="verse-line">But eighty, ninety-five percent who cares about degree</div>
+                    <div class="verse-line">It's parity that no one understands</div>
+                    <div class="verse-line">The country's in the very best of hands</div>
+                </div>
+                
+                <div class="verse">
+                    <div class="verse-line">Them GOP's and democrats</div>
+                    <div class="verse-line">Each hates the other one</div>
+                    <div class="verse-line">They's always criticizing</div>
+                    <div class="verse-line">How the country should be run</div>
+                    <div class="verse-line">But neither tell the public</div>
+                    <div class="verse-line">What the others gone and done</div>
+                    <div class="verse-line">As long as no one knows</div>
+                    <div class="verse-line">Where no one stands</div>
+                    <div class="verse-line">The country's in the very best of hands</div>
+                </div>
+                
+                <div class="bones-section">
+                    <div>They sits around in this place they're at,</div>
+                    <div>Where folks in congress has always sat</div>
+                    <div>Just sits around on their excess fat,</div>
+                    <div>Up there they calls 'em their thigh bones</div>
+                    <br>
+                    <div>They sits around till they starts to snore</div>
+                    <div>Jumps up and hollers</div>
+                    <div>I has the floor</div>
+                    <div>Then sits right down where they sats before</div>
+                    <div>Up there they calls it their thigh bone</div>
+                    <br>
+                    <div>Them bones, them bones</div>
+                    <div>Gonna rise again,</div>
+                    <div>So dignified and so wise again</div>
+                    <div>While the budget doubles in size again</div>
+                    <div>When it gets them off of their thigh bone</div>
+                </div>
+                
+                <div class="chorus">
+                    The country's in the very best of hands<br>
+                    The best of hands<br>
+                    The best of hands
+                </div>
+                
+                <div class="verse">
+                    <div class="verse-line">The money that they taxes us</div>
+                    <div class="verse-line">That's known as revenue</div>
+                    <div class="verse-line">They compound up collaterals</div>
+                    <div class="verse-line">Subtracts the residue</div>
+                    <br>
+                    <div class="verse-line">Don't worry about the principal</div>
+                    <div class="verse-line">And interest it incrues</div>
+                    <div class="verse-line">They're shipping all that stuff to foreign lands</div>
+                    <div class="verse-line">The country's in the very best of hands</div>
+                </div>
+                
+                <div class="decorative-border">
+                    <span class="musical-note">♪</span>
+                    <span class="musical-note">♫</span>
+                    <span class="musical-note">♪</span>
+                </div>
+            </div>
+            
+            <!-- Parody Version -->
+            <div id="maga" class="song-version">
+                <div class="decorative-border">
+                    <span class="musical-note">♪</span>
+                    <span class="musical-note">♫</span>
+                    <span class="musical-note">♪</span>
+                </div>
+                
+                <h1 class="title">The Country's in the Very Best of Tariffs</h1>
+                <p class="subtitle">A Political Folk Satire in Classic Style</p>
+                
+                <div class="verse">
+                    <div class="verse-line">Them traders and we-uns</div>
+                    <div class="verse-line">Are caught in the same fight,</div>
+                    <div class="verse-line">Though they ain't used to paying double price.</div>
+                    <div class="verse-line">We don't like sticker shock,</div>
+                    <div class="verse-line">But we're told it's all for stock,</div>
+                    <div class="verse-line">So we keep buying while we gripe and slice.</div>
+                </div>
+                
+                <div class="chorus">
+                    <em>The country's in the very best of tariffs,</em><br>
+                    <em>The best of tariffs, the best of tariffs.</em>
+                </div>
+                
+                <div class="verse">
+                    <div class="verse-line">The White House says the deficit's</div>
+                    <div class="verse-line">A little out of line,</div>
+                    <div class="verse-line">But slapping on more duties</div>
+                    <div class="verse-line">Will make the dollar shine.</div>
+                    <div class="verse-line">A ten-percent surprise on beans</div>
+                    <div class="verse-line">Becomes a farmer's fine—</div>
+                    <div class="verse-line">But hey, that's just the art of grand designs.</div>
+                </div>
+                
+                <div class="chorus">
+                    <em>The country's in the very best of tariffs.</em><br>
+                    <em>The best of tariffs, the best of tariffs.</em>
+                </div>
+                
+                <div class="verse">
+                    <div class="verse-line">You oughta hear the lobbyists</div>
+                    <div class="verse-line">When they draft another fee,</div>
+                    <div class="verse-line">With "national security"</div>
+                    <div class="verse-line">As the magic key.</div>
+                    <div class="verse-line">They mumble steel and aluminum</div>
+                    <div class="verse-line">Like a bedtime plea—</div>
+                    <div class="verse-line">A logic only K-Street minds can see.</div>
+                </div>
+                
+                <div class="chorus">
+                    <em>The country's in the very best of tariffs.</em><br>
+                    <em>The best of tariffs, the best of tariffs.</em>
+                </div>
+                
+                <div class="verse">
+                    <div class="verse-line">Factories say they're hurting,</div>
+                    <div class="verse-line">Imports cost a pile,</div>
+                    <div class="verse-line">Yet someone tweets "We're winning big!"</div>
+                    <div class="verse-line">And grins a knowing smile.</div>
+                    <div class="verse-line">If markets start to wobble,</div>
+                    <div class="verse-line">They just blame it on the style—</div>
+                    <div class="verse-line">The "deal" is always worth it all the while.</div>
+                </div>
+                
+                <div class="chorus">
+                    <em>The country's in the very best of tariffs.</em><br>
+                    <em>The best of tariffs, the best of tariffs.</em>
+                </div>
+                
+                <div class="bones-section">
+                    <div>Them bones, them bones</div>
+                    <div>Gonna rise again,</div>
+                    <div>Price tags climb to the skies again,</div>
+                    <div>Consumers pay and the Fed sighs again,</div>
+                    <div>Till someone tweets it's "a 4-D plan."</div>
+                </div>
+                
+                <div class="chorus">
+                    <em>The country's in the very best of tariffs,</em><br>
+                    <em>The best of tariffs, the best of tariffs.</em>
+                </div>
+                
+                <div class="outro">
+                    <em>"And that, folks, is how you make trade wars... easy to win."</em>
+                </div>
+                
+                <div class="decorative-border">
+                    <span class="musical-note">♪</span>
+                    <span class="musical-note">♫</span>
+                    <span class="musical-note">♪</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function showVersion(version) {
+            // Hide all versions
+            document.querySelectorAll('.song-version').forEach(v => {
+                v.classList.remove('active');
+            });
+            
+            // Remove active state from all buttons
+            document.querySelectorAll('.toggle-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            // Show selected version
+            document.getElementById(version).classList.add('active');
+            
+            // Activate clicked button
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>
