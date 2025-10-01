@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meeting Analysis Dashboard</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <title>Zoom Discussion Session Flow Visualization</title>
     <style>
         * {
             margin: 0;
@@ -13,551 +12,530 @@
         }
         
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background-color: #f3f4f6;
             padding: 20px;
+            line-height: 1.6;
         }
         
         .container {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
-            overflow: hidden;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
         
         .header {
-            background: linear-gradient(45deg, #2c3e50, #34495e);
-            color: white;
-            padding: 30px;
             text-align: center;
+            margin-bottom: 40px;
         }
         
         .header h1 {
-            font-size: 2.5em;
+            font-size: 2rem;
+            color: #1f2937;
             margin-bottom: 10px;
-            font-weight: 300;
         }
         
         .header p {
-            font-size: 1.1em;
-            opacity: 0.9;
+            color: #6b7280;
         }
         
-        .dashboard {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            grid-template-rows: auto auto auto;
-            gap: 30px;
-            padding: 30px;
-        }
-        
-        .card {
-            background: white;
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
-        }
-        
-        .card:hover {
-            transform: translateY(-5px);
-        }
-        
-        .card-title {
-            font-size: 1.4em;
+        .section-title {
+            font-size: 1.5rem;
+            color: #1f2937;
             margin-bottom: 20px;
-            color: #2c3e50;
-            font-weight: 600;
-            border-bottom: 3px solid #3498db;
-            padding-bottom: 10px;
-        }
-        
-        .topics-timeline {
-            grid-column: 1 / -1;
-        }
-        
-        .timeline {
-            position: relative;
-            padding: 20px 0;
-        }
-        
-        .timeline-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 25px;
-            position: relative;
-        }
-        
-        .timeline-dot {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            margin-right: 20px;
-            flex-shrink: 0;
-            position: relative;
-            z-index: 2;
-        }
-        
-        .timeline-dot::after {
-            content: '';
-            position: absolute;
-            left: 50%;
-            top: 100%;
-            width: 2px;
-            height: 30px;
-            background: #bdc3c7;
-            transform: translateX(-50%);
-        }
-        
-        .timeline-item:last-child .timeline-dot::after {
-            display: none;
-        }
-        
-        .timeline-content {
-            flex-grow: 1;
-            background: #f8f9fa;
-            padding: 15px 20px;
-            border-radius: 10px;
-            border-left: 4px solid #3498db;
-        }
-        
-        .topic-title {
-            font-weight: 600;
-            color: #2c3e50;
-            margin-bottom: 5px;
-        }
-        
-        .topic-duration {
-            font-size: 0.9em;
-            color: #7f8c8d;
-            margin-bottom: 8px;
-        }
-        
-        .topic-description {
-            font-size: 0.95em;
-            line-height: 1.4;
-            color: #34495e;
-        }
-        
-        .healthcare { background: #e74c3c; }
-        .international { background: #f39c12; }
-        .ai-tech { background: #9b59b6; }
-        .politics { background: #e67e22; }
-        .media { background: #1abc9c; }
-        .social { background: #95a5a6; }
-        
-        .social-section {
-            margin-bottom: 25px;
-        }
-        
-        .social-item {
-            display: flex;
-            align-items: flex-start;
-            margin-bottom: 15px;
-            padding: 12px;
-            background: rgba(52, 152, 219, 0.1);
-            border-radius: 8px;
-            border-left: 3px solid #3498db;
-        }
-        
-        .social-icon {
-            font-size: 1.2em;
-            margin-right: 12px;
-            flex-shrink: 0;
-            margin-top: 2px;
-        }
-        
-        .social-text {
-            flex-grow: 1;
-            font-size: 0.95em;
-            line-height: 1.4;
-        }
-        
-        .social-text strong {
-            color: #2c3e50;
-        }
-        
-        .chart-container {
-            position: relative;
-            height: 300px;
-        }
-        
-        .key-insights {
-            grid-column: 1 / -1;
-            background: linear-gradient(45deg, #74b9ff, #0984e3);
-            color: white;
-        }
-        
-        .key-insights .card-title {
-            color: white;
-            border-color: rgba(255,255,255,0.3);
-        }
-        
-        .insights-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-        }
-        
-        .insight {
-            background: rgba(255,255,255,0.1);
-            padding: 20px;
-            border-radius: 10px;
-            backdrop-filter: blur(10px);
-        }
-        
-        .insight-title {
-            font-weight: 600;
-            margin-bottom: 10px;
             display: flex;
             align-items: center;
             gap: 10px;
         }
         
-        .insight-icon {
-            font-size: 1.5em;
+        .timeline {
+            margin-bottom: 40px;
         }
         
-        .meeting-flow {
-            grid-column: 1 / -1;
-        }
-        
-        .flow-bars {
-            display: flex;
-            height: 60px;
+        .segment {
+            padding: 20px;
             border-radius: 10px;
-            overflow: hidden;
-            margin-top: 20px;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
         
-        .flow-segment {
+        .segment:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transform: translateY(-2px);
+        }
+        
+        .segment.active {
+            box-shadow: 0 0 0 4px #3b82f6;
+        }
+        
+        .segment-header {
+            display: flex;
+            align-items: start;
+            gap: 15px;
+        }
+        
+        .segment-icon {
+            background: white;
+            padding: 10px;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-weight: 600;
-            font-size: 0.9em;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
-            transition: all 0.3s ease;
-            cursor: pointer;
+            font-size: 20px;
+            flex-shrink: 0;
         }
         
-        .flow-segment:hover {
-            filter: brightness(1.1);
-            transform: scaleY(1.1);
+        .segment-content {
+            flex: 1;
         }
+        
+        .segment-title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 10px;
+        }
+        
+        .segment-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #1f2937;
+        }
+        
+        .segment-time {
+            font-family: 'Courier New', monospace;
+            font-size: 0.875rem;
+            background: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            white-space: nowrap;
+        }
+        
+        .segment-details {
+            margin-top: 15px;
+            display: none;
+        }
+        
+        .segment.active .segment-details {
+            display: block;
+        }
+        
+        .segment-prompt {
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-top: 5px;
+        }
+        
+        .segment.active .segment-prompt {
+            display: none;
+        }
+        
+        .topics-box, .tone-box {
+            background: rgba(255,255,255,0.7);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        
+        .topics-box p, .tone-box p {
+            font-weight: 600;
+            margin-bottom: 10px;
+            font-size: 0.875rem;
+        }
+        
+        .topics-box ul {
+            list-style: none;
+            font-size: 0.875rem;
+        }
+        
+        .topics-box li {
+            display: flex;
+            align-items: start;
+            gap: 10px;
+            margin-bottom: 5px;
+        }
+        
+        .topics-box li::before {
+            content: "•";
+            color: #3b82f6;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+        
+        .tone-box {
+            font-size: 0.875rem;
+        }
+        
+        .portal-section {
+            background: linear-gradient(to right, #f3e8ff, #fce7f3);
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .portal-box {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+        
+        .portal-box.highlight {
+            border: 2px solid #a855f7;
+        }
+        
+        .portal-box p.title {
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .portal-box p.content {
+            color: #374151;
+            font-size: 0.875rem;
+        }
+        
+        .portal-box ul {
+            margin-left: 20px;
+            margin-top: 10px;
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+        
+        .portal-box ul li {
+            margin-bottom: 5px;
+        }
+        
+        .insights {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+        
+        .insight-card {
+            padding: 20px;
+            border-radius: 10px;
+        }
+        
+        .insight-card h3 {
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #1f2937;
+        }
+        
+        .insight-card p {
+            font-size: 0.875rem;
+            color: #374151;
+        }
+        
+        .bg-blue { background-color: #dbeafe; }
+        .bg-green { background-color: #d1fae5; }
+        .bg-purple { background-color: #e9d5ff; }
+        .bg-yellow { background-color: #fef3c7; }
+        .bg-red { background-color: #fee2e2; }
+        .bg-orange { background-color: #ffedd5; }
+        .bg-teal { background-color: #ccfbf1; }
+        .bg-indigo { background-color: #e0e7ff; }
+        
+        .bg-insight-blue { background-color: #eff6ff; }
+        .bg-insight-green { background-color: #f0fdf4; }
+        .bg-insight-purple { background-color: #faf5ff; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <h1>📊 Meeting Analysis Dashboard</h1>
-            <p>Academic Discussion Group • September 3, 2025 • Duration: ~114 minutes</p>
+            <h1>Political Discussion Group - Session Flow</h1>
+            <p>Duration: 80 minutes | Date: September 30, 2025</p>
         </div>
-        
-        <div class="dashboard">
-            <!-- Meeting Flow Overview -->
-            <div class="card meeting-flow">
-                <div class="card-title">🔄 Meeting Flow Timeline</div>
-                <div class="flow-bars">
-                    <div class="flow-segment social" style="flex: 0.5;">Setup</div>
-                    <div class="flow-segment healthcare" style="flex: 4;">Healthcare Crisis</div>
-                    <div class="flow-segment international" style="flex: 2;">International Impact</div>
-                    <div class="flow-segment ai-tech" style="flex: 1.5;">AI Discussion</div>
-                    <div class="flow-segment politics" style="flex: 1.8;">Political Analysis</div>
-                    <div class="flow-segment media" style="flex: 1;">Media Tools</div>
-                    <div class="flow-segment social" style="flex: 0.2;">Wrap-up</div>
-                </div>
-            </div>
-            
 
+        <div class="timeline">
+            <h2 class="section-title">📅 Session Timeline</h2>
             
-            <!-- Social Dynamics & Interaction Patterns -->
-            <div class="card">
-                <div class="card-title">🤝 Social Dynamics & Interaction</div>
-                
-                <div class="social-section">
-                    <h4 style="color: #2c3e50; margin-bottom: 15px; font-size: 1.1em;">👋 Meeting Atmosphere</h4>
-                    <div class="social-item">
-                        <span class="social-icon">🏠</span>
-                        <div class="social-text">
-                            <strong>Casual Setting:</strong> Mark mentioned being "on his porch," showing comfortable home environments
+            <div class="segment bg-blue" onclick="toggleSegment(this)">
+                <div class="segment-header">
+                    <div class="segment-icon">👥</div>
+                    <div class="segment-content">
+                        <div class="segment-title-row">
+                            <h3 class="segment-title">Social Opening</h3>
+                            <span class="segment-time">00:00-10:20</span>
+                        </div>
+                        <p class="segment-prompt">Click to expand details...</p>
+                        <div class="segment-details">
+                            <div class="topics-box">
+                                <p>Key Topics:</p>
+                                <ul>
+                                    <li>Personal check-ins and location updates</li>
+                                    <li>Discussion about aging parents (101 years old)</li>
+                                    <li>Caregiving arrangements in Florida</li>
+                                    <li>Jamaican caregiver community</li>
+                                </ul>
+                            </div>
+                            <div class="tone-box">
+                                <p><strong>Tone:</strong> Warm, personal, empathetic</p>
+                            </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <div class="social-section">
-                    <h4 style="color: #2c3e50; margin-bottom: 15px; font-size: 1.1em;">💬 Interaction Patterns</h4>
-                    <div class="social-item">
-                        <span class="social-icon">🎯</span>
-                        <div class="social-text">
-                            <strong>Respectful Discourse:</strong> Participants regularly acknowledged each other ("Richard, you have a question?", "Thanks, John")
+            <div class="segment bg-green" onclick="toggleSegment(this)">
+                <div class="segment-header">
+                    <div class="segment-icon">🌍</div>
+                    <div class="segment-content">
+                        <div class="segment-title-row">
+                            <h3 class="segment-title">Immigration Deep Dive</h3>
+                            <span class="segment-time">10:20-23:30</span>
                         </div>
-                    </div>
-                    <div class="social-item">
-                        <span class="social-icon">😄</span>
-                        <div class="social-text">
-                            <strong>Humor & Levity:</strong> References to "Gentlemen's C" grades for Bush, jokes about Trump taking bleach, Lincoln at Ford Theater
-                        </div>
-                    </div>
-                    <div class="social-item">
-                        <span class="social-icon">🤔</span>
-                        <div class="social-text">
-                            <strong>Intellectual Curiosity:</strong> Participants built on each other's points, asked clarifying questions, shared personal experiences
+                        <p class="segment-prompt">Click to expand details...</p>
+                        <div class="segment-details">
+                            <div class="topics-box">
+                                <p>Key Topics:</p>
+                                <ul>
+                                    <li>Immigrant workers and their contributions</li>
+                                    <li>Trump's immigration policies</li>
+                                    <li>Border security vs. humanitarian concerns</li>
+                                    <li>DACA and deportation issues</li>
+                                    <li>Immigrant crime statistics vs. perceptions</li>
+                                </ul>
+                            </div>
+                            <div class="tone-box">
+                                <p><strong>Tone:</strong> Passionate, nuanced debate</p>
+                            </div>
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <div class="social-section">
-                    <h4 style="color: #2c3e50; margin-bottom: 15px; font-size: 1.1em;">👥 Group Relationships</h4>
-                    <div class="social-item">
-                        <span class="social-icon">🎓</span>
-                        <div class="social-text">
-                            <strong>Academic Community:</strong> References to "our group," semester schedules, and transitioning to less frequent meetings
+            <div class="segment bg-purple" onclick="toggleSegment(this)">
+                <div class="segment-header">
+                    <div class="segment-icon">📱</div>
+                    <div class="segment-content">
+                        <div class="segment-title-row">
+                            <h3 class="segment-title">Portal Introduction & Demo</h3>
+                            <span class="segment-time">23:30-32:50</span>
                         </div>
-                    </div>
-                    <div class="social-item">
-                        <span class="social-icon">📅</span>
-                        <div class="social-text">
-                            <strong>Future Planning:</strong> Discussion of in-person meetings, winter scheduling, and maintaining group attendance (used to have 30 people)
-                        </div>
-                    </div>
-                    <div class="social-item">
-                        <span class="social-icon">🙏</span>
-                        <div class="social-text">
-                            <strong>Mutual Appreciation:</strong> Mark thanked John for summer materials, recognition of each other's expertise and contributions
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Topic Distribution -->
-            <div class="card">
-                <div class="card-title">📈 Topic Distribution</div>
-                <div class="chart-container">
-                    <canvas id="topicChart"></canvas>
-                </div>
-            </div>
-            
-            <!-- Discussion Timeline -->
-            <div class="card topics-timeline">
-                <div class="card-title">⏰ Major Discussion Timeline</div>
-                <div class="timeline">
-                    <div class="timeline-item">
-                        <div class="timeline-dot social"></div>
-                        <div class="timeline-content">
-                            <div class="topic-title">Opening & Introductions</div>
-                            <div class="topic-duration">06:47 - 14:30 (~8 minutes)</div>
-                            <div class="topic-description">
-                                Beth's technical difficulties, participant greetings and setup, informal conversation before main topics begin.
+                        <p class="segment-prompt">Click to expand details...</p>
+                        <div class="segment-details">
+                            <div class="topics-box">
+                                <p>Key Topics:</p>
+                                <ul>
+                                    <li>New 'Trending Topics' interface revealed</li>
+                                    <li>Simplified news-in-review approach</li>
+                                    <li>Two-week cycle tracking mentions</li>
+                                    <li>Curated content vs. AI hallucination</li>
+                                    <li>Source diversity discussion (left vs. right)</li>
+                                </ul>
                             </div>
-                        </div>
-                    </div>
-                    
-                    <div class="timeline-item">
-                        <div class="timeline-dot healthcare"></div>
-                        <div class="timeline-content">
-                            <div class="topic-title">Healthcare Crisis Introduction</div>
-                            <div class="topic-duration">14:40 - 29:08 (~15 minutes)</div>
-                            <div class="topic-description">
-                                Initial discussion of health situation, Kennedy's malfeasance, Richard Laing introduced as health policy expert, setting up main healthcare discussion.
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="timeline-item">
-                        <div class="timeline-dot healthcare"></div>
-                        <div class="timeline-content">
-                            <div class="topic-title">RFK Jr. & CDC Dismantling</div>
-                            <div class="topic-duration">29:08 - 35:13 (~6 minutes)</div>
-                            <div class="topic-description">
-                                George's overview of Kennedy's appointments, firing of vaccine advisory panels, Susan Mona Res replacement, CDC staff resignations.
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="timeline-item">
-                        <div class="timeline-dot healthcare"></div>
-                        <div class="timeline-content">
-                            <div class="topic-title">Richard's Expert Analysis</div>
-                            <div class="topic-duration">35:13 - 46:10 (~11 minutes)</div>
-                            <div class="topic-description">
-                                Richard Laing's detailed analysis of CDC destruction, EIS system breakdown, 1000+ staff resignation letter, comparison to smallpox eradication leadership.
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="timeline-item">
-                        <div class="timeline-dot international"></div>
-                        <div class="timeline-content">
-                            <div class="topic-title">Global Health Impact - Malawi Case Study</div>
-                            <div class="topic-duration">46:10 - 52:15 (~6 minutes)</div>
-                            <div class="topic-description">
-                                USAID budget discussion, Richard's detailed analysis of tuberculosis crisis in Malawi, treatment rationing, resistant organisms development.
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="timeline-item">
-                        <div class="timeline-dot international"></div>
-                        <div class="timeline-content">
-                            <div class="topic-title">USAID Termination & Global Response</div>
-                            <div class="topic-duration">52:15 - 66:28 (~14 minutes)</div>
-                            <div class="topic-description">
-                                Discussion of 14 million projected deaths by 2030, Chinese involvement in Africa, PEPFAR impacts, global aid percentages by country.
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="timeline-item">
-                        <div class="timeline-dot ai-tech"></div>
-                        <div class="timeline-content">
-                            <div class="topic-title">AI Revolution Article Review</div>
-                            <div class="topic-duration">66:40 - 73:28 (~7 minutes)</div>
-                            <div class="topic-description">
-                                Mark's presentation of Tom Friedman article on US-China AI cooperation, nuclear weapons comparison, AI proliferation concerns.
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="timeline-item">
-                        <div class="timeline-dot ai-tech"></div>
-                        <div class="timeline-content">
-                            <div class="topic-title">Historical Technology Fears Analysis</div>
-                            <div class="topic-duration">73:28 - 86:32 (~13 minutes)</div>
-                            <div class="topic-description">
-                                John's AI-generated analysis of technology fear patterns throughout history (printing press to social media), discussion of AI bias and source verification.
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="timeline-item">
-                        <div class="timeline-dot politics"></div>
-                        <div class="timeline-content">
-                            <div class="topic-title">Trump's Emergency Powers Strategy</div>
-                            <div class="topic-duration">87:18 - 101:41 (~14 minutes)</div>
-                            <div class="topic-description">
-                                Scott's article on fabricated emergencies, timeline of Trump's power accumulation tactics, discussion of National Guard deployments and legal challenges.
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="timeline-item">
-                        <div class="timeline-dot media"></div>
-                        <div class="timeline-content">
-                            <div class="topic-title">Ground News & Media Balance</div>
-                            <div class="topic-duration">101:41 - 109:00 (~7 minutes)</div>
-                            <div class="topic-description">
-                                John's introduction to Ground News platform, discussion of need to understand different political perspectives, Democratic Party messaging challenges.
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="timeline-item">
-                        <div class="timeline-dot social"></div>
-                        <div class="timeline-content">
-                            <div class="topic-title">Sally's "Sex & Scandal" + Wrap-up</div>
-                            <div class="topic-duration">109:00 - 114:45 (~6 minutes)</div>
-                            <div class="topic-description">
-                                Lighthearted segment with celebrity news (Lil Nas X, AI music duplication), meeting logistics discussion, appreciation and closing remarks.
+                            <div class="tone-box">
+                                <p><strong>Tone:</strong> Collaborative, analytical</p>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            
-            <!-- Key Insights -->
-            <div class="card key-insights">
-                <div class="card-title">💡 Key Meeting Insights</div>
-                <div class="insights-grid">
-                    <div class="insight">
-                        <div class="insight-title">
-                            <span class="insight-icon">🏥</span>
-                            Expert-Led Discussion
+
+            <div class="segment bg-yellow" onclick="toggleSegment(this)">
+                <div class="segment-header">
+                    <div class="segment-icon">💬</div>
+                    <div class="segment-content">
+                        <div class="segment-title-row">
+                            <h3 class="segment-title">Violence & Social Isolation</h3>
+                            <span class="segment-time">32:50-47:40</span>
                         </div>
-                        <div>Richard Laing's health policy expertise dominated the healthcare segment, providing authoritative analysis of RFK Jr.'s impact on CDC and global health programs.</div>
-                    </div>
-                    
-                    <div class="insight">
-                        <div class="insight-title">
-                            <span class="insight-icon">🌍</span>
-                            Global Perspective
+                        <p class="segment-prompt">Click to expand details...</p>
+                        <div class="segment-details">
+                            <div class="topics-box">
+                                <p>Key Topics:</p>
+                                <ul>
+                                    <li>Miller Idris research on young men</li>
+                                    <li>25% of men under 30 have no friends</li>
+                                    <li>Online radicalization and video games</li>
+                                    <li>Mass shootings and white male perpetrators</li>
+                                    <li>Historical context of political violence</li>
+                                </ul>
+                            </div>
+                            <div class="tone-box">
+                                <p><strong>Tone:</strong> Serious, research-focused</p>
+                            </div>
                         </div>
-                        <div>Strong focus on international consequences of US policy changes, particularly the humanitarian impact of USAID cuts on tuberculosis and HIV programs.</div>
-                    </div>
-                    
-                    <div class="insight">
-                        <div class="insight-title">
-                            <span class="insight-icon">🔬</span>
-                            Technology Skepticism
-                        </div>
-                        <div>Thoughtful analysis of AI hype, with historical context showing pattern of technology fear-mongering, while acknowledging real societal changes.</div>
-                    </div>
-                    
-                    <div class="insight">
-                        <div class="insight-title">
-                            <span class="insight-icon">⚖️</span>
-                            Democratic Concerns
-                        </div>
-                        <div>Serious discussion of democratic backsliding, emergency powers abuse, and the challenge of reaching voters outside liberal echo chambers.</div>
                     </div>
                 </div>
+            </div>
+
+            <div class="segment bg-red" onclick="toggleSegment(this)">
+                <div class="segment-header">
+                    <div class="segment-icon">⚖️</div>
+                    <div class="segment-content">
+                        <div class="segment-title-row">
+                            <h3 class="segment-title">Gun Culture Discussion</h3>
+                            <span class="segment-time">47:40-52:20</span>
+                        </div>
+                        <p class="segment-prompt">Click to expand details...</p>
+                        <div class="segment-details">
+                            <div class="topics-box">
+                                <p>Key Topics:</p>
+                                <ul>
+                                    <li>America's history of violence</li>
+                                    <li>Gun availability and mass shootings</li>
+                                    <li>Comparison with Canada</li>
+                                    <li>Concealed carry laws in Florida</li>
+                                    <li>ER doctors carrying guns in Houston</li>
+                                </ul>
+                            </div>
+                            <div class="tone-box">
+                                <p><strong>Tone:</strong> Concerned, comparative</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="segment bg-orange" onclick="toggleSegment(this)">
+                <div class="segment-header">
+                    <div class="segment-icon">💡</div>
+                    <div class="segment-content">
+                        <div class="segment-title-row">
+                            <h3 class="segment-title">Cultural Commentary</h3>
+                            <span class="segment-time">52:20-69:20</span>
+                        </div>
+                        <p class="segment-prompt">Click to expand details...</p>
+                        <div class="segment-details">
+                            <div class="topics-box">
+                                <p>Key Topics:</p>
+                                <ul>
+                                    <li>Little Abner musical ('Country's in the Best of Hands')</li>
+                                    <li>Al Capp vs. Jimmy Kimmel comparison</li>
+                                    <li>Humor as political weapon</li>
+                                    <li>Media consolidation concerns</li>
+                                    <li>Audience fragmentation then vs. now</li>
+                                </ul>
+                            </div>
+                            <div class="tone-box">
+                                <p><strong>Tone:</strong> Nostalgic, analytical</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="segment bg-teal" onclick="toggleSegment(this)">
+                <div class="segment-header">
+                    <div class="segment-icon">📈</div>
+                    <div class="segment-content">
+                        <div class="segment-title-row">
+                            <h3 class="segment-title">Kimmel Victory Analysis</h3>
+                            <span class="segment-time">69:20-75:15</span>
+                        </div>
+                        <p class="segment-prompt">Click to expand details...</p>
+                        <div class="segment-details">
+                            <div class="topics-box">
+                                <p>Key Topics:</p>
+                                <ul>
+                                    <li>ABC's initial capitulation to Trump</li>
+                                    <li>Consumer backlash drives reversal</li>
+                                    <li>Sinclair and Nexstar backing down</li>
+                                    <li>Strategic importance of the victory</li>
+                                    <li>Exhaustion tactics and resistance</li>
+                                </ul>
+                            </div>
+                            <div class="tone-box">
+                                <p><strong>Tone:</strong> Hopeful, strategic</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="segment bg-indigo" onclick="toggleSegment(this)">
+                <div class="segment-header">
+                    <div class="segment-icon">📚</div>
+                    <div class="segment-content">
+                        <div class="segment-title-row">
+                            <h3 class="segment-title">Forward Planning</h3>
+                            <span class="segment-time">75:15-80:27</span>
+                        </div>
+                        <p class="segment-prompt">Click to expand details...</p>
+                        <div class="segment-details">
+                            <div class="topics-box">
+                                <p>Key Topics:</p>
+                                <ul>
+                                    <li>Alan's question: 'How to unwind the mess?'</li>
+                                    <li>Democratic strategy post-2028 scenario</li>
+                                    <li>Need for coherent Democratic philosophy</li>
+                                    <li>Beyond being 'anti-Trump'</li>
+                                    <li>John's 'afterword' summary feature</li>
+                                </ul>
+                            </div>
+                            <div class="tone-box">
+                                <p><strong>Tone:</strong> Forward-looking, constructive</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="portal-section">
+            <h2 class="section-title">📱 Portal Integration in Discussion Flow</h2>
+            
+            <div class="portal-box">
+                <p class="title">Before Portal (00:00-23:30):</p>
+                <p class="content">Natural, spontaneous conversation starting with personal topics (caregiving), flowing into immigration debate. <strong>Organic discussion without structure.</strong></p>
+            </div>
+            
+            <div class="portal-box highlight">
+                <p class="title" style="color: #7c3aed;">Portal Demo (23:30-32:50):</p>
+                <p class="content">John introduces <strong>"Trending Topics"</strong> interface - a curated approach to spark conversation with 2-week mention tracking across categories.</p>
+                <ul>
+                    <li>Group provides immediate feedback on sources</li>
+                    <li>Suggests adding "Healthcare" category (Alan)</li>
+                    <li>Discusses left-bias concern (George)</li>
+                    <li>Fran immediately grasps intended usage</li>
+                </ul>
+            </div>
+            
+            <div class="portal-box">
+                <p class="title">After Portal (32:50-80:27):</p>
+                <p class="content">Discussion continues with portal examples (Miller Idris profile, Al Capp comparison). <strong>Portal becomes reference tool</strong> within natural conversation flow. John announces "afterword" feature for post-meeting summaries.</p>
+            </div>
+        </div>
+
+        <div class="insights">
+            <div class="insight-card bg-insight-blue">
+                <h3>Discussion Style</h3>
+                <p>Collaborative, intellectually curious group comfortable with disagreement and nuanced positions</p>
+            </div>
+            <div class="insight-card bg-insight-green">
+                <h3>Portal Reception</h3>
+                <p>Immediate constructive feedback; group understands it as conversation starter, not comprehensive analysis</p>
+            </div>
+            <div class="insight-card bg-insight-purple">
+                <h3>Integration Success</h3>
+                <p>Portal seamlessly weaves into organic discussion without disrupting natural conversational rhythm</p>
             </div>
         </div>
     </div>
-    
+
     <script>
-        // Topic Distribution Chart
-        const ctx = document.getElementById('topicChart').getContext('2d');
-        new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                labels: ['Healthcare Crisis', 'International Impact', 'AI & Technology', 'Political Analysis', 'Media & Tools', 'Social/Setup'],
-                datasets: [{
-                    data: [35, 17, 18, 12, 6, 12],
-                    backgroundColor: [
-                        '#e74c3c',
-                        '#f39c12', 
-                        '#9b59b6',
-                        '#e67e22',
-                        '#1abc9c',
-                        '#95a5a6'
-                    ],
-                    borderWidth: 2,
-                    borderColor: '#fff'
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        position: 'bottom',
-                        labels: {
-                            padding: 20,
-                            usePointStyle: true
-                        }
-                    }
+        function toggleSegment(element) {
+            // Remove active class from all segments
+            const allSegments = document.querySelectorAll('.segment');
+            allSegments.forEach(seg => {
+                if (seg !== element) {
+                    seg.classList.remove('active');
                 }
-            }
-        });
-        
-        // Add hover effects to flow segments
-        document.querySelectorAll('.flow-segment').forEach(segment => {
-            segment.addEventListener('mouseenter', function() {
-                this.style.transform = 'scaleY(1.2)';
-                this.style.zIndex = '10';
             });
             
-            segment.addEventListener('mouseleave', function() {
-                this.style.transform = 'scaleY(1)';
-                this.style.zIndex = '1';
-            });
-        });
+            // Toggle active class on clicked segment
+            element.classList.toggle('active');
+        }
     </script>
 </body>
 </html>
