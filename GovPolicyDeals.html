@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historical "Deals" Comparison</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            text-align: center;
+            color: white;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #f0f0f0;
+            margin-bottom: 40px;
+            font-size: 1.1em;
+        }
+        
+        .deals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+        
+        .deal-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .deal-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+        
+        .deal-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+        }
+        
+        .square-deal::before { background: #2ecc71; }
+        .new-deal::before { background: #3498db; }
+        .fair-deal::before { background: #9b59b6; }
+        .bum-deal::before { background: #e74c3c; }
+        
+        .deal-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .deal-icon {
+            font-size: 2.5em;
+            margin-right: 15px;
+        }
+        
+        .deal-title {
+            flex: 1;
+        }
+        
+        .deal-title h2 {
+            font-size: 1.8em;
+            margin-bottom: 5px;
+        }
+        
+        .deal-period {
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        .support-meter {
+            margin: 20px 0;
+        }
+        
+        .meter-label {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .meter-bar {
+            background: #e0e0e0;
+            height: 30px;
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .meter-fill {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+            color: white;
+            font-weight: bold;
+            transition: width 1.5s ease;
+        }
+        
+        .square-deal .meter-fill { background: linear-gradient(90deg, #27ae60, #2ecc71); }
+        .new-deal .meter-fill { background: linear-gradient(90deg, #2980b9, #3498db); }
+        .fair-deal .meter-fill { background: linear-gradient(90deg, #8e44ad, #9b59b6); }
+        .bum-deal .meter-fill { background: linear-gradient(90deg, #c0392b, #e74c3c); }
+        
+        .key-policies {
+            margin-top: 20px;
+        }
+        
+        .key-policies h3 {
+            font-size: 1.1em;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .policy-list {
+            list-style: none;
+        }
+        
+        .policy-list li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+            color: #555;
+            line-height: 1.5;
+        }
+        
+        .policy-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+        
+        .square-deal .policy-list li::before { color: #2ecc71; }
+        .new-deal .policy-list li::before { color: #3498db; }
+        .fair-deal .policy-list li::before { color: #9b59b6; }
+        .bum-deal .policy-list li::before { content: '✗'; color: #e74c3c; }
+        
+        .comparison-chart {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .chart-title {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #333;
+        }
+        
+        .metric-row {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 15px;
+            margin-bottom: 25px;
+            align-items: center;
+        }
+        
+        .metric-label {
+            font-weight: bold;
+            color: #555;
+        }
+        
+        .metric-bars {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .metric-bar {
+            flex: 1;
+            height: 40px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 0.9em;
+            transition: transform 0.3s ease;
+        }
+        
+        .metric-bar:hover {
+            transform: scale(1.05);
+        }
+        
+        @media (max-width: 768px) {
+            h1 { font-size: 1.8em; }
+            .deals-grid { grid-template-columns: 1fr; }
+            .metric-row { grid-template-columns: 1fr; }
+            .metric-bars { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>The Evolution of Government Support</h1>
+        <p class="subtitle">A comparison of presidential policies and their impact on American citizens</p>
+        
+        <div class="deals-grid">
+            <div class="deal-card square-deal">
+                <div class="deal-header">
+                    <div class="deal-icon">🤝</div>
+                    <div class="deal-title">
+                        <h2>Square Deal</h2>
+                        <p class="deal-period">Theodore Roosevelt, 1901-1909</p>
+                    </div>
+                </div>
+                
+                <div class="support-meter">
+                    <div class="meter-label">Government Support Level</div>
+                    <div class="meter-bar">
+                        <div class="meter-fill" style="width: 0%" data-width="70%">70%</div>
+                    </div>
+                </div>
+                
+                <div class="key-policies">
+                    <h3>Key Policies:</h3>
+                    <ul class="policy-list">
+                        <li>Trust-busting and corporate regulation</li>
+                        <li>Consumer protection laws</li>
+                        <li>Conservation of natural resources</li>
+                        <li>Fair labor practices</li>
+                        <li>Railroad rate regulation</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="deal-card new-deal">
+                <div class="deal-header">
+                    <div class="deal-icon">🏛️</div>
+                    <div class="deal-title">
+                        <h2>New Deal</h2>
+                        <p class="deal-period">Franklin D. Roosevelt, 1933-1939</p>
+                    </div>
+                </div>
+                
+                <div class="support-meter">
+                    <div class="meter-label">Government Support Level</div>
+                    <div class="meter-bar">
+                        <div class="meter-fill" style="width: 0%" data-width="95%">95%</div>
+                    </div>
+                </div>
+                
+                <div class="key-policies">
+                    <h3>Key Policies:</h3>
+                    <ul class="policy-list">
+                        <li>Social Security system established</li>
+                        <li>Banking reforms and protections</li>
+                        <li>Massive public works programs</li>
+                        <li>Labor rights and minimum wage</li>
+                        <li>Unemployment insurance</li>
+                        <li>Farm subsidies and rural electrification</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="deal-card fair-deal">
+                <div class="deal-header">
+                    <div class="deal-icon">⚖️</div>
+                    <div class="deal-title">
+                        <h2>Fair Deal</h2>
+                        <p class="deal-period">Harry S. Truman, 1945-1953</p>
+                    </div>
+                </div>
+                
+                <div class="support-meter">
+                    <div class="meter-label">Government Support Level</div>
+                    <div class="meter-bar">
+                        <div class="meter-fill" style="width: 0%" data-width="75%">75%</div>
+                    </div>
+                </div>
+                
+                <div class="key-policies">
+                    <h3>Key Policies:</h3>
+                    <ul class="policy-list">
+                        <li>National health insurance proposal</li>
+                        <li>Expansion of Social Security</li>
+                        <li>Public housing initiatives</li>
+                        <li>Increased minimum wage</li>
+                        <li>Civil rights advocacy</li>
+                        <li>Education funding expansion</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="deal-card bum-deal">
+                <div class="deal-header">
+                    <div class="deal-icon">⚠️</div>
+                    <div class="deal-title">
+                        <h2>"Bum Deal"</h2>
+                        <p class="deal-period">Authoritarian Approach, 2025+</p>
+                    </div>
+                </div>
+                
+                <div class="support-meter">
+                    <div class="meter-label">Government Support Level</div>
+                    <div class="meter-bar">
+                        <div class="meter-fill" style="width: 0%" data-width="25%">25%</div>
+                    </div>
+                </div>
+                
+                <div class="key-policies">
+                    <h3>Proposed Changes:</h3>
+                    <ul class="policy-list">
+                        <li>Drastic reduction in social programs</li>
+                        <li>Elimination of regulatory protections</li>
+                        <li>Concentration of executive power</li>
+                        <li>Weakening of democratic institutions</li>
+                        <li>Reduction in healthcare access</li>
+                        <li>Tax cuts favoring wealthy individuals</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="comparison-chart">
+            <h2 class="chart-title">Direct Policy Comparison</h2>
+            
+            <div class="metric-row">
+                <div class="metric-label">Social Safety Net</div>
+                <div class="metric-bars">
+                    <div class="metric-bar" style="background: #2ecc71; flex-basis: 70%;">Square: Strong</div>
+                    <div class="metric-bar" style="background: #3498db; flex-basis: 95%;">New: Comprehensive</div>
+                    <div class="metric-bar" style="background: #9b59b6; flex-basis: 75%;">Fair: Expanded</div>
+                    <div class="metric-bar" style="background: #e74c3c; flex-basis: 25%;">Bum: Gutted</div>
+                </div>
+            </div>
+            
+            <div class="metric-row">
+                <div class="metric-label">Worker Protections</div>
+                <div class="metric-bars">
+                    <div class="metric-bar" style="background: #2ecc71; flex-basis: 65%;">Square: Moderate</div>
+                    <div class="metric-bar" style="background: #3498db; flex-basis: 90%;">New: Strong</div>
+                    <div class="metric-bar" style="background: #9b59b6; flex-basis: 80%;">Fair: Enhanced</div>
+                    <div class="metric-bar" style="background: #e74c3c; flex-basis: 20%;">Bum: Minimal</div>
+                </div>
+            </div>
+            
+            <div class="metric-row">
+                <div class="metric-label">Healthcare Access</div>
+                <div class="metric-bars">
+                    <div class="metric-bar" style="background: #2ecc71; flex-basis: 40%;">Square: Limited</div>
+                    <div class="metric-bar" style="background: #3498db; flex-basis: 60%;">New: Growing</div>
+                    <div class="metric-bar" style="background: #9b59b6; flex-basis: 70%;">Fair: Proposed</div>
+                    <div class="metric-bar" style="background: #e74c3c; flex-basis: 30%;">Bum: Reduced</div>
+                </div>
+            </div>
+            
+            <div class="metric-row">
+                <div class="metric-label">Democratic Norms</div>
+                <div class="metric-bars">
+                    <div class="metric-bar" style="background: #2ecc71; flex-basis: 85%;">Square: Upheld</div>
+                    <div class="metric-bar" style="background: #3498db; flex-basis: 90%;">New: Strengthened</div>
+                    <div class="metric-bar" style="background: #9b59b6; flex-basis: 88%;">Fair: Protected</div>
+                    <div class="metric-bar" style="background: #e74c3c; flex-basis: 35%;">Bum: Threatened</div>
+                </div>
+            </div>
+            
+            <div class="metric-row">
+                <div class="metric-label">Economic Equality</div>
+                <div class="metric-bars">
+                    <div class="metric-bar" style="background: #2ecc71; flex-basis: 60%;">Square: Improved</div>
+                    <div class="metric-bar" style="background: #3498db; flex-basis: 85%;">New: Prioritized</div>
+                    <div class="metric-bar" style="background: #9b59b6; flex-basis: 75%;">Fair: Advanced</div>
+                    <div class="metric-bar" style="background: #e74c3c; flex-basis: 15%;">Bum: Worsened</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Animate meter fills on page load
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.querySelectorAll('.meter-fill').forEach(meter => {
+                    meter.style.width = meter.dataset.width;
+                });
+            }, 500);
+        });
+    </script>
+</body>
+</html>
