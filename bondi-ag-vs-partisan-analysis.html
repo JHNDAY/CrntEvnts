@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bondi: Attorney General vs Political Partisan</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0a0a0a;
+            color: #fff;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            padding: 50px 20px;
+            background: linear-gradient(135deg, #1e3a8a 0%, #7c2d12 100%);
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+        
+        h1 {
+            font-size: 3em;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        .subtitle {
+            font-size: 1.3em;
+            color: #fff;
+            opacity: 1;
+        }
+        
+        .intro {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border-left: 5px solid #fcd34d;
+        }
+        
+        .intro h2 {
+            color: #fcd34d;
+            margin-bottom: 15px;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .role-column {
+            background: rgba(255, 255, 255, 0.03);
+            padding: 30px;
+            border-radius: 15px;
+            border: 2px solid;
+        }
+        
+        .ag-column {
+            border-color: #60a5fa;
+        }
+        
+        .partisan-column {
+            border-color: #f87171;
+        }
+        
+        .role-column h2 {
+            font-size: 2em;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid;
+        }
+        
+        .ag-column h2 {
+            color: #60a5fa;
+            border-color: #60a5fa;
+        }
+        
+        .partisan-column h2 {
+            color: #f87171;
+            border-color: #f87171;
+        }
+        
+        .expected-behavior {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .expected-behavior h3 {
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+        
+        .ag-column .expected-behavior h3 {
+            color: #93c5fd;
+        }
+        
+        .partisan-column .expected-behavior h3 {
+            color: #fca5a5;
+        }
+        
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        ul li {
+            padding: 8px 0 8px 25px;
+            position: relative;
+        }
+        
+        .ag-column ul li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #60a5fa;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        
+        .partisan-column ul li::before {
+            content: "✗";
+            position: absolute;
+            left: 0;
+            color: #f87171;
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        
+        .evidence-section {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 25px;
+            border-radius: 10px;
+            margin: 30px 0;
+        }
+        
+        .evidence-section h3 {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            color: #fcd34d;
+        }
+        
+        .evidence-card {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 5px solid;
+        }
+        
+        .evidence-card.ag-aligned {
+            border-color: #60a5fa;
+        }
+        
+        .evidence-card.partisan-aligned {
+            border-color: #f87171;
+        }
+        
+        .evidence-card h4 {
+            font-size: 1.3em;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.7em;
+            font-weight: bold;
+        }
+        
+        .badge-ag {
+            background: #60a5fa;
+            color: #000;
+            font-weight: bold;
+        }
+        
+        .badge-partisan {
+            background: #f87171;
+            color: #000;
+            font-weight: bold;
+        }
+        
+        .quote-box {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            border-left: 4px solid #fcd34d;
+            margin: 15px 0;
+            font-style: italic;
+            border-radius: 5px;
+        }
+        
+        .analysis {
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .score-meter {
+            background: rgba(255, 255, 255, 0.1);
+            height: 40px;
+            border-radius: 20px;
+            overflow: hidden;
+            margin: 20px 0;
+            position: relative;
+        }
+        
+        .score-fill-ag {
+            height: 100%;
+            background: linear-gradient(90deg, #60a5fa 0%, #93c5fd 100%);
+            float: left;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #000;
+        }
+        
+        .score-fill-partisan {
+            height: 100%;
+            background: linear-gradient(90deg, #f87171 0%, #fca5a5 100%);
+            float: left;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #000;
+        }
+        
+        .verdict-box {
+            background: linear-gradient(135deg, rgba(220, 38, 38, 0.2) 0%, rgba(59, 130, 246, 0.2) 100%);
+            padding: 40px;
+            border-radius: 15px;
+            margin-top: 40px;
+            border: 2px solid #fcd34d;
+        }
+        
+        .verdict-box h2 {
+            color: #fcd34d;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .verdict-box p {
+            font-size: 1.2em;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+        
+        @media (max-width: 1024px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>⚖️ Pam Bondi: Two Roles in Conflict</h1>
+            <div class="subtitle">Attorney General of the United States vs. Political Partisan & Presidential Loyalist</div>
+        </header>
+
+        <div class="intro">
+            <h2>The Fundamental Question</h2>
+            <p>The Attorney General serves as the nation's chief law enforcement officer and head of the Department of Justice. The role requires <strong>independence from political pressure</strong>, commitment to the rule of law, and loyalty to the Constitution—not to any individual, including the President. This analysis examines whether Bondi's testimony reflects the traditional responsibilities of an Attorney General or the behavior of a political partisan whose primary loyalty is to President Trump.</p>
+        </div>
+
+        <div class="comparison-grid">
+            <div class="role-column ag-column">
+                <h2>🏛️ Traditional Attorney General Role</h2>
+                
+                <div class="expected-behavior">
+                    <h3>Core Responsibilities</h3>
+                    <ul>
+                        <li>Serve as the "people's lawyer" not the president's personal attorney</li>
+                        <li>Maintain independence from political influence</li>
+                        <li>Uphold the Constitution and rule of law above partisan interests</li>
+                        <li>Provide transparent, honest testimony to Congress</li>
+                        <li>Respect judicial independence and court orders</li>
+                        <li>Apply the law equally regardless of political affiliation</li>
+                        <li>Protect civil liberties and constitutional rights</li>
+                        <li>Avoid conflicts of interest</li>
+                        <li>Cooperate with congressional oversight</li>
+                    </ul>
+                </div>
+                
+                <div class="expected-behavior">
+                    <h3>Relationship with Congress</h3>
+                    <ul>
+                        <li>Provide complete, truthful answers to both parties</li>
+                        <li>Treat oversight as a constitutional duty, not an attack</li>
+                        <li>Maintain professional, non-combative demeanor</li>
+                        <li>Answer questions about legal rationale for decisions</li>
+                        <li>Disclose potential conflicts of interest</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="role-column partisan-column">
+                <h2>🎭 Political Partisan Loyalist</h2>
+                
+                <div class="expected-behavior">
+                    <h3>Partisan Behavior Patterns</h3>
+                    <ul>
+                        <li>Prioritize president's political interests over institutional norms</li>
+                        <li>View opposition party oversight as attacks to be deflected</li>
+                        <li>Use DOJ as tool for president's political agenda</li>
+                        <li>Refuse to answer legitimate oversight questions</li>
+                        <li>Respond combatively to opposing party while deferring to allies</li>
+                        <li>Frame law enforcement actions in partisan political terms</li>
+                        <li>Defend president's actions regardless of legal merit</li>
+                        <li>Attack critics rather than address substantive concerns</li>
+                        <li>Maintain secrecy to protect political leadership</li>
+                    </ul>
+                </div>
+                
+                <div class="expected-behavior">
+                    <h3>Congressional Relations</h3>
+                    <ul>
+                        <li>Hostile and dismissive toward opposition oversight</li>
+                        <li>Make personal attacks on opposing party members</li>
+                        <li>Refuse to provide legal rationale that might embarrass president</li>
+                        <li>Deflect questions with counter-accusations</li>
+                        <li>Treat hearings as political theater rather than oversight</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="evidence-section">
+            <h3>📋 Evidence from Testimony: How Did Bondi Behave?</h3>
+            
+            <div class="evidence-card partisan-aligned">
+                <h4>
+                    <span>Refusal to Discuss White House Conversations</span>
+                    <span class="badge badge-partisan">PARTISAN LOYALIST</span>
+                </h4>
+                <div class="quote-box">
+                    <strong>Durbin:</strong> "Were you consulted by the White House before they deployed National Guard troops to cities in the United States?"<br><br>
+                    <strong>Bondi:</strong> "I'm not going to discuss any internal conversations with the White House."<br><br>
+                    <strong>Durbin:</strong> "You won't even say whether you talked to the White House about this?"<br><br>
+                    <strong>Bondi:</strong> "I'm not going to discuss any internal conversations with the White House with you, Ranking Member."
+                </div>
+                <div class="analysis">
+                    <strong>Analysis:</strong> A traditional AG would explain the legal basis for deployments and whether they advised on the legality of the action. This is a legitimate oversight question about the use of military force against American cities. Her blanket refusal suggests protecting the president politically rather than providing transparency required of the nation's chief law enforcement officer.
+                </div>
+            </div>
+
+            <div class="evidence-card partisan-aligned">
+                <h4>
+                    <span>Personal Attacks on Democratic Senators</span>
+                    <span class="badge badge-partisan">PARTISAN LOYALIST</span>
+                </h4>
+                <div class="quote-box">
+                    <strong>To Senator Durbin:</strong> "I wish you loved Chicago as much as you hate President Trump, and currently the National Guard are on the way to Chicago. If you're not going to protect your citizens, President Trump will."
+                </div>
+                <div class="quote-box">
+                    <strong>Later to Durbin:</strong> "You're sitting here grilling me and they're on their way to Chicago to keep your state safe."
+                </div>
+                <div class="analysis">
+                    <strong>Analysis:</strong> This is highly inappropriate for an Attorney General. Rather than addressing legitimate oversight questions about legal authority, she launched personal attacks questioning a senator's patriotism and love for his home state. A traditional AG maintains professional composure regardless of tough questioning. This behavior mirrors political campaign rhetoric, not legal testimony.
+                </div>
+            </div>
+
+            <div class="evidence-card partisan-aligned">
+                <h4>
+                    <span>Deflection Through Counter-Accusations</span>
+                    <span class="badge badge-partisan">PARTISAN LOYALIST</span>
+                </h4>
+                <div class="quote-box">
+                    When asked about Epstein files, Bondi responded:<br><br>
+                    "Senator Durbin, I find it very interesting that you refused repeated Republican requests to release the Epstein flight logs in 2023 and 2024. You fought that. Did you take money from Reid Hoffman, campaign donations?"
+                </div>
+                <div class="analysis">
+                    <strong>Analysis:</strong> When asked about her claims regarding Epstein files, instead of answering directly, she attacked the questioner with unrelated accusations. This is a classic partisan deflection tactic. An AG's job is to answer questions about their actions, not to investigate senators asking those questions. This shows loyalty to defending the president's allies rather than transparency.
+                </div>
+            </div>
+
+            <div class="evidence-card partisan-aligned">
+                <h4>
+                    <span>Partisan Framework for Justice Department Mission</span>
+                    <span class="badge badge-partisan">PARTISAN LOYALIST</span>
+                </h4>
+                <div class="quote-box">
+                    "When I was confirmed as the 87th Attorney General of the United States, I took office with two main goals, to end the weaponization of justice and return the department to its core mission of fighting violent crime."
+                </div>
+                <div class="quote-box">
+                    "They wanted to take President Trump off the playing field. They were playing politics with law enforcement powers and will go down as a historic betrayal of public trust."
+                </div>
+                <div class="analysis">
+                    <strong>Analysis:</strong> She frames her entire mission through a partisan lens—assuming the previous administration "weaponized" the DOJ against Trump. A traditional AG would focus on enforcing the law fairly, not on vindicating a former president. This framing reveals she sees her primary role as defending Trump from what she characterizes as political persecution, rather than serving as an independent law enforcement officer.
+                </div>
+            </div>
+
+            <div class="evidence-card partisan-aligned">
+                <h4>
+                    <span>Refusing to Disclose Legal Rationale (Qatar Jet)</span>
+                    <span class="badge badge-partisan">PARTISAN LOYALIST</span>
+                </h4>
+                <div class="quote-box">
+                    <strong>Durbin:</strong> Asked about legal rationale for President accepting $400 million jet from Qatar, a former client of Bondi's.<br><br>
+                    <strong>Bondi:</strong> "Obviously in preparing any advice for the president on a jet or anything else, we consult with the Office of Legal Counsel. The confidentiality applies to their input as well."
+                </div>
+                <div class="analysis">
+                    <strong>Analysis:</strong> While OLC advice can be confidential, Congress has legitimate oversight over whether constitutional requirements (Emoluments Clause) are being followed. The AG should at minimum confirm whether she consulted ethics officials given her past representation of Qatar. Her refusal suggests protecting the president from accountability rather than ensuring constitutional compliance. Additionally, she did not answer whether she consulted DOJ ethics officials about her own conflict of interest.
+                </div>
+            </div>
+
+            <div class="evidence-card partisan-aligned">
+                <h4>
+                    <span>Stark Contrast: Cooperation with Republicans</span>
+                    <span class="badge badge-partisan">PARTISAN LOYALIST</span>
+                </h4>
+                <div class="quote-box">
+                    With Senator Grassley and other Republicans, Bondi was consistently cooperative:<br><br>
+                    • Offered to provide information in writing<br>
+                    • Gave detailed answers about Arctic Frost<br>
+                    • Praised their oversight efforts<br>
+                    • Said "Yes, Senator" and "Thank you, Chairman"<br>
+                    • No personal attacks or deflections
+                </div>
+                <div class="analysis">
+                    <strong>Analysis:</strong> The night-and-day difference in her treatment of Democrats vs. Republicans is perhaps the strongest evidence of partisan loyalty over institutional integrity. A true Attorney General treats congressional oversight the same regardless of party. Her willingness to cooperate with Republican oversight while attacking Democratic oversight shows she views her role as protecting the president politically, not serving as an independent law enforcement official.
+                </div>
+            </div>
+
+            <div class="evidence-card partisan-aligned">
+                <h4>
+                    <span>Using DOJ Actions as Political Weapons</span>
+                    <span class="badge badge-partisan">PARTISAN LOYALIST</span>
+                </h4>
+                <div class="quote-box">
+                    During questioning, Bondi repeatedly invoked ongoing federal operations in Chicago as a political cudgel:<br><br>
+                    "The National Guard is on the way right now as we speak. Oh, by the way, so is Director Patel and Deputy Attorney General Todd Blanche. You're sitting here grilling me and they're on their way to Chicago to keep your state safe."
+                </div>
+                <div class="analysis">
+                    <strong>Analysis:</strong> She used federal law enforcement deployment timing as a way to embarrass a Democratic senator during his questioning. This suggests the deployment was at least partly political theater. A traditional AG would never weaponize law enforcement operations as gotcha moments against oversight. It reveals she sees DOJ actions through a partisan lens—as tools to score political points rather than as serious law enforcement operations.
+                </div>
+            </div>
+
+            <div class="evidence-card ag-aligned">
+                <h4>
+                    <span>Providing Crime Statistics and Operational Details</span>
+                    <span class="badge badge-ag">ATTORNEY GENERAL</span>
+                </h4>
+                <div class="quote-box">
+                    Bondi provided detailed information about DOJ operations:<br><br>
+                    • 3,800 arrests in Washington DC surge, 365 illegal guns seized<br>
+                    • 300 arrests in Memphis, 80 guns seized<br>
+                    • FBI Operation Summer Heat: 8,600 arrests<br>
+                    • DEA seized 47.9 million fentanyl pills (370 million deadly doses)<br>
+                    • 51,000 fugitives arrested by U.S. Marshals
+                </div>
+                <div class="analysis">
+                    <strong>Analysis:</strong> Providing operational details and crime statistics is appropriate AG behavior. However, notably, she provided these primarily to Republicans and in her opening statement—not in response to Democrats' questions about grant cuts and resource allocation. This selective transparency still suggests partisan approach to information sharing.
+                </div>
+            </div>
+
+            <div class="evidence-card ag-aligned">
+                <h4>
+                    <span>Explaining Grant Appeal Process</span>
+                    <span class="badge badge-ag">ATTORNEY GENERAL</span>
+                </h4>
+                <div class="quote-box">
+                    "All grant termination appeals will be individually considered for alignment with our current policies, which are strengthening law enforcement and protecting victims. Recipients are given the opportunity to appeal a grant termination consistent with the rules by writing to the Assistant Attorney General."
+                </div>
+                <div class="analysis">
+                    <strong>Analysis:</strong> Explaining administrative procedures for grant appeals is appropriate AG behavior. She offered to work with senators on specific grants, which shows some willingness to engage constructively. However, the fact that hundreds of grants were terminated without consultation and required appeals process suggests the decisions may have been rushed or politically motivated rather than carefully evaluated.
+                </div>
+            </div>
+
+            <div class="evidence-card partisan-aligned">
+                <h4>
+                    <span>Dismissive Responses: "Talk to Director Patel"</span>
+                    <span class="badge badge-partisan">PARTISAN LOYALIST</span>
+                </h4>
+                <div class="quote-box">
+                    <strong>Whitehouse:</strong> "What became of the $50,000 in cash that the FBI paid to Mr. Homan in a paper bag?"<br><br>
+                    <strong>Bondi:</strong> "Senator Whitehouse, you're welcome to discuss this with Director Patel."<br><br>
+                    <strong>Whitehouse:</strong> "They report to you. Can't you answer this question?"<br><br>
+                    <strong>Bondi:</strong> "Senator Whitehouse, you're welcome to discuss this with Director Patel."
+                </div>
+                <div class="analysis">
+                    <strong>Analysis:</strong> The Attorney General is the head of the Department of Justice. The FBI Director reports to her. Repeatedly telling senators to "talk to" subordinates rather than taking responsibility for department actions shows an unwillingness to be accountable. This is particularly problematic for a serious question about potential misuse of federal funds. A traditional AG would either answer the question or explain why they cannot, not dismiss senators' legitimate oversight role.
+                </div>
+            </div>
+
+            <div class="evidence-card partisan-aligned">
+                <h4>
+                    <span>Defending Legally Questionable Appointments</span>
+                    <span class="badge badge-partisan">PARTISAN LOYALIST</span>
+                </h4>
+                <div class="quote-box">
+                    Senator Durbin noted that courts ruled Alina Habba and Sigal Chatha "are serving in their roles illegally, jeopardizing countless prosecutions." Bondi did not address this directly in her responses.
+                </div>
+                <div class="analysis">
+                    <strong>Analysis:</strong> When federal courts rule that appointments are illegal, a traditional Attorney General would either: (1) comply with the ruling, (2) appeal through proper channels, or (3) explain the legal basis for disagreement. Ignoring judicial rulings or declining to address them suggests loyalty to the president's personnel choices over respect for judicial authority and the legal process. This jeopardizes actual criminal prosecutions but appears secondary to protecting the president's appointees.
+                </div>
+            </div>
+        </div>
+
+        <div class="verdict-box">
+            <h2>⚖️ The Verdict</h2>
+            
+            <div style="margin-bottom: 30px;">
+                <h3 style="color: #60a5fa; margin-bottom: 10px;">Attorney General Alignment: 15%</h3>
+                <div class="score-meter">
+                    <div class="score-fill-ag" style="width: 15%;">15%</div>
+                </div>
+            </div>
+            
+            <div style="margin-bottom: 30px;">
+                <h3 style="color: #f87171; margin-bottom: 10px;">Partisan Loyalist Alignment: 85%</h3>
+                <div class="score-meter">
+                    <div class="score-fill-partisan" style="width: 85%;">85%</div>
+                </div>
+            </div>
+            
+            <p><strong>Based on this testimony, Pam Bondi's behavior overwhelmingly aligns with that of a political partisan and presidential loyalist rather than a traditional Attorney General.</strong></p>
+            
+            <p><strong>Key Indicators of Partisan Loyalty Over Institutional Role:</strong></p>
+            
+            <ul style="margin: 20px 0; padding-left: 20px;">
+                <li style="margin-bottom: 10px;"><strong>Dual Standards:</strong> Cooperative and deferential with Republicans, combative and evasive with Democrats—treating oversight as partisan warfare rather than constitutional duty.</li>
+                
+                <li style="margin-bottom: 10px;"><strong>Personal Attacks:</strong> Launching ad hominem attacks on senators ("I wish you loved Chicago as much as you hate President Trump") is campaign rhetoric, not the conduct expected of the nation's chief law enforcement officer.</li>
+                
+                <li style="margin-bottom: 10px;"><strong>Systematic Evasion:</strong> Refusing to answer questions about legal rationale, White House consultations, ethics reviews, and conflicts of interest—all legitimate oversight concerns.</li>
+                
+                <li style="margin-bottom: 10px;"><strong>Deflection Tactics:</strong> Rather than answering questions about her actions, repeatedly counter-attacked questioners with unrelated accusations (Reid Hoffman donations, Epstein flight logs).</li>
+                
+                <li style="margin-bottom: 10px;"><strong>Mission Framed as Political:</strong> Explicitly stated her mission as "ending weaponization" against Trump, revealing she sees DOJ's purpose as vindicating the president rather than enforcing law impartially.</li>
+                
+                <li style="margin-bottom: 10px;"><strong>Weaponizing DOJ Operations:</strong> Used timing of Chicago deployment as political theater to embarrass Democratic senator during questioning.</li>
+                
+                <li style="margin-bottom: 10px;"><strong>Protecting President Over Transparency:</strong> Blanket refusal to discuss White House conversations even on matters of significant public concern (military deployment to U.S. cities).</li>
+                
+                <li style="margin-bottom: 10px;"><strong>Lack of Accountability:</strong> Repeatedly told senators to "talk to" subordinates rather than taking responsibility as department head.</li>
+            </ul>
+            
+            <p><strong>Historical Context:</strong></p>
+            
+            <p>Traditional Attorneys General from both parties—from Robert Jackson to Eric Holder to William Barr (in his first tenure)—maintained that the AG serves the Constitution and the rule of law, not the president personally. Even controversial AGs maintained professional decorum during congressional testimony and attempted to answer questions substantively. The famous phrase is that the AG serves as "the people's lawyer," not "the president's lawyer."</p>
+            
+            <p><strong>Bondi's testimony reveals an AG who sees herself primarily as President Trump's defender and political warrior rather than an independent law enforcement official.</strong> Her willingness to engage constructively with Republican oversight while treating Democratic oversight with contempt and evasion shows she views her role through a purely partisan lens. The personal attacks, deflections, and systematic refusal to provide transparency to legitimate oversight questions are hallmarks of political loyalty superseding institutional responsibility.</p>
+            
+            <p style="margin-top: 20px; padding: 20px; background: rgba(252, 211, 77, 0.15); border-radius: 10px; border-left: 5px solid #fcd34d;">
+                <strong>Bottom Line:</strong> While Bondi provided some operational statistics and described administrative processes (the 15% that aligns with AG role), the overwhelming pattern of her testimony—the combativeness, evasions, personal attacks, partisan framing, and dual standards—demonstrates behavior consistent with a political operative whose primary loyalty is to the president rather than to the Constitution, the rule of law, and the American people she is sworn to serve.
+            </p>
+        </div>
+    </div>
+</body>
+</html>
