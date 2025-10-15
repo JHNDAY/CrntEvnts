@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Current Events Oct 4-11, 2025</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .news-section {
+            padding: 30px;
+        }
+
+        .news-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            overflow: hidden;
+            border: 2px solid transparent;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .news-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+            border-color: #667eea;
+        }
+
+        .news-card.expanded {
+            transform: none;
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .card-header {
+            color: white;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            transform: rotate(45deg);
+        }
+
+        .card-header.level-1 { background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%); }
+        .card-header.level-2 { background: linear-gradient(135deg, #ff4444 0%, #dd2222 100%); }
+        .card-header.level-3 { background: linear-gradient(135deg, #ff8888 0%, #ff5555 100%); }
+        .card-header.level-4 { background: linear-gradient(135deg, #ffaa88 0%, #ff7755 100%); }
+        .card-header.level-5 { background: linear-gradient(135deg, #88aaff 0%, #5577ff 100%); }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-content {
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.4s ease-in-out;
+        }
+
+        .card-content.expanded {
+            max-height: 2000px;
+            padding: 20px;
+        }
+
+        .subtopic {
+            background: #f0f2ff;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .subtopic:hover {
+            background: #e8ebff;
+            transform: translateX(5px);
+        }
+
+        .subtopic h4 {
+            color: #1e3c72;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+
+        .subtopic p {
+            color: #666;
+            line-height: 1.5;
+            font-size: 0.95rem;
+        }
+
+        .expand-icon {
+            float: right;
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .expand-icon.rotated {
+            transform: rotate(180deg);
+        }
+
+        .severity-indicator {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.2rem;
+            z-index: 2;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .severity-critical::before { content: "🚨"; }
+        .severity-high::before { content: "⚠️"; }
+        .severity-ongoing::before { content: "🔥"; }
+
+        .footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .sources {
+            margin-top: 20px;
+            text-align: left;
+            font-size: 0.85rem;
+        }
+
+        .sources h3 {
+            color: #1e3c72;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .sources ul {
+            margin-left: 20px;
+            line-height: 1.8;
+        }
+
+        .sources a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .sources a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .news-section {
+                padding: 20px;
+            }
+            
+            .card-title {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Current Events Analysis</h1>
+            <p>October 4-11, 2025</p>
+            <p style="font-size: 0.9rem; margin-top: 10px;">Topics Discussed in Current Affairs Session of CEOct14</p>
+        </div>
+
+        <div class="news-section">
+            <!-- Pam Bondi Senate Testimony -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-1">
+                    <div class="severity-indicator severity-critical"></div>
+                    <div class="card-title">
+                        Attorney General Bondi's Contentious Senate Hearing
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-subtitle">Combative testimony on DOJ weaponization allegations</div>
+                </div>
+                <div class="card-content">
+                    <div class="subtopic">
+                        <h4>🏛️ October 7 Judiciary Committee Appearance</h4>
+                        <p>Attorney General Pam Bondi faced 4+ hours of intense questioning from Senate Democrats, defending Justice Department direction while deflecting questions on Comey indictment, Epstein files, and Tom Homan investigation. Democrats accused her of weaponizing DOJ; Republicans defended her as restoring law enforcement's core mission.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>📋 Prepared Opposition Research</h4>
+                        <p>Reuters photos revealed Bondi brought binder with personal attacks on senators. She challenged Blumenthal about Vietnam service claims, accused Whitehouse of receiving Epstein-associate donations, and deflected questions with zingers. Observers called it unprecedented combativeness from an Attorney General.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>⚖️ Comey Indictment Defense</h4>
+                        <p>Bondi defended James Comey's September 26 indictment, noting it came from "one of the most liberal grand juries in the country" in Alexandria, Virginia. Indictment came days after Trump's Truth Social post demanding prosecution. Career prosecutors reportedly found insufficient evidence before political appointee secured charges.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>💼 DOJ Independence Questions</h4>
+                        <p>Senator Mazie Hirono pressed Bondi on Trump's direct public directive to prosecute political enemies including Comey, Adam Schiff, and Letitia James. Bondi confirmed she was "the Pam" Trump addressed, stated Trump is "most transparent president in American history." Democrats warned of constitutional crisis.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>📊 Public Reaction</h4>
+                        <p>Chris Christie called DOJ "a capo regime who goes out and executes hits when directed by the Don." Bipartisan concern over department transformation; Bondi remains least popular cabinet member in polling. Conservative Justice Barrett separately said country is NOT in constitutional crisis despite concerns.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Government Shutdown & Healthcare -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-2">
+                    <div class="severity-indicator severity-critical"></div>
+                    <div class="card-title">
+                        Government Shutdown Over Healthcare
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-subtitle">ACA premium subsidies at center of budget standoff</div>
+                </div>
+                <div class="card-content">
+                    <div class="subtopic">
+                        <h4>🏥 October 1 Shutdown Begins</h4>
+                        <p>Federal government shut down after Democrats refused to pass funding bill without extension of ACA enhanced premium tax credits. Credits expire December 31, 2025. Democrats demand action before November 1 open enrollment; Republicans say there's time to negotiate later.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>💰 Premium Increases Projected</h4>
+                        <p>KFF analysis shows subsidized enrollees will face 114% average premium increase if credits expire - from $888 to $1,904 annually. Family of four earning $75,000 would pay $3,367 more per year. Congressional Budget Office estimates 4 million people will lose coverage without extension.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🗳️ Political Stakes</h4>
+                        <p>More than 80% of premium tax credit beneficiaries live in states Trump won in 2024. Marjorie Taylor Greene flipped to Democratic position after her sons' premiums doubled. KFF poll shows 78% of Americans, including majority of Republicans and MAGA supporters, favor extending subsidies.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🏛️ Democratic Strategy</h4>
+                        <p>House Minority Leader Hakeem Jeffries and Senate Democrats holding firm on healthcare demands. Framing shutdown as choice between protecting healthcare vs. tax cuts for billionaires. Republicans accuse Democrats of holding government hostage over program that doesn't expire until December.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>📉 Immediate Impacts</h4>
+                        <p>Medicare telehealth services expired October 1. Medicaid funding through first quarter FY2026 only. Nursing home residents on Medicaid (two-thirds of costs) face uncertainty. Federal workers going without paychecks. Healthcare open enrollment begins November 1 with uncertain pricing.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gaza Hostage Deal -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-3">
+                    <div class="severity-indicator severity-high"></div>
+                    <div class="card-title">
+                        Gaza Ceasefire and Hostage Release
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-subtitle">Trump brokers deal ending two-year conflict</div>
+                </div>
+                <div class="card-content">
+                    <div class="subtopic">
+                        <h4>📜 September 29: 20-Point Plan Announced</h4>
+                        <p>Trump and Netanyahu unveiled comprehensive peace plan at White House requiring immediate ceasefire, hostage releases within 72 hours, Hamas disarmament, Gaza demilitarization, and international trusteeship for governance. Plan includes Trump economic development plan with special economic zone for Gaza.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🤝 October 4: Hamas Initial Response</h4>
+                        <p>Hamas agreed to release all hostages and hand Gaza administration to independent Palestinian technocrats. Accepted some plan elements but said others require "comprehensive national stance" and Palestinian framework discussions. Netanyahu sent delegation to Cairo to finalize technical details.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>✅ October 8-13: Deal Finalized and Implemented</h4>
+                        <p>Israeli Cabinet approved agreement October 8. Ceasefire took effect October 11. Final 20 living Israeli hostages released October 13. Israel freed 250 life-sentence prisoners plus 1,700 Gazans detained since October 7, 2023. Hamas released 4 deceased hostage bodies but failed to meet 28-body requirement.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🌍 October 13: Sharm el-Sheikh Summit</h4>
+                        <p>Trump addressed Israeli Knesset, received standing ovation, then flew to Egypt for signing ceremony with 20+ world leaders. Egyptian President el-Sisi called it "birth of a glimmer of hope." Trump declared war over; humanitarian aid "pouring in" to Gaza. Netanyahu declined invitation citing Jewish holiday.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>❓ Unresolved Questions</h4>
+                        <p>Israeli troops still hold roughly half of Gaza with no withdrawal timeline. Hamas disarmament process unclear; no agreement on who oversees demobilization. Anti-Hamas militias emerging across Gaza Strip. Experts warn "hard work just beginning" despite Trump's victory declaration. Netanyahu's far-right coalition threatened by deal.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pentagon Press Restrictions -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-4">
+                    <div class="severity-indicator severity-ongoing"></div>
+                    <div class="card-title">
+                        Pentagon vs. Press Freedom
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-subtitle">Hegseth's media restrictions face widespread rejection</div>
+                </div>
+                <div class="card-content">
+                    <div class="subtopic">
+                        <h4>📝 September 20: New Policy Announced</h4>
+                        <p>Defense Secretary Pete Hegseth unveiled 17-page policy requiring journalists to pledge not to gather ANY information—even unclassified—that hasn't been expressly authorized for release. Reporters must sign by October 15 or lose Pentagon press credentials and building access.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🚫 October 14: Universal Media Rejection</h4>
+                        <p>Fox News (Hegseth's former employer), ABC, CBS, NBC, CNN, NPR, Washington Post, New York Times, Washington Times, and Newsmax all refused to sign. Joint statement condemned policy as "without precedent" and threat to "core journalistic protections." Only OAN indicated willingness to sign.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>⚖️ First Amendment Concerns</h4>
+                        <p>Freedom of the Press Foundation called policy "prior restraint on publication" - most serious First Amendment violation. Pentagon Press Association warned it threatens reporters with "prosecution for simply doing our jobs." Policy requires acknowledging harm from any unauthorized disclosure—classified or not.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>📊 Broader Context</h4>
+                        <p>Hegseth has given only 2 briefings in 10 months as Defense Secretary. No background briefings on Iran nuclear strikes or Venezuela boat bombings. Previously booted CNN and other outlets from Pentagon workspaces. Ended decades-long tradition of reporters freely walking Pentagon halls.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🗣️ Reactions</h4>
+                        <p>NPR's 28-year Pentagon veteran Tom Bowman losing access: "Signing would make us stenographers parroting press releases, not watchdogs." Trump appeared unaware of policy, said "nothing stops reporters." Republican Rep. Don Bacon: "We don't want a bunch of Pravda newspapers." Former Pentagon spokesman criticized Hegseth's approach.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Project 2029 -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-5">
+                    <div class="severity-indicator severity-ongoing"></div>
+                    <div class="card-title">
+                        Project 2029: Democratic Policy Vision
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-subtitle">Progressive coalition develops governing agenda</div>
+                </div>
+                <div class="card-content">
+                    <div class="subtopic">
+                        <h4>📋 Centrist Alternative to Project 2025</h4>
+                        <p>Coalition led by Jake Sullivan, Neera Tandon, and centrist Democrats creating detailed policy recommendations. Comprehensive plans covering healthcare, economy, foreign policy, education, and environment. Progressive wing criticizes as not ambitious enough but provides substantive governing framework.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🏥 Healthcare as Human Right</h4>
+                        <p>Proposes treating healthcare as fundamental right—language with potential bipartisan appeal. Avoids politically toxic "Medicare for All" branding. Focuses on universal coverage framework while addressing payment systems separately from care delivery. Pete Buttigieg advocates finding common ground with Republicans.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🔧 Working-Class Liberalism</h4>
+                        <p>MIT economist Daron Acemoglu (2024 Nobel Prize winner) emphasizes rebuilding Democratic working-class base. Proposes policies respecting cultural differences between regions. Josh Shapiro model: removed bachelor's degree requirements for Pennsylvania state jobs. Recognizes vocational training as equal to academic paths.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🛡️ Democracy Defense Strategy</h4>
+                        <p>Democracy 2025 coalition coordinates 650+ organizations for legal challenges. Focuses on issues with cross-partisan appeal: removing phones from schools, assault weapons restrictions, sanctuary city resistance. Aims to find unity across political spectrum to oppose Trump administration overreach.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🗣️ Messaging Lessons</h4>
+                        <p>Bill Clinton model: simple direct language on how policies impact individual lives rather than systemic change rhetoric. Avoid culturally alienating progressive positions that lost working class support. Address real problems Trump identified (regulatory overreach, permit delays) with better solutions than his demolition approach.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>📅 Topics discussed in Current Affairs Session of October 14, 2025</p>
+            <p>🗓️ Events covered: October 4-11, 2025</p>
+            <p>🔍 Click on any story card to explore detailed subtopics</p>
+            
+            <div class="sources">
+                <h3>📚 Sources Used</h3>
+                
+                <p><strong>Pam Bondi Senate Testimony:</strong></p>
+                <ul>
+                    <li><a href="https://www.npr.org/2025/10/07/nx-s1-5563934/bondi-senate-judiciary-committee-testify" target="_blank">NPR - Bondi Faces Sharp Questions Over DOJ Weaponization</a></li>
+                    <li><a href="https://www.cnn.com/politics/live-news/pam-bondi-hearing-senate-10-07-25" target="_blank">CNN - Attorney General Bondi Spars with Senate</a></li>
+                    <li><a href="https://www.cnn.com/2025/10/07/politics/bondi-senate-hearing-takeaways" target="_blank">CNN - Takeaways from Bondi's Contentious Hearing</a></li>
+                    <li><a href="https://www.aljazeera.com/news/2025/10/8/us-attorney-general-pam-bondi-clashes-with-critics-at-key-senate-hearing" target="_blank">Al Jazeera - Bondi Clashes with Critics at Senate Hearing</a></li>
+                    <li><a href="https://www.washingtonpost.com/national-security/2025/10/07/bondi-senate-hearing-epstein-comey/" target="_blank">Washington Post - Bondi Faces Grilling on Epstein, Trump Foes</a></li>
+                    <li><a href="https://abcnews.go.com/Politics/democrats-highlight-doj-weaponization-epstein-files-bondis-senate/story?id=126260560" target="_blank">ABC News - Bondi Rips Senators, Dodges Questions</a></li>
+                    <li><a href="https://www.thenation.com/article/politics/pam-bondi-senate-judiciary-hearing/" target="_blank">The Nation - Bondi's Shameless Message to Democrats</a></li>
+                </ul>
+                
+                <p><strong>Government Shutdown & Healthcare:</strong></p>
+                <ul>
+                    <li><a href="https://www.nbcnews.com/health/health-care/government-shutdown-medicare-medicaid-health-programs-rcna235052" target="_blank">NBC News - What Shutdown Means for Medicare, Medicaid</a></li>
+                    <li><a href="https://www.medicarerights.org/medicare-watch/2025/10/02/federal-government-shuts-down-over-health-care-subsidies" target="_blank">Medicare Rights Center - Shutdown Over ACA Subsidies</a></li>
+                    <li><a href="https://www.npr.org/2025/10/02/nx-s1-5559810/shutdown-aca-health-care-premium-subsidies" target="_blank">NPR - Behind the Health Care Fight That Led to Shutdown</a></li>
+                    <li><a href="https://www.cnn.com/2025/10/09/politics/obamacare-premiums-government-shutdown-aca-vis" target="_blank">CNN - Obamacare Premiums Could More Than Double</a></li>
+                    <li><a href="https://abcnews.go.com/Health/affordable-care-act-subsidies-sticking-point-government-shutdown/story?id=126322841" target="_blank">ABC News - How ACA Subsidies Became Sticking Point</a></li>
+                    <li><a href="https://www.npr.org/2025/10/07/g-s1-92251/government-shutdown-health-insurance-premiums" target="_blank">NPR - Democrats Cast Shutdown as Healthcare Showdown</a></li>
+                    <li><a href="https://www.npr.org/2025/10/12/nx-s1-5570849/shutdown-aca-health-care-tax-credits" target="_blank">NPR - ACA Health Plans at Center of Shutdown Fight</a></li>
+                    <li><a href="https://www.factcheck.org/2025/10/lawmakers-health-care-government-shutdown-claims/" target="_blank">FactCheck.org - Lawmakers' Health Care Shutdown Claims</a></li>
+                </ul>
+                
+                <p><strong>Gaza Ceasefire & Hostage Deal:</strong></p>
+                <ul>
+                    <li><a href="https://www.npr.org/2025/10/13/g-s1-93207/hamas-releasing-israeli-hostages" target="_blank">NPR - Israeli Hostages Freed, Trump Hails 'Historic Dawn'</a></li>
+                    <li><a href="https://abcnews.go.com/US/trump-declares-end-israel-hamas-war-experts-hard/story?id=126482789" target="_blank">ABC News - Trump Declares End but Experts See Work Beginning</a></li>
+                    <li><a href="https://www.cbsnews.com/news/hamas-agreed-to-parts-of-gaza-peace-proposal-trump-israel/" target="_blank">CBS News - Hamas Agrees to Parts of Trump Peace Plan</a></li>
+                    <li><a href="https://www.npr.org/2025/09/29/nx-s1-5556916/trump-israel-gaza-netanyahu" target="_blank">NPR - Trump Announces Agreement to End Gaza War</a></li>
+                    <li><a href="https://www.timesofisrael.com/liveblog-october-04-2025/" target="_blank">Times of Israel - Oct 4 Live Updates</a></li>
+                    <li><a href="https://www.foxnews.com/live-news/gaza-ceasefire-israel-hamas-hostage-release-october-13-2025" target="_blank">Fox News - Living Hostages Freed, Trump Addresses Knesset</a></li>
+                    <li><a href="https://www.cnn.com/world/live-news/israel-gaza-ceasefire-deal-hostages-10-14-25" target="_blank">CNN - Oct 14 Gaza Ceasefire News</a></li>
+                    <li><a href="https://www.nbcnews.com/world/middle-east/hamas-says-agrees-release-israeli-hostages-part-trumps-gaza-peace-plan-rcna234632" target="_blank">NBC News - Hamas Agrees to Release Hostages Pending Conditions</a></li>
+                    <li><a href="https://www.axios.com/2025/10/08/gaza-deal-trump-announce-war-over" target="_blank">Axios - Trump: Gaza Hostage, Ceasefire Deal Reached</a></li>
+                    <li><a href="https://www.nbcnews.com/world/israel/ceasefire-israel-hamas-gaza-palestinians-trump-netanyahu-qatar-rcna217806" target="_blank">NBC News - Israeli Government Approves First Part of Deal</a></li>
+                </ul>
+                
+                <p><strong>Pentagon Press Restrictions:</strong></p>
+                <ul>
+                    <li><a href="https://www.cnn.com/2025/10/13/media/pentagon-hegseth-press-restrictions-newsmax-fox-news" target="_blank">CNN - Media Outlets Including Fox Refuse Pentagon Rules</a></li>
+                    <li><a href="https://newrepublic.com/post/201740/pete-hegseth-kick-news-outlets-out-pentagon" target="_blank">New Republic - Hegseth About to Kick All Outlets Out But One</a></li>
+                    <li><a href="https://www.npr.org/2025/09/20/g-s1-89713/pentagon-new-strict-guidelines-for-media" target="_blank">NPR - Hegseth Requires New 'Pledge' for Reporters</a></li>
+                    <li><a href="https://www.washingtonpost.com/business/2025/10/14/fox-news-among-broadcasters-refusing-sign-pentagon-press-pledge/" target="_blank">Washington Post - Fox Among Broadcasters Refusing Pentagon Pledge</a></li>
+                    <li><a href="https://www.axios.com/2025/10/14/pentagon-press-restrictions-trump-journalists-news-outlets" target="_blank">Axios - News Outlets Broadly Reject Pentagon Rules</a></li>
+                    <li><a href="https://www.axios.com/2025/10/14/fox-news-pentagon-press-policy-pete-hegseth" target="_blank">Axios - Fox News Declines to Sign Pentagon Policy</a></li>
+                    <li><a href="https://www.cnn.com/2025/09/22/media/pentagon-parnell-hegseth-media-access-pledge" target="_blank">CNN - News Outlets Prepare Fight Against Pentagon Pledge</a></li>
+                    <li><a href="https://www.npr.org/2025/10/14/g-s1-93297/pentagon-reporter-opinion-press-policy" target="_blank">NPR - Veteran Pentagon Reporter Warns Policy Stifles Journalism</a></li>
+                    <li><a href="https://www.washingtonpost.com/business/2025/09/19/pentagon-hegseth-press-unauthorized-material/" target="_blank">Washington Post - Pentagon Demands Journalists Pledge</a></li>
+                </ul>
+                
+                <p style="margin-top: 15px; font-style: italic; text-align: center; color: #666;">
+                    Context derived from Current Affairs Discussion of CEOct14 held October 14, 2025.<br>
+                    All sources accessed October 4-15, 2025. Links verified at time of compilation.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleCard(card) {
+            const content = card.querySelector('.card-content');
+            const icon = card.querySelector('.expand-icon');
+            
+            // Close all other cards
+            document.querySelectorAll('.news-card').forEach(otherCard => {
+                if (otherCard !== card) {
+                    otherCard.classList.remove('expanded');
+                    otherCard.querySelector('.card-content').classList.remove('expanded');
+                    otherCard.querySelector('.expand-icon').classList.remove('rotated');
+                }
+            });
+            
+            // Toggle current card
+            card.classList.toggle('expanded');
+            content.classList.toggle('expanded');
+            icon.classList.toggle('rotated');
+        }
+
+        // Add smooth animations on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.news-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    card.style.transition = 'all 0.5s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>
