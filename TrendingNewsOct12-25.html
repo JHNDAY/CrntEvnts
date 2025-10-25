@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trending News - Oct. 12 to Oct. 25, 2025</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .news-section {
+            padding: 30px;
+        }
+
+        .news-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            overflow: hidden;
+            border: 2px solid transparent;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .news-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+            border-color: #667eea;
+        }
+
+        .news-card.expanded {
+            transform: none;
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .card-header {
+            color: white;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            transform: rotate(45deg);
+        }
+
+        /* Red to Blue gradient based on occurrence count */
+        .card-header.level-1 { background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%); }
+        .card-header.level-2 { background: linear-gradient(135deg, #ff4444 0%, #dd2222 100%); }
+        .card-header.level-3 { background: linear-gradient(135deg, #ff6666 0%, #ff3333 100%); }
+        .card-header.level-4 { background: linear-gradient(135deg, #ff8866 0%, #ff5533 100%); }
+        .card-header.level-5 { background: linear-gradient(135deg, #99aaff 0%, #6677ff 100%); }
+        .card-header.level-6 { background: linear-gradient(135deg, #5588ff 0%, #3355ff 100%); }
+        .card-header.level-7 { background: linear-gradient(135deg, #3366ff 0%, #1144dd 100%); }
+        .card-header.level-8 { background: linear-gradient(135deg, #0044ff 0%, #0022cc 100%); }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .expand-icon {
+            float: right;
+            transition: transform 0.3s ease;
+            font-size: 1.2rem;
+        }
+
+        .expand-icon.rotated {
+            transform: rotate(180deg);
+        }
+
+        .card-content {
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.4s ease-in-out;
+        }
+
+        .card-content.expanded {
+            max-height: 2000px;
+            padding: 20px;
+        }
+
+        .subtopic {
+            background: #f0f2ff;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .subtopic:hover {
+            background: #e8ebff;
+            transform: translateX(5px);
+        }
+
+        .subtopic h4 {
+            color: #1e3c72;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+
+        .subtopic p {
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .footer {
+            background: #f8f9fa;
+            padding: 30px;
+            border-top: 3px solid #667eea;
+        }
+
+        .footer h3 {
+            color: #1e3c72;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .footer p {
+            color: #666;
+            line-height: 1.8;
+            margin-bottom: 15px;
+        }
+
+        .sources-section {
+            margin-top: 20px;
+            columns: 2;
+            column-gap: 30px;
+            font-size: 0.9rem;
+        }
+
+        .source-category {
+            break-inside: avoid;
+            margin-bottom: 20px;
+        }
+
+        .source-category h4 {
+            color: #1e3c72;
+            margin-bottom: 10px;
+            font-size: 1rem;
+        }
+
+        .source-category ul {
+            list-style-position: inside;
+            margin-left: 10px;
+        }
+
+        .source-category li {
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+
+        .source-category a {
+            color: #667eea;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .source-category a:hover {
+            color: #1e3c72;
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .sources-section {
+                columns: 1;
+            }
+
+            .header h1 {
+                font-size: 2rem;
+            }
+
+            .card-title {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📰 Trending News</h1>
+            <p>October 12 to October 25, 2025</p>
+        </div>
+
+        <div class="news-section">
+            <!-- Threat to Democracy (85+ mentions) -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-1">
+                    <div class="card-title">
+                        Threat to Democracy (85+ mentions)
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-subtitle">Democracy threat index reaches highest levels; Project 2025 implementation accelerates</div>
+                </div>
+                <div class="card-content">
+                    <div class="subtopic">
+                        <h4>🚨 Democracy Threat Assessment</h4>
+                        <p>Democracy threat index updated October 24 shows "severe threat" level at 3.3 out of 5, with treatment of media rated 3.2/5. Authoritarian Warning Survey compiles ratings from democracy experts across political spectrum on six key metrics.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>📋 Project 2025 Implementation</h4>
+                        <p>Trump administration systematically implementing Project 2025, the Heritage Foundation's authoritarian playbook. Analysis shows nearly two-thirds of executive actions mirror or partially mirror Project 2025 proposals. Democracy 2025 coalition of 650+ organizations preparing comprehensive legal challenges.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>⚖️ Institutional Challenges</h4>
+                        <p>Three pillars of democracy—protecting elections, defending rule of law, and fighting corruption—facing significant challenges. Brookings Democracy Playbook 2025 warns of dangerous cracks in democratic foundations requiring multi-year defense efforts.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🗳️ Election Integrity Concerns</h4>
+                        <p>California Proposition 50 sparks debate over partisan redistricting and democracy. Trump's openly expressed purpose of ensuring congressional control through mid-decade redistricting raises concerns about electoral manipulation.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>✊ Resistance Movement</h4>
+                        <p>Over 7 million people participated in nationwide "No Kings" protests across 2,700 events in all 50 states exercising First Amendment rights. ACLU defending freedom of speech, press, and assembly against administration threats.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Immigration & Detention (75+ mentions) -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-1">
+                    <div class="card-title">
+                        Immigration & Detention (75+ mentions)
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-subtitle">ICE detention deaths hit two-decade high; over 170 US citizens wrongfully detained</div>
+                </div>
+                <div class="card-content">
+                    <div class="subtopic">
+                        <h4>💀 Record Detention Deaths</h4>
+                        <p>2025 is the deadliest year in ICE custody since 2004, with at least 20 deaths recorded. Nearly 60,000 people held in immigration detention—the highest number in years. Concerns about inadequate medical staffing and extreme heat conditions in facilities.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🇺🇸 US Citizens Detained</h4>
+                        <p>Over 170 US citizens wrongfully held by immigration agents, with Americans dragged, tackled, beaten, tased and shot. Supreme Court Justice Kavanaugh claimed citizens would be "promptly" released, but reality shows extended detentions lasting days without contact.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>📊 Detention Demographics</h4>
+                        <p>71.5% of those in ICE detention (42,755 out of 59,762) have no criminal conviction. Less than 10% were convicted of serious violent or sexual crimes. Internal data contradicts administration's "worst of the worst" messaging.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🏥 Detention Conditions</h4>
+                        <p>ICE facilities experience average of 29 dangerous heat days annually—11 more than other prison systems. Planned expansion to 107,000+ capacity will worsen conditions. Office of Detention Oversight placed on furlough despite surging detainee numbers.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>⚠️ Due Process Concerns</h4>
+                        <p>Immigration advocates argue rapid arrest approach reduces limited due process. Officers making arrests at court appearances despite judges' instructions. President stated it's not possible for all targeted individuals to get trials.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Conservative Court Impact (65+ mentions) -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-2">
+                    <div class="card-title">
+                        Conservative Court Impact (65+ mentions)
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-subtitle">Supreme Court signals willingness to weaken Voting Rights Act; conversion therapy bans threatened</div>
+                </div>
+                <div class="card-content">
+                    <div class="subtopic">
+                        <h4>🗳️ Voting Rights Act Threatened</h4>
+                        <p>Conservative majority signaled deep skepticism over Louisiana's second majority-Black district on October 14-15. Questions raised about whether Voting Rights Act's attempts to redress past discrimination can coexist with Equal Protection Clause. Decision could limit minority representation in Congress.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🏳️‍🌈 LGBTQ Rights Under Attack</h4>
+                        <p>October 7 oral arguments show conservative majority prepared to rule against Colorado's conversion therapy ban. Roughly half of US states have banned the discredited practice for minors. Decision could have sweeping implications nationwide.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>⚖️ Nationwide Injunctions Restricted</h4>
+                        <p>6-3 ruling significantly curtailed ability of district courts to issue nationwide injunctions blocking executive orders. Justice Barrett stated universal injunctions not anticipated by founders. Makes challenging presidential actions far more difficult.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🏛️ Unitary Executive Theory</h4>
+                        <p>Court appears to accept unitary executive theory through stays in Trump v. Wilcox, Trump v. Boyle, and Trump v. Slaughter cases. Granted review on whether to overrule Humphrey's Executor precedent limiting presidential removal power.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🌍 Environmental Rollbacks</h4>
+                        <p>Decision grants Trump administration greater leeway for fossil fuel development with less environmental review. Expected to result in less climate-related disclosure in NEPA reviews according to Columbia Law experts.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Executive Overreach (60+ mentions) -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-3">
+                    <div class="card-title">
+                        Executive Overreach (60+ mentions)
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-subtitle">210 executive orders issued; unprecedented pace of agency restructuring and firings</div>
+                </div>
+                <div class="card-content">
+                    <div class="subtopic">
+                        <h4>📜 Executive Order Deluge</h4>
+                        <p>As of October 22, Trump signed 210 executive orders, 54 memoranda, and 103 proclamations. Signed 143 executive orders in first 100 days—more than any president in history. On first day alone, issued 26 executive orders.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🔥 Agency Firings & Restructuring</h4>
+                        <p>October 15 executive order on "Ensuring Continued Accountability in Federal Hiring." September 22 designated Antifa as domestic terrorist organization. October 6-8 memoranda on Arctic security and Illinois federal property protection.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>⚖️ Legal Challenges</h4>
+                        <p>Several orders considered to violate federal laws, regulations, and Constitution. Some blocked in court. Analysis shows orders create "devastating uncertainty" for federal employees and agencies according to Columbia Law Professor Goldberg.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🏢 DOGE Initiative</h4>
+                        <p>White House fact sheet details "deconstruction of unconstitutional administrative state." Department of Government Efficiency founded to eliminate federal programs and reduce bureaucracy. Thousands of civil service positions targeted.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🪖 Military Deployment</h4>
+                        <p>Deployed Marines and National Guard to crack down on protests in Los Angeles. Thousands of Guard members patrolling streets of Washington D.C. Plans to deploy more troops to Chicago and elsewhere violate Posse Comitatus Act principles.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Economic Analysis (55+ mentions) -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-4">
+                    <div class="card-title">
+                        Economic Analysis (55+ mentions)
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-subtitle">Tariffs drive inflation to 3%; consumer costs rising across multiple sectors</div>
+                </div>
+                <div class="card-content">
+                    <div class="subtopic">
+                        <h4>📈 Inflation Impact</h4>
+                        <p>September CPI climbed to 3% annual rate (from 2.9% in August). Tariffs account for 0.5 percentage points of headline PCE inflation June-August period. St. Louis Fed study shows tariffs explain 10.9% of annual inflation.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>💰 Tariff Cost Analysis</h4>
+                        <p>Trump tariffs will cost US businesses additional $1.2 trillion this year. Consumers shouldering $592 billion (roughly two-thirds) of costs through higher prices. Companies passed 35% of tariff costs to consumers May-July; Goldman Sachs projects up to 55% passthrough.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🛒 Product Price Increases</h4>
+                        <p>Biggest price hikes in furniture, car parts, electronics, and musical instruments. Retail coffee prices up 19% year-over-year partly due to tariffs. Average effective tariff rate jumped from 10% to over 23%.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🌍 Global Economic Impact</h4>
+                        <p>IMF World Economic Outlook projects global real GDP growth at 1.4% in Q4 2025, down from 2.1% at year start. J.P. Morgan estimates tariffs could boost PCE prices by 1-1.5% this year with inflationary effects in middle quarters.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>💼 Investment Concerns</h4>
+                        <p>San Francisco Fed estimates across-the-board 25% tariff could increase investment goods prices by 9.5% versus 2.2% for consumption goods. Could have major implications for businesses' investment decisions and domestic production costs.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- International Issues (50+ mentions) -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-4">
+                    <div class="card-title">
+                        International Issues (50+ mentions)
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-subtitle">Gaza ceasefire fragile; Israel killed 93 Palestinians since October 10 truce began</div>
+                </div>
+                <div class="card-content">
+                    <div class="subtopic">
+                        <h4>🕊️ Fragile Ceasefire</h4>
+                        <p>Trump-brokered ceasefire began October 10 following negotiations in Sharm el-Sheikh, Egypt. Based on 20-point proposal requiring Hamas disarmament and removal from governance. Israeli forces to pull back to buffer zones on Gaza edges.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>💔 Ceasefire Violations</h4>
+                        <p>Israel killed at least 93 Palestinians and wounded 230 since ceasefire began. Gaza's media office accuses Israel of 80+ ceasefire violations. October 19 violence threatened to derail agreement with strikes on "dozens of Hamas terror targets."</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🏥 Humanitarian Crisis</h4>
+                        <p>UN says 1.5 million Palestinians need "emergency assistance." Israel reduced aid trucks by half on October 15 and closed Rafah crossing. Aid flows remain far below needed levels despite ceasefire agreement requirements.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🔄 Hostage Exchanges</h4>
+                        <p>20 living Israeli hostages to be released; 28 deceased hostages' remains still held. Israel released nearly 2,000 Palestinian prisoners. Hamas says heavy digging equipment needed to excavate bodies from rubble. 13 dead hostages remain in Gaza.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🌐 Regional Dynamics</h4>
+                        <p>Trump held peace summit in Sharm el-Sheikh with regional leaders. Addressed Israeli parliament with strong support for Israel. Palestinian Authority President Abbas attended summit; Netanyahu declined due to Jewish holidays. Egypt's Sisi reiterated call for independent Palestinian state.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Health Care (45+ mentions) -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-5">
+                    <div class="card-title">
+                        Health Care (45+ mentions)
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-subtitle">ACA premiums poised to skyrocket 30-114%; enhanced tax credits expiring</div>
+                </div>
+                <div class="card-content">
+                    <div class="subtopic">
+                        <h4>💸 Premium Increases</h4>
+                        <p>Average ACA premiums set to spike 30% for 2026 per CMS-approved rates. Without enhanced tax credits extension, premiums could grow by 114% for marketplace enrollees. "Subsidy cliff" returns for households earning above 400% of federal poverty level.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>📉 Coverage Loss Projections</h4>
+                        <p>Nearly 5 million people estimated to become uninsured in 2026 if tax credits expire. Urban Institute projects 7.3 million people will lose ACA coverage, with 4.8 million becoming uninsured. Could lead to 340,000 jobs lost across US.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🏛️ Government Shutdown Impact</h4>
+                        <p>Debate over ACA subsidies at heart of October government shutdown. Democrats demand extension of enhanced premium tax credits before they expire end of 2025. Republicans argue there's time to negotiate later.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>📋 Medicaid Cuts</h4>
+                        <p>"One Big Beautiful Bill Act" includes over $1 trillion in healthcare spending cuts through 2034. Creates new work requirements and administrative conditions for Medicaid eligibility. Center on Budget estimates 15 million more uninsured by 2034.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🩺 Medicare Telehealth Ended</h4>
+                        <p>Pandemic-era Medicare telehealth rule expired October 1, cutting off access for many homebound seniors. Service will remain expired unless Congress includes funding in coming spending bill. Open enrollment begins November 1 amid unprecedented uncertainty.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Constitutional Crises (40+ mentions) -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-6">
+                    <div class="card-title">
+                        Constitutional Crises (40+ mentions)
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-subtitle">Birthright citizenship challenged; 14th Amendment interpretation disputed</div>
+                </div>
+                <div class="card-content">
+                    <div class="subtopic">
+                        <h4>🇺🇸 Birthright Citizenship</h4>
+                        <p>Trump's January 20 executive order effectively limits birthright citizenship to children of citizens or green card holders. Multiple federal district courts declared order unconstitutional. 14th Amendment states "All persons born or naturalized in the United States...are citizens."</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>⚖️ Nationwide Injunction Limits</h4>
+                        <p>Supreme Court's 6-3 decision makes it far more difficult to challenge executive orders nationwide. Justice Barrett wrote that universal injunctions weren't anticipated by founders. Individual district judges can no longer issue broad blocking orders.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🪖 Civil-Military Divide</h4>
+                        <p>Deployment of military forces for civilian law enforcement violates Posse Comitatus Act principles. Marines and National Guard deployed to crack down on protests. Immigration detention centers under construction on military bases.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>📰 First Amendment Threats</h4>
+                        <p>ACLU warns of "new McCarthy era" with government punishing those who disagree. Over 7 million participated in nationwide protests defending First Amendment rights. Two lawmakers ejected from Knesset during Trump speech for calling for Palestinian recognition.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🔨 Impoundment Authority</h4>
+                        <p>Project 2025 author Russell Vought argues president should use illegal "impoundment" practice—withholding congressionally appropriated funds—to defund federal programs and agencies at will.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Political Strategy Analysis (35+ mentions) -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-7">
+                    <div class="card-title">
+                        Political Strategy Analysis (35+ mentions)
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-subtitle">Democratic resistance strategies; redistricting battles intensify</div>
+                </div>
+                <div class="card-content">
+                    <div class="subtopic">
+                        <h4>🗺️ Redistricting Wars</h4>
+                        <p>California Proposition 50 proposes temporary legislative redistricting to counter Trump's partisan gerrymandering efforts. Trump openly expressed purpose of mid-decade redistricting to ensure congressional control. Obama endorsement signals Democratic tactical shift.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🏛️ Legal Coordination</h4>
+                        <p>Democracy 2025 coalition coordinates legal responses across 650+ organizations. Preparing comprehensive challenges to Trump administration policies. Organizations ready to fight in court and court of public opinion from Day One.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🏙️ Sanctuary City Resistance</h4>
+                        <p>Democratic governors and mayors vowing to resist federal immigration enforcement. Testing constitutional limits of federal versus state authority. Sanctuary city policies under intense pressure from administration.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>📊 Public Opinion Dynamics</h4>
+                        <p>Polling shows Trump administration receiving mostly D/F grades in first 100 days. Democracy concerns remain high among independents. Authoritarian Warning Survey shows sharp increase in concern about political violence.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>✊ Grassroots Mobilization</h4>
+                        <p>Over 7 million people participated in "No Kings" protests across 2,700 events nationwide. Protests defend First Amendment rights and opposition to democracy threats. Demonstrating that Americans will not accept attempts to undermine freedoms.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p style="text-align: center; font-weight: bold; color: #1e3c72; margin-bottom: 15px;">
+                📅 Data compiled from major news sources for October 12-25, 2025
+            </p>
+            <p style="text-align: center; margin-bottom: 15px;">
+                🔍 Click on any story card to explore detailed subtopics for investigation
+            </p>
+            <p style="text-align: center; margin-bottom: 25px;">
+                📊 Categories ordered by frequency of mentions in news coverage
+            </p>
+            
+            <h3>📚 Sources Used</h3>
+            
+            <div class="sources-section">
+                <div class="source-category">
+                    <h4>Democracy & Threats:</h4>
+                    <ul>
+                        <li><a href="https://protectdemocracy.org/threat-index/" target="_blank">Protect Democracy - Threat Index</a></li>
+                        <li><a href="https://www.democracy2025.org/" target="_blank">Democracy 2025 Coalition</a></li>
+                        <li><a href="https://www.brookings.edu/articles/threats-to-us-democracy-dangerous-cracks-in-us-democracy-pillars/" target="_blank">Brookings - Democracy Pillars Analysis</a></li>
+                        <li><a href="https://www.brookings.edu/articles/democracy-playbook-2025/" target="_blank">Brookings - Democracy Playbook 2025</a></li>
+                        <li><a href="https://civilrights.org/blog/project-2025-poses-a-serious-threat-to-our-democracy/" target="_blank">Leadership Conference - Project 2025 Analysis</a></li>
+                        <li><a href="https://thefulcrum.us/governance-legislation/trump-democracy-project-2025" target="_blank">The Fulcrum - Project 2025 in Action</a></li>
+                        <li><a href="https://www.aclu.org/news/civil-liberties/how-trumps-attacks-on-democracy-put-the-constitution-at-risk" target="_blank">ACLU - Constitutional Threats Analysis</a></li>
+                    </ul>
+                </div>
+                
+                <div class="source-category">
+                    <h4>Supreme Court & Legal:</h4>
+                    <ul>
+                        <li><a href="https://www.scotusblog.com/2025/10/the-trump-docket/" target="_blank">SCOTUSblog - The Trump Docket</a></li>
+                        <li><a href="https://www.cnn.com/2025/10/07/politics/supreme-court-conversion-therapy-lgbtq-oral-arguments" target="_blank">CNN - Conversion Therapy Case</a></li>
+                        <li><a href="https://www.cnn.com/politics/live-news/supreme-court-voting-rights-act-redistricting-10-15-25" target="_blank">CNN - Voting Rights Act Arguments</a></li>
+                        <li><a href="https://www.cnn.com/2025/10/15/politics/voting-rights-act-supreme-court-takeaways" target="_blank">CNN - VRA Takeaways</a></li>
+                        <li><a href="https://www.law.columbia.edu/news/archive/columbia-law-experts-2025-supreme-court-rulings" target="_blank">Columbia Law - Court Rulings Analysis</a></li>
+                        <li><a href="https://www.washingtonpost.com/politics/interactive/2025/supreme-court-cases-decisions/" target="_blank">Washington Post - Court Decisions Tracker</a></li>
+                        <li><a href="https://www.multistate.us/insider/2025/7/15/supreme-court-2025-five-major-decisions-reshaping-state-policy-nationwide" target="_blank">MultiState - Court Impact Analysis</a></li>
+                    </ul>
+                </div>
+                
+                <div class="source-category">
+                    <h4>Immigration & ICE:</h4>
+                    <ul>
+                        <li><a href="https://www.npr.org/2025/10/23/nx-s1-5538090/ice-detention-custody-immigration-arrest-enforcement-dhs-trump" target="_blank">NPR - ICE Custody Deaths</a></li>
+                        <li><a href="https://www.npr.org/2025/10/19/g-s1-94019/ice-immigration-detention-due-process" target="_blank">NPR - ICE Due Process Concerns</a></li>
+                        <li><a href="https://www.opb.org/article/2025/10/16/immigration-ice-arrests-propublica-white-house-deportation-immigrants-sweep/" target="_blank">ProPublica/OPB - US Citizens Detained</a></li>
+                        <li><a href="https://www.cnn.com/2025/06/16/us/la-ice-raids-violent-criminals-records-invs" target="_blank">CNN - ICE Detention Data Analysis</a></li>
+                        <li><a href="https://www.washingtonpost.com/climate-environment/interactive/2025/ice-detention-extreme-heat/" target="_blank">Washington Post - ICE Heat Conditions</a></li>
+                        <li><a href="https://www.washingtonpost.com/business/2025/10/07/ice-detention-centers-oversight-shutdown/" target="_blank">Washington Post - ICE Oversight Closure</a></li>
+                        <li><a href="https://tracreports.org/immigration/quickfacts/" target="_blank">TRAC - Immigration Detention Data</a></li>
+                    </ul>
+                </div>
+                
+                <div class="source-category">
+                    <h4>Executive Actions:</h4>
+                    <ul>
+                        <li><a href="https://www.federalregister.gov/presidential-documents/executive-orders/donald-trump/2025" target="_blank">Federal Register - 2025 Executive Orders</a></li>
+                        <li><a href="https://www.whitehouse.gov/presidential-actions/" target="_blank">White House - Presidential Actions</a></li>
+                        <li><a href="https://ballotpedia.org/Donald_Trump's_executive_orders_and_actions,_2025" target="_blank">Ballotpedia - Executive Orders Tracker</a></li>
+                        <li><a href="https://en.wikipedia.org/wiki/List_of_executive_orders_in_the_second_Trump_presidency" target="_blank">Wikipedia - Executive Orders List</a></li>
+                    </ul>
+                </div>
+                
+                <div class="source-category">
+                    <h4>Economic & Tariffs:</h4>
+                    <ul>
+                        <li><a href="https://www.stlouisfed.org/on-the-economy/2025/oct/how-tariffs-are-affecting-prices-2025" target="_blank">St. Louis Fed - Tariff Impact Analysis</a></li>
+                        <li><a href="https://www.cbsnews.com/news/inflation-tariffs-trump-prices-consumers/" target="_blank">CBS News - Tariffs and Consumer Prices</a></li>
+                        <li><a href="https://www.cnbc.com/2025/10/24/cpi-inflation-september-2025.html" target="_blank">CNBC - September CPI Report</a></li>
+                        <li><a href="https://www.washingtonpost.com/business/2025/10/24/delayed-inflation-report-tariffs/" target="_blank">Washington Post - Inflation Report</a></li>
+                        <li><a href="https://www.jpmorgan.com/insights/global-research/current-events/us-tariffs" target="_blank">J.P. Morgan - Global Tariff Analysis</a></li>
+                        <li><a href="https://www.imf.org/-/media/Files/Publications/WEO/2025/October/English/text.ashx" target="_blank">IMF - World Economic Outlook October</a></li>
+                        <li><a href="https://www.bostonfed.org/publications/current-policy-perspectives/2025/the-impact-of-tariffs-on-inflation.aspx" target="_blank">Boston Fed - Tariff Inflation Impact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="source-category">
+                    <h4>Gaza & International:</h4>
+                    <ul>
+                        <li><a href="https://www.aljazeera.com/news/2025/10/20/has-the-gaza-ceasefire-been-broken" target="_blank">Al Jazeera - Gaza Ceasefire Status</a></li>
+                        <li><a href="https://www.npr.org/2025/10/19/nx-s1-5579554/israel-and-hamas-accuse-each-other-of-breaching-fragile-ceasefire-in-gaza" target="_blank">NPR - Ceasefire Violations</a></li>
+                        <li><a href="https://www.aljazeera.com/news/liveblog/2025/10/25/live-un-says-1-5m-in-gaza-need-aid-israel-blocks-borders-despite-ceasefir" target="_blank">Al Jazeera - Gaza Live Updates</a></li>
+                        <li><a href="https://abcnews.go.com/International/israel-hamas-ceasefire-gaza-proposed-deal/story?id=126318216" target="_blank">ABC News - Ceasefire Deal Details</a></li>
+                        <li><a href="https://www.npr.org/2025/10/08/g-s1-92558/gaza-ceasefire-israel-hamas" target="_blank">NPR - Ceasefire Agreement</a></li>
+                        <li><a href="https://www.cnn.com/world/live-news/israel-gaza-ceasefire-deal-hostages-10-15-25" target="_blank">CNN - October 15 Gaza News</a></li>
+                        <li><a href="https://www.washingtonpost.com/world/2025/10/09/israel-hamas-gaza-deal-ceasefire-live/" target="_blank">Washington Post - Cabinet Approval</a></li>
+                    </ul>
+                </div>
+                
+                <div class="source-category">
+                    <h4>Health Care:</h4>
+                    <ul>
+                        <li><a href="https://publichealth.jhu.edu/2025/the-changes-coming-to-the-aca-medicaid-and-medicare" target="_blank">Johns Hopkins - ACA/Medicaid Changes</a></li>
+                        <li><a href="https://www.wbur.org/hereandnow/2025/10/21/obamacare-premiums" target="_blank">WBUR - ACA Premiums Analysis</a></li>
+                        <li><a href="https://www.commonwealthfund.org/publications/issue-briefs/2025/oct/expiring-premium-tax-credits-lead-340000-jobs-lost-2026" target="_blank">Commonwealth Fund - Tax Credits Impact</a></li>
+                        <li><a href="https://www.washingtonpost.com/health/2025/10/24/obamacare-premiums-rise-30-percent/" target="_blank">Washington Post - Premium Increases</a></li>
+                        <li><a href="https://www.nbcnews.com/health/health-care/government-shutdown-medicare-medicaid-health-programs-rcna235052" target="_blank">NBC News - Shutdown Health Impact</a></li>
+                        <li><a href="https://www.ama-assn.org/health-care-advocacy/federal-advocacy/changes-medicaid-aca-and-other-key-provisions-one-big" target="_blank">AMA - One Big Beautiful Bill Analysis</a></li>
+                    </ul>
+                </div>
+                
+                <div class="source-category">
+                    <h4>Political Analysis:</h4>
+                    <ul>
+                        <li><a href="https://www.sandiegouniontribune.com/2025/10/10/disagreeing-over-just-what-is-the-real-threat-to-democracy/" target="_blank">San Diego Tribune - Democracy Debate</a></li>
+                        <li><a href="https://www.democracygroup.org/blog/biggest-threats-to-democracy" target="_blank">Democracy Group - Threats Analysis</a></li>
+                        <li><a href="https://democracyfund.org/idea/project-2025-is-a-threat-to-our-democracy-heres-how-funding-accountability-work-can-help/" target="_blank">Democracy Fund - Accountability Work</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <p style="margin-top: 25px; font-style: italic; text-align: center; color: #666; font-size: 0.9rem;">
+                All sources accessed October 12-25, 2025. Links verified at time of compilation.
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function toggleCard(card) {
+            const content = card.querySelector('.card-content');
+            const icon = card.querySelector('.expand-icon');
+            
+            // Close all other cards
+            document.querySelectorAll('.news-card').forEach(otherCard => {
+                if (otherCard !== card) {
+                    otherCard.classList.remove('expanded');
+                    otherCard.querySelector('.card-content').classList.remove('expanded');
+                    otherCard.querySelector('.expand-icon').classList.remove('rotated');
+                }
+            });
+            
+            // Toggle current card
+            card.classList.toggle('expanded');
+            content.classList.toggle('expanded');
+            icon.classList.toggle('rotated');
+        }
+
+        // Add smooth animations on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.news-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    card.style.transition = 'all 0.5s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>
