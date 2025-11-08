@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trending for Oct 26 to Nov 8</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .news-section {
+            padding: 30px;
+        }
+
+        .news-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            overflow: hidden;
+            border: 2px solid transparent;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .news-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+            border-color: #667eea;
+        }
+
+        .news-card.expanded {
+            transform: none;
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .card-header {
+            color: white;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            transform: rotate(45deg);
+        }
+
+        .card-header.level-1 { background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%); }
+        .card-header.level-2 { background: linear-gradient(135deg, #ff4444 0%, #dd2222 100%); }
+        .card-header.level-3 { background: linear-gradient(135deg, #ff8888 0%, #ff5555 100%); }
+        .card-header.level-4 { background: linear-gradient(135deg, #ffaa88 0%, #ff7755 100%); }
+        .card-header.level-5 { background: linear-gradient(135deg, #88aaff 0%, #5577ff 100%); }
+        .card-header.level-6 { background: linear-gradient(135deg, #4488ff 0%, #2255ff 100%); }
+        .card-header.level-7 { background: linear-gradient(135deg, #0044ff 0%, #0022cc 100%); }
+        .card-header.level-8 { background: linear-gradient(135deg, #0022cc 0%, #001188 100%); }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-content {
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.4s ease-in-out;
+        }
+
+        .card-content.expanded {
+            max-height: 2000px;
+            padding: 20px;
+        }
+
+        .subtopic {
+            background: #f0f2ff;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .subtopic:hover {
+            background: #e8ebff;
+            transform: translateX(5px);
+        }
+
+        .subtopic h4 {
+            color: #1e3c72;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+
+        .subtopic p {
+            color: #666;
+            line-height: 1.5;
+            font-size: 0.95rem;
+        }
+
+        .expand-icon {
+            float: right;
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .expand-icon.rotated {
+            transform: rotate(180deg);
+        }
+
+        .footer {
+            background: linear-gradient(135deg, #f8f9ff 0%, #e8ebff 100%);
+            padding: 30px;
+            border-top: 2px solid #667eea;
+        }
+
+        .footer p {
+            color: #1e3c72;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .sources {
+            margin-top: 25px;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .sources h3 {
+            color: #1e3c72;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .sources p {
+            color: #333;
+            font-weight: 600;
+            margin-top: 15px;
+            margin-bottom: 8px;
+            text-align: left;
+        }
+
+        .sources ul {
+            list-style-position: inside;
+            margin-left: 10px;
+        }
+
+        .sources li {
+            color: #666;
+            margin-bottom: 6px;
+            line-height: 1.5;
+        }
+
+        .sources a {
+            color: #667eea;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .sources a:hover {
+            color: #1e3c72;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📰 Trending for Oct 26 to Nov 8</h1>
+            <p>Major news categories and developments</p>
+        </div>
+
+        <div class="news-section">
+            <!-- Trump Administration Litigation (60+ mentions) -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-1">
+                    <div class="card-title">
+                        Trump Administration Litigation (60+ mentions)
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-subtitle">Extensive legal challenges across multiple fronts</div>
+                </div>
+                <div class="card-content">
+                    <div class="subtopic">
+                        <h4>⚖️ Tariff Lawsuits at Supreme Court</h4>
+                        <p>Supreme Court hearing arguments on Trump's tariff policies with justices appearing skeptical of presidential authority to impose sweeping emergency tariffs under IEEPA.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>📋 186 Legal Actions Filed</h4>
+                        <p>Over 186 lawsuits filed against Trump administration since January 2025, far exceeding previous administrations' first 100 days. Only four cases fully adjudicated with mixed results.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>💰 Trump's $230M Claim Against DOJ</h4>
+                        <p>Trump demanding $230 million compensation from DOJ for Russia investigation and Mar-a-Lago search, raising concerns about self-dealing as sitting president.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>📚 Education Policy Challenges</h4>
+                        <p>68 lawsuits challenging Trump education policies including book bans, DEI restrictions, and Department of Education dismantling efforts.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🏛️ Federal Worker Protections</h4>
+                        <p>AFGE and unions filing multiple lawsuits against Schedule F reinstatement, mass layoffs, and threats to federal workforce during government shutdown.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Immigration & Detention (55+ mentions) -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-1">
+                    <div class="card-title">
+                        Immigration & Detention (55+ mentions)
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-subtitle">Mass detention expansion and deportation operations</div>
+                </div>
+                <div class="card-content">
+                    <div class="subtopic">
+                        <h4>🚨 Laken Riley Act Signed</h4>
+                        <p>Trump's first legislative victory mandates detention and deportation of undocumented immigrants for minor crimes like shoplifting, allowing states to sue federal government.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🏕️ Detention Infrastructure Expansion</h4>
+                        <p>Executive orders directing massive expansion of detention capacity, with plans to detain all arrested individuals pending deportation proceedings. Concerns over use of military facilities and Guantanamo for detention.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>⚡ Expedited Removal Expansion</h4>
+                        <p>Administration expanding expedited removal to maximum extent, allowing rapid deportations without immigration judge hearings for those unable to prove two years of continuous presence.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🛑 Humanitarian Parole Programs Ended</h4>
+                        <p>Supreme Court allowed termination of CHNV parole programs affecting 500,000+ people. Ukraine parole program suspended, leaving 150,000+ Ukrainians vulnerable.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>💼 Work Authorization Changes</h4>
+                        <p>EAD renewal applications after Oct 30 no longer receive automatic extensions, creating gaps in work authorization for thousands during long processing times.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Economic Analysis (50+ mentions) -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-2">
+                    <div class="card-title">
+                        Economic Analysis (50+ mentions)
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-subtitle">Tariff impacts and recession warnings</div>
+                </div>
+                <div class="card-content">
+                    <div class="subtopic">
+                        <h4>📊 Tariff Rate Surge</h4>
+                        <p>Effective tariff rate increased from 2.4% to over 17% by end of October, representing nine-fold increase. Treasury collecting four times more tariff revenue but at steep economic cost.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>📉 Economic Growth Slowdown</h4>
+                        <p>OECD forecasting U.S. GDP growth to fall from 2.8% in 2024 to just 1.6% in 2025 due to rising trade costs. Penn Wharton projects long-run GDP reduction of 6-8%.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>💸 Consumer Impact</h4>
+                        <p>Middle-income households facing lifetime losses of $22K-$58K from tariffs. Prices rising on apparel, furniture, and goods heavily reliant on imports. Manufacturing employment down 40,000+ jobs since April.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🏭 Business Uncertainty</h4>
+                        <p>Economic Policy Uncertainty Index at highest level since December 2020. Federal Reserve lowering interest rates despite above-target inflation due to economic concerns.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🌍 Global Recession Risks</h4>
+                        <p>J.P. Morgan calling for U.S. recession, with global GDP growth expected to fall to 1.4% in Q4 2025. Canada and Mexico already facing recession projections.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Health Care (45+ mentions) -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-3">
+                    <div class="card-title">
+                        Health Care (45+ mentions)
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-subtitle">Medicaid cuts and ACA subsidy expiration</div>
+                </div>
+                <div class="card-content">
+                    <div class="subtopic">
+                        <h4>💊 One Big Beautiful Bill Impact</h4>
+                        <p>Trump signing $1 trillion health care cuts into law on July 4, expected to cause 15-17 million Americans to lose health insurance over next decade.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🏥 Hospital Closures Accelerating</h4>
+                        <p>Emergency rooms, clinics, and rural hospitals shutting down citing uninsured patients and declining government payments. Maine Family Planning closed three primary care practices. Texas hospital board closed two emergency rooms.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>📈 Premium Costs Doubling</h4>
+                        <p>Enhanced ACA subsidies expiring end of 2025, causing premiums to spike 114% on average. California's 400,000 and Colorado's 75,000 residents expected to lose coverage.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>⚕️ Medicaid Work Requirements</h4>
+                        <p>New community engagement mandates requiring 80 hours monthly of work, service, or study starting December 2026. Eligibility checks increased to every six months instead of annually.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🚑 Government Shutdown Effects</h4>
+                        <p>Shutdown fight centered on ACA subsidies and Medicaid cuts. SNAP benefits paused by Supreme Court ruling, affecting tens of millions. Telehealth services ended for Medicare patients.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Conservative Court Impact (40+ mentions) -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-3">
+                    <div class="card-title">
+                        Conservative Court Impact (40+ mentions)
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-subtitle">6-3 conservative majority reshaping policy</div>
+                </div>
+                <div class="card-content">
+                    <div class="subtopic">
+                        <h4>🏳️‍⚧️ Transgender Rights Restrictions</h4>
+                        <p>Supreme Court allowing Trump passport policy restricting sex designations, blocking state bans on gender-affirming care for minors. Court ruling transgender people not automatically suspect class.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>📚 Parental Rights Expansion</h4>
+                        <p>Court ruling 6-3 that parents must receive advance notice and opt-out rights for LGBTQ+ curriculum in public schools, citing religious upbringing rights.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>⚖️ Nationwide Injunction Limits</h4>
+                        <p>Supreme Court significantly restricting district courts' ability to issue nationwide injunctions, requiring judges to limit relief to actual parties unless necessary for "complete relief."</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>💰 Medicaid Enforcement Restricted</h4>
+                        <p>Court blocking individual Medicaid patients' right to sue for care enforcement, determining duty rests with elected representatives rather than private actions.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🏛️ Presidential Firing Powers</h4>
+                        <p>Court rulings on Trump's authority to fire agency heads creating uncertainty for federal employees and agency operations.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ukraine (38+ mentions) -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-4">
+                    <div class="card-title">
+                        Ukraine (38+ mentions)
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-subtitle">Peace talks stalled, Trump pressuring ceasefire</div>
+                </div>
+                <div class="card-content">
+                    <div class="subtopic">
+                        <h4>🤝 Trump-Putin Talks Collapse</h4>
+                        <p>Planned meeting in Budapest canceled after Putin maintains maximalist demands for complete Donbas control and Ukrainian disarmament. Trump growing frustrated after 10 months without progress.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🚫 Tomahawk Missiles Denied</h4>
+                        <p>Trump refusing Zelenskyy's request for long-range Tomahawk missiles during Oct 17 White House meeting, citing need to preserve U.S. stockpiles for national security.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🛑 "Freeze Where You Are"</h4>
+                        <p>Trump calling for Russia and Ukraine to stop at current battle lines, allowing Russia to keep 78% of occupied territory in Donbas region. Shift from earlier position supporting Ukrainian territorial recovery.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>💰 New Sanctions on Russian Oil</h4>
+                        <p>Administration announcing "massive sanctions" on Rosneft and Lukoil on Oct 23, attempting to pressure Putin to negotiating table after months of failed diplomacy.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🇪🇺 European Concerns Growing</h4>
+                        <p>NATO allies worried about U.S. stepping back from European security commitments. Europe taking greater responsibility for Ukraine aid as U.S. reduces direct support.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Threat to Democracy (35+ mentions) -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-4">
+                    <div class="card-title">
+                        Threat to Democracy (35+ mentions)
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-subtitle">Project 2025 implementation and protests</div>
+                </div>
+                <div class="card-content">
+                    <div class="subtopic">
+                        <h4>📋 Project 2025 Nearly Half Implemented</h4>
+                        <p>Within first six months, nearly 50% of Project 2025's hundreds of proposals implemented according to Fulcrum analysis. Heritage Foundation authors now holding key administration positions.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🗣️ Senator Merkley's Alarm</h4>
+                        <p>Oregon Senator Jeff Merkley speaking for 3+ hours on Senate floor Oct 21, warning of "most perilous moment" since Civil War, citing Trump "shredding Constitution."</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>📢 Mass Protests in D.C.</h4>
+                        <p>Thousands rallying on National Mall Nov 5, one year after Trump's reelection, warning of fascism threat. Protesters chanting "Stop Trump, now!" across downtown Washington.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🌎 International Concerns</h4>
+                        <p>Former Canadian PM Jean Chrétien warning Trump "does not care much about rule of law" and threatens democracy. Similar warnings from international leaders.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>⚠️ Emergency Powers Abuse</h4>
+                        <p>Critics comparing Trump's use of emergency declarations to Venezuelan democratic backsliding. Military deployed for immigration enforcement raising constitutional concerns.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Executive Overreach (28+ mentions) -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-5">
+                    <div class="card-title">
+                        Executive Overreach (28+ mentions)
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-subtitle">210+ executive orders and emergency declarations</div>
+                </div>
+                <div class="card-content">
+                    <div class="subtopic">
+                        <h4>📝 Executive Order Surge</h4>
+                        <p>Trump signing 210 executive orders, 54 memoranda, and 104 proclamations through October 28, 2025, dramatically exceeding typical presidential pace.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🚨 IEEPA Tariff Authority</h4>
+                        <p>Unprecedented use of International Emergency Economic Powers Act to impose tariffs, with multiple courts ruling Trump exceeded his authority. Supreme Court hearing challenge Nov 5.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🛂 Birthright Citizenship Ban</h4>
+                        <p>Executive order ending automatic citizenship for children of undocumented immigrants, sparking immediate constitutional challenges in multiple federal courts.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>💼 Schedule F Reinstatement</h4>
+                        <p>Executive order threatening to reclassify tens of thousands of federal employees into at-will positions, bypassing civil service protections.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🔄 Federal Agency Dismantling</h4>
+                        <p>Orders targeting Department of Education and other agencies for elimination or massive restructuring, raising separation of powers concerns.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Political Strategy Analysis (25+ mentions) -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-6">
+                    <div class="card-title">
+                        Political Strategy Analysis (25+ mentions)
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-subtitle">2026 midterm positioning and resistance coordination</div>
+                </div>
+                <div class="card-content">
+                    <div class="subtopic">
+                        <h4>🗳️ Health Care Cuts Backloaded</h4>
+                        <p>Republicans strategically delaying most severe Medicaid and ACA impacts until after 2026 midterms. Real effects of $1 trillion cuts won't be fully felt for years.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>📢 Democratic Messaging Challenge</h4>
+                        <p>Democrats launching ad campaigns in swing states about health care cuts, but struggling with gradual rollout making immediate impacts less visible to voters.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🏛️ State-Level Resistance</h4>
+                        <p>Democratic governors and state AGs filing numerous lawsuits. Massachusetts AG alone filed 11 cases challenging birthright citizenship, federal worker firings, and other policies.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🤝 Progressive Coalition Building</h4>
+                        <p>Over 650 organizations coordinating legal challenges and grassroots resistance. Democracy 2025 coalition preparing comprehensive response strategies.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>📊 Public Opinion Dynamics</h4>
+                        <p>Consumer confidence and business sentiment declining sharply. Economic uncertainty and policy chaos potentially reshaping 2026 electoral landscape.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Constitutional Crises (20+ mentions) -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-7">
+                    <div class="card-title">
+                        Constitutional Crises (20+ mentions)
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-subtitle">Separation of powers and rule of law concerns</div>
+                </div>
+                <div class="card-content">
+                    <div class="subtopic">
+                        <h4>⚖️ Judicial Independence Threats</h4>
+                        <p>Trump's attempts to influence court decisions and attacks on judges raising concerns about judicial branch independence. Demands for DOJ settlements creating conflicts of interest.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🏛️ Congressional Authority Bypass</h4>
+                        <p>Use of emergency powers and executive orders to implement policies without congressional approval. Tariffs, immigration enforcement, and agency restructuring done unilaterally.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>📋 Government Shutdown Politics</h4>
+                        <p>Shutdown beginning Oct 1 over health care policy disputes. Trump threatening permanent federal job cuts during crisis, potentially reshaping government structure.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🗳️ Election Integrity Concerns</h4>
+                        <p>Executive orders targeting voter registration and election administration. Critics warning of attempts to undermine election infrastructure ahead of 2026 midterms.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>⚠️ Norm Erosion</h4>
+                        <p>Rapid abandonment of traditional governmental norms and processes. Attacks on career civil servants, politicization of DOJ, and concentration of executive power.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>📅 Data compiled from major news sources for October 26 - November 8, 2025</p>
+            <p>🔍 Click on any story card to explore detailed subtopics</p>
+            <p>📊 Categories ordered by frequency of mentions in news coverage</p>
+            
+            <div class="sources">
+                <h3>📚 Sources Used</h3>
+                
+                <p><strong>Democracy & Threats:</strong></p>
+                <ul>
+                    <li><a href="https://thefulcrum.us/governance-legislation/trump-democracy-project-2025" target="_blank">The Fulcrum - Project 2025 in Action</a></li>
+                    <li><a href="https://www.cnn.com/politics/live-news/trump-government-shutdown-news-10-21-25" target="_blank">CNN - Government Shutdown Live Coverage</a></li>
+                    <li><a href="https://www.wusa9.com/article/news/politics/thousands-rally-in-dc-to-protest-trump-warn-fascism/" target="_blank">WUSA9 - D.C. Rally Against Trump</a></li>
+                    <li><a href="https://www.cbc.ca/news/politics/jean-chretien-trump-threat-to-democracy-9.6933230" target="_blank">CBC - Chrétien on Trump Threat</a></li>
+                    <li><a href="https://americanoversight.org/newsletter/newsletter-a-second-trump-administration-and-the-threat-to-our-democracy/" target="_blank">American Oversight - Democracy Newsletter</a></li>
+                </ul>
+                
+                <p><strong>Supreme Court & Legal:</strong></p>
+                <ul>
+                    <li><a href="https://www.scotusblog.com/2025/11/court-appears-dubious-of-trumps-tariffs/" target="_blank">SCOTUSblog - Tariff Case Arguments</a></li>
+                    <li><a href="https://www.scotusblog.com/2025/11/supreme-court-sides-with-trump-administration-on-sex-designations-on-passports/" target="_blank">SCOTUSblog - Passport Policy</a></li>
+                    <li><a href="https://www.cnn.com/2025/11/07/politics/trump-administration-supreme-court-snap-benefits" target="_blank">CNN - SNAP Benefits Ruling</a></li>
+                    <li><a href="https://www.law.columbia.edu/news/archive/columbia-law-experts-2025-supreme-court-rulings" target="_blank">Columbia Law - Expert Analysis</a></li>
+                    <li><a href="https://www.washingtonpost.com/politics/interactive/2025/supreme-court-cases-decisions/" target="_blank">Washington Post - Court Decisions Tracker</a></li>
+                </ul>
+                
+                <p><strong>Immigration & Detention:</strong></p>
+                <ul>
+                    <li><a href="https://usahello.org/2025-immigration-policies/" target="_blank">USA Hello - 2025 Immigration Changes</a></li>
+                    <li><a href="https://www.whitehouse.gov/presidential-actions/2025/01/protecting-the-american-people-against-invasion/" target="_blank">White House - Immigration Executive Order</a></li>
+                    <li><a href="https://www.vera.org/explainers/trumps-week-one-orders-on-immigration-law-explained" target="_blank">Vera Institute - Immigration Orders Explained</a></li>
+                    <li><a href="https://www.nafsa.org/executive-and-regulatory-actions-trump2admin" target="_blank">NAFSA - Executive Actions Tracker</a></li>
+                    <li><a href="https://www.detentionwatchnetwork.org/pressroom/releases/2025/detention-watch-network-denounces-trump-s-ruthless-executive-orders-will" target="_blank">Detention Watch Network - Response</a></li>
+                </ul>
+                
+                <p><strong>Economic Analysis:</strong></p>
+                <ul>
+                    <li><a href="https://www.cbpp.org/blog/a-weakening-economy-and-a-drastically-cut-economic-support-system" target="_blank">Center on Budget and Policy Priorities - Economic Assessment</a></li>
+                    <li><a href="https://budgetmodel.wharton.upenn.edu/issues/2025/4/10/economic-effects-of-president-trumps-tariffs" target="_blank">Penn Wharton - Tariff Economic Effects</a></li>
+                    <li><a href="https://www.npr.org/2025/11/05/nx-s1-5596488/tariffs-trump-economy-inflation" target="_blank">NPR - Tariffs Raising Billions at Steep Cost</a></li>
+                    <li><a href="https://time.com/7290808/trump-tariffs-oecd-economic-forecast/" target="_blank">Time - OECD Economic Forecast</a></li>
+                    <li><a href="https://www.jpmorgan.com/insights/global-research/current-events/us-tariffs" target="_blank">J.P. Morgan - Tariffs Impact Analysis</a></li>
+                </ul>
+                
+                <p><strong>Ukraine & Foreign Policy:</strong></p>
+                <ul>
+                    <li><a href="https://www.npr.org/2025/10/23/nx-s1-5583519/trump-sanctions-russia-oil-ukraine" target="_blank">NPR - Trump Levies Russia Sanctions</a></li>
+                    <li><a href="https://www.npr.org/2025/10/18/nx-s1-5578871/zelenskyy-meeting-trump-ukraine-russia-war" target="_blank">NPR - Trump-Zelenskyy White House Meeting</a></li>
+                    <li><a href="https://www.euronews.com/2025/10/20/trump-says-he-doesnt-think-ukraine-can-win-war-against-russia-but-adds-anything-is-possibl" target="_blank">Euronews - Trump on Ukraine Winning</a></li>
+                    <li><a href="https://www.aljazeera.com/news/2025/10/22/why-planned-trump-putin-talks-collapsed-and-what-it-means-for-ukraine" target="_blank">Al Jazeera - Trump-Putin Talks Collapse</a></li>
+                    <li><a href="https://www.csis.org/analysis/what-could-trump-peace-plan-ukraine-look" target="_blank">CSIS - Trump Peace Plan Analysis</a></li>
+                </ul>
+                
+                <p><strong>Health Care:</strong></p>
+                <ul>
+                    <li><a href="https://www.finance.senate.gov/ranking-members-news/trumpcare-is-gutting-americans-health-care" target="_blank">Senate Finance Committee - Trumpcare Impact Report</a></li>
+                    <li><a href="https://www.americanprogress.org/article/when-do-the-one-big-beautiful-bill-acts-health-care-provisions-go-into-effect/" target="_blank">Center for American Progress - OBBBA Timeline</a></li>
+                    <li><a href="https://www.axios.com/2025/07/07/medicaid-impacts-tax-bill-delayed" target="_blank">Axios - Health Effects Timeline</a></li>
+                    <li><a href="https://www.nbcnews.com/health/health-care/government-shutdown-medicare-medicaid-health-programs-rcna235052" target="_blank">NBC News - Shutdown Impact on Health Programs</a></li>
+                    <li><a href="https://medicareadvocacy.org/impact-of-the-big-bill-on-medicare/" target="_blank">Center for Medicare Advocacy - Medicare Impact</a></li>
+                </ul>
+                
+                <p><strong>Litigation & Legal Challenges:</strong></p>
+                <ul>
+                    <li><a href="https://www.justsecurity.org/107087/tracker-litigation-legal-challenges-trump-administration/" target="_blank">Just Security - Litigation Tracker</a></li>
+                    <li><a href="https://www.lawfaremedia.org/projects-series/trials-of-the-trump-administration/tracking-trump-administration-litigation" target="_blank">Lawfare - Trump Administration Litigation</a></li>
+                    <li><a href="https://www.cnbc.com/2025/10/21/trump-doj-settlement-election-classified-documents.html" target="_blank">CNBC - Trump's $230M DOJ Claim</a></li>
+                    <li><a href="https://www.brookings.edu/articles/tracking-lawsuits-challenging-the-trump-administrations-k-12-education-agenda/" target="_blank">Brookings - Education Litigation Tracker</a></li>
+                    <li><a href="https://www.afge.org/article/summary-of-afge-lawsuits-against-trump--how-litigation-works-2/" target="_blank">AFGE - Federal Worker Lawsuits</a></li>
+                </ul>
+                
+                <p style="margin-top: 15px; font-style: italic; text-align: center; color: #666;">
+                    All sources accessed October 26 - November 8, 2025. Links verified at time of compilation.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleCard(card) {
+            const content = card.querySelector('.card-content');
+            const icon = card.querySelector('.expand-icon');
+            
+            // Close all other cards
+            document.querySelectorAll('.news-card').forEach(otherCard => {
+                if (otherCard !== card) {
+                    otherCard.classList.remove('expanded');
+                    otherCard.querySelector('.card-content').classList.remove('expanded');
+                    otherCard.querySelector('.expand-icon').classList.remove('rotated');
+                }
+            });
+            
+            // Toggle current card
+            card.classList.toggle('expanded');
+            content.classList.toggle('expanded');
+            icon.classList.toggle('rotated');
+        }
+
+        // Add smooth animations on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.news-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    card.style.transition = 'all 0.5s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>
