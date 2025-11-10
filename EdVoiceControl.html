@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<!-- saved from url=(0070)https://jhnday.github.io/AI-Research-Collective/zoom_voice_control_viz -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ed - Voice Control System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .header h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header .subtitle {
+            color: #7f8c8d;
+            font-size: 1.2em;
+        }
+
+        .modes-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .mode-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .mode-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: var(--accent-color);
+        }
+
+        .mode-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .listening-mode {
+            --accent-color: #e74c3c;
+        }
+
+        .selective-mode {
+            --accent-color: #f39c12;
+        }
+
+        .conversation-mode {
+            --accent-color: #27ae60;
+        }
+
+        .mode-title {
+            font-size: 1.8em;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .mode-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .listening-mode .mode-icon {
+            background: #e74c3c;
+        }
+
+        .selective-mode .mode-icon {
+            background: #f39c12;
+        }
+
+        .conversation-mode .mode-icon {
+            background: #27ae60;
+        }
+
+        .mode-description {
+            margin-bottom: 20px;
+            font-size: 1.1em;
+            color: #555;
+        }
+
+        .behavior-list {
+            list-style: none;
+        }
+
+        .behavior-list li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+            color: #444;
+        }
+
+        .behavior-list li::before {
+            content: '•';
+            color: var(--accent-color);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+            font-size: 1.2em;
+        }
+
+        .trigger-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .trigger-section h2 {
+            color: #2c3e50;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .triggers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .trigger-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            border-left: 5px solid #3498db;
+            transition: all 0.3s ease;
+        }
+
+        .trigger-card:hover {
+            background: #e9ecef;
+            transform: translateX(5px);
+        }
+
+        .trigger-phrase {
+            font-size: 1.4em;
+            font-weight: 700;
+            color: #2980b9;
+            margin-bottom: 10px;
+        }
+
+        .trigger-action {
+            color: #555;
+            font-style: italic;
+        }
+
+        .flow-diagram {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .flow-diagram h2 {
+            color: #2c3e50;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .flow-chart {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .flow-node {
+            background: #3498db;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 25px;
+            font-weight: 600;
+            text-align: center;
+            min-width: 150px;
+            position: relative;
+        }
+
+        .flow-node.default {
+            background: #e74c3c;
+        }
+
+        .flow-node.selective {
+            background: #f39c12;
+        }
+
+        .flow-node.conversation {
+            background: #27ae60;
+        }
+
+        .arrow {
+            font-size: 2em;
+            color: #7f8c8d;
+        }
+
+        .rules-section {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .rules-section h2 {
+            color: #e74c3c;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .critical-rule {
+            background: #fef9e7;
+            border: 2px solid #f39c12;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .critical-rule h3 {
+            color: #d68910;
+            margin-bottom: 10px;
+        }
+
+
+        @media (max-width: 768px) {
+            .modes-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .triggers-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .flow-chart {
+                flex-direction: column;
+            }
+            
+            .arrow {
+                transform: rotate(90deg);
+            }
+
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🤖 ED - AI Voice Control System</h1>
+            <div class="subtitle">ChatGPT Voice Control for Zoom Meetings</div>
+        </div>
+
+        <div class="trigger-section">
+            <h2>🎯 Trigger Phrases (Must be EXACT)</h2>
+            <div class="triggers-grid">
+                <div class="trigger-card">
+                    <div class="trigger-phrase">"Hey Ed"</div>
+                    <div class="trigger-action">→ Respond to ONE request, then return to listening</div>
+                </div>
+                <div class="trigger-card">
+                    <div class="trigger-phrase">"Let's Talk Ed"</div>
+                    <div class="trigger-action">→ Enter Full Conversation Mode</div>
+                </div>
+                <div class="trigger-card">
+                    <div class="trigger-phrase">"Just Listen Ed"</div>
+                    <div class="trigger-action">→ Return to Listening Mode (silent)</div>
+                </div>
+                <div class="trigger-card">
+                    <div class="trigger-phrase">"Ed Reset"</div>
+                    <div class="trigger-action">→ Emergency reset to Listening Mode</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modes-container">
+            <div class="mode-card listening-mode">
+                <div class="mode-title">
+                    <span class="mode-icon">🔴</span>
+                    LISTENING MODE
+                </div>
+                <div class="mode-description"><strong>DEFAULT MODE:</strong> Completely silent observer</div>
+                <ul class="behavior-list">
+                    <li>STAY COMPLETELY SILENT</li>
+                    <li>Do NOT respond to name mentions</li>
+                    <li>Do NOT respond to questions</li>
+                    <li>Do NOT provide commentary</li>
+                    <li>ONLY respond to exact trigger phrases</li>
+                    <li>Observe and listen passively</li>
+                </ul>
+            </div>
+
+            <div class="mode-card selective-mode">
+                <div class="mode-title">
+                    <span class="mode-icon">🟡</span>
+                    SELECTIVE MODE
+                </div>
+                <div class="mode-description"><strong>After "Hey Ed":</strong> One response only</div>
+                <ul class="behavior-list">
+                    <li>Respond to the immediate request</li>
+                    <li>Say "Returning to listening mode"</li>
+                    <li>Immediately go back to LISTENING MODE</li>
+                    <li>Do not continue conversation</li>
+                    <li>Single interaction only</li>
+                </ul>
+            </div>
+
+            <div class="mode-card conversation-mode">
+                <div class="mode-title">
+                    <span class="mode-icon">🟢</span>
+                    CONVERSATION MODE
+                </div>
+                <div class="mode-description"><strong>After "Let's Talk Ed":</strong> Full participation</div>
+                <ul class="behavior-list">
+                    <li>Respond to all questions and comments</li>
+                    <li>Participate actively in discussions</li>
+                    <li>Stay engaged until mode change</li>
+                    <li>Natural conversation flow</li>
+                    <li>Only exit with "Just Listen" or "Reset"</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="flow-diagram">
+            <h2>🔄 Mode Flow Diagram</h2>
+            <div class="flow-chart">
+                <div class="flow-node default">LISTENING MODE<br><small>(Default/Start)</small></div>
+                <div class="arrow">→</div>
+                <div class="flow-node selective">SELECTIVE MODE<br><small>"Hey Ed"</small></div>
+                <div class="arrow">→</div>
+                <div class="flow-node default">LISTENING MODE<br><small>(Auto Return)</small></div>
+            </div>
+            <br>
+            <div class="flow-chart">
+                <div class="flow-node default">LISTENING MODE</div>
+                <div class="arrow">→</div>
+                <div class="flow-node conversation">CONVERSATION MODE<br><small>"Let's Talk Ed"</small></div>
+                <div class="arrow">→</div>
+                <div class="flow-node default">LISTENING MODE<br><small>"Just Listen" / "Reset"</small></div>
+            </div>
+        </div>
+
+        <div class="rules-section">
+            <h2>⚠️ Critical Rules</h2>
+            
+            <div class="critical-rule">
+                <h3>Before Responding - Always Check:</h3>
+                <ol>
+                    <li>What is my current mode?</li>
+                    <li>Does this input match my mode's response rules?</li>
+                    <li>If in Listening Mode → STAY SILENT (except exact triggers)</li>
+                </ol>
+            </div>
+
+            <div class="critical-rule">
+                <h3>Error Recovery:</h3>
+                <ul>
+                    <li>If accidentally respond in Listening Mode: Say "Sorry, returning to listening mode" then go silent</li>
+                    <li>If unsure about command: Default to Listening Mode</li>
+                    <li>Better to miss a response than break listening mode incorrectly</li>
+                </ul>
+            </div>
+
+            <div class="critical-rule">
+                <h3>Mode Switch Protocol:</h3>
+                <ol>
+                    <li>Immediately acknowledge mode change</li>
+                    <li>Say EXACTLY: "Switching to [MODE NAME] mode"</li>
+                    <li>Follow that mode strictly</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+</body></html>
