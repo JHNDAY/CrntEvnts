@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trending from Nov 3 to Nov 17</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .news-section {
+            padding: 30px;
+        }
+
+        .news-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            overflow: hidden;
+            border: 2px solid transparent;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .news-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+            border-color: #667eea;
+        }
+
+        .news-card.expanded {
+            transform: none;
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .card-header {
+            color: white;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            transform: rotate(45deg);
+        }
+
+        .card-header.level-1 { background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%); }
+        .card-header.level-2 { background: linear-gradient(135deg, #ff4444 0%, #dd2222 100%); }
+        .card-header.level-3 { background: linear-gradient(135deg, #ff8888 0%, #ff5555 100%); }
+        .card-header.level-4 { background: linear-gradient(135deg, #ffaa88 0%, #ff7755 100%); }
+        .card-header.level-5 { background: linear-gradient(135deg, #88aaff 0%, #5577ff 100%); }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-content {
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.4s ease-in-out;
+        }
+
+        .card-content.expanded {
+            max-height: 2000px;
+            padding: 20px;
+        }
+
+        .expand-icon {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5rem;
+            transition: transform 0.3s ease;
+            z-index: 2;
+        }
+
+        .expand-icon.rotated {
+            transform: translateY(-50%) rotate(180deg);
+        }
+
+        .subtopic {
+            margin: 10px 0;
+            padding: 12px;
+            background: white;
+            border-left: 3px solid #667eea;
+            border-radius: 5px;
+        }
+
+        .subtopic-title {
+            font-weight: 600;
+            color: #1e3c72;
+            margin-bottom: 5px;
+        }
+
+        .subtopic-description {
+            font-size: 0.9rem;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        ul {
+            margin: 15px 0;
+            padding-left: 20px;
+        }
+
+        li {
+            margin: 8px 0;
+            line-height: 1.6;
+        }
+
+        a {
+            color: #2a5298;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        a:hover {
+            color: #667eea;
+            text-decoration: underline;
+        }
+
+        .sources-header {
+            font-weight: 600;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            color: #1e3c72;
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Trending from Nov 3 to Nov 17</h1>
+        </div>
+
+        <div class="news-section">
+            <!-- Card 1: Trump Tariffs (42 mentions) -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-1">
+                    <div class="card-title">Trump Tariffs (42 mentions)</div>
+                    <div class="card-subtitle">Economic policy, Supreme Court challenges, and global trade impacts</div>
+                    <div class="expand-icon">▼</div>
+                </div>
+                <div class="card-content">
+                    <div class="subtopic">
+                        <div class="subtopic-title">Supreme Court Legal Challenges</div>
+                        <div class="subtopic-description">Supreme Court heard oral arguments on November 5 regarding Trump's use of the International Emergency Economic Powers Act (IEEPA) to impose tariffs. Justices from both conservative and liberal wings expressed skepticism about the administration's legal authority, questioning whether Congress intended to grant the president such broad taxation powers.</div>
+                    </div>
+
+                    <div class="subtopic">
+                        <div class="subtopic-title">Tariff Rollbacks and Food Prices</div>
+                        <div class="subtopic-description">On November 14-15, Trump signed executive orders removing tariffs on beef, coffee, bananas, cocoa, tomatoes, spices, and other agricultural products in response to rising food prices and political pressure. This marked the most significant tariff backtrack of his administration.</div>
+                    </div>
+
+                    <div class="subtopic">
+                        <div class="subtopic-title">$2,000 Rebate Proposal</div>
+                        <div class="subtopic-description">Trump floated the idea of issuing $2,000 "tariff dividends" to middle and lower-income Americans using tariff revenue. Treasury Secretary Scott Bessent indicated this would require Congressional approval, and budget experts noted the plan would cost far more than tariff revenues generate.</div>
+                    </div>
+
+                    <div class="subtopic">
+                        <div class="subtopic-title">Economic Impact</div>
+                        <div class="subtopic-description">The average tax on U.S. imports has risen to nearly 18% from 2.4% before Trump's second term. Manufacturing employment has dropped by more than 40,000 jobs since April, while factory activity has declined for eight consecutive months. Ground coffee prices reached record highs of $8.41 per pound in July, up 33% year-over-year.</div>
+                    </div>
+
+                    <div class="subtopic">
+                        <div class="subtopic-title">Trade Negotiations</div>
+                        <div class="subtopic-description">The administration announced framework agreements with multiple countries including El Salvador, Argentina, Ecuador, Guatemala, Thailand, Vietnam, UK, EU, and Switzerland. China negotiations continued with temporary deals extending through November 9.</div>
+                    </div>
+
+                    <div class="sources-header">Sources:</div>
+                    <ul>
+                        <li><a href="https://www.npr.org/2025/11/05/nx-s1-5599537/supreme-court-trump-tariffs" target="_blank">NPR - Supreme Court Scrutiny of Trump Tariffs</a></li>
+                        <li><a href="https://www.npr.org/2025/11/14/g-s1-97936/trump-tariffs-executive-order-beef-coffee-fruit" target="_blank">NPR - Trump Scraps Tariffs on Beef, Coffee, Tropical Fruit</a></li>
+                        <li><a href="https://www.detroitnews.com/story/business/2025/11/16/guide-to-donald-trump-tariffs-prices-supreme-court-auto-industry-canada-china-european-union/87312599007/" target="_blank">Detroit News - Field Guide to Trump's Tariffs and Supreme Court</a></li>
+                        <li><a href="https://www.cnn.com/2025/11/16/business/bessent-tariff-rebate-supreme-court-trade" target="_blank">CNN - Treasury Secretary on $2,000 Rebate Checks</a></li>
+                        <li><a href="https://www.npr.org/2025/11/11/nx-s1-5604681/trump-tariff-dividends-flaws" target="_blank">NPR - Trump Floats Tariff Dividends Despite Major Flaws</a></li>
+                        <li><a href="https://www.cnbc.com/2025/11/14/trump-cuts-tariffs-goods-prices.html" target="_blank">CNBC - Trump Cuts Tariffs on Goods to Slash Consumer Prices</a></li>
+                        <li><a href="https://www.axios.com/2025/11/15/tariff-justifications-are-trumps-swiss-army-knife" target="_blank">Axios - Trump's All-in-One Tariffs Try to Fund Everything</a></li>
+                        <li><a href="https://www.npr.org/2025/11/05/nx-s1-5596488/tariffs-trump-economy-inflation" target="_blank">NPR - Tariffs Raising Billions But at Steep Economic Cost</a></li>
+                        <li><a href="https://www.gov.ca.gov/2025/10/24/governor-newsom-urges-the-supreme-court-to-strike-down-trumps-illegal-tariffs/" target="_blank">California Governor - Urges Supreme Court to Strike Down Trump's Illegal Tariffs</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Card 2: Hollowing Out of the DOJ (38 mentions) -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-2">
+                    <div class="card-title">Hollowing Out of the DOJ (38 mentions)</div>
+                    <div class="card-subtitle">Mass resignations, firings of career prosecutors, and dismantling of key divisions</div>
+                    <div class="expand-icon">▼</div>
+                </div>
+                <div class="card-content">
+                    <div class="subtopic">
+                        <div class="subtopic-title">Eric Adams Case Mass Resignations (February 2025)</div>
+                        <div class="subtopic-description">At least seven DOJ officials resigned in 36 hours after being ordered to dismiss corruption charges against NYC Mayor Eric Adams. Acting U.S. Attorney Danielle Sassoon and Acting Public Integrity Section head John Keller both resigned rather than comply. In resignation letters, prosecutors described a quid pro quo where Adams would help Trump's immigration enforcement in exchange for dropped charges. Assistant U.S. Attorney Hagan Scotten wrote: "I expect you will eventually find someone who is enough of a fool, or enough of a coward, to file your motion. But it was never going to be me." The event has been dubbed the "Thursday Night Massacre" or "Valentine's Day Seven," echoing Nixon's Saturday Night Massacre.</div>
+                    </div>
+
+                    <div class="subtopic">
+                        <div class="subtopic-title">Civil Rights Division Exodus (70% Departure Rate)</div>
+                        <div class="subtopic-description">As of May 2025, 70% of Civil Rights Division lawyers had left through quits, deferred resignation programs, or early retirements. Assistant Attorney General Harmeet Dhillon stated her vision to "turn the train around and drive it in the opposite direction," shelving the division's traditional mission. Attorneys were forced onto task forces focused on Trump priorities like antisemitism and transgender issues. The administration dropped investigations and withdrew statements in approximately 30 cases. Current and former officials describe this as "the dismantling of the civil rights division."</div>
+                    </div>
+
+                    <div class="subtopic">
+                        <div class="subtopic-title">Immigration Judge Purge</div>
+                        <div class="subtopic-description">The Trump administration terminated more than 80 immigration judges since taking office, with total numbers dropping from 700 to 600 nationwide. This occurred while Congress authorized hiring 100 new judges to address a 3.4 million case backlog. DOJ is training hundreds of military lawyers without immigration law backgrounds to serve temporarily as judges. Defendants increasingly fail to appear at court due to fear of ICE detention in hallways.</div>
+                    </div>
+
+                    <div class="subtopic">
+                        <div class="subtopic-title">Career Prosecutor Firings and Intimidation</div>
+                        <div class="subtopic-description">In late January 2025, multiple career prosecutors who worked on Jack Smith's team investigating Trump were fired. Former officials stated the firings were designed to "intimidate the Justice Department and FBI workforce and deter investigations of Trump's second administration." Senior career officials handling national security threats, from terrorist plots to Chinese cyberattacks, were removed or reassigned. One former FBI official asked: "Is anyone in DOJ or FBI really going to investigate that now?"</div>
+                    </div>
+
+                    <div class="subtopic">
+                        <div class="subtopic-title">November 2025 Russia Investigation Resignations</div>
+                        <div class="subtopic-description">In early November 2025, two DOJ prosecutors in the Southern District of Florida resigned after being assigned to a grand jury investigating the origins of the 2016 Trump-Russia investigation. One prosecutor told colleagues continuing would "violate their ethical responsibilities." Over 30 subpoenas were issued targeting former CIA Director John Brennan, FBI agents Peter Strzok and Lisa Page. U.S. Attorney Jason Reding Quiñones held an emergency meeting as the atmosphere became "pins and needles."</div>
+                    </div>
+
+                    <div class="subtopic">
+                        <div class="subtopic-title">Strategic Removals and Reassignments</div>
+                        <div class="subtopic-description">George Toscas, involved in the Mar-a-Lago FBI search, was reassigned to a sanctuary city task force. Eun Young Choi, who helped convict Ross Ulbricht (Silk Road founder), was similarly reassigned. The head of the Public Integrity Section was removed. Biden-appointed U.S. Attorneys across the country were terminated via email rather than being asked to resign, a departure from past practice.</div>
+                    </div>
+
+                    <div class="sources-header">Sources:</div>
+                    <ul>
+                        <li><a href="https://www.nbcnews.com/politics/national-security/trumps-doj-firings-are-designed-deter-future-investigations-former-off-rcna189344" target="_blank">NBC News - Trump's DOJ Firings Designed to Deter Future Investigations</a></li>
+                        <li><a href="https://www.npr.org/2025/05/19/g-s1-66906/trump-civil-rights-justice-exodus" target="_blank">NPR - 70% of DOJ's Civil Rights Division Lawyers Are Leaving</a></li>
+                        <li><a href="https://en.wikipedia.org/wiki/2025_U.S._Department_of_Justice_resignations" target="_blank">Wikipedia - 2025 U.S. Department of Justice Resignations</a></li>
+                        <li><a href="https://www.cbsnews.com/news/u-s-attorney-manhattan-danielle-sassoon-quits-justice-dept-drops-eric-adams-case/" target="_blank">CBS News - Top DOJ Officials Resign After Eric Adams Case Orders</a></li>
+                        <li><a href="https://www.nbcnewyork.com/news/local/crime-and-courts/ausa-who-worked-on-adams-case-resigns-in-sharply-worded-letter-to-doj/6150699/" target="_blank">NBC New York - AUSA Resigns in Sharply Worded Letter to DOJ</a></li>
+                        <li><a href="https://abcnews.go.com/Politics/new-yorks-top-federal-prosecutor-steps-amid-tension/story?id=118796725" target="_blank">ABC News - NY's Top Federal Prosecutor, Several DOJ Officials Resign</a></li>
+                        <li><a href="https://thehill.com/homenews/administration/5145882-here-are-the-doj-officials-who-resigned-over-order-to-drop-adams-case/" target="_blank">The Hill - DOJ Officials Who Resigned Over Adams Case</a></li>
+                        <li><a href="https://www.cnn.com/2025/10/16/politics/justice-department-trump-resignations" target="_blank">CNN - The Trump DOJ's Slow-Motion Saturday Night Massacre</a></li>
+                        <li><a href="https://www.nbcnews.com/politics/justice-department/seventh-doj-official-resigns-warns-trump-use-charges-leverage-nyc-mayo-rcna192240" target="_blank">NBC News - Seventh DOJ Official Resigns Warning Trump Could Use Charges as Leverage</a></li>
+                        <li><a href="https://federalnewsnetwork.com/workforce/2025/11/immigration-courts-understaffed-and-overwhelmed-as-trump-administration-surges-enforcement-hiring/" target="_blank">Federal News Network - Immigration Courts Understaffed and Overwhelmed</a></li>
+                        <li><a href="https://www.lifezette.com/2025/11/deep-state-panics-as-prosecutors-quit-amid-new-trump-russia-origins-investigation-watch/" target="_blank">LifeZette - Prosecutors Quit Amid Trump-Russia Origins Investigation</a></li>
+                        <li><a href="https://www.factcheck.org/2025/09/trump-project-2025-and-the-dismantling-of-the-administrative-state/" target="_blank">FactCheck.org - Trump, Project 2025 and the 'Dismantling' of the 'Administrative State'</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Card 3: Fractures in MAGA Coalition (35 mentions) -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-3">
+                    <div class="card-title">Fractures in MAGA Coalition (35 mentions)</div>
+                    <div class="card-subtitle">Internal conflicts over H-1B visas, Israel policy, and Trump's relationships with supporters</div>
+                    <div class="expand-icon">▼</div>
+                </div>
+                <div class="card-content">
+                    <div class="subtopic">
+                        <div class="subtopic-title">H-1B Visa Controversy</div>
+                        <div class="subtopic-description">Trump's defense of H-1B visas during a November interview with Laura Ingraham sparked outrage from MAGA supporters. His statement that America doesn't have people with "certain talents" contradicted his America First base. Prominent supporters including Marjorie Taylor Greene, Jack Posobiec, Kevin Sorbo, and Laura Loomer publicly criticized the position, creating one of the first major MAGA splits since the 2024 election.</div>
+                    </div>
+
+                    <div class="subtopic">
+                        <div class="subtopic-title">Israel Policy Divisions</div>
+                        <div class="subtopic-description">Tucker Carlson's interview with Nick Fuentes and the Heritage Foundation's defense of Carlson exposed deep fractures over Israel policy. The Republican Jewish Coalition summit became a flashpoint, with signs reading "TUCKER IS NOT MAGA." The split pits pro-Israel "Israel first" Republicans against an emerging anti-Israel faction arguing US support contradicts America First principles.</div>
+                    </div>
+
+                    <div class="subtopic">
+                        <div class="subtopic-title">Trump vs. Marjorie Taylor Greene</div>
+                        <div class="subtopic-description">On November 15, Trump withdrew his support and endorsement of Rep. Marjorie Taylor Greene, threatening to back a primary challenger. Greene had criticized Trump for "gaslighting the people" about whether prices have come down and for his stance on the Epstein files.</div>
+                    </div>
+
+                    <div class="subtopic">
+                        <div class="subtopic-title">Economic Messaging Disconnect</div>
+                        <div class="subtopic-description">MAGA media figures like Ben Shapiro openly acknowledged that Trump's claims about prices becoming more affordable don't match the reality many supporters face. Greene and others pushed back against Trump's economic messaging as prices remain high.</div>
+                    </div>
+
+                    <div class="subtopic">
+                        <div class="subtopic-title">Tech Right vs. America First Wing</div>
+                        <div class="subtopic-description">The divide between Silicon Valley tech figures (Elon Musk, Peter Thiel) and the paleoconservative America First wing has created tensions, particularly over H-1B visas and tariff exemptions for computer chips. Steve Bannon attempted to quell the backlash by calling Trump an "imperfect instrument" while urging supporters to stay focused.</div>
+                    </div>
+
+                    <div class="sources-header">Sources:</div>
+                    <ul>
+                        <li><a href="https://abcnews.go.com/Politics/president-maga-supporters-uproar-trumps-1b-visa-comments/story?id=127458610" target="_blank">ABC News - MAGA Supporters in Uproar Over Trump's H-1B Visa Comments</a></li>
+                        <li><a href="https://www.nbcnews.com/politics/donald-trump/trump-withdraws-support-rep-marjorie-taylor-greene-rcna244065" target="_blank">NBC News - Trump Withdraws Support for Marjorie Taylor Greene</a></li>
+                        <li><a href="https://www.salon.com/2025/11/15/donald-trumps-america-first-movement-seems-to-be-fracturing/" target="_blank">Salon - Donald Trump's America First Movement is Fracturing</a></li>
+                        <li><a href="https://www.newarab.com/news/maga-infighting-erupts-heritage-row-exposes-divide-israel" target="_blank">New Arab - MAGA Infighting Over Heritage Row Exposes Israel Divide</a></li>
+                        <li><a href="https://theconservativetreehouse.com/blog/2025/11/11/the-2025-maga-fracture-and-the-benefactors-behind-it/" target="_blank">Conservative Treehouse - The 2025 MAGA Fracture and the Benefactors Behind It</a></li>
+                        <li><a href="https://www.bostonreview.net/articles/the-conservatives-who-think-trump-isnt-going-far-enough/" target="_blank">Boston Review - The Conservatives Who Think Trump Isn't Going Far Enough</a></li>
+                        <li><a href="https://www.bostonreview.net/articles/trumps-bid-at-a-new-fusionism/" target="_blank">Boston Review - The New MAGA Coalition</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Card 4: Epstein Files (28 mentions) -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-4">
+                    <div class="card-title">Epstein Files (28 mentions)</div>
+                    <div class="card-subtitle">Congressional release of documents, Trump's shifting position, and House vote</div>
+                    <div class="expand-icon">▼</div>
+                </div>
+                <div class="card-content">
+                    <div class="subtopic">
+                        <div class="subtopic-title">Document Releases</div>
+                        <div class="subtopic-description">On November 12, the House Oversight Committee released over 20,000 documents from Jeffrey Epstein's estate, including emails mentioning Trump. Key emails included: Epstein calling Trump "the dog that hasn't barked" and claiming Trump spent "hours at my house" with an alleged victim (2011); Epstein writing that Trump "knew about the girls as he asked Ghislaine to stop" (2019); and Epstein telling Lawrence Summers "I have met some very bad people, none as bad as Trump" (2017).</div>
+                    </div>
+
+                    <div class="subtopic">
+                        <div class="subtopic-title">Trump's Position Reversal</div>
+                        <div class="subtopic-description">On November 16, Trump dramatically reversed course and urged House Republicans to vote to release the Epstein files, calling it a "Democrat Hoax" after initially resisting the release. Speaker Mike Johnson indicated the House would vote on Tuesday, November 18, saying "We'll just get this done and move it on. There's nothing to hide."</div>
+                    </div>
+
+                    <div class="subtopic">
+                        <div class="subtopic-title">Bipartisan Discharge Petition</div>
+                        <div class="subtopic-description">Reps. Thomas Massie (R-KY) and Ro Khanna (D-CA) led a bipartisan effort forcing a House floor vote through a discharge petition. Republican support grew despite Trump's initial opposition, with expectations of around 40 GOP lawmakers voting for release.</div>
+                    </div>
+
+                    <div class="subtopic">
+                        <div class="subtopic-title">Political Fallout</div>
+                        <div class="subtopic-description">Trump withdrew his endorsement of Marjorie Taylor Greene over her support for releasing the files. Greene stated the rift "has all come down to the Epstein files" and questioned why Trump was fighting the release so hard. Right-wing media figures downplayed the document releases, with some claiming Trump was actually an FBI informant on Epstein.</div>
+                    </div>
+
+                    <div class="subtopic">
+                        <div class="subtopic-title">Senate Uncertainty</div>
+                        <div class="subtopic-description">Senate Majority Leader John Thune indicated the Senate may not take up the legislation, citing the Justice Department's existing document releases. The bill's fate in the Senate remains uncertain even if the House passes it.</div>
+                    </div>
+
+                    <div class="sources-header">Sources:</div>
+                    <ul>
+                        <li><a href="https://www.npr.org/2025/11/12/nx-s1-5605582/epstein-files-release-trump-email-grijalva-massie" target="_blank">NPR - Trump's Name Appears in New Epstein Files Released by Congress</a></li>
+                        <li><a href="https://www.cnn.com/politics/live-news/trump-administration-epstein-files-11-16-25" target="_blank">CNN - Latest on Trump Administration as Lawmakers Face Epstein Files Vote</a></li>
+                        <li><a href="https://www.aljazeera.com/news/2025/11/13/new-epstein-emails-and-files-what-do-they-reveal-about-trump" target="_blank">Al Jazeera - New Epstein Emails: What Do They Reveal About Trump?</a></li>
+                        <li><a href="https://www.cnn.com/2025/11/16/politics/epstein-files-petition-growing-gop-support" target="_blank">CNN - Trump Urges Republicans to Vote to Release Epstein Files</a></li>
+                        <li><a href="https://www.npr.org/2025/11/15/nx-s1-5608227/epstein-emails-qanon-influencers" target="_blank">NPR - Right-Wing Media Shrugs Off Latest Epstein Document Release</a></li>
+                        <li><a href="https://abcnews.go.com/Politics/timeline-trump-administration-responses-epstein-files-release-saga/story?id=127529275" target="_blank">ABC News - Timeline: Trump Administration Responses in Epstein Files Saga</a></li>
+                        <li><a href="https://www.npr.org/2025/11/16/nx-s1-5610552/trump-house-republicans-epstein-files" target="_blank">NPR - In a Shift, Trump Says House Republicans Should Vote to Release Epstein Files</a></li>
+                        <li><a href="https://www.washingtonpost.com/politics/2025/11/16/house-epstein-discharge-petition-trump/" target="_blank">Washington Post - In Reversal, Trump Says House Should Vote to Release Epstein Files</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Card 5: Revenge Litigation by Trump Administration (22 mentions) -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-5">
+                    <div class="card-title">Revenge Litigation by Trump Administration (22 mentions)</div>
+                    <div class="card-subtitle">Criminal prosecutions of Trump critics, vindictive prosecution defenses, and DOJ controversies</div>
+                    <div class="expand-icon">▼</div>
+                </div>
+                <div class="card-content">
+                    <div class="subtopic">
+                        <div class="subtopic-title">James Comey Prosecution</div>
+                        <div class="subtopic-description">Former FBI Director James Comey was indicted in September 2025, fulfilling Trump's promise of revenge. Comey's defense argued the prosecution was vindictive, motivated solely by Trump's desire for retaliation. More than 100 former Justice Department officials, including ex-Attorney General Eric Holder, filed a brief supporting Comey's argument.</div>
+                    </div>
+
+                    <div class="subtopic">
+                        <div class="subtopic-title">Letitia James Case</div>
+                        <div class="subtopic-description">New York Attorney General Letitia James joined the growing list of Justice Department targets seeking to dismiss criminal charges by arguing prosecutions are motivated by Trump's revenge. She was charged in Virginia in November 2025.</div>
+                    </div>
+
+                    <div class="subtopic">
+                        <div class="subtopic-title">Other Targets</div>
+                        <div class="subtopic-description">The administration has directed prosecutors to investigate: Rep. LaMonica McIver, John Bolton (former National Security Advisor), Miles Taylor (who wrote warnings about Trump's authoritarian tendencies), and Chris Krebs (who assured voters the 2020 election was secure). Additionally, Trump cut deals with law firms to do free legal work rather than face penalties for hiring his opponents.</div>
+                    </div>
+
+                    <div class="subtopic">
+                        <div class="subtopic-title">Vindictive Prosecution Defense</div>
+                        <div class="subtopic-description">Multiple defendants are using the vindictive prosecution defense against Trump's Justice Department. One judge found "some evidence of vindictiveness" in these cases. The irony: When Trump was charged by special counsel Jack Smith, he claimed vindictive prosecution, but Judge Tanya Chutkan rejected his argument.</div>
+                    </div>
+
+                    <div class="subtopic">
+                        <div class="subtopic-title">Broader Pattern</div>
+                        <div class="subtopic-description">The administration has targeted institutions that defied Trump, including barring law firms from federal business, targeting universities for funding cuts, filing judicial misconduct complaints against judges who ruled against him, and revoking security clearances of about three dozen current and former officials. Defense Secretary Pete Hegseth has fired military leaders perceived as critics.</div>
+                    </div>
+
+                    <div class="sources-header">Sources:</div>
+                    <ul>
+                        <li><a href="https://www.washingtonpost.com/national-security/2025/11/07/letitia-james-vindictive-prosecution-motion/" target="_blank">Washington Post - Letitia James Urges Court to Toss Case, Calling It Trump's Revenge</a></li>
+                        <li><a href="https://www.washingtontimes.com/news/2025/nov/4/trumps-justice-department-faces-vindictive-prosecution-defense/" target="_blank">Washington Times - Trump's Justice Department Faces Vindictive Prosecution Defense</a></li>
+                        <li><a href="https://www.justsecurity.org/107087/tracker-litigation-legal-challenges-trump-administration/" target="_blank">Just Security - Litigation Tracker: Legal Challenges to Trump Administration</a></li>
+                        <li><a href="https://govt.dartmouth.edu/news/2025/09/comey-prosecution-trump-fulfills-promise-revenge" target="_blank">Dartmouth - With Comey Prosecution, Trump Fulfills Promise of Revenge</a></li>
+                        <li><a href="https://www.lawfaremedia.org/projects-series/trials-of-the-trump-administration/tracking-trump-administration-litigation" target="_blank">Lawfare - Trump Administration Litigation Tracker</a></li>
+                        <li><a href="https://www.bostonglobe.com/2025/08/23/nation/trump-political-revenge/" target="_blank">Boston Globe - Trump Ran on a Promise of Revenge. He's Making Good on It.</a></li>
+                        <li><a href="https://www.washingtonpost.com/politics/2025/09/25/trump-comey-justice-revenge/" target="_blank">Washington Post - With James Comey Prosecution, Trump Fulfills Promise of Revenge</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Card 6: Supreme Court Cases (18 mentions) -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-5">
+                    <div class="card-title">Supreme Court Cases (18 mentions)</div>
+                    <div class="card-subtitle">Tariff challenges, SNAP benefits, E. Jean Carroll appeal, and passport policy</div>
+                    <div class="expand-icon">▼</div>
+                </div>
+                <div class="card-content">
+                    <div class="subtopic">
+                        <div class="subtopic-title">Tariff Cases (Learning Resources v. Trump)</div>
+                        <div class="subtopic-description">The Supreme Court heard oral arguments on November 5, 2025, regarding Trump's use of IEEPA to impose tariffs. Both conservative and liberal justices expressed skepticism about the administration's legal authority. Chief Justice Roberts noted the statute says nothing about tariffs, while Justice Kagan sarcastically noted "we're in emergencies...all the time, about, like, half the world." The Court extended oral argument time to handle the complexity. A decision could come by year-end.</div>
+                    </div>
+
+                    <div class="subtopic">
+                        <div class="subtopic-title">SNAP Benefits Dispute</div>
+                        <div class="subtopic-description">Justice Ketanji Brown Jackson temporarily paused a lower court order on November 7 requiring the Trump administration to cover full SNAP food stamp benefits for millions of Americans during the government shutdown. The case involves whether the USDA must use emergency funds to pay full November benefits despite the lapse in Congressional appropriations.</div>
+                    </div>
+
+                    <div class="subtopic">
+                        <div class="subtopic-title">E. Jean Carroll Sexual Abuse Case</div>
+                        <div class="subtopic-description">On November 10, Trump asked the Supreme Court to review the $5 million civil case finding he sexually abused and defamed columnist E. Jean Carroll. Trump claims the trial judge made numerous errors, including allowing testimony from two other women who alleged assault and admitting the "Access Hollywood" tape. A separate $83 million defamation judgment was also affirmed by appeals courts.</div>
+                    </div>
+
+                    <div class="subtopic">
+                        <div class="subtopic-title">Passport Sex Designation Policy</div>
+                        <div class="subtopic-description">On November 6, the Supreme Court granted the administration's emergency request to stay a district court injunction blocking enforcement of a new passport policy requiring all passports to list an individual's sex assigned at birth. This followed Trump's January 20 executive order stating there are only two sexes determined by immutable biological factors at conception.</div>
+                    </div>
+
+                    <div class="subtopic">
+                        <div class="subtopic-title">Hush Money Conviction Appeal</div>
+                        <div class="subtopic-description">A federal appeals court on November 6 said Trump should be allowed to make a case for why federal courts should review his hush money conviction for possible conflicts with the Supreme Court's immunity decision. The panel sent the case back to district court to address questions about Trump's "good cause" for a second removal attempt.</div>
+                    </div>
+
+                    <div class="sources-header">Sources:</div>
+                    <ul>
+                        <li><a href="https://www.npr.org/2025/11/05/nx-s1-5599537/supreme-court-trump-tariffs" target="_blank">NPR - Supreme Court Put Trump Tariffs on a High-Fire Grill</a></li>
+                        <li><a href="https://www.cnn.com/2025/11/10/politics/e-jean-carroll-trump-supreme-court" target="_blank">CNN - Trump Asks Supreme Court to Overturn E. Jean Carroll Verdict</a></li>
+                        <li><a href="https://www.scotusblog.com/2025/11/trump-administration-urges-supreme-court-to-pause-ruling-on-november-snap-payments/" target="_blank">SCOTUSblog - Trump Administration Responds to Supreme Court on SNAP Payment Dispute</a></li>
+                        <li><a href="https://www.cnn.com/2025/11/07/politics/trump-administration-supreme-court-snap-benefits" target="_blank">CNN - Supreme Court Lets Trump Pause Full SNAP Payments for Now</a></li>
+                        <li><a href="https://www.newsweek.com/supreme-court-changes-rules-trump-tariff-cases-10930168" target="_blank">Newsweek - Supreme Court Changes Rules for Upcoming Trump Tariff Cases</a></li>
+                        <li><a href="https://www.npr.org/2025/11/05/nx-s1-5592338/trump-tariffs-supreme-court" target="_blank">NPR - Supreme Court Enters the Lion's Den on Trump Tariffs</a></li>
+                        <li><a href="https://www.cnn.com/2025/11/06/politics/hush-money-trump-appeals-court" target="_blank">CNN - Appeals Court Revives Trump's Effort to Fight Hush Money Conviction</a></li>
+                        <li><a href="https://www.justsecurity.org/107087/tracker-litigation-legal-challenges-trump-administration/" target="_blank">Just Security - Litigation Tracker</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div style="padding: 20px; text-align: center; color: #666; font-style: italic;">
+                All sources accessed November 3-17, 2025. Analysis based on news coverage during this period.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleCard(card) {
+            const content = card.querySelector('.card-content');
+            const icon = card.querySelector('.expand-icon');
+            
+            // Close all other cards
+            document.querySelectorAll('.news-card').forEach(otherCard => {
+                if (otherCard !== card) {
+                    otherCard.classList.remove('expanded');
+                    otherCard.querySelector('.card-content').classList.remove('expanded');
+                    otherCard.querySelector('.expand-icon').classList.remove('rotated');
+                }
+            });
+            
+            // Toggle current card
+            card.classList.toggle('expanded');
+            content.classList.toggle('expanded');
+            icon.classList.toggle('rotated');
+        }
+
+        // Add smooth animations on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.news-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    card.style.transition = 'all 0.5s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>
