@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tennessee 7th District Special Election Analysis</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --dem-blue: #0015BC;
+            --rep-red: #E81B23;
+            --neutral-gray: #6B7280;
+            --bg-light: #F9FAFB;
+            --text-dark: #111827;
+            --border-color: #E5E7EB;
+            --accent-gold: #F59E0B;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #991b1b 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(255,255,255,0.05) 10px,
+                rgba(255,255,255,0.05) 20px
+            );
+            animation: slide 20s linear infinite;
+        }
+
+        @keyframes slide {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        h1 {
+            font-size: 2.5em;
+            font-weight: 800;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .election-date {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 8px 20px;
+            border-radius: 20px;
+            margin-top: 15px;
+            font-weight: 600;
+            position: relative;
+            z-index: 1;
+        }
+
+        nav {
+            background: var(--bg-light);
+            padding: 15px 30px;
+            border-bottom: 2px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text-dark);
+            padding: 8px 16px;
+            border-radius: 6px;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        nav a:hover {
+            background: var(--accent-gold);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        section {
+            margin-bottom: 50px;
+            scroll-margin-top: 80px;
+        }
+
+        h2 {
+            font-size: 2em;
+            margin-bottom: 20px;
+            color: var(--text-dark);
+            border-left: 5px solid var(--accent-gold);
+            padding-left: 15px;
+        }
+
+        h3 {
+            font-size: 1.5em;
+            margin: 30px 0 15px;
+            color: var(--text-dark);
+        }
+
+        .key-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .stat-card {
+            background: var(--bg-light);
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            border: 2px solid var(--border-color);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: 800;
+            color: var(--accent-gold);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            color: var(--neutral-gray);
+            margin-top: 5px;
+        }
+
+        .candidate-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .candidate-card {
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .candidate-card:hover {
+            transform: scale(1.02);
+        }
+
+        .democrat {
+            background: linear-gradient(135deg, #dbeafe 0%, #93c5fd 100%);
+            border: 3px solid var(--dem-blue);
+        }
+
+        .republican {
+            background: linear-gradient(135deg, #fee2e2 0%, #fca5a5 100%);
+            border: 3px solid var(--rep-red);
+        }
+
+        .candidate-name {
+            font-size: 1.8em;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .candidate-party {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .dem-tag {
+            background: var(--dem-blue);
+            color: white;
+        }
+
+        .rep-tag {
+            background: var(--rep-red);
+            color: white;
+        }
+
+        .candidate-info {
+            margin: 15px 0;
+        }
+
+        .info-item {
+            margin: 10px 0;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .info-item::before {
+            content: '▪';
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+            color: var(--accent-gold);
+        }
+
+        .funding-chart {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            margin: 20px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .bar-chart {
+            display: flex;
+            gap: 20px;
+            margin: 20px 0;
+            align-items: flex-end;
+            height: 300px;
+        }
+
+        .bar-group {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        .bar {
+            width: 100%;
+            border-radius: 8px 8px 0 0;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 1.1em;
+            padding: 10px;
+            transition: all 0.5s ease;
+            position: relative;
+        }
+
+        .bar:hover {
+            opacity: 0.8;
+            transform: scaleY(1.05);
+        }
+
+        .bar-label {
+            margin-top: 10px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 100%;
+            background: var(--border-color);
+        }
+
+        .timeline-item {
+            margin: 30px 0;
+            position: relative;
+            padding: 0 40px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 20px;
+            height: 20px;
+            background: var(--accent-gold);
+            border-radius: 50%;
+            border: 4px solid white;
+            box-shadow: 0 0 0 3px var(--accent-gold);
+        }
+
+        .timeline-content {
+            width: 45%;
+            background: var(--bg-light);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content {
+            margin-left: auto;
+        }
+
+        .timeline-date {
+            font-weight: 700;
+            color: var(--accent-gold);
+            margin-bottom: 8px;
+        }
+
+        .scenario-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .scenario-card {
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            padding: 25px;
+            transition: all 0.3s;
+        }
+
+        .scenario-card:hover {
+            border-color: var(--accent-gold);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            transform: translateY(-5px);
+        }
+
+        .scenario-title {
+            font-size: 1.3em;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--text-dark);
+        }
+
+        .likelihood {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .likely {
+            background: #10b981;
+            color: white;
+        }
+
+        .possible {
+            background: var(--accent-gold);
+            color: white;
+        }
+
+        .unlikely {
+            background: var(--neutral-gray);
+            color: white;
+        }
+
+        .alert-box {
+            background: #fef3c7;
+            border-left: 5px solid var(--accent-gold);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .alert-box strong {
+            color: #92400e;
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1.1em;
+        }
+
+        .link-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .resource-link {
+            display: block;
+            padding: 15px;
+            background: var(--bg-light);
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--text-dark);
+            border: 2px solid var(--border-color);
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .resource-link:hover {
+            border-color: var(--accent-gold);
+            background: white;
+            transform: translateX(5px);
+        }
+
+        .resource-link::before {
+            content: '🔗 ';
+            margin-right: 8px;
+        }
+
+        footer {
+            background: var(--text-dark);
+            color: white;
+            text-align: center;
+            padding: 30px;
+        }
+
+        .takeaways-list {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .takeaways-list li {
+            margin: 15px 0;
+            padding: 15px;
+            background: var(--bg-light);
+            border-radius: 6px;
+            border-left: 4px solid var(--accent-gold);
+        }
+
+        .takeaways-list strong {
+            color: var(--accent-gold);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        th {
+            background: var(--text-dark);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        tr:hover {
+            background: var(--bg-light);
+        }
+
+        @media (max-width: 768px) {
+            .candidate-comparison {
+                grid-template-columns: 1fr;
+            }
+
+            .timeline::before {
+                left: 20px;
+            }
+
+            .timeline-item::before {
+                left: 20px;
+            }
+
+            .timeline-content {
+                width: calc(100% - 60px);
+                margin-left: 60px !important;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .content {
+                padding: 20px;
+            }
+        }
+
+        .scroll-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--accent-gold);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transition: all 0.3s;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .scroll-top.visible {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .scroll-top:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🗳️ Tennessee 7th District Special Election</h1>
+            <p class="subtitle">Comprehensive Analysis & Visualization</p>
+            <div class="election-date">December 2, 2025</div>
+        </header>
+
+        <nav>
+            <ul>
+                <li><a href="#overview">Overview</a></li>
+                <li><a href="#candidates">Candidates</a></li>
+                <li><a href="#district">District Profile</a></li>
+                <li><a href="#funding">Campaign Finance</a></li>
+                <li><a href="#timeline">Timeline</a></li>
+                <li><a href="#scenarios">Scenarios</a></li>
+                <li><a href="#takeaways">Key Takeaways</a></li>
+                <li><a href="#resources">Resources</a></li>
+            </ul>
+        </nav>
+
+        <div class="content">
+            <section id="overview">
+                <h2>📊 Executive Summary</h2>
+                <p>The special election for Tennessee's 7th Congressional District has evolved from what was expected to be a routine Republican hold into one of the most closely watched races of 2025. Despite the district's R+10 Cook Partisan Voter Index and President Trump's 22-point victory there in 2024, the race has attracted unprecedented national attention.</p>
+
+                <div class="key-stats">
+                    <div class="stat-card">
+                        <span class="stat-number">R+10</span>
+                        <div class="stat-label">Cook PVI Rating</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">+22</span>
+                        <div class="stat-label">Trump's 2024 Margin</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">$3M+</span>
+                        <div class="stat-label">Total Spending</div>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">14</span>
+                        <div class="stat-label">Counties in District</div>
+                    </div>
+                </div>
+
+                <div class="alert-box">
+                    <strong>Why This Race Matters:</strong>
+                    This is the first federal election since November 2025's Democratic gubernatorial victories in Virginia and New Jersey. The race serves as a crucial test of Trump's approval and a potential indicator for the 2026 midterm elections. Republicans currently hold a narrow 219-213 House majority.
+                </div>
+            </section>
+
+            <section id="candidates">
+                <h2>👥 The Candidates</h2>
+                
+                <div class="candidate-comparison">
+                    <div class="candidate-card democrat">
+                        <div class="candidate-name">Aftyn Behn</div>
+                        <span class="candidate-party dem-tag">DEMOCRAT</span>
+                        
+                        <div class="candidate-info">
+                            <div class="info-item"><strong>Age:</strong> 35 (born Nov 24, 1989)</div>
+                            <div class="info-item"><strong>Current Position:</strong> TN State Rep, District 51</div>
+                            <div class="info-item"><strong>Education:</strong> M.S.W., UT Austin (2016)</div>
+                            <div class="info-item"><strong>Profession:</strong> Licensed Social Worker</div>
+                            <div class="info-item"><strong>Primary Win:</strong> 28% in 4-way race</div>
+                        </div>
+
+                        <h4 style="margin-top: 20px; color: var(--dem-blue);">Key Platform:</h4>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>Eliminate grocery sales tax</li>
+                            <li>Protect rural hospitals</li>
+                            <li>Affordable healthcare access</li>
+                            <li>Check on Trump majority</li>
+                        </ul>
+
+                        <h4 style="margin-top: 20px; color: var(--dem-blue);">Major Endorsements:</h4>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>Kamala Harris (campaign appearance)</li>
+                            <li>DNC Chair Ken Martin</li>
+                            <li>Rep. Jasmine Crockett</li>
+                        </ul>
+                    </div>
+
+                    <div class="candidate-card republican">
+                        <div class="candidate-name">Matt Van Epps</div>
+                        <span class="candidate-party rep-tag">REPUBLICAN</span>
+                        
+                        <div class="candidate-info">
+                            <div class="info-item"><strong>Military:</strong> Lt. Col., TN Army National Guard</div>
+                            <div class="info-item"><strong>Education:</strong> West Point Graduate (2005)</div>
+                            <div class="info-item"><strong>Service:</strong> 9 Combat Tours</div>
+                            <div class="info-item"><strong>Recent Role:</strong> TN General Services Commissioner</div>
+                            <div class="info-item"><strong>Primary Win:</strong> Defeated 10 Republicans</div>
+                        </div>
+
+                        <h4 style="margin-top: 20px; color: var(--rep-red);">Key Platform:</h4>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>Support Trump's MAGA agenda</li>
+                            <li>Border security</li>
+                            <li>Lower prices and create jobs</li>
+                            <li>Continue Mark Green's legacy</li>
+                        </ul>
+
+                        <h4 style="margin-top: 20px; color: var(--rep-red);">Major Endorsements:</h4>
+                        <ul style="margin-left: 20px; margin-top: 10px;">
+                            <li>President Donald Trump</li>
+                            <li>Governor Bill Lee</li>
+                            <li>Rep. Jim Jordan</li>
+                            <li>Former Rep. Mark Green</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <section id="district">
+                <h2>🗺️ District Profile</h2>
+                
+                <h3>Geographic Coverage</h3>
+                <p>The 7th Congressional District spans 14 counties across Middle and West Tennessee, from the Kentucky border to the Alabama border. It includes portions of Nashville (Davidson County), Clarksville (Montgomery County), and Franklin (Williamson County), along with 11 rural counties.</p>
+
+                <h3>Recent Presidential Results</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Year</th>
+                            <th>Republican</th>
+                            <th>Democrat</th>
+                            <th>Margin</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>2024</strong></td>
+                            <td>Trump: 61.2%</td>
+                            <td>Harris: 38.8%</td>
+                            <td><strong>R+22.3</strong></td>
+                        </tr>
+                        <tr>
+                            <td><strong>2020 (new boundaries)</strong></td>
+                            <td>Trump: 56.4%</td>
+                            <td>Biden: 41.3%</td>
+                            <td><strong>R+15.1</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>Recent Congressional Results</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Year</th>
+                            <th>Republican (Mark Green)</th>
+                            <th>Democrat</th>
+                            <th>Margin</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>2024</strong></td>
+                            <td>60.0%</td>
+                            <td>Megan Barry: 38.1%</td>
+                            <td><strong>R+21.9</strong></td>
+                        </tr>
+                        <tr>
+                            <td><strong>2022</strong></td>
+                            <td>60.0%</td>
+                            <td>Odessa Kelly: 40.0%</td>
+                            <td><strong>R+20.0</strong></td>
+                        </tr>
+                        <tr>
+                            <td><strong>2020</strong></td>
+                            <td>70%+</td>
+                            <td>Kiran Sreepada: ~30%</td>
+                            <td><strong>R+40</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="alert-box">
+                    <strong>2022 Redistricting Impact:</strong>
+                    Tennessee's Republican legislature "cracked" Nashville by dividing it across three districts to dilute Democratic voting power. This paradoxically made the 7th District less safely Republican (from R+20 to R+10) by adding more Democratic voters from Nashville.
+                </div>
+
+                <h3>District Characteristics</h3>
+                <ul style="margin-left: 20px; line-height: 2;">
+                    <li><strong>Military Presence:</strong> Significant due to Fort Campbell proximity</li>
+                    <li><strong>Wealth Range:</strong> Includes Williamson County (one of wealthiest in US) and some of Tennessee's poorest counties</li>
+                    <li><strong>Urban/Rural Split:</strong> Most votes from Davidson, Montgomery, or Williamson counties despite large rural area</li>
+                    <li><strong>Political History:</strong> Republican-held since 1983 (42+ years)</li>
+                    <li><strong>Cook PVI:</strong> R+10 (down from R+20 before redistricting)</li>
+                </ul>
+            </section>
+
+            <section id="funding">
+                <h2>💰 Campaign Finance & Outside Spending</h2>
+
+                <h3>Candidate Fundraising (Oct 1 - Nov 12, 2025)</h3>
+                <div class="funding-chart">
+                    <div class="bar-chart">
+                        <div class="bar-group">
+                            <div class="bar" style="height: 85%; background: var(--dem-blue);">
+                                $1.04M
+                            </div>
+                            <div class="bar-label">Behn Raised</div>
+                        </div>
+                        <div class="bar-group">
+                            <div class="bar" style="height: 48%; background: var(--rep-red);">
+                                $591K
+                            </div>
+                            <div class="bar-label">Van Epps Raised</div>
+                        </div>
+                        <div class="bar-group">
+                            <div class="bar" style="height: 70%; background: var(--dem-blue); opacity: 0.7;">
+                                $522K
+                            </div>
+                            <div class="bar-label">Behn Cash on Hand</div>
+                        </div>
+                        <div class="bar-group">
+                            <div class="bar" style="height: 31%; background: var(--rep-red); opacity: 0.7;">
+                                $231K
+                            </div>
+                            <div class="bar-label">Van Epps Cash on Hand</div>
+                        </div>
+                    </div>
+                    <p style="text-align: center; color: var(--neutral-gray); margin-top: 20px;">
+                        <strong>Behn has outraised Van Epps nearly 2:1</strong>
+                    </p>
+                </div>
+
+                <h3>Major Outside Spending Groups</h3>
+                <div style="background: var(--bg-light); padding: 25px; border-radius: 10px; margin: 20px 0;">
+                    <h4 style="color: var(--rep-red); margin-bottom: 15px;">Supporting Van Epps (Republican):</h4>
+                    <ul style="margin-left: 20px; line-height: 2;">
+                        <li><strong>MAGA Inc.</strong> (Trump super PAC): $1,000,000+ — First expenditure since 2024 presidential race</li>
+                        <li><strong>Club for Growth:</strong> $328,000 in anti-Behn ads</li>
+                        <li><strong>Conservatives for American Excellence</strong> (Ken Griffin): $600,000+ in anti-Behn ads</li>
+                        <li><strong>Total Republican Outside Spending:</strong> ~$2,000,000+</li>
+                    </ul>
+
+                    <h4 style="color: var(--dem-blue); margin: 25px 0 15px;">Supporting Behn (Democrat):</h4>
+                    <ul style="margin-left: 20px; line-height: 2;">
+                        <li><strong>House Majority PAC:</strong> $1,000,000 in TV and digital ads</li>
+                        <li><strong>Your Community PAC:</strong> Funding ads promoting conservative independent to split Republican vote</li>
+                    </ul>
+                </div>
+
+                <div class="alert-box">
+                    <strong>Significance:</strong>
+                    MAGA Inc.'s $1 million investment is the first federal race the Trump super PAC has engaged in during his second term, signaling serious Republican concern about a district Trump won by 22 points. The unprecedented spending levels indicate both parties view this as a critical bellwether.
+                </div>
+            </section>
+
+            <section id="timeline">
+                <h2>📅 Key Events Timeline</h2>
+                
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-date">June 9, 2025</div>
+                            <p><strong>Rep. Mark Green announces resignation</strong> to pursue private sector opportunity</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-date">July 9, 2025</div>
+                            <p><strong>Aftyn Behn announces candidacy</strong> for the special election</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-date">July 20, 2025</div>
+                            <p><strong>Green's resignation becomes effective</strong> after "One Big Beautiful Bill" passage</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-date">October 2, 2025</div>
+                            <p><strong>Trump endorses Van Epps</strong> - "Complete and Total Endorsement"</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-date">October 7, 2025</div>
+                            <p><strong>Primary Elections:</strong> Van Epps wins Republican primary (11 candidates), Behn wins Democratic primary with 28% (4 candidates)</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-date">November 4, 2025</div>
+                            <p><strong>Democrats win Virginia & New Jersey</strong> - Landslide gubernatorial victories boost party momentum</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-date">November 12, 2025</div>
+                            <p><strong>Early voting begins</strong> across 14 counties</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-date">November 14, 2025</div>
+                            <p><strong>MAGA Inc. begins spending</strong> - First federal race involvement in 2025</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-date">November 18, 2025</div>
+                            <p><strong>Kamala Harris campaigns for Behn</strong> at Nashville event; Trump holds virtual rally for Van Epps</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-date">November 21, 2025</div>
+                            <p><strong>House Majority PAC announces $1M investment</strong> in TV and digital advertising</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-date">November 26, 2025</div>
+                            <p><strong>Early voting ends</strong> - Final day before Thanksgiving</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-content">
+                            <div class="timeline-date">December 2, 2025</div>
+                            <p><strong>🗳️ ELECTION DAY</strong></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section id="scenarios">
+                <h2>🎯 Potential Outcomes & Scenarios</h2>
+
+                <div class="scenario-grid">
+                    <div class="scenario-card">
+                        <div class="scenario-title">Scenario 1: Comfortable Van Epps Victory</div>
+                        <span class="likelihood likely">MOST LIKELY</span>
+                        
+                        <p><strong>Margin:</strong> Van Epps wins by 12-18 points</p>
+                        
+                        <p style="margin: 15px 0;"><strong>Conditions:</strong></p>
+                        <ul style="margin-left: 20px;">
+                            <li>Strong Republican turnout</li>
+                            <li>Trump endorsement effective</li>
+                            <li>Military credentials resonate</li>
+                            <li>Low Democratic rural turnout</li>
+                        </ul>
+
+                        <p style="margin: 15px 0;"><strong>Implications:</strong></p>
+                        <ul style="margin-left: 20px;">
+                            <li>Republicans maintain district safety narrative</li>
+                            <li>Minimal 2026 impact</li>
+                            <li>Democrats claim moral victory if under 15 points</li>
+                        </ul>
+                    </div>
+
+                    <div class="scenario-card">
+                        <div class="scenario-title">Scenario 2: Close Van Epps Victory</div>
+                        <span class="likelihood possible">COMPETITIVE</span>
+                        
+                        <p><strong>Margin:</strong> Van Epps wins by 3-8 points</p>
+                        
+                        <p style="margin: 15px 0;"><strong>Conditions:</strong></p>
+                        <ul style="margin-left: 20px;">
+                            <li>Strong independent showing</li>
+                            <li>High Democratic turnout</li>
+                            <li>National momentum continues</li>
+                            <li>Split conservative vote</li>
+                        </ul>
+
+                        <p style="margin: 15px 0;"><strong>Implications:</strong></p>
+                        <ul style="margin-left: 20px;">
+                            <li><strong>Major warning sign for GOP</strong></li>
+                            <li>District becomes 2026 Democratic target</li>
+                            <li>Questions about Trump coattails</li>
+                            <li>Boosts Democratic fundraising</li>
+                        </ul>
+                    </div>
+
+                    <div class="scenario-card">
+                        <div class="scenario-title">Scenario 3: Behn Upset Victory</div>
+                        <span class="likelihood unlikely">UNLIKELY BUT POSSIBLE</span>
+                        
+                        <p><strong>Margin:</strong> Behn wins by any margin</p>
+                        
+                        <p style="margin: 15px 0;"><strong>Conditions:</strong></p>
+                        <ul style="margin-left: 20px;">
+                            <li>Perfect storm of low GOP turnout</li>
+                            <li>Strong independent splits vote</li>
+                            <li>Overwhelming Democratic enthusiasm</li>
+                            <li>Late-breaking issues favor Dems</li>
+                        </ul>
+
+                        <p style="margin: 15px 0;"><strong>Implications:</strong></p>
+                        <ul style="margin-left: 20px;">
+                            <li><strong>Political earthquake</strong></li>
+                            <li>Immediate 2026 House control questions</li>
+                            <li>Validation of Democratic strategy</li>
+                            <li>Major embarrassment for Trump/TN GOP</li>
+                        </ul>
+                    </div>
+
+                    <div class="scenario-card">
+                        <div class="scenario-title">Scenario 4: Recount Territory</div>
+                        <span class="likelihood unlikely">VERY UNLIKELY</span>
+                        
+                        <p><strong>Margin:</strong> Under 1% either way</p>
+                        
+                        <p style="margin: 15px 0;"><strong>Conditions:</strong></p>
+                        <ul style="margin-left: 20px;">
+                            <li>Extremely close race</li>
+                            <li>High independent vote totals</li>
+                            <li>Possible litigation</li>
+                        </ul>
+
+                        <p style="margin: 15px 0;"><strong>Implications:</strong></p>
+                        <ul style="margin-left: 20px;">
+                            <li>Extended uncertainty</li>
+                            <li>National media focus</li>
+                            <li>Heightened 2026 tensions</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="alert-box" style="margin-top: 30px;">
+                    <strong>Expert Consensus:</strong>
+                    Van Epps remains the favorite based on district fundamentals, but the margin of victory will be closely watched as a midterm indicator. Democrats have overperformed in 2025 special elections by an average of 9 percentage points compared to Kamala Harris's 2024 presidential performance. The Cook Political Report's rating change from "Solidly Republican" to "Likely Republican" is significant for an R+10 district.
+                </div>
+            </section>
+
+            <section id="takeaways">
+                <h2>🔑 Key Takeaways</h2>
+                
+                <div class="takeaways-list">
+                    <ol style="list-style-position: inside;">
+                        <li>
+                            <strong>The race matters far beyond Tennessee:</strong> This is the first federal election since November 2025's Democratic wins, serving as a potential midterm bellwether for the 2026 House elections.
+                        </li>
+                        <li>
+                            <strong>Money and attention are unprecedented:</strong> Over $3 million in combined candidate and outside spending in a district Trump won by 22 points signals both parties see major stakes in this race.
+                        </li>
+                        <li>
+                            <strong>Special election dynamics favor Democrats:</strong> Low turnout, energized base, and recent momentum create opportunity despite unfavorable fundamentals. Democrats have consistently overperformed in 2025 special elections.
+                        </li>
+                        <li>
+                            <strong>Republican nervousness is palpable:</strong> MAGA Inc.'s first 2025 expenditure and consideration of Trump in-person visit to an R+10 district reveals significant GOP concerns about holding the seat comfortably.
+                        </li>
+                        <li>
+                            <strong>Redistricting created an opening:</strong> While the 2022 gerrymander was intended to weaken Democrats by "cracking" Nashville, it paradoxically made the district less safely Republican (R+20 → R+10).
+                        </li>
+                        <li>
+                            <strong>Margin matters as much as outcome:</strong> Even a Van Epps victory by single digits would alarm Republicans and embolden Democrats heading into 2026. The race is viewed as a referendum on Trump's approval.
+                        </li>
+                        <li>
+                            <strong>Independent candidates could be decisive:</strong> Conservative independent Jon Thorp, actively promoted by Democratic-aligned PACs, could split the Republican vote in a close race.
+                        </li>
+                        <li>
+                            <strong>Turnout is everything:</strong> In a special election where primary turnout was 75% lower than the general, ground game and voter enthusiasm will determine the winner. Post-Thanksgiving timing could suppress turnout.
+                        </li>
+                    </ol>
+                </div>
+            </section>
+
+            <section id="resources">
+                <h2>🔗 Additional Resources & Sources</h2>
+
+                <h3>Official Election Information</h3>
+                <div class="link-grid">
+                    <a href="https://sos.tn.gov/elections/services/special-election-information" class="resource-link" target="_blank">Tennessee Secretary of State: Special Election Info</a>
+                    <a href="https://ballotpedia.org/Tennessee's_7th_Congressional_District_special_election,_2025" class="resource-link" target="_blank">Ballotpedia: Complete Race Coverage</a>
+                </div>
+
+                <h3>Campaign Websites</h3>
+                <div class="link-grid">
+                    <a href="https://www.aftynforcongress.com/" class="resource-link" target="_blank">Aftyn Behn for Congress</a>
+                    <a href="https://www.mattfortn.com" class="resource-link" target="_blank">Matt Van Epps for Congress</a>
+                </div>
+
+                <h3>News Coverage & Analysis</h3>
+                <div class="link-grid">
+                    <a href="https://tennesseelookout.com/" class="resource-link" target="_blank">Tennessee Lookout</a>
+                    <a href="https://wpln.org/" class="resource-link" target="_blank">WPLN Nashville Public Radio</a>
+                    <a href="https://nashvillebanner.com/" class="resource-link" target="_blank">Nashville Banner</a>
+                    <a href="https://www.nbcnews.com/politics" class="resource-link" target="_blank">NBC News: Politics Coverage</a>
+                    <a href="https://www.cookpolitical.com/" class="resource-link" target="_blank">Cook Political Report</a>
+                    <a href="https://abcnews.go.com/Politics" class="resource-link" target="_blank">ABC News: Politics</a>
+                </div>
+
+                <h3>Candidate Information</h3>
+                <div class="link-grid">
+                    <a href="https://en.wikipedia.org/wiki/Aftyn_Behn" class="resource-link" target="_blank">Aftyn Behn - Wikipedia</a>
+                    <a href="https://ballotpedia.org/Aftyn_Behn" class="resource-link" target="_blank">Aftyn Behn - Ballotpedia</a>
+                    <a href="https://ballotpedia.org/Matt_Van_Epps" class="resource-link" target="_blank">Matt Van Epps - Ballotpedia</a>
+                </div>
+
+                <h3>District Analysis</h3>
+                <div class="link-grid">
+                    <a href="https://en.wikipedia.org/wiki/Tennessee's_7th_congressional_district" class="resource-link" target="_blank">TN-7 District Profile - Wikipedia</a>
+                    <a href="https://ballotpedia.org/Tennessee's_7th_Congressional_District" class="resource-link" target="_blank">TN-7 District - Ballotpedia</a>
+                </div>
+
+                <div style="background: var(--bg-light); padding: 25px; border-radius: 10px; margin: 30px 0;">
+                    <h3 style="margin-bottom: 15px;">Document Information</h3>
+                    <p><strong>Compiled:</strong> November 22, 2025</p>
+                    <p><strong>Election Date:</strong> December 2, 2025</p>
+                    <p><strong>Early Voting Period:</strong> November 12-26, 2025</p>
+                    <p><strong>Analysis Based On:</strong> Publicly available information through November 22, 2025</p>
+                    <p style="margin-top: 15px; font-style: italic;">This analysis draws from over 50 news sources, official election data, campaign finance reports, and expert political analysis.</p>
+                </div>
+            </section>
+        </div>
+
+        <footer>
+            <p style="font-size: 1.2em; margin-bottom: 10px;">Tennessee 7th District Special Election Analysis</p>
+            <p>Comprehensive research and visualization • December 2, 2025</p>
+            <p style="margin-top: 15px; opacity: 0.7;">This document provides analysis and should not be construed as endorsement of any candidate.</p>
+        </footer>
+    </div>
+
+    <div class="scroll-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+        ↑
+    </div>
+
+    <script>
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('nav a').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                target.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+
+        // Show/hide scroll to top button
+        window.addEventListener('scroll', function() {
+            const scrollTop = document.querySelector('.scroll-top');
+            if (window.pageYOffset > 300) {
+                scrollTop.classList.add('visible');
+            } else {
+                scrollTop.classList.remove('visible');
+            }
+        });
+
+        // Animate stat cards on scroll
+        const observerOptions = {
+            threshold: 0.5,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animation = 'fadeInUp 0.6s ease forwards';
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.stat-card, .candidate-card, .scenario-card').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Add CSS animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(30px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
