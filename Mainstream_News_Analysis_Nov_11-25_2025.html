@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mainstream News Analysis - November 11-25, 2025</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .newsletter {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .header .date {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+
+        .header .subtitle {
+            font-size: 1rem;
+            opacity: 0.8;
+            font-style: italic;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 30px;
+        }
+
+        .section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .section-title {
+            font-size: 1.6rem;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            border-left: 4px solid #3498db;
+            padding: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background-color 0.3s ease;
+            border-radius: 5px;
+            background: #f8f9fa;
+        }
+
+        .section-title:hover {
+            background-color: #e9ecef;
+        }
+
+        .section-content {
+            transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+            overflow: hidden;
+        }
+
+        .section-content.collapsed {
+            max-height: 0;
+            opacity: 0;
+        }
+
+        .section-content.expanded {
+            max-height: 8000px;
+            opacity: 1;
+        }
+
+        .story {
+            margin-bottom: 25px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            border-left: 3px solid #3498db;
+        }
+
+        .story-headline {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+
+        .story-content {
+            font-size: 1rem;
+            line-height: 1.7;
+            margin-bottom: 15px;
+        }
+
+        .quote {
+            background: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 15px 20px;
+            margin: 15px 0;
+            font-style: italic;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .citation {
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: bold;
+            margin-top: 8px;
+        }
+
+        .key-facts {
+            background: #f0f8ff;
+            border: 1px solid #b3d9ff;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .key-facts-title {
+            font-weight: bold;
+            color: #2980b9;
+            margin-bottom: 10px;
+        }
+
+        .fact-list {
+            margin-left: 20px;
+        }
+
+        .fact-list li {
+            margin-bottom: 5px;
+        }
+
+        .stats-box {
+            background: linear-gradient(135deg, #ff7b7b 0%, #ff416c 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            text-align: center;
+        }
+
+        .stats-number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .breakdown-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .breakdown-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 3px solid #e74c3c;
+            text-align: center;
+        }
+
+        .breakdown-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .breakdown-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .emphasis {
+            background: linear-gradient(120deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .warning {
+            background: #ffe6e6;
+            border: 1px solid #ffb3b3;
+            color: #d63031;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .footer {
+            background: #2c3e50;
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+        }
+
+        .source-note {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            line-height: 1.6;
+            text-align: left;
+        }
+
+        .source-link {
+            color: #74b9ff;
+            text-decoration: none;
+        }
+
+        .source-link:hover {
+            text-decoration: underline;
+        }
+
+        .expand-icon {
+            font-size: 1.5rem;
+            color: #3498db;
+            transition: transform 0.3s ease;
+        }
+
+        .collapse-button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: background-color 0.3s ease;
+            width: 150px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .collapse-button:hover {
+            background: #2980b9;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .breakdown-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <script>
+        function toggleSection(sectionId) {
+            const content = document.getElementById(sectionId);
+            const icon = document.querySelector(`[onclick="toggleSection('${sectionId}')"] .expand-icon`);
+            
+            if (content.classList.contains('collapsed')) {
+                content.classList.remove('collapsed');
+                content.classList.add('expanded');
+                icon.textContent = '▼';
+            } else {
+                content.classList.add('collapsed');
+                content.classList.remove('expanded');
+                icon.textContent = '▶';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const allSectionContents = document.querySelectorAll('.section-content');
+            allSectionContents.forEach(content => {
+                content.classList.add('collapsed');
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="newsletter">
+        <div class="header">
+            <h1>📰 Mainstream Media Coverage Analysis</h1>
+            <div class="date">November 11–25, 2025</div>
+            <div class="subtitle">Topics Discussed in BOLLI Current Events Discussion • November 25, 2025</div>
+        </div>
+
+        <div class="content">
+            <!-- Iran Water Crisis -->
+            <div class="section">
+                <div class="section-title" onclick="toggleSection('iran-section')">
+                    🏜️ Iran's Tehran Water Crisis: "No Choice" but to Relocate Capital
+                    <span class="expand-icon">▶</span>
+                </div>
+                
+                <div class="section-content collapsed" id="iran-section">
+                    <div class="story">
+                        <div class="story-headline">
+                            Tehran Faces Existential Water Emergency
+                        </div>
+                        <div class="story-content">
+                            <a href="https://www.washingtonpost.com/world/2025/11/24/iran-tehran-water-crisis-agriculture/" class="source-link">The Washington Post</a> reported that a staggering water shortage is throwing Iran's future livability into question, with dozens of dams close to empty and the president floating the idea of evacuating the capital—though it is unclear where those millions of people would go.
+                        </div>
+
+                        <div class="stats-box">
+                            <div class="stats-number">10 Million</div>
+                            <div>Tehran residents facing potential evacuation</div>
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://www.nbcnews.com/world/iran/iran-water-crisis-taps-run-dry-tehran-evacuation-looms-rcna243430" class="source-link">NBC News</a> detailed the crisis on the ground: "We didn't have water for three days. The pressure was so low that nothing came out," said one Tehran resident. The reservoirs supplying the capital are at only 5% of reserve capacity.
+                        </div>
+
+                        <div class="key-facts">
+                            <div class="key-facts-title">Key Crisis Factors:</div>
+                            <ul class="fact-list">
+                                <li><strong>Sixth consecutive year</strong> of drought in Tehran</li>
+                                <li>Rainfall at <strong>century-low levels</strong></li>
+                                <li>Land sinking at <strong>25-30 cm per year</strong></li>
+                                <li>Temperatures exceeded <strong>122°F (50°C)</strong> last summer</li>
+                                <li>Iran-Israel war <strong>damaged water infrastructure</strong></li>
+                            </ul>
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://www.scientificamerican.com/article/irans-capital-has-run-out-of-water-forcing-it-to-move/" class="source-link">Scientific American</a> noted that President Masoud Pezeshkian declared, "We no longer have a choice," adding that relocating the capital is "a necessity." Experts say the proposal could cost more than $100 billion.
+                        </div>
+                        
+                        <div class="quote">
+                            "It would be a mistake to look at this only through the lens of climate change. Water, land, and wastewater mismanagement and corruption have made the crisis worse."
+                        </div>
+                        <div class="citation">— Michael Rubin, American Enterprise Institute, via <a href="https://www.scientificamerican.com/article/irans-capital-has-run-out-of-water-forcing-it-to-move/" class="source-link">Scientific American</a></div>
+
+                        <div class="story-content">
+                            <a href="https://www.aljazeera.com/news/2025/11/12/as-the-dams-feeding-tehran-run-dry-iran-struggles-with-a-dire-water-crisis" class="source-link">Al Jazeera</a> reported that Iranian experts blame mismanagement over decades, with over 90% of Iran's water devoted to agriculture—an inefficient sector accounting for only 12% of GDP. The Kan River, a major waterway draining into Tehran, is now completely dry.
+                        </div>
+
+                        <div class="citation">Sources: <a href="https://www.washingtonpost.com/world/2025/11/24/iran-tehran-water-crisis-agriculture/" class="source-link">Washington Post</a>, <a href="https://www.nbcnews.com/world/iran/iran-water-crisis-taps-run-dry-tehran-evacuation-looms-rcna243430" class="source-link">NBC News</a>, <a href="https://www.scientificamerican.com/article/irans-capital-has-run-out-of-water-forcing-it-to-move/" class="source-link">Scientific American</a>, <a href="https://www.aljazeera.com/news/2025/11/12/as-the-dams-feeding-tehran-run-dry-iran-struggles-with-a-dire-water-crisis" class="source-link">Al Jazeera</a>, <a href="https://www.rferl.org/a/iran-water-crisis-drought-tehran/33588345.html" class="source-link">Radio Free Europe</a></div>
+                    </div>
+                    
+                    <button class="collapse-button" onclick="toggleSection('iran-section')">
+                        <span>▲</span> Collapse Section
+                    </button>
+                </div>
+            </div>
+
+            <!-- Trump Legal Cases -->
+            <div class="section">
+                <div class="section-title" onclick="toggleSection('legal-section')">
+                    ⚖️ Comey & James Cases Dismissed: Prosecutor Found "Unlawfully Appointed"
+                    <span class="expand-icon">▶</span>
+                </div>
+                
+                <div class="section-content collapsed" id="legal-section">
+                    <div class="story">
+                        <div class="story-headline">
+                            Major Blow to Trump Retribution Campaign
+                        </div>
+                        <div class="story-content">
+                            <a href="https://www.nbcnews.com/politics/justice-department/judge-dismisses-cases-james-comey-letitia-james-finding-prosecutor-was-rcna244775" class="source-link">NBC News</a> reported that U.S. District Judge Cameron Currie dismissed the criminal indictments against former FBI Director James Comey and New York Attorney General Letitia James on November 24, finding that prosecutor Lindsey Halligan was not lawfully appointed.
+                        </div>
+
+                        <div class="key-facts">
+                            <div class="key-facts-title">What the Judge Found:</div>
+                            <ul class="fact-list">
+                                <li>Halligan was "a former White House aide with <strong>no prior prosecutorial experience</strong>"</li>
+                                <li>Her appointment violated the <strong>120-day limit</strong> for interim U.S. attorneys</li>
+                                <li>Cases dismissed "without prejudice"—can potentially be refiled</li>
+                                <li>AG Pam Bondi announced immediate appeal</li>
+                            </ul>
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://www.washingtonpost.com/national-security/2025/11/24/halligan-appointment-comey-james/" class="source-link">The Washington Post</a> called the ruling "an emphatic blow to President Donald Trump's rushed efforts to engineer prosecutions of two of his prominent foes." Halligan was installed after Trump forced out the previous U.S. attorney who resisted bringing charges.
+                        </div>
+                        
+                        <div class="quote">
+                            "I'm grateful that the court ended the case against me, which was a prosecution based on malevolence and incompetence and a reflection of what the Department of Justice has become under Donald Trump."
+                        </div>
+                        <div class="citation">— James Comey, via <a href="https://www.npr.org/2025/11/24/g-s1-98612/trump-us-attorney-lindsey-halligan" class="source-link">NPR</a></div>
+
+                        <div class="story-content">
+                            <a href="https://www.cnn.com/2025/11/24/politics/takeaways-lindsey-halligan-james-comey-letitia-james" class="source-link">CNN</a> noted a Marquette poll showed 58% of Americans said cases against Trump's foes were not justified, even as they supported by 10 points that indictments against Trump himself were justified—suggesting Americans see these prosecutions as more politicized.
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://www.axios.com/2025/11/24/trump-comey-case-charges-dismissed-judge" class="source-link">Axios</a> reported that White House press secretary Karoline Leavitt dismissed the ruling as "a technical ruling" by "a judge who is clearly trying to shield" the defendants from accountability.
+                        </div>
+
+                        <div class="citation">Sources: <a href="https://www.nbcnews.com/politics/justice-department/judge-dismisses-cases-james-comey-letitia-james-finding-prosecutor-was-rcna244775" class="source-link">NBC News</a>, <a href="https://www.washingtonpost.com/national-security/2025/11/24/halligan-appointment-comey-james/" class="source-link">Washington Post</a>, <a href="https://www.cnn.com/2025/11/24/politics/takeaways-lindsey-halligan-james-comey-letitia-james" class="source-link">CNN</a>, <a href="https://www.npr.org/2025/11/24/g-s1-98612/trump-us-attorney-lindsey-halligan" class="source-link">NPR</a>, <a href="https://www.axios.com/2025/11/24/trump-comey-case-charges-dismissed-judge" class="source-link">Axios</a></div>
+                    </div>
+                    
+                    <button class="collapse-button" onclick="toggleSection('legal-section')">
+                        <span>▲</span> Collapse Section
+                    </button>
+                </div>
+            </div>
+
+            <!-- January 6 Pardons -->
+            <div class="section">
+                <div class="section-title" onclick="toggleSection('j6-section')">
+                    🏛️ January 6 Pardons: "Basket of Deplorables" Face New Charges
+                    <span class="expand-icon">▶</span>
+                </div>
+                
+                <div class="section-content collapsed" id="j6-section">
+                    <div class="story">
+                        <div class="story-headline">
+                            Pardoned Rioters Charged with Sex Crimes, Murder Plots
+                        </div>
+                        <div class="story-content">
+                            <a href="https://www.citizensforethics.org/reports-investigations/crew-investigations/at-least-10-pardoned-insurrectionists-face-other-criminal-charges/" class="source-link">Citizens for Responsibility and Ethics in Washington (CREW)</a> documented that at least 10 January 6 insurrectionists pardoned by President Trump have already been rearrested, charged, or sentenced for other crimes—including plotting murder of FBI agents, child sexual assault, and reckless homicide while driving drunk.
+                        </div>
+
+                        <div class="stats-box">
+                            <div class="stats-number">~1,600</div>
+                            <div>January 6 defendants pardoned by Trump</div>
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://theintercept.com/2025/11/17/pardoned-jan-6-child-abuse-molestation-andrew-paul-johnson/" class="source-link">The Intercept</a> reported that Andrew Paul Johnson, a pardoned Capitol rioter, was charged with child sex crimes in Florida, allegedly molesting a child as young as 11. He reportedly told one victim he was entitled to $10 million in "January 6 reparations" money.
+                        </div>
+
+                        <div class="key-facts">
+                            <div class="key-facts-title">Post-Pardon Criminal Activity:</div>
+                            <ul class="fact-list">
+                                <li><strong>Andrew Taake:</strong> Rearrested on charges of soliciting a minor</li>
+                                <li><strong>Edward Kelley:</strong> Convicted of plotting to murder FBI agents who investigated him</li>
+                                <li><strong>Emily Hernandez:</strong> Sentenced to 10 years for fatal drunk driving accident</li>
+                                <li><strong>Theodore Middendorf:</strong> Serving 19 years for sexually assaulting a 7-year-old</li>
+                                <li><strong>Shane Jason Woods:</strong> Convicted of reckless homicide and DUI</li>
+                                <li><strong>Matthew Huttle:</strong> Shot and killed by police during traffic stop days after pardon</li>
+                            </ul>
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://www.newsweek.com/list-of-donald-trump-pardon-recipients-charged-with-new-crimes-11088352" class="source-link">Newsweek</a> is maintaining a running list of Trump pardon recipients charged with new crimes, noting the rising number "has intensified scrutiny of the presidential clemency process."
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://www.npr.org/2025/01/30/nx-s1-5276336/donald-trump-jan-6-rape-assault-pardons-rioters" class="source-link">NPR</a> reported that dozens of pardoned defendants had past criminal convictions including rape, manslaughter, domestic violence, and drug trafficking—records that existed before their January 6 participation.
+                        </div>
+
+                        <div class="citation">Sources: <a href="https://www.citizensforethics.org/reports-investigations/crew-investigations/at-least-10-pardoned-insurrectionists-face-other-criminal-charges/" class="source-link">CREW</a>, <a href="https://theintercept.com/2025/11/17/pardoned-jan-6-child-abuse-molestation-andrew-paul-johnson/" class="source-link">The Intercept</a>, <a href="https://www.newsweek.com/list-of-donald-trump-pardon-recipients-charged-with-new-crimes-11088352" class="source-link">Newsweek</a>, <a href="https://www.npr.org/2025/01/30/nx-s1-5276336/donald-trump-jan-6-rape-assault-pardons-rioters" class="source-link">NPR</a></div>
+                    </div>
+                    
+                    <button class="collapse-button" onclick="toggleSection('j6-section')">
+                        <span>▲</span> Collapse Section
+                    </button>
+                </div>
+            </div>
+
+            <!-- MTG Resignation -->
+            <div class="section">
+                <div class="section-title" onclick="toggleSection('mtg-section')">
+                    🎭 Marjorie Taylor Greene Resigns: From Trump Ally to "Traitor"
+                    <span class="expand-icon">▶</span>
+                </div>
+                
+                <div class="section-content collapsed" id="mtg-section">
+                    <div class="story">
+                        <div class="story-headline">
+                            Georgia Congresswoman's Stunning Break with President
+                        </div>
+                        <div class="story-content">
+                            <a href="https://www.cnn.com/2025/11/21/politics/marjorie-taylor-greene-resign-in-january" class="source-link">CNN</a> reported that Rep. Marjorie Taylor Greene announced on November 21 that she will resign from Congress in January, "stunning some in her own party after a shocking, monthslong political pivot that catapulted her from one of President Donald Trump's closest allies to one of his top antagonists."
+                        </div>
+
+                        <div class="key-facts">
+                            <div class="key-facts-title">The Falling Out:</div>
+                            <ul class="fact-list">
+                                <li>Trump called Greene a <strong>"traitor"</strong> on Truth Social</li>
+                                <li>Greene sided with Democrats on <strong>ACA subsidies</strong></li>
+                                <li>She pushed for <strong>Jeffrey Epstein files</strong> release against White House wishes</li>
+                                <li>Cited <strong>physical threats</strong> as reason for leaving</li>
+                                <li>Says she's <strong>not running</strong> for president, governor, or Senate</li>
+                            </ul>
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://www.cnn.com/2025/11/24/politics/marjorie-taylor-greene-georgia-district" class="source-link">CNN</a> reported that Greene's district was in disbelief: "It took me watching her resignation video for about 5 minutes to realize that it was not an AI-generated video—that's how shocking it was," said the Paulding County Republican Party chairman.
+                        </div>
+                        
+                        <div class="quote">
+                            "She dropped out because of PLUMMETING Poll Numbers and my threat to support a primary challenger against her... I said, 'Go your own way,' and once I left her, she resigned. She would never have survived the primary."
+                        </div>
+                        <div class="citation">— President Trump, via <a href="https://www.cnn.com/2025/11/21/politics/marjorie-taylor-greene-resign-in-january" class="source-link">CNN</a></div>
+
+                        <div class="story-content">
+                            <a href="https://www.atlantanewsfirst.com/2025/11/24/im-not-running-president-marjorie-taylor-greene-says-again/" class="source-link">Atlanta News First</a> noted Greene denied presidential ambitions twice in November, posting on X: "TIME claims 'sources' told them I'm running for President in 2028, which means this is a complete lie... I'm not running for President."
+                        </div>
+
+                        <div class="story-content">
+                            Greene's exit will further tighten House Speaker Mike Johnson's slim majority, with her replacement timing now largely up to Republican Gov. Brian Kemp.
+                        </div>
+
+                        <div class="citation">Sources: <a href="https://www.cnn.com/2025/11/21/politics/marjorie-taylor-greene-resign-in-january" class="source-link">CNN</a>, <a href="https://www.cnn.com/2025/11/24/politics/marjorie-taylor-greene-georgia-district" class="source-link">CNN</a>, <a href="https://www.atlantanewsfirst.com/2025/11/24/im-not-running-president-marjorie-taylor-greene-says-again/" class="source-link">Atlanta News First</a></div>
+                    </div>
+                    
+                    <button class="collapse-button" onclick="toggleSection('mtg-section')">
+                        <span>▲</span> Collapse Section
+                    </button>
+                </div>
+            </div>
+
+            <!-- Ukraine Peace Plan -->
+            <div class="section">
+                <div class="section-title" onclick="toggleSection('ukraine-section')">
+                    🕊️ Ukraine Peace Talks: Trump's 28-Point Plan "Heavily Tilted" Toward Russia
+                    <span class="expand-icon">▶</span>
+                </div>
+                
+                <div class="section-content collapsed" id="ukraine-section">
+                    <div class="story">
+                        <div class="story-headline">
+                            Controversial Framework Demands Major Ukrainian Concessions
+                        </div>
+                        <div class="story-content">
+                            <a href="https://www.cnn.com/2025/11/20/politics/ukraine-russia-trump-peace-proposal" class="source-link">CNN</a> obtained a draft of Trump's 28-point peace plan, which would see Kyiv cede territory to Russia, provide U.S. "de facto" recognition of Crimea, and impose limits on Ukraine's military size.
+                        </div>
+
+                        <div class="breakdown-grid">
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Original Points</div>
+                                <div class="breakdown-value">28</div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Revised Points</div>
+                                <div class="breakdown-value">19</div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Status</div>
+                                <div class="breakdown-value">Negotiating</div>
+                            </div>
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://www.aljazeera.com/news/2025/11/20/trumps-new-28-point-plan-what-does-it-want-ukraine-to-concede-to-putin" class="source-link">Al Jazeera</a> reported that experts called the terms "unenforceable, nonsensical and vague." The plan was reportedly drafted by U.S. and Russian officials without Ukrainian input.
+                        </div>
+
+                        <div class="key-facts">
+                            <div class="key-facts-title">Key Plan Requirements:</div>
+                            <ul class="fact-list">
+                                <li>Ukraine to <strong>withdraw from territory</strong> it still controls</li>
+                                <li><strong>Cut armed forces by more than half</strong></li>
+                                <li>Commit to <strong>never joining NATO</strong></li>
+                                <li>U.S. recognition of Crimea as Russian</li>
+                                <li><strong>Amnesty</strong> provisions (problematic given ICC warrant for Putin)</li>
+                            </ul>
+                        </div>
+
+                        <div class="warning">
+                            <strong>Allegation:</strong> <a href="https://abcnews.go.com/International/kremlin-describing-information-frenzy-declines-detail-moscows-view/story?id=127852942" class="source-link">ABC News</a> reported that Secretary of State Marco Rubio allegedly told three senators, including Jeanne Shaheen, that the points were "dictated by Putin." Rubio subsequently denied making the statement.
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://www.cnn.com/2025/11/25/europe/analysis-putin-trump-ukraine-peace-plan-latam-intl" class="source-link">CNN analysis</a> on November 25 noted that "Putin plays Trump for time"—Russia's goals appear to be impeding enforcement of new oil sanctions while making Trump believe negotiations are progressing.
+                        </div>
+                        
+                        <div class="quote">
+                            "Either complicated 28 points, or an extremely tough winter—the toughest—and further risks. A life without freedom, without dignity, without justice."
+                        </div>
+                        <div class="citation">— President Volodymyr Zelensky, via <a href="https://abcnews.go.com/US/putin-zelenskyy-respond-trumps-peace-plan/story?id=127758454" class="source-link">ABC News</a></div>
+
+                        <div class="citation">Sources: <a href="https://www.cnn.com/2025/11/20/politics/ukraine-russia-trump-peace-proposal" class="source-link">CNN</a>, <a href="https://www.aljazeera.com/news/2025/11/20/trumps-new-28-point-plan-what-does-it-want-ukraine-to-concede-to-putin" class="source-link">Al Jazeera</a>, <a href="https://www.axios.com/2025/11/20/trump-ukraine-peace-plan-28-points-russia" class="source-link">Axios</a>, <a href="https://abcnews.go.com/US/putin-zelenskyy-respond-trumps-peace-plan/story?id=127758454" class="source-link">ABC News</a>, <a href="https://www.washingtonpost.com/world/2025/11/25/russia-ukraine-peace-plan-putin/" class="source-link">Washington Post</a></div>
+                    </div>
+                    
+                    <button class="collapse-button" onclick="toggleSection('ukraine-section')">
+                        <span>▲</span> Collapse Section
+                    </button>
+                </div>
+            </div>
+
+            <!-- AI and Geothermal Energy -->
+            <div class="section">
+                <div class="section-title" onclick="toggleSection('energy-section')">
+                    ⚡ AI Data Centers & Geothermal Energy: The Power Question
+                    <span class="expand-icon">▶</span>
+                </div>
+                
+                <div class="section-content collapsed" id="energy-section">
+                    <div class="story">
+                        <div class="story-headline">
+                            Geothermal Could Power Nearly All New Data Centers
+                        </div>
+                        <div class="story-content">
+                            <a href="https://rhg.com/research/geothermal-data-center-electricity-demand/" class="source-link">Rhodium Group</a> research found that geothermal could economically meet up to 64% of expected data center demand growth by the early 2030s—and potentially 100% if centers are sited optimally.
+                        </div>
+
+                        <div class="stats-box">
+                            <div class="stats-number">68 GW</div>
+                            <div>AI data center power capacity needed by 2027 (RAND estimate)</div>
+                        </div>
+
+                        <div class="key-facts">
+                            <div class="key-facts-title">Geothermal Advantages for Data Centers:</div>
+                            <ul class="fact-list">
+                                <li><strong>24/7 reliability</strong>—operates with 90%+ capacity factor</li>
+                                <li><strong>Zero carbon emissions</strong>—helps meet corporate climate targets</li>
+                                <li><strong>31-45% lower costs</strong> when data centers locate near geothermal resources</li>
+                                <li><strong>Not location-dependent</strong>—deep drilling makes it viable almost anywhere</li>
+                                <li><strong>Information travels at light speed</strong>—data centers can be anywhere</li>
+                            </ul>
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://techcrunch.com/2025/03/11/geothermal-could-power-nearly-all-new-data-centers-through-2030/" class="source-link">TechCrunch</a> noted that advanced geothermal techniques—drilling deeper and using hydraulic fracturing—unlock resources in far more locations than conventional hydrothermal systems. Companies like Fervo Energy and Sage Geosystems are leading the charge.
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://about.fb.com/news/2024/08/new-geothermal-energy-project-to-support-our-data-centers/" class="source-link">Meta</a> announced a partnership with Sage Geosystems to deliver up to 150 MW of geothermal baseload power, calling it "a first-of-its-kind project" that could make geothermal viable "virtually anywhere."
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://www.rand.org/pubs/research_reports/RRA3572-1.html" class="source-link">RAND Corporation</a> warned that AI data centers could need 68 GW of power capacity by 2027—close to California's entire power capacity—and urged evaluation of geothermal and small modular reactors as solutions.
+                        </div>
+
+                        <div class="citation">Sources: <a href="https://rhg.com/research/geothermal-data-center-electricity-demand/" class="source-link">Rhodium Group</a>, <a href="https://techcrunch.com/2025/03/11/geothermal-could-power-nearly-all-new-data-centers-through-2030/" class="source-link">TechCrunch</a>, <a href="https://www.rand.org/pubs/research_reports/RRA3572-1.html" class="source-link">RAND</a>, <a href="https://about.fb.com/news/2024/08/new-geothermal-energy-project-to-support-our-data-centers/" class="source-link">Meta</a>, <a href="https://fervoenergy.com/fervo-uipa-the-enhanced-geothermal-data-center-corridor-july-2025/" class="source-link">Fervo Energy</a></div>
+                    </div>
+                    
+                    <button class="collapse-button" onclick="toggleSection('energy-section')">
+                        <span>▲</span> Collapse Section
+                    </button>
+                </div>
+            </div>
+
+            <!-- RFK Jr Scandal -->
+            <div class="section">
+                <div class="section-title" onclick="toggleSection('rfk-section')">
+                    💔 RFK Jr. & Olivia Nuzzi: The Scandal That Won't Stop
+                    <span class="expand-icon">▶</span>
+                </div>
+                
+                <div class="section-content collapsed" id="rfk-section">
+                    <div class="story">
+                        <div class="story-headline">
+                            New Revelations as Memoir and Counter-Memoir Collide
+                        </div>
+                        <div class="story-content">
+                            <a href="https://www.thedailybeast.com/rfk-jr-told-me-he-loved-me-and-wanted-my-baby-journalist/" class="source-link">The Daily Beast</a> reported that journalist Olivia Nuzzi's forthcoming memoir claims Health and Human Services Secretary Robert F. Kennedy Jr., 71, told her he loved her and expressed a desire to father her child—painting their relationship as more serious than previously known.
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://www.theringer.com/2025/11/25/national-affairs/olivia-nuzzi-rfk-jr-ryan-lizza-explained-book-scandal" class="source-link">The Ringer</a> provided an extensive timeline noting the scandal "encompasses political corruption, journalistic malpractice, lizards, Dante's Divine Comedy, Malibu, $15,000 worth of Cartier jewelry, shocking press releases, surprise investigations, naked presidential candidates (more than one)..."
+                        </div>
+
+                        <div class="key-facts">
+                            <div class="key-facts-title">The Latest Developments:</div>
+                            <ul class="fact-list">
+                                <li>Nuzzi's ex-fiancé <strong>Ryan Lizza</strong> publishing serialized Substack rebuttals</li>
+                                <li>Lizza alleges Nuzzi had <strong>prior affair with Mark Sanford</strong> (also a source)</li>
+                                <li>Claims Nuzzi wrote <strong>campaign strategy memos</strong> for RFK Jr.</li>
+                                <li>Vanity Fair reportedly <strong>reviewing Nuzzi's conduct</strong></li>
+                                <li>Kennedy continues to <strong>deny</strong> the relationship was more than one interview</li>
+                            </ul>
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://washingtonian.com/2025/11/24/crisis-pr-experts-have-advice-for-olivia-nuzzi-and-ryan-lizza/" class="source-link">Washingtonian</a> consulted crisis PR experts who noted that Cheryl Hines, Kennedy's wife, "has the least stable positioning—she can still change what she does at any point in time" and has "more room to maneuver than anyone else in the story, because she's the least responsible for any of it."
+                        </div>
+                        
+                        <div class="quote">
+                            "Don't become the story. And no journalist deserves to have that tablet taped to her forehead as much as Olivia Nuzzi."
+                        </div>
+                        <div class="citation">— <a href="https://airmail.news/issues/2025-11-22/all-the-nuzzi-thats-fit-to-print" class="source-link">Air Mail</a></div>
+
+                        <div class="citation">Sources: <a href="https://www.thedailybeast.com/rfk-jr-told-me-he-loved-me-and-wanted-my-baby-journalist/" class="source-link">Daily Beast</a>, <a href="https://www.theringer.com/2025/11/25/national-affairs/olivia-nuzzi-rfk-jr-ryan-lizza-explained-book-scandal" class="source-link">The Ringer</a>, <a href="https://washingtonian.com/2025/11/24/crisis-pr-experts-have-advice-for-olivia-nuzzi-and-ryan-lizza/" class="source-link">Washingtonian</a>, <a href="https://airmail.news/issues/2025-11-22/all-the-nuzzi-thats-fit-to-print" class="source-link">Air Mail</a></div>
+                    </div>
+                    
+                    <button class="collapse-button" onclick="toggleSection('rfk-section')">
+                        <span>▲</span> Collapse Section
+                    </button>
+                </div>
+            </div>
+
+            <!-- DHS Immigration Focus -->
+            <div class="section">
+                <div class="section-title" onclick="toggleSection('dhs-section')">
+                    🚨 DHS Immigration Priorities: Resources & Consequences
+                    <span class="expand-icon">▶</span>
+                </div>
+                
+                <div class="section-content collapsed" id="dhs-section">
+                    <div class="story">
+                        <div class="story-headline">
+                            Immigration Enforcement vs. Other DHS Missions
+                        </div>
+                        <div class="story-content">
+                            <a href="https://www.dhs.gov/news/2025/08/14/secretary-noem-makes-history-first-200-days-office" class="source-link">DHS</a> touted Secretary Kristi Noem's accomplishments including a 93% drop in daily border encounters and locating over 13,000 unaccompanied children. ICE received nearly $75 billion through 2029 under the "Big Beautiful Bill."
+                        </div>
+
+                        <div class="breakdown-grid">
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">ICE Funding (2025-2029)</div>
+                                <div class="breakdown-value">$75B</div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Border Encounters Drop</div>
+                                <div class="breakdown-value">93%</div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">New ICE Applications</div>
+                                <div class="breakdown-value">200,000+</div>
+                            </div>
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://www.cnn.com/2025/11/26/politics/kristi-noem-deportation-flights-el-salvador-boasberg" class="source-link">CNN</a> reported that Noem made the decision to continue deportation flights to El Salvador despite a federal judge's order to turn planes around, according to DOJ filings.
+                        </div>
+
+                        <div class="story-content">
+                            Discussion participants noted concerns that intensive immigration enforcement may be drawing resources from other DHS missions, including child sex trafficking investigations—though <a href="https://www.dhs.gov/news/2025/07/25/dhs-leads-efforts-rescue-child-victims-sex-and-labor-trafficking" class="source-link">DHS maintains</a> it is "leading efforts to rescue child victims of sex and labor trafficking."
+                        </div>
+
+                        <div class="citation">Sources: <a href="https://www.dhs.gov/making-america-safe-again" class="source-link">DHS</a>, <a href="https://www.cnn.com/2025/11/26/politics/kristi-noem-deportation-flights-el-salvador-boasberg" class="source-link">CNN</a>, <a href="https://www.dhs.gov/news/2025/07/30/secretary-noem-taking-sledgehammer-criminal-human-trafficking-rings" class="source-link">DHS Anti-Trafficking</a></div>
+                    </div>
+                    
+                    <button class="collapse-button" onclick="toggleSection('dhs-section')">
+                        <span>▲</span> Collapse Section
+                    </button>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="footer">
+            <div class="source-note">
+                <strong>Context:</strong> This analysis compiles mainstream media coverage of topics discussed in the BOLLI Current Events Discussion session of November 25, 2025.<br><br>
+                
+                <strong>Date Range:</strong> November 11–25, 2025<br><br>
+                
+                <strong>Publications Referenced:</strong><br>
+                • <a href="https://www.washingtonpost.com/" class="source-link">Washington Post</a> — Iran crisis, Trump legal cases, Ukraine<br>
+                • <a href="https://www.nytimes.com/" class="source-link">New York Times</a> — Nuzzi scandal, political analysis<br>
+                • <a href="https://www.nbcnews.com/" class="source-link">NBC News</a> — Iran water crisis, Comey/James cases<br>
+                • <a href="https://www.cnn.com/" class="source-link">CNN</a> — MTG resignation, Ukraine plan, legal analysis<br>
+                • <a href="https://www.npr.org/" class="source-link">NPR</a> — January 6 pardons, Trump prosecutions<br>
+                • <a href="https://www.aljazeera.com/" class="source-link">Al Jazeera</a> — Iran crisis, Ukraine peace plan<br>
+                • <a href="https://www.axios.com/" class="source-link">Axios</a> — Ukraine plan details, legal rulings<br>
+                • <a href="https://abcnews.go.com/" class="source-link">ABC News</a> — Ukraine negotiations, Rubio allegations<br>
+                • <a href="https://www.scientificamerican.com/" class="source-link">Scientific American</a> — Tehran water crisis<br>
+                • <a href="https://www.citizensforethics.org/" class="source-link">CREW</a> — January 6 pardon investigations<br>
+                • <a href="https://theintercept.com/" class="source-link">The Intercept</a> — Pardoned rioter crimes<br>
+                • <a href="https://www.thedailybeast.com/" class="source-link">Daily Beast</a> — RFK Jr./Nuzzi scandal<br>
+                • <a href="https://rhg.com/" class="source-link">Rhodium Group</a> — Geothermal energy research<br>
+                • <a href="https://www.rand.org/" class="source-link">RAND Corporation</a> — AI power demand analysis<br><br>
+
+                <em>Compiled for educational and analytical purposes. All links direct to original source publications.</em>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
