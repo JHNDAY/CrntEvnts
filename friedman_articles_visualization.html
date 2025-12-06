@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>George Friedman's Recent Articles - Visual Summary</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: #333;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            padding: 40px 20px;
+            margin-bottom: 40px;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 100%;
+            background: rgba(255,255,255,0.3);
+            top: 0;
+        }
+
+        .article-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            position: relative;
+            width: calc(50% - 40px);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .article-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+        }
+
+        .article-card.left {
+            margin-right: auto;
+            margin-left: 0;
+        }
+
+        .article-card.right {
+            margin-left: auto;
+            margin-right: 0;
+        }
+
+        .date {
+            display: inline-block;
+            background: #2a5298;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .article-card h2 {
+            color: #1e3c72;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            line-height: 1.3;
+        }
+
+        .article-card p {
+            color: #555;
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+
+        .topics {
+            margin: 15px 0;
+        }
+
+        .topic-tag {
+            display: inline-block;
+            background: #e8f4f8;
+            color: #2a5298;
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            margin-right: 8px;
+            margin-bottom: 8px;
+        }
+
+        .read-more {
+            display: inline-block;
+            background: #2a5298;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: bold;
+            transition: background 0.3s ease;
+        }
+
+        .read-more:hover {
+            background: #1e3c72;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+            gap: 20px;
+        }
+
+        .stat-box {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+            min-width: 200px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .stat-number {
+            font-size: 3em;
+            font-weight: bold;
+            color: #2a5298;
+            display: block;
+        }
+
+        .stat-label {
+            color: #666;
+            font-size: 1.1em;
+            margin-top: 10px;
+        }
+
+        .theme-section {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .theme-section h2 {
+            color: #1e3c72;
+            margin-bottom: 20px;
+            font-size: 2em;
+        }
+
+        .theme-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .theme-item {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #2a5298;
+        }
+
+        .theme-item h3 {
+            color: #2a5298;
+            margin-bottom: 10px;
+        }
+
+        .theme-item ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .theme-item li {
+            padding: 5px 0;
+            color: #555;
+        }
+
+        .theme-item li::before {
+            content: "▸ ";
+            color: #2a5298;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            .timeline::before {
+                left: 30px;
+            }
+
+            .article-card {
+                width: calc(100% - 60px);
+                margin-left: 60px !important;
+                margin-right: 0 !important;
+            }
+
+            header h1 {
+                font-size: 2em;
+            }
+
+            .stat-number {
+                font-size: 2em;
+            }
+        }
+
+        footer {
+            text-align: center;
+            color: white;
+            padding: 30px;
+            margin-top: 40px;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📊 George Friedman's Recent Articles</h1>
+            <p>Geopolitical Analysis & Strategic Forecasting (September - December 2025)</p>
+        </header>
+
+        <div class="stats">
+            <div class="stat-box">
+                <span class="stat-number">9</span>
+                <div class="stat-label">Articles Published</div>
+            </div>
+            <div class="stat-box">
+                <span class="stat-number">4</span>
+                <div class="stat-label">Months Covered</div>
+            </div>
+            <div class="stat-box">
+                <span class="stat-number">6</span>
+                <div class="stat-label">Major Themes</div>
+            </div>
+        </div>
+
+        <div class="theme-section">
+            <h2>🌍 Major Thematic Areas</h2>
+            <div class="theme-list">
+                <div class="theme-item">
+                    <h3>U.S. Domestic Cycles</h3>
+                    <ul>
+                        <li>Demographic crisis</li>
+                        <li>50-year socioeconomic cycle</li>
+                        <li>80-year institutional cycle</li>
+                        <li>2020s transformation</li>
+                    </ul>
+                </div>
+                <div class="theme-item">
+                    <h3>Russia & Eastern Europe</h3>
+                    <ul>
+                        <li>Ukraine conflict resolution</li>
+                        <li>Central Asian strategy</li>
+                        <li>Belarus positioning</li>
+                        <li>Poland's emergence</li>
+                    </ul>
+                </div>
+                <div class="theme-item">
+                    <h3>China Analysis</h3>
+                    <ul>
+                        <li>PLA leadership purges</li>
+                        <li>Xi Jinping's consolidation</li>
+                        <li>Economic challenges</li>
+                        <li>U.S. tariff strategy</li>
+                    </ul>
+                </div>
+                <div class="theme-item">
+                    <h3>Rising Powers</h3>
+                    <ul>
+                        <li>Japan's militarization</li>
+                        <li>Poland's regional role</li>
+                        <li>Turkey in Middle East</li>
+                        <li>Shifting alliances</li>
+                    </ul>
+                </div>
+                <div class="theme-item">
+                    <h3>Technology & Society</h3>
+                    <ul>
+                        <li>AI limitations</li>
+                        <li>Internet governance</li>
+                        <li>Medical innovation</li>
+                        <li>Workforce transformation</li>
+                    </ul>
+                </div>
+                <div class="theme-item">
+                    <h3>Demographics</h3>
+                    <ul>
+                        <li>Aging populations</li>
+                        <li>Birth rate decline</li>
+                        <li>Immigration policy</li>
+                        <li>Productivity challenges</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="timeline">
+            <div class="article-card right">
+                <span class="date">December 1, 2025</span>
+                <h2>The Nature of the Next American Cycle</h2>
+                <p>Friedman argues that America's next cycle will be defined by demographic challenges. With life expectancy at 78 years and birth rates at 1.7 children per woman, the U.S. faces a crisis where consumption rises as the productive workforce shrinks. The solution lies in medical innovation and material science to extend productive life, rather than relying solely on AI.</p>
+                <div class="topics">
+                    <span class="topic-tag">Demographics</span>
+                    <span class="topic-tag">U.S. Economy</span>
+                    <span class="topic-tag">Medical Innovation</span>
+                    <span class="topic-tag">AI Limitations</span>
+                </div>
+                <a href="https://geopoliticalfutures.com/the-nature-of-the-next-american-cycle/" class="read-more" target="_blank">Read Full Article →</a>
+            </div>
+
+            <div class="article-card left">
+                <span class="date">November 24, 2025</span>
+                <h2>On the 28-Point Plan to Resolve Ukraine</h2>
+                <p>Friedman addresses questions about Belarus's role in Ukraine peace negotiations, discussing the country's strategic position bordering NATO in the Baltics and its importance in any comprehensive settlement framework.</p>
+                <div class="topics">
+                    <span class="topic-tag">Ukraine</span>
+                    <span class="topic-tag">Belarus</span>
+                    <span class="topic-tag">NATO</span>
+                    <span class="topic-tag">Peace Negotiations</span>
+                </div>
+                <a href="https://geopoliticalfutures.com/author/gfriedman/" class="read-more" target="_blank">Read Full Article →</a>
+            </div>
+
+            <div class="article-card right">
+                <span class="date">November 17, 2025</span>
+                <h2>Rethinking China</h2>
+                <p>Friedman reconsiders his earlier analysis of Xi Jinping's dismissal of nine senior PLA generals, exploring whether this represents health issues, internal power struggles, or preparations for authoritarian consolidation. He examines China's mounting debt, political repression, and regional inequality as indicators of potential fragmentation or increased authoritarianism.</p>
+                <div class="topics">
+                    <span class="topic-tag">China</span>
+                    <span class="topic-tag">Xi Jinping</span>
+                    <span class="topic-tag">PLA</span>
+                    <span class="topic-tag">Political Analysis</span>
+                </div>
+                <a href="https://www.realclearworld.com/2025/11/17/rethinking_china_1147800.html" class="read-more" target="_blank">Read Full Article →</a>
+            </div>
+
+            <div class="article-card left">
+                <span class="date">November 11, 2025</span>
+                <h2>Russia's Issues Beyond Ukraine</h2>
+                <p>Friedman analyzes Trump's meeting with Central Asian leaders, arguing that the U.S. is opening a second front against Russia by cultivating relationships in Central Asia and the South Caucasus. This creates an arc of strategic pressure from the Baltics to Mongolia, transforming Russia's former buffer zones into U.S. spheres of influence.</p>
+                <div class="topics">
+                    <span class="topic-tag">Russia</span>
+                    <span class="topic-tag">Central Asia</span>
+                    <span class="topic-tag">U.S. Strategy</span>
+                    <span class="topic-tag">Geopolitical Encirclement</span>
+                </div>
+                <a href="https://geopoliticalfutures.com/author/gfriedman/" class="read-more" target="_blank">Read Full Article →</a>
+            </div>
+
+            <div class="article-card right">
+                <span class="date">October 30, 2025</span>
+                <h2>The 2020s and Its Historic Shift: China</h2>
+                <p>Friedman explores how Trump's tariffs are fundamentally about containing China, examining the country's economic trajectory since its 15% growth rate in 1984. He discusses China's current structural challenges including debt accumulation and regional disparities.</p>
+                <div class="topics">
+                    <span class="topic-tag">China</span>
+                    <span class="topic-tag">Trade Policy</span>
+                    <span class="topic-tag">Economic Analysis</span>
+                    <span class="topic-tag">U.S.-China Relations</span>
+                </div>
+                <a href="https://geopoliticalfutures.com/category/from-the-desk-of-george-friedman/" class="read-more" target="_blank">Read Full Article →</a>
+            </div>
+
+            <div class="article-card left">
+                <span class="date">October 16, 2025</span>
+                <h2>The Internet Today</h2>
+                <p>Friedman discusses anonymity's impact on the internet and responds to questions about whether tech companies have become publishing companies. He revisits his 2017 article "The Internet and the Tragedy of the Commons," examining how digital anonymity affects discourse and governance.</p>
+                <div class="topics">
+                    <span class="topic-tag">Technology</span>
+                    <span class="topic-tag">Internet Governance</span>
+                    <span class="topic-tag">Social Media</span>
+                    <span class="topic-tag">Digital Society</span>
+                </div>
+                <a href="https://geopoliticalfutures.com/category/from-the-desk-of-george-friedman/" class="read-more" target="_blank">Read Full Article →</a>
+            </div>
+
+            <div class="article-card right">
+                <span class="date">September 22, 2025</span>
+                <h2>The 2020s and Its Historic Shift: Japan's Evolution</h2>
+                <p>Friedman examines Japan's emergence as a major power, addressing the country's demographic challenges and its evolution in the context of reduced U.S. engagement in Asia. He revisits his forecast from "The Next 100 Years" about Japan's remilitarization to contain China.</p>
+                <div class="topics">
+                    <span class="topic-tag">Japan</span>
+                    <span class="topic-tag">Asia-Pacific</span>
+                    <span class="topic-tag">Military Power</span>
+                    <span class="topic-tag">Demographics</span>
+                </div>
+                <a href="https://geopoliticalfutures.com/category/from-the-desk-of-george-friedman/" class="read-more" target="_blank">Read Full Article →</a>
+            </div>
+
+            <div class="article-card left">
+                <span class="date">September 8, 2025</span>
+                <h2>The 2020s and Its Historic Shift: Poland's Evolution</h2>
+                <p>Friedman analyzes Poland's transformation into a regional power as Russia attempts to retrieve former Soviet borders and the U.S. reduces its European presence. Poland is positioned to become a major player in Eastern Europe's security architecture.</p>
+                <div class="topics">
+                    <span class="topic-tag">Poland</span>
+                    <span class="topic-tag">Eastern Europe</span>
+                    <span class="topic-tag">Regional Powers</span>
+                    <span class="topic-tag">NATO</span>
+                </div>
+                <a href="https://geopoliticalfutures.com/category/from-the-desk-of-george-friedman/" class="read-more" target="_blank">Read Full Article →</a>
+            </div>
+
+            <div class="article-card right">
+                <span class="date">December 4, 2025</span>
+                <h2>🎙️ Podcast: America's Next Crisis</h2>
+                <p>A podcast discussion expanding on themes from "The Storm Before the Calm," addressing demographic challenges, immigration policy, and AI's role in addressing workforce shortages. Friedman discusses the convergence of the 50-year socioeconomic cycle and 80-year institutional cycle.</p>
+                <div class="topics">
+                    <span class="topic-tag">Podcast</span>
+                    <span class="topic-tag">Demographics</span>
+                    <span class="topic-tag">Immigration</span>
+                    <span class="topic-tag">Workforce</span>
+                </div>
+                <a href="https://geopoliticalfutures.com/americas-next-crisis-george-friedman-on-immigration-technology-and-the-workforce/" class="read-more" target="_blank">Listen to Podcast →</a>
+            </div>
+        </div>
+
+        <div class="theme-section">
+            <h2>📚 About George Friedman</h2>
+            <p style="color: #555; line-height: 1.8; margin-bottom: 15px;">
+                George Friedman is an internationally recognized geopolitical forecaster and the founder and chairman of Geopolitical Futures. A New York Times bestselling author, his books include <em>The Storm Before the Calm</em> (2020), <em>The Next 100 Years</em> (2009), and <em>The Next Decade</em> (2011). Prior to founding Geopolitical Futures, he was chairman of Stratfor, a geopolitical intelligence platform.
+            </p>
+            <p style="color: #555; line-height: 1.8;">
+                His analysis focuses on long-term historical cycles, geography's role in shaping national interests, and the structural forces that drive geopolitical change. All articles cited above are published on <strong>Geopolitical Futures</strong> (geopoliticalfutures.com).
+            </p>
+        </div>
+
+        <footer>
+            <p>Visualization created December 6, 2025</p>
+            <p>Data source: Geopolitical Futures and affiliated publications</p>
+        </footer>
+    </div>
+</body>
+</html>
