@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Current Events Portal - Interactive User Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #2d3748;
+            padding: 20px;
+        }
+
+        .guide-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .guide-header {
+            background: linear-gradient(135deg, #4a5568, #2d3748);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .guide-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .guide-header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            font-style: italic;
+        }
+
+        .guide-content {
+            padding: 40px;
+        }
+
+        .accordion-item {
+            margin-bottom: 10px;
+        }
+
+        .nav-tab {
+            background: linear-gradient(45deg, #f7fafc, #edf2f7);
+            border: 2px solid #cbd5e0;
+            padding: 12px 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            color: #4a5568;
+            position: relative;
+            display: block;
+            width: 100%;
+            text-align: left;
+        }
+
+        .nav-tab::after {
+            content: '▼';
+            position: absolute;
+            right: 15px;
+            font-size: 0.8rem;
+            transition: transform 0.3s ease;
+            opacity: 0.6;
+        }
+
+        .nav-tab.active::after {
+            transform: rotate(180deg);
+        }
+
+        .nav-tab:hover {
+            background: linear-gradient(45deg, #edf2f7, #e2e8f0);
+            transform: translateY(-2px);
+        }
+
+        .nav-tab.active {
+            background: linear-gradient(45deg, #4299e1, #3182ce);
+            color: white;
+            border-color: #2c5282;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .guide-section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+            overflow: hidden;
+            transition: all 0.4s ease-out;
+            padding: 20px;
+            background: white;
+            border: 2px solid #cbd5e0;
+            border-top: none;
+            border-radius: 0 0 10px 10px;
+            margin-top: -2px;
+        }
+
+        .guide-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .feature-card {
+            background: linear-gradient(135deg, #f7fafc 0%, #edf2f7 100%);
+            border-left: 5px solid #4299e1;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(66, 153, 225, 0.2);
+        }
+
+        .feature-card h3 {
+            color: #2d3748;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .feature-icon {
+            font-size: 1.8rem;
+        }
+
+        .feature-card p {
+            color: #4a5568;
+            margin-bottom: 12px;
+            line-height: 1.7;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .feature-list li {
+            padding: 10px 0;
+            padding-left: 30px;
+            position: relative;
+            color: #2d3748;
+        }
+
+        .feature-list li:before {
+            content: "▸";
+            position: absolute;
+            left: 10px;
+            color: #4299e1;
+            font-weight: bold;
+        }
+
+        .highlight-box {
+            background: linear-gradient(45deg, #fff5f5, #fed7d7);
+            border-left: 5px solid #fc8181;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .highlight-box h4 {
+            color: #c53030;
+            margin-bottom: 10px;
+        }
+
+        .info-box {
+            background: linear-gradient(45deg, #ebf8ff, #bee3f8);
+            border-left: 5px solid #4299e1;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .info-box h4 {
+            color: #2c5282;
+            margin-bottom: 10px;
+        }
+
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(45deg, #4299e1, #3182ce);
+            color: white;
+            border-radius: 50%;
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .component-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .component-box {
+            background: white;
+            border: 2px solid #cbd5e0;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .component-box:hover {
+            border-color: #4299e1;
+            box-shadow: 0 5px 15px rgba(66, 153, 225, 0.2);
+            transform: translateY(-3px);
+        }
+
+        .component-box h4 {
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+
+        .component-box p {
+            color: #718096;
+            font-size: 0.9rem;
+        }
+
+        .quick-tip {
+            background: linear-gradient(45deg, #fefcbf, #faf089);
+            border-left: 5px solid #ecc94b;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-style: italic;
+        }
+
+        .section-title {
+            font-size: 1.8rem;
+            color: #2d3748;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #4299e1;
+        }
+
+        .example-link {
+            display: inline-block;
+            background: linear-gradient(45deg, #48bb78, #38a169);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            text-decoration: none;
+            margin: 10px 10px 10px 0;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .example-link:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(72, 187, 120, 0.3);
+        }
+
+        .session-structure {
+            background: linear-gradient(135deg, #e6fffa 0%, #b2f5ea 100%);
+            border-left: 5px solid #38b2ac;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        .session-structure h4 {
+            color: #234e52;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        @media (max-width: 768px) {
+            .guide-header h1 {
+                font-size: 2rem;
+            }
+            
+            .nav-tabs {
+                flex-direction: column;
+            }
+
+            .nav-tab {
+                border-radius: 10px;
+            }
+
+            .component-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="guide-container">
+        <div class="guide-header">
+            <h1>📚 Current Events Portal</h1>
+            <p>Your Complete Interactive User Guide</p>
+        </div>
+
+        <div class="guide-content">
+            <!-- Overview Tab and Section -->
+            <div class="accordion-item">
+                <div class="nav-tab" onclick="toggleSection('overview', event)">🏠 Overview</div>
+                <div id="overview" class="guide-section">
+                    <h2 class="section-title">Welcome to Current Events</h2>
+                    
+                    <div class="feature-card">
+                        <h3><span class="feature-icon">🎯</span>Mission</h3>
+                        <p>Current Events is your hub for insightful political analysis and current events discussion. We combine informed analysis, critical thinking, and engaging dialogue about contemporary political and social issues.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <h3><span class="feature-icon">🔑</span>Key Features</h3>
+                        <ul class="feature-list">
+                            <li><strong>Live Zoom Sessions:</strong> Interactive discussions on current topics</li>
+                            <li><strong>News in Review:</strong> Trending topics with conversation starters</li>
+                            <li><strong>For Your Consideration:</strong> Curated materials to facilitate discussions</li>
+                            <li><strong>Session Archives:</strong> Complete records with recordings, summaries, and afterwords</li>
+                            <li><strong>Special Features:</strong> Creative content including satire and historical analysis</li>
+                            <li><strong>Email Digest:</strong> Weekly summaries and trending topics initiated by user emails</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-box">
+                        <h4>🚀 Getting Started</h4>
+                        <p>Use the tabs above to explore different aspects of the portal. Each section contains detailed information about specific features and how to use them effectively.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation Tab and Section -->
+            <div class="accordion-item">
+                <div class="nav-tab" onclick="toggleSection('navigation', event)">🧭 Navigation</div>
+                <div id="navigation" class="guide-section">
+                <h2 class="section-title">Portal Navigation Guide</h2>
+
+                <div class="feature-card">
+                    <h3><span class="feature-icon">🎨</span>Portal Layout</h3>
+                    <p>The Current Events portal is organized into several main sections:</p>
+                    
+                    <div class="component-grid">
+                        <div class="component-box">
+                            <h4>📋 Agenda</h4>
+                            <p>Current week's News in Review with trending topics and email digest</p>
+                        </div>
+                        <div class="component-box">
+                            <h4>💡 For Your Consideration</h4>
+                            <p>Curated topics and resources for upcoming discussions</p>
+                        </div>
+                        <div class="component-box">
+                            <h4>📰 Session Archives</h4>
+                            <p>Past sessions organized by month with complete documentation</p>
+                        </div>
+                        <div class="component-box">
+                            <h4>💡 FYC Archives</h4>
+                            <p>Historical "For Your Consideration" topics</p>
+                        </div>
+                        <div class="component-box">
+                            <h4>⭐ Special Features</h4>
+                            <p>Creative content, satire, and unique presentations</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <h3><span class="feature-icon">🔗</span>Using Links</h3>
+                    <p>Each section contains multiple resource links:</p>
+                    <ul class="feature-list">
+                        <li>Click buttons to access external resources and visualizations</li>
+                        <li>Links open in new tabs to preserve your place in the portal</li>
+                        <li>Hover over elements to see interactive effects</li>
+                        <li>Date badges show when content was published or discussed</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h3><span class="feature-icon">🎥</span>Attending Zoom Meeting and Communicating to the Portal</h3>
+                    <p>At the top of the portal, you'll find two important buttons for engagement:</p>
+                    
+                    <div class="component-grid">
+                        <div class="component-box" style="border-color: #4299e1;">
+                            <h4>🎥 Join Zoom Meeting</h4>
+                            <p>Click to connect to live Current Events discussion sessions</p>
+                        </div>
+                        <div class="component-box" style="border-color: #48bb78;">
+                            <h4>📧 We Want to Hear From You</h4>
+                            <p>Send articles, topics, and suggestions that become part of the Email Digest</p>
+                        </div>
+                    </div>
+
+                    <div class="info-box" style="margin-top: 20px;">
+                        <h4>How "We Want to Hear From You" Works</h4>
+                        <p><span class="step-number">1</span>Click the "We Want to Hear From You" button</p>
+                        <p><span class="step-number">2</span>Send news articles, topics, or questions you'd like to discuss</p>
+                        <p><span class="step-number">3</span>Your contributions are compiled into the weekly Email Digest</p>
+                        <p><span class="step-number">4</span>The digest is published two days before the session</p>
+                        <p><span class="step-number">5</span>Topics you submitted may become part of the discussion</p>
+                    </div>
+
+                    <p style="margin-top: 15px;">This member-driven process ensures that discussions reflect the interests and concerns of the Current Events community.</p>
+                </div>
+
+                <div class="quick-tip">
+                    💡 <strong>Quick Tip:</strong> The portal is fully responsive! Access it on desktop, tablet, or mobile devices for seamless browsing.
+                </div>
+            </div>
+
+            <!-- Agenda Tab and Section -->
+            <div class="accordion-item">
+                <div class="nav-tab" onclick="toggleSection('agenda', event)">📋 Agenda</div>
+                <div id="agenda" class="guide-section">
+                <h2 class="section-title">📋 Agenda: News in Review</h2>
+
+                <div class="feature-card">
+                    <h3><span class="feature-icon">📊</span>The "Trending" Feature</h3>
+                    <p>The Trending button displays a list of topics that appeared most frequently in the press during the previous week.</p>
+                    
+                    <div class="info-box">
+                        <h4>How It Works</h4>
+                        <p><span class="step-number">1</span>The system analyzes press coverage from the previous week</p>
+                        <p><span class="step-number">2</span>Topics are categorized by frequency of appearance</p>
+                        <p><span class="step-number">3</span>Each category can be expanded to reveal potential conversation topics</p>
+                        <p><span class="step-number">4</span>Sources for the trending list appear at the bottom of the display</p>
+                    </div>
+
+                    <ul class="feature-list" style="margin-top: 20px;">
+                        <li><strong>Conversation Starters:</strong> Topics are designed specifically as conversation starters for timely, relevant discussions</li>
+                        <li><strong>Weekly Updates:</strong> Trending topics refresh each week based on current news cycles</li>
+                        <li><strong>Source Attribution:</strong> All trending topics include source references</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h3><span class="feature-icon">✉️</span>Email Digest</h3>
+                    <p>The email digest is created from member contributions through the "We Want to Hear From You" feature and is made available two days prior to each session:</p>
+                    <ul class="feature-list">
+                        <li>Members send articles and topics via "We Want to Hear From You"</li>
+                        <li>Contributions are compiled into a weekly trending topics digest</li>
+                        <li>Digest is published two days before the session</li>
+                        <li>Direct links to relevant news articles shared by members</li>
+                        <li>Curated selection of discussion-worthy topics from the community</li>
+                        <li>Easy access to primary sources for upcoming sessions</li>
+                    </ul>
+                </div>
+
+                <div class="highlight-box">
+                    <h4>🎯 Request Additional Topics</h4>
+                    <p>Members can request additional topics via email for inclusion in the News in Review card. Your input helps shape our discussion agenda!</p>
+                </div>
+
+                <div class="quick-tip">
+                    💡 <strong>Pro Tip:</strong> Review the Trending topics and Email Digest before sessions to come prepared with questions and insights!
+                </div>
+            </div>
+
+            <!-- For Your Consideration Tab and Section -->
+            <div class="accordion-item">
+                <div class="nav-tab" onclick="toggleSection('consideration', event)">💡 For Your Consideration</div>
+                <div id="consideration" class="guide-section">
+                <h2 class="section-title">💡 For Your Consideration</h2>
+
+                <div class="feature-card">
+                    <h3><span class="feature-icon">📚</span>Purpose and Function</h3>
+                    <p>The "For Your Consideration" section augments information to facilitate our discussions. This curated content provides background, context, and multiple perspectives on upcoming topics.</p>
+                    
+                    <ul class="feature-list">
+                        <li><strong>Background Materials:</strong> Context and historical perspective on complex topics</li>
+                        <li><strong>Multiple Viewpoints:</strong> Diverse perspectives on controversial issues</li>
+                        <li><strong>Supporting Documentation:</strong> Primary sources and analytical resources</li>
+                        <li><strong>Topic Deep Dives:</strong> Comprehensive exploration of key issues</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h3><span class="feature-icon">🎨</span>Limited Visualizations</h3>
+                    <p>Select topics may include visualizations to enhance understanding and engagement:</p>
+                    
+                    <div class="session-structure">
+                        <h4>Featured Example: "Being Funny is Serious Business"</h4>
+                        <p>Found in the For Your Consideration section, this visualization explores Jimmy Kimmel's approach to political commentary, examining how humor serves as a vehicle for serious political discourse.</p>
+                    </div>
+
+                    <p style="margin-top: 15px;">These visualizations transform complex topics into engaging, interactive experiences that enhance understanding and stimulate discussion.</p>
+                </div>
+
+                <div class="feature-card">
+                    <h3><span class="feature-icon">📦</span>For Your Consideration Archives</h3>
+                    <p>The portal also maintains an archive of past "For Your Consideration" topics, allowing members to:</p>
+                    <ul class="feature-list">
+                        <li>Review background materials from previous discussions</li>
+                        <li>Track how topics have evolved over time</li>
+                        <li>Access resources for ongoing research</li>
+                        <li>Find connections between past and current issues</li>
+                    </ul>
+                </div>
+
+                <div class="quick-tip">
+                    💡 <strong>Discussion Tip:</strong> Review "For Your Consideration" materials before sessions to deepen your understanding and prepare thoughtful contributions!
+                </div>
+            </div>
+
+            <!-- Session Archives Tab and Section -->
+            <div class="accordion-item">
+                <div class="nav-tab" onclick="toggleSection('sessions', event)">📰 Session Archives</div>
+                <div id="sessions" class="guide-section">
+                <h2 class="section-title">📰 Session Archives Structure</h2>
+
+                <div class="feature-card">
+                    <h3><span class="feature-icon">📦</span>Comprehensive Archive System</h3>
+                    <p>Each archived session now contains a single comprehensive card with four integrated components, providing complete documentation of every discussion.</p>
+                </div>
+
+                <div class="component-grid" style="margin-top: 30px;">
+                    <div class="component-box" style="border-color: #4299e1;">
+                        <h4>✉️ Email Digest</h4>
+                        <p>Weekly trending topics that were initiated from members sending mail through the We Want to Hear From You and were available two days prior to the session</p>
+                    </div>
+                    <div class="component-box" style="border-color: #48bb78;">
+                        <h4>🎥 Session Recording</h4>
+                        <p>Full Zoom recording available for replay</p>
+                    </div>
+                    <div class="component-box" style="border-color: #ed8936;">
+                        <h4>📊 Session Summary</h4>
+                        <p>Visual overview of session highlights and themes</p>
+                    </div>
+                    <div class="component-box" style="border-color: #9f7aea;">
+                        <h4>📄 Afterwords</h4>
+                        <p>Curated summary of topics actually discussed</p>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <h3><span class="feature-icon">✉️</span>Email Digest (Archive Component)</h3>
+                    <p>Each archived session includes the email digest with weekly trending topics that were initiated from members sending mail through the "We Want to Hear From You" feature and were made available two days prior to the session, providing context for what was current at the time of discussion.</p>
+                </div>
+
+                <div class="feature-card">
+                    <h3><span class="feature-icon">🎥</span>Session Recording</h3>
+                    <p>Full Zoom recordings allow you to:</p>
+                    <ul class="feature-list">
+                        <li>Catch up on sessions you missed</li>
+                        <li>Review complex discussions in detail</li>
+                        <li>Reference specific comments or insights</li>
+                        <li>Experience the full flow of conversation</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h3><span class="feature-icon">📊</span>Session Summary</h3>
+                    <p>The Summary Visualization provides:</p>
+                    <ul class="feature-list">
+                        <li>Visual overview of key topics discussed</li>
+                        <li>Highlighting of major themes and insights</li>
+                        <li>Interactive elements for exploration</li>
+                        <li>Quick reference for session highlights</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h3><span class="feature-icon">📝</span>Afterwords: The Innovation</h3>
+                    <p>This unique feature sets our archives apart:</p>
+                    
+                    <div class="info-box">
+                        <h4>What It Is</h4>
+                        <p>A curated summary of topics from online news publications that were actually discussed during the live session, derived directly from the Zoom transcript.</p>
+                    </div>
+
+                    <ul class="feature-list" style="margin-top: 20px;">
+                        <li><strong>Transcript-Derived:</strong> Automatically identifies topics discussed from the recording</li>
+                        <li><strong>Source Linking:</strong> Connects to original news articles that were mentioned</li>
+                        <li><strong>Session Follow-up:</strong> Allows members to review items post-discussion</li>
+                        <li><strong>Coverage Tracking:</strong> Shows what was and wasn't covered during the live session</li>
+                        <li><strong>Additional Research:</strong> Provides access to news items that may not have been fully discussed due to time constraints</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h3><span class="feature-icon">🔍</span>Using the Session Archives</h3>
+                    <p><span class="step-number">1</span>Navigate to the session archive section (organized by month)</p>
+                    <p><span class="step-number">2</span>Select the specific session you want to explore</p>
+                    <p><span class="step-number">3</span>Review the Email Digest to understand the trending news topics from that week</p>
+                    <p><span class="step-number">4</span>Watch the Session Recording to experience the full discussion</p>
+                    <p><span class="step-number">5</span>Check the Session Summary for visual highlights of key themes</p>
+                    <p><span class="step-number">6</span>Explore the Afterwords to discover what was actually discussed</p>
+                    <p><span class="step-number">7</span>Follow links to news articles for deeper understanding</p>
+                </div>
+
+                <div class="highlight-box">
+                    <h4>💎 Value of Archives</h4>
+                    <p>Archives serve multiple purposes: catch up on missed sessions, revisit important discussions, track how topics evolve over time, research political developments, and understand the progression of issues through multiple sessions.</p>
+                </div>
+
+                <div class="quick-tip">
+                    💡 <strong>Research Tip:</strong> Use the Summary Visualizations to quickly scan multiple archived sessions when researching how a particular topic evolved over time!
+                </div>
+            </div>
+
+            <!-- Special Features Tab and Section -->
+            <div class="accordion-item">
+                <div class="nav-tab" onclick="toggleSection('features', event)">⭐ Special Features</div>
+                <div id="features" class="guide-section">
+                <h2 class="section-title">⭐ Special Features Explained</h2>
+
+                <div class="feature-card">
+                    <h3><span class="feature-icon">🎭</span>Creative Content</h3>
+                    <p>The Special Features section showcases the creative side of political analysis:</p>
+                    
+                    <ul class="feature-list">
+                        <li><strong>Political Satire:</strong> Original parodies and humorous takes on current events</li>
+                        <li><strong>Musical Tributes:</strong> Tom Lehrer catalogues and collaborations</li>
+                        <li><strong>Visual Essays:</strong> Artistic representations of political themes</li>
+                        <li><strong>Historical Parallels:</strong> Connecting past and present through creative formats</li>
+                        <li><strong>Interactive Visualizations:</strong> Data-driven artistic presentations</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h3><span class="feature-icon">🎨</span>Select Visualizations in Special Features</h3>
+                    
+                    <div class="session-structure">
+                        <h4>Featured Example: "Trump Plays the UN"</h4>
+                        <p>Located in the Special Features section, this creative visualization transforms complex political analysis into an engaging theatrical presentation, making diplomatic events more accessible and memorable.</p>
+                    </div>
+
+                    <p style="margin-top: 15px;">These special visualizations use creative formats to explore serious political topics, combining entertainment with education.</p>
+                </div>
+
+                <div class="feature-card">
+                    <h3><span class="feature-icon">🎵</span>Tom Lehrer Collection</h3>
+                    <p>Multiple resources celebrating the legendary political satirist:</p>
+                    
+                    <div class="component-grid">
+                        <div class="component-box">
+                            <h4>🎶 Greatest Hits</h4>
+                            <p>Interactive listening experience with classic Lehrer songs</p>
+                        </div>
+                        <div class="component-box">
+                            <h4>📚 Song Catalogue</h4>
+                            <p>Browse the complete collection of Lehrer's work</p>
+                        </div>
+                        <div class="component-box">
+                            <h4>😂 Seliber Lehrer</h4>
+                            <p>Modern collaboration and interpretation</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="feature-card">
+                    <h3><span class="feature-icon">🏛️</span>Adventures in Bad Taste</h3>
+                    <p>A timeless exploration of political aesthetics and presentation:</p>
+                    <ul class="feature-list">
+                        <li><strong>Tacky Decor:</strong> Analysis of political imagery and style choices</li>
+                        <li><strong>Even Tackier:</strong> Deeper dive into questionable aesthetic decisions</li>
+                        <li><strong>Walk into Infamy:</strong> Historical perspective on political presentation</li>
+                        <li><strong>Scorched Earth - The White House Remake:</strong> Visual analysis of interior design choices</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <h3><span class="feature-icon">🎬</span>Additional Special Features</h3>
+                    <div class="component-grid">
+                        <div class="component-box">
+                            <h4>🎭 The Epstein Files</h4>
+                            <p>Dramatic presentation exploring complex political connections</p>
+                        </div>
+                        <div class="component-box">
+                            <h4>🃏 Shamalot</h4>
+                            <p>Political parody connecting current events to classic narratives</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <h4>🎯 Purpose of Special Features</h4>
+                    <p>These creative approaches serve serious purposes: making complex topics accessible, providing emotional engagement with serious issues, offering alternative perspectives, creating memorable learning experiences, and enhancing retention and understanding through artistic expression.</p>
+                </div>
+
+                <div class="quick-tip">
+                    💡 <strong>Discovery Tip:</strong> Special Features are perfect for sharing! Send links to friends who might enjoy a different approach to political discussion.
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        let currentSection = null;
+
+        function toggleSection(sectionId, event) {
+            const section = document.getElementById(sectionId);
+            const tab = event.currentTarget;
+            
+            // If clicking the same section, toggle it
+            if (section.classList.contains('active')) {
+                // Collapse it
+                section.classList.remove('active');
+                tab.classList.remove('active');
+                currentSection = null;
+            } else {
+                // Close all other sections
+                const allSections = document.querySelectorAll('.guide-section');
+                const allTabs = document.querySelectorAll('.nav-tab');
+                
+                allSections.forEach(s => s.classList.remove('active'));
+                allTabs.forEach(t => t.classList.remove('active'));
+                
+                // Open this section
+                section.classList.add('active');
+                tab.classList.add('active');
+                currentSection = sectionId;
+            }
+        }
+    </script>
+</body>
+</html>
