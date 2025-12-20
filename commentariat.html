@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Commentariat - Recent Articles</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .header-icon {
+            font-size: 60px;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            font-size: 1.5em;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-number {
+            font-size: 4em;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 1.3em;
+            color: #666;
+        }
+
+        .authors-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .author-card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .author-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 15px;
+            border-bottom: 3px solid #667eea;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            border-radius: 10px;
+        }
+
+        .author-header:hover {
+            background: #f8f9fa;
+        }
+
+        .author-icon {
+            font-size: 40px;
+            margin-right: 15px;
+        }
+
+        .author-name {
+            font-size: 1.8em;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .author-subtitle {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .article-count {
+            background: #667eea;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            margin-left: auto;
+            margin-right: 10px;
+        }
+
+        .chevron {
+            font-size: 1.5em;
+            transition: transform 0.3s ease;
+            color: #667eea;
+        }
+
+        .chevron.rotated {
+            transform: rotate(180deg);
+        }
+
+        .articles-summary {
+            margin-top: 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+        }
+
+        .articles-summary.expanded {
+            max-height: 5000px;
+        }
+
+        .article-preview {
+            padding: 15px;
+            margin-bottom: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .article-preview:hover {
+            background: #e9ecef;
+        }
+
+        .article-title {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+            font-size: 1.1em;
+        }
+
+        .article-date {
+            font-size: 0.85em;
+            color: #999;
+            margin-bottom: 8px;
+        }
+
+        .article-excerpt {
+            color: #555;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+
+        .expand-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-top: 15px;
+            transition: background 0.3s ease;
+        }
+
+        .expand-btn:hover {
+            background: #5568d3;
+        }
+
+        .article-details {
+            display: none;
+            margin-top: 15px;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .article-details.active {
+            display: block;
+        }
+
+        .article-link {
+            display: inline-block;
+            margin-top: 10px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .article-link:hover {
+            text-decoration: underline;
+        }
+
+        .themes-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-top: 40px;
+        }
+
+        .themes-title {
+            font-size: 2em;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .themes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .theme-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .theme-icon {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .theme-name {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+            
+            .subtitle {
+                font-size: 1.2em;
+            }
+            
+            .stat-number {
+                font-size: 3em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-icon">📰</div>
+            <h1>The Commentariat - Recent Articles</h1>
+            <div class="subtitle">Political Analysis & Commentary (October - December 2025)</div>
+        </header>
+
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-number">30+</div>
+                <div class="stat-label">Articles Published</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">3</div>
+                <div class="stat-label">Leading Voices</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">8</div>
+                <div class="stat-label">Major Themes</div>
+            </div>
+        </div>
+
+        <div class="authors-grid">
+            <!-- George Friedman -->
+            <div class="author-card">
+                <div class="author-header" onclick="toggleAuthorSection('gf-section', this)">
+                    <div>
+                        <div class="author-icon">🌍</div>
+                    </div>
+                    <div style="flex: 1;">
+                        <div class="author-name">George Friedman</div>
+                        <div class="author-subtitle">Geopolitical Futures</div>
+                    </div>
+                    <div class="article-count">5 articles</div>
+                    <div class="chevron">▼</div>
+                </div>
+                
+                <div class="articles-summary" id="gf-section">
+                    <div class="article-preview" onclick="toggleArticle('gf1')">
+                        <div class="article-title">The European Crisis: Origin and Future</div>
+                        <div class="article-date">December 15, 2025</div>
+                        <div class="article-excerpt">Europe today faces challenges similar to the 13 colonies that united against British power...</div>
+                    </div>
+                    <div class="article-details" id="gf1">
+                        <p>Friedman explores the structural challenges facing Europe, drawing parallels to historical moments of political fragmentation and consolidation. He examines whether the European Union can overcome internal divisions and external pressures, or whether centrifugal forces will pull it apart. The analysis considers economic disparities, demographic shifts, and the challenge of maintaining unity while preserving national sovereignty.</p>
+                        <a href="https://geopoliticalfutures.com/george-answers-your-questions-the-fate-of-europe/" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+
+                    <div class="article-preview" onclick="toggleArticle('gf2')">
+                        <div class="article-title">On the New US National Security Strategy</div>
+                        <div class="article-date">December 9, 2025</div>
+                        <div class="article-excerpt">Analysis of the 2025 National Security Strategy document and its implications for American foreign policy...</div>
+                    </div>
+                    <div class="article-details" id="gf2">
+                        <p>Friedman examines the 2025 National Security Strategy released by the Trump administration, analyzing how it represents a fundamental shift in American strategic thinking. He discusses the document's emphasis on Western Hemisphere preeminence, skepticism toward international institutions, and the move away from global engagement that characterized post-World War II American foreign policy. The piece evaluates whether this represents ideological change or natural geopolitical evolution.</p>
+                        <a href="https://geopoliticalfutures.com/george-answers-your-questions-on-the-new-us-national-security-strategy/" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+
+                    <div class="article-preview" onclick="toggleArticle('gf3')">
+                        <div class="article-title">On the 28-Point Plan to Resolve Ukraine</div>
+                        <div class="article-date">November 24, 2025</div>
+                        <div class="article-excerpt">Where does Belarus figure in negotiations? Analysis of proposed settlement frameworks...</div>
+                    </div>
+                    <div class="article-details" id="gf3">
+                        <p>Friedman analyzes various proposals for resolving the Ukraine conflict, examining the geopolitical implications of different settlement scenarios. He discusses Belarus's role in regional security, the challenges of creating sustainable agreements, and how any resolution must account for Russia's strategic interests, Ukraine's sovereignty, and European security architecture. The piece evaluates the viability of proposed diplomatic solutions.</p>
+                        <a href="https://geopoliticalfutures.com/" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+
+                    <div class="article-preview" onclick="toggleArticle('gf4')">
+                        <div class="article-title">Rethinking China</div>
+                        <div class="article-date">November 17, 2025</div>
+                        <div class="article-excerpt">Military purges and economic challenges signal deeper structural issues in China...</div>
+                    </div>
+                    <div class="article-details" id="gf4">
+                        <p>Friedman examines the dismissal of nine senior PLA generals and what this reveals about internal tensions within China's political-military establishment. He analyzes how economic slowdown, demographic challenges, and Xi Jinping's consolidation of power create instability. The article evaluates China's capacity to sustain its geopolitical ambitions amid these domestic pressures and what this means for regional security dynamics.</p>
+                        <a href="https://geopoliticalfutures.com/author/gfriedman/" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+
+                    <div class="article-preview" onclick="toggleArticle('gf5')">
+                        <div class="article-title">Russia's Issues Beyond Ukraine</div>
+                        <div class="article-date">November 11, 2025</div>
+                        <div class="article-excerpt">Russia's capacity and interests extend well beyond the Ukrainian conflict...</div>
+                    </div>
+                    <div class="article-details" id="gf5">
+                        <p>Friedman analyzes Russia's broader strategic challenges including its relations with Central Asian states, demographic decline, economic constraints, and the sustainability of its current political system. He examines whether Russia has the capability or desire to project power beyond its immediate periphery, and how internal pressures may constrain its foreign policy ambitions regardless of the Ukraine outcome.</p>
+                        <a href="https://geopoliticalfutures.com/author/gfriedman/" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Heather Cox Richardson -->
+            <div class="author-card">
+                <div class="author-header" onclick="toggleAuthorSection('hcr-section', this)">
+                    <div>
+                        <div class="author-icon">📜</div>
+                    </div>
+                    <div style="flex: 1;">
+                        <div class="author-name">Heather Cox Richardson</div>
+                        <div class="author-subtitle">Letters from an American</div>
+                    </div>
+                    <div class="article-count">17 articles</div>
+                    <div class="chevron">▼</div>
+                </div>
+                
+                <div class="articles-summary" id="hcr-section">
+                    <div class="article-preview" onclick="toggleArticle('hcr1')">
+                        <div class="article-title">December 19, 2025 - The Final Chaotic Days</div>
+                        <div class="article-date">December 19, 2025</div>
+                        <div class="article-excerpt">This past week feels like the final, chaotic days of a political era...</div>
+                    </div>
+                    <div class="article-details" id="hcr1">
+                        <p>Richardson reflects on the tumultuous closing days of 2025, documenting the rapid-fire policy changes, institutional challenges, and political maneuvering that characterized the week. She provides historical context for moments of political transition and crisis, drawing parallels to other periods when American democracy faced significant stress. The letter emphasizes the importance of remaining engaged and informed during periods of political turbulence.</p>
+                        <a href="https://heathercoxrichardson.substack.com/p/december-19-2025" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+
+                    <div class="article-preview" onclick="toggleArticle('hcr2')">
+                        <div class="article-title">December 18, 2025 - These Are the Times</div>
+                        <div class="article-date">December 18, 2025</div>
+                        <div class="article-excerpt">"These are the times that try men's souls..."</div>
+                    </div>
+                    <div class="article-details" id="hcr2">
+                        <p>Opening with Thomas Paine's famous words from the American Revolution, Richardson examines contemporary challenges to American democracy through the lens of historical struggles for self-governance. She discusses how citizens throughout American history have faced moments that tested their commitment to democratic principles, and draws lessons from these episodes for today's political moment.</p>
+                        <a href="https://heathercoxrichardson.substack.com/p/december-18-2025" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+
+                    <div class="article-preview" onclick="toggleArticle('hcr3')">
+                        <div class="article-title">December 17, 2025 - House Republicans and the Discharge Petition</div>
+                        <div class="article-date">December 17, 2025</div>
+                        <div class="article-excerpt">Four vulnerable Republicans signed onto the discharge petition to force Speaker Johnson's hand...</div>
+                    </div>
+                    <div class="article-details" id="hcr3">
+                        <p>Richardson analyzes the political dynamics behind vulnerable House Republicans joining Democrats on a discharge petition to bypass Speaker Mike Johnson. She examines what this reveals about fractures within the Republican caucus, the political calculus facing members in competitive districts, and the procedural mechanisms through which minority parties can challenge leadership. The letter discusses implications for governance and party unity.</p>
+                        <a href="https://heathercoxrichardson.substack.com/p/december-17-2025" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+
+                    <div class="article-preview" onclick="toggleArticle('hcr4')">
+                        <div class="article-title">December 16, 2025 - Trump Administration Actions</div>
+                        <div class="article-date">December 16, 2025</div>
+                        <div class="article-excerpt">While President Donald J. Trump continues policy implementation...</div>
+                    </div>
+                    <div class="article-details" id="hcr4">
+                        <p>Richardson documents specific Trump administration policy initiatives and their historical context, examining how current executive actions compare to previous administrations and what they reveal about the changing nature of presidential power. She analyzes the interplay between executive action, congressional oversight, and judicial review in maintaining constitutional balance.</p>
+                        <a href="https://heathercoxrichardson.substack.com/p/december-16-2025" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+
+                    <div class="article-preview" onclick="toggleArticle('hcr5')">
+                        <div class="article-title">December 15, 2025 - On Rob Reiner and The American President</div>
+                        <div class="article-date">December 15, 2025</div>
+                        <div class="article-excerpt">Reflecting on director Rob Reiner's 1995 film and its meditation on presidential leadership...</div>
+                    </div>
+                    <div class="article-details" id="hcr5">
+                        <p>Richardson uses the 1995 film "The American President" as a lens for examining what the presidency should represent versus current reality. She analyzes Aaron Sorkin's screenplay and its articulation of presidential responsibility, discussing how the film's ideals contrast with contemporary political behavior. The letter reflects on the gulf between aspirational visions of American democracy and current practice.</p>
+                        <a href="https://heathercoxrichardson.substack.com/p/december-15-2025" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+
+                    <div class="article-preview" onclick="toggleArticle('hcr6')">
+                        <div class="article-title">December 12, 2025 - Legislative Developments</div>
+                        <div class="article-date">December 12, 2025</div>
+                        <div class="article-excerpt">Examining key legislative battles and their historical significance...</div>
+                    </div>
+                    <div class="article-details" id="hcr6">
+                        <p>Richardson provides detailed analysis of congressional proceedings, placing current legislative debates in historical context. She examines the procedural and substantive issues at stake, how they connect to longer-term political trends, and what outcomes might mean for American governance. The letter emphasizes the importance of understanding legislative process in evaluating democratic health.</p>
+                        <a href="https://heathercoxrichardson.substack.com/p/december-12-2025" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+
+                    <div class="article-preview" onclick="toggleArticle('hcr7')">
+                        <div class="article-title">December 11, 2025 - Policy and Politics</div>
+                        <div class="article-date">December 11, 2025</div>
+                        <div class="article-excerpt">Daily documentation of American political developments...</div>
+                    </div>
+                    <div class="article-details" id="hcr7">
+                        <p>Richardson continues her daily chronicle of American politics, connecting current events to broader historical patterns. She examines how today's policy debates echo earlier conflicts over the role of government, individual rights, and the balance between federal and state power. The letter maintains her signature approach of using history to illuminate present-day political dynamics.</p>
+                        <a href="https://heathercoxrichardson.substack.com/p/december-11-2025" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+
+                    <div class="article-preview" onclick="toggleArticle('hcr8')">
+                        <div class="article-title">December 5, 2025 - The National Security Strategy</div>
+                        <div class="article-date">December 5, 2025</div>
+                        <div class="article-excerpt">Late-night release of 2025 NSS reveals dramatic foreign policy shift...</div>
+                    </div>
+                    <div class="article-details" id="hcr8">
+                        <p>Richardson provides in-depth analysis of the Trump administration's 2025 National Security Strategy, examining its rejection of the post-World War II international order, embrace of spheres-of-influence politics, and vision of American isolationism. She discusses the document's troubling echoes of white supremacist rhetoric and what the strategy reveals about the administration's worldview. The letter contextualizes these policy choices within American diplomatic history.</p>
+                        <a href="https://heathercoxrichardson.substack.com/p/december-5-2025" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+
+                    <div class="article-preview" onclick="toggleArticle('hcr9')">
+                        <div class="article-title">December 1, 2025 - Monthly Transition</div>
+                        <div class="article-date">December 1, 2025</div>
+                        <div class="article-excerpt">Entering December with analysis of the preceding month's political developments...</div>
+                    </div>
+                    <div class="article-details" id="hcr9">
+                        <p>Richardson reflects on November's political developments and previews December's challenges. She examines recurring patterns in American politics, seasonal rhythms of governance, and how year-end legislative activity shapes policy outcomes. The letter provides perspective on the cumulative impact of political decisions and the importance of sustained civic engagement.</p>
+                        <a href="https://heathercoxrichardson.substack.com/p/december-1-2025" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+
+                    <p style="margin-top: 15px; color: #666; font-style: italic;">Plus 8 additional Letters from an American published in October and November 2025, providing daily historical context for contemporary political events.</p>
+                </div>
+            </div>
+
+            <!-- Jennifer Rubin -->
+            <div class="author-card">
+                <div class="author-header" onclick="toggleAuthorSection('jr-section', this)">
+                    <div>
+                        <div class="author-icon">✍️</div>
+                    </div>
+                    <div style="flex: 1;">
+                        <div class="author-name">Jennifer Rubin</div>
+                        <div class="author-subtitle">The Contrarian (Substack)</div>
+                    </div>
+                    <div class="article-count">8 articles</div>
+                    <div class="chevron">▼</div>
+                </div>
+                
+                <div class="articles-summary" id="jr-section">
+                    <div class="article-preview" onclick="toggleArticle('jr1')">
+                        <div class="article-title">15 Trump Moments That Felt Like a Fever Dream</div>
+                        <div class="article-date">December 19, 2025</div>
+                        <div class="article-excerpt">The 47th president's preposterous behavior in 2025 has left even jaded observers in shock...</div>
+                    </div>
+                    <div class="article-details" id="jr1">
+                        <p>Rubin catalogs the most outrageous moments from Trump's second term, documenting incidents that would have been dismissed as implausible satire just years earlier. From turning the White House into a Tesla showroom to launching a "Trump Gold Card" visa program, she chronicles how authoritarian normalization occurs through accumulated absurdities. The piece serves as both documentation and warning about democratic erosion.</p>
+                        <a href="https://contrarian.substack.com/p/15-trump-moments-that-felt-like-a" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+
+                    <div class="article-preview" onclick="toggleArticle('jr2')">
+                        <div class="article-title">The "Powerful" Who Cowered in 2025</div>
+                        <div class="article-date">December 18, 2025</div>
+                        <div class="article-excerpt">Documenting the year's worst capitulations to authoritarianism...</div>
+                    </div>
+                    <div class="article-details" id="jr2">
+                        <p>Rubin's comprehensive accountability project names names: media outlets like CBS that settled Trump lawsuits and Disney/ABC that pulled Jimmy Kimmel; governors like Greg Abbott who enthusiastically enforced Trump's most extreme policies; and corporate leaders who bent the knee. She argues that understanding who failed to resist is as important as celebrating those who stood firm, creating a record of institutional cowardice for history's judgment.</p>
+                        <a href="https://contrarian.substack.com/p/its-time-for-the-lists" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+
+                    <div class="article-preview" onclick="toggleArticle('jr3')">
+                        <div class="article-title">Split Screen: 2025 in 5 Political Photos</div>
+                        <div class="article-date">December 18, 2025</div>
+                        <div class="article-excerpt">From propaganda to resistance, images that shaped America this year...</div>
+                    </div>
+                    <div class="article-details" id="jr3">
+                        <p>Rubin (via contributor Azza Cohen) examines how visual media shaped political consciousness in 2025. From the disturbing image of tech billionaires at Trump's inauguration to hopeful photos of new Democratic leaders like Detroit Mayor-elect Mary Sheffield, the piece analyzes how photography functions as both propaganda and resistance. The visual essay demonstrates how images can both normalize authoritarianism and inspire democratic renewal.</p>
+                        <a href="https://contrarian.substack.com/p/split-screen-2025-in-5-political" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+
+                    <div class="article-preview" onclick="toggleArticle('jr4')">
+                        <div class="article-title">America Abroad in 2025</div>
+                        <div class="article-date">December 16, 2025</div>
+                        <div class="article-excerpt">How the world stopped waiting for the "old America" to return...</div>
+                    </div>
+                    <div class="article-details" id="jr4">
+                        <p>Former CIA senior executive Brian O'Neill examines how 2025 marked a definitive break in America's global relationships. Allies stopped viewing Trump as an aberration to manage and began treating American unreliability as a permanent condition requiring structural adaptation. From European defense planning to trade relationships, O'Neill documents how other nations engineered alternatives to American leadership, permanently diminishing U.S. influence regardless of future elections.</p>
+                        <a href="https://contrarian.substack.com/p/america-abroad-in-2025" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+
+                    <div class="article-preview" onclick="toggleArticle('jr5')">
+                        <div class="article-title">National Security in 2025</div>
+                        <div class="article-date">December 15, 2025</div>
+                        <div class="article-excerpt">U.S. security instruments remain intact despite political turbulence...</div>
+                    </div>
+                    <div class="article-details" id="jr5">
+                        <p>O'Neill assesses the state of American national security capabilities at year's end, finding that while political leadership has been chaotic and destructive, core security institutions have maintained professional integrity. Intelligence agencies, military organizations, and career civil servants continue functioning despite political pressure. However, he warns that institutional resilience has limits and sustained political assault could eventually break even robust systems.</p>
+                        <a href="https://contrarian.substack.com/p/national-security-in-2025" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+
+                    <div class="article-preview" onclick="toggleArticle('jr6')">
+                        <div class="article-title">A Five-Year Plan to Confront Gun Violence</div>
+                        <div class="article-date">December 9, 2025</div>
+                        <div class="article-excerpt">Parkland survivor outlines comprehensive strategy to end America's gun crisis...</div>
+                    </div>
+                    <div class="article-details" id="jr6">
+                        <p>A Parkland shooting survivor and March For Our Lives founder presents a detailed roadmap for reducing gun violence through policy change, cultural shift, and sustained activism. The piece combines personal testimony with policy analysis, arguing that young people who've lived through school shootings bring unique moral authority and political energy to this fight. Despite setbacks, the author maintains that comprehensive gun reform remains achievable.</p>
+                        <a href="https://contrarian.substack.com/p/a-five-year-plan-to-confront-americas" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+
+                    <div class="article-preview" onclick="toggleArticle('jr7')">
+                        <div class="article-title">The Caregiving Crisis Upon Us</div>
+                        <div class="article-date">December 3, 2025</div>
+                        <div class="article-excerpt">America's caregiving crisis demands urgent policy response...</div>
+                    </div>
+                    <div class="article-details" id="jr7">
+                        <p>Jennifer Weiss-Wolf examines how the unaffordable cost of caregiving—for children, elderly parents, disabled family members—has become a national crisis affecting millions of families. She analyzes how the lack of affordable childcare and elder care constrains economic opportunity, particularly for women, and argues that addressing the caregiving crisis is both moral imperative and economic necessity. The piece calls for comprehensive policy solutions.</p>
+                        <a href="https://contrarian.substack.com/p/the-caregiving-crisis-upon-us" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+
+                    <div class="article-preview" onclick="toggleArticle('jr8')">
+                        <div class="article-title">Looped In with Lynn Sweet: Presidential Rumors</div>
+                        <div class="article-date">December 2, 2025</div>
+                        <div class="article-excerpt">Looking ahead to 2028 Democratic possibilities and 2026 Senate races...</div>
+                    </div>
+                    <div class="article-details" id="jr8">
+                        <p>Rubin and Chicago Sun-Times political correspondent Lynn Sweet discuss early maneuvering for the 2028 presidential race, with prominent mayors from major cities reportedly considering runs. They also preview the 2026 Illinois Senate race and analyze ongoing legal cases involving immigration enforcement. The conversation demonstrates how the resistance must simultaneously defend against immediate threats while building for future electoral contests.</p>
+                        <a href="https://contrarian.substack.com/p/rumors-of-a-presidential-candidate" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Major Themes Section -->
+        <div class="themes-section">
+            <h2 class="themes-title">Major Themes Across Commentators</h2>
+            <div class="themes-grid">
+                <div class="theme-card">
+                    <div class="theme-icon">⚖️</div>
+                    <div class="theme-name">Democratic Institutions</div>
+                </div>
+                <div class="theme-card">
+                    <div class="theme-icon">🌐</div>
+                    <div class="theme-name">Geopolitical Shifts</div>
+                </div>
+                <div class="theme-card">
+                    <div class="theme-icon">🏛️</div>
+                    <div class="theme-name">Authoritarian Threats</div>
+                </div>
+                <div class="theme-card">
+                    <div class="theme-icon">🗳️</div>
+                    <div class="theme-name">Electoral Politics</div>
+                </div>
+                <div class="theme-card">
+                    <div class="theme-icon">🌍</div>
+                    <div class="theme-name">Foreign Policy</div>
+                </div>
+                <div class="theme-card">
+                    <div class="theme-icon">📰</div>
+                    <div class="theme-name">Media Accountability</div>
+                </div>
+                <div class="theme-card">
+                    <div class="theme-icon">⚔️</div>
+                    <div class="theme-name">International Conflicts</div>
+                </div>
+                <div class="theme-card">
+                    <div class="theme-icon">🛡️</div>
+                    <div class="theme-name">National Security</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleAuthorSection(sectionId, headerElement) {
+            const section = document.getElementById(sectionId);
+            const chevron = headerElement.querySelector('.chevron');
+            
+            section.classList.toggle('expanded');
+            chevron.classList.toggle('rotated');
+        }
+
+        function toggleArticle(articleId) {
+            const article = document.getElementById(articleId);
+            const allArticles = document.querySelectorAll('.article-details');
+            
+            // Close all other articles
+            allArticles.forEach(a => {
+                if (a.id !== articleId) {
+                    a.classList.remove('active');
+                }
+            });
+            
+            // Toggle the clicked article
+            article.classList.toggle('active');
+        }
+
+        function toggleAllArticles(prefix) {
+            const button = event.target;
+            const articles = document.querySelectorAll(`[id^="${prefix}"]`);
+            const isExpanding = button.textContent === 'Show All Articles';
+            
+            articles.forEach(article => {
+                if (isExpanding) {
+                    article.classList.add('active');
+                } else {
+                    article.classList.remove('active');
+                }
+            });
+            
+            button.textContent = isExpanding ? 'Hide All Articles' : 'Show All Articles';
+        }
+    </script>
+</body>
+</html>
