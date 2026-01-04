@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trending from Dec 21 to Jan 4</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .news-section {
+            padding: 30px;
+        }
+
+        .news-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            overflow: hidden;
+            border: 2px solid transparent;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .news-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+            border-color: #667eea;
+        }
+
+        .news-card.expanded {
+            transform: none;
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .card-header {
+            color: white;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            transform: rotate(45deg);
+        }
+
+        .card-header.level-1 { background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%); }
+        .card-header.level-2 { background: linear-gradient(135deg, #ff4444 0%, #dd2222 100%); }
+        .card-header.level-3 { background: linear-gradient(135deg, #ff8888 0%, #ff5555 100%); }
+        .card-header.level-4 { background: linear-gradient(135deg, #ffaa88 0%, #ff7755 100%); }
+        .card-header.level-5 { background: linear-gradient(135deg, #ffcc99 0%, #ff9966 100%); }
+        .card-header.level-6 { background: linear-gradient(135deg, #88aaff 0%, #5577ff 100%); }
+        .card-header.level-7 { background: linear-gradient(135deg, #4488ff 0%, #2255ff 100%); }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .expand-icon {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5rem;
+            transition: transform 0.3s ease;
+        }
+
+        .expand-icon.rotated {
+            transform: translateY(-50%) rotate(180deg);
+        }
+
+        .card-content {
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.4s ease-in-out;
+        }
+
+        .card-content.expanded {
+            max-height: 5000px;
+            padding: 25px;
+        }
+
+        .subtopic {
+            background: #f8f9ff;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+        }
+
+        .subtopic-title {
+            font-weight: 600;
+            color: #1e3c72;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+
+        .subtopic-description {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .sources-header {
+            font-weight: 600;
+            color: #1e3c72;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        ul {
+            list-style-position: inside;
+            color: #555;
+            line-height: 1.8;
+        }
+
+        ul li {
+            margin-bottom: 5px;
+        }
+
+        a {
+            color: #667eea;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        a:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Trending from Dec 21 to Jan 4</h1>
+        </div>
+        
+        <div class="news-section">
+            <!-- Card 1: Latin America - Venezuela Invasion (287 mentions) -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-1">
+                    <div class="card-title">Latin America - Venezuela (287 mentions)</div>
+                    <div class="card-subtitle">US military strikes Venezuela, captures Maduro; "Trump Corollary" asserts regional control</div>
+                    <div class="expand-icon">▼</div>
+                </div>
+                <div class="card-content">
+                    <div class="subtopic">
+                        <div class="subtopic-title">Operation Absolute Resolve: January 3 Strike</div>
+                        <div class="subtopic-description">January 3, 2026: US launched 150+ aircraft strikes on Venezuela starting 2:00 AM local time, capturing President Nicolás Maduro and First Lady Cilia Flores. Delta Force conducted raid; both flown to USS Iwo Jima. Trump posted photo showing Maduro blindfolded, wearing Nike Tech sweatsuit, holding water bottle. Attorney General Pam Bondi announced indictments in Southern District of New York on narcoterrorism charges, superseding 2020 indictment. Trump at press conference: "We are going to run the country until such time as we can do a safe, proper and judicious transition." Strikes reported in Caracas, La Guaira, Miranda, and Aragua states. Maduro's Vice President Delcy Rodríguez denounced capture as kidnapping, elevated to acting president. Trump claimed "most stunning, effective and powerful displays of American military might" in US history, threatened "second and much larger attack."</div>
+                    </div>
+
+                    <div class="subtopic">
+                        <div class="subtopic-title">Escalation Leading to Strike</div>
+                        <div class="subtopic-description">December 30: Trump claimed first known US land strike on Venezuelan dock "used to load boats up with drugs"—marking shift from maritime to shore-based operations. December 30: Pacific strike killed 2 people; Southern Command described victims as "two male narco-terrorists." Total death toll from September through December: 107 people killed in 30 strikes on vessels. December seizure of "Skipper" oil tanker carrying Venezuelan crude in international waters—"largest ever seized." Naval historian called seizure "very unusual" and "provocative." US deployed USS Gerald R. Ford carrier and 15,000+ troops—largest regional military presence in decades. September: US began attacking alleged drug boats in Caribbean. Trump announced total blockade of sanctioned tankers entering/leaving Venezuela, declared Venezuelan airspace "closed in its entirety."</div>
+                    </div>
+
+                    <div class="subtopic">
+                        <div class="subtopic-title">International and Domestic Response</div>
+                        <div class="subtopic-description">Widespread international condemnation: Colombia's President Gustavo Petro rejected "aggression against sovereignty of Venezuela and Latin America," deployed military to Venezuelan border. Cuba's President Miguel Díaz-Canel called it "criminal attack" and "state terrorism." Brazil's Lula da Silva called for UN response; Uruguay, Bolivia, Trinidad and Tobago issued condemnations. Ecuador's President Daniel Noboa urged Venezuelan opposition to "reclaim your country." Within US: Venezuelan migrants in Doral, Florida, Santiago, Madrid, Lima, and Quito celebrated. Cúcuta, Colombia crowds danced in streets. Within Venezuela: CNN reported mixed reactions—celebrations and protests demanding Maduro's release. International affairs analyst Dominic Waghorn: capture was "unprecedented event" even accounting for past US removals of heads of state.</div>
+                    </div>
+
+                    <div class="subtopic">
+                        <div class="subtopic-title">"Trump Corollary" to Monroe Doctrine</div>
+                        <div class="subtopic-description">December 5 National Security Strategy introduced "Trump Corollary" emphasizing US "control" over Western Hemisphere politically, economically, commercially, and militarily. Trump at press conference characterized action as application of Monroe Doctrine, styled as "Donroe Doctrine": "American dominance in the western hemisphere will never be questioned again." Strategy warns migration flows will lead to "civilizational erasure" in Europe. Deputy Chief of Staff Stephen Miller and VP JD Vance framed mass migration as "theft of the American Dream." Secretary of State Marco Rubio's "Americas First" foreign policy pledged to end decades of US focus on other regions. Policy combines migration control, tariff threats, military deployment against alleged drug trafficking, rewarding political allies, cutting foreign aid, punishing adversaries. CSIS analysis: signals "Trump Corollary is not mere bluster."</div>
+                    </div>
+
+                    <div class="subtopic">
+                        <div class="subtopic-title">Latin American Regional Response Throughout 2025</div>
+                        <div class="subtopic-description">Argentine President Javier Milei embraced Trump, won $20 billion peso support package boosting party in midterm elections. Colombian President Gustavo Petro initially rejected US deportation flights in January, reversed after Trump threatened punitive tariffs on flower exports. Mexico's President Claudia Sheinbaum and Brazil's Lula da Silva offered moderate compromises. US intervened in Brazil's domestic politics, attempted to meddle in Bolsonaro trial. March: Suriname's Albert Ramdin elected to lead OAS—opponent had signaled strong Trump alignment. Panama: Rubio threatened action if Hong Kong's CK Hutchison didn't sell port shares; company acquiesced month later. Regional GDP growth: 2.4% through 2025, ahead of IMF April projection of 2%. Foreign Policy: "The biggest single event to affect Latin American foreign policy this year was Trump's January inauguration."</div>
+                    </div>
+
+                    <div class="subtopic">
+                        <div class="subtopic-title">Legal Questions and War Crime Allegations</div>
+                        <div class="subtopic-description">Legal experts, human rights groups, Colombian and Venezuelan governments say strikes violate US and international law, amount to extrajudicial executions. Chatham House International Law Programme: Some authority exists for force to defend democracy abroad (African Union precedent), but only applies to counter-constitutional coups or clear election results refused. Venezuelan 2024 elections were "not free and fair" but insufficient to justify military force even under pro-democratic intervention standard. US Attorney General Pamela Bondi announced charges against Maduro and wife: "face full wrath of American justice on American soil in American courts." Trump claimed—without evidence—operations reduced maritime drug trafficking by 97%. Venezuelan government denies drug trafficking involvement, insists Washington seeks regime change to seize world's largest oil reserves. María Corina Machado (2025 Nobel Peace Prize recipient) managing "difficult balancing act" as Trump uses "increasingly aggressive tactics."</div>
+                    </div>
+
+                    <div class="sources-header">Sources:</div>
+                    <ul>
+                        <li><a href="https://www.aljazeera.com/opinions/2026/1/4/trump-just-sent-a-very-dangerous-message-to-latin-america" target="_blank">Al Jazeera - Trump Sent Dangerous Message to Latin America</a></li>
+                        <li><a href="https://www.chathamhouse.org/2026/01/us-attacks-venezuela-and-maduro-captured-early-analysis-chatham-house-experts" target="_blank">Chatham House - Early Analysis of US Venezuela Strikes</a></li>
+                        <li><a href="https://en.wikipedia.org/wiki/2026_United_States_strikes_in_Venezuela" target="_blank">Wikipedia - 2026 United States Strikes in Venezuela</a></li>
+                        <li><a href="https://www.csis.org/analysis/maduro-captured-what-comes-next-venezuela" target="_blank">CSIS - Maduro Captured: What Comes Next for Venezuela?</a></li>
+                        <li><a href="https://www.aljazeera.com/news/2026/1/3/world-reacts-to-reported-us-bombing-of-venezuela" target="_blank">Al Jazeera - World Reacts to US Bombing of Venezuela</a></li>
+                        <li><a href="https://www.aljazeera.com/news/2025/12/30/trump-claims-attack-on-a-dock-in-venezuela-us-strikes-kill-two-in-pacific" target="_blank">Al Jazeera - US Claims Attack on Dock in Venezuela</a></li>
+                        <li><a href="https://www.cnn.com/2025/12/31/americas/venezuela-us-history-trump-strike-latam-intl" target="_blank">CNN - In Evolving Latin America, US-Venezuela Discord Remains Constant</a></li>
+                        <li><a href="https://www.chathamhouse.org/2025/12/trump-corollary-us-security-strategy-brings-new-focus-latin-america-it-disordered-plan" target="_blank">Chatham House - The 'Trump Corollary' in US Security Strategy</a></li>
+                        <li><a href="https://foreignpolicy.com/2025/12/24/latin-america-top-reads-panama-el-salvador-brazil-argentina-venezuela-trump/" target="_blank">Foreign Policy - 2025: Latin America's Turbulent Year of Trump</a></li>
+                        <li><a href="https://foreignpolicy.com/2025/12/26/latin-america-trump-us-tariffs-deportations-venezuela-brazil-argentina-mexico/" target="_blank">Foreign Policy - Latin America Brief: The Year in Review 2025</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Card 2: Epstein Files (214 mentions) -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-2">
+                    <div class="card-title">Epstein Files (214 mentions)</div>
+                    <div class="card-subtitle">DOJ misses deadline, releases incomplete files; Trump-Musk rift erupts; MTG resigns over issue</div>
+                    <div class="expand-icon">▼</div>
+                </div>
+                <div class="card-content">
+                    <div class="subtopic">
+                        <div class="subtopic-title">Incomplete Release and Missed Deadlines</div>
+                        <div class="subtopic-description">December 19 deadline: DOJ failed to fully meet legal requirement to release expansive files. Epstein Files Transparency Act (passed November 19 with near-unanimous support) required release of "all unclassified records" within 30 days. January 3 legal deadline: DOJ missed second deadline to submit written justification for redactions/withheld documents. Files total 300+ gigabytes of data, papers, videos, photographs, audio from FBI's electronic case management system. December 19 initial release: thousands of files but heavily redacted, inconsistent redactions (same content redacted in one instance, not in another). CNN: documents "appears, at least after early reviews, to include no smoking guns and relatively few major revelations." December 23: DOJ released additional batch; NPR analysis shows some documents available Friday no longer accessible Saturday. Rep. Ro Khanna (D-CA): release "seems at very best incomplete," missing draft 60-count indictment and 82-page prosecution memo from 2007.</div>
+                    </div>
+
+                    <div class="subtopic">
+                        <div class="subtopic-title">Content of Released Files</div>
+                        <div class="subtopic-description">Heavy focus on Bill Clinton: multiple photos including in hot tub with redacted face, with Ghislaine Maxwell in cultural garb, with Mick Jagger and redacted person, on airplane with Michael Jackson and Diana Ross. Clinton spokesperson Angel Ureña accused Trump administration of "shielding themselves from what comes next, or from what they'll try and hide forever." Trump: remarkably little appearance after early reviews—especially notable given close friendship documented by New York Times. Photo found on Steve Bannon's iPhone (June 2021 Cellebrite search) showing Trump with Ghislaine Maxwell. Fake document crisis: December 23 letter purportedly from "J. Epstein" to Larry Nassar went viral; DOJ later confirmed fake based on Virginia postmark (not New York where Epstein jailed), wrong date formatting, handwriting mismatch. DOJ posted: law requires release of "all documents related to Jeffrey Epstein" including fakes. Austrian passport photos released showing Epstein's photo under different name, 1980s issue listing Saudi Arabian residence, stamps from France, Spain, Saudi Arabia, UK.</div>
+                    </div>
+
+                    <div class="subtopic">
+                        <div class="subtopic-title">Trump-Musk Rift Over Files</div>
+                        <div class="subtopic-description">Musk posted accusation that Trump refuses to release files because Trump himself is in them—later deleted. Trump stopped railing against Musk on Truth Social after initial conflict. Musk declared intent to start "America Party." The Nation: "Former first buddies Elon Musk and Donald Trump" relationship "went gloriously kinetic on social media." New York Times issued live alert feed tracking breakup. Trump December 26 Truth Social: appeared to suggest DOJ should focus on releasing Democrats' names and move on—"When do they say NO MORE, and work on Election Fraud etc." Trump November threatened investigation of "Jeffrey Epstein's involvement and relationship with Bill Clinton, Larry Summers, Reid Hoffman, J.P. Morgan, Chase." Trump called "affordability" during campaign speech a "con job by the Democrats" but polls show it remains voter concern. NPR January 2: "During 2024 election, President Trump promised to release Epstein files as part of campaign message arguing government was run by powerful people hiding truth from Americans. At start of 2026, many people agree—and believe he is now one of powerful few keeping public in dark."</div>
+                    </div>
+
+                    <div class="subtopic">
+                        <div class="subtopic-title">Congressional Response and MTG Resignation</div>
+                        <div class="subtopic-description">Rep. Thomas Massie (R-KY) highlighted Epstein Files Transparency Act requirements: "Not later than 30 days after date of enactment" and word "all" before description of documents. Massie posted 14-minute video December 19 describing expectations, noting victim's lawyers told him at least 20 names of men accused of sex crimes in FBI possession (FD 302 forms). Rep. Ro Khanna seeking 60-count draft indictment against Epstein written but never filed by federal prosecutors in 2007, plus 82-page memo supporting prosecution. Instead Epstein pleaded guilty in Florida to state prostitution charges in 2008, sentenced to 13 months with significant "work release" time. Marjorie Taylor Greene: once Trump MAGA stalwart, broke publicly with president over multiple issues including foreign affairs focus over domestic policy. Greene now identifies as "America First" rather than MAGA. NPR/OPB December: "Georgia Republican Rep. Marjorie Taylor Greene is set to resign from House Jan. 5 after Trump repeatedly attacked her over her lobbying to release files, shrinking already-tenuous majority for House Republicans."</div>
+                    </div>
+
+                    <div class="subtopic">
+                        <div class="subtopic-title">Conspiracy Theories and Political Fallout</div>
+                        <div class="subtopic-description">NPR: "Old conspiracy theories about his life and death have subsided and new ones have taken shape." "Two weeks since Justice Department failed to fully meet legal deadline to release expansive tranche of files on Jeffrey Epstein." CBS News accuser Marina Lacerda demanded DOJ "stop redacting names that don't need to be redacted." Rep. Khanna told NPR unclear what steps Congress may take to compel faster production or if he follows through on "inherent contempt" proceedings against AG Pam Bondi. Lawmakers on recess for holidays, return to Washington in January. Political context: "Caps off rocky first year for administration facing record-low favorability ratings and president whose grasp on base is appearing to slip. Trump spent most of 2025 downplaying significance of files, at times lashing out against Republicans who demanded release of information about other potential perpetrators." Heather Cox Richardson January 3: "Trump has taken a hit on his domestic policy lately" with Epstein files among issues undermining support.</div>
+                    </div>
+
+                    <div class="subtopic">
+                        <div class="subtopic-title">Historical Context and Comparison</div>
+                        <div class="subtopic-description">Joe Biden 2021: signed executive order leading FBI and DOJ to declassify/release roughly 4,000 files related to September 11, 2001 attacks. Trump January 2025: executive orders related to JFK, Robert F. Kennedy, and Martin Luther King Jr. assassinations led to release of close to 400,000 pages. 2025 Epstein law is "less detailed in its requests and does not provide any additional funding for Justice Department to complete process of reviewing and releasing files." Vast majority of roughly 250,000 documents now available about Epstein are from public court dockets, FOIA requests from state/federal agencies, and records turned over to House Oversight Committee by Epstein's estate. December 18: House Oversight Committee Democrats released batch of 68 photos from trove of about 95,000 obtained from Epstein's estate. December 12: Earlier batch included snapshots of Trump, Clinton, Larry Summers, Woody Allen, Steve Bannon—photos do not implicate those pictured in Epstein's crimes.</div>
+                    </div>
+
+                    <div class="sources-header">Sources:</div>
+                    <ul>
+                        <li><a href="https://www.npr.org/2026/01/02/nx-s1-5662638/epstein-files-release-trump-conspiracy-2026" target="_blank">NPR - With Few Epstein Files Released, Conspiracy Theories Flourish</a></li>
+                        <li><a href="https://www.cnn.com/politics/live-news/jeffrey-epstein-files-released" target="_blank">CNN - December 19, 2025: Jeffrey Epstein Files Released</a></li>
+                        <li><a href="https://www.cnn.com/2025/12/27/politics/epstein-files-what-to-know-doj" target="_blank">CNN - Hundreds of Thousands of 'Epstein Files' Have Been Released</a></li>
+                        <li><a href="https://www.opb.org/article/2026/01/02/epstein-files-release-breeds-more-conspiracy-theories-even-less-trust/" target="_blank">OPB - With Few Epstein Files Released, Questions Remain</a></li>
+                        <li><a href="https://www.cbsnews.com/live-updates/epstein-files-released-2025/" target="_blank">CBS News - New Epstein Files Include Photos, Documents with Redactions</a></li>
+                        <li><a href="https://www.cbsnews.com/live-updates/epstein-files-released-documents-2025/" target="_blank">CBS News - DOJ Releases Huge Set of Epstein Files with Many Trump Mentions</a></li>
+                        <li><a href="https://www.npr.org/2025/12/19/nx-s1-5615152/epstein-files-release-trump-pam-bondi-democrats" target="_blank">NPR - DOJ Releases Epstein Files Short on New Information</a></li>
+                        <li><a href="https://www.npr.org/2025/12/20/nx-s1-5650758/epstein-files-doj-trump-photo" target="_blank">NPR - Available to Download Friday, Some Epstein Files No Longer There Saturday</a></li>
+                        <li><a href="https://heathercoxrichardson.substack.com/p/january-3-2026" target="_blank">Heather Cox Richardson - January 3, 2026</a></li>
+                        <li><a href="https://www.congress.gov/bill/119th-congress/house-bill/4405" target="_blank">Congress.gov - H.R.4405: Epstein Files Transparency Act</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Card 3: MAGA Coalition Fractures (162 mentions) -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-3">
+                    <div class="card-title">MAGA Coalition Fractures (162 mentions)</div>
+                    <div class="card-subtitle">MAGA self-identification drops 7 points; Turning Point civil war; Trump approval underwater</div>
+                    <div class="expand-icon">▼</div>
+                </div>
+                <div class="card-content">
+                    <div class="subtopic">
+                        <div class="subtopic-title">Polling Shows Base Erosion</div>
+                        <div class="subtopic-description">NBC News Decision Desk Poll (Nov 20-Dec 8): Only 50% of Republicans identify primarily with MAGA, down 7 points from 57% in April 2025. Equal 50% now identify more with traditional Republican Party—Republicans "evenly split." Trump overall approval: 42%, down from 45% in April; disapproval rose from 55% to 58%. "Strong" approval among non-MAGA Republicans fell from 38% to 35%. Trump economic approval: only 33% (Reuters/Ipsos Dec 12-14)—lowest of 2025. Among Republicans, economic approval fell from 78% to 72% in just weeks. Newsweek December 20 headline: "Three Polls That Show Donald Trump is Losing His Base." 53% trust Democratic Party over Republican Party (47%) on handling rising prices—consistent across African Americans (77%), women (61%), Latinos (60%), young people (59%), independents (55%). Northeastern professor Costas Panagopoulos: "Trump's popularity seems to be on downward spiral, with more Republicans and die-hard MAGA supporters questioning their affinity."</div>
+                    </div>
+
+                    <div class="subtopic">
+                        <div class="subtopic-title">Turning Point USA AmericaFest Civil War</div>
+                        <div class="subtopic-description">December 18-19 first Turning Point conference since Charlie Kirk's September assassination became battleground. Erika Kirk (Charlie's widow, new Turning Point leader) warned: "Since assassination, we've seen fractures, we've seen bridges being burned that shouldn't be burnt." Ben Shapiro attacked Tucker Carlson as "charlatan" for interviewing white nationalist Nick Fuentes: "conservative movement is in danger from charlatans who claim to speak in principle, but actually traffic in conspiracism and dishonesty." Carlson fired back about succession battle: "There's a lot of blood at stake here, as question becomes, who gets to run it after, who gets the machinery when President exits scene. There are a lot of people in Washington, maybe even in this room, who aren't quite sure what they want, but they know they don't want—JD Vance." Megyn Kelly vs. Shapiro: Kelly said Shapiro "thinks he's in a position to decide who must say what to whom and when. So, I don't think we are friends anymore." NPR December 19: "MAGA divisions over antisemitism on display at Turning Point."</div>
+                    </div>
+
+                    <div class="subtopic">
+                        <div class="subtopic-title">Electoral Defeats and 2026 Concerns</div>
+                        <div class="subtopic-description">November 2025 elections: Democrats dominated on affordability message; "stinging defeats for Republicans" attributed partly to MAGA base apathy. Brookings Institution: Trump's declining approval among independents and suburban voters "darkens GOP prospects, potentially costing seats in Congress." University of Surrey's Mark Shanahan: "Trump isn't on ballot in 2026, but he will still dominate election. If Republicans lose Congress next November, all bets are off for 2028." Historical patterns suggest president's party often struggles in midterm elections. White House Chief of Staff Susie Wiles signaled strategy shift: Trump will "campaign like it's 2024 again" to re-energize supporters. Challenge: without Trump's personal charisma on ballot, mobilizing disparate coalition—working-class voters, evangelicals, tech-aligned libertarians—has proven difficult. Some Republicans already adapting: Axios reports lawmakers have defied Trump on issues from tariffs to controversial rhetoric with "growing habit of quiet pushback."</div>
+                    </div>
+
+                    <div class="subtopic">
+                        <div class="subtopic-title">Influencer Feuds and Media Fractures</div>
+                        <div class="subtopic-description">Laura Loomer vs. H-1B visa defenders: Loomer criticized Trump appointment of Sriram Krishnan as AI czar, spent week tearing into Vivek Ramaswamy and other defenders. Musk: "I will go to war on this issue the likes of which you cannot possibly comprehend." Trump called H-1B "a great program." Loomer eventually criticized Trump himself. First major public MAGA split since Trump's election—ferocity raised questions about coalition durability. Vivek Ramaswamy: initially tapped as Musk's DOGE partner, "now reportedly being pushed out of Trump world altogether" (Boston Review). Analysts: fights not just personality-driven but reflect jockeying for influence in potential post-Trump era. Figures positioning themselves: JD Vance, Ted Cruz, Ron DeSantis, Tucker Carlson. Steve Bannon and Laura Loomer amplify criticisms of "insufficiently committed" officials on X. Axios/PoliticalWire: media apparatus "ripping itself to shreds."</div>
+                    </div>
+
+                    <div class="subtopic">
+                        <div class="subtopic-title">Policy Betrayals Fracturing Base</div>
+                        <div class="subtopic-description">The Last Refuge (Conservative Treehouse): Effort to split MAGA base using Israel as wedge issue "only benefits one larger apparatus, Sea Island billionaire control system." Israel-first voices vs. Qatar influence battle visible early 2025. Ben Shapiro, Mark Levin claims of antisemitism against voices not putting Israeli government interests first. Attacks on Tucker Carlson, Megyn Kelly, Candace Owens. Trump's visa pivot infuriated white workers who believed he promised protectionism. SNAP cuts broke trust among low-income supporters who assumed cruelty aimed at "others," not themselves. Epstein files boomeranged on conspiracy-leaning voters expecting transparency. "These were not isolated grievances" (American Community Media). Political historian Claire Potter: "There has always been broad streak of antisemitism in MAGA movement and, at same time, strong support for Israel among rightwing Christians and Jewish media figures. This combination has meant MAGA coalition was inherently unstable from start."</div>
+                    </div>
+
+                    <div class="subtopic">
+                        <div class="subtopic-title">2028 Succession Battle Brewing</div>
+                        <div class="subtopic-description">December 19 Erika Kirk at Turning Point endorsed JD Vance for 2028: "We are going to get my husband's friend JD Vance elected for 48 in most resounding way possible"—receiving cheers. Potential 2028 candidates include Vance, Vivek Ramaswamy, Nick Fuentes, Marjorie Taylor Greene (who broke with Trump November). Project 2025: serves as 920-page implementation blueprint tied to movement; roughly 40% of policy wish list already happened or in process. Heritage Foundation support for Carlson—refusal to condemn Fuentes—sent prominent conservatives to Mike Pence's project. Raw Story January 2: "This is why MAGA will die when Trump is gone." Political Junkie: "GOP will probably evolve into something that echoes maga without actually being maga." Medium December 20: "Once an unbreakable force that propelled Donald Trump to second term and reshaped Republican Party, Make America Great Again movement now shows deepening fractures. Insiders and analysts describe base that is increasingly divided, demoralized, and struggling to maintain cohesion."</div>
+                    </div>
+
+                    <div class="sources-header">Sources:</div>
+                    <ul>
+                        <li><a href="https://www.nbcnews.com/politics/politics-news/poll-trumps-maga-base-still-cracks-are-showing-ahead-2026-rcna248722" target="_blank">NBC News - Trump's MAGA Base Still Behind Him—But Cracks Showing</a></li>
+                        <li><a href="https://www.foxnews.com/media/rift-maga-movement-full-display-tpusas-americafest-ben-shapiro-tucker-carlson-battle-out" target="_blank">Fox News - Deepening MAGA Rift at TPUSA's AmericaFest 2025</a></li>
+                        <li><a href="https://medium.com/@lovefoods_54026/inside-maga-cracks-in-the-coalition-infighting-and-a-base-on-the-brink-ahead-of-2026-midterms-5b44e8617c6a" target="_blank">Medium - Inside MAGA: Cracks in the Coalition, Infighting Ahead of 2026</a></li>
+                        <li><a href="https://theconservativetreehouse.com/blog/2025/12/20/the-2025-maga-fracture-and-the-benefactors-behind-it/" target="_blank">The Last Refuge - The 2025 Attempted MAGA Fracture</a></li>
+                        <li><a href="https://www.thenation.com/article/politics/maga-break-up-trump-musk/" target="_blank">The Nation - Will Trump and Musk Bring the Whole MAGA Coalition Down?</a></li>
+                        <li><a href="https://americancommunitymedia.org/news-exchange/a-realignment-begins-why-the-maga-base-started-to-break-in-2025/" target="_blank">ACoM - A Realignment Begins: Why the MAGA Base Started to Break</a></li>
+                        <li><a href="https://www.bostonreview.net/articles/trumps-bid-at-a-new-fusionism/" target="_blank">Boston Review - The New MAGA Coalition</a></li>
+                        <li><a href="https://factually.co/fact-checks/politics/status-of-maga-december-2025-8bebfa" target="_blank">Factually.co - What is the Status of MAGA</a></li>
+                        <li><a href="https://www.rawstory.com/raw-investigates/maga-2674840025/" target="_blank">Raw Story - This Is Why MAGA Will Die When Trump Is Gone</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Card 4: Affordability Crisis (149 mentions) -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-4">
+                    <div class="card-title">Affordability Crisis (149 mentions)</div>
+                    <div class="card-subtitle">Wage growth hits 3.5% as inflation stays at 3%; 71% say income falls short of expenses</div>
+                    <div class="expand-icon">▼</div>
+                </div>
+                <div class="card-content">
+                    <div class="subtopic">
+                        <div class="subtopic-title">Wage Growth at Multi-Year Low</div>
+                        <div class="subtopic-description">November paycheck growth: lowest since May 2021. Average hourly wages $36.86, up only 3.5% annually—barely keeping pace with 3% inflation. RSM US chief economist Joe Brusuelas: "Wage growth is easing into sustained affordability crisis." Annual wage growth topped out at 5.9% in March 2022, has been steadily falling since. US economy lost jobs in 3 of past 6 months; 2025 on pace for worst job growth since pandemic (average 76,000 jobs/month vs. 2024's rate). Voluntary quit rates at 5-year low in October; employers have less incentive to give raises if not losing workers. Fed Chair Jerome Powell: "We are going to need to have some years where real compensation is higher for people to start feeling good about affordability issue." Thursday December CPI report expected to show annual inflation rose to 3.1%, further narrowing gap between paycheck growth and price increases.</div>
+                    </div>
+
+                    <div class="subtopic">
+                        <div class="subtopic-title">Consumer Financial Stress Indicators</div>
+                        <div class="subtopic-description">Conference Board December poll: consumers' views of current financial situation "collapsed" into negative territory for first time since July 2022 (month after pandemic-era inflation peaked). Marist poll (December, 1,400+ adults): 70% say cost of living in their area not very affordable or not affordable at all for average family. NPR/PBS News/Marist: Staggering 71% say income just matches or falls short of monthly expenses. 45% said high prices biggest economic worry vs. only 10% worried about job security. McKinsey Q4 2025 research: 29% dipped into savings in last 3 months (up from 26% Q3); 29% reduced savings rate (up from 26%); 28% using credit cards more (up from 26%). Credit card debt rose to collective $1.23 trillion in US as of Q3 2025 (New York Fed). 32% of Americans expect things to get worse in 2026 (Bankrate). Credit Karma survey: consumers hopeful about 2026 goals but many struggling.</div>
+                    </div>
+
+                    <div class="subtopic">
+                        <div class="subtopic-title">Category-Specific Price Increases</div>
+                        <div class="subtopic-description">CPI has risen 26% in past 6 years—about twice as fast as Fed's optimal rate (Mark Zandi, Moody's chief economist). Categories rising faster than overall inflation: housing (up 14% Sept 2023-Sept 2025), groceries (18% higher Sept 2025 vs. Jan 2022), medical costs (up nearly 7%), services (up over 8%), dining out, car repairs, used cars. November 2025 specifics: coffee prices up 19% from previous year, beef up around 15%, bananas up 7%. Almost half say it's harder to afford groceries than year ago (Axios/Harris Poll, September). Only 19% said food prices cheaper than year earlier. Roughly 14% of US households reported food insecurity Jan-Oct 2025, up from 12.5% in 2024 (Purdue). In NYC, 40% of families can't afford weekly food costs (Robin Hood/Columbia University). Utility costs: Americans now pay average $265/month in utilities, up 12% since last year (Century Foundation/Protect Borrowers). 124+ million Americans expected to see energy bill rate increases in 2025 (PowerLines).</div>
+                    </div>
+
+                    <div class="subtopic">
+                        <div class="subtopic-title">Housing and Healthcare Costs</div>
+                        <div class="subtopic-description">Almost 3/4 of Americans said housing has grown more unaffordable in communities in recent years (YouGov/U.Florida Center Oct poll). Mortgage rates stuck around 6.2% since September despite Fed cuts; expected to stay above 6% in 2026. Redfin: 75%+ of homes unaffordable for typical households. Rents may rise 2-3% year-over-year by end of 2026 (Redfin). Trump teased "most aggressive housing reform plans" in US history for 2026; National Economic Council Director Kevin Hassett suggested focus on housing regulations. Health insurance: Enhanced ACA premium subsidies expired Dec 31, 2025. Without extension, low/mid-income households will see premiums rise from average $888 (2025) to $1,904 (2026) (KFF). Four out of five consumers found 2025 plans for $10 or less monthly—that ends Jan 1. Employer-based plans: costs likely to rise as much as 7% for 2026 plans (Mercer). 29% of voters delayed/skipped medical care in past year due to cost; 24% delayed/skipped buying doctor-prescribed medication (Century Foundation survey Oct 14-24).</div>
+                    </div>
+
+                    <div class="subtopic">
+                        <div class="subtopic-title">Political Dimensions and Trump Response</div>
+                        <div class="subtopic-description">Democrats won recent elections in NYC, New Jersey, Virginia by highlighting affordability issues. NPR/PBS/Marist: Only 36% approve of Trump's economic stewardship—lowest in 6 years, matching Biden's 2022 low. AP-NOPC December 11: 7 in 10 US adults described current state of US economy negatively. Trump December speech called "affordability" a "con job by the Democrats" despite it being issue No. 1 in poll after poll. Rep. MTG told Sean Spicer: Trump's "gaslighting the people and trying to tell them that prices have come down is not helping." Ben Shapiro: "When President Trump says things are becoming more affordable, people don't believe that because they aren't really more affordable." Trump claimed Dec 11: "prices are coming down tremendously" but inflation stood at 3% in September (same as January inauguration). Trump tariff agenda has pushed prices on essentials (bananas, coffee) and discretionary items (toys, electronics). Leanna Haakons (Black Hawk Financial): "Consumers balancing many pressures including tariffs, sticky inflation and softening labor market."</div>
+                    </div>
+
+                    <div class="subtopic">
+                        <div class="subtopic-title">2026 Economic Outlook</div>
+                        <div class="subtopic-description">Inflation should cool to about 2.4% in 2026 (Federal Reserve December forecast), but Fed projects only one additional rate cut for 2026 (down from earlier expectations). Fed Chair Powell: disinflation appears continuing in services; goods inflation "should come down in back half of 2026" as firms finish dividing tariff costs. Goldman Sachs December 22: US economic growth likely to accelerate in 2026 due to reduced "tariff drag," tax cuts, improved financial conditions. Projects 2.6% real GDP growth (higher than previously expected 2%). Hiring could improve: average payroll gains could rise to 70,000/month in 2026, more than double 2025's 32,000/month average. Wages projected to climb 2.3% in 2026 (accelerating from 1.9% in 2025). However: some economists warn job market could remain muted as companies turn to AI. Oxford Economics chief economist Michael Pearce: "I think it'll be better year. Tax cuts will be center stage, and we'll see broadening out of economic strength." But many households won't feel relief immediately: "2026 might not feel all that different than end of 2025—it's slow process that might take five or six years."</div>
+                    </div>
+
+                    <div class="sources-header">Sources:</div>
+                    <ul>
+                        <li><a href="https://www.cnn.com/2025/12/16/economy/affordability-wage-growth-inflation" target="_blank">CNN - The No. 1 Cause of America's Affordability Problem Just Got Worse</a></li>
+                        <li><a href="https://www.cnbc.com/2025/12/24/affordability-is-a-buzzword-right-now-these-charts-show-why.html" target="_blank">CNBC - Affordability Is a Buzzword Right Now—These Charts Show Why</a></li>
+                        <li><a href="https://www.cbsnews.com/news/affordability-2025-inflation-food-prices-housing-child-care-health-costs/" target="_blank">CBS News - America's Deepening Affordability Crisis Summed Up in 5 Charts</a></li>
+                        <li><a href="https://www.cnbc.com/2025/12/26/how-americans-are-responding-to-the-affordability-crisis.html" target="_blank">CNBC - Americans Are 'Trying to Muscle Through' the Affordability Crisis</a></li>
+                        <li><a href="https://www.cbsnews.com/news/economy-2026-outlook-affordability-rates-jobs-markets/" target="_blank">CBS News - What Will the U.S. Economy Look Like in 2026?</a></li>
+                        <li><a href="https://www.cnn.com/2025/12/15/economy/affordability-jobs-inflation" target="_blank">CNN - The Solution to America's Affordability Problem Might Be Broken, Too</a></li>
+                        <li><a href="https://www.cnn.com/2025/12/26/business/trump-housing-market-reform-home-prices-2026" target="_blank">CNN - Trump Promised Housing Reform. Where May Home Prices Go in 2026?</a></li>
+                        <li><a href="https://tcf.org/content/report/survey-the-affordability-crisis-is-here-and-its-hitting-the-working-class-the-hardest/" target="_blank">Century Foundation - Survey: Affordability Crisis Hitting Working Class Hardest</a></li>
+                        <li><a href="https://dailyreporter.com/2025/12/12/trump-inflation-housing-costs-2026/" target="_blank">Daily Reporter - US Inflation May Slow, But Affordability Debate Likely to Keep Raging</a></li>
+                        <li><a href="https://www.npr.org/2025/12/18/nx-s1-5647510/inflation-economy-prices-affordability" target="_blank">NPR - Inflation Cools Slightly as Worries About Affordability Grip Americans</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Card 5: Supreme Court Cases (95 mentions) -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-5">
+                    <div class="card-title">Supreme Court Cases (95 mentions)</div>
+                    <div class="card-subtitle">SCOTUS rejects National Guard deployment; birthright citizenship, tariffs, Fed firing on docket</div>
+                    <div class="expand-icon">▼</div>
+                </div>
+                <div class="card-content">
+                    <div class="subtopic">
+                        <div class="subtopic-title">December 23 National Guard Rejection</div>
+                        <div class="subtopic-description">December 23: Supreme Court rejected Trump's effort to deploy National Guard in Illinois in 6-3 decision. Illinois Democratic Governor J.B. Pritzker: "Donald Trump's lying again" after Trump claimed December 31 he is removing National Guard from Chicago, Los Angeles, Portland because troops had "greatly reduced" crime. Trump vowed to "come back, perhaps in much different and stronger form, when crime begins to soar again—Only a question of time!" This decision marked departure from Trump's shadow docket success rate: since January 20, 2025, SCOTUS issued 25 shadow docket decisions concerning administration actions—20 ruled for administration at least partially. 7 decisions not accompanied by any written explanation. Law professor Stephen Vladeck: Trump's "first real loss" at Supreme Court since April. Brennan Center tracker shows two shadow docket applications currently pending as of late December.</div>
+                    </div>
+
+                    <div class="subtopic">
+                        <div class="subtopic-title">Major Cases Scheduled for 2026</div>
+                        <div class="subtopic-description">Birthright citizenship (Barbara v. Trump): Arguments expected spring 2026, ruling by June-July. Trump's executive order seeks to bar children of undocumented immigrants born in US from citizenship—would overturn right guaranteed by 14th Amendment upheld for over century. Lower courts already ruled against administration. Learning Resources v. Trump / Trump v. V.O.S. Selections (tariffs): November arguments completed; ruling expected early 2026. Justices appeared skeptical of Trump's power to impose tariffs under 1977 International Emergency Economic Powers Act. Loss would significantly curtail Trump's power, could require refunds of $100+ billion in tariff payments. Trump called it "most important case ever." Trump v. Cook (Federal Reserve): January 21, 2026 oral arguments. Whether Trump can fire Lisa Cook from Fed Board of Governors. October temporary ruling allowed Cook to remain on job. Federal Reserve Act: president can only remove members "for cause." Trump v. Slaughter (FTC): December 8 arguments completed. Whether Trump can fire FTC Commissioner Rebecca Slaughter and overturn 90-year Humphrey's Executor precedent. Win would give Trump far greater control over FTC, FCC, NLRB and other independent agencies.</div>
+                    </div>
+
+                    <div class="subtopic">
+                        <div class="subtopic-title">Voting Rights and Civil Rights Cases</div>
+                        <div class="subtopic-description">Louisiana v. Callais: SCOTUS appeared "poised to severely curtail Section 2 of Voting Rights Act" in decision that would reshape how legislative and congressional maps are drawn nationwide, potentially reducing minority representation by significant margins. Challenges core VRA provision that has created maps allowing minority voters to elect candidates of choice. Overturning could allow Republicans to lock in additional congressional and legislative seats across country. Little v. Hecox: Challenges Idaho law prohibiting transgender girls and women from participating in female sports. Decision against athletes would mark major setback for LGBTQ+ community, adding to Trump's other 2025 actions limiting protections for transgender individuals. Chiles v. Salazar: Whether therapists' conversations with patients about conversion therapy are protected by First Amendment or considered medical treatment states can regulate. Twenty-three states had full bans on conversion therapy as of late 2025, five states imposing partial ban. LGBTQ+ advocates, major medical and mental health organizations condemn conversion therapy as harmful, discriminatory, ineffective.</div>
+                    </div>
+
+                    <div class="subtopic">
+                        <div class="subtopic-title">Second Amendment Cases</div>
+                        <div class="subtopic-description">Wolford v. Lopez (Arguments: January 20, 2026): Hawaii law makes it crime to carry handgun on private property without "express authorization" from owner, lessee, operator, or manager. Ninth Circuit ruled in favor of state. Petitioners cite Second Circuit ruling on similar law that court struck down. United States v. Hemani: Fifth Circuit invalidated federal law prohibiting firearm possession by person who "is unlawful user of or addicted to any controlled substance," concluding law violated Second Amendment in most instances.</div>
+                    </div>
+
+                    <div class="subtopic">
+                        <div class="subtopic-title">Campaign Finance and Other Cases</div>
+                        <div class="subtopic-description">NRSC v. FEC: Do limits on amount of money political parties can spend in coordination with individual candidates violate First Amendment? Supreme Court will determine constitutionality. Additional significant cases accepted by Court: whether certain agencies can be regulated; questions about presidential power over economy; Second Amendment scope regarding Hawaii gun restrictions; transgender rights questions.</div>
+                    </div>
+
+                    <div class="subtopic">
+                        <div class="subtopic-title">Strategic Timing and Political Context</div>
+                        <div class="subtopic-description">NBC News analysis: "Court has long history of waiting until president has lost some of his post-election power and popularity before delivering major legal losses." Richard Pildes (NYU Law): "Court is not confronting president head-on until spring this year. That's very different in terms of his political strength." Trump started second term with positive ratings but December NBC News poll showed 42% approval (down from April), 58% disapprove. In birthright, tariffs, Fed firing cases, "justices could have acted sooner" but waited. December ruling will come "just months before midterm elections that will put president into lame duck territory." Axios: "SCOTUS granted Trump several wins in 2025, including letting him fire federal workers, proceed with mass deportation plan, and ban transgender people from military service." Washington Post: Court ruling on tariffs "perhaps biggest of Supreme Court's term." Oral arguments scheduled through January; major decisions expected spring-summer 2026.</div>
+                    </div>
+
+                    <div class="sources-header">Sources:</div>
+                    <ul>
+                        <li><a href="https://www.scotusblog.com/2025/12/supreme-court-rejects-trumps-effort-to-deploy-national-guard-in-illinois/" target="_blank">SCOTUSblog - Supreme Court Rejects Trump's National Guard Deployment</a></li>
+                        <li><a href="https://www.nbcnews.com/politics/supreme-court/supreme-court-new-term-trump-tariffs-birthright-citizenship-fed-rcna249340" target="_blank">NBC News - Supreme Court Has Delayed Direct Conflict with Trump</a></li>
+                        <li><a href="https://www.axios.com/2026/01/01/2026-trump-supreme-court-cases-tariffs" target="_blank">Axios - How Trump's Agenda Lands at the Supreme Court in 2026</a></li>
+                        <li><a href="https://www.washingtonpost.com/politics/interactive/2025/supreme-court-cases-2025-26-term/" target="_blank">Washington Post - The Supreme Court's Major Cases During 2025-2026 Term</a></li>
+                        <li><a href="https://www.brennancenter.org/our-work/research-reports/supreme-court-shadow-docket-tracker-challenges-trump-administration" target="_blank">Brennan Center - Supreme Court Shadow Docket Tracker</a></li>
+                        <li><a href="https://news.northeastern.edu/2025/10/06/supreme-court-2025-2026-term-executive-power/" target="_blank">Northeastern - Supreme Court 2025-26 Term Begins with Five Big Cases</a></li>
+                        <li><a href="https://constitutioncenter.org/blog/presidential-powers-transgender-rights-among-upcoming-supreme-court-arguments" target="_blank">Constitution Center - Presidential Powers, Transgender Rights Among Upcoming Arguments</a></li>
+                        <li><a href="https://ogletree.com/insights-resources/blog-posts/supreme-court-to-review-constitutionality-of-birthright-citizenship-in-2025-26-term/" target="_blank">Ogletree Deakins - Supreme Court to Review Birthright Citizenship</a></li>
+                        <li><a href="https://www.kjzz.org/fronteras-desk/2025-12-26/supreme-court-will-take-up-birthright-citizenship-case-in-2026" target="_blank">KJZZ - Supreme Court Will Take Up Birthright Citizenship in 2026</a></li>
+                        <li><a href="https://www.britannica.com/topic/Major-Supreme-Court-Cases-from-the-2025-26-Term" target="_blank">Britannica - Major Supreme Court Cases from 2025-26 Term</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Card 6: Trump Administration Reversals (78 mentions) -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-6">
+                    <div class="card-title">Trump Administration Reversals (78 mentions)</div>
+                    <div class="card-subtitle">43-day shutdown ends; Project 2025 40% implemented; tariffs invalidated then stayed; IRS cuts risk tax season</div>
+                    <div class="expand-icon">▼</div>
+                </div>
+                <div class="card-content">
+                    <div class="subtopic">
+                        <div class="subtopic-title">Government Shutdown and Resolution</div>
+                        <div class="subtopic-description">Trump signed narrow spending package to end 43-day government shutdown—longest lapse of government funding in US history. House passed bill 222-209 after group of Democratic representatives broke with party to advance it. Bill funds government through January, reverses recent federal worker layoffs, guarantees back pay for furloughed employees. Package omits Democrats' priority of extending ACA tax credit enhancements, prompting separate vote over health care subsidies in mid-December (which failed). During shutdown: Education Department eliminated employees working in programs it opposes "under cover of government shutdown." Musk at February Cabinet meeting: "We will make mistakes. DOGE accidentally canceled very briefly funding for Ebola prevention efforts." Treasury IG September report: 2026 tax filing season "at risk" because of sizable cuts to teams handling customer service and fixing tax-return errors. IRS employee Alex Berman (National Treasury Employees Union): "Taxpayers will be frustrated, less likely to have problems fixed, end up paying more monies in penalties and interest if they owe, owed more interest if refunds are delayed."</div>
+                    </div>
+
+                    <div class="subtopic">
+                        <div class="subtopic-title">Tariff Policy Chaos and Court Ruling</div>
+                        <div class="subtopic-description">August 29, 2025: US Court of Appeals for Federal Circuit invalidated tariffs Trump invoked under International Emergency Economic Powers Act—representing majority of tariffs announced since return to office. Tariffs remain in effect through October 14 to allow for administration appeal, "only creates more uncertainty." Center for American Progress: typical small business importing products already faced $90,000+ in tariff costs April-July 2025 alone; reporting revenue losses of about 13%, will annualize to $100,000 if costs continue to mount. "These costs are only the beginning of toll that Trump's turbulence will take on businesses and consumers in months to come." Trump administration's first six months marked by "strong statements and reversals that have unnerved markets and consumers." American businesses recently expressed worries about having to grapple with potentially negative impacts from tariffs in 2026, such as higher consumer prices. Private investment fell nearly 15% on annual basis in quarter after Trump announced "Liberation Day" tariffs—biggest one-quarter decline outside recession since 1988. Pullback in tariffs may have helped Q3 investment remain basically stable.</div>
+                    </div>
+
+                    <div class="subtopic">
+                        <div class="subtopic-title">Project 2025 Implementation Status</div>
+                        <div class="subtopic-description">Axios January 1: "From reshaping federal government to his push to recognize only two genders, Trump spent much of 2025 ticking off items from conservative wishlist." Online tracker shows administration enacted several Project 2025 goals, "many of which were long-held conservative desires." Roughly 40% of Project 2025's 900-page policy wish list has either already happened or is in process (The Nation). Administration laid groundwork to dismantle Department of Education, ditched Biden-era Title IX protections for students based on gender identity/sexual orientation. Six new interagency agreements transfer Education Dept programs to four other agencies: Office of Elementary and Secondary Education and Office of Postsecondary Education housed under other departments. Still on table for 2026: federal "Parents' Bill of Rights," FDA reversal of chemical abortion drug approval (RFK Jr. said will be studied), "Born-Alive Abortion Survivors Protection Act" (hasn't passed Congress), CMS imposing "time limits or lifetime caps on benefits to disincentivize permanent dependence" on publicly-funded health benefits.</div>
+                    </div>
+
+                    <div class="subtopic">
+                        <div class="subtopic-title">Deregulation Executive Order</div>
+                        <div class="subtopic-description">Trump signed "Unleashing Prosperity Through Deregulation" executive order requiring federal agencies to identify at least 10 existing regulations to repeal whenever seeking to issue new one. Order aims to reduce "unnecessary, burdensome, and costly federal regulations," requires cost of all new regulations be "significantly less than zero" for fiscal year 2025. Reinstates Trump first-term deregulatory efforts, reversing Biden-era rules and lowering review thresholds for new regulations. 225 total executive orders signed in 2025 (EO 14147 through EO 14371). Critics: policy prioritizes deregulation over public protections. Supporters: will boost economic growth and government efficiency. Brookings Regulatory Tracker (updated December 3, last rules current through November 25): monitors "curated selection of significant regulatory and deregulatory changes made by Trump administration" across environmental, health, labor policy areas.</div>
+                    </div>
+
+                    <div class="subtopic">
+                        <div class="subtopic-title">Specific Policy Reversals and Impacts</div>
+                        <div class="subtopic-description">IRS funding: Republican-run Congress enacted cuts clawing back billions in promised funding for IRS auditors hunting for tax fraud. Estimates vary: could lead to $350 billion to $900 billion in lost revenue by 2036. Transgender military ban: SCOTUS permitted administration to enforce ban, lifting nationwide injunction. Unsigned decision allows military to discharge current transgender service members and deny enlistment while legal challenges proceed. Environmental reversals: Grist reported "major environmental reversals including loosening fossil fuel rules and weakening endangered-species safeguards," though "conservationists, lawmakers, and researchers still notched key wins at local and state levels." Jack Smith testimony: December 31 House Judiciary Republicans released 255-page transcript of former special counsel Smith's December 17 closed-door testimony. Fact they released at time "when most Americans are not paying attention to news tells you all you need to know about what Smith said." Smith testified under oath Trump was guilty: "developed proof beyond reasonable doubt that President Trump engaged in criminal scheme to overturn results of 2020 election and prevent lawful transfer of power."</div>
+                    </div>
+
+                    <div class="subtopic">
+                        <div class="subtopic-title">Agricultural Support Package</div>
+                        <div class="subtopic-description">December 8: USDA announced $12 billion farmer bridge payments for American farmers impacted by "unfair market disruptions." Up to $11 billion for Farmer Bridge Assistance (FBA) Program providing broad relief to row crop farmers. Payments intended to aid farmers until historic investments from One Big Beautiful Bill Act (OBBBA), including reference prices increasing 10-21% for major covered commodities (soybeans, corn, wheat) reach eligible farmers October 1, 2026. FBA addresses market disruptions, elevated input costs, persistent inflation, market losses from foreign competitors. Farmers qualifying can expect payments by February 28, 2026. OBBBA extended marketing assistance loan programs through 2031, updated loan rates beginning 2026 crop year. Loan rate for raw cane sugar increased to average 24 cents/pound for 2025-2031; refined beet sugar rates increased to 32.77 cents/pound. OBBBA invested in major conservation programs: $34B+ in conservation work on agricultural land over next 10 years. Provides $285 million/year for agricultural trade promotion and facilitation.</div>
+                    </div>
+
+                    <div class="sources-header">Sources:</div>
+                    <ul>
+                        <li><a href="https://www.theregreview.org/2025/12/26/top-regulatory-news-of-2025/" target="_blank">The Regulatory Review - Top Regulatory News of 2025</a></li>
+                        <li><a href="https://www.axios.com/2026/01/01/trump-project-2025-remaining-goals" target="_blank">Axios - Trump's First Year Reflected Many Project 2025 Goals</a></li>
+                        <li><a href="https://www.americanprogress.org/article/8-ways-trumps-turbulence-tax-is-costing-the-economy/" target="_blank">Center for American Progress - 8 Ways Trump's Turbulence Tax Is Costing Economy</a></li>
+                        <li><a href="https://www.brookings.edu/articles/tracking-regulatory-changes-in-the-second-trump-administration/" target="_blank">Brookings - Tracking Regulatory Changes in Second Trump Administration</a></li>
+                        <li><a href="https://us.cnn.com/2026/01/01/politics/donald-trump-2025-federal-government" target="_blank">CNN - How Trump Upended the Federal Government in 2025</a></li>
+                        <li><a href="https://dailycaller.com/2026/01/01/economy-trump-2025-tariffs-tax-cuts-federal-workers/" target="_blank">Daily Caller - Here's How US Economy Really Fared Under Trump in 2025</a></li>
+                        <li><a href="https://www.usnews.com/news/national-news/articles/trumps-biggest-policy-reversals-so-far" target="_blank">US News - Trump's Biggest Policy Reversals in First 100 Days</a></li>
+                        <li><a href="https://grist.org/solutions/despite-trump-era-reversals-2025-still-saw-environmental-wins-here-are-7-worth-noting/" target="_blank">Grist - Despite Trump-Era Reversals, 2025 Still Saw Environmental Wins</a></li>
+                        <li><a href="https://www.usda.gov/about-usda/news/press-releases/2025/12/08/trump-administration-announces-12-billion-farmer-bridge-payments-american-farmers-impacted-unfair" target="_blank">USDA - $12 Billion Farmer Bridge Payments Announced</a></li>
+                        <li><a href="https://www.federalregister.gov/presidential-documents/executive-orders/donald-trump/2025" target="_blank">Federal Register - 2025 Donald J. Trump Executive Orders</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Card 7: Government Sponsored Health Care (46 mentions) -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-7">
+                    <div class="card-title">Government Sponsored Health Care (46 mentions)</div>
+                    <div class="card-subtitle">Enhanced ACA subsidies expire Dec 31; premiums to more than double for 22 million; 10-15M lose coverage</div>
+                    <div class="expand-icon">▼</div>
+                </div>
+                <div class="card-content">
+                    <div class="subtopic">
+                        <div class="subtopic-title">ACA Enhanced Subsidies Expiration</div>
+                        <div class="subtopic-description">Enhanced premium subsidies for 22 million Americans enrolled in ACA marketplace expired December 31, 2025. Congress failed to extend subsidies despite December votes. Shutdown ended without agreement to extend subsidies. December 11: Senate voted on ACA measures but neither Democrats' 3-year extension nor Republicans' alternative advanced. Without extension: average premiums will increase 75% for 2026 (previous reporting). KFF analysis: low/middle-income households previously qualifying for tax credits will see premiums rise from average $888 in 2025 to $1,904 in 2026. Four out of five consumers found 2025 plans for $10 or less monthly—that ends January 1. ACA marketplace premiums projected to rise by median of 18% nationwide in 2026—an 11 percentage point increase compared with 7% average annual growth rate seen from 2023 to 2025. Typical 40-year-old couple earning $82,000 annually (401% FPL) would see monthly premiums for silver plan nearly double—rising by $412, from $581 to $993 per month, resulting in annual increase of approximately $4,946.</div>
+                    </div>
+
+                    <div class="subtopic">
+                        <div class="subtopic-title">Projected Coverage Losses</div>
+                        <div class="subtopic-description">CBO estimates: without enhanced subsidies, 14+ million more uninsured by 2034. Combined with One Big Beautiful Bill Act (OBBBA) cuts, 10-15 million could lose coverage. Johns Hopkins estimates up to 15 million more uninsured by 2034 from OBBBA alone. OBBBA includes over $1 trillion in healthcare cuts through 2034—"biggest cut to our social safety net in history" (Johns Hopkins). New sign-ups dropped considerably in Pennsylvania and California during enrollment period. 21 state-based exchanges saw 18% decrease in new customers to 210,500. Roughly 22 million people in 2025 had premiums reduced because of enhanced tax credits. Century Foundation survey October 14-24: 250 million Americans will face health insurance premium increases in 2026 far exceeding inflation, wage growth, and Social Security adjustments. Nearly 3 in 10 Americans (29%) report delaying or going without medical care in past year—37% of Hispanics, 33% of women, 32% of Black Americans. Among adults 18-29, nearly half (49%) delayed or skipped medical care. One in four people (24%) delayed or skipped buying doctor-prescribed medication in past year due to finances; women twice as likely as men (32% vs. 16%).</div>
+                    </div>
+
+                    <div class="subtopic">
+                        <div class="subtopic-title">January 1, 2026 Changes</div>
+                        <div class="subtopic-description">More frequent Medicaid redeterminations required. Work requirements for Medicaid expansion enrollees. Restrictions on lawfully present noncitizens: refugees, asylees, TPS recipients no longer eligible for ACA subsidies. DACA recipients ineligible for ACA Marketplace coverage. New enrollees must prove eligibility before receiving subsidies—no more 90-day grace period. Fiscal incentives for Medicaid expansion end, leaving 10 non-expansion states with less motivation. Medicaid gap in 10 states that have not expanded: Urban Institute projects uninsured rates to jump 65% in Mississippi, 50% in South Carolina. Millions will turn to Federally Qualified Health Centers, hospital charity care, prescription assistance programs. Emily Sory of Tennessee planned to be uninsured in 2026, forced to make difficult tradeoffs between healthcare and other necessities.</div>
+                    </div>
+
+                    <div class="subtopic">
+                        <div class="subtopic-title">Systemic Healthcare Cost Impacts</div>
+                        <div class="subtopic-description">Medicaid represents ~20% of hospital revenue nationwide. Johns Hopkins warning: "If hospitals see increase in uninsured people who can't pay bills, they're going to increase rates for other payers. It's not possible for 10-15 million people to lose health insurance and not have effects on rest of system." Employer-based health costs projected to rise as much as 7% for 2026 plans (Mercer). California attempted to mitigate: allocated $190 million to replace enhanced subsidies for lowest-income enrollees—far short of $2.5 billion in federal enhanced subsidies Californians received in 2025. Jeremy Tolbert (Kansas web developer): family's monthly premiums set to rise 18% to $2,600 in 2026. Planning to cut back in other areas: "Our food budget is going to go down—we're not talking about eating beans and rice, but going from comfortable middle-class lifestyle to eating how we did when we first got out of college."</div>
+                    </div>
+
+                    <div class="sources-header">Sources:</div>
+                    <ul>
+                        <li><a href="https://www.cnbc.com/2025/12/24/affordability-is-a-buzzword-right-now-these-charts-show-why.html" target="_blank">CNBC - Affordability: Enhanced ACA Subsidies Poised to Disappear</a></li>
+                        <li><a href="https://www.cbsnews.com/news/affordability-2025-inflation-food-prices-housing-child-care-health-costs/" target="_blank">CBS News - America's Deepening Affordability Crisis: Health Care Costs</a></li>
+                        <li><a href="https://tcf.org/content/report/survey-the-affordability-crisis-is-here-and-its-hitting-the-working-class-the-hardest/" target="_blank">Century Foundation - Survey: 250 Million Face Premium Increases in 2026</a></li>
+                        <li><a href="https://www.theregreview.org/2025/12/26/top-regulatory-news-of-2025/" target="_blank">The Regulatory Review - Spending Package Omits ACA Tax Credit Extensions</a></li>
+                        <li><a href="https://www.americanprogress.org/article/8-ways-trumps-turbulence-tax-is-costing-the-economy/" target="_blank">Center for American Progress - OBBBA Will Increase Uninsured by 10 Million</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleCard(card) {
+            const content = card.querySelector('.card-content');
+            const icon = card.querySelector('.expand-icon');
+            
+            // Close all other cards
+            document.querySelectorAll('.news-card').forEach(otherCard => {
+                if (otherCard !== card) {
+                    otherCard.classList.remove('expanded');
+                    otherCard.querySelector('.card-content').classList.remove('expanded');
+                    otherCard.querySelector('.expand-icon').classList.remove('rotated');
+                }
+            });
+            
+            // Toggle current card
+            card.classList.toggle('expanded');
+            content.classList.toggle('expanded');
+            icon.classList.toggle('rotated');
+        }
+
+        // Add smooth animations on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.news-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    card.style.transition = 'all 0.5s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>
