@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emerging Democratic Leaders: Oct 1, 2025 - Jan 9, 2026</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .news-section {
+            padding: 30px;
+        }
+
+        .news-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            overflow: hidden;
+            border: 2px solid transparent;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .news-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+            border-color: #667eea;
+        }
+
+        .news-card.expanded {
+            transform: none;
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .card-header {
+            color: white;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            transform: rotate(45deg);
+        }
+
+        .card-header.level-1 { background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%); }
+        .card-header.level-2 { background: linear-gradient(135deg, #ff4444 0%, #dd2222 100%); }
+        .card-header.level-3 { background: linear-gradient(135deg, #ff8888 0%, #ff5555 100%); }
+        .card-header.level-4 { background: linear-gradient(135deg, #ffaa88 0%, #ff7755 100%); }
+        .card-header.level-5 { background: linear-gradient(135deg, #88aaff 0%, #5577ff 100%); }
+        .card-header.level-6 { background: linear-gradient(135deg, #4488ff 0%, #2255ff 100%); }
+        .card-header.level-7 { background: linear-gradient(135deg, #0044ff 0%, #0022cc 100%); }
+        .card-header.level-8 { background: linear-gradient(135deg, #0022cc 0%, #001188 100%); }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-content {
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.4s ease-in-out;
+        }
+
+        .card-content.expanded {
+            max-height: 1000px;
+            padding: 20px;
+        }
+
+        .subtopic {
+            background: #f0f2ff;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .subtopic:hover {
+            background: #e8ebff;
+            transform: translateX(5px);
+        }
+
+        .subtopic h4 {
+            color: #1e3c72;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+
+        .subtopic p {
+            color: #666;
+            line-height: 1.5;
+            font-size: 0.95rem;
+        }
+
+        .expand-icon {
+            float: right;
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .expand-icon.rotated {
+            transform: rotate(180deg);
+        }
+
+        .severity-indicator {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.2rem;
+            z-index: 2;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .severity-critical::before { content: "🚨"; }
+        .severity-high::before { content: "⚠️"; }
+        .severity-medium::before { content: "📊"; }
+        .severity-ongoing::before { content: "🔥"; }
+
+        .footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .sources {
+            margin-top: 20px;
+            text-align: left;
+            font-size: 0.85rem;
+        }
+
+        .sources h3 {
+            color: #1e3c72;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .sources ul {
+            margin-left: 20px;
+            line-height: 1.8;
+        }
+
+        .sources a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .sources a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .news-section {
+                padding: 20px;
+            }
+            
+            .card-title {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Emerging Democratic Leaders</h1>
+            <p>Key News & Developments: October 1, 2025 - January 9, 2026</p>
+        </div>
+
+        <div class="news-section">
+            
+            <!-- GAVIN NEWSOM - LEVEL 1 -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-1">
+                    <div class="severity-indicator severity-ongoing"></div>
+                    <div class="card-title">
+                        Gavin Newsom (California Governor) - 18+ Stories
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-subtitle">Final State of the State, Prop 50 victory, National Guard lawsuit win, LA fires, 2028 positioning</div>
+                </div>
+                <div class="card-content">
+                    <p><strong>Key Developments (Oct-Jan 2026):</strong></p>
+                    <ul>
+                        <li><strong>Final State of the State Address (Jan 9):</strong> Delivered final address reaffirming California as "national beacon for democracy," criticized Trump's "assault on our values"</li>
+                        <li><strong>National Guard Lawsuit Victory (Dec 15):</strong> Ninth Circuit barred continued deployment of federalized National Guard troops in Los Angeles</li>
+                        <li><strong>Proposition 50 Victory (Nov 2025):</strong> "Election Rigging Response Act" constitutional amendment passed overwhelmingly, allowing congressional redistricting; described as "light years ahead" in 2028 field</li>
+                        <li><strong>LA Fires Anniversary (Jan):</strong> Managed response to devastating Los Angeles fires anniversary, requested $34B in federal disaster aid</li>
+                        <li><strong>Homelessness Drop (2025):</strong> Announced 9% decrease in unsheltered homelessness - largest drop in 15 years</li>
+                        <li><strong>Podcast Launch:</strong> Started "This Is Gavin Newsom" podcast featuring guests across political spectrum including MAGA figures</li>
+                        <li><strong>50+ Lawsuits Against Trump:</strong> California has sued Trump administration more than 50 times</li>
+                        <li><strong>"California Derangement Syndrome":</strong> Coined term to counter critics in State of the State</li>
+                        <li><strong>Former Aide Scandal (Nov-Dec):</strong> Dana Williamson, former top aide, indicted over alleged theft</li>
+                        <li><strong>Tech Industry Balancing Act:</strong> Navigating tech leaders' Trump ties while defending innovation economy</li>
+                        <li><strong>Budget Challenges:</strong> Proposing $18B budget deficit solutions while maintaining reserves</li>
+                        <li><strong>Storm Emergencies (Dec):</strong> Proclaimed states of emergency for multiple counties due to atmospheric rivers</li>
+                    </ul>
+                    
+                    <p><strong>Key Sources:</strong></p>
+                    <ul>
+                        <li><a href="https://abc7.com/post/california-governor-gavin-newsom-deliver-final-state-address-amid-18-billion-budget-deficit/18372121/" target="_blank">ABC7 Los Angeles - Final State of the State (Jan 9)</a></li>
+                        <li><a href="https://calmatters.org/politics/2025/11/proposition-50-newsom-spotlight/" target="_blank">CalMatters - Prop 50 Puts Newsom "Light Years Ahead" (Nov 6)</a></li>
+                        <li><a href="https://www.gov.ca.gov/2025/12/29/heres-everything-so-far-governor-newsom-got-done-in-the-year-that-would-not-end/" target="_blank">CA Governor's Office - 2025 Accomplishments (Dec 29)</a></li>
+                        <li><a href="https://calmatters.org/politics/2025/12/gavin-newsom-primer/" target="_blank">CalMatters - Newsom's 2025: LA Fires, Trump Battles, Prop 50</a></li>
+                        <li><a href="https://www.kqed.org/news/12068929/in-final-year-gov-gavin-newsom-looks-to-finish-what-he-started" target="_blank">KQED - Newsom's Final Year Agenda (Jan 7)</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- JOSH SHAPIRO - LEVEL 1 -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-1">
+                    <div class="severity-indicator severity-ongoing"></div>
+                    <div class="card-title">
+                        Josh Shapiro (Pennsylvania Governor) - 16+ Stories
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-subtitle">Reelection campaign launch with record $30M war chest, 60% approval, security upgrades controversy, 2028 speculation</div>
+                </div>
+                <div class="card-content">
+                    <p><strong>Key Developments (Oct-Jan 2026):</strong></p>
+                    <ul>
+                        <li><strong>Reelection Campaign Launch (Jan 9):</strong> Officially announced bid for second term with rallies in Philadelphia and Pittsburgh</li>
+                        <li><strong>Record Fundraising:</strong> $30M+ in campaign war chest - most in Pennsylvania governor's race history; raised $10M+ in Q4 2025, $23M+ in 2025 overall</li>
+                        <li><strong>High Approval (Oct 2025):</strong> 60% approval rating according to Quinnipiac poll - all-time high; 16-point lead over Republican challenger Stacy Garrity</li>
+                        <li><strong>Economic Success:</strong> Touted Pennsylvania as "only state in Northeast with growing economy," secured $35B+ in private sector investment, 18,000+ new jobs</li>
+                        <li><strong>Major Economic Projects (Nov-Dec):</strong> Esplanade Development Project ($1.5B), Farm Plast facility ($8M), DrinkPAK facility ($195M), Eurofins expansion ($147.5M)</li>
+                        <li><strong>Home Security Upgrades Controversy (Dec):</strong> Nearly $1.1M in public security upgrades to private Montgomery County home sparked ethics debates</li>
+                        <li><strong>Arson Attack Response:</strong> State Police recommended security upgrades after middle-of-night arson attack on governor's mansion while family slept inside</li>
+                        <li><strong>SNAP Benefits Announcement (Nov 7):</strong> Ensured availability for 2 million Pennsylvanians during federal shutdown</li>
+                        <li><strong>Late Budget Concerns:</strong> Third late budget in three years caused disruption though most Pennsylvanians unaffected</li>
+                        <li><strong>Book Tour Planned:</strong> Scheduled for late January 2026</li>
+                        <li><strong>National Profile Building:</strong> Atlantic feature, national interviews, discussion with Rep. Jim Clyburn</li>
+                        <li><strong>2028 Positioning:</strong> Widely viewed as potential presidential contender; only governor with 2028 rumors up for reelection in swing state</li>
+                    </ul>
+                    
+                    <p><strong>Key Sources:</strong></p>
+                    <ul>
+                        <li><a href="https://whyy.org/articles/josh-shapiro-pennsylvania-governor-reelection-campaign/" target="_blank">WHYY - Shapiro Launches Reelection Campaign (Jan 9)</a></li>
+                        <li><a href="https://thehill.com/homenews/campaign/5674270-governor-shapiro-white-house-run/" target="_blank">The Hill - Shapiro's $30M War Chest Fuels 2028 Speculation (Jan 6)</a></li>
+                        <li><a href="https://www.nbcnews.com/politics/2026-election/pennsylvania-gov-josh-shapiro-begins-re-election-year-30-million-bank-rcna252090" target="_blank">NBC News - Shapiro Begins Re-election Year with $30M (Jan 6)</a></li>
+                        <li><a href="https://www.inquirer.com/politics/pennsylvania/josh-shapiro-governor-reelection-campaign-presidential-race-20260108.html" target="_blank">Philadelphia Inquirer - Shapiro's Reelection and 2028 Ambitions (Jan 8)</a></li>
+                        <li><a href="https://www.spotlightpa.org/news/2025/12/pennsylvania-governors-residence-josh-shapiro-security-upgrades-details-josh-shapiro/" target="_blank">Spotlight PA - Security Upgrades Details (Dec 5)</a></li>
+                        <li><a href="https://www.timesleader.com/news/1728508/pennsylvania-roundup-shapiro-says-pa-is-only-state-in-northeast-with-a-growing-economy" target="_blank">Times Leader - Economic Development Announcements (Dec)</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- ABIGAIL SPANBERGER - LEVEL 2 -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-2">
+                    <div class="severity-indicator severity-high"></div>
+                    <div class="card-title">
+                        Abigail Spanberger (Virginia Governor-Elect) - 12+ Stories
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-subtitle">Historic win as first woman Virginia governor, 15-point victory, transition team & cabinet announcements, taking office Jan 17</div>
+                </div>
+                <div class="card-content">
+                    <p><strong>Key Developments (Oct-Jan 2026):</strong></p>
+                    <ul>
+                        <li><strong>Historic Election Victory (Nov 5):</strong> Won governorship with 15-point margin - first woman governor in Virginia history; largest margin for any Democratic statewide winner in Virginia in 2025</li>
+                        <li><strong>Inauguration Jan 17:</strong> Will be sworn in as 75th governor of Virginia at state capitol</li>
+                        <li><strong>Democratic Sweep:</strong> Led ticket that won all three statewide offices; Democrats gained 64-seat majority in House of Delegates</li>
+                        <li><strong>Cabinet Nominations (Dec 23-30):</strong> Announced team including three Democratic delegates and former FBI agent; multiple secretariat appointments</li>
+                        <li><strong>"Affordable Virginia Agenda" (Dec 19):</strong> Rolled out 15+ bills on healthcare, housing, and energy with General Assembly leaders</li>
+                        <li><strong>Transition Team Announcement (Nov 14):</strong> Selected "United for Virginia's Future" committee with senior campaign staff and former officials</li>
+                        <li><strong>Transition Website Launch (Nov 7):</strong> Provided application portal for administration jobs</li>
+                        <li><strong>Multiple Cabinet Appointments (Dec):</strong> Secretary of Education, Health & Human Resources, Commerce & Trade, Finance, Natural & Historic Resources, Veterans & Defense Affairs</li>
+                        <li><strong>Former CIA Officer & Congresswoman:</strong> Served 3 terms in Congress representing swing district; former CIA case officer</li>
+                        <li><strong>Jay Jones Text Controversy (Oct):</strong> Democratic AG nominee's violent text messages threatened ticket but she navigated to victory</li>
+                        <li><strong>Obama Campaigned:</strong> Former President campaigned for her in Norfolk (Nov 1)</li>
+                        <li><strong>NPR Interview (Dec 18):</strong> Discussed historic nature of win and governing philosophy</li>
+                        <li><strong>Campaign Model:</strong> Focused on economic issues, cost of living, and Trump administration pushback - viewed as 2026 model for Democrats</li>
+                    </ul>
+                    
+                    <p><strong>Key Sources:</strong></p>
+                    <ul>
+                        <li><a href="https://19thnews.org/2025/11/abigail-spanberger-virginia-first-woman-governor/" target="_blank">The 19th News - Spanberger's Historic Win (Nov 5)</a></li>
+                        <li><a href="https://www.washingtonpost.com/dc-md-va/2025/12/23/virginia-spanberger-cabinet-nominees/" target="_blank">Washington Post - Cabinet Picks (Dec 30)</a></li>
+                        <li><a href="https://www.washingtonpost.com/dc-md-va/2025/12/19/virginia-spanberger-affordability-proposals/" target="_blank">Washington Post - Affordable Virginia Agenda (Dec 19)</a></li>
+                        <li><a href="https://virginiabusiness.com/spanberger_interview_priorities_governor/" target="_blank">Virginia Business - Interview on Economic Priorities</a></li>
+                        <li><a href="https://www.vpm.org/npr-news/2025-12-18/gov-elect-abigail-spanberger-represents-a-series-of-virginia-firsts" target="_blank">VPM - Series of Virginia Firsts (Dec 18)</a></li>
+                        <li><a href="https://spanbergertransition.com/news/" target="_blank">Spanberger Transition - Multiple Announcements (Nov-Dec)</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- MIKIE SHERRILL - LEVEL 2 -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-2">
+                    <div class="severity-indicator severity-high"></div>
+                    <div class="card-title">
+                        Mikie Sherrill (New Jersey Governor-Elect) - 11+ Stories
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-subtitle">First Democratic woman NJ governor, first female veteran governor nationwide, 14-point victory, taking office Jan 20</div>
+                </div>
+                <div class="card-content">
+                    <p><strong>Key Developments (Oct-Jan 2026):</strong></p>
+                    <ul>
+                        <li><strong>Landslide Victory (Nov 4):</strong> Won with 56-57% of vote (14.4-point margin) defeating Republican Jack Ciattarelli</li>
+                        <li><strong>Historic Firsts:</strong> Second woman governor in NJ history, first Democratic woman governor, first female military veteran to be governor of any US state</li>
+                        <li><strong>Breaking 60-Year Trend:</strong> First time since 1961 that one party has won NJ governorship three consecutive terms</li>
+                        <li><strong>Inauguration at NJPAC (Jan 20):</strong> Breaking tradition, will be sworn in at New Jersey Performing Arts Center in Newark (not state capital Trenton)</li>
+                        <li><strong>NJPAC Announcement (Dec):</strong> Newark Mayor Ras Baraka and Essex County officials praised decision as "high honor"</li>
+                        <li><strong>Former Navy Pilot & Prosecutor:</strong> First class of women allowed to fly in all combat roles; served as federal prosecutor in Newark</li>
+                        <li><strong>Won Crowded Primary (June 10):</strong> Won Democratic nomination with 34% defeating Newark Mayor Ras Baraka and Jersey City Mayor Steven Fulop</li>
+                        <li><strong>Congress Resignation (Nov 20):</strong> Resigned House seat (NJ-11) triggering special election</li>
+                        <li><strong>Record Voter Turnout:</strong> Essex County turnout surged 30%+ vs 2021; backed Sherrill by 30+ points</li>
+                        <li><strong>Transition Team:</strong> Led by Lt. Gov-elect Dale Caldwell and Executive Director Kellie Doucette</li>
+                        <li><strong>Affordability Focus:</strong> Campaign centered on cost of living, energy costs, Trump administration resistance</li>
+                        <li><strong>Obama Support:</strong> Former President Obama campaigned for her (Nov 1)</li>
+                        <li><strong>Polls Underestimated Win:</strong> Expected close race became double-digit victory</li>
+                    </ul>
+                    
+                    <p><strong>Key Sources:</strong></p>
+                    <ul>
+                        <li><a href="https://www.cnn.com/2025/11/04/politics/nj-governor-mikie-sherrill-wins" target="_blank">CNN - Sherrill Wins NJ Governor's Race (Nov 5)</a></li>
+                        <li><a href="https://19thnews.org/2025/11/mikie-sherrill-new-jersey-governor/" target="_blank">The 19th News - Sherrill's Victory (Nov 5)</a></li>
+                        <li><a href="https://montclairlocal.news/2025/12/gov-elect-mikie-sherrill-to-hold-inaugural-ceremony-at-njpac/" target="_blank">Montclair Local - NJPAC Inauguration Plans (Dec)</a></li>
+                        <li><a href="https://newjerseymonitor.com/2025/11/04/mikie-sherrill-democrat-new-jersey-governor/" target="_blank">NJ Monitor - Sherrill Celebrates Victory (Nov 5)</a></li>
+                        <li><a href="https://www.essexdems.org/post/mikie-sherrill-s-historic-win-what-essex-county-voters-need-to-know-about-jersey-s-governor-elect" target="_blank">Essex County Democrats - Historic Win Breakdown (Dec 3)</a></li>
+                        <li><a href="https://www.npr.org/2025/11/04/nx-s1-5590033/election-results-new-jersey-governor-sherrill" target="_blank">NPR - Sherrill Wins Governor's Race (Nov 5)</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- JB PRITZKER - LEVEL 2 -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-2">
+                    <div class="severity-indicator severity-high"></div>
+                    <div class="card-title">
+                        JB Pritzker (Illinois Governor) - 10+ Stories
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-subtitle">Immigration accountability commission, SNAP emergency funding, National Guard lawsuit, clean energy reform, 2028 presidential buzz</div>
+                </div>
+                <div class="card-content">
+                    <p><strong>Key Developments (Oct-Jan 2026):</strong></p>
+                    <ul>
+                        <li><strong>2028 Presidential Buzz:</strong> Washington Post profiled Pritzker as potential 2028 candidate (Dec 15), highlighting populist messaging and wealth</li>
+                        <li><strong>SNAP Emergency Response (Oct 30):</strong> Signed executive order directing $20M to food banks as federal food aid froze during government shutdown affecting 1.9M Illinois residents</li>
+                        <li><strong>Immigration Accountability Commission (Oct 23-Nov):</strong> Created commission to investigate federal immigration enforcement tactics in Illinois, calling operations "wider and more intense"</li>
+                        <li><strong>National Guard Lawsuit (Oct 6):</strong> Sued with Chicago Mayor to block Trump deployment of Texas National Guard to Chicago area</li>
+                        <li><strong>Clean Energy Bill (Jan 2026):</strong> Signed Clean and Reliable Grid Affordability Act lifting nuclear moratorium, funding battery storage</li>
+                        <li><strong>Medical Aid-in-Dying (Dec 12):</strong> Signed controversial law allowing physician-assisted death, joining 10+ states; discussed with Pope Leo XIV</li>
+                        <li><strong>Immigrant Protections (Dec 9):</strong> Signed bill protecting immigrants in courthouses with 1,000-foot buffer zones</li>
+                        <li><strong>Infrastructure Announcement (Oct 1):</strong> Announced $50.6B multi-year program for 200+ projects statewide</li>
+                        <li><strong>Third Term Campaign:</strong> Began campaigning for third gubernatorial term while mulling 2028 run</li>
+                        <li><strong>Republican Criticism (Dec):</strong> Facing calls from GOP to prosecute ICE agents if Democrats take power</li>
+                    </ul>
+                    
+                    <p><strong>Key Sources:</strong></p>
+                    <ul>
+                        <li><a href="https://www.washingtonpost.com/politics/2025/12/15/billionaires-pritzker-democrats-president-trump/" target="_blank">Washington Post - Pritzker Profile: Billionaire Democrat Eyes 2028 (Dec 15)</a></li>
+                        <li><a href="https://www.chicagotribune.com/2025/10/30/illinois-snap-pritzker-food/" target="_blank">Chicago Tribune - Pritzker SNAP Executive Order (Oct 30)</a></li>
+                        <li><a href="https://capitolnewsillinois.com/news/pritzker-warns-immigration-crackdown-becoming-wider-and-more-intense/" target="_blank">Capitol News Illinois - Immigration Crackdown Warning (Oct 31)</a></li>
+                        <li><a href="https://abc7chicago.com/post/illinois-governor-jb-pritzker-sign-clean-energy-bill-lifting-moratorium-new-nuclear-plants-adding-battery-storage/18371567/" target="_blank">ABC7 Chicago - Clean Energy Bill Signing (Jan 2026)</a></li>
+                        <li><a href="https://www.chicagotribune.com/2025/12/12/pritzer-right-to-die-signed/" target="_blank">Chicago Tribune - Medical Aid-in-Dying Law (Dec 12)</a></li>
+                        <li><a href="https://capitolnewsillinois.com/news/pritzker-signs-bill-enacting-immigrant-protections-in-courthouses/" target="_blank">Capitol News Illinois - Immigrant Courthouse Protections (Dec 9)</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- JAMES TALARICO - LEVEL 3 -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-3">
+                    <div class="severity-indicator severity-medium"></div>
+                    <div class="card-title">
+                        James Talarico (Texas State Rep/Senate Candidate) - 8+ Stories
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-subtitle">US Senate primary race, record $13M+ fundraising, Rio Grande Valley outreach, Israel controversy, trailing in polls</div>
+                </div>
+                <div class="card-content">
+                    <p><strong>Key Developments (Oct-Jan 2026):</strong></p>
+                    <ul>
+                        <li><strong>Record Fundraising:</strong> Raised $13M+ since launching Senate bid in September; Q4 2025: $6.8M with 215,000+ individual donors; 98% donations $100 or less</li>
+                        <li><strong>Most in Texas History:</strong> Campaign claims most a Senate candidate has raised in first quarter in Texas history</li>
+                        <li><strong>Democratic Primary (March 3, 2026):</strong> Running against Rep. Jasmine Crockett for Democratic nomination; TSU poll (Dec) shows him trailing by 8 points (51%-43%)</li>
+                        <li><strong>Rio Grande Valley Outreach (Dec 18):</strong> Joint rally with Tejano music star Bobby Pulido in Weslaco, courting Latino voters who backed Trump</li>
+                        <li><strong>Israel/Gaza Controversy (Dec):</strong> Comments calling for end to "war crimes" in Gaza sparked concerns from Texas Jewish community leaders</li>
+                        <li><strong>Colin Allred Criticism (Nov 14):</strong> Attacked for accepting donations from casino magnate Miriam Adelson's PACs while railing against billionaires</li>
+                        <li><strong>Joe Rogan Appearance (July 2025):</strong> Discussed faith and politics on widely-viewed podcast after Ten Commandments speech went viral</li>
+                        <li><strong>Seminary Student:</strong> Currently studying to become Presbyterian pastor while serving in Texas House; 36 years old with 1.2M TikTok followers</li>
+                        <li><strong>Christian Nationalism Opposition:</strong> Outspoken critic, calling it "cancer on our religion"; viral speeches against Ten Commandments in classrooms</li>
+                        <li><strong>Former Teacher:</strong> Former sixth-grade teacher in San Antonio; first elected to Texas House in 2018 at age 27</li>
+                    </ul>
+                    
+                    <p><strong>Key Sources:</strong></p>
+                    <ul>
+                        <li><a href="https://thehill.com/homenews/campaign/5669726-talarico-crockett-senate-race/" target="_blank">The Hill - Talarico Raises $7M in Q4 (Jan 2026)</a></li>
+                        <li><a href="https://www.washingtonexaminer.com/news/campaigns/state/4398109/james-talarico-strong-fundraising-haul-close-out-2025/" target="_blank">Washington Examiner - Strong Fundraising Close-Out (Jan 2026)</a></li>
+                        <li><a href="https://www.texastribune.org/2025/12/18/texas-james-talarico-bobby-pulido-senate-congress/" target="_blank">Texas Tribune - Rio Grande Valley Rally with Bobby Pulido (Dec 18)</a></li>
+                        <li><a href="https://jewishinsider.com/2025/12/texas-jewish-voters-james-talarico-democratic-senate-candidate/" target="_blank">Jewish Insider - Texas Jewish Voters Alarmed (Dec)</a></li>
+                        <li><a href="https://www.texastribune.org/2025/11/14/texas-tribune-festival-us-senate-democrats-colin-allred-james-talarico/" target="_blank">Texas Tribune - Allred Criticizes Talarico on Adelson Donations (Nov 14)</a></li>
+                        <li><a href="https://www.wfaa.com/article/news/politics/inside-politics/texas-politics/james-talarico-touts-fundraising-prowess-and-discusses-why-texas-voters-should-choose-him/287-d5433d6f-df9e-4348-bfb9-a69b66aad370" target="_blank">WFAA - Talarico Interview on Campaign</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- ANDY BESHEAR - LEVEL 3 -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-3">
+                    <div class="severity-indicator severity-medium"></div>
+                    <div class="card-title">
+                        Andy Beshear (Kentucky Governor) - 6+ Stories
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-subtitle">Chair of Democratic Governors Association 2026, economic development success, year-end reflections, 2028 speculation</div>
+                </div>
+                <div class="card-content">
+                    <p><strong>Key Developments (Oct-Jan 2026):</strong></p>
+                    <ul>
+                        <li><strong>DGA Chair (2026):</strong> Named chair of Democratic Governors Association for 2026, using platform to build national profile</li>
+                        <li><strong>CBS National Interview (Dec 8):</strong> Featured in exclusive CBS News profile about national role and Democratic strategy for 2026 midterms</li>
+                        <li><strong>Economic Development Record:</strong> Second-best year in Kentucky history with $10.5B in private sector investment; Kentucky economy growing while most states slide into recession</li>
+                        <li><strong>End of Year Interviews (Dec 18-22):</strong> Multiple media appearances describing 2025 as "resilient" year despite natural disasters and federal headwinds</li>
+                        <li><strong>BlueOval SK Transition:</strong> Ford battery plant transitioning from EV to storage batteries; temporary layoffs of 1,600 but hiring 2,100 with $2B retooling</li>
+                        <li><strong>Universal Pre-K Advocacy:</strong> Major push for universal pre-K funded by sports gaming revenue; faces legislative opposition despite potential 70,000 workforce boost</li>
+                        <li><strong>2028 Presidential Positioning:</strong> With Gretchen Whitmer, discussed at DGA meeting as potential 2028 candidate; non-committal but visible nationally</li>
+                        <li><strong>Not Running for Senate:</strong> Explicitly stated not interested in Mitch McConnell's seat in 2026</li>
+                        <li><strong>Term Ending Dec 2027:</strong> Focused on remaining 362 days as governor, committed to finishing term</li>
+                    </ul>
+                    
+                    <p><strong>Key Sources:</strong></p>
+                    <ul>
+                        <li><a href="https://www.cbsnews.com/news/andy-beshear-democrats-governors-association-white-house-2028/" target="_blank">CBS News - Beshear's National Role and 2028 (Dec 8)</a></li>
+                        <li><a href="https://spectrumnews1.com/ky/louisville/in-focus-shows/2025/12/22/andy-beshear-end-of-year" target="_blank">Spectrum News - End of Year Interview (Dec 22)</a></li>
+                        <li><a href="https://www.wkyt.com/2025/12/18/beshear-reflects-2025-calls-kentuckians-resilient-amid-challenges/" target="_blank">WKYT - Beshear Reflects on 2025 (Dec 18)</a></li>
+                        <li><a href="https://www.wdrb.com/news/politics/gov-beshear-reflects-on-2024-looks-ahead-to-2025-and-beyond/article_937f1018-bf1e-11ef-90ca-9b3b843482ef.html" target="_blank">WDRB - Looking Ahead to 2025 and Beyond (Dec 21, 2024)</a></li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+        
+        <div class="footer">
+            <p><strong>About This Tracking:</strong> This visualization tracks major news coverage of emerging Democratic leaders from October 1, 2025 through January 9, 2026, ranked by volume of coverage in major online publications. Story counts reflect major news articles and announcements during this period. These politicians represent the next generation of Democratic leadership, with many positioning for 2026 midterms, gubernatorial races, and potential 2028 presidential bids.</p>
+            <p style="margin-top: 15px; font-style: italic; color: #666;">
+                Rankings based on number of major news stories since October 1, 2025. All sources accessed October-January 2026. Links verified at time of compilation. Compiled January 9, 2026.
+            </p>
+        </div>    </div>
+
+    <script>
+        function toggleCard(card) {
+            const content = card.querySelector('.card-content');
+            const icon = card.querySelector('.expand-icon');
+            
+            // Close all other cards
+            document.querySelectorAll('.news-card').forEach(otherCard => {
+                if (otherCard !== card) {
+                    otherCard.classList.remove('expanded');
+                    otherCard.querySelector('.card-content').classList.remove('expanded');
+                    otherCard.querySelector('.expand-icon').classList.remove('rotated');
+                }
+            });
+            
+            // Toggle current card
+            card.classList.toggle('expanded');
+            content.classList.toggle('expanded');
+            icon.classList.toggle('rotated');
+        }
+
+        // Add smooth animations on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.news-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    card.style.transition = 'all 0.5s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>
