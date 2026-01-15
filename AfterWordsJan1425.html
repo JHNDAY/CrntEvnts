@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mainstream News Analysis - January 1-14, 2026</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .newsletter {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .header .date {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+
+        .header .subtitle {
+            font-size: 1rem;
+            opacity: 0.8;
+            font-style: italic;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 30px;
+        }
+
+        .section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .section-title {
+            font-size: 1.6rem;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            border-left: 4px solid #3498db;
+            padding: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background-color 0.3s ease;
+            border-radius: 5px;
+            background: #f8f9fa;
+        }
+
+        .section-title:hover {
+            background-color: #e9ecef;
+        }
+
+        .expand-icon {
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .section-content {
+            transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+            overflow: hidden;
+        }
+
+        .section-content.collapsed {
+            max-height: 0;
+            opacity: 0;
+        }
+
+        .section-content.expanded {
+            max-height: 5000px;
+            opacity: 1;
+        }
+
+        .story {
+            margin-bottom: 25px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            border-left: 3px solid #3498db;
+        }
+
+        .story-headline {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+
+        .story-content {
+            font-size: 1rem;
+            line-height: 1.7;
+            margin-bottom: 15px;
+        }
+
+        .quote {
+            background: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 15px 20px;
+            margin: 15px 0;
+            font-style: italic;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .citation {
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: bold;
+            margin-top: 8px;
+        }
+
+        .key-facts {
+            background: #f0f8ff;
+            border: 1px solid #b3d9ff;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .key-facts-title {
+            font-weight: bold;
+            color: #2980b9;
+            margin-bottom: 10px;
+        }
+
+        .fact-list {
+            list-style-position: inside;
+            margin-left: 10px;
+        }
+
+        .fact-list li {
+            margin: 8px 0;
+            line-height: 1.6;
+        }
+
+        .stats-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            text-align: center;
+        }
+
+        .stats-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .source-link {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .source-link:hover {
+            text-decoration: underline;
+        }
+
+        .collapse-button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 15px;
+            font-size: 0.9rem;
+            font-weight: bold;
+        }
+
+        .collapse-button:hover {
+            background: #2980b9;
+        }
+
+        .footer {
+            background: #2c3e50;
+            color: white;
+            padding: 30px;
+            font-size: 0.9rem;
+            line-height: 1.8;
+        }
+
+        .source-note {
+            margin-bottom: 15px;
+        }
+
+        .breakdown-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        .breakdown-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border-left: 3px solid #3498db;
+        }
+
+        .breakdown-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .breakdown-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+    </style>
+    <script>
+        function toggleSection(sectionId) {
+            const content = document.getElementById(sectionId);
+            const icon = content.previousElementSibling.querySelector('.expand-icon');
+            
+            if (content.classList.contains('collapsed')) {
+                content.classList.remove('collapsed');
+                content.classList.add('expanded');
+                icon.textContent = '▼';
+            } else {
+                content.classList.remove('expanded');
+                content.classList.add('collapsed');
+                icon.textContent = '▶';
+            }
+        }
+
+        window.onload = function() {
+            document.querySelectorAll('.section-content').forEach(content => {
+                content.classList.add('collapsed');
+            });
+            document.querySelectorAll('.expand-icon').forEach(icon => {
+                icon.textContent = '▶';
+            });
+        };
+    </script>
+</head>
+<body>
+    <div class="newsletter">
+        <div class="header">
+            <h1>Mainstream News Analysis</h1>
+            <div class="date">January 1-14, 2026</div>
+            <div class="subtitle">Context from Current Events Discussion of January 14, 2026</div>
+        </div>
+
+        <div class="content">
+            <!-- Minneapolis ICE Shooting -->
+            <div class="section">
+                <div class="section-title" onclick="toggleSection('minneapolis-section')">
+                    Minneapolis ICE Shooting: National Crisis Over Law Enforcement Use of Force
+                    <span class="expand-icon">▶</span>
+                </div>
+                
+                <div class="section-content collapsed" id="minneapolis-section">
+                    <div class="story">
+                        <div class="story-headline">
+                            Fatal ICE Shooting Sparks National Debate on Federal Law Enforcement Tactics
+                        </div>
+                        <div class="story-content">
+                            On January 7, 2026, <a href="https://www.nbcnews.com/news/us-news/federal-law-enforcement-involved-ice-related-shooting-minneapolis-rcna252812" class="source-link">NBC News</a> reported that Immigration and Customs Enforcement agent Jonathan Ross fatally shot Renee Nicole Good, 37, a U.S. citizen, during an immigration enforcement operation in Minneapolis. The shooting occurred near East 34th Street and Portland Avenue, less than a mile from where George Floyd was killed in 2020.
+                        </div>
+
+                        <div class="key-facts">
+                            <div class="key-facts-title">Key Details:</div>
+                            <ul class="fact-list">
+                                <li><strong>Victim:</strong> Renee Nicole Good, 37-year-old U.S. citizen and mother</li>
+                                <li><strong>Location:</strong> South Minneapolis residential neighborhood</li>
+                                <li><strong>Federal Claims:</strong> DHS called it "domestic terrorism," claimed Good weaponized her vehicle</li>
+                                <li><strong>Local Response:</strong> Mayor Frey called federal claims "BS" after viewing video evidence</li>
+                                <li><strong>Investigation:</strong> FBI and Minnesota BCA investigating</li>
+                            </ul>
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://www.cnn.com/us/live-news/minnesota-fraud-state-reps-testify-01-07-26" class="source-link">CNN</a> reported conflicting narratives between federal and local officials. Department of Homeland Security Secretary Kristi Noem characterized the incident as an "act of domestic terrorism," claiming the ICE officer was struck by Good's vehicle. However, Minneapolis Police Chief Brian O'Hara expressed being "very concerned" with the tactics used by federal immigration agents.
+                        </div>
+
+                        <div class="quote">
+                            "This was a federal agent recklessly using power that resulted in somebody dying."
+                        </div>
+                        <div class="citation">— Minneapolis Mayor Jacob Frey</div>
+
+                        <div class="story-content">
+                            <a href="https://www.startribune.com/ice-agent-who-fatally-shot-woman-in-minneapolis-is-identified/601560214" class="source-link">Minneapolis Star Tribune</a> identified the agent as Jonathan Ross and reported that five use-of-force experts questioned the decision to shoot at a moving vehicle, with some calling it a "bad shooting." The experts noted that most police departments discourage shooting at moving vehicles because deadly force is unlikely to stop the car and could jeopardize bystanders.
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://www.npr.org/2026/01/07/nx-s1-5670289/ice-minneapolis-shooting-immigration-crackdown" class="source-link">NPR</a> covered the immediate aftermath, including protests where law enforcement deployed tear gas and pepper spray on demonstrators. House Minority Leader Hakeem Jeffries called Good's death "an abomination — a disgrace."
+                        </div>
+
+                        <div class="story-content">
+                            President Trump defended the agent's actions on Truth Social, characterizing Good as a "professional agitator" who "violently, willfully, and viciously" ran over the officer. Vice President JD Vance echoed this characterization, according to <a href="https://www.cbsnews.com/minnesota/live-updates/minneapolis-federal-agents-protesters-clash-portland-avenue/" class="source-link">CBS News</a>, saying critics should be "ashamed of yourselves."
+                        </div>
+
+                        <div class="citation">Sources: <a href="https://www.nbcnews.com/news/us-news/federal-law-enforcement-involved-ice-related-shooting-minneapolis-rcna252812" class="source-link">NBC News</a>, <a href="https://www.cnn.com/us/live-news/minnesota-fraud-state-reps-testify-01-07-26" class="source-link">CNN</a>, <a href="https://www.minneapolismn.gov/news/2026/january/fatal-shooting-response/" class="source-link">City of Minneapolis</a>, <a href="https://www.startribune.com/ice-agent-who-fatally-shot-woman-in-minneapolis-is-identified/601560214" class="source-link">Star Tribune</a>, <a href="https://www.npr.org/2026/01/07/nx-s1-5670289/ice-minneapolis-shooting-immigration-crackdown" class="source-link">NPR</a>, <a href="https://www.cbsnews.com/minnesota/live-updates/minneapolis-federal-agents-protesters-clash-portland-avenue/" class="source-link">CBS News</a>, <a href="https://abcnews.go.com/US/ice-related-shooting-occurred-minnesota-governor/story?id=128984401" class="source-link">ABC News</a></div>
+                    </div>
+                    
+                    <button class="collapse-button" onclick="toggleSection('minneapolis-section')">
+                        <span>▲</span> Collapse Section
+                    </button>
+                </div>
+            </div>
+
+            <!-- DOJ Resignations -->
+            <div class="section">
+                <div class="section-title" onclick="toggleSection('doj-section')">
+                    Justice Department Crisis: Mass Resignations Over Minneapolis Shooting
+                    <span class="expand-icon">▶</span>
+                </div>
+                
+                <div class="section-content collapsed" id="doj-section">
+                    <div class="story">
+                        <div class="story-headline">
+                            Senior DOJ Officials Resign in Protest Over Handling of ICE Shooting Investigation
+                        </div>
+                        <div class="story-content">
+                            <a href="https://www.ms.now/news/doj-civil-rights-division-officials-quit-harmeet-dhillon" class="source-link">MS NOW</a> broke the story on January 12 that at least six leaders of the Justice Department's Civil Rights Division resigned in protest after Assistant Attorney General Harmeet Dhillon decided not to investigate the ICE officer's fatal shooting of Renee Good.
+                        </div>
+
+                        <div class="key-facts">
+                            <div class="key-facts-title">Resignations Include:</div>
+                            <ul class="fact-list">
+                                <li><strong>Criminal Section Chief</strong> and entire senior leadership team</li>
+                                <li><strong>Principal Deputy Chief</strong></li>
+                                <li><strong>Deputy Chief and Acting Deputy Chief</strong></li>
+                                <li><strong>Six federal prosecutors</strong> in Minnesota U.S. Attorney's office</li>
+                            </ul>
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://www.cbsnews.com/news/minneapolis-ice-agent-shooting-justice-department-civil-rights-division-resignations/" class="source-link">CBS News</a> reported that the departures represent the most significant mass resignation at the Justice Department since February 2025, when five leaders resigned rather than dismiss bribery charges against then-New York Mayor Eric Adams. The Civil Rights Division has lost approximately 75% of its staff in 2025.
+                        </div>
+
+                        <div class="quote">
+                            "There is currently no basis for a criminal civil rights investigation."
+                        </div>
+                        <div class="citation">— Deputy Attorney General Todd Blanche</div>
+
+                        <div class="story-content">
+                            <a href="https://www.pbs.org/newshour/show/doj-prosecutors-resign-in-protest-over-handling-of-ice-shooting-investigation" class="source-link">PBS NewsHour</a> featured an interview with Carol Leonnig discussing the broader implications. The Minnesota federal prosecutors reportedly resigned both due to disappointment with how Main Justice handled the matter and concerns about being pushed to investigate Good herself rather than the officer.
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://www.washingtonpost.com/national-security/2026/01/13/justice-department-civil-rights-resignations/" class="source-link">Washington Post</a> noted that multiple senior prosecutors in both Washington and Minnesota left their jobs amid turmoil over the Trump administration's handling of the shooting death, highlighting the unprecedented nature of an entire leadership team departing simultaneously.
+                        </div>
+
+                        <div class="stats-box">
+                            <div class="stats-number">75%</div>
+                            <div>of Civil Rights Division attorneys lost in 2025</div>
+                        </div>
+
+                        <div class="citation">Sources: <a href="https://www.ms.now/news/doj-civil-rights-division-officials-quit-harmeet-dhillon" class="source-link">MS NOW</a>, <a href="https://www.cbsnews.com/news/minneapolis-ice-agent-shooting-justice-department-civil-rights-division-resignations/" class="source-link">CBS News</a>, <a href="https://www.pbs.org/newshour/show/doj-prosecutors-resign-in-protest-over-handling-of-ice-shooting-investigation" class="source-link">PBS NewsHour</a>, <a href="https://www.washingtonpost.com/national-security/2026/01/13/justice-department-civil-rights-resignations/" class="source-link">Washington Post</a></div>
+                    </div>
+                    
+                    <button class="collapse-button" onclick="toggleSection('doj-section')">
+                        <span>▲</span> Collapse Section
+                    </button>
+                </div>
+            </div>
+
+            <!-- Venezuela and Oil -->
+            <div class="section">
+                <div class="section-title" onclick="toggleSection('venezuela-section')">
+                    Venezuela Oil Strategy: Skepticism from Energy Executives
+                    <span class="expand-icon">▶</span>
+                </div>
+                
+                <div class="section-content collapsed" id="venezuela-section">
+                    <div class="story">
+                        <div class="story-headline">
+                            Trump's Venezuela Vision Meets Industry Reality Check
+                        </div>
+                        <div class="story-content">
+                            On January 9, President Trump convened oil executives at the White House to discuss investing in Venezuela's oil infrastructure. <a href="https://www.cnbc.com/2026/01/10/what-the-big-oil-executives-told-trump-about-investing-in-venezuela.html" class="source-link">CNBC</a> reported that major oil company CEOs expressed significant reservations about rapid investment in the country.
+                        </div>
+
+                        <div class="quote">
+                            "If we look at the legal and commercial constructs and frameworks in place today in Venezuela, today it's uninvestable."
+                        </div>
+                        <div class="citation">— ExxonMobil CEO Darren Woods</div>
+
+                        <div class="story-content">
+                            <a href="https://www.cnn.com/2026/01/09/politics/oil-executives-venezuela-white-house" class="source-link">CNN Politics</a> described Trump's meeting as ending "without any major commitments from companies to invest billions of dollars." Woods bluntly told officials that Venezuela presents "an unacceptable risk," citing the country's history of seizing Exxon's assets twice since 2006.
+                        </div>
+
+                        <div class="breakdown-grid">
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Venezuelan Oil Reserves</div>
+                                <div class="breakdown-value">303B barrels</div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Current Production</div>
+                                <div class="breakdown-value">~800K bpd</div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Peak Production (1990s)</div>
+                                <div class="breakdown-value">3.5M bpd</div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Estimated Rebuild Cost</div>
+                                <div class="breakdown-value">$180B+</div>
+                            </div>
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://www.cbsnews.com/live-updates/trump-big-oil-executives-venezuela/" class="source-link">CBS News</a> reported that ConocoPhillips CEO Ryan Lance called for restructuring the entire Venezuelan energy system, including state-owned oil company PDVSA. Treasury Secretary Scott Bessent acknowledged that "big oil companies who move slowly, who have corporate boards, are not interested."
+                        </div>
+
+                        <div class="story-content">
+                            Only Chevron, currently operating in Venezuela through joint ventures, expressed readiness to increase production. <a href="https://www.aljazeera.com/economy/2026/1/9/trump-promises-oil-executives-total-safety-if-they-invest-in-venezuela" class="source-link">Al Jazeera</a> quoted Chevron Vice Chairman Mark Nelson saying the company could increase liftings by 100% "essentially effective immediately" and boost production by 50% in 18-24 months.
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://www.cnn.com/2026/01/05/business/venezuela-trump-oil-chevron" class="source-link">CNN Business</a> analysis highlighted that industry sources were "unlikely to dive headfirst into Venezuela" due to the uncertain situation on the ground, the oil industry's state of disrepair, and Caracas' history of seizing U.S. oil assets. Energy Secretary Chris Wright acknowledged that reaching the $100 billion investment target "does indeed take time."
+                        </div>
+
+                        <div class="citation">Sources: <a href="https://www.cnbc.com/2026/01/10/what-the-big-oil-executives-told-trump-about-investing-in-venezuela.html" class="source-link">CNBC</a>, <a href="https://www.cnn.com/2026/01/09/politics/oil-executives-venezuela-white-house" class="source-link">CNN Politics</a>, <a href="https://www.cbsnews.com/live-updates/trump-big-oil-executives-venezuela/" class="source-link">CBS News</a>, <a href="https://www.aljazeera.com/economy/2026/1/9/trump-promises-oil-executives-total-safety-if-they-invest-in-venezuela" class="source-link">Al Jazeera</a>, <a href="https://www.cnn.com/2026/01/05/business/venezuela-trump-oil-chevron" class="source-link">CNN Business</a>, <a href="https://corporate.exxonmobil.com/news/news-releases/2026/our-perspective-regarding-the-situation-in-venezuela" class="source-link">ExxonMobil</a></div>
+                    </div>
+                    
+                    <button class="collapse-button" onclick="toggleSection('venezuela-section')">
+                        <span>▲</span> Collapse Section
+                    </button>
+                </div>
+            </div>
+
+            <!-- Federal Reserve Investigation -->
+            <div class="section">
+                <div class="section-title" onclick="toggleSection('fed-section')">
+                    Federal Reserve Independence: Criminal Investigation of Chair Powell
+                    <span class="expand-icon">▶</span>
+                </div>
+                
+                <div class="section-content collapsed" id="fed-section">
+                    <div class="story">
+                        <div class="story-headline">
+                            DOJ Launches Unprecedented Investigation Into Fed Chair
+                        </div>
+                        <div class="story-content">
+                            On January 11, <a href="https://www.cnbc.com/2026/01/12/fed-jerome-powell-criminal-probe-nyt.html" class="source-link">CNBC</a> reported that Federal Reserve Chair Jerome Powell disclosed he was under criminal investigation by the Department of Justice, receiving grand jury subpoenas related to his Congressional testimony about the Fed's $2.5 billion headquarters renovation project.
+                        </div>
+
+                        <div class="quote">
+                            "The threat of criminal charges is a consequence of the Federal Reserve setting interest rates based on our best assessment of what will serve the public, rather than following the preferences of the President."
+                        </div>
+                        <div class="citation">— Fed Chair Jerome Powell</div>
+
+                        <div class="story-content">
+                            <a href="https://www.cnn.com/2026/01/11/business/federal-prosecutors-criminal-investigation-federal-reserve-chair-jerome-powell" class="source-link">CNN Business</a> characterized the probe as taking "Trump's fight with the Fed to a whole new level," noting it sends a "chilling message" to Powell and whoever might next lead the Federal Reserve. Powell's term as chair ends in May 2026, though his term as a Fed governor extends until January 2028.
+                        </div>
+
+                        <div class="key-facts">
+                            <div class="key-facts-title">Investigation Context:</div>
+                            <ul class="fact-list">
+                                <li><strong>Stated Focus:</strong> Powell's June 2025 Senate testimony about Fed building renovations</li>
+                                <li><strong>Powell's View:</strong> Investigation is pretext to pressure Fed on interest rate cuts</li>
+                                <li><strong>Trump's Response:</strong> "I don't know anything about it" (NBC News interview)</li>
+                                <li><strong>Political Reaction:</strong> Republican Senator Thom Tillis vows to oppose all Fed nominees until resolved</li>
+                            </ul>
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://www.axios.com/2026/01/12/jerome-powell-trump-federal-reserve-renovations" class="source-link">Axios</a> noted the investigation "ostensibly concerns the central bank's $2.5 billion renovation project, but functions as an unprecedented escalation of the president's effort to influence the central bank over interest rates." The Fed cut rates three times in the second half of 2025, but Trump has consistently demanded more aggressive rate reductions.
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://www.cnbc.com/2026/01/13/trump-powell-fed-dimon-pirro-doj.html" class="source-link">CNBC</a> reported Trump's subsequent comments calling Powell either "incompetent" or "crooked" and saying "that jerk will be gone soon." JPMorgan Chase CEO Jamie Dimon warned that anything undermining Fed independence "is probably not a great idea."
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://www.pbs.org/newshour/politics/doj-investigation-of-powell-sparks-backlash-support-for-fed-independence" class="source-link">PBS NewsHour</a> covered the bipartisan backlash, with Republican Senator Lisa Murkowski stating after speaking with Powell that "the administration's investigation is nothing more than an attempt at coercion."
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://www.aljazeera.com/news/2026/1/13/investigation-of-fed-chief-jerome-powell-what-trump-has-said-about-him" class="source-link">Al Jazeera</a> documented Trump's escalating attacks on Powell throughout 2025, including calling him "a stupid person," "a very incompetent man," and claiming Powell has "no personality, no high intelligence, no nothing."
+                        </div>
+
+                        <div class="citation">Sources: <a href="https://www.cnbc.com/2026/01/12/fed-jerome-powell-criminal-probe-nyt.html" class="source-link">CNBC</a>, <a href="https://www.cnn.com/2026/01/11/business/federal-prosecutors-criminal-investigation-federal-reserve-chair-jerome-powell" class="source-link">CNN Business</a>, <a href="https://www.axios.com/2026/01/12/jerome-powell-trump-federal-reserve-renovations" class="source-link">Axios</a>, <a href="https://www.federalreserve.gov/newsevents/speech/powell20260111a.htm" class="source-link">Federal Reserve</a>, <a href="https://www.nbcnews.com/politics/donald-trump/trump-denies-involvement-doj-fed-subpoena-jerome-powell-rcna253526" class="source-link">NBC News</a>, <a href="https://www.pbs.org/newshour/politics/doj-investigation-of-powell-sparks-backlash-support-for-fed-independence" class="source-link">PBS NewsHour</a>, <a href="https://www.aljazeera.com/news/2026/1/13/investigation-of-fed-chief-jerome-powell-what-trump-has-said-about-him" class="source-link">Al Jazeera</a>, <a href="https://abcnews.go.com/Politics/doj-launches-criminal-investigation-fed-chair-jerome-powell/story?id=129114228" class="source-link">ABC News</a></div>
+                    </div>
+                    
+                    <button class="collapse-button" onclick="toggleSection('fed-section')">
+                        <span>▲</span> Collapse Section
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="source-note">
+                <strong>Analysis compiled from:</strong> Mainstream media coverage of topics discussed in the Current Events Discussion of January 14, 2026. This visualization presents news reporting from major publications during the period January 1-14, 2026.<br><br>
+                
+                <strong>Publications Referenced:</strong><br>
+                • <a href="https://www.nytimes.com/" class="source-link">New York Times</a><br>
+                • <a href="https://www.washingtonpost.com/" class="source-link">Washington Post</a><br>
+                • <a href="https://www.wsj.com/" class="source-link">Wall Street Journal</a><br>
+                • <a href="https://www.reuters.com/" class="source-link">Reuters</a><br>
+                • <a href="https://www.cnn.com/" class="source-link">CNN</a><br>
+                • <a href="https://www.nbcnews.com/" class="source-link">NBC News</a><br>
+                • <a href="https://www.cbsnews.com/" class="source-link">CBS News</a><br>
+                • <a href="https://abcnews.go.com/" class="source-link">ABC News</a><br>
+                • <a href="https://www.politico.com/" class="source-link">Politico</a><br>
+                • <a href="https://www.npr.org/" class="source-link">NPR</a><br>
+                • <a href="https://www.pbs.org/" class="source-link">PBS NewsHour</a><br>
+                • <a href="https://www.bloomberg.com/" class="source-link">Bloomberg</a><br>
+                • <a href="https://www.cnbc.com/" class="source-link">CNBC</a><br>
+                • <a href="https://www.axios.com/" class="source-link">Axios</a><br>
+                • <a href="https://www.aljazeera.com/" class="source-link">Al Jazeera</a><br>
+                • <a href="https://www.startribune.com/" class="source-link">Minneapolis Star Tribune</a><br>
+                • <a href="https://www.minneapolismn.gov/" class="source-link">City of Minneapolis</a><br>
+                • <a href="https://www.federalreserve.gov/" class="source-link">Federal Reserve</a><br>
+                • <a href="https://corporate.exxonmobil.com/" class="source-link">ExxonMobil</a><br>
+                • <a href="https://www.ms.now/" class="source-link">MS NOW</a><br><br>
+
+                <strong>Methodology:</strong> This analysis examines how mainstream media outlets covered the major topics discussed in the Current Events Discussion session of January 14, 2026. All citations link to actual news reports published between January 1-14, 2026. The visualization preserves the diversity of perspectives and factual reporting from the period, including conflicting narratives where they existed in the source material.<br><br>
+                
+                <strong>Note:</strong> This visualization is based on the context taken from the Current Events Discussion of January 14, 2026. Topics were selected based on their prominence in that discussion and the availability of mainstream media coverage during the specified period.<br><br>
+                
+                <em>Compiled for educational and analytical purposes to examine mainstream media framing of current events topics.</em>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
