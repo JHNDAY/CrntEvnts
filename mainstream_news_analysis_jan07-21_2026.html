@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mainstream News Analysis - January 7-21, 2026</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .newsletter {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .header .date {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+
+        .header .subtitle {
+            font-size: 1rem;
+            opacity: 0.8;
+            font-style: italic;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 30px;
+        }
+
+        .section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .section-title {
+            font-size: 1.6rem;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            border-left: 4px solid #3498db;
+            padding: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background-color 0.3s ease;
+            border-radius: 5px;
+            background: #f8f9fa;
+        }
+
+        .section-title:hover {
+            background-color: #e9ecef;
+        }
+
+        .section-content {
+            transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+            overflow: hidden;
+        }
+
+        .section-content.collapsed {
+            max-height: 0;
+            opacity: 0;
+        }
+
+        .section-content.expanded {
+            max-height: 5000px;
+            opacity: 1;
+        }
+
+        .story {
+            margin-bottom: 25px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            border-left: 3px solid #3498db;
+        }
+
+        .story-headline {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+
+        .story-content {
+            font-size: 1rem;
+            line-height: 1.7;
+            margin-bottom: 15px;
+        }
+
+        .quote {
+            background: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 15px 20px;
+            margin: 15px 0;
+            font-style: italic;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .citation {
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: bold;
+            margin-top: 8px;
+        }
+
+        .key-facts {
+            background: #f0f8ff;
+            border: 1px solid #b3d9ff;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .key-facts-title {
+            font-weight: bold;
+            color: #2980b9;
+            margin-bottom: 10px;
+        }
+
+        .fact-list {
+            list-style-position: inside;
+            color: #555;
+            padding-left: 15px;
+        }
+
+        .fact-list li {
+            margin-bottom: 8px;
+        }
+
+        .stats-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 15px 0;
+        }
+
+        .stats-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .breakdown-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        .breakdown-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+        }
+
+        .breakdown-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .breakdown-value {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .expand-icon {
+            font-size: 1.2rem;
+        }
+
+        .collapse-button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin-top: 15px;
+            transition: transform 0.2s ease;
+        }
+
+        .collapse-button:hover {
+            transform: scale(1.05);
+        }
+
+        .source-link {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        .source-link:hover {
+            color: #2980b9;
+            text-decoration: underline;
+        }
+
+        .footer {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 30px;
+            font-size: 0.9rem;
+            line-height: 1.8;
+        }
+
+        .source-note {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .source-note strong {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.6rem;
+            }
+
+            .section-title {
+                font-size: 1.3rem;
+            }
+
+            .breakdown-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <script>
+        function toggleSection(sectionId) {
+            const content = document.getElementById(sectionId);
+            const icon = content.previousElementSibling.querySelector('.expand-icon');
+            
+            if (content.classList.contains('collapsed')) {
+                content.classList.remove('collapsed');
+                content.classList.add('expanded');
+                icon.textContent = '▼';
+            } else {
+                content.classList.remove('expanded');
+                content.classList.add('collapsed');
+                icon.textContent = '▶';
+            }
+        }
+    </script>
+</head>
+<body>
+    <div class="newsletter">
+        <div class="header">
+            <h1>Mainstream News Analysis</h1>
+            <p class="date">January 7-21, 2026</p>
+            <p class="subtitle">Topics Discussed in Current Events Group</p>
+        </div>
+
+        <div class="content">
+            <!-- Greenland Crisis -->
+            <div class="section">
+                <div class="section-title" onclick="toggleSection('greenland-media-section')">
+                    The Greenland Crisis: Tariffs, Territory & Transatlantic Tensions
+                    <span class="expand-icon">▶</span>
+                </div>
+                
+                <div class="section-content collapsed" id="greenland-media-section">
+                    <div class="story">
+                        <div class="story-headline">
+                            Trump Announces Tariffs on Eight European Allies Over Greenland
+                        </div>
+                        <div class="story-content">
+                            On January 17, 2026, <a href="https://www.cnn.com/2026/01/17/europe/protesters-denmark-greenland-trump-intl" class="source-link">CNN</a> and <a href="https://www.nbcnews.com/business/economy/trump-denmark-european-tariffs-greenland-deal-rcna254551" class="source-link">NBC News</a> reported that President Trump announced 10% tariffs on Denmark, Finland, France, Germany, the Netherlands, Norway, Sweden, and the United Kingdom, starting February 1, 2026. Trump stated the tariffs would increase to 25% by June 1 "until such time as a Deal is reached for the Complete and Total purchase of Greenland."
+                        </div>
+
+                        <div class="quote">
+                            "We have subsidized Denmark, and all of the Countries of the European Union, and others, for many years by not charging them Tariffs, or any other forms of remuneration. Now, after Centuries, it is time for Denmark to give back — World Peace is at stake!"
+                        </div>
+                        <div class="citation">— President Trump, Truth Social post, January 17, 2026</div>
+
+                        <div class="key-facts">
+                            <div class="key-facts-title">Timeline of Escalation:</div>
+                            <ul class="fact-list">
+                                <li><strong>January 17:</strong> Trump announces 10% tariffs on 8 European NATO allies</li>
+                                <li><strong>January 18:</strong> EU holds emergency meeting with all 27 ambassadors</li>
+                                <li><strong>January 18-19:</strong> Thousands protest in Nuuk, Greenland - estimated 25% of capital's population</li>
+                                <li><strong>January 20:</strong> Trump arrives at Davos, markets roil</li>
+                                <li><strong>January 21:</strong> Trump announces "framework of a deal" with NATO chief, cancels tariffs</li>
+                            </ul>
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://www.npr.org/2026/01/18/nx-s1-5681422/european-leaders-greenland-tariffs-downward-spiral" class="source-link">NPR</a> reported that European leaders issued a joint statement condemning the tariffs as threatening "a dangerous downward spiral." Danish Prime Minister Mette Frederiksen stated, "Europe will not be blackmailed."
+                        </div>
+
+                        <div class="citation">Sources: <a href="https://www.cnn.com/2026/01/17/europe/protesters-denmark-greenland-trump-intl" class="source-link">CNN</a>, <a href="https://www.nbcnews.com/business/economy/trump-denmark-european-tariffs-greenland-deal-rcna254551" class="source-link">NBC News</a>, <a href="https://www.npr.org/2026/01/18/nx-s1-5681422/european-leaders-greenland-tariffs-downward-spiral" class="source-link">NPR</a>, <a href="https://www.aljazeera.com/news/2026/1/18/trump-announces-new-tariffs-over-greenland-how-have-eu-allies-responded" class="source-link">Al Jazeera</a></div>
+                    </div>
+
+                    <div class="story">
+                        <div class="story-headline">
+                            European Unity: Eight Leaders Issue Joint Response
+                        </div>
+                        <div class="story-content">
+                            <a href="https://abcnews.go.com/International/europe-united-face-trumps-greenland-threats-tariffs-eu/story?id=129324420" class="source-link">ABC News</a> reported on January 19 that leaders of Denmark, Finland, France, Germany, the Netherlands, Norway, Sweden, and the United Kingdom issued an unprecedented joint statement. They affirmed their commitment to "strengthening security in the Arctic region as a shared transatlantic interest" and emphasized that their military exercise in Greenland "poses a threat to no one."
+                        </div>
+
+                        <div class="quote">
+                            "Our position on Greenland is very clear -- it is part of the Kingdom of Denmark and its future is a matter for the Greenlanders and the Danes. Applying tariffs on allies for pursuing the collective security of NATO allies is completely wrong."
+                        </div>
+                        <div class="citation">— UK Prime Minister Keir Starmer, January 18, 2026</div>
+
+                        <div class="story-content">
+                            <a href="https://www.cnn.com/2026/01/18/business/europe-greenland-trump-tariffs-trade" class="source-link">CNN Business</a> analyzed the potential economic impact, noting that the EU's "anti-coercion instrument" — colloquially known as a "trade bazooka" — could be activated. French President Emmanuel Macron reportedly asked the EU to deploy this mechanism.
+                        </div>
+
+                        <div class="citation">Sources: <a href="https://abcnews.go.com/International/europe-united-face-trumps-greenland-threats-tariffs-eu/story?id=129324420" class="source-link">ABC News</a>, <a href="https://www.cnn.com/2026/01/18/business/europe-greenland-trump-tariffs-trade" class="source-link">CNN Business</a></div>
+                    </div>
+
+                    <div class="story">
+                        <div class="story-headline">
+                            Abrupt Reversal: Trump Cancels Tariffs After NATO Chief Talks
+                        </div>
+                        <div class="story-content">
+                            In a dramatic turn, <a href="https://www.aljazeera.com/news/2026/1/21/trump-nixes-european-tariff-threats-over-greenland-after-nato-chief-talks" class="source-link">Al Jazeera</a> and <a href="https://finance.yahoo.com/news/live/trump-tariffs-live-updates-trump-links-greenland-threats-to-nobel-peace-prize-snub-eu-discusses-108-billion-in-retaliatory-tariffs-152657413.html" class="source-link">Yahoo Finance</a> reported on January 21 that Trump announced he was calling off the tariffs after talks with NATO Secretary General Mark Rutte, citing a "framework of a future deal" regarding Greenland and the Arctic region.
+                        </div>
+
+                        <div class="quote">
+                            "This solution, if consummated, will be a great one for the United States of America, and all NATO Nations. Based upon this understanding, I will not be imposing the Tariffs that were scheduled to go into effect on February 1st."
+                        </div>
+                        <div class="citation">— President Trump, Truth Social, January 21, 2026</div>
+
+                        <div class="story-content">
+                            The reversal came hours after Trump delivered a keynote address at Davos where he appeared to rule out the use of force to acquire Greenland but called for "immediate negotiations."
+                        </div>
+
+                        <div class="citation">Sources: <a href="https://www.aljazeera.com/news/2026/1/21/trump-nixes-european-tariff-threats-over-greenland-after-nato-chief-talks" class="source-link">Al Jazeera</a>, <a href="https://finance.yahoo.com/news/live/trump-tariffs-live-updates-trump-links-greenland-threats-to-nobel-peace-prize-snub-eu-discusses-108-billion-in-retaliatory-tariffs-152657413.html" class="source-link">Yahoo Finance</a></div>
+                    </div>
+
+                    <div class="story">
+                        <div class="story-headline">
+                            Congressional Response: Bipartisan Concerns About NATO Cohesion
+                        </div>
+                        <div class="story-content">
+                            <a href="https://www.cnn.com/politics/live-news/trump-administration-news-01-18-26" class="source-link">CNN Politics</a> reported on January 18 that Sens. Tim Kaine (D-VA) and Rand Paul (R-KY) appeared jointly on NBC's "Meet the Press" to discuss efforts to rein in Trump's Greenland pursuit. They are exploring three options: a new war powers resolution, challenging the tariff authority, or relying on laws preventing unilateral NATO withdrawal.
+                        </div>
+
+                        <div class="quote">
+                            "Trump's rhetoric on Greenland is not helpful because it's pushing allies away from us, rather than forging the stronger relationships with allies that we need."
+                        </div>
+                        <div class="citation">— Sen. Tim Kaine, NBC's "Meet the Press," January 18, 2026</div>
+
+                        <div class="citation">Sources: <a href="https://www.cnn.com/politics/live-news/trump-administration-news-01-18-26" class="source-link">CNN Politics</a></div>
+                    </div>
+
+                    <div class="story">
+                        <div class="story-headline">
+                            Economic Impact Analysis: European Exporters at Risk
+                        </div>
+                        <div class="story-content">
+                            <a href="https://www.cnbc.com/2026/01/19/trump-greenland-tariffs-exposed-exporters-europe.html" class="source-link">CNBC</a> analyzed which European sectors faced the greatest exposure. Pharmaceutical giants including Denmark's Novo Nordisk, Switzerland's Roche, and France's Sanofi saw stock declines. Norway's Equinor led energy sector losses, down 3.4%, while BP, Shell, and TotalEnergies fell 1-1.5%.
+                        </div>
+
+                        <div class="breakdown-grid">
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Novo Nordisk</div>
+                                <div class="breakdown-value">-2.1%</div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Equinor (Norway)</div>
+                                <div class="breakdown-value">-3.4%</div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Target Date</div>
+                                <div class="breakdown-value">Feb 1</div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Escalated Rate</div>
+                                <div class="breakdown-value">25%</div>
+                            </div>
+                        </div>
+
+                        <div class="citation">Sources: <a href="https://www.cnbc.com/2026/01/19/trump-greenland-tariffs-exposed-exporters-europe.html" class="source-link">CNBC</a></div>
+                    </div>
+                    
+                    <button class="collapse-button" onclick="toggleSection('greenland-media-section')">
+                        <span>▲</span> Collapse Section
+                    </button>
+                </div>
+            </div>
+
+            <!-- 2026 Midterm Elections -->
+            <div class="section">
+                <div class="section-title" onclick="toggleSection('midterm-media-section')">
+                    2026 Midterm Elections: Senate and House Battlegrounds
+                    <span class="expand-icon">▶</span>
+                </div>
+                
+                <div class="section-content collapsed" id="midterm-media-section">
+                    <div class="story">
+                        <div class="story-headline">
+                            Historical Pattern Favors Opposition Party in Midterms
+                        </div>
+                        <div class="story-content">
+                            <a href="https://theconversation.com/for-80-years-the-presidents-party-has-almost-always-lost-house-seats-in-midterm-elections-a-pattern-that-makes-the-2026-congressional-outlook-clear-271605" class="source-link">The Conversation</a> published analysis on January 19 showing that for 80 years, the president's party has consistently lost House seats in midterm elections, making the 2026 outlook clear for Republicans defending their narrow majority.
+                        </div>
+
+                        <div class="stats-box">
+                            <div class="stats-number">30 seats</div>
+                            <div>Average first-term midterm loss for president's party</div>
+                        </div>
+
+                        <div class="story-content">
+                            Current Republican control stands at 218-213 (after Rep. Doug LaMalfa's death announced January 7), meaning Democrats need a net gain of just three seats to take the majority.
+                        </div>
+
+                        <div class="citation">Sources: <a href="https://theconversation.com/for-80-years-the-presidents-party-has-almost-always-lost-house-seats-in-midterm-elections-a-pattern-that-makes-the-2026-congressional-outlook-clear-271605" class="source-link">The Conversation</a>, <a href="https://en.wikipedia.org/wiki/2026_United_States_elections" class="source-link">Wikipedia: 2026 Elections</a></div>
+                    </div>
+
+                    <div class="story">
+                        <div class="story-headline">
+                            Senate Map: Democrats Face Uphill Battle for Control
+                        </div>
+                        <div class="story-content">
+                            <a href="https://en.wikipedia.org/wiki/2026_United_States_Senate_elections" class="source-link">Wikipedia</a> and <a href="https://www.270towin.com/2026-senate-election/" class="source-link">270toWin</a> track the 35 Senate seats up for election (33 regular, 2 special). Republicans hold a 53-47 advantage, with 22 Republican seats and 13 Democratic seats up for election.
+                        </div>
+
+                        <div class="breakdown-grid">
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Current Control</div>
+                                <div class="breakdown-value">53-47 (R)</div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Dems Need to Flip</div>
+                                <div class="breakdown-value">4 seats</div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">GOP Seats Up</div>
+                                <div class="breakdown-value">22</div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Dem Seats Up</div>
+                                <div class="breakdown-value">13</div>
+                            </div>
+                        </div>
+
+                        <div class="key-facts">
+                            <div class="key-facts-title">Most Competitive Races (per Sabato's Crystal Ball, updated Jan 12):</div>
+                            <ul class="fact-list">
+                                <li><strong>Maine:</strong> Sen. Susan Collins (R) - blue-leaning state but Collins has survived before</li>
+                                <li><strong>North Carolina:</strong> Open seat with Roy Cooper (D) running - toss-up</li>
+                                <li><strong>Michigan:</strong> Open after Sen. Gary Peters (D) retirement - key battleground</li>
+                                <li><strong>Georgia:</strong> Sen. Jon Ossoff (D) seeking re-election - vulnerable after narrow 2020 win</li>
+                                <li><strong>Texas:</strong> Sen. John Cornyn (R) facing primary challenge from Ken Paxton</li>
+                                <li><strong>Ohio:</strong> Special election after JD Vance resignation - Sherrod Brown running</li>
+                            </ul>
+                        </div>
+
+                        <div class="citation">Sources: <a href="https://en.wikipedia.org/wiki/2026_United_States_Senate_elections" class="source-link">Wikipedia</a>, <a href="https://www.270towin.com/2026-senate-election/" class="source-link">270toWin</a>, <a href="https://centerforpolitics.org/crystalball/2026-senate/" class="source-link">Sabato's Crystal Ball</a></div>
+                    </div>
+
+                    <div class="story">
+                        <div class="story-headline">
+                            Nine Senate Retirements Reshape 2026 Landscape
+                        </div>
+                        <div class="story-content">
+                            <a href="https://www.upi.com/Top_News/US/2026/01/06/2026-midterm-elections-house-senate-preview/4231767711258/" class="source-link">UPI</a> reported on January 6 that nine senators have announced retirements, including Mitch McConnell (R-KY), ending his 40-year career as the longest-serving Senate party leader in history.
+                        </div>
+
+                        <div class="key-facts">
+                            <div class="key-facts-title">Notable Retirements:</div>
+                            <ul class="fact-list">
+                                <li><strong>Mitch McConnell (R-KY):</strong> 40-year career, longest-serving party leader</li>
+                                <li><strong>Gary Peters (D-MI):</strong> Opens crucial battleground seat</li>
+                                <li><strong>Joni Ernst (R-IA):</strong> Announced she won't seek third term</li>
+                                <li><strong>Tina Smith (D-MN):</strong> Puts Minnesota seat up for grabs</li>
+                                <li><strong>Jeanne Shaheen (D-NH):</strong> Opening race against John Sununu</li>
+                            </ul>
+                        </div>
+
+                        <div class="citation">Sources: <a href="https://www.upi.com/Top_News/US/2026/01/06/2026-midterm-elections-house-senate-preview/4231767711258/" class="source-link">UPI</a>, <a href="https://ballotpedia.org/United_States_Senate_elections,_2026" class="source-link">Ballotpedia</a></div>
+                    </div>
+
+                    <div class="story">
+                        <div class="story-headline">
+                            House Battlegrounds: Michigan and Georgia in Focus
+                        </div>
+                        <div class="story-content">
+                            <a href="https://ballotpedia.org/United_States_Congress_elections,_2026" class="source-link">Ballotpedia</a> identifies key House races. Michigan's 7th District, held by Republican Tom Barrett, has flipped in consecutive elections. Georgia's 14th District is open after Marjorie Taylor Greene's January 5 resignation, with a special election scheduled.
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://rollcall.com/2026/01/15/midterm-election-calendar-2026-primaries/" class="source-link">Roll Call</a> published the congressional primary calendar on January 15, noting that primary season kicks off March 3 in Arkansas, North Carolina, and Texas, concluding 196 days later in Delaware.
+                        </div>
+
+                        <div class="citation">Sources: <a href="https://ballotpedia.org/United_States_Congress_elections,_2026" class="source-link">Ballotpedia</a>, <a href="https://rollcall.com/2026/01/15/midterm-election-calendar-2026-primaries/" class="source-link">Roll Call</a></div>
+                    </div>
+
+                    <div class="story">
+                        <div class="story-headline">
+                            Election Integrity Concerns Surface in Media Coverage
+                        </div>
+                        <div class="story-content">
+                            <a href="https://en.wikipedia.org/wiki/2026_United_States_elections" class="source-link">Wikipedia</a> noted that in January 2026, The Washington Post reported the Trump administration had undertaken several tactics "meant to undermine confidence in the midterm elections," including mid-decade redistricting for partisan gain and floating the idea of canceling elections.
+                        </div>
+
+                        <div class="quote">
+                            White House Press Secretary Karoline Leavitt claimed Trump was "speaking facetiously" and was "simply joking" about election cancellation.
+                        </div>
+                        <div class="citation">— Wikipedia summary of Washington Post reporting, January 2026</div>
+
+                        <div class="citation">Sources: <a href="https://en.wikipedia.org/wiki/2026_United_States_elections" class="source-link">Wikipedia (citing Washington Post)</a></div>
+                    </div>
+                    
+                    <button class="collapse-button" onclick="toggleSection('midterm-media-section')">
+                        <span>▲</span> Collapse Section
+                    </button>
+                </div>
+            </div>
+
+            <!-- Trump Administration Developments -->
+            <div class="section">
+                <div class="section-title" onclick="toggleSection('trump-admin-section')">
+                    Trump Administration: Policy Initiatives and Controversies
+                    <span class="expand-icon">▶</span>
+                </div>
+                
+                <div class="section-content collapsed" id="trump-admin-section">
+                    <div class="story">
+                        <div class="story-headline">
+                            Congressional Approval Reaches Historic Low
+                        </div>
+                        <div class="story-content">
+                            <a href="https://ballotpedia.org/United_States_Senate_elections,_2026" class="source-link">Ballotpedia</a> tracked congressional approval ratings, which stood at just 15% as of January 20, 2026 — reflecting deep public dissatisfaction with Congress during the early Trump administration period.
+                        </div>
+
+                        <div class="stats-box">
+                            <div class="stats-number">15%</div>
+                            <div>Congressional Approval Rating (January 20, 2026)</div>
+                        </div>
+
+                        <div class="citation">Sources: <a href="https://ballotpedia.org/United_States_Senate_elections,_2026" class="source-link">Ballotpedia Congressional Approval Tracker</a></div>
+                    </div>
+
+                    <div class="story">
+                        <div class="story-headline">
+                            Special Elections Follow House Resignations and Deaths
+                        </div>
+                        <div class="story-content">
+                            Multiple news outlets tracked special House elections scheduled for 2026. <a href="https://en.wikipedia.org/wiki/2026_United_States_elections" class="source-link">Wikipedia</a> reported that at least four special elections will be held:
+                        </div>
+
+                        <div class="key-facts">
+                            <div class="key-facts-title">Special Elections:</div>
+                            <ul class="fact-list">
+                                <li><strong>Georgia's 14th:</strong> Marjorie Taylor Greene resigned January 5, 2026 (R+19 district)</li>
+                                <li><strong>California's 1st:</strong> Doug LaMalfa died January 6, 2026 (R+12 district)</li>
+                                <li><strong>New Jersey's 11th:</strong> Mikie Sherrill resigned to become governor (D+5 district)</li>
+                                <li><strong>Texas's 18th:</strong> Sylvester Turner died March 5, 2025 (D+21 district)</li>
+                            </ul>
+                        </div>
+
+                        <div class="citation">Sources: <a href="https://en.wikipedia.org/wiki/2026_United_States_elections" class="source-link">Wikipedia</a>, <a href="https://ballotpedia.org/United_States_Congress_elections,_2026" class="source-link">Ballotpedia</a></div>
+                    </div>
+
+                    <div class="story">
+                        <div class="story-headline">
+                            Texas Senate Race: Cornyn Faces Primary Challenge from Paxton
+                        </div>
+                        <div class="story-content">
+                            <a href="https://www.upi.com/Top_News/US/2026/01/06/2026-midterm-elections-house-senate-preview/4231767711258/" class="source-link">UPI</a> reported that Sen. John Cornyn (R-TX) faces a contested Republican primary from Texas Attorney General Ken Paxton, who has been "a key figure in Texas' redistricting battle" and frequent opponent of Biden administration policies. Rep. Wesley Hunt is also challenging Cornyn.
+                        </div>
+
+                        <div class="story-content">
+                            The race has drawn attention as Texas Democrats are considering candidates, with speculation about emerging voices who could appeal to conservative voters while maintaining progressive values.
+                        </div>
+
+                        <div class="citation">Sources: <a href="https://www.upi.com/Top_News/US/2026/01/06/2026-midterm-elections-house-senate-preview/4231767711258/" class="source-link">UPI</a></div>
+                    </div>
+
+                    <div class="story">
+                        <div class="story-headline">
+                            Minnesota Troops Deployed: Insurrection Act Considerations
+                        </div>
+                        <div class="story-content">
+                            <a href="https://www.cnn.com/politics/live-news/trump-administration-news-01-18-26" class="source-link">CNN Politics</a> reported on January 18 that a "top Trump administration official voiced support for President Donald Trump's potential use of the Insurrection Act as the Pentagon has ordered approximately 1,500 active duty soldiers to prepare for a potential deployment to Minnesota."
+                        </div>
+
+                        <div class="story-content">
+                            The development raised concerns among civil liberties advocates about the administration's willingness to deploy military force domestically.
+                        </div>
+
+                        <div class="citation">Sources: <a href="https://www.cnn.com/politics/live-news/trump-administration-news-01-18-26" class="source-link">CNN Politics</a></div>
+                    </div>
+                    
+                    <button class="collapse-button" onclick="toggleSection('trump-admin-section')">
+                        <span>▲</span> Collapse Section
+                    </button>
+                </div>
+            </div>
+
+            <!-- International Affairs -->
+            <div class="section">
+                <div class="section-title" onclick="toggleSection('international-section')">
+                    International Affairs: NATO, Arctic Security, and Global Tensions
+                    <span class="expand-icon">▶</span>
+                </div>
+                
+                <div class="section-content collapsed" id="international-section">
+                    <div class="story">
+                        <div class="story-headline">
+                            European Military Exercise in Greenland: "Operation Arctic Endurance"
+                        </div>
+                        <div class="story-content">
+                            <a href="https://www.npr.org/2026/01/18/nx-s1-5681422/european-leaders-greenland-tariffs-downward-spiral" class="source-link">NPR</a> reported that European NATO allies deployed military personnel to Greenland for a Danish-led exercise called "Operation Arctic Endurance." Sweden sent military officers to help plan the exercise at Denmark's request.
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://abcnews.go.com/International/europe-united-face-trumps-greenland-threats-tariffs-eu/story?id=129324420" class="source-link">ABC News</a> noted that while it's not unusual for NATO countries to send military assets for exercises in Greenland, "the timing represents a significant show of support for Denmark and underscores the tensions within the transatlantic alliance."
+                        </div>
+
+                        <div class="quote">
+                            "As members of NATO, we are committed to strengthening Arctic security as a shared transatlantic interest."
+                        </div>
+                        <div class="citation">— Joint statement from eight European leaders, January 19, 2026</div>
+
+                        <div class="citation">Sources: <a href="https://www.npr.org/2026/01/18/nx-s1-5681422/european-leaders-greenland-tariffs-downward-spiral" class="source-link">NPR</a>, <a href="https://abcnews.go.com/International/europe-united-face-trumps-greenland-threats-tariffs-eu/story?id=129324420" class="source-link">ABC News</a></div>
+                    </div>
+
+                    <div class="story">
+                        <div class="story-headline">
+                            Danish Foreign Minister: Trump "Wishes to Conquer Greenland"
+                        </div>
+                        <div class="story-content">
+                            <a href="https://abcnews.go.com/International/europe-united-face-trumps-greenland-threats-tariffs-eu/story?id=129324420" class="source-link">ABC News</a> reported that Danish Foreign Minister Lars Løkke Rasmussen told reporters after meeting with Vice President JD Vance and Secretary of State Marco Rubio: "It's clear that the president has this wish of conquering over Greenland." Rasmussen called that outcome "totally unacceptable."
+                        </div>
+
+                        <div class="story-content">
+                            Rasmussen expressed surprise at Trump's tariff threat on January 18, noting it came after what he described as a "constructive meeting" with Vance and Rubio the previous week.
+                        </div>
+
+                        <div class="citation">Sources: <a href="https://abcnews.go.com/International/europe-united-face-trumps-greenland-threats-tariffs-eu/story?id=129324420" class="source-link">ABC News</a></div>
+                    </div>
+
+                    <div class="story">
+                        <div class="story-headline">
+                            NATO Chief Rutte Brokers "Framework" Deal on Arctic Security
+                        </div>
+                        <div class="story-content">
+                            <a href="https://www.aljazeera.com/news/2026/1/21/trump-nixes-european-tariff-threats-over-greenland-after-nato-chief-talks" class="source-link">Al Jazeera</a> reported that NATO Secretary General Mark Rutte's intervention on January 21 helped defuse the crisis. Trump credited Rutte with brokering a "framework of a future deal with respect to Greenland and, in fact, the entire Arctic Region."
+                        </div>
+
+                        <div class="story-content">
+                            Details of the framework remained vague, with Trump not elaborating on what was agreed upon. European leaders expressed cautious relief while emphasizing that Greenland's status as part of Denmark remains unchanged.
+                        </div>
+
+                        <div class="citation">Sources: <a href="https://www.aljazeera.com/news/2026/1/21/trump-nixes-european-tariff-threats-over-greenland-after-nato-chief-talks" class="source-link">Al Jazeera</a></div>
+                    </div>
+
+                    <div class="story">
+                        <div class="story-headline">
+                            Greenlandic Protests: "Hands Off Greenland" Movement
+                        </div>
+                        <div class="story-content">
+                            <a href="https://www.cnn.com/2026/01/17/europe/protesters-denmark-greenland-trump-intl" class="source-link">CNN</a> and <a href="https://www.aljazeera.com/news/2026/1/21/trump-nixes-european-tariff-threats-over-greenland-after-nato-chief-talks" class="source-link">Al Jazeera</a> documented mass protests in Nuuk, Greenland's capital, on January 17-18, with an estimated 25% of the city's population demonstrating under the banner "Hands off Greenland."
+                        </div>
+
+                        <div class="story-content">
+                            Greenlandic and Danish leaders have consistently rejected Trump's push to take control of Greenland, a self-governing territory of Denmark with broad autonomy and the right to self-determination.
+                        </div>
+
+                        <div class="citation">Sources: <a href="https://www.cnn.com/2026/01/17/europe/protesters-denmark-greenland-trump-intl" class="source-link">CNN</a>, <a href="https://www.aljazeera.com/news/2026/1/21/trump-nixes-european-tariff-threats-over-greenland-after-nato-chief-talks" class="source-link">Al Jazeera</a></div>
+                    </div>
+                    
+                    <button class="collapse-button" onclick="toggleSection('international-section')">
+                        <span>▲</span> Collapse Section
+                    </button>
+                </div>
+            </div>
+
+            <!-- Economic Impact -->
+            <div class="section">
+                <div class="section-title" onclick="toggleSection('economic-section')">
+                    Economic Impact: Tariffs, Trade Relations, and Market Reactions
+                    <span class="expand-icon">▶</span>
+                </div>
+                
+                <div class="section-content collapsed" id="economic-section">
+                    <div class="story">
+                        <div class="story-headline">
+                            EU Trade Agreement with US in Jeopardy
+                        </div>
+                        <div class="story-content">
+                            <a href="https://www.cnn.com/2026/01/18/business/europe-greenland-trump-tariffs-trade" class="source-link">CNN Business</a> reported that the EU-US trade agreement reached last summer but not yet signed is now in serious doubt. European Parliament's Manfred Weber stated on X: "Given Donald Trump's threats regarding Greenland, approval is not possible at this stage."
+                        </div>
+
+                        <div class="quote">
+                            "These actions really do represent an end of the credibility of American commitments. That's going to have adverse effects on the world economy."
+                        </div>
+                        <div class="citation">— Steven Durlauf, Professor, University of Chicago Harris School of Public Policy</div>
+
+                        <div class="key-facts">
+                            <div class="key-facts-title">2024 US-European Trade (US Census Bureau):</div>
+                            <ul class="fact-list">
+                                <li><strong>Germany:</strong> $236 billion in bilateral trade</li>
+                                <li><strong>United Kingdom:</strong> $147.7 billion</li>
+                                <li><strong>Netherlands:</strong> $122.27 billion</li>
+                                <li><strong>France, Norway, Sweden:</strong> Combined hundreds of billions</li>
+                            </ul>
+                        </div>
+
+                        <div class="citation">Sources: <a href="https://www.cnn.com/2026/01/18/business/europe-greenland-trump-tariffs-trade" class="source-link">CNN Business</a></div>
+                    </div>
+
+                    <div class="story">
+                        <div class="story-headline">
+                            Treasury Secretary Dismisses Danish Bond Sale
+                        </div>
+                        <div class="story-content">
+                            <a href="https://finance.yahoo.com/news/live/trump-tariffs-live-updates-trump-links-greenland-threats-to-nobel-peace-prize-snub-eu-discusses-108-billion-in-retaliatory-tariffs-152657413.html" class="source-link">Yahoo Finance</a> reported that Treasury Secretary Scott Bessent "brushed off Denmark's sale of US Treasurys" at the World Economic Forum in Davos on January 20.
+                        </div>
+
+                        <div class="quote">
+                            "European leaders will come around, and they will understand they need to be under the US security umbrella."
+                        </div>
+                        <div class="citation">— Treasury Secretary Scott Bessent, Davos, January 20, 2026</div>
+
+                        <div class="story-content">
+                            Bessent also stated: "Make Greenland part of the United States. And there will not be a conflict because the United States right now: we're the hottest country in the world, we're the strongest country in the world. Europeans project weakness; the US projects strength."
+                        </div>
+
+                        <div class="citation">Sources: <a href="https://finance.yahoo.com/news/live/trump-tariffs-live-updates-trump-links-greenland-threats-to-nobel-peace-prize-snub-eu-discusses-108-billion-in-retaliatory-tariffs-152657413.html" class="source-link">Yahoo Finance</a></div>
+                    </div>
+
+                    <div class="story">
+                        <div class="story-headline">
+                            Market Impact: European Stocks Decline on Tariff Threats
+                        </div>
+                        <div class="story-content">
+                            <a href="https://www.cnbc.com/2026/01/19/trump-greenland-tariffs-exposed-exporters-europe.html" class="source-link">CNBC</a> tracked the immediate market reaction on January 19-20. Pharmaceutical companies, energy stocks, and auto manufacturers all faced pressure as investors assessed the potential 10-25% tariff impact.
+                        </div>
+
+                        <div class="quote">
+                            "Welcome to 2026. I think this is going to be the sort of year that we are going to talk a lot more about what it means not to have the U.S. play ball with the traditional allies. It's going to have an impact on oil prices, commodity prices, equity markets, debt markets, private credit."
+                        </div>
+                        <div class="citation">— Ozan Özkural, Founder, Tanto Capital, CNBC's "Squawk Box Europe," January 19</div>
+
+                        <div class="citation">Sources: <a href="https://www.cnbc.com/2026/01/19/trump-greenland-tariffs-exposed-exporters-europe.html" class="source-link">CNBC</a></div>
+                    </div>
+
+                    <div class="story">
+                        <div class="story-headline">
+                            Supreme Court Decision Looms on Emergency Tariff Powers
+                        </div>
+                        <div class="story-content">
+                            <a href="https://www.cnn.com/2026/01/17/europe/protesters-denmark-greenland-trump-intl" class="source-link">CNN</a> noted that "The Supreme Court is expected to rule in the coming weeks on whether Trump can use the emergency powers granted in the International Emergency Economic Powers Act to impose tariffs."
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://www.cnn.com/2026/01/18/business/europe-greenland-trump-tariffs-trade" class="source-link">CNN Business</a> added: "These tariffs could also be struck down by the highly anticipated Supreme Court ruling on Trump's use of emergency powers."
+                        </div>
+
+                        <div class="citation">Sources: <a href="https://www.cnn.com/2026/01/17/europe/protesters-denmark-greenland-trump-intl" class="source-link">CNN</a>, <a href="https://www.cnn.com/2026/01/18/business/europe-greenland-trump-tariffs-trade" class="source-link">CNN Business</a></div>
+                    </div>
+                    
+                    <button class="collapse-button" onclick="toggleSection('economic-section')">
+                        <span>▲</span> Collapse Section
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="source-note">
+                <strong>Newsletter compiled from:</strong> Mainstream media coverage of topics discussed in the January 21, 2026 Current Events session. All stories represent actual news coverage from the period January 7-21, 2026.<br><br>
+                
+                <strong>Publications Referenced:</strong><br>
+                • <a href="https://www.cnn.com/" class="source-link" style="color: #3498db;">CNN</a> - Breaking news and political analysis<br>
+                • <a href="https://www.nbcnews.com/" class="source-link" style="color: #3498db;">NBC News</a> - National and international coverage<br>
+                • <a href="https://www.npr.org/" class="source-link" style="color: #3498db;">NPR</a> - In-depth analysis and reporting<br>
+                • <a href="https://www.aljazeera.com/" class="source-link" style="color: #3498db;">Al Jazeera</a> - International perspective<br>
+                • <a href="https://abcnews.go.com/" class="source-link" style="color: #3498db;">ABC News</a> - Political developments<br>
+                • <a href="https://www.cnbc.com/" class="source-link" style="color: #3498db;">CNBC</a> - Economic and financial analysis<br>
+                • <a href="https://www.upi.com/" class="source-link" style="color: #3498db;">UPI</a> - Congressional coverage<br>
+                • <a href="https://finance.yahoo.com/" class="source-link" style="color: #3498db;">Yahoo Finance</a> - Market reactions and economic policy<br>
+                • <a href="https://theconversation.com/" class="source-link" style="color: #3498db;">The Conversation</a> - Academic analysis<br>
+                • <a href="https://rollcall.com/" class="source-link" style="color: #3498db;">Roll Call</a> - Congressional elections coverage<br><br>
+
+                <strong>Data & Analysis Sources:</strong><br>
+                • <a href="https://www.270towin.com/" class="source-link" style="color: #3498db;">270toWin</a> - Electoral forecasting and maps<br>
+                • <a href="https://centerforpolitics.org/crystalball/" class="source-link" style="color: #3498db;">Sabato's Crystal Ball</a> - Senate race ratings<br>
+                • <a href="https://ballotpedia.org/" class="source-link" style="color: #3498db;">Ballotpedia</a> - Comprehensive election data<br>
+                • <a href="https://www.racetothewh.com/" class="source-link" style="color: #3498db;">Race to the WH</a> - Election forecasting<br>
+                • <a href="https://en.wikipedia.org/" class="source-link" style="color: #3498db;">Wikipedia</a> - Aggregated news sources and timelines<br><br>
+
+                <strong>Methodology:</strong> This analysis examines mainstream media coverage of topics discussed in the January 21, 2026 Current Events group session. All citations link to actual news stories published between January 7-21, 2026. The visualization synthesizes reporting from major news organizations to provide comprehensive context for the issues debated by the discussion group.<br><br>
+                
+                <em>This newsletter compiles mainstream media perspectives on current events for educational and analytical purposes. All source links direct to original reporting from established news organizations.</em>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
