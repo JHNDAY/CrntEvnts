@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trending from Jan 12, 2026 to Jan 21, 2026</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header h2 {
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: white;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .news-section {
+            padding: 30px;
+        }
+
+        .news-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            overflow: hidden;
+            border: 2px solid transparent;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .news-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+            border-color: #667eea;
+        }
+
+        .news-card.expanded {
+            transform: none;
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .card-header {
+            color: white;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            transform: rotate(45deg);
+        }
+
+        .card-header.level-1 { background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%); }
+        .card-header.level-2 { background: linear-gradient(135deg, #ff4444 0%, #dd2222 100%); }
+        .card-header.level-3 { background: linear-gradient(135deg, #ff8888 0%, #ff5555 100%); }
+        .card-header.level-4 { background: linear-gradient(135deg, #ffaa88 0%, #ff7755 100%); }
+        .card-header.level-5 { background: linear-gradient(135deg, #88aaff 0%, #5577ff 100%); }
+        .card-header.level-6 { background: linear-gradient(135deg, #4488ff 0%, #2255ff 100%); }
+        .card-header.level-7 { background: linear-gradient(135deg, #0044ff 0%, #0022cc 100%); }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-content {
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.4s ease-in-out;
+        }
+
+        .card-content.expanded {
+            max-height: 3000px;
+            padding: 25px;
+        }
+
+        .expand-icon {
+            float: right;
+            font-size: 1.5rem;
+            transition: transform 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .expand-icon.rotated {
+            transform: rotate(180deg);
+        }
+
+        .content-section {
+            margin-bottom: 20px;
+        }
+
+        .content-section h3 {
+            color: #2c3e50;
+            margin-bottom: 12px;
+            font-size: 1.2rem;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .content-section ul {
+            list-style-position: inside;
+            color: #34495e;
+            line-height: 1.8;
+        }
+
+        .content-section li {
+            margin-bottom: 8px;
+            padding-left: 10px;
+        }
+
+        .content-section a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        .content-section a:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+
+        .sources-section {
+            margin-top: 30px;
+            padding: 20px;
+            background: rgba(102, 126, 234, 0.05);
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+
+        .sources-section h3 {
+            color: #1e3c72;
+            margin-bottom: 15px;
+        }
+
+        p {
+            color: #34495e;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .footer-note {
+            margin-top: 15px;
+            font-style: italic;
+            text-align: center;
+            color: #666;
+            font-size: 0.95rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Trending News Analysis</h1>
+            <h2>From the Right of Center</h2>
+            <p>Conservative & Heterodox Media Coverage</p>
+            <p>January 12, 2026 - January 21, 2026</p>
+        </div>
+
+        <div class="news-section">
+            <!-- Border Security & Immigration -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-1">
+                    <div class="card-title">
+                        Border Security & Immigration (28 mentions)
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-subtitle">Most Discussed Topic</div>
+                </div>
+                <div class="card-content">
+                    <div class="content-section">
+                        <h3>Key Developments</h3>
+                        <ul>
+                            <li>Trump administration expands travel ban to 24 additional countries (effective Jan 1, 2026)</li>
+                            <li>DHS deploys 1,000 additional CBP officers to Minnesota amid protests</li>
+                            <li>Border apprehensions fall to historic lows (under 9,000/month nationwide)</li>
+                            <li>Zero releases policy: 6th consecutive month of zero illegal alien releases</li>
+                            <li>Minnesota/Illinois file lawsuits against DHS over immigration enforcement tactics</li>
+                            <li>Federal judge in Minnesota denies temporary restraining order against ICE operations</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-section">
+                        <h3>Subtopics to Explore</h3>
+                        <ul>
+                            <li>Economic impacts of reduced immigration flows on labor markets</li>
+                            <li>State vs. federal authority in immigration enforcement</li>
+                            <li>Travel ban constitutional challenges and implementation</li>
+                            <li>Minnesota shooting incident and federal accountability</li>
+                            <li>287(g) program expansion and state partnerships</li>
+                            <li>Self-deportation trends and enforcement statistics</li>
+                        </ul>
+                    </div>
+
+                    <div class="sources-section">
+                        <h3>Sources Referenced</h3>
+                        <p><strong>Conservative Substack Commentary:</strong></p>
+                        <ul>
+                            <li><a href="https://www.thefp.com/t/immigration" target="_blank">The Free Press (Bari Weiss) - Immigration Coverage</a></li>
+                            <li><a href="https://systemupdate.substack.com/" target="_blank">Glenn Greenwald (System Update) - Minnesota ICE Shooting & Federal Accountability</a></li>
+                        </ul>
+                        <p><strong>Fox News Coverage:</strong></p>
+                        <ul>
+                            <li><a href="https://www.mainepublic.org/immigration/2026-01-21/ice-confirms-maine-immigration-surge-on-fox-news-claims-nearly-50-arrests-so-far" target="_blank">Fox News - ICE Confirms Maine Immigration Surge (Nearly 50 Arrests)</a></li>
+                            <li><a href="https://www.foxnews.com/category/us/immigration" target="_blank">Fox News - Immigration Coverage</a></li>
+                            <li><a href="https://www.foxla.com/news/new-california-immigration-laws-2026" target="_blank">Fox 11 LA - New California Immigration Laws 2026</a></li>
+                        </ul>
+                        <p><strong>Government & Analysis:</strong></p>
+                        <ul>
+                            <li><a href="https://www.dhs.gov/news/2026/01/20/dhs-sets-stage-another-historic-record-breaking-year-under-president-trump" target="_blank">DHS - Historic Record-Breaking Year Under President Trump</a></li>
+                            <li><a href="https://forumtogether.org/article/legislative-bulletin-friday-january-16-2026/" target="_blank">National Immigration Forum - Legislative Bulletin (January 16, 2026)</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DEI/CRT in Institutions -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-2">
+                    <div class="card-title">
+                        DEI/CRT in Institutions (22 mentions)
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-subtitle">Second Highest Activity</div>
+                </div>
+                <div class="card-content">
+                    <div class="content-section">
+                        <h3>Key Developments</h3>
+                        <ul>
+                            <li>45 universities under investigation by Education Department for ties to PhD Project</li>
+                            <li>Christopher Rufo targets universities through social media campaigns</li>
+                            <li>Texas A&M and other Texas universities withdraw from DEI conferences</li>
+                            <li>National Science Foundation strikes "inclusivity" from scientific integrity guidelines</li>
+                            <li>State Department proposes suspending 38 universities from Diplomacy Lab program</li>
+                            <li>American Bar Association considers repealing DEI Standard 206</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-section">
+                        <h3>Subtopics to Explore</h3>
+                        <ul>
+                            <li>Federal funding threats to universities maintaining DEI programs</li>
+                            <li>State legislation targeting DEI bureaucracies</li>
+                            <li>Academic freedom vs. anti-discrimination concerns</li>
+                            <li>Private sector scaling back of DEI initiatives</li>
+                            <li>Accreditation reform proposals from conservative organizations</li>
+                            <li>Impact on university hiring and admissions practices</li>
+                        </ul>
+                    </div>
+
+                    <div class="sources-section">
+                        <h3>Sources Referenced</h3>
+                        <p><strong>Conservative Substack Commentary:</strong></p>
+                        <ul>
+                            <li><a href="https://christopherrufo.com/" target="_blank">Christopher Rufo - Official Substack & Blog</a></li>
+                            <li><a href="https://christopherrufo.com/p/how-to-stop-dei" target="_blank">Christopher Rufo - How to Stop DEI (The Free Press Debate with Bari Weiss)</a></li>
+                            <li><a href="https://www.thefp.com/p/end-dei-woke-capture" target="_blank">The Free Press (Bari Weiss) - End DEI</a></li>
+                        </ul>
+                        <p><strong>Fox News Coverage:</strong></p>
+                        <ul>
+                            <li><a href="https://www.foxnews.com/politics/dozens-of-parents-rights-groups-call-for-50-state-audit-to-rid-k-12-schools-of-dei-clean-up-the-mess" target="_blank">Fox News - Dozens of Parents Rights Groups Call for 50-State Audit to Rid K-12 Schools of DEI</a></li>
+                            <li><a href="https://www.foxnews.com/category/dei" target="_blank">Fox News - DEI Coverage</a></li>
+                        </ul>
+                        <p><strong>Legal & Policy Analysis:</strong></p>
+                        <ul>
+                            <li><a href="https://www.gibsondunn.com/dei-task-force-update-december-30-2025/" target="_blank">Gibson Dunn - DEI Task Force Update (December 30, 2025)</a></li>
+                            <li><a href="https://www.philanthropy.com/news/facing-anti-dei-investigations-colleges-cut-ties-with-nonprofit-targeted-by-conservatives/" target="_blank">Chronicle of Philanthropy - 45 Colleges Cut Ties with PhD Project</a></li>
+                            <li><a href="https://www.thecrimson.com/article/2024/2/24/dei-scrut/" target="_blank">Harvard Crimson - The Fight Over DEI Arrives at Harvard</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Education & Parental Rights -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-3">
+                    <div class="card-title">
+                        Education & Parental Rights (18 mentions)
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-subtitle">High Activity</div>
+                </div>
+                <div class="card-content">
+                    <div class="content-section">
+                        <h3>Key Developments</h3>
+                        <ul>
+                            <li>U.S. Department of Education directs schools to comply with FERPA on gender identity records (Jan 15)</li>
+                            <li>South Carolina advances comprehensive Parental Rights Act (HB 4757)</li>
+                            <li>Florida proposes education bill banning DEI funding and requiring ultrasound videos in health classes</li>
+                            <li>Federal court reaffirms parents' right to opt out of LGBTQ storybooks</li>
+                            <li>Fairfax County Public Schools faces civil rights complaint over hiding gender transitions</li>
+                            <li>California implements 11 new education laws including gender-neutral bathroom requirements</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-section">
+                        <h3>Subtopics to Explore</h3>
+                        <ul>
+                            <li>FERPA enforcement and "Gender Plans" controversy</li>
+                            <li>State-level parental notification laws</li>
+                            <li>School bathroom and facility access policies</li>
+                            <li>Curriculum opt-out rights and religious liberty</li>
+                            <li>Immigration protection policies in schools</li>
+                            <li>Federal vs. state authority in education policy</li>
+                        </ul>
+                    </div>
+
+                    <div class="sources-section">
+                        <h3>Sources Referenced</h3>
+                        <ul>
+                            <li><a href="https://www.ed.gov/about/news/press-release/us-department-of-education-directs-schools-comply-parental-rights-laws" target="_blank">U.S. Department of Education - Parental Rights Compliance Directive</a></li>
+                            <li><a href="http://www.parentherald.com/articles/236907/20260121/new-sc-parental-rights-bills-target-school-policies-student-bathroom-access-family-healthcare.htm" target="_blank">Parent Herald - South Carolina Parental Rights Bills</a></li>
+                            <li><a href="https://www.standingforfreedom.com/2026/01/22/federal-court-parents-opt-out-lgbtq-storybooks/" target="_blank">Standing for Freedom Center - Federal Court Reaffirms Opt-Out Rights</a></li>
+                            <li><a href="https://www.foxnews.com/politics/school-district-hot-seat-amid-fresh-allegations-hiding-students-gender-transition" target="_blank">Fox News - Fairfax County Gender Transition Concealment Allegations</a></li>
+                            <li><a href="https://edsource.org/2025/protecting-students-immigration-raids/746881" target="_blank">EdSource - 11 New Laws Impacting California Schools in 2026</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Woke Corporate Culture -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-4">
+                    <div class="card-title">
+                        Woke Corporate Culture (15 mentions)
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-subtitle">Medium-High Activity</div>
+                </div>
+                <div class="card-content">
+                    <div class="content-section">
+                        <h3>Key Developments</h3>
+                        <ul>
+                            <li>Multiple major corporations scaling back DEI programs (Ford, Lowe's, Harley Davidson)</li>
+                            <li>Shareholder activism against ESG proposals gaining momentum</li>
+                            <li>U.S. Chamber of Commerce criticized as "woke" by Consumers' Research</li>
+                            <li>Corporate language shifting from "ESG" to "sustainability"</li>
+                            <li>Anti-ESG shareholder proposals filed by National Center for Public Policy Research</li>
+                            <li>Trump administration pressure on corporate DEI elimination</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-section">
+                        <h3>Subtopics to Explore</h3>
+                        <ul>
+                            <li>Corporate response to political pressure vs. market forces</li>
+                            <li>Stock performance impacts of partisan corporate tweets</li>
+                            <li>ESG fund flows and investor sentiment in 2026</li>
+                            <li>Legal challenges to corporate DEI programs</li>
+                            <li>Board diversity requirements and shareholder proposals</li>
+                            <li>State pension fund divestment from ESG investments</li>
+                        </ul>
+                    </div>
+
+                    <div class="sources-section">
+                        <h3>Sources Referenced</h3>
+                        <ul>
+                            <li><a href="https://www.city-journal.org/article/woke-corporations-dei-esg-democrats" target="_blank">City Journal - How Corporations Went Woke</a></li>
+                            <li><a href="https://www.foxnews.com/politics/us-chamber-commerce-accused-leading-woke-corporate-america-trump-dismantles-dei-agenda" target="_blank">Fox News - U.S. Chamber Accused of Leading Woke Corporate America</a></li>
+                            <li><a href="https://www.esgdive.com/news/retail-dei-diversity-equity-inclusion-woke-policy-changes/728186/" target="_blank">ESG Dive - Not All Companies Abandoning DEI</a></li>
+                            <li><a href="https://www.heritage.org/progressivism/commentary/what-wrong-esg-wokeism" target="_blank">Heritage Foundation - What Is Wrong With ESG Wokeism</a></li>
+                            <li><a href="https://www.culturebanx.com/cbx-daily/shareholder-activism-threatens-dei-initiatives-in-the-anti-woke-uprising/" target="_blank">CultureBanx - Shareholder Activism Threatens DEI Initiatives</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Free Speech & Censorship -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-4">
+                    <div class="card-title">
+                        Free Speech & Censorship (14 mentions)
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-subtitle">Medium-High Activity</div>
+                </div>
+                <div class="card-content">
+                    <div class="content-section">
+                        <h3>Key Developments</h3>
+                        <ul>
+                            <li>Matt Taibbi files defamation lawsuit defending free speech principles</li>
+                            <li>Glenn Greenwald and Taibbi testify on government censorship (Feb 2025)</li>
+                            <li>Ongoing debates over "Censorship-Industrial Complex"</li>
+                            <li>Twitter Files reporting continues to influence policy discussions</li>
+                            <li>Congressional hearings on State Department censorship activities</li>
+                            <li>Criticism of corporate media's bias in coverage of free speech issues</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-section">
+                        <h3>Subtopics to Explore</h3>
+                        <ul>
+                            <li>Government-tech platform coordination on content moderation</li>
+                            <li>Distinction between defamation lawsuits and censorship</li>
+                            <li>Academic freedom and campus speech codes</li>
+                            <li>Social media content moderation policies</li>
+                            <li>Anti-BDS laws and First Amendment concerns</li>
+                            <li>Mainstream vs. alternative media free speech commitments</li>
+                        </ul>
+                    </div>
+
+                    <div class="sources-section">
+                        <h3>Sources Referenced</h3>
+                        <p><strong>Conservative Substack Commentary:</strong></p>
+                        <ul>
+                            <li><a href="https://www.thefp.com/p/matt-taibbi-to-protect-free-speech-im-suing-the-man-who-defamed-me" target="_blank">The Free Press - Matt Taibbi: To Protect Free Speech, I'm Suing</a></li>
+                            <li><a href="https://www.racket.news/" target="_blank">Matt Taibbi - Racket News (Substack)</a></li>
+                            <li><a href="https://greenwald.substack.com/p/democrats-abandon-free-speech" target="_blank">Glenn Greenwald - Democrats Abandon Free Speech</a></li>
+                            <li><a href="https://systemupdate.substack.com/" target="_blank">Glenn Greenwald - System Update (Substack)</a></li>
+                        </ul>
+                        <p><strong>Analysis & Commentary:</strong></p>
+                        <ul>
+                            <li><a href="https://conservativefiringline.com/taibbi-and-greenwald-on-how-the-regime-media-branded-free-speech-as-far-right-video/" target="_blank">Conservative Firing Line - Taibbi and Greenwald on Regime Media</a></li>
+                            <li><a href="https://www.thefp.com/p/matt-taibbi-censorship-free-speech-rescue-the-republic" target="_blank">The Free Press - Matt Taibbi: How to Fight Back Against the Censors</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Government Overreach & Administrative State -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-5">
+                    <div class="card-title">
+                        Government Overreach & Administrative State (12 mentions)
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-subtitle">Medium Activity</div>
+                </div>
+                <div class="card-content">
+                    <div class="content-section">
+                        <h3>Key Developments</h3>
+                        <ul>
+                            <li>Trump executive order proposes federal AI policy framework preempting state laws</li>
+                            <li>California and Texas AI regulation laws take effect January 1, 2026</li>
+                            <li>Illinois passes Illinois Bivens Act for state remedies against federal officials</li>
+                            <li>Cheyenne, Wyoming residents protest administrative warrant ordinance</li>
+                            <li>State constitutional challenges to federal immigration enforcement</li>
+                            <li>Administrative state legislation tracking shows increased state-level pushback</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-section">
+                        <h3>Subtopics to Explore</h3>
+                        <ul>
+                            <li>Federal preemption vs. state sovereignty in AI regulation</li>
+                            <li>State remedies for federal civil rights violations</li>
+                            <li>Administrative agency rulemaking authority limits</li>
+                            <li>Chevron deference and judicial review of agency actions</li>
+                            <li>State-level resistance to federal mandates</li>
+                            <li>Federalism principles and power dispersion</li>
+                        </ul>
+                    </div>
+
+                    <div class="sources-section">
+                        <h3>Sources Referenced</h3>
+                        <ul>
+                            <li><a href="https://www.kslaw.com/news-and-insights/new-state-ai-laws-are-effective-on-january-1-2026-but-a-new-executive-order-signals-disruption" target="_blank">King & Spalding - New State AI Laws and Federal Executive Order</a></li>
+                            <li><a href="https://statecourtreport.org/our-work/analysis-opinion/federalism-and-state-constitutional-rights-2026" target="_blank">State Court Report - Federalism and State Constitutional Rights in 2026</a></li>
+                            <li><a href="https://www.texaspolicyresearch.com/the-texas-model-applying-mises-to-stop-government-overreach/" target="_blank">Texas Policy Research - The Texas Model: Applying Mises to Stop Government Overreach</a></li>
+                            <li><a href="https://www.heritage.org/government-regulation/commentary/biden-administrations-overreach-affecting-states-rights-too" target="_blank">Heritage Foundation - Government Overreach Affecting States' Rights</a></li>
+                            <li><a href="https://ballotpedia.org/Administrative_state" target="_blank">Ballotpedia - Administrative State Legislation Tracker</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Media Bias & Institutional Capture -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-6">
+                    <div class="card-title">
+                        Media Bias & Institutional Capture (10 mentions)
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-subtitle">Medium Activity</div>
+                </div>
+                <div class="card-content">
+                    <div class="content-section">
+                        <h3>Key Developments</h3>
+                        <ul>
+                            <li>Bari Weiss appointed CBS News Editor-in-Chief after Paramount-Skydance merger ($150M acquisition of The Free Press)</li>
+                            <li>Bari Weiss shelves then airs "60 Minutes" segment on El Salvador prison conditions</li>
+                            <li>CNN accused of bias in inflation coverage framing (6% under Biden vs. 2.7% under Trump)</li>
+                            <li>NPR critic predicts "ominous" 2026 for media under Trump administration</li>
+                            <li>Media consolidation threatens independent journalism</li>
+                            <li>Public media funding cuts affecting rural stations</li>
+                            <li>Increased AI integration in media bias rating systems</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-section">
+                        <h3>Subtopics to Explore</h3>
+                        <ul>
+                            <li>Corporate consolidation of news media ownership</li>
+                            <li>Political bias in economic reporting</li>
+                            <li>Alternative media rise (Substack, independent journalists)</li>
+                            <li>Trust in mainstream vs. alternative media sources</li>
+                            <li>Impact of wealthy businesspeople controlling information ecosystem</li>
+                            <li>Media literacy and bias awareness tools</li>
+                        </ul>
+                    </div>
+
+                    <div class="sources-section">
+                        <h3>Sources Referenced</h3>
+                        <p><strong>Conservative Substack Commentary:</strong></p>
+                        <ul>
+                            <li><a href="https://www.thefp.com/" target="_blank">The Free Press (Bari Weiss) - Main Site</a></li>
+                            <li><a href="https://en.wikipedia.org/wiki/Bari_Weiss" target="_blank">Wikipedia - Bari Weiss CBS News Appointment</a></li>
+                            <li><a href="https://www.cnn.com/2026/01/18/media/cbs-60-minutes-inside-cecot-bari-weiss-exclusive" target="_blank">CNN - 60 Minutes CECOT Segment Finally Airs</a></li>
+                        </ul>
+                        <p><strong>Fox News & Conservative Media:</strong></p>
+                        <ul>
+                            <li><a href="https://www.thegatewaypundit.com/2026/01/what-media-bias-look-how-cnn-framed-inflation/" target="_blank">Gateway Pundit - CNN Media Bias in Inflation Coverage</a></li>
+                            <li><a href="https://newsbusters.org/blogs/nb/tim-graham/2026/01/12/npr-critic-2026-media-scene-looks-ominous-if-trump-isnt-thrashed" target="_blank">NewsBusters - NPR Critic on "Ominous" 2026 Media Scene</a></li>
+                        </ul>
+                        <p><strong>Media Analysis:</strong></p>
+                        <ul>
+                            <li><a href="https://www.npr.org/2026/01/10/nx-s1-5599552/media-2026-warner-paramount-netfilx-trump" target="_blank">NPR - Why 2026 Looks Ominous for Media Industry</a></li>
+                            <li><a href="https://www.allsides.com/media-bias" target="_blank">AllSides - Media Bias Ratings</a></li>
+                            <li><a href="https://mediabiasfactcheck.com/" target="_blank">Media Bias/Fact Check</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Religious Liberty -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-7">
+                    <div class="card-title">
+                        Religious Liberty (6 mentions)
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-subtitle">Lower Activity</div>
+                </div>
+                <div class="card-content">
+                    <div class="content-section">
+                        <h3>Key Developments</h3>
+                        <ul>
+                            <li>Federal court reaffirms parents' right to opt out of LGBTQ storybooks based on religious beliefs</li>
+                            <li>Mahmoud Supreme Court decision strengthens parental rights in religious education</li>
+                            <li>South Carolina legislation addresses religious liberty in education</li>
+                            <li>Senate bill proposed to restrict visas based on religious freedom violations</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-section">
+                        <h3>Subtopics to Explore</h3>
+                        <ul>
+                            <li>First Amendment protections in public education</li>
+                            <li>Religious opt-outs from controversial curriculum</li>
+                            <li>Church-state separation in school policies</li>
+                            <li>International religious freedom and visa restrictions</li>
+                            <li>Corporate policies affecting religious expression</li>
+                        </ul>
+                    </div>
+
+                    <div class="sources-section">
+                        <h3>Sources Referenced</h3>
+                        <ul>
+                            <li><a href="https://www.standingforfreedom.com/2026/01/22/federal-court-parents-opt-out-lgbtq-storybooks/" target="_blank">Standing for Freedom Center - Federal Court on LGBTQ Storybook Opt-Outs</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-note">
+                <p><strong>Data compiled from conservative and heterodox sources including:</strong></p>
+                <p>The Free Press (Bari Weiss), Christopher Rufo, Glenn Greenwald (System Update), Matt Taibbi (Racket News), 
+                   Heritage Foundation, Manhattan Institute, National Review contributors, and other independent journalists 
+                   featured in the Conservative & Heterodox Substack landscape.</p>
+                <p style="margin-top: 15px;">All sources accessed January 12-21, 2026. Analysis reflects reporting during this period.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleCard(card) {
+            const content = card.querySelector('.card-content');
+            const icon = card.querySelector('.expand-icon');
+            
+            // Close all other cards
+            document.querySelectorAll('.news-card').forEach(otherCard => {
+                if (otherCard !== card) {
+                    otherCard.classList.remove('expanded');
+                    otherCard.querySelector('.card-content').classList.remove('expanded');
+                    otherCard.querySelector('.expand-icon').classList.remove('rotated');
+                }
+            });
+            
+            // Toggle current card
+            card.classList.toggle('expanded');
+            content.classList.toggle('expanded');
+            icon.classList.toggle('rotated');
+        }
+
+        // Add smooth animations on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.news-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    card.style.transition = 'all 0.5s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>
