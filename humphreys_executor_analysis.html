@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Humphrey's Executor: Presidential Removal Power Analysis</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Georgia', serif;
+            line-height: 1.6;
+            color: #2c3e50;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .tabs {
+            display: flex;
+            background: #34495e;
+            overflow-x: auto;
+        }
+        
+        .tab {
+            flex: 1;
+            padding: 15px 20px;
+            background: #34495e;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 1em;
+            min-width: 150px;
+        }
+        
+        .tab:hover {
+            background: #2c3e50;
+        }
+        
+        .tab.active {
+            background: white;
+            color: #2c3e50;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        h2 {
+            color: #2a5298;
+            margin: 30px 0 20px 0;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+            font-size: 2em;
+        }
+        
+        h3 {
+            color: #34495e;
+            margin: 25px 0 15px 0;
+            font-size: 1.5em;
+        }
+        
+        .case-box {
+            background: #f8f9fa;
+            border-left: 5px solid #2a5298;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .timeline {
+            position: relative;
+            padding-left: 40px;
+            margin: 30px 0;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 10px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: #667eea;
+        }
+        
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -34px;
+            top: 5px;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: #2a5298;
+            border: 3px solid white;
+            box-shadow: 0 0 0 3px #667eea;
+        }
+        
+        .timeline-year {
+            font-weight: bold;
+            color: #2a5298;
+            font-size: 1.2em;
+        }
+        
+        .pros-cons {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 30px 0;
+        }
+        
+        @media (max-width: 768px) {
+            .pros-cons {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .argument-box {
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .pro-box {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            border-left: 5px solid #4caf50;
+        }
+        
+        .con-box {
+            background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);
+            border-left: 5px solid #ff9800;
+        }
+        
+        .argument-box h3 {
+            margin-top: 0;
+        }
+        
+        .argument-item {
+            margin: 15px 0;
+            padding: 15px;
+            background: white;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .argument-item h4 {
+            color: #2c3e50;
+            margin-bottom: 8px;
+        }
+        
+        .source {
+            font-size: 0.9em;
+            color: #7f8c8d;
+            font-style: italic;
+            margin-top: 10px;
+        }
+        
+        .source a {
+            color: #2a5298;
+            text-decoration: none;
+        }
+        
+        .source a:hover {
+            text-decoration: underline;
+        }
+        
+        .key-point {
+            background: #fff9c4;
+            border-left: 4px solid #ffd600;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 5px;
+        }
+        
+        .agency-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .agency-card {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .agency-card h4 {
+            color: #2a5298;
+            margin-bottom: 5px;
+        }
+        
+        .agency-card p {
+            font-size: 0.9em;
+            color: #666;
+        }
+        
+        .quote {
+            border-left: 4px solid #9b59b6;
+            padding: 15px 20px;
+            margin: 20px 0;
+            background: #f9f9f9;
+            font-style: italic;
+        }
+        
+        .current-status {
+            background: linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%);
+            border: 2px solid #e57373;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+        
+        ul {
+            margin: 15px 0 15px 30px;
+        }
+        
+        li {
+            margin: 8px 0;
+        }
+        
+        .citation-count {
+            background: #2a5298;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            border-radius: 5px;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Humphrey's Executor v. United States</h1>
+            <p>Presidential Removal Power and Independent Agencies</p>
+            <p style="font-size: 0.9em; margin-top: 10px;">A Balanced Analysis of Constitutional Authority and Institutional Independence</p>
+        </header>
+        
+        <div class="tabs">
+            <button class="tab active" onclick="openTab('overview')">Case Overview</button>
+            <button class="tab" onclick="openTab('timeline')">Timeline</button>
+            <button class="tab" onclick="openTab('arguments-for')">Pro-Removal Power</button>
+            <button class="tab" onclick="openTab('arguments-against')">Pro-Independence</button>
+            <button class="tab" onclick="openTab('current')">Current Status</button>
+            <button class="tab" onclick="openTab('sources')">Sources</button>
+        </div>
+        
+        <div class="content">
+            <!-- OVERVIEW TAB -->
+            <div id="overview" class="tab-content active">
+                <h2>The Landmark Case</h2>
+                
+                <div class="case-box">
+                    <h3>Humphrey's Executor v. United States, 295 U.S. 602 (1935)</h3>
+                    <p><strong>Decision:</strong> Unanimous (9-0)</p>
+                    <p><strong>Justice:</strong> George Sutherland</p>
+                    <p><strong>Holding:</strong> Congress may limit the President's power to remove commissioners of independent regulatory agencies to removal "for cause" only.</p>
+                </div>
+                
+                <h3>The Facts</h3>
+                <p>In 1933, President Franklin D. Roosevelt attempted to remove William E. Humphrey from the Federal Trade Commission (FTC) because Humphrey, a conservative Republican appointed in 1931, opposed Roosevelt's New Deal policies. The FTC Act allowed removal only for "inefficiency, neglect of duty, or malfeasance in office." When Humphrey refused to resign, Roosevelt fired him anyway. Humphrey died five months later, and his estate sued for back pay.</p>
+                
+                <div class="key-point">
+                    <strong>Central Question:</strong> Can Congress constitutionally restrict the President's power to remove members of independent regulatory commissions, or does the President possess unlimited removal authority over all executive branch officers?
+                </div>
+                
+                <h3>The Court's Reasoning</h3>
+                <div class="quote">
+                    "We think it plain under the Constitution that illimitable power of removal is not possessed by the President in respect of officers of the character of those just named. The authority of Congress, in creating quasi-legislative or quasi-judicial agencies, to require them to act in discharge of their duties independently of executive control cannot well be doubted."
+                    <div class="source"><a href="https://supreme.justia.com/cases/federal/us/295/602/" target="_blank">Humphrey's Executor v. United States, 295 U.S. 602 (1935)</a></div>
+                </div>
+                
+                <p>The Court distinguished between:</p>
+                <ul>
+                    <li><strong>Purely Executive Officers</strong> (e.g., postmasters) - subject to unlimited presidential removal</li>
+                    <li><strong>Quasi-Legislative/Quasi-Judicial Officers</strong> (e.g., FTC commissioners) - may be protected by for-cause removal provisions</li>
+                </ul>
+                
+                <h3>Why Independent Agencies Exist</h3>
+                <div class="agency-list">
+                    <div class="agency-card">
+                        <h4>Federal Trade Commission</h4>
+                        <p>Consumer protection and antitrust enforcement</p>
+                    </div>
+                    <div class="agency-card">
+                        <h4>Federal Reserve Board</h4>
+                        <p>Monetary policy and banking regulation</p>
+                    </div>
+                    <div class="agency-card">
+                        <h4>Securities & Exchange Commission</h4>
+                        <p>Financial markets regulation</p>
+                    </div>
+                    <div class="agency-card">
+                        <h4>National Labor Relations Board</h4>
+                        <p>Labor rights protection</p>
+                    </div>
+                    <div class="agency-card">
+                        <h4>Consumer Product Safety Commission</h4>
+                        <p>Product safety standards</p>
+                    </div>
+                    <div class="agency-card">
+                        <h4>Federal Communications Commission</h4>
+                        <p>Communications regulation</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- TIMELINE TAB -->
+            <div id="timeline" class="tab-content">
+                <h2>Evolution of Removal Power Doctrine</h2>
+                
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-year">1926</div>
+                        <h3>Myers v. United States</h3>
+                        <p>The Supreme Court held that the President has unlimited power to remove purely executive officers. Chief Justice William Howard Taft wrote that removal power is essential to the President's constitutional duty to execute the laws.</p>
+                        <div class="source"><a href="https://en.wikipedia.org/wiki/Humphrey's_Executor_v._United_States" target="_blank">Wikipedia - Humphrey's Executor</a></div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-year">1935</div>
+                        <h3>Humphrey's Executor v. United States</h3>
+                        <p>Unanimously ruled that Congress can limit presidential removal of independent agency heads to "for cause" only. Distinguished quasi-legislative/judicial agencies from purely executive ones.</p>
+                        <div class="source"><a href="https://supreme.justia.com/cases/federal/us/295/602/" target="_blank">Justia - Full Text</a></div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-year">1958</div>
+                        <h3>Wiener v. United States</h3>
+                        <p>Reinforced Humphrey's Executor, holding that even without explicit statutory protection, the President cannot remove officials from agencies requiring independence.</p>
+                        <div class="source"><a href="https://www.americanprogress.org/article/what-is-humphreys-executor-and-why-should-you-care-about-it/" target="_blank">Center for American Progress</a></div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-year">1988</div>
+                        <h3>Morrison v. Olson</h3>
+                        <p>By 7-1, upheld for-cause protections for inferior officers. Justice Scalia dissented, arguing for unlimited presidential removal power based on unitary executive theory.</p>
+                        <div class="source"><a href="https://www.scotusblog.com/2025/12/morrison-v-olson-and-the-triumph-of-the-unitary-executive-theory/" target="_blank">SCOTUSblog Analysis</a></div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-year">2010</div>
+                        <h3>Free Enterprise Fund v. PCAOB</h3>
+                        <p>Struck down "dual for-cause" removal protections as unconstitutional, but left Humphrey's Executor intact for single-layer protections.</p>
+                        <div class="source"><a href="https://www.law.cornell.edu/constitution-conan/article-2/section-2/clause-2/twenty-first-century-cases-on-removal" target="_blank">Constitution Annotated</a></div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-year">2020</div>
+                        <h3>Seila Law v. CFPB</h3>
+                        <p>By 5-4, narrowed Humphrey's Executor, holding that single-director agencies wielding substantial executive power cannot have for-cause protections. Preserved exception for multimember commissions.</p>
+                        <div class="source"><a href="https://www.law.cornell.edu/wex/unitary_executive_theory_(uet)" target="_blank">Cornell Law - Unitary Executive Theory</a></div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-year">2021</div>
+                        <h3>Collins v. Yellen</h3>
+                        <p>Similar to Seila Law, struck down for-cause protections for single-director Federal Housing Finance Agency.</p>
+                        <div class="source"><a href="https://www.law.cornell.edu/wex/unitary_executive_theory_(uet)" target="_blank">Cornell Law</a></div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-year">2025</div>
+                        <h3>Trump Administration Removals</h3>
+                        <p>President Trump fired multiple independent agency commissioners without cause, leading to legal challenges. Cases pending before the Supreme Court include Trump v. Slaughter (FTC) and Trump v. Cook (Federal Reserve).</p>
+                        <div class="source"><a href="https://en.wikipedia.org/wiki/Humphrey's_Executor_v._United_States" target="_blank">Wikipedia - Recent Developments</a></div>
+                    </div>
+                    
+                    <div class="timeline-item">
+                        <div class="timeline-year">December 2025</div>
+                        <h3>Trump v. Slaughter - Oral Arguments</h3>
+                        <p>Supreme Court heard arguments on whether FTC commissioners' removal protections are constitutional. Decision could overturn or narrow Humphrey's Executor after 90 years.</p>
+                        <div class="source"><a href="https://www.pbs.org/newshour/show/supreme-court-hears-arguments-on-trumps-power-over-independent-agencies" target="_blank">PBS NewsHour</a></div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- ARGUMENTS FOR TAB -->
+            <div id="arguments-for" class="tab-content">
+                <h2>Arguments For Unlimited Presidential Removal Power</h2>
+                <p><em>The Unitary Executive Theory Perspective</em></p>
+                
+                <div class="argument-item">
+                    <h4>1. Constitutional Text - Article II Vesting Clause</h4>
+                    <p>The Constitution states "The executive Power shall be vested in a President of the United States." Proponents argue this language grants all executive power to the President alone, making removal authority inherent in the office.</p>
+                    <div class="quote">
+                        "Article II grants the President conclusive and preclusive power to remove executive officers."
+                        <div class="source"><a href="https://www.scotusblog.com/2025/12/morrison-v-olson-and-the-triumph-of-the-unitary-executive-theory/" target="_blank">Solicitor General's Brief, Trump v. Slaughter</a></div>
+                    </div>
+                    <div class="source"><a href="https://en.wikipedia.org/wiki/Unitary_executive_theory" target="_blank">Wikipedia - Unitary Executive Theory</a></div>
+                </div>
+                
+                <div class="argument-item">
+                    <h4>2. Democratic Accountability</h4>
+                    <p>The President is the only nationally elected official (along with the Vice President) and should be accountable to voters for all executive branch actions. If the President cannot control agency officials, there is no democratic accountability.</p>
+                    <ul>
+                        <li>Voters elect the President to implement their policy preferences</li>
+                        <li>Unelected bureaucrats should not make policy independent of the elected President</li>
+                        <li>Clear lines of authority make government more responsive to citizens</li>
+                    </ul>
+                    <div class="source"><a href="https://www.theregreview.org/2025/03/03/shane-the-unbearable-lightness-of-the-unitary-executive-theory/" target="_blank">The Regulatory Review</a></div>
+                </div>
+                
+                <div class="argument-item">
+                    <h4>3. Take Care Clause</h4>
+                    <p>Article II requires the President to "take Care that the Laws be faithfully executed." Proponents argue this duty cannot be fulfilled if the President cannot remove subordinates who fail to execute laws properly.</p>
+                    <div class="quote">
+                        "The President's removal power is the rule, not the exception."
+                        <div class="source"><a href="https://www.theusconstitution.org/news/what-is-humphreys-executor-a-look-at-the-90-year-old-supreme-court-decision-trump-is-targeting/" target="_blank">Chief Justice John Roberts, Seila Law v. CFPB (2020)</a></div>
+                    </div>
+                    <div class="source"><a href="https://en.wikipedia.org/wiki/Unitary_executive_theory" target="_blank">Wikipedia</a></div>
+                </div>
+                
+                <div class="argument-item">
+                    <h4>4. Separation of Powers</h4>
+                    <p>Independent agencies exercising executive power but insulated from presidential control violate the constitutional separation of powers by creating a "headless fourth branch" of government.</p>
+                    <ul>
+                        <li>The Constitution creates only three branches, not four</li>
+                        <li>Executive power must reside in the executive branch under presidential control</li>
+                        <li>Congressional limits on removal improperly intrude on executive authority</li>
+                    </ul>
+                    <div class="source"><a href="https://www.hklaw.com/en/insights/publications/2025/09/supreme-courts-potential-restructuring-of-ftc" target="_blank">Holland & Knight Analysis</a></div>
+                </div>
+                
+                <div class="argument-item">
+                    <h4>5. Efficiency and Unified Policy</h4>
+                    <p>A single executive ensures coherent, unified policy implementation rather than conflicting actions from independent agencies pursuing their own agendas.</p>
+                    <ul>
+                        <li>Reduces bureaucratic gridlock and conflicting regulations</li>
+                        <li>Enables rapid response to changing circumstances</li>
+                        <li>Prevents agencies from being captured by special interests</li>
+                    </ul>
+                    <div class="source"><a href="https://publicknowledge.org/no-one-wins-under-the-unitary-executive-theory/" target="_blank">Public Knowledge</a></div>
+                </div>
+                
+                <div class="argument-item">
+                    <h4>6. Historical Practice - The Decision of 1789</h4>
+                    <p>Early Congresses, including many Framers, debated and affirmed presidential removal power during the creation of executive departments in 1789. This represents an early constitutional interpretation.</p>
+                    <div class="source"><a href="https://review.law.stanford.edu/wp-content/uploads/sites/3/2021/01/Birk-73-Stan.-L.-Rev.-175.pdf" target="_blank">Stanford Law Review - Historical Analysis</a></div>
+                </div>
+                
+                <div class="argument-item">
+                    <h4>7. Modern Administrative State Problems</h4>
+                    <p>Independent agencies have grown far beyond what the 1935 Court envisioned, now wielding enormous regulatory, enforcement, and quasi-judicial powers that affect every aspect of American life.</p>
+                    <div class="quote">
+                        "The CFPB Director exercised executive power, possessing the authority to promulgate binding rules fleshing out 19 federal statutes, issue final decisions awarding legal and equitable relief in administrative adjudications, and to seek daunting monetary penalties in enforcement actions."
+                        <div class="source"><a href="https://www.law.cornell.edu/constitution-conan/article-2/section-2/clause-2/twenty-first-century-cases-on-removal" target="_blank">Seila Law v. CFPB (2020)</a></div>
+                    </div>
+                    <div class="source"><a href="https://www.yalejreg.com/nc/what-does-humphreys-executor-mean-by-nathaniel-wald-donahue/" target="_blank">Yale Journal on Regulation</a></div>
+                </div>
+            </div>
+            
+            <!-- ARGUMENTS AGAINST TAB -->
+            <div id="arguments-against" class="tab-content">
+                <h2>Arguments For Limited Removal Power / Agency Independence</h2>
+                <p><em>Defending Humphrey's Executor and Independent Agencies</em></p>
+                
+                <div class="argument-item">
+                    <h4>1. Congressional Authority Under Article I</h4>
+                    <p>Article I grants Congress broad power to create offices and agencies. This includes authority to structure agencies in ways that serve their statutory purposes, including removal protections.</p>
+                    <div class="quote">
+                        "The authority of Congress, in creating quasi-legislative or quasi-judicial agencies, to require them to act in discharge of their duties independently of executive control cannot well be doubted."
+                        <div class="source"><a href="https://supreme.justia.com/cases/federal/us/295/602/" target="_blank">Humphrey's Executor v. United States (1935)</a></div>
+                    </div>
+                    <div class="source"><a href="https://www.theregreview.org/2025/03/03/shane-the-unbearable-lightness-of-the-unitary-executive-theory/" target="_blank">The Regulatory Review</a></div>
+                </div>
+                
+                <div class="argument-item">
+                    <h4>2. Expertise and Apolitical Decision-Making</h4>
+                    <p>Independent agencies are staffed by nonpartisan experts who make decisions based on technical knowledge rather than political pressure. Removal protections enable evidence-based policy.</p>
+                    <ul>
+                        <li>Technical fields (finance, communications, consumer safety) require specialized expertise</li>
+                        <li>Protection from political pressure enables unpopular but necessary decisions</li>
+                        <li>Long-term planning beyond election cycles</li>
+                        <li>Consistent enforcement of laws regardless of administration</li>
+                    </ul>
+                    <div class="source"><a href="https://www.theusconstitution.org/blog/the-virtues-and-necessity-of-independent-agencies/" target="_blank">Constitutional Accountability Center</a></div>
+                </div>
+                
+                <div class="argument-item">
+                    <h4>3. Preventing Politicization of Critical Functions</h4>
+                    <p>Some government functions—like election administration, civil service protection, and financial regulation—must be insulated from partisan politics to maintain public trust.</p>
+                    <div class="quote">
+                        "The legitimacy of American democracy—and the public's confidence in the democratic system—comes from the belief that our elections are protected from powerful political figures who would benefit by manipulating them."
+                        <div class="source"><a href="https://campaignlegal.org/update/independent-agencies-must-remain-independent" target="_blank">Campaign Legal Center</a></div>
+                    </div>
+                    <ul>
+                        <li>Federal Election Commission must be nonpartisan</li>
+                        <li>Merit Systems Protection Board protects federal employees from political retaliation</li>
+                        <li>Federal Reserve can make economically sound but politically unpopular decisions</li>
+                    </ul>
+                    <div class="source"><a href="https://www.americanprogress.org/article/what-is-humphreys-executor-and-why-should-you-care-about-it/" target="_blank">Center for American Progress</a></div>
+                </div>
+                
+                <div class="argument-item">
+                    <h4>4. Stability and Predictability</h4>
+                    <p>Removal protections and staggered terms prevent complete policy reversals with each new administration, providing stability for regulated industries and the public.</p>
+                    <ul>
+                        <li>Businesses can plan based on consistent regulatory frameworks</li>
+                        <li>Prevents whipsaw policy changes every four years</li>
+                        <li>Institutional memory and continuity of expertise</li>
+                    </ul>
+                    <div class="source"><a href="https://www.theusconstitution.org/blog/the-virtues-and-necessity-of-independent-agencies/" target="_blank">Constitutional Accountability Center</a></div>
+                </div>
+                
+                <div class="argument-item">
+                    <h4>5. Historical Precedent and Reliance</h4>
+                    <p>Independent agencies have existed since the Interstate Commerce Commission (1887). The modern administrative state and economy have been built around this 140-year structure.</p>
+                    <div class="quote">
+                        "For almost 140 years, removal protections have been the hallmark of independence for multimember commissions like the Federal Trade Commission."
+                        <div class="source"><a href="https://www.lawfaremedia.org/article/slaughter--ing-humphrey-s-executor" target="_blank">Lawfare</a></div>
+                    </div>
+                    <p>Overturning this framework would create massive disruption and uncertainty.</p>
+                    <div class="source"><a href="https://ndlawreview.org/interring-the-unitary-executive/" target="_blank">Notre Dame Law Review</a></div>
+                </div>
+                
+                <div class="argument-item">
+                    <h4>6. Founding-Era Practice Supports Limitations</h4>
+                    <p>Historical research shows early Congresses created independent structures and used removal protections, contradicting unitary executive claims.</p>
+                    <ul>
+                        <li>Sinking Fund Commission included Vice President and Chief Justice not removable by President</li>
+                        <li>Early Congresses used multimember decision-making structures</li>
+                        <li>First and Second Banks of the United States had removal restrictions</li>
+                    </ul>
+                    <div class="source"><a href="https://ndlawreview.org/interring-the-unitary-executive/" target="_blank">Notre Dame Law Review - Historical Analysis</a></div>
+                </div>
+                
+                <div class="argument-item">
+                    <h4>7. Protecting Against Abuse of Power</h4>
+                    <p>Independent agencies serve as checks on presidential power, preventing corruption and ensuring laws are enforced even when politically inconvenient.</p>
+                    <div class="quote">
+                        "For it is quite evident that one who holds his office only during the pleasure of another cannot be depended upon to maintain an attitude of independence against the latter's will."
+                        <div class="source"><a href="https://en.wikipedia.org/wiki/Humphrey's_Executor_v._United_States" target="_blank">Humphrey's Executor (1935)</a></div>
+                    </div>
+                    <ul>
+                        <li>Prevents presidents from using agencies to target political opponents</li>
+                        <li>Enables investigation of executive branch misconduct</li>
+                        <li>Protects whistleblowers and ensures accountability</li>
+                    </ul>
+                    <div class="source"><a href="https://publicknowledge.org/no-one-wins-under-the-unitary-executive-theory/" target="_blank">Public Knowledge</a></div>
+                </div>
+                
+                <div class="argument-item">
+                    <h4>8. Balanced Accountability</h4>
+                    <p>Independent agencies remain accountable through multiple mechanisms beyond presidential removal:</p>
+                    <ul>
+                        <li>Congressional oversight and appropriations</li>
+                        <li>Judicial review of agency actions</li>
+                        <li>Public participation in rulemaking</li>
+                        <li>Presidential appointment power (with Senate confirmation)</li>
+                        <li>Removal "for cause" for genuine misconduct</li>
+                    </ul>
+                    <div class="source"><a href="https://columbialawreview.org/content/the-three-permissionspresidential-removal-and-the-statutory-limits-of-agency-independence/" target="_blank">Columbia Law Review</a></div>
+                </div>
+                
+                <div class="argument-item">
+                    <h4>9. "For Cause" Still Permits Removal</h4>
+                    <p>The standard removal language ("inefficiency, neglect of duty, or malfeasance in office") already permits presidents to remove officials who fail to faithfully execute the law—it just prevents purely political firings.</p>
+                    <div class="quote">
+                        "Neglect of duty and malfeasance in office, as traditionally interpreted, encompass what we call a failure of 'faithful execution': the official misbehavior that the Take Care Clause purportedly obliges the President to prevent."
+                        <div class="source"><a href="https://columbialawreview.org/content/the-three-permissionspresidential-removal-and-the-statutory-limits-of-agency-independence/" target="_blank">Columbia Law Review</a></div>
+                    </div>
+                    <div class="source"><a href="https://scholarship.law.columbia.edu/cgi/viewcontent.cgi?article=4122&context=faculty_scholarship" target="_blank">Columbia Law Scholarship</a></div>
+                </div>
+            </div>
+            
+            <!-- CURRENT STATUS TAB -->
+            <div id="current" class="tab-content">
+                <h2>Current Legal and Political Status (2025-2026)</h2>
+                
+                <div class="current-status">
+                    <h3>⚠️ Critical Juncture</h3>
+                    <p>The 90-year-old precedent of Humphrey's Executor is under direct challenge. The Supreme Court is currently considering cases that could fundamentally reshape the structure of the federal government.</p>
+                </div>
+                
+                <h3>Pending Supreme Court Cases</h3>
+                
+                <div class="argument-item">
+                    <h4>Trump v. Slaughter (FTC Commissioner)</h4>
+                    <ul>
+                        <li><strong>Oral Arguments:</strong> December 8, 2025</li>
+                        <li><strong>Issue:</strong> Whether statutory removal protections for FTC commissioners violate separation of powers, and whether Humphrey's Executor should be overruled</li>
+                        <li><strong>Status:</strong> Rebecca Slaughter was removed by President Trump in March 2025 for policy disagreements. Lower courts ruled removal illegal; Supreme Court stayed the injunction</li>
+                        <li><strong>Stakes:</strong> Could affect 24+ independent agencies with similar structures</li>
+                    </ul>
+                    <div class="source"><a href="https://www.lawfaremedia.org/article/slaughter--ing-humphrey-s-executor" target="_blank">Lawfare Analysis</a></div>
+                </div>
+                
+                <div class="argument-item">
+                    <h4>Trump v. Cook (Federal Reserve Governor)</h4>
+                    <ul>
+                        <li><strong>Oral Arguments:</strong> January 21, 2026</li>
+                        <li><strong>Issue:</strong> Whether Federal Reserve governors' removal protections are constitutional</li>
+                        <li><strong>Unique Factor:</strong> Conservative justices have expressed special concern about Federal Reserve independence</li>
+                        <li><strong>Potential Outcome:</strong> Court might create exception for Federal Reserve while limiting other agencies</li>
+                    </ul>
+                    <div class="source"><a href="https://www.scotusblog.com/2025/12/morrison-v-olson-and-the-triumph-of-the-unitary-executive-theory/" target="_blank">SCOTUSblog</a></div>
+                </div>
+                
+                <div class="argument-item">
+                    <h4>Trump v. Wilcox (NLRB Member)</h4>
+                    <ul>
+                        <li><strong>Status:</strong> Gwynne Wilcox became the first NLRB member ever fired since the board's creation in 1935</li>
+                        <li><strong>Significance:</strong> Tests removal protections for labor agencies</li>
+                    </ul>
+                    <div class="source"><a href="https://en.wikipedia.org/wiki/Humphrey's_Executor_v._United_States" target="_blank">Wikipedia</a></div>
+                </div>
+                
+                <h3>Other Recent Removals</h3>
+                <ul>
+                    <li>Hampton Dellinger - Office of Special Counsel</li>
+                    <li>Cathy Harris - Merit Systems Protection Board Chair</li>
+                    <li>Susan Grundmann - Federal Labor Relations Authority Chair</li>
+                    <li>Alvaro Bedoya - FTC Commissioner</li>
+                </ul>
+                <div class="source"><a href="https://www.theusconstitution.org/blog/the-virtues-and-necessity-of-independent-agencies/" target="_blank">Constitutional Accountability Center</a></div>
+                
+                <h3>What Oral Arguments Revealed</h3>
+                
+                <div class="key-point">
+                    <strong>Conservative Majority Skepticism:</strong> During December 2025 oral arguments in Slaughter, Chief Justice Roberts called Humphrey's Executor "just a dried husk," suggesting the conservative majority is prepared to narrow or overturn it.
+                    <div class="source"><a href="https://federalnewsnetwork.com/commentary/2026/01/the-supreme-courts-dangerous-double-standard-on-independent-agencies/" target="_blank">Federal News Network</a></div>
+                </div>
+                
+                <div class="argument-item">
+                    <h4>Key Questions from Oral Arguments</h4>
+                    <ul>
+                        <li><strong>Scope:</strong> How far would the ruling extend? Would it affect all 24+ independent agencies?</li>
+                        <li><strong>Federal Reserve:</strong> Is the Fed different from other agencies and deserving of special protection?</li>
+                        <li><strong>Congressional Power:</strong> Can Congress restructure executive departments as independent agencies to evade presidential control?</li>
+                        <li><strong>Workable Standards:</strong> What distinguishes "executive power" from "quasi-legislative/quasi-judicial" functions?</li>
+                    </ul>
+                    <div class="source"><a href="https://www.pbs.org/newshour/show/supreme-court-hears-arguments-on-trumps-power-over-independent-agencies" target="_blank">PBS NewsHour</a></div>
+                </div>
+                
+                <h3>Possible Outcomes</h3>
+                
+                <div class="pros-cons">
+                    <div class="argument-box pro-box">
+                        <h3>Narrow Ruling</h3>
+                        <ul>
+                            <li>Court could rule on FTC specifically without overturning Humphrey's Executor broadly</li>
+                            <li>Could create exception for Federal Reserve</li>
+                            <li>Might maintain protections for some agencies based on their functions</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="argument-box con-box">
+                        <h3>Broad Ruling</h3>
+                        <ul>
+                            <li>Complete overturn of Humphrey's Executor</li>
+                            <li>All multimember commission protections eliminated</li>
+                            <li>Fundamental restructuring of administrative state</li>
+                            <li>Massive legal and operational uncertainty</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <h3>Potential Impacts</h3>
+                
+                <div class="agency-list">
+                    <div class="agency-card">
+                        <h4>Political</h4>
+                        <p>Increased presidential power over entire federal bureaucracy; potential for partisan control of previously independent functions</p>
+                    </div>
+                    <div class="agency-card">
+                        <h4>Economic</h4>
+                        <p>Uncertainty in financial markets; changes to Federal Reserve independence could affect monetary policy credibility</p>
+                    </div>
+                    <div class="agency-card">
+                        <h4>Regulatory</h4>
+                        <p>Policy whipsaws every 4-8 years; reduced long-term planning by businesses; potential regulatory capture</p>
+                    </div>
+                    <div class="agency-card">
+                        <h4>Legal</h4>
+                        <p>Thousands of agency actions potentially subject to challenge; questions about past decisions made by now-removable officials</p>
+                    </div>
+                    <div class="agency-card">
+                        <h4>Institutional</h4>
+                        <p>Loss of expertise as career officials replaced with political appointees; reduced bipartisan cooperation</p>
+                    </div>
+                    <div class="agency-card">
+                        <h4>Democratic</h4>
+                        <p>Questions about election administration, civil service protections, and checks on executive power</p>
+                    </div>
+                </div>
+                
+                <div class="quote">
+                    "The fate of the administrative state turns on the 1935 case Humphrey's Executor v. United States."
+                    <div class="source"><a href="https://www.yalejreg.com/nc/what-does-humphreys-executor-mean-by-nathaniel-wald-donahue/" target="_blank">Yale Journal on Regulation</a></div>
+                </div>
+            </div>
+            
+            <!-- SOURCES TAB -->
+            <div id="sources" class="tab-content">
+                <h2>Complete Source Citations</h2>
+                
+                <div class="citation-count">
+                    All sources accessed January 31, 2026
+                </div>
+                
+                <h3>Primary Legal Sources</h3>
+                <ol>
+                    <li>Humphrey's Executor v. United States, 295 U.S. 602 (1935)<br>
+                    <a href="https://supreme.justia.com/cases/federal/us/295/602/" target="_blank">https://supreme.justia.com/cases/federal/us/295/602/</a></li>
+                    
+                    <li>Myers v. United States, 272 U.S. 52 (1926)</li>
+                    
+                    <li>Morrison v. Olson, 487 U.S. 654 (1988)</li>
+                    
+                    <li>Seila Law LLC v. Consumer Financial Protection Bureau, 591 U.S. 197 (2020)<br>
+                    <a href="https://www.law.cornell.edu/wex/unitary_executive_theory_(uet)" target="_blank">https://www.law.cornell.edu/wex/unitary_executive_theory_(uet)</a></li>
+                    
+                    <li>Collins v. Yellen, 594 U.S. 220 (2021)</li>
+                    
+                    <li>Free Enterprise Fund v. PCAOB, 561 U.S. 477 (2010)</li>
+                    
+                    <li>Wiener v. United States, 357 U.S. 349 (1958)</li>
+                </ol>
+                
+                <h3>Legal Analysis & Commentary</h3>
+                <ol>
+                    <li>"Humphrey's Executor v. United States" - Wikipedia<br>
+                    <a href="https://en.wikipedia.org/wiki/Humphrey's_Executor_v._United_States" target="_blank">https://en.wikipedia.org/wiki/Humphrey's_Executor_v._United_States</a></li>
+                    
+                    <li>"What Is Humphrey's Executor and Why Should You Care About It?" - Center for American Progress<br>
+                    <a href="https://www.americanprogress.org/article/what-is-humphreys-executor-and-why-should-you-care-about-it/" target="_blank">https://www.americanprogress.org/article/what-is-humphreys-executor-and-why-should-you-care-about-it/</a></li>
+                    
+                    <li>"What is Humphrey's Executor?" - Constitutional Accountability Center<br>
+                    <a href="https://www.theusconstitution.org/news/what-is-humphreys-executor-a-look-at-the-90-year-old-supreme-court-decision-trump-is-targeting/" target="_blank">https://www.theusconstitution.org/news/what-is-humphreys-executor-a-look-at-the-90-year-old-supreme-court-decision-trump-is-targeting/</a></li>
+                    
+                    <li>"'Slaughter'-ing Humphrey's Executor" - Lawfare<br>
+                    <a href="https://www.lawfaremedia.org/article/slaughter--ing-humphrey-s-executor" target="_blank">https://www.lawfaremedia.org/article/slaughter--ing-humphrey-s-executor</a></li>
+                    
+                    <li>"What Does Humphrey's Executor Mean?" by Nathaniel Wald Donahue - Yale Journal on Regulation<br>
+                    <a href="https://www.yalejreg.com/nc/what-does-humphreys-executor-mean-by-nathaniel-wald-donahue/" target="_blank">https://www.yalejreg.com/nc/what-does-humphreys-executor-mean-by-nathaniel-wald-donahue/</a></li>
+                    
+                    <li>"Supreme Court's Potential Restructuring of FTC" - Holland & Knight<br>
+                    <a href="https://www.hklaw.com/en/insights/publications/2025/09/supreme-courts-potential-restructuring-of-ftc" target="_blank">https://www.hklaw.com/en/insights/publications/2025/09/supreme-courts-potential-restructuring-of-ftc</a></li>
+                    
+                    <li>"Humphrey's Executor v. United States" - Ballotpedia<br>
+                    <a href="https://ballotpedia.org/Humphrey's_Executor_v._United_States" target="_blank">https://ballotpedia.org/Humphrey's_Executor_v._United_States</a></li>
+                </ol>
+                
+                <h3>Unitary Executive Theory Sources</h3>
+                <ol>
+                    <li>"Unitary executive theory" - Wikipedia<br>
+                    <a href="https://en.wikipedia.org/wiki/Unitary_executive_theory" target="_blank">https://en.wikipedia.org/wiki/Unitary_executive_theory</a></li>
+                    
+                    <li>"The Unbearable Lightness of the Unitary Executive Theory" - The Regulatory Review<br>
+                    <a href="https://www.theregreview.org/2025/03/03/shane-the-unbearable-lightness-of-the-unitary-executive-theory/" target="_blank">https://www.theregreview.org/2025/03/03/shane-the-unbearable-lightness-of-the-unitary-executive-theory/</a></li>
+                    
+                    <li>"Morrison v. Olson and the triumph of the unitary executive theory" - SCOTUSblog<br>
+                    <a href="https://www.scotusblog.com/2025/12/morrison-v-olson-and-the-triumph-of-the-unitary-executive-theory/" target="_blank">https://www.scotusblog.com/2025/12/morrison-v-olson-and-the-triumph-of-the-unitary-executive-theory/</a></li>
+                    
+                    <li>"Unitary Executive Theory (UET)" - Legal Information Institute, Cornell Law School<br>
+                    <a href="https://www.law.cornell.edu/wex/unitary_executive_theory_(uet)" target="_blank">https://www.law.cornell.edu/wex/unitary_executive_theory_(uet)</a></li>
+                    
+                    <li>"Interrogating the Historical Basis for a Unitary Executive" - Stanford Law Review<br>
+                    <a href="https://review.law.stanford.edu/wp-content/uploads/sites/3/2021/01/Birk-73-Stan.-L.-Rev.-175.pdf" target="_blank">https://review.law.stanford.edu/wp-content/uploads/sites/3/2021/01/Birk-73-Stan.-L.-Rev.-175.pdf</a></li>
+                    
+                    <li>"The Unitary Executive Without Inherent Presidential Removal Power"<br>
+                    <a href="https://administrativestate.gmu.edu/wp-content/uploads/2022/08/Harrison-Revised-FINAL.pdf" target="_blank">https://administrativestate.gmu.edu/wp-content/uploads/2022/08/Harrison-Revised-FINAL.pdf</a></li>
+                    
+                    <li>"Guest Post: The Unitary Executive: Presidential Control, not Removal"<br>
+                    <a href="https://blog.dividedargument.com/p/guest-post-the-unitary-executive" target="_blank">https://blog.dividedargument.com/p/guest-post-the-unitary-executive</a></li>
+                </ol>
+                
+                <h3>Independent Agencies Defense Sources</h3>
+                <ol>
+                    <li>"Independent Agencies Must Remain Independent" - Campaign Legal Center<br>
+                    <a href="https://campaignlegal.org/update/independent-agencies-must-remain-independent" target="_blank">https://campaignlegal.org/update/independent-agencies-must-remain-independent</a></li>
+                    
+                    <li>"The Virtues and Necessity of Independent Agencies" - Constitutional Accountability Center<br>
+                    <a href="https://www.theusconstitution.org/blog/the-virtues-and-necessity-of-independent-agencies/" target="_blank">https://www.theusconstitution.org/blog/the-virtues-and-necessity-of-independent-agencies/</a></li>
+                    
+                    <li>"No One Wins Under the Unitary Executive Theory" - Public Knowledge<br>
+                    <a href="https://publicknowledge.org/no-one-wins-under-the-unitary-executive-theory/" target="_blank">https://publicknowledge.org/no-one-wins-under-the-unitary-executive-theory/</a></li>
+                    
+                    <li>"Interring the Unitary Executive" - Notre Dame Law Review<br>
+                    <a href="https://ndlawreview.org/interring-the-unitary-executive/" target="_blank">https://ndlawreview.org/interring-the-unitary-executive/</a></li>
+                    
+                    <li>"THE THREE PERMISSIONS: Presidential Removal and the Statutory Limits of Agency Independence" - Columbia Law Review<br>
+                    <a href="https://columbialawreview.org/content/the-three-permissionspresidential-removal-and-the-statutory-limits-of-agency-independence/" target="_blank">https://columbialawreview.org/content/the-three-permissionspresidential-removal-and-the-statutory-limits-of-agency-independence/</a></li>
+                    
+                    <li>"Presidential Removal and the Statutory Limits of Agency Independence" - Columbia Law Scholarship<br>
+                    <a href="https://scholarship.law.columbia.edu/cgi/viewcontent.cgi?article=4122&context=faculty_scholarship" target="_blank">https://scholarship.law.columbia.edu/cgi/viewcontent.cgi?article=4122&context=faculty_scholarship</a></li>
+                    
+                    <li>"Revisiting the Constitutionality of Independent Agencies" - The Regulatory Review<br>
+                    <a href="https://www.theregreview.org/2020/07/21/bell-revisiting-constitutionality-independent-agencies/" target="_blank">https://www.theregreview.org/2020/07/21/bell-revisiting-constitutionality-independent-agencies/</a></li>
+                    
+                    <li>"Deconstructing Independent Agencies (and Executive Agencies)" - Cornell Law Review<br>
+                    <a href="https://scholarship.law.cornell.edu/cgi/viewcontent.cgi?article=3270&context=clr" target="_blank">https://scholarship.law.cornell.edu/cgi/viewcontent.cgi?article=3270&context=clr</a></li>
+                </ol>
+                
+                <h3>Current Developments</h3>
+                <ol>
+                    <li>"Supreme Court hears arguments on Trump's power over independent agencies" - PBS NewsHour<br>
+                    <a href="https://www.pbs.org/newshour/show/supreme-court-hears-arguments-on-trumps-power-over-independent-agencies" target="_blank">https://www.pbs.org/newshour/show/supreme-court-hears-arguments-on-trumps-power-over-independent-agencies</a></li>
+                    
+                    <li>"The Supreme Court's dangerous double standard on independent agencies" - Federal News Network<br>
+                    <a href="https://federalnewsnetwork.com/commentary/2026/01/the-supreme-courts-dangerous-double-standard-on-independent-agencies/" target="_blank">https://federalnewsnetwork.com/commentary/2026/01/the-supreme-courts-dangerous-double-standard-on-independent-agencies/</a></li>
+                    
+                    <li>"Twenty-First Century Cases on Removal" - Constitution Annotated, Library of Congress<br>
+                    <a href="https://constitution.congress.gov/browse/essay/artII-S2-C2-3-15-7/ALDE_00013113/" target="_blank">https://constitution.congress.gov/browse/essay/artII-S2-C2-3-15-7/ALDE_00013113/</a></li>
+                    
+                    <li>"Twenty-First Century Cases on Removal" - Legal Information Institute, Cornell Law<br>
+                    <a href="https://www.law.cornell.edu/constitution-conan/article-2/section-2/clause-2/twenty-first-century-cases-on-removal" target="_blank">https://www.law.cornell.edu/constitution-conan/article-2/section-2/clause-2/twenty-first-century-cases-on-removal</a></li>
+                    
+                    <li>"The Myth that Agency Adjudications Cannot Address Constitutional Claims" - George Mason Law Review<br>
+                    <a href="https://lawreview.gmu.edu/print__issues/the-myth-that-agency-adjudications-cannot-address-constitutional-claims/" target="_blank">https://lawreview.gmu.edu/print__issues/the-myth-that-agency-adjudications-cannot-address-constitutional-claims/</a></li>
+                </ol>
+                
+                <h3>Research Notes</h3>
+                <p>This visualization presents balanced perspectives from constitutional scholars, legal analysts, advocacy organizations, and court decisions. Sources represent viewpoints across the political and ideological spectrum to provide a comprehensive understanding of both sides of this constitutional debate.</p>
+                
+                <p><strong>Note on Perspective:</strong> The "Pro-Removal Power" arguments primarily draw from unitary executive theory advocates, conservative legal scholars, and the Trump administration's positions. The "Pro-Independence" arguments draw from administrative law scholars, progressive organizations, and defenders of the current regulatory structure. Both represent legitimate constitutional interpretations with serious academic and judicial support.</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function openTab(tabName) {
+            // Hide all tab contents
+            const tabContents = document.getElementsByClassName('tab-content');
+            for (let i = 0; i < tabContents.length; i++) {
+                tabContents[i].classList.remove('active');
+            }
+            
+            // Remove active class from all tabs
+            const tabs = document.getElementsByClassName('tab');
+            for (let i = 0; i < tabs.length; i++) {
+                tabs[i].classList.remove('active');
+            }
+            
+            // Show the selected tab content
+            document.getElementById(tabName).classList.add('active');
+            
+            // Mark the clicked tab as active
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>
