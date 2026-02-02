@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trending News: January 15 - February 1, 2026</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .news-section {
+            padding: 30px;
+        }
+
+        .news-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            overflow: hidden;
+            border: 2px solid transparent;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .news-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+            border-color: #667eea;
+        }
+
+        .news-card.expanded {
+            transform: none;
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .card-header {
+            color: white;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            transform: rotate(45deg);
+        }
+
+        .card-header.level-1 { background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%); }
+        .card-header.level-2 { background: linear-gradient(135deg, #ff4444 0%, #dd2222 100%); }
+        .card-header.level-3 { background: linear-gradient(135deg, #ff8844 0%, #ff5522 100%); }
+        .card-header.level-4 { background: linear-gradient(135deg, #ffaa66 0%, #ff7744 100%); }
+        .card-header.level-5 { background: linear-gradient(135deg, #6699ff 0%, #4477ff 100%); }
+        .card-header.level-6 { background: linear-gradient(135deg, #4488ff 0%, #2255ff 100%); }
+        .card-header.level-7 { background: linear-gradient(135deg, #0044ff 0%, #0022cc 100%); }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-content {
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.4s ease-in-out;
+        }
+
+        .card-content.expanded {
+            max-height: 5000px;
+            padding: 25px;
+        }
+
+        .expand-icon {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5rem;
+            transition: transform 0.3s ease;
+            z-index: 2;
+        }
+
+        .expand-icon.rotated {
+            transform: translateY(-50%) rotate(180deg);
+        }
+
+        .content-section {
+            margin-bottom: 20px;
+        }
+
+        .content-section h3 {
+            color: #2a5298;
+            font-size: 1.2rem;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .content-section p, .content-section ul {
+            line-height: 1.7;
+            color: #333;
+            margin-bottom: 12px;
+        }
+
+        .content-section ul {
+            padding-left: 20px;
+        }
+
+        .content-section li {
+            margin-bottom: 8px;
+        }
+
+        .content-section strong {
+            color: #1e3c72;
+        }
+
+        .sources {
+            background: #f0f4f8;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .sources h4 {
+            color: #1e3c72;
+            margin-bottom: 12px;
+            font-size: 1.1rem;
+        }
+
+        .sources ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sources li {
+            margin-bottom: 8px;
+        }
+
+        .sources a {
+            color: #2a5298;
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+
+        .sources a:hover {
+            color: #667eea;
+            text-decoration: underline;
+        }
+
+        .footer {
+            background: #1e3c72;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .news-section {
+                padding: 20px;
+            }
+            
+            .card-content.expanded {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📰 Trending News</h1>
+            <p>January 15 - February 1, 2026</p>
+        </div>
+
+        <div class="news-section">
+            <!-- ICE Operations (45+ mentions) -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-1">
+                    <div class="card-title">ICE Operations (45+ mentions)</div>
+                    <div class="card-subtitle">Operation Metro Surge, Fatal Shootings, Nationwide Expansion</div>
+                    <span class="expand-icon">▼</span>
+                </div>
+                <div class="card-content">
+                    <div class="content-section">
+                        <h3>Operation Metro Surge - Minneapolis</h3>
+                        <ul>
+                            <li><strong>Scale:</strong> Largest immigration enforcement operation in U.S. history; 3,000 agents deployed to Minneapolis-St. Paul area</li>
+                            <li><strong>Arrests:</strong> 3,000 people arrested in Minneapolis since operation began; 69,000 currently in detention nationwide</li>
+                            <li><strong>Fatal Shootings:</strong> Two U.S. citizens killed by federal agents:
+                                <ul>
+                                    <li>Renée Good (Jan 7, 2026) - Shot by ICE agent during traffic stop</li>
+                                    <li>Alex Pretti (Jan 24, 2026) - ICU nurse shot at protest</li>
+                                </ul>
+                            </li>
+                            <li><strong>Court Orders Violated:</strong> At least 96 court orders violated by ICE in Minnesota since January 1</li>
+                            <li><strong>Cuban Deaths:</strong> 32 Cubans killed during U.S. military operations in Venezuela</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-section">
+                        <h3>Nationwide Expansion & New Operations</h3>
+                        <ul>
+                            <li><strong>Operation Catch of the Day:</strong> Maine operation launched Jan 21, targeting Somali immigrants and others</li>
+                            <li><strong>Manpower Surge:</strong> 120% increase (12,000 new officers/agents) in 4 months - from 10,000 to 22,000</li>
+                            <li><strong>287(g) Agreements:</strong> 1,300+ local law enforcement partnerships (up from 135)</li>
+                            <li><strong>New Memo:</strong> Expanded warrantless arrest authority for "collateral arrests"</li>
+                            <li><strong>Training Reduced:</strong> Academy cut from 13 weeks to 8 weeks (47 days - "because Trump is 47th president")</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-section">
+                        <h3>Public Response & Protests</h3>
+                        <ul>
+                            <li><strong>National Days of Action:</strong> Jan 23, 30-31 - General strikes, business closures, marches in multiple cities</li>
+                            <li><strong>Target Boycott:</strong> Protesters demanding Target ban ICE from stores after agents detained U.S. citizen employees</li>
+                            <li><strong>Schools:</strong> Many transitioned to remote learning in Minneapolis</li>
+                            <li><strong>Public Opinion:</strong> 63% of Americans think ICE has gone "too far" (Times/Sinema poll, Jan 22)</li>
+                            <li><strong>Minnesota AG:</strong> Keith Ellison sues DHS</li>
+                            <li><strong>Tom Homan:</strong> Border czar takes over operations after backlash</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-section">
+                        <h3>International Controversy</h3>
+                        <ul>
+                            <li><strong>Italy:</strong> Outrage over ICE agents at 2026 Olympics (Milan Cortina)</li>
+                            <li><strong>Italian FM:</strong> "It's not like the SS are about to arrive" - attempting to defuse controversy</li>
+                        </ul>
+                    </div>
+
+                    <div class="sources">
+                        <h4>📎 Sources</h4>
+                        <ul>
+                            <li><a href="https://en.wikipedia.org/wiki/Operation_Metro_Surge" target="_blank">Wikipedia - Operation Metro Surge</a></li>
+                            <li><a href="https://www.npr.org/2026/01/31/nx-s1-5695221/anti-ice-protesters-call-for-national-action-against-federal-immigration-tactics" target="_blank">NPR - National Action Against ICE</a></li>
+                            <li><a href="https://www.britannica.com/event/2025-26-Minnesota-ICE-Deployment" target="_blank">Britannica - Minnesota ICE Deployment</a></li>
+                            <li><a href="https://www.cbsnews.com/news/ice-operation-maine-deportation-agents/" target="_blank">CBS News - ICE Operation in Maine</a></li>
+                            <li><a href="https://www.dhs.gov/news/2026/01/03/ice-announces-historic-120-manpower-increase-thanks-recruitment-campaign-brought" target="_blank">DHS - 120% Manpower Increase</a></li>
+                            <li><a href="https://www.ice.gov/newsroom" target="_blank">ICE - News Releases</a></li>
+                            <li><a href="https://www.npr.org/2026/01/27/nx-s1-5690100/winter-olympics-ice-agents-milan-italy" target="_blank">NPR - ICE at Olympics Controversy</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Epstein Files (40+ mentions) -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-2">
+                    <div class="card-title">Epstein Files Release (40+ mentions)</div>
+                    <div class="card-subtitle">3.5 Million Pages Released, Political Fallout, MTG Resignation</div>
+                    <span class="expand-icon">▼</span>
+                </div>
+                <div class="card-content">
+                    <div class="content-section">
+                        <h3>January 30 Release</h3>
+                        <ul>
+                            <li><strong>Volume:</strong> 3.5 million pages of documents, 180,000 images, 2,000 videos</li>
+                            <li><strong>Missed Deadline:</strong> Originally due Dec 19, 2025 - drew bipartisan criticism</li>
+                            <li><strong>Faulty Redactions:</strong> Public recovered blacked-out content from December release</li>
+                            <li><strong>DOJ Claims:</strong> Deputy AG Todd Blanche says release fulfills legal requirement</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-section">
+                        <h3>Trump in the Files</h3>
+                        <ul>
+                            <li><strong>Mentions:</strong> Trump appears in 4,500+ documents</li>
+                            <li><strong>FBI Tip:</strong> Unverified tip alleging Trump witnessed infant killing (later removed from database)</li>
+                            <li><strong>DOJ Statement:</strong> Files contain "untrue and sensationalist claims" that are "unfounded and false"</li>
+                            <li><strong>Public Access:</strong> Tip list regarding Trump no longer available on DOJ database as of Feb 1, 2026</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-section">
+                        <h3>Other Prominent Figures</h3>
+                        <ul>
+                            <li><strong>Bill Clinton:</strong> Epstein invoked Fifth Amendment when asked about Clinton</li>
+                            <li><strong>Elon Musk:</strong> Emails and communications included</li>
+                            <li><strong>Steve Bannon:</strong> Hundreds of texts, planned documentary on Epstein</li>
+                            <li><strong>Prince Andrew:</strong> UK PM suggests cooperation with U.S. authorities</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-section">
+                        <h3>Political Fallout</h3>
+                        <ul>
+                            <li><strong>MTG Resignation:</strong> Marjorie Taylor Greene announces resignation from House (effective Jan 5) after Trump attacks her over Epstein file lobbying</li>
+                            <li><strong>Trump-Musk Rift:</strong> Relationship fractures over file accusations</li>
+                            <li><strong>Public Opinion:</strong>
+                                <ul>
+                                    <li>55-56% disapprove of Trump's handling of release</li>
+                                    <li>49% believe there was coverup attempt</li>
+                                    <li>Only 6% satisfied with release (CNN poll)</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="content-section">
+                        <h3>Victims' Names Exposed</h3>
+                        <p>Some victims' names were improperly exposed in the release, drawing criticism for inadequate redaction practices and victim protection.</p>
+                    </div>
+
+                    <div class="sources">
+                        <h4>📎 Sources</h4>
+                        <ul>
+                            <li><a href="https://www.aljazeera.com/news/2026/1/30/us-department-of-justice-releases-three-million-new-epstein-documents" target="_blank">Al Jazeera - DOJ Releases 3 Million Files</a></li>
+                            <li><a href="https://en.wikipedia.org/wiki/Epstein_files" target="_blank">Wikipedia - Epstein Files</a></li>
+                            <li><a href="https://www.npr.org/2026/01/30/nx-s1-5693904/epstein-files-doj-trump" target="_blank">NPR - DOJ Releases Epstein Files</a></li>
+                            <li><a href="https://www.cbsnews.com/live-updates/epstein-files-released-doj-2026/" target="_blank">CBS News - Epstein Files Live Updates</a></li>
+                            <li><a href="https://www.axios.com/2026/01/30/epstein-files-release-january-trump-clinton" target="_blank">Axios - Epstein Files Release</a></li>
+                            <li><a href="https://www.npr.org/2026/01/02/nx-s1-5662638/epstein-files-release-trump-conspiracy-2026" target="_blank">NPR - Epstein Files Conspiracy Theories</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Latin America / Venezuela (35+ mentions) -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-2">
+                    <div class="card-title">Latin America / Venezuela Intervention (35+ mentions)</div>
+                    <div class="card-subtitle">U.S. Captures Maduro, "Monroe Doctrine 2.0", Regional Turmoil</div>
+                    <span class="expand-icon">▼</span>
+                </div>
+                <div class="card-content">
+                    <div class="content-section">
+                        <h3>January 3, 2026 Military Operation</h3>
+                        <ul>
+                            <li><strong>Operation:</strong> U.S. military captures Venezuelan President Nicolás Maduro and wife in "largest display since WWII"</li>
+                            <li><strong>Casualties:</strong> 32 Cubans killed during operation</li>
+                            <li><strong>Trump Quote:</strong> "We are going to run the country" - superseded Monroe Doctrine</li>
+                            <li><strong>Control:</strong> Venezuela now submits monthly budgets to Trump admin for approval</li>
+                            <li><strong>Oil Seizure:</strong> U.S. seizes control of Venezuelan oil industry</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-section">
+                        <h3>Global Response</h3>
+                        <ul>
+                            <li><strong>Support:</strong> Argentina, Ecuador, El Salvador</li>
+                            <li><strong>Condemnation:</strong> Chile, North Korea, Colombia's President Gustavo Petro</li>
+                            <li><strong>Celebrations:</strong> Venezuelan expatriates in Doral FL, Madrid, Buenos Aires, Lima, Quito, Santiago</li>
+                            <li><strong>U.S. Public Opinion:</strong> 33% approve, 34% disapprove, 33% unsure (Reuters/Ipsos poll)</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-section">
+                        <h3>Economic Motivations</h3>
+                        <ul>
+                            <li><strong>Oil Revenue:</strong> To go to Venezuelan people, U.S. oil companies, and "reimbursement for damages"</li>
+                            <li><strong>Privatization:</strong> Oil privatization law signed by interim leader Delcy Rodríguez</li>
+                            <li><strong>CIA Presence:</strong> Permanent CIA presence established in Venezuela</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-section">
+                        <h3>MAGA Coalition Split</h3>
+                        <ul>
+                            <li><strong>Isolationists:</strong> Oppose foreign intervention (MTG condemned operation)</li>
+                            <li><strong>Interventionists:</strong> Support regime change and oil seizure</li>
+                            <li><strong>"Donroe Doctrine":</strong> Trump's version asserting "we've superseded [Monroe Doctrine] by a lot"</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-section">
+                        <h3>Threats to Other Countries</h3>
+                        <ul>
+                            <li><strong>Colombia:</strong> Trump threatens Gustavo Petro, calls him drug trafficker</li>
+                            <li><strong>Greenland:</strong> Katie Miller posts "SOON" with Greenland in U.S. flag colors</li>
+                            <li><strong>Iran:</strong> Trump warns "locked and loaded" if Iran kills protesters</li>
+                        </ul>
+                    </div>
+
+                    <div class="sources">
+                        <h4>📎 Sources</h4>
+                        <ul>
+                            <li><a href="https://en.wikipedia.org/wiki/2026_United_States_strikes_in_Venezuela" target="_blank">Wikipedia - 2026 Venezuela Intervention</a></li>
+                            <li><a href="https://www.brookings.edu/articles/making-sense-of-the-us-military-operation-in-venezuela/" target="_blank">Brookings - Making Sense of Venezuela Operation</a></li>
+                            <li><a href="https://www.cbsnews.com/live-updates/venezuela-us-military-strikes-maduro-trump/" target="_blank">CBS News - Trump Says U.S. "In Charge" of Venezuela</a></li>
+                            <li><a href="https://www.chathamhouse.org/2026/01/us-attacks-venezuela-and-maduro-captured-early-analysis-chatham-house-experts" target="_blank">Chatham House - Early Analysis</a></li>
+                            <li><a href="https://www.aljazeera.com/opinions/2026/1/4/trump-just-sent-a-very-dangerous-message-to-latin-america" target="_blank">Al Jazeera - Dangerous Message to Latin America</a></li>
+                            <li><a href="https://time.com/7343093/trump-venezuela-us-next-colombia-cuba-greenland-iran-mexico/" target="_blank">TIME - Trump's Potential Next Targets</a></li>
+                            <li><a href="https://ecfr.eu/article/trump-strikes-venezuela-three-conclusions-for-europe/" target="_blank">European Council - Three Conclusions for Europe</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Supreme Court Cases (30+ mentions) -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-3">
+                    <div class="card-title">Supreme Court Cases (30+ mentions)</div>
+                    <div class="card-subtitle">Tariffs, Birthright Citizenship, Federal Reserve, Voting Rights</div>
+                    <span class="expand-icon">▼</span>
+                </div>
+                <div class="card-content">
+                    <div class="content-section">
+                        <h3>Learning Resources v. Trump (Tariffs)</h3>
+                        <ul>
+                            <li><strong>Issue:</strong> Trump's authority to impose worldwide tariffs under 1977 International Emergency Economic Powers Act</li>
+                            <li><strong>Arguments:</strong> Nov 5, 2025 - Justices appeared skeptical of Trump's emergency powers claim</li>
+                            <li><strong>Stakes:</strong> Could force refund of $100+ billion in tariffs already collected</li>
+                            <li><strong>Trump Quote:</strong> "Evil, American hating Forces are fighting us at the United States Supreme Court"</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-section">
+                        <h3>Trump v. Barbara (Birthright Citizenship)</h3>
+                        <ul>
+                            <li><strong>Issue:</strong> Executive order ending automatic citizenship for children of undocumented/temporary residents</li>
+                            <li><strong>14th Amendment:</strong> "All persons born or naturalized in the United States...are citizens"</li>
+                            <li><strong>Timeline:</strong> Oral arguments expected early 2026, ruling by end of June</li>
+                            <li><strong>Legal Consensus:</strong> Most experts expect Court to rule against Trump</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-section">
+                        <h3>Trump v. Cook (Federal Reserve Firing)</h3>
+                        <ul>
+                            <li><strong>Issue:</strong> Can president fire Federal Reserve Board governor Lisa Cook?</li>
+                            <li><strong>Oral Arguments:</strong> Jan 21, 2026</li>
+                            <li><strong>Kavanaugh Warning:</strong> Firing would "shatter" Fed independence</li>
+                            <li><strong>Court Action:</strong> Left lower court block in place while hearing case</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-section">
+                        <h3>Other Key Cases</h3>
+                        <ul>
+                            <li><strong>Louisiana v. Callais:</strong> Voting Rights Act Section 2 and redistricting</li>
+                            <li><strong>West Virginia v. B.P.J. & Little v. Hecox:</strong> Transgender athletes in women's sports</li>
+                            <li><strong>Chiles v. [Unnamed]:</strong> LGBTQ+ conversion therapy bans</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-section">
+                        <h3>Historical Pattern</h3>
+                        <ul>
+                            <li><strong>2025:</strong> Trump won 36 of 39 emergency appeals (procedural victories)</li>
+                            <li><strong>2026:</strong> Substantive challenges - analysts expect losses</li>
+                            <li><strong>Illinois National Guard:</strong> Court blocked 6-3, may signal tariff ruling</li>
+                            <li><strong>Trump Approval:</strong> At 42% - creates opening for adverse rulings</li>
+                            <li><strong>Active Challenges:</strong> 253 cases challenging Trump actions</li>
+                        </ul>
+                    </div>
+
+                    <div class="sources">
+                        <h4>📎 Sources</h4>
+                        <ul>
+                            <li><a href="https://www.nbcnews.com/politics/supreme-court/supreme-court-new-term-trump-tariffs-birthright-citizenship-fed-rcna249340" target="_blank">NBC News - Supreme Court Delayed Conflict with Trump</a></li>
+                            <li><a href="https://www.axios.com/2026/01/01/2026-trump-supreme-court-cases-tariffs" target="_blank">Axios - Trump's Agenda at Supreme Court</a></li>
+                            <li><a href="https://www.npr.org/2026/01/07/nx-s1-5669353/supreme-court-poised-to-rule-on-tariffs-birthright-citizenship-and-more" target="_blank">NPR - Supreme Court Rulings on Tariffs, Birthright Citizenship</a></li>
+                            <li><a href="https://news.bloomberglaw.com/us-law-week/birthright-citizenship-tops-supreme-court-cases-to-watch-in-2026" target="_blank">Bloomberg Law - Birthright Citizenship Tops Cases to Watch</a></li>
+                            <li><a href="https://www.scotusblog.com/2025/12/supreme-court-agrees-to-hear-trumps-challenge-to-birthright-citizenship/" target="_blank">SCOTUSblog - Birthright Citizenship Challenge</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Illegally Appointed US Attorneys (28+ mentions) -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-3">
+                    <div class="card-title">Illegally Appointed US District Attorneys (28+ mentions)</div>
+                    <div class="card-subtitle">Five Prosecutors Disqualified, Indictments Dismissed, DOJ Defiance</div>
+                    <span class="expand-icon">▼</span>
+                </div>
+                <div class="card-content">
+                    <div class="content-section">
+                        <h3>Lindsey Halligan (E.D. Virginia)</h3>
+                        <ul>
+                            <li><strong>Background:</strong> Trump's former personal lawyer, no prosecutorial experience</li>
+                            <li><strong>Appointment Ruled Unlawful:</strong> Federal Vacancies Reform Act violation - 120-day limit exceeded</li>
+                            <li><strong>Indictments Dismissed:</strong> James Comey and Letitia James charges thrown out as void</li>
+                            <li><strong>Judge Novak Order:</strong> Called it "charade of masquerading" in defiance of court orders</li>
+                            <li><strong>Status:</strong> Left position Jan 20, no longer DOJ employee as of Jan 26, 2026</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-section">
+                        <h3>Alina Habba (D. New Jersey)</h3>
+                        <ul>
+                            <li><strong>Background:</strong> Trump's former personal lawyer</li>
+                            <li><strong>Ruling:</strong> Third Circuit upheld disqualification - Dec 1, 2025</li>
+                            <li><strong>Judge Fisher:</strong> "Current administration has been frustrated" but steps to install Habba violate law</li>
+                            <li><strong>Appeal Denied:</strong> Full Third Circuit denied rehearing on Jan 27, 2026</li>
+                            <li><strong>Current Role:</strong> Senior adviser for US attorneys at DOJ</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-section">
+                        <h3>Other Disqualified Prosecutors</h3>
+                        <ul>
+                            <li><strong>Bill Essayli (C.D. California):</strong> Former GOP assemblymember, disqualified</li>
+                            <li><strong>Sigal Chattah (D. Nevada):</strong> Ruling stayed pending appeal</li>
+                            <li><strong>John Sarcone III (N.D. New York):</strong> Fifth prosecutor disqualified</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-section">
+                        <h3>DOJ "Workarounds"</h3>
+                        <ul>
+                            <li><strong>Title Changes:</strong> Bondi renamed disqualified attorneys as "Special Attorneys"</li>
+                            <li><strong>Personnel Shuffles:</strong> Attempted retroactive ratifications</li>
+                            <li><strong>Continued Use of Title:</strong> Halligan kept using "U.S. Attorney" after disqualification</li>
+                            <li><strong>Bondi/Blanche Statements:</strong> Defiant responses to court rulings</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-section">
+                        <h3>Pattern of Loyalist Appointments</h3>
+                        <p>All appointees were Trump loyalists targeting perceived enemies. The administration has systematically violated Federal Vacancies Reform Act by exceeding 120-day limits and attempting to circumvent Senate confirmation process.</p>
+                    </div>
+
+                    <div class="sources">
+                        <h4>📎 Sources</h4>
+                        <ul>
+                            <li><a href="https://www.democracydocket.com/analysis/lindsey-halligan-alina-habba-judges-unlawful-appointment-justice-department-us-attorneys/" target="_blank">Democracy Docket - Despite Disqualifications, Trump Appointees Claim Titles</a></li>
+                            <li><a href="https://www.nbcnews.com/politics/justice-department/lindsey-halligan-not-employed-justice-department-us-attorney-rcna255969" target="_blank">NBC News - Halligan No Longer Employed by DOJ</a></li>
+                            <li><a href="https://www.congress.gov/crs-product/LSB11380" target="_blank">Congress.gov - Court Says Interim U.S. Attorney Unlawfully Appointed</a></li>
+                            <li><a href="https://www.nbcnews.com/politics/justice-department/appeals-court-upholds-ruling-disqualified-alina-habba-serving-new-jers-rcna246751" target="_blank">NBC News - Appeals Court Upholds Habba Disqualification</a></li>
+                            <li><a href="https://news.bloomberglaw.com/us-law-week/doj-rebuffed-by-judges-in-bid-to-return-habba-to-prosecutor-role" target="_blank">Bloomberg Law - DOJ Rebuffed on Habba</a></li>
+                            <li><a href="https://www.democracydocket.com/news-alerts/judge-disqualifies-trump-acting-u-s-attorney-john-sarcone-northern-new-york/" target="_blank">Democracy Docket - Fifth Trump-Appointed Attorney Disqualified</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MAGA Coalition Fractures (25+ mentions) -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-4">
+                    <div class="card-title">Fractures in MAGA Coalition (25+ mentions)</div>
+                    <div class="card-subtitle">MTG Resignation, "Leaving MAGA" Movement, Internal Battles</div>
+                    <span class="expand-icon">▼</span>
+                </div>
+                <div class="card-content">
+                    <div class="content-section">
+                        <h3>Marjorie Taylor Greene Resignation</h3>
+                        <ul>
+                            <li><strong>Announcement:</strong> Nov 21, 2025 - resigning Jan 5, 2026</li>
+                            <li><strong>Reasons:</strong> Trump attacks over Epstein file lobbying; feels "cast aside"</li>
+                            <li><strong>Key Issues:</strong> Venezuela intervention, Epstein files, healthcare, government shutdown</li>
+                            <li><strong>Trump Response:</strong> Called her "traitor," suggested "plummeting poll numbers"</li>
+                            <li><strong>Physical Threats:</strong> MTG cites threats and safety concerns</li>
+                            <li><strong>Resignation Letter:</strong> "Battered wife" metaphor; criticism of "political industrial complex"</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-section">
+                        <h3>"Leaving MAGA" Movement</h3>
+                        <ul>
+                            <li><strong>Rich Logis Group:</strong> Organization in 20 states, $100,000 raised</li>
+                            <li><strong>NBC Poll:</strong> MAGA identification dropped 7 points since April 2025</li>
+                            <li><strong>GOP Split:</strong> Now evenly divided between traditional and MAGA-aligned</li>
+                            <li><strong>November 2025 Elections:</strong> "Stinging defeats" for Republicans in off-year races</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-section">
+                        <h3>Trump-Musk Split</h3>
+                        <ul>
+                            <li><strong>Epstein Files:</strong> Musk accused Trump of coverup</li>
+                            <li><strong>Musk Threat:</strong> Considering forming "America Party"</li>
+                            <li><strong>Venezuela:</strong> Different views on intervention</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-section">
+                        <h3>Policy Divisions</h3>
+                        <ul>
+                            <li><strong>Foreign Policy:</strong> Venezuela intervention splits isolationists vs interventionists</li>
+                            <li><strong>Internal Battles:</strong> Bannon vs Musk, DeSantis vs Trump, Christian Nationalists vs libertarians</li>
+                            <li><strong>Iran/Ukraine:</strong> Divisions on bombing Iran, Ukraine aid</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-section">
+                        <h3>More in Common Study (Jan 2026)</h3>
+                        <ul>
+                            <li><strong>Sample:</strong> 10,000+ voters</li>
+                            <li><strong>Four Distinct Types:</strong> Different MAGA factions identified</li>
+                            <li><strong>"Reluctant Right":</strong> Confidence dropped to 41% (from 47%)</li>
+                            <li><strong>Trump Voters:</strong> Only 38% say being MAGA important</li>
+                        </ul>
+                    </div>
+
+                    <div class="sources">
+                        <h4>📎 Sources</h4>
+                        <ul>
+                            <li><a href="https://www.npr.org/2026/01/06/nx-s1-5668142/marjorie-taylor-greenes-puzzling-political-transformation-explained" target="_blank">NPR - MTG's Political Transformation</a></li>
+                            <li><a href="https://www.npr.org/2025/11/21/nx-s1-5617227/marjorie-taylor-greene-resignation-trump" target="_blank">NPR - MTG Will Resign After Break with Trump</a></li>
+                            <li><a href="https://time.com/7336228/marjorie-taylore-greene-resignation-letter-trump/" target="_blank">TIME - MTG's Resignation Letter Takes Aim at MAGA Failures</a></li>
+                            <li><a href="https://www.newsweek.com/marjorie-taylor-greene-georgia-election-11326995" target="_blank">Newsweek - Top Contenders to Replace MTG</a></li>
+                            <li><a href="https://www.britannica.com/biography/Marjorie-Taylor-Greene" target="_blank">Britannica - Marjorie Taylor Greene Biography</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Trump Administration Reversals (22+ mentions) -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-5">
+                    <div class="card-title">Trump Administration Reversals (22+ mentions)</div>
+                    <div class="card-subtitle">Grant Freeze Rescinded, DOGE Restricted, Aid Programs Halted</div>
+                    <span class="expand-icon">▼</span>
+                </div>
+                <div class="card-content">
+                    <div class="content-section">
+                        <h3>Major Policy Reversals</h3>
+                        <ul>
+                            <li><strong>OMB Grant Freeze (Jan 29):</strong> Rescinds federal grant/aid freeze after judicial block</li>
+                            <li><strong>DOJ Legal Services:</strong> Reverses memo cutting legal services for detained immigrants</li>
+                            <li><strong>Gaza Rhetoric:</strong> "Takeover" statements walked back</li>
+                            <li><strong>Some Tariffs:</strong> Rolled back after inflationary effects</li>
+                            <li><strong>DOGE Treasury Access:</strong> Restricted by court order</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-section">
+                        <h3>Environmental & Energy</h3>
+                        <ul>
+                            <li><strong>Clean Energy Grants:</strong> Federal judge rules $7.6B cancellation illegal</li>
+                            <li><strong>Offshore Wind:</strong> Three projects resume after court orders</li>
+                            <li><strong>UN Climate (Jan 7):</strong> Withdraws from frameworks, Green Climate Fund</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-section">
+                        <h3>Anti-Corruption Policy Dismantled</h3>
+                        <ul>
+                            <li><strong>Offices Closed:</strong> Anti-corruption offices shut down</li>
+                            <li><strong>Aid Programs:</strong> Democracy and anti-corruption aid eliminated</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-section">
+                        <h3>Immigration & Visa Changes</h3>
+                        <ul>
+                            <li><strong>Jan 21:</strong> Suspends immigrant visas for 75 countries</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-section">
+                        <h3>Government Shutdown Ended</h3>
+                        <ul>
+                            <li><strong>Jan 8:</strong> House votes 397-28 for "minibus" ending shutdown</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-section">
+                        <h3>Executive Actions Count (as of Jan 29)</h3>
+                        <ul>
+                            <li><strong>Executive Orders:</strong> 234</li>
+                            <li><strong>Memoranda:</strong> 57</li>
+                            <li><strong>Proclamations:</strong> 123</li>
+                        </ul>
+                    </div>
+
+                    <div class="sources">
+                        <h4>📎 Sources</h4>
+                        <ul>
+                            <li><a href="https://www.newsweek.com/donald-trump-executive-orders-reversals-policy-changes-2026-2054312" target="_blank">Newsweek - Trump Reversals and Policy Changes</a></li>
+                            <li><a href="https://carnegieendowment.org/research/2026/01/trump-gutted-us-anti-corruption-policy" target="_blank">Carnegie Endowment - Anti-Corruption Policy Dismantled</a></li>
+                            <li><a href="https://techcrunch.com/2026/01/29/white-house-rescinds-federal-grant-freeze-after-court-blocks-elon-musks-doge-from-accessing-treasury-systems/" target="_blank">TechCrunch - Grant Freeze Rescinded, DOGE Restricted</a></li>
+                            <li><a href="https://en.wikipedia.org/wiki/Executive_actions_of_the_second_Donald_Trump_administration" target="_blank">Wikipedia - Second Trump Administration Executive Actions</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Affordability Crisis (18+ mentions) -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-6">
+                    <div class="card-title">Affordability Crisis (18+ mentions)</div>
+                    <div class="card-subtitle">Inflation at 2.7%, Real Wages Flat, Housing/Food Costs Soar</div>
+                    <span class="expand-icon">▼</span>
+                </div>
+                <div class="card-content">
+                    <div class="content-section">
+                        <h3>Current Inflation Status</h3>
+                        <ul>
+                            <li><strong>December 2025:</strong> 2.7% inflation (down from 9% peak, above 2% target)</li>
+                            <li><strong>Trump Claim:</strong> Declared "inflation defeated" hours after 2.7% announcement</li>
+                            <li><strong>Cumulative Impact:</strong> Consumers paid 25% more in Nov 2025 than 2019</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-section">
+                        <h3>Real Earnings Stagnant</h3>
+                        <ul>
+                            <li><strong>4-Year Comparison:</strong> Real earnings essentially flat - 23.8% vs 23.7%</li>
+                            <li><strong>Fed Chair Powell:</strong> Need "years where wages higher than inflation" for people to feel good</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-section">
+                        <h3>Major Cost Increases</h3>
+                        <ul>
+                            <li><strong>Home Prices:</strong> Up 45% since 2020</li>
+                            <li><strong>Eggs:</strong> Roughly double pre-inflation levels</li>
+                            <li><strong>New Cars:</strong> Average exceeds $50,000 (20% jump 2021-2023)</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-section">
+                        <h3>ACA Subsidies Expiring</h3>
+                        <ul>
+                            <li><strong>End of 2025:</strong> Enhanced ACA subsidies expire</li>
+                            <li><strong>Impact:</strong> 22 million Americans face doubled premiums</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-section">
+                        <h3>Public Sentiment</h3>
+                        <ul>
+                            <li><strong>65% of Households:</strong> Say cost of living worse</li>
+                            <li><strong>2025 Elections:</strong> Democrats won NYC, NJ, Virginia on affordability message</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-section">
+                        <h3>Tariff Impact</h3>
+                        <ul>
+                            <li><strong>Revenue:</strong> $30B/month = $100-200 per household</li>
+                            <li><strong>2026 Outlook:</strong> Inflation remains elevated, lower-income households most stressed</li>
+                        </ul>
+                    </div>
+
+                    <div class="sources">
+                        <h4>📎 Sources</h4>
+                        <ul>
+                            <li><a href="https://time.com/7204405/why-americans-dont-feel-good-economy/" target="_blank">TIME - Why Americans Don't Feel Good About Economy</a></li>
+                            <li><a href="https://fortune.com/2025/12/11/inflation-december-2025-cpi-report-trump/" target="_blank">Fortune - December Inflation Report</a></li>
+                            <li><a href="https://www.gobankingrates.com/money/economy/how-much-costs-gone-up-since-pandemic/" target="_blank">GoBankingRates - How Much Costs Have Gone Up</a></li>
+                            <li><a href="https://www.cnbc.com/2025/12/18/affordable-care-act-enrollment-2025-what-to-know.html" target="_blank">CNBC - ACA Enrollment and Subsidies</a></li>
+                            <li><a href="https://www.cbsnews.com/news/federal-reserve-interest-rates-inflation-2026-outlook/" target="_blank">CBS News - Fed and Inflation 2026 Outlook</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Government Sponsored Health (12+ mentions) -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-7">
+                    <div class="card-title">Government Sponsored Health (12+ mentions)</div>
+                    <div class="card-subtitle">ACA Subsidies Expire, Premiums Double, Trump's "Great Healthcare Plan"</div>
+                    <span class="expand-icon">▼</span>
+                </div>
+                <div class="card-content">
+                    <div class="content-section">
+                        <h3>Enhanced ACA Premium Subsidies</h3>
+                        <ul>
+                            <li><strong>Expiration:</strong> End of 2025</li>
+                            <li><strong>Affected:</strong> 22 million Americans</li>
+                            <li><strong>Impact:</strong> Premiums predicted to more than double</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-section">
+                        <h3>2026 ACA Changes</h3>
+                        <ul>
+                            <li><strong>Affordability Threshold:</strong> 9.96% (up from 9.02%)</li>
+                            <li><strong>FPL Safe Harbor:</strong> $129.89/month max for employee-only coverage</li>
+                            <li><strong>Budget Bill Impact:</strong> Predicted to increase premiums significantly</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-section">
+                        <h3>Trump's "Great Healthcare Plan"</h3>
+                        <ul>
+                            <li><strong>Announcement:</strong> Jan 15, 2026</li>
+                            <li><strong>Details:</strong> Vague, no specifics provided</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-section">
+                        <h3>Student Loan Impacts</h3>
+                        <ul>
+                            <li><strong>Default Wage Garnishments:</strong> Resume January 2026</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-section">
+                        <h3>Healthcare Cost Trends</h3>
+                        <p>Healthcare costs rising faster than general inflation, creating additional burden for families already struggling with affordability crisis.</p>
+                    </div>
+
+                    <div class="sources">
+                        <h4>📎 Sources</h4>
+                        <ul>
+                            <li><a href="https://www.cnbc.com/2025/12/18/affordable-care-act-enrollment-2025-what-to-know.html" target="_blank">CNBC - ACA Enrollment 2025</a></li>
+                            <li><a href="https://www.newfront.com/blog/2026-aca-affordability-thresholds-and-safe-harbors" target="_blank">Newfront - 2026 ACA Affordability Thresholds</a></li>
+                            <li><a href="https://www.whitehouse.gov/briefing-room/statements-releases/2026/01/15/president-trump-announces-great-healthcare-plan/" target="_blank">White House - Trump Announces Healthcare Plan</a></li>
+                            <li><a href="https://www.pbs.org/newshour/health/what-happens-if-enhanced-aca-subsidies-expire" target="_blank">PBS - What Happens If ACA Subsidies Expire</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>News compiled from January 15 - February 1, 2026</p>
+            <p style="margin-top: 10px; font-size: 0.85rem;">Color coding: Red (most mentions) → Blue (fewer mentions)</p>
+        </div>
+    </div>
+
+    <script>
+        function toggleCard(card) {
+            const content = card.querySelector('.card-content');
+            const icon = card.querySelector('.expand-icon');
+            
+            // Close all other cards
+            document.querySelectorAll('.news-card').forEach(otherCard => {
+                if (otherCard !== card) {
+                    otherCard.classList.remove('expanded');
+                    otherCard.querySelector('.card-content').classList.remove('expanded');
+                    otherCard.querySelector('.expand-icon').classList.remove('rotated');
+                }
+            });
+            
+            // Toggle current card
+            card.classList.toggle('expanded');
+            content.classList.toggle('expanded');
+            icon.classList.toggle('rotated');
+        }
+
+        // Add smooth animations on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.news-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    card.style.transition = 'all 0.5s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>

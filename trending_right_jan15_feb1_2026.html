@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conservative Perspective: Trending from Jan 15 - Feb 1, 2026</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #c31432 0%, #240b36 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-top: 10px;
+        }
+
+        .news-section {
+            padding: 30px;
+        }
+
+        .news-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            overflow: hidden;
+            border: 2px solid transparent;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .news-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+            border-color: #c31432;
+        }
+
+        .news-card.expanded {
+            transform: none;
+            border-color: #c31432;
+            background: #f8f9ff;
+        }
+
+        .card-header {
+            color: white;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            transform: rotate(45deg);
+        }
+
+        .card-header.level-1 { background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%); }
+        .card-header.level-2 { background: linear-gradient(135deg, #ff4444 0%, #dd2222 100%); }
+        .card-header.level-3 { background: linear-gradient(135deg, #ff8888 0%, #ff5555 100%); }
+        .card-header.level-4 { background: linear-gradient(135deg, #ffaa88 0%, #ff7755 100%); }
+        .card-header.level-5 { background: linear-gradient(135deg, #88aaff 0%, #5577ff 100%); }
+        .card-header.level-6 { background: linear-gradient(135deg, #4488ff 0%, #2255ff 100%); }
+        .card-header.level-7 { background: linear-gradient(135deg, #0044ff 0%, #0022cc 100%); }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+            position: relative;
+            z-index: 1;
+        }
+
+        .mention-count {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-top: 5px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .expand-icon {
+            float: right;
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .news-card.expanded .expand-icon {
+            transform: rotate(180deg);
+        }
+
+        .card-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .news-card.expanded .card-content {
+            max-height: 3000px;
+        }
+
+        .content-inner {
+            padding: 25px;
+        }
+
+        .subtopic {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .subtopic:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .subtopic h3 {
+            color: #c31432;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .subtopic p {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        .sources {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        .sources h4 {
+            color: #333;
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .source-link {
+            display: inline-block;
+            margin: 5px 10px 5px 0;
+            padding: 6px 12px;
+            background: #c31432;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 0.85rem;
+            transition: background 0.3s ease;
+        }
+
+        .source-link:hover {
+            background: #240b36;
+        }
+
+        .key-points {
+            margin: 15px 0;
+        }
+
+        .key-points ul {
+            padding-left: 20px;
+        }
+
+        .key-points li {
+            margin: 8px 0;
+            color: #444;
+            line-height: 1.5;
+        }
+
+        footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .source-badge {
+            display: inline-block;
+            background: #240b36;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 0.75rem;
+            margin-left: 8px;
+            font-weight: normal;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .card-title {
+                font-size: 1.2rem;
+            }
+
+            .content-inner {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🗞️ Conservative Perspective: Trending News</h1>
+            <p>January 15 - February 1, 2026</p>
+            <p style="font-size: 0.9rem; margin-top: 15px; opacity: 0.85;">Analysis from Independent Conservative & Heterodox Sources</p>
+        </header>
+
+        <div class="news-section">
+            <!-- 1. ICE Operations & Immigration Enforcement - 42 mentions -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-1">
+                    <div class="card-title">
+                        ICE Operations & Immigration Enforcement
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="mention-count">42 mentions - Highest Coverage</div>
+                </div>
+                <div class="card-content">
+                    <div class="content-inner">
+                        <div class="subtopic">
+                            <h3>Minneapolis Operation Controversy</h3>
+                            <p>Operation Metro Surge sparked intense debate about federal immigration enforcement, with conservative commentators questioning media framing and local resistance to federal law.</p>
+                            <div class="key-points">
+                                <ul>
+                                    <li>Fatal shooting of Alex Pretti (Jan 24) and earlier Renée Good incident raised questions about operational protocols</li>
+                                    <li>DHS Secretary Kristi Noem's initial statements challenged by The Free Press as "reckless lies"</li>
+                                    <li>Debate over constitutional authority: DOJ investigating state officials for "obstructing ICE"</li>
+                                    <li>Media coverage bifurcation: Right sees mob attacking Christians; left sees military occupation</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="subtopic">
+                            <h3>Federalism & Constitutional Questions</h3>
+                            <p>Conservative constitutional scholars debated proper balance between federal enforcement authority and state sovereignty.</p>
+                            <div class="key-points">
+                                <ul>
+                                    <li>Reports of DOJ investigating Gov. Tim Walz and Mayor Jacob Frey for obstruction</li>
+                                    <li>The Free Press: "The Constitution says they're within their rights"</li>
+                                    <li>Tension between "law and order" conservatism and limited government principles</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="subtopic">
+                            <h3>Media Framing Battle</h3>
+                            <p>The Dispatch's Nick Catoggio noted administration views anyone "affiliated with the left" as "lawful combatant in a hot culture war."</p>
+                            <div class="key-points">
+                                <ul>
+                                    <li>Platform bifurcation: 3.4M posts on X about church protest vs minimal Bluesky coverage</li>
+                                    <li>Reverse pattern for elderly citizen dragged outside in underwear</li>
+                                    <li>Matt Taibbi documented quantifiable media splitting along platform lines</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="sources">
+                            <h4>Primary Sources:</h4>
+                            <a href="https://www.thefp.com/" class="source-link" target="_blank">The Free Press (Bari Weiss)</a>
+                            <a href="https://thedispatch.com/" class="source-link" target="_blank">The Dispatch</a>
+                            <a href="https://www.racket.news/" class="source-link" target="_blank">Racket News (Matt Taibbi)</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Trans Issues & Gender Ideology - 38 mentions -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-2">
+                    <div class="card-title">
+                        Trans Issues & Gender Ideology
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="mention-count">38 mentions</div>
+                </div>
+                <div class="card-content">
+                    <div class="content-inner">
+                        <div class="subtopic">
+                            <h3>Medical Ethics & Youth Transition</h3>
+                            <p>Christopher Rufo's reporting on children's hospitals continued to drive conservative discourse on medical interventions for minors.</p>
+                            <div class="key-points">
+                                <ul>
+                                    <li>Physician testimonies about pressure to affirm gender identity in major hospitals</li>
+                                    <li>Debate over "affirmation model" vs exploratory therapy approaches</li>
+                                    <li>Conservative argument: Current protocols prioritize ideology over "do no harm" principle</li>
+                                    <li>Rufo: "When you affirm these individuals' gender identity, what you are doing is affirming their hatred for themselves"</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="subtopic">
+                            <h3>Institutional Capture Claims</h3>
+                            <p>City Journal and conservative outlets documented alleged ideological takeover of medical and educational institutions.</p>
+                            <div class="key-points">
+                                <ul>
+                                    <li>NSA insider allegations: "It was like a cult that was hellbent on pushing gender ideology"</li>
+                                    <li>Concerns about national security implications of ideological capture</li>
+                                    <li>School district policies on automatic affirmation without parental notification</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="subtopic">
+                            <h3>Queer Theory Debate</h3>
+                            <p>Intellectual debate between Rufo and gender theorist Judith Butler intensified over characterization of curricula and pedagogy.</p>
+                            <div class="key-points">
+                                <ul>
+                                    <li>Butler published "Who's Afraid of Gender?" challenging conservative activists</li>
+                                    <li>Rufo documented specific curricula containing explicit sexual content for minors</li>
+                                    <li>Disagreement over whether queer theory is taught in K-12 schools</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="sources">
+                            <h4>Primary Sources:</h4>
+                            <a href="https://www.city-journal.org/person/christopher-f-rufo" class="source-link" target="_blank">City Journal (Christopher Rufo)</a>
+                            <a href="https://christopherrufo.com/" class="source-link" target="_blank">Christopher F. Rufo Substack</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Free Speech & Censorship - 35 mentions -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-2">
+                    <div class="card-title">
+                        Free Speech & Censorship
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="mention-count">35 mentions</div>
+                </div>
+                <div class="card-content">
+                    <div class="content-inner">
+                        <div class="subtopic">
+                            <h3>Platform Censorship & Government Pressure</h3>
+                            <p>Glenn Greenwald and other libertarian voices continued documenting coordination between tech platforms and government actors.</p>
+                            <div class="key-points">
+                                <ul>
+                                    <li>Greenwald: "Online censorship is the most valuable tool of Dems, media corporations and the US Security State"</li>
+                                    <li>Twitter Files revelations continued to inform conservative understanding of content moderation</li>
+                                    <li>Debate over private actor censorship vs government censorship</li>
+                                    <li>Corporate censorship concerns: lack of democratic accountability for monopolistic tech giants</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="subtopic">
+                            <h3>Journalistic Independence</h3>
+                            <p>Conservative commentators noted mainstream journalists increasingly advocate for speech restrictions rather than defending press freedom.</p>
+                            <div class="key-points">
+                                <ul>
+                                    <li>Greenwald: "The US is plagued by the most bizarre spectacle that *journalists* are the leading activists for censorship"</li>
+                                    <li>NYT publishing op-eds arguing against free speech absolutism</li>
+                                    <li>ACLU's evolution from free speech defender to selective enforcement based on ideology</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="subtopic">
+                            <h3>Conservative Free Speech Principles</h3>
+                            <p>Heterodox thinkers emphasized protecting unpopular speech, even from political opponents.</p>
+                            <div class="key-points">
+                                <ul>
+                                    <li>Greenwald's history defending neo-Nazi speech rights as gay Jewish man</li>
+                                    <li>Principle: "Heroic attribute to be committed to a principle when it defends people that you hate"</li>
+                                    <li>Warning that censorship precedents eventually target censorship advocates</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="sources">
+                            <h4>Primary Sources:</h4>
+                            <a href="https://greenwald.substack.com/" class="source-link" target="_blank">Glenn Greenwald</a>
+                            <a href="https://www.racket.news/" class="source-link" target="_blank">Racket News (Matt Taibbi)</a>
+                            <a href="https://public.substack.com/" class="source-link" target="_blank">Public (Michael Shellenberger)</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. Media Bias & Institutional Capture - 32 mentions -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-3">
+                    <div class="card-title">
+                        Media Bias & Institutional Capture
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="mention-count">32 mentions</div>
+                </div>
+                <div class="card-content">
+                    <div class="content-inner">
+                        <div class="subtopic">
+                            <h3>CBS News Transformation Under Bari Weiss</h3>
+                            <p>Weiss's appointment as CBS News Editor-in-Chief sparked debate about mainstream media's rightward shift and convergence with opinion journalism.</p>
+                            <div class="key-points">
+                                <ul>
+                                    <li>January 27 all-hands meeting: "We are not producing a product enough people want"</li>
+                                    <li>18 new contributors announced, including Niall Ferguson, Coleman Hughes, Andrew Huberman</li>
+                                    <li>Free Press acquisition for $150M by Paramount Skydance signaled corporate strategy shift</li>
+                                    <li>Controversy over spiked 60 Minutes "Inside CECOT" segment on El Salvador prison</li>
+                                    <li>Weiss personally calling reporters to spin coverage, according to Mediaite sources</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="subtopic">
+                            <h3>Layoffs & Demographic Patterns</h3>
+                            <p>Critics alleged CBS targeted minorities while shifting white employees; defenders cited need for broadcast evolution.</p>
+                            <div class="key-points">
+                                <ul>
+                                    <li>~100 employee layoffs reported, including eight on-air hosts (all women)</li>
+                                    <li>Former producer alleged racial minorities disproportionately terminated</li>
+                                    <li>Tony Dokoupil appointed CBS Evening News anchor effective Jan 5, 2026</li>
+                            </ul>
+                            </div>
+                        </div>
+
+                        <div class="subtopic">
+                            <h3>Conservative Media Ecosystem Growth</h3>
+                            <p>Substack and independent platforms continued enabling conservative voices outside legacy institutions.</p>
+                            <div class="key-points">
+                                <ul>
+                                    <li>The Free Press: 900K+ subscribers, ~$10M+ annual revenue</li>
+                                    <li>Greenwald, Taibbi, Sullivan maintaining substantial independent audiences</li>
+                                    <li>Heterodox voices challenging both progressive orthodoxy and traditional conservative institutions</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="sources">
+                            <h4>Primary Sources:</h4>
+                            <a href="https://www.thefp.com/" class="source-link" target="_blank">The Free Press</a>
+                            <a href="https://www.mediaite.com/" class="source-link" target="_blank">Mediaite</a>
+                            <a href="https://newrepublic.com/" class="source-link" target="_blank">The New Republic (Critical Coverage)</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. Energy Policy & Climate Realism - 28 mentions -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-4">
+                    <div class="card-title">
+                        Energy Policy & Climate Realism
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="mention-count">28 mentions</div>
+                </div>
+                <div class="card-content">
+                    <div class="content-inner">
+                        <div class="subtopic">
+                            <h3>Nuclear & Natural Gas Advocacy</h3>
+                            <p>Michael Shellenberger continued championing nuclear power and natural gas as pragmatic climate solutions against renewable-only mandates.</p>
+                            <div class="key-points">
+                                <ul>
+                                    <li>Testified before Congress six times since January 2020 on energy policy</li>
+                                    <li>House Minority Leader Kevin McCarthy citing Shellenberger's work for GOP climate policy</li>
+                                    <li>Argued fracking revolution (not renewables) drove U.S. emissions reductions</li>
+                                    <li>Nuclear waste "solution to all other waste problems" - volume orders of magnitude smaller than solar/wind</li>
+                            </ul>
+                            </div>
+                        </div>
+
+                        <div class="subtopic">
+                            <h3>Critique of Climate Alarmism</h3>
+                            <p>"Apocalypse Never" thesis: Environmental alarmism hurts cause by promoting unrealistic solutions and opposing proven technologies.</p>
+                            <div class="key-points">
+                                <ul>
+                                    <li>Climate change real but not existential threat portrayed in activism/media</li>
+                                    <li>Mental health consequences: 1 in 5 British children having nightmares about climate</li>
+                                    <li>100% renewable by 2050 would require 3,300 gigawatts of battery capacity - economically unrealistic</li>
+                                    <li>Progressive environmental groups accepting "hundreds of millions from fossil fuel interests"</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="subtopic">
+                            <h3>Texas Blackout Analysis</h3>
+                            <p>Conservative energy analysts pointed to February 2021 Texas freeze as case study in renewable limitations.</p>
+                            <div class="key-points">
+                                <ul>
+                                    <li>$53 billion invested in wind turbines largely unavailable during cold snap</li>
+                                    <li>Biden Climate Advisor Gina McCarthy: "Tech companies have to stop allowing...disinformation" about blackouts</li>
+                                    <li>Shellenberger: Many criticisms of renewable failure were factual, not disinformation</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="sources">
+                            <h4>Primary Sources:</h4>
+                            <a href="https://public.substack.com/" class="source-link" target="_blank">Public (Michael Shellenberger)</a>
+                            <a href="https://environmentalprogress.org/" class="source-link" target="_blank">Environmental Progress</a>
+                            <a href="https://www.city-journal.org/" class="source-link" target="_blank">City Journal</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6. Government Overreach & Administrative State - 24 mentions -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-5">
+                    <div class="card-title">
+                        Government Overreach & Administrative State
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="mention-count">24 mentions</div>
+                </div>
+                <div class="card-content">
+                    <div class="content-inner">
+                        <div class="subtopic">
+                            <h3>Regulatory State Expansion</h3>
+                            <p>Conservative voices documented growth of administrative power beyond democratic accountability.</p>
+                            <div class="key-points">
+                                <ul>
+                                    <li>Concern over unelected bureaucrats setting policy through regulation rather than legislation</li>
+                                    <li>Debate over proper scope of executive agency authority</li>
+                                    <li>Question of democratic accountability for administrative decisions</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="subtopic">
+                            <h3>DEI & Ideological Mandates</h3>
+                            <p>Christopher Rufo and allies documented federal promotion of diversity programs they characterize as ideological rather than merit-based.</p>
+                            <div class="key-points">
+                                <ul>
+                                    <li>Biden administration promotion of neo-pronouns and gender reassignment for minors</li>
+                                    <li>Government celebration of expanding identity categories (pansexual, non-binary)</li>
+                                    <li>Conservative argument: Government enforcing ideological conformity beyond constitutional role</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="subtopic">
+                            <h3>Surveillance & Intelligence Community</h3>
+                            <p>Greenwald's continued focus on intelligence agency overreach and lack of oversight.</p>
+                            <div class="key-points">
+                                <ul>
+                                    <li>Ongoing concerns from Snowden revelations about domestic surveillance</li>
+                                    <li>Intelligence community coordination with social media platforms</li>
+                                    <li>Limited congressional oversight of expanding security apparatus</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="sources">
+                            <h4>Primary Sources:</h4>
+                            <a href="https://www.city-journal.org/" class="source-link" target="_blank">City Journal (Manhattan Institute)</a>
+                            <a href="https://greenwald.substack.com/" class="source-link" target="_blank">Glenn Greenwald</a>
+                            <a href="https://thedispatch.com/" class="source-link" target="_blank">The Dispatch</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 7. Education & Parental Rights - 20 mentions -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-5">
+                    <div class="card-title">
+                        Education & Parental Rights
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="mention-count">20 mentions</div>
+                </div>
+                <div class="card-content">
+                    <div class="content-inner">
+                        <div class="subtopic">
+                            <h3>Curriculum Transparency Debates</h3>
+                            <p>Conservative activists continued pushing for parental notification and opt-out rights regarding gender and sexuality curriculum.</p>
+                            <div class="key-points">
+                                <ul>
+                                    <li>School district policies on social transition without parental notification</li>
+                                    <li>Debate over age-appropriate sexual education content</li>
+                                    <li>Rufo documenting specific curricula containing explicit content for elementary students</li>
+                                    <li>Lurie Children's Hospital Chicago presentations promoting "gender diversity" in public schools</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="subtopic">
+                            <h3>School Choice Movement</h3>
+                            <p>Rufo's ultimate policy goal: end public education as currently structured in favor of voucher system.</p>
+                            <div class="key-points">
+                                <ul>
+                                    <li>Strategy: "Raising partisan conflict around schools" to drive support for alternatives</li>
+                                    <li>Conservative argument: Parental control vs institutional indoctrination</li>
+                                    <li>Critics argue this undermines public education system</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="subtopic">
+                            <h3>Critical Race Theory Continuation</h3>
+                            <p>Ongoing debate over teaching of race and American history in schools.</p>
+                            <div class="key-points">
+                                <ul>
+                                    <li>Rufo's role in 2020 Trump executive order on CRT in federal contractors</li>
+                                    <li>State legislation restricting certain race-based curriculum</li>
+                                    <li>Debate over balancing accurate history with civic pride</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="sources">
+                            <h4>Primary Sources:</h4>
+                            <a href="https://www.city-journal.org/person/christopher-f-rufo" class="source-link" target="_blank">City Journal (Rufo)</a>
+                            <a href="https://christopherrufo.com/" class="source-link" target="_blank">Christopher F. Rufo</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 8. Crime & Urban Governance - 18 mentions -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-6">
+                    <div class="card-title">
+                        Crime & Urban Governance
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="mention-count">18 mentions</div>
+                </div>
+                <div class="card-content">
+                    <div class="content-inner">
+                        <div class="subtopic">
+                            <h3>Progressive Urban Policy Critique</h3>
+                            <p>Michael Shellenberger's "San Fransicko" thesis: Progressive policies on homelessness, drugs, and crime counterproductive.</p>
+                            <div class="key-points">
+                                <ul>
+                                    <li>San Francisco social services facility tolerating illegal drug use closed Dec 2022 after failing mission</li>
+                                    <li>Public credited Shellenberger for breaking story of de-facto supervised injection site</li>
+                                    <li>Harm reduction vs treatment-first debate</li>
+                                    <li>Conservative argument: Compassion requires accountability, not enabling</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="subtopic">
+                            <h3>Prosecution & Criminal Justice</h3>
+                            <p>Debate over progressive prosecutors' policies and impact on public safety.</p>
+                            <div class="key-points">
+                                <ul>
+                                    <li>Non-prosecution policies for certain offenses</li>
+                                    <li>Bail reform impacts on repeat offenders</li>
+                                    <li>Quality of life crimes enforcement</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="subtopic">
+                            <h3>Mental Health & Homelessness</h3>
+                            <p>Conservative voices argued for involuntary treatment and housing-first alternatives.</p>
+                            <div class="key-points">
+                                <ul>
+                                    <li>Shellenberger advocacy for psychiatric treatment requirements</li>
+                                    <li>Critique of permissive encampment policies</li>
+                                    <li>Call for reviving mental health infrastructure</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="sources">
+                            <h4>Primary Sources:</h4>
+                            <a href="https://public.substack.com/" class="source-link" target="_blank">Public (Shellenberger)</a>
+                            <a href="https://www.city-journal.org/" class="source-link" target="_blank">City Journal</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 9. Religious Liberty - 15 mentions -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-6">
+                    <div class="card-title">
+                        Religious Liberty
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="mention-count">15 mentions</div>
+                </div>
+                <div class="card-content">
+                    <div class="content-inner">
+                        <div class="subtopic">
+                            <h3>Faith vs Ideology Conflicts</h3>
+                            <p>Conservative religious commentators framed gender ideology as challenge to religious freedom and traditional belief.</p>
+                            <div class="key-points">
+                                <ul>
+                                    <li>Rod Dreher's "Live Not By Lies" and "soft totalitarianism" framework</li>
+                                    <li>Orthodox Christian perspective on cultural pressures</li>
+                                    <li>Andrew Sullivan's conservative Catholic gay perspective on trans activism</li>
+                                    <li>The Dispatch's "Good Faith" podcast examining faith and politics intersection</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="subtopic">
+                            <h3>Institutional Religious Freedom</h3>
+                            <p>Debates over religious institutions' right to maintain traditional teachings on sexuality and gender.</p>
+                            <div class="key-points">
+                                <ul>
+                                    <li>Catholic school employment policies</li>
+                                    <li>Religious hospital accommodation of gender procedures</li>
+                                    <li>Faith-based adoption agency conflicts with state mandates</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="subtopic">
+                            <h3>Post-Liberal Conservatism</h3>
+                            <p>Some conservative religious voices advocating move beyond classical liberalism to protect traditional values.</p>
+                            <div class="key-points">
+                                <ul>
+                                    <li>Dreher's "Benedict Option": Strategic withdrawal to preserve Christian communities</li>
+                                    <li>Exploration of European populist models (Hungary)</li>
+                                    <li>Tension with free speech absolutism in some conservative religious circles</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="sources">
+                            <h4>Primary Sources:</h4>
+                            <a href="https://europeanconservative.com/author/rod-dreher/" class="source-link" target="_blank">Rod Dreher (European Conservative)</a>
+                            <a href="https://thedispatch.com/" class="source-link" target="_blank">The Dispatch</a>
+                            <a href="https://andrewsullivan.substack.com/" class="source-link" target="_blank">Andrew Sullivan</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 10. Epstein Files - 12 mentions -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-7">
+                    <div class="card-title">
+                        Epstein Files & Government Transparency
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="mention-count">12 mentions</div>
+                </div>
+                <div class="card-content">
+                    <div class="content-inner">
+                        <div class="subtopic">
+                            <h3>Limited Conservative Coverage</h3>
+                            <p>Notably, conservative Substack sources provided limited original reporting on Epstein files compared to ICE operations and cultural issues.</p>
+                            <div class="key-points">
+                                <ul>
+                                    <li>Focus more on government transparency and institutional accountability than specific allegations</li>
+                                    <li>Some conservative commentators noted bipartisan nature of scandal</li>
+                                    <li>Emphasis on media's selective coverage based on political affiliation of those implicated</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="subtopic">
+                            <h3>Government Accountability</h3>
+                            <p>Conservative civil libertarians emphasized need for full transparency regardless of political implications.</p>
+                            <div class="key-points">
+                                <ul>
+                                    <li>Critique of redaction failures and delayed releases</li>
+                                    <li>Greenwald-style emphasis on government accountability to public</li>
+                                    <li>Skepticism toward official narratives about investigation</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="sources">
+                            <h4>Primary Sources:</h4>
+                            <a href="https://greenwald.substack.com/" class="source-link" target="_blank">Glenn Greenwald</a>
+                            <a href="https://www.thefp.com/" class="source-link" target="_blank">The Free Press</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 11. Government Sponsored Health - 10 mentions -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-7">
+                    <div class="card-title">
+                        Government Sponsored Health
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="mention-count">10 mentions</div>
+                </div>
+                <div class="card-content">
+                    <div class="content-inner">
+                        <div class="subtopic">
+                            <h3>Limited Direct Coverage</h3>
+                            <p>Conservative Substack sources focused more on cultural aspects of healthcare (gender procedures, DEI in medicine) than government healthcare programs.</p>
+                            <div class="key-points">
+                                <ul>
+                                    <li>Free market vs government-run healthcare philosophical divide</li>
+                                    <li>Rufo's reporting on DEI initiatives in medical schools and hospitals</li>
+                                    <li>Critique of politicization of medical profession</li>
+                            </ul>
+                            </div>
+                        </div>
+
+                        <div class="subtopic">
+                            <h3>Medical Freedom Arguments</h3>
+                            <p>Conservative health voices emphasized patient choice and physician autonomy over government mandates.</p>
+                            <div class="key-points">
+                                <ul>
+                                    <li>Dr. Mark Hyman (Free Press contributor) on functional medicine approaches</li>
+                                    <li>Critique of one-size-fits-all government health directives</li>
+                                    <li>Emphasis on individual responsibility and choice</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="sources">
+                            <h4>Primary Sources:</h4>
+                            <a href="https://www.city-journal.org/" class="source-link" target="_blank">City Journal</a>
+                            <a href="https://www.thefp.com/" class="source-link" target="_blank">The Free Press</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p><strong>Source Note:</strong> This analysis draws from conservative and heterodox independent media sources including The Free Press (Bari Weiss), Racket News (Matt Taibbi), Glenn Greenwald, City Journal (Christopher Rufo), Public (Michael Shellenberger), The Dispatch, Andrew Sullivan, and Rod Dreher.</p>
+            <p style="margin-top: 10px;">These sources represent perspectives challenging progressive orthodoxy and establishment narratives from right-of-center, libertarian, and heterodox positions.</p>
+            <p style="margin-top: 15px; font-size: 0.85rem; opacity: 0.8;">Coverage Period: January 15 - February 1, 2026 | Compiled from Substack publications, independent newsletters, and heterodox media</p>
+        </footer>
+    </div>
+
+    <script>
+        function toggleCard(card) {
+            card.classList.toggle('expanded');
+        }
+
+        // Add smooth scrolling
+        document.querySelectorAll('.news-card').forEach(card => {
+            card.addEventListener('click', function() {
+                if (this.classList.contains('expanded')) {
+                    setTimeout(() => {
+                        this.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    }, 100);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

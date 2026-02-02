@@ -1,0 +1,1419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COVID-19 Data Analysis: 2020-2026</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-dark: #1a2332;
+            --secondary-dark: #2c3e50;
+            --accent-red: #c73e3e;
+            --accent-blue: #3498db;
+            --accent-green: #27ae60;
+            --accent-amber: #f39c12;
+            --text-primary: #2c3e50;
+            --text-secondary: #546e7a;
+            --bg-light: #f8f9fa;
+            --bg-white: #ffffff;
+            --border-color: #e0e6ed;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Work Sans', sans-serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e8eef3 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--secondary-dark) 100%);
+            color: white;
+            padding: 60px 20px;
+            margin-bottom: 40px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 60%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(52, 152, 219, 0.1) 0%, transparent 70%);
+            animation: pulse 8s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        h1 {
+            font-family: 'Crimson Pro', serif;
+            font-size: 3.5em;
+            font-weight: 700;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 1;
+            letter-spacing: -1px;
+        }
+
+        .subtitle {
+            font-size: 1.3em;
+            opacity: 0.9;
+            font-weight: 400;
+            position: relative;
+            z-index: 1;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .stat-card {
+            background: var(--bg-white);
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border-left: 4px solid var(--accent-blue);
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.6s ease-out;
+            animation-fill-mode: both;
+        }
+
+        .stat-card:nth-child(2) {
+            animation-delay: 0.1s;
+            border-left-color: var(--accent-red);
+        }
+
+        .stat-card:nth-child(3) {
+            animation-delay: 0.2s;
+            border-left-color: var(--accent-green);
+        }
+
+        .stat-card:nth-child(4) {
+            animation-delay: 0.3s;
+            border-left-color: var(--accent-amber);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .stat-value {
+            font-family: 'Crimson Pro', serif;
+            font-size: 2.8em;
+            font-weight: 700;
+            color: var(--primary-dark);
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+
+        .stat-context {
+            font-size: 0.85em;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        .section {
+            background: var(--bg-white);
+            padding: 40px;
+            margin-bottom: 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            animation: fadeInUp 0.8s ease-out;
+            animation-fill-mode: both;
+        }
+
+        .section:nth-child(odd) {
+            animation-delay: 0.1s;
+        }
+
+        .section:nth-child(even) {
+            animation-delay: 0.2s;
+        }
+
+        h2 {
+            font-family: 'Crimson Pro', serif;
+            font-size: 2.2em;
+            margin-bottom: 25px;
+            color: var(--primary-dark);
+            border-bottom: 3px solid var(--accent-blue);
+            padding-bottom: 15px;
+            display: inline-block;
+        }
+
+        h3 {
+            font-family: 'Crimson Pro', serif;
+            font-size: 1.6em;
+            margin: 30px 0 15px 0;
+            color: var(--secondary-dark);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin: 30px 0;
+            padding: 20px;
+            background: var(--bg-light);
+            border-radius: 12px;
+        }
+
+        .chart-container.tall {
+            height: 500px;
+        }
+
+        .insight-box {
+            background: linear-gradient(135deg, #f0f4f8 0%, #e8eef3 100%);
+            border-left: 4px solid var(--accent-amber);
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 8px;
+            font-size: 0.95em;
+            line-height: 1.7;
+        }
+
+        .insight-box strong {
+            color: var(--primary-dark);
+            font-weight: 600;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 25px 0;
+            font-size: 0.95em;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .data-table th {
+            background: var(--primary-dark);
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85em;
+            letter-spacing: 0.5px;
+        }
+
+        .data-table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border-color);
+            background: var(--bg-white);
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .data-table tr:hover td {
+            background: var(--bg-light);
+        }
+
+        .highlight-red {
+            color: var(--accent-red);
+            font-weight: 600;
+        }
+
+        .highlight-green {
+            color: var(--accent-green);
+            font-weight: 600;
+        }
+
+        .highlight-blue {
+            color: var(--accent-blue);
+            font-weight: 600;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        @media (max-width: 768px) {
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2.5em;
+            }
+            
+            .chart-container {
+                height: 300px;
+            }
+        }
+
+        .ma-section {
+            border-top: 4px solid var(--accent-green);
+            margin-top: 50px;
+        }
+
+        .ma-section h2 {
+            border-bottom-color: var(--accent-green);
+        }
+
+        .note {
+            font-size: 0.85em;
+            color: var(--text-secondary);
+            font-style: italic;
+            margin-top: 15px;
+            padding-left: 20px;
+            border-left: 2px solid var(--border-color);
+        }
+
+        .metric-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .metric-row:last-child {
+            border-bottom: none;
+        }
+
+        .metric-label {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .metric-value {
+            font-family: 'Crimson Pro', serif;
+            font-size: 1.4em;
+            font-weight: 600;
+            color: var(--primary-dark);
+        }
+
+        .section-header {
+            cursor: pointer;
+            user-select: none;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 0;
+            transition: all 0.3s ease;
+        }
+
+        .section-header:hover h2 {
+            color: var(--accent-blue);
+        }
+
+        .expand-icon {
+            font-size: 1.5em;
+            color: var(--accent-blue);
+            transition: transform 0.3s ease;
+            font-weight: bold;
+            min-width: 30px;
+            text-align: center;
+        }
+
+        .expand-icon.expanded {
+            transform: rotate(180deg);
+        }
+
+        .section-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out, opacity 0.3s ease;
+            opacity: 0;
+        }
+
+        .section-content.expanded {
+            max-height: 10000px;
+            opacity: 1;
+            transition: max-height 0.8s ease-in, opacity 0.5s ease;
+        }
+
+        .expand-all-container {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+
+        .expand-all-btn {
+            background: var(--accent-blue);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-family: 'Work Sans', sans-serif;
+            font-weight: 600;
+            font-size: 0.95em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(52, 152, 219, 0.3);
+        }
+
+        .expand-all-btn:hover {
+            background: var(--secondary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);
+        }
+
+        .source-material {
+            background: var(--bg-white);
+            padding: 40px;
+            margin: 40px 0;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border-top: 4px solid var(--accent-amber);
+        }
+
+        .source-material h2 {
+            border-bottom-color: var(--accent-amber);
+            margin-bottom: 30px;
+        }
+
+        .source-text {
+            font-family: 'Work Sans', sans-serif;
+            font-size: 1em;
+            line-height: 1.8;
+            color: var(--text-primary);
+        }
+
+        .source-text h3 {
+            font-family: 'Crimson Pro', serif;
+            font-size: 1.5em;
+            margin-top: 35px;
+            margin-bottom: 20px;
+            color: var(--primary-dark);
+            font-weight: 600;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .source-text p {
+            margin-bottom: 15px;
+        }
+
+        .source-text table {
+            margin: 20px 0;
+        }
+
+        .source-text strong {
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>COVID-19 Data Analysis</h1>
+            <p class="subtitle">National and Massachusetts Trends: 2020-2026</p>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Expand/Collapse Control -->
+        <div class="expand-all-container">
+            <button class="expand-all-btn" onclick="toggleAllSections()">Expand All Sections</button>
+        </div>
+
+        <!-- Key Statistics Summary -->
+        <div class="summary-grid">
+            <div class="stat-card">
+                <div class="stat-label">Total U.S. Deaths</div>
+                <div class="stat-value">1.23M</div>
+                <div class="stat-context">Comparable to all U.S. war casualties (1.3M)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">2025 Deaths</div>
+                <div class="stat-value">16k</div>
+                <div class="stat-context">97% decrease from 2021 peak (462k)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Current Vaccination</div>
+                <div class="stat-value">17%</div>
+                <div class="stat-context">Adults vaccinated 2024-25 season</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Wastewater Level</div>
+                <div class="stat-value">Low</div>
+                <div class="stat-context">Current viral load: 3.59 (Moderate-Low)</div>
+            </div>
+        </div>
+
+        <!-- National COVID Deaths Timeline -->
+        <div class="section">
+            <div class="section-header" onclick="toggleSection(this)">
+                <h2>National COVID-19 Deaths</h2>
+                <span class="expand-icon">▼</span>
+            </div>
+            <div class="section-content">
+            <div class="chart-container">
+                <canvas id="deathsChart"></canvas>
+            </div>
+            <div class="insight-box">
+                <strong>Key Insight:</strong> Annual deaths peaked in 2021 at 462,000, driven by the Delta variant and pre-vaccination spread. The emergence of Omicron (highly infectious but less severe) combined with increasing immunity through vaccination and prior infection has led to a steady decline. Deaths dropped 66% from 2022 to 2023, and continued falling to just 16,000 in 2025—a 97% reduction from the peak.
+            </div>
+            </div>
+        </div>
+
+        <!-- Vaccination Rates -->
+        <div class="section">
+            <div class="section-header" onclick="toggleSection(this)">
+                <h2>Vaccination Rates</h2>
+                <span class="expand-icon">▼</span>
+            </div>
+            <div class="section-content">
+            <div class="two-column">
+                <div>
+                    <h3>Historical Context</h3>
+                    <div class="metric-row">
+                        <span class="metric-label">End of 2021</span>
+                        <span class="metric-value highlight-green">80%</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">2023-24 Season</span>
+                        <span class="metric-value">23%</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">2024-25 Season</span>
+                        <span class="metric-value">23%</span>
+                    </div>
+                </div>
+                <div>
+                    <h3>Current Season (2024-25)</h3>
+                    <div class="metric-row">
+                        <span class="metric-label">Already Vaccinated</span>
+                        <span class="metric-value highlight-blue">17%</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Planning to Get Vaccinated</span>
+                        <span class="metric-value">8%</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Unsure</span>
+                        <span class="metric-value">26%</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Likely to Decline</span>
+                        <span class="metric-value highlight-red">49%</span>
+                    </div>
+                </div>
+            </div>
+            <div class="insight-box">
+                <strong>Concern:</strong> Vaccination rates have plummeted from the 80% achieved in 2021 to approximately 23% in recent seasons. With anti-vaccine messaging and potential restrictions on vaccine access, rates may stagnate or decline further, leaving the population vulnerable to new, more virulent strains.
+            </div>
+            </div>
+        </div>
+
+        <!-- Wastewater Monitoring -->
+        <div class="section">
+            <div class="section-header" onclick="toggleSection(this)">
+                <h2>Wastewater COVID Monitoring</h2>
+                <span class="expand-icon">▼</span>
+            </div>
+            <div class="section-content">
+            <p>CDC wastewater monitoring provides the best measure of COVID prevalence (not severity) since many cases go unreported. The data uses a logarithmic scale where readings below 2.0 are "Very Low," 2-3.4 are "Low," 3.4-5.3 are "Moderate," 5.3-7.8 are "High," and above 7.8 are "Very High."</p>
+            
+            <div class="chart-container tall">
+                <canvas id="wastewaterChart"></canvas>
+            </div>
+
+            <h3>Regional Comparison (Week Ending 1/24/26)</h3>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Region</th>
+                        <th>Current Level</th>
+                        <th>Winter Peak (1/10/26)</th>
+                        <th>2025 Low (11/1/25)</th>
+                        <th>Classification</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>National</td>
+                        <td><strong>3.59</strong></td>
+                        <td>5.11</td>
+                        <td>1.39</td>
+                        <td>Moderate (Low End)</td>
+                    </tr>
+                    <tr>
+                        <td>Northeast</td>
+                        <td><strong>3.93</strong></td>
+                        <td>6.79</td>
+                        <td>1.45</td>
+                        <td>Moderate</td>
+                    </tr>
+                    <tr>
+                        <td>South</td>
+                        <td><strong>3.25</strong></td>
+                        <td>3.43</td>
+                        <td>1.33</td>
+                        <td>Low</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="insight-box">
+                <strong>Positive Trend:</strong> The 2025-26 winter peak (so far) is approximately 70% of last year's peak, 35% of 2023-24, and only 20% of the Omicron peak. The Northeast typically shows higher viral loads due to dense population and cold climate forcing people indoors, but greater vaccine uptake has moderated the expected disparity with the South.
+            </div>
+            </div>
+        </div>
+
+        <!-- Seasonal Flu Comparison -->
+        <div class="section">
+            <div class="section-header" onclick="toggleSection(this)">
+                <h2>Seasonal Flu Context</h2>
+                <span class="expand-icon">▼</span>
+            </div>
+            <div class="section-content">
+            <div class="chart-container">
+                <canvas id="fluChart"></canvas>
+            </div>
+            <div class="two-column">
+                <div>
+                    <h3>Annual Deaths</h3>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Season</th>
+                                <th>Deaths</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>2011-20 Average</td>
+                                <td><strong>35,000</strong></td>
+                            </tr>
+                            <tr>
+                                <td>2021-22</td>
+                                <td>6,000</td>
+                            </tr>
+                            <tr>
+                                <td>2022-23</td>
+                                <td>21,000</td>
+                            </tr>
+                            <tr>
+                                <td>2023-24</td>
+                                <td>28,000</td>
+                            </tr>
+                            <tr>
+                                <td>2024-25 (Projected)</td>
+                                <td class="highlight-blue">~25,000</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    <h3>Vaccination Rates</h3>
+                    <div class="metric-row">
+                        <span class="metric-label">Pre-Pandemic Average</span>
+                        <span class="metric-value">52%</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Last 2 Years Average</span>
+                        <span class="metric-value">48%</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Current Season</span>
+                        <span class="metric-value">46%</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Projected Full Season</span>
+                        <span class="metric-value highlight-green">~50%</span>
+                    </div>
+                </div>
+            </div>
+            <p class="note">The 2022-25 average of 29,000 deaths is lower than the pre-pandemic 35,000 average, likely because some flu deaths are now classified as COVID-related.</p>
+            </div>
+        </div>
+
+        <!-- Massachusetts Section -->
+        <div class="section ma-section">
+            <div class="section-header" onclick="toggleSection(this)">
+                <h2>Massachusetts Data</h2>
+                <span class="expand-icon">▼</span>
+            </div>
+            <div class="section-content">
+            
+            <div class="chart-container">
+                <canvas id="maDeathsChart"></canvas>
+            </div>
+
+            <div class="insight-box">
+                <strong>Massachusetts Performance:</strong> Total MA deaths (26,200) account for 2.1% of national deaths, matching our population share exactly. Despite dense population, older demographics, colder climate, and the initial Biogen convention outbreak, Massachusetts has performed comparably to the national average.
+            </div>
+
+            <h3>Emergency Room Visits (Week Ending 1/24/26)</h3>
+            <div class="two-column">
+                <div>
+                    <div class="metric-row">
+                        <span class="metric-label">Current Week COVID Visits</span>
+                        <span class="metric-value highlight-green">570</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Same Week 2025</span>
+                        <span class="metric-value">1,196</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Same Week 2024</span>
+                        <span class="metric-value">1,489</span>
+                    </div>
+                    <p class="note">DPH classifies current level as "Very Low"</p>
+                </div>
+                <div>
+                    <div class="metric-row">
+                        <span class="metric-label">Current Week Flu Visits</span>
+                        <span class="metric-value highlight-green">1,420</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Same Week 2025</span>
+                        <span class="metric-value">6,865</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">Same Week 2024</span>
+                        <span class="metric-value">1,677</span>
+                    </div>
+                    <p class="note">DPH classifies current level as "Low"</p>
+                </div>
+            </div>
+
+            <h3>Massachusetts Wastewater Monitoring (MWRA)</h3>
+            <div class="chart-container tall">
+                <canvas id="maWastewaterChart"></canvas>
+            </div>
+            <div class="insight-box">
+                <strong>Encouraging Trend:</strong> Current viral load (288 copies/mL) represents about 30% of last year's peak, 20% of two years ago, and only 5% of the Omicron peak (9,900 copies/mL). The MWRA data, tracking since the pandemic's start, shows a stark contrast between peaks and troughs compared to the national CDC metric.
+            </div>
+
+            <h3>Massachusetts Vaccination Concerns</h3>
+            <div class="two-column">
+                <div>
+                    <h4>COVID Vaccination</h4>
+                    <div class="metric-row">
+                        <span class="metric-label">MA Adults Vaccinated</span>
+                        <span class="metric-value highlight-red">12%</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">National Average</span>
+                        <span class="metric-value">17%</span>
+                    </div>
+                    <p class="note">MA historically had one of the highest vaccination rates nationally, making this relative decline concerning.</p>
+                </div>
+                <div>
+                    <h4>Flu Vaccination</h4>
+                    <div class="metric-row">
+                        <span class="metric-label">MA Current Season</span>
+                        <span class="metric-value highlight-red">37%</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">National Average</span>
+                        <span class="metric-value">46%</span>
+                    </div>
+                    <div class="metric-row">
+                        <span class="metric-label">MA Last Year (Same Time)</span>
+                        <span class="metric-value">38%</span>
+                    </div>
+                </div>
+            </div>
+
+            <h3>Massachusetts Flu Statistics</h3>
+            <div class="metric-row">
+                <span class="metric-label">Total Flu Deaths This Season</span>
+                <span class="metric-value">193</span>
+            </div>
+            <div class="metric-row">
+                <span class="metric-label">MA Share of National Deaths</span>
+                <span class="metric-value highlight-green">1.75%</span>
+            </div>
+            <p class="note">Massachusetts is performing 16% better than its 2.1% population share would suggest.</p>
+            
+            <div class="metric-row">
+                <span class="metric-label">Provider Office Visits (Last Week)</span>
+                <span class="metric-value">4.32%</span>
+            </div>
+            <p class="note">DPH classifies as "High" (nearly double the regional baseline), though down from 5.85% the prior week.</p>
+            
+            <div class="metric-row">
+                <span class="metric-label">Hospitalizations</span>
+                <span class="metric-value highlight-green">2.63%</span>
+            </div>
+            <p class="note">DPH classifies as "Low" (down from 10.94% two weeks ago).</p>
+            </div>
+        </div>
+
+        <!-- Source Material Section -->
+        <div class="source-material">
+            <div class="section-header" onclick="toggleSection(this)">
+                <h2>Source Material - George</h2>
+                <span class="expand-icon">▼</span>
+            </div>
+            <div class="section-content">
+            <div class="source-text">
+<h3>National Data</h3>
+
+<p>Annual Covid Deaths have evolved as follows:</p>
+
+<table class="data-table">
+    <thead>
+        <tr>
+            <th>Year</th>
+            <th>Deaths</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr><td>2020</td><td><strong>384,000</strong></td></tr>
+        <tr><td>2021</td><td><strong>462,000</strong></td></tr>
+        <tr><td>2022</td><td><strong>246,000</strong></td></tr>
+        <tr><td>2023</td><td><strong>76,000</strong></td></tr>
+        <tr><td>2024</td><td><strong>47,000</strong></td></tr>
+        <tr><td>2025</td><td><strong>16,000</strong></td></tr>
+        <tr style="background: #f0f4f8;"><td><strong>Total</strong></td><td><strong class="highlight-red">1,231,000</strong></td></tr>
+    </tbody>
+</table>
+
+<p>By the end of 2021, nearly 80% of adults, including 90% of seniors, had been vaccinated and the highly infectious Omicron strain became dominant, going on to cause 150k deaths during the first two months of 2022. Since then, the number of deaths has decreased steadily as vaccines and illness have induced the emergence of a degree of herd immunity, Omicron and its descendants have produced less severe illness than earlier strains, (most recently the XFG variants), and vaccines have mitigated the severity of illness.</p>
+
+<p>Although the trend has been favorable, the 1.23 million Covid deaths so far is comparable to the 1.3 million deaths the U.S. has sustained from all its wars (equally divided between foreign wars and the Civil War). Looking forward, we remain vulnerable as virulent new Covid strains which overcome our defenses could emerge, especially because our vaccination rates have decreased and the timely development of new vaccines may be deterred by RFK Jr. and his cronies. Although the anti-vax community complains that the vaccines are not fully effective in preventing the disease, its adherents blithely ignore that their main benefit is reducing the severity of disease.</p>
+
+<h3>Covid Vaccination Rates</h3>
+
+<p>For the 2023-24 and 2024-25 Covid vaccination seasons, the CDC reports that about 23% of adults received the new vaccines each year. So far this season according to the CDC, 17% of adults, including 34% of seniors, have already been vaccinated, 8% plan to be vaccinated, 26% are unsure, and 49% are likely to decline vaccination. Although the 2025-26 vaccination rate could then fall between 25-30%, a surprising increase, this pales in comparison to the 80% rate achieved at the end of 2021. Moreover, given the anti-vaccine messaging from HHS and the CDC as well as restrictions placed upon vaccine access there may only be a minimal increase in inoculation, if any, this year.</p>
+
+<h3>Wastewater Covid Monitoring</h3>
+
+<p>Since 2022, the CDC has been monitoring the Covid viral load in wastewater across the country. Because many, if not most, cases are not reported, this data is the best available measure of the prevalence, not the severity, of Covid. The CDC uses a non-intuitive logarithmic scale to measure relative viral loads, but their metric effectively shows us how Covid prevalence is trending. Here are the recent numbers and how they compare to those at earlier benchmark points in time:</p>
+
+<table class="data-table">
+    <thead>
+        <tr>
+            <th>Week Ending</th>
+            <th>National</th>
+            <th>Northeast</th>
+            <th>South</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr style="background: #e8f4f8;"><td><strong>1/24/26 Current</strong></td><td><strong>3.59</strong></td><td><strong>3.93</strong></td><td><strong>3.25</strong></td></tr>
+        <tr><td>1/10/26 Winter Peak*</td><td>5.11</td><td>6.79</td><td>3.43</td></tr>
+        <tr><td>11/01/25 CY25 Low</td><td>1.39</td><td>1.45</td><td>1.33</td></tr>
+        <tr><td>2025 Summer Peak</td><td>7.34</td><td>5.46</td><td>10.27</td></tr>
+        <tr><td>2024-25 Winter Peak</td><td>7.15</td><td>10.02</td><td>6.26</td></tr>
+        <tr><td>2023-24 Winter Peak</td><td>14.43</td><td>17.65</td><td>13.66</td></tr>
+        <tr><td>2022-23 Winter Peak</td><td>10.79</td><td>9.59</td><td>12.03</td></tr>
+        <tr><td>1/08/22 Omicron Peak</td><td>28.35</td><td>13.16</td><td>28.10</td></tr>
+    </tbody>
+</table>
+
+<p style="font-size: 0.9em; font-style: italic; margin-top: 10px;">* This level could be exceeded later in the season, but historically the viral load has peaked in the wake of the holiday season.</p>
+
+<p><strong>Notes:</strong><br>
+Data for the Midwest and West is also available<br>
+CDC Scale: &lt;2.0 Very Low ; 2-3.4 Low; 3.4-5.3 Moderate; 5.3-7.8 High; &gt;7.8 Very High</p>
+
+<p><strong>Observations:</strong><br>
+Over the last 12 months, the National level was deemed to be High in January and mid-September, Very Low in the Spring and November and is currently at the low end of Moderate.<br>
+The viral load for the 1/10/26 Winter Peak (so far) was about 70% of that for 2024-25, 35% of that for 2023-24 and 20% of that at the height of Omicron.<br>
+Compared to the South, the Northeast is more densely populated and has a colder climate forcing people indoors during winter, but the concomitant disparity in expected illness has been tempered by greater vaccine intake in the Northeast.</p>
+
+<h3>Seasonal Flu</h3>
+
+<p>Over the 9-year period spanning the 2011-20 flu seasons, which run between October thru May inclusive, annual deaths ranged between 12k and 52k, with an annual average of about 35k deaths.</p>
+
+<p>Since the pandemic, annual deaths have been as follows (there was no data collection during the 2020-21 season as Covid was the overriding focus):</p>
+
+<table class="data-table">
+    <thead>
+        <tr>
+            <th>Season</th>
+            <th>Deaths</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr><td>2021-22</td><td>6,000</td></tr>
+        <tr><td>2022-23</td><td>21,000</td></tr>
+        <tr><td>2023-24</td><td>28,000</td></tr>
+        <tr><td>2024-25</td><td>38,000</td></tr>
+    </tbody>
+</table>
+
+<p>The 3-year average for 2022-25 was 29k deaths. Some decrease from the pre-pandemic 35k average was to be expected because some flu deaths were likely subsumed by being classified as Covid-related.</p>
+
+<p>Through late January there have been 11k deaths so far this season. Given that we're nearly halfway through the winter, which is when the flu peaks, and allowing for late reporting, I estimate roughly 25k deaths for the full season.</p>
+
+<p>With regard to vaccinations, over the course of the last two years the population flu vaccination rate including children decreased from the prior 3-year average of 52% to 48%. So far this season, the vaccination rate has been 46%, a 2% increase over the rate at this point last season. I estimate that the rate for the full season will be around 50%. Given the HHS messaging, this small increase since last year is a pleasant surprise.</p>
+
+<h3>Massachusetts Data</h3>
+
+<p>Annual Covid Deaths have been as follows:</p>
+
+<table class="data-table">
+    <thead>
+        <tr>
+            <th>Year</th>
+            <th>Deaths</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr><td>2020</td><td><strong>10,400</strong></td></tr>
+        <tr><td>2021</td><td><strong>6,600</strong></td></tr>
+        <tr><td>2022</td><td><strong>6,000</strong></td></tr>
+        <tr><td>2023</td><td><strong>2,200</strong></td></tr>
+        <tr><td>2024</td><td><strong>700</strong></td></tr>
+        <tr><td>2025</td><td><strong>300</strong></td></tr>
+        <tr style="background: #e8f4f8;"><td><strong>Total</strong></td><td><strong class="highlight-green">26,200</strong></td></tr>
+    </tbody>
+</table>
+
+<p>The total MA deaths account for 2.1% of the national deaths, matching our share of the U.S. population. Given our dense and somewhat older population, colder climate and the initial outbreak triggered by the Biogen convention at the Marriott Long Wharf, MA has acquitted itself quite well according to this metric.</p>
+
+<h3>Emergency Room Visits</h3>
+
+<p>During the weekly reporting period ending on 1/24/26, there were 570 ER visits related to Covid. This compares to 1196 at this time last year and 1489 the year before. The DPH Dashboard characterizes this level of visits as being Very Low.</p>
+
+<h3>Vaccination</h3>
+
+<p>Over the course of the Covid pandemic, MA has had one of the highest vaccination rates in the country, sometimes even the highest, but it is concerning that only 12% of adults have received the new vaccine so far compared to the 17% rate for the U.S. in aggregate.</p>
+
+<h3>Wastewater Covid Monitoring</h3>
+
+<p>Whereas the U.S. began collecting wastewater data at the beginning of 2022, the MWRA has been monitoring wastewater since the beginning of the pandemic. Here are the recent Eastern MA viral loads, taking the average for the North and South Systems, compared to those surveyed at benchmark points in time:</p>
+
+<table class="data-table">
+    <thead>
+        <tr>
+            <th>Week Ending</th>
+            <th>Copies per mL</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr style="background: #e8f4f8;"><td><strong>1/22/26 Current</strong></td><td><strong>288</strong></td></tr>
+        <tr><td>1/08/26 Winter Peak*</td><td>518</td></tr>
+        <tr><td>11/13/25 Annual Low</td><td>98</td></tr>
+        <tr><td>1/09/25 Annual High</td><td>1,734</td></tr>
+        <tr><td>11/21/24 Annual Low</td><td>202</td></tr>
+        <tr><td>1/01/24 Annual High</td><td>2,663</td></tr>
+        <tr><td>6/22/23 Annual Low</td><td>88</td></tr>
+        <tr><td>1/01/23 Annual High</td><td>1,904</td></tr>
+        <tr><td>1/03/22 Annual High</td><td>9,900</td></tr>
+    </tbody>
+</table>
+
+<p style="font-size: 0.9em; font-style: italic; margin-top: 10px;">* so far</p>
+
+<p>As was the case with the national data, the viral load peaks over the course of the holiday season after bottoming out in the early summer or November. The direct metric MA tracks, however, depicts a far starker disparity between the peaks and troughs than does the more esoteric CDC metric. The moderation of this year's current seasonal peak is quite encouraging as it equates to about 30% of last year's, 20% compared to two years ago, and only 5% of the Omicron peak.</p>
+
+<h3>Seasonal Flu</h3>
+
+<p>There have been 193 deaths due to influenza in MA so far this season, 1.75% of the National total, which means that we are faring 1/6 better than our 2.1% population share.</p>
+
+<p>So far this season, 37% of MA residents have been vaccinated against influenza, which compares unfavorably to the national rate of 46% and also falls below the 38% achieved in MA by this time last year and 40% the year before.</p>
+
+<p>Although DPH characterizes the 4.32% of provider office visits last week attributable to influenza as being High, nearly double the regional baseline, this share did decrease from 5.85% the prior week.</p>
+
+<p>On the other hand, DPH characterizes the 2.63% share of hospitalizations associated with influenza, down from 10.94% just two weeks ago, as being Low.</p>
+
+<p>This past week, there were 1420 ER visits related to influenza compared to 6865 for the same week last year and 1677 the year before. The DPH Dashboard characterizes this level of ER visits as being Low.</p>
+            </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Chart configurations with enhanced styling
+        const chartDefaults = {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: {
+                        font: {
+                            family: "'Work Sans', sans-serif",
+                            size: 13,
+                            weight: '500'
+                        },
+                        padding: 15,
+                        usePointStyle: true,
+                        pointStyle: 'circle'
+                    }
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(26, 35, 50, 0.95)',
+                    titleFont: {
+                        family: "'Crimson Pro', serif",
+                        size: 15,
+                        weight: '600'
+                    },
+                    bodyFont: {
+                        family: "'Work Sans', sans-serif",
+                        size: 13
+                    },
+                    padding: 12,
+                    cornerRadius: 8,
+                    displayColors: true,
+                    boxPadding: 6
+                }
+            }
+        };
+
+        // National Deaths Chart
+        const deathsCtx = document.getElementById('deathsChart').getContext('2d');
+        new Chart(deathsCtx, {
+            type: 'bar',
+            data: {
+                labels: ['2020', '2021', '2022', '2023', '2024', '2025'],
+                datasets: [{
+                    label: 'Annual COVID Deaths (thousands)',
+                    data: [384, 462, 246, 76, 47, 16],
+                    backgroundColor: [
+                        'rgba(199, 62, 62, 0.8)',
+                        'rgba(199, 62, 62, 1)',
+                        'rgba(231, 76, 60, 0.8)',
+                        'rgba(243, 156, 18, 0.8)',
+                        'rgba(52, 152, 219, 0.8)',
+                        'rgba(39, 174, 96, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgba(199, 62, 62, 1)',
+                        'rgba(199, 62, 62, 1)',
+                        'rgba(231, 76, 60, 1)',
+                        'rgba(243, 156, 18, 1)',
+                        'rgba(52, 152, 219, 1)',
+                        'rgba(39, 174, 96, 1)'
+                    ],
+                    borderWidth: 2,
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                ...chartDefaults,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Deaths (thousands)',
+                            font: {
+                                family: "'Work Sans', sans-serif",
+                                size: 13,
+                                weight: '600'
+                            }
+                        },
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)'
+                        },
+                        ticks: {
+                            font: {
+                                family: "'Work Sans', sans-serif",
+                                size: 12
+                            }
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            font: {
+                                family: "'Work Sans', sans-serif",
+                                size: 12,
+                                weight: '500'
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    ...chartDefaults.plugins,
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+
+        // Wastewater Monitoring Chart
+        const wastewaterCtx = document.getElementById('wastewaterChart').getContext('2d');
+        new Chart(wastewaterCtx, {
+            type: 'line',
+            data: {
+                labels: ['Omicron Peak\n(1/8/22)', '2022-23\nWinter Peak', '2023-24\nWinter Peak', '2024-25\nWinter Peak', '2025 Low\n(11/1/25)', '2025 Winter\nPeak (1/10/26)', 'Current\n(1/24/26)'],
+                datasets: [
+                    {
+                        label: 'National',
+                        data: [28.35, 10.79, 14.43, 7.15, 1.39, 5.11, 3.59],
+                        borderColor: 'rgba(52, 152, 219, 1)',
+                        backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                        borderWidth: 3,
+                        tension: 0.4,
+                        fill: true,
+                        pointRadius: 5,
+                        pointHoverRadius: 7,
+                        pointBackgroundColor: 'rgba(52, 152, 219, 1)',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2
+                    },
+                    {
+                        label: 'Northeast',
+                        data: [13.16, 9.59, 17.65, 10.02, 1.45, 6.79, 3.93],
+                        borderColor: 'rgba(155, 89, 182, 1)',
+                        backgroundColor: 'rgba(155, 89, 182, 0.1)',
+                        borderWidth: 3,
+                        tension: 0.4,
+                        fill: true,
+                        pointRadius: 5,
+                        pointHoverRadius: 7,
+                        pointBackgroundColor: 'rgba(155, 89, 182, 1)',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2
+                    },
+                    {
+                        label: 'South',
+                        data: [28.10, 12.03, 13.66, 6.26, 1.33, 3.43, 3.25],
+                        borderColor: 'rgba(243, 156, 18, 1)',
+                        backgroundColor: 'rgba(243, 156, 18, 0.1)',
+                        borderWidth: 3,
+                        tension: 0.4,
+                        fill: true,
+                        pointRadius: 5,
+                        pointHoverRadius: 7,
+                        pointBackgroundColor: 'rgba(243, 156, 18, 1)',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2
+                    }
+                ]
+            },
+            options: {
+                ...chartDefaults,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'CDC Viral Load Scale',
+                            font: {
+                                family: "'Work Sans', sans-serif",
+                                size: 13,
+                                weight: '600'
+                            }
+                        },
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)'
+                        },
+                        ticks: {
+                            font: {
+                                family: "'Work Sans', sans-serif",
+                                size: 12
+                            }
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            font: {
+                                family: "'Work Sans', sans-serif",
+                                size: 11
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Flu Deaths Chart
+        const fluCtx = document.getElementById('fluChart').getContext('2d');
+        new Chart(fluCtx, {
+            type: 'bar',
+            data: {
+                labels: ['2011-20\nAverage', '2021-22', '2022-23', '2023-24', '2024-25\n(Projected)'],
+                datasets: [{
+                    label: 'Annual Flu Deaths (thousands)',
+                    data: [35, 6, 21, 28, 25],
+                    backgroundColor: [
+                        'rgba(149, 165, 166, 0.7)',
+                        'rgba(52, 152, 219, 0.8)',
+                        'rgba(155, 89, 182, 0.8)',
+                        'rgba(243, 156, 18, 0.8)',
+                        'rgba(39, 174, 96, 0.8)'
+                    ],
+                    borderColor: [
+                        'rgba(149, 165, 166, 1)',
+                        'rgba(52, 152, 219, 1)',
+                        'rgba(155, 89, 182, 1)',
+                        'rgba(243, 156, 18, 1)',
+                        'rgba(39, 174, 96, 1)'
+                    ],
+                    borderWidth: 2,
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                ...chartDefaults,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Deaths (thousands)',
+                            font: {
+                                family: "'Work Sans', sans-serif",
+                                size: 13,
+                                weight: '600'
+                            }
+                        },
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)'
+                        },
+                        ticks: {
+                            font: {
+                                family: "'Work Sans', sans-serif",
+                                size: 12
+                            }
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            font: {
+                                family: "'Work Sans', sans-serif",
+                                size: 11
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    ...chartDefaults.plugins,
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+
+        // Massachusetts Deaths Chart
+        const maDeathsCtx = document.getElementById('maDeathsChart').getContext('2d');
+        new Chart(maDeathsCtx, {
+            type: 'bar',
+            data: {
+                labels: ['2020', '2021', '2022', '2023', '2024', '2025'],
+                datasets: [{
+                    label: 'Massachusetts COVID Deaths (thousands)',
+                    data: [10.4, 6.6, 6.0, 2.2, 0.7, 0.3],
+                    backgroundColor: [
+                        'rgba(39, 174, 96, 0.7)',
+                        'rgba(39, 174, 96, 0.8)',
+                        'rgba(39, 174, 96, 0.85)',
+                        'rgba(39, 174, 96, 0.9)',
+                        'rgba(39, 174, 96, 0.95)',
+                        'rgba(39, 174, 96, 1)'
+                    ],
+                    borderColor: 'rgba(39, 174, 96, 1)',
+                    borderWidth: 2,
+                    borderRadius: 8
+                }]
+            },
+            options: {
+                ...chartDefaults,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Deaths (thousands)',
+                            font: {
+                                family: "'Work Sans', sans-serif",
+                                size: 13,
+                                weight: '600'
+                            }
+                        },
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)'
+                        },
+                        ticks: {
+                            font: {
+                                family: "'Work Sans', sans-serif",
+                                size: 12
+                            }
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            font: {
+                                family: "'Work Sans', sans-serif",
+                                size: 12,
+                                weight: '500'
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    ...chartDefaults.plugins,
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+
+        // Massachusetts Wastewater Chart
+        const maWastewaterCtx = document.getElementById('maWastewaterChart').getContext('2d');
+        new Chart(maWastewaterCtx, {
+            type: 'line',
+            data: {
+                labels: ['Omicron Peak\n(1/3/22)', 'Annual High\n(1/1/23)', 'Annual Low\n(6/22/23)', 'Annual High\n(1/1/24)', 'Annual Low\n(11/21/24)', 'Annual High\n(1/9/25)', 'Annual Low\n(11/13/25)', 'Winter Peak\n(1/8/26)', 'Current\n(1/22/26)'],
+                datasets: [{
+                    label: 'Viral Load (copies per mL)',
+                    data: [9900, 1904, 88, 2663, 202, 1734, 98, 518, 288],
+                    borderColor: 'rgba(39, 174, 96, 1)',
+                    backgroundColor: 'rgba(39, 174, 96, 0.1)',
+                    borderWidth: 3,
+                    tension: 0.4,
+                    fill: true,
+                    pointRadius: 6,
+                    pointHoverRadius: 8,
+                    pointBackgroundColor: 'rgba(39, 174, 96, 1)',
+                    pointBorderColor: '#fff',
+                    pointBorderWidth: 2
+                }]
+            },
+            options: {
+                ...chartDefaults,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Copies per mL',
+                            font: {
+                                family: "'Work Sans', sans-serif",
+                                size: 13,
+                                weight: '600'
+                            }
+                        },
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.05)'
+                        },
+                        ticks: {
+                            font: {
+                                family: "'Work Sans', sans-serif",
+                                size: 12
+                            }
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            font: {
+                                family: "'Work Sans', sans-serif",
+                                size: 10
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    ...chartDefaults.plugins,
+                    legend: {
+                        display: false
+                    }
+                }
+            }
+        });
+    </script>
+
+    <script>
+        function toggleSection(header) {
+            const content = header.nextElementSibling;
+            const icon = header.querySelector('.expand-icon');
+            
+            if (content.classList.contains('expanded')) {
+                content.classList.remove('expanded');
+                icon.classList.remove('expanded');
+            } else {
+                content.classList.add('expanded');
+                icon.classList.add('expanded');
+            }
+        }
+
+        function toggleAllSections() {
+            const allContents = document.querySelectorAll('.section-content');
+            const allIcons = document.querySelectorAll('.expand-icon');
+            const button = document.querySelector('.expand-all-btn');
+            
+            // Check if any section is collapsed
+            const anyCollapsed = Array.from(allContents).some(content => !content.classList.contains('expanded'));
+            
+            if (anyCollapsed) {
+                // Expand all
+                allContents.forEach(content => content.classList.add('expanded'));
+                allIcons.forEach(icon => icon.classList.add('expanded'));
+                button.textContent = 'Collapse All Sections';
+            } else {
+                // Collapse all
+                allContents.forEach(content => content.classList.remove('expanded'));
+                allIcons.forEach(icon => icon.classList.remove('expanded'));
+                button.textContent = 'Expand All Sections';
+            }
+        }
+
+        // Initialize all sections as collapsed on load for overview
+        window.addEventListener('DOMContentLoaded', function() {
+            // Sections start collapsed by default (no action needed)
+            // Button text is already set to "Expand All Sections"
+        });
+    </script>
+</body>
+</html>
