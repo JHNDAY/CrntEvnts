@@ -1,0 +1,1379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weaponizing the Administrative Subpoena</title>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@300;400;600;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --surveillance-red: #DC2626;
+            --deep-black: #0A0A0A;
+            --paper-white: #F8F7F4;
+            --shadow-gray: #3F3F46;
+            --redacted-red: #991B1B;
+            --grid-gray: #E5E5E5;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Libre Franklin', sans-serif;
+            background: var(--paper-white);
+            color: var(--deep-black);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .header {
+            background: var(--deep-black);
+            color: var(--paper-white);
+            padding: 3rem 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(220, 38, 38, 0.03) 2px,
+                    rgba(220, 38, 38, 0.03) 4px
+                );
+            pointer-events: none;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .classified-stamp {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.75rem;
+            letter-spacing: 3px;
+            color: var(--surveillance-red);
+            border: 2px solid var(--surveillance-red);
+            padding: 0.5rem 1rem;
+            display: inline-block;
+            margin-bottom: 1rem;
+            animation: fadeInDown 0.6s ease;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        h1 {
+            font-size: clamp(2rem, 6vw, 4rem);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            letter-spacing: -2px;
+            animation: fadeInUp 0.8s ease 0.2s backwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            font-weight: 300;
+            max-width: 800px;
+            opacity: 0.9;
+            animation: fadeInUp 0.8s ease 0.4s backwards;
+        }
+
+        .redacted-bar {
+            background: var(--surveillance-red);
+            height: 4px;
+            width: 100%;
+            margin-top: 2rem;
+            animation: expandWidth 1s ease 0.6s backwards;
+        }
+
+        @keyframes expandWidth {
+            from {
+                width: 0;
+            }
+            to {
+                width: 100%;
+            }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 4rem 0;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 2rem;
+            border-left: 4px solid var(--surveillance-red);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            animation: fadeInUp 0.6s ease backwards;
+        }
+
+        .stat-card:nth-child(1) { animation-delay: 0.1s; }
+        .stat-card:nth-child(2) { animation-delay: 0.2s; }
+        .stat-card:nth-child(3) { animation-delay: 0.3s; }
+        .stat-card:nth-child(4) { animation-delay: 0.4s; }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--surveillance-red);
+            font-family: 'Space Mono', monospace;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.95rem;
+            color: var(--shadow-gray);
+            font-weight: 600;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin: 4rem 0 2rem;
+            letter-spacing: -1px;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100px;
+            height: 3px;
+            background: var(--surveillance-red);
+        }
+
+        .timeline {
+            position: relative;
+            padding: 2rem 0 2rem 3rem;
+            margin: 3rem 0;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(180deg, 
+                var(--surveillance-red) 0%,
+                var(--shadow-gray) 100%);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 3rem;
+            animation: slideInRight 0.6s ease backwards;
+        }
+
+        .timeline-item:nth-child(odd) { animation-delay: 0.1s; }
+        .timeline-item:nth-child(even) { animation-delay: 0.2s; }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -3.5rem;
+            top: 0.5rem;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--surveillance-red);
+            border: 3px solid var(--paper-white);
+            box-shadow: 0 0 0 3px var(--surveillance-red);
+        }
+
+        .timeline-date {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--surveillance-red);
+            margin-bottom: 0.5rem;
+            letter-spacing: 1px;
+        }
+
+        .timeline-content {
+            background: white;
+            padding: 1.5rem;
+            border-left: 2px solid var(--grid-gray);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .timeline-content h3 {
+            font-size: 1.25rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: var(--deep-black);
+        }
+
+        .timeline-content p {
+            color: var(--shadow-gray);
+            font-size: 0.95rem;
+        }
+
+        .case-studies {
+            display: grid;
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .case-card {
+            background: white;
+            padding: 2rem;
+            border-top: 3px solid var(--surveillance-red);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            animation: fadeIn 0.8s ease backwards;
+        }
+
+        .case-card:nth-child(1) { animation-delay: 0.1s; }
+        .case-card:nth-child(2) { animation-delay: 0.2s; }
+        .case-card:nth-child(3) { animation-delay: 0.3s; }
+        .case-card:nth-child(4) { animation-delay: 0.4s; }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .case-card:hover {
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        }
+
+        .case-date {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.8rem;
+            color: var(--surveillance-red);
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .case-card h3 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .case-card p {
+            color: var(--shadow-gray);
+            line-height: 1.7;
+        }
+
+        .quote-box {
+            background: var(--deep-black);
+            color: var(--paper-white);
+            padding: 3rem;
+            margin: 4rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quote-box::before {
+            content: '"';
+            position: absolute;
+            top: -20px;
+            left: 20px;
+            font-size: 12rem;
+            font-weight: 800;
+            color: rgba(220, 38, 38, 0.15);
+            line-height: 1;
+        }
+
+        .quote-text {
+            font-size: 1.75rem;
+            font-weight: 300;
+            line-height: 1.5;
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .quote-attribution {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--surveillance-red);
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .warning-banner {
+            background: linear-gradient(135deg, var(--redacted-red), var(--surveillance-red));
+            color: white;
+            padding: 2rem;
+            margin: 3rem 0;
+            border-left: 6px solid var(--deep-black);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .warning-banner::before {
+            content: '⚠';
+            position: absolute;
+            right: -20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 10rem;
+            opacity: 0.1;
+        }
+
+        .warning-banner h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .warning-banner ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .warning-banner li {
+            padding-left: 1.5rem;
+            margin-bottom: 0.75rem;
+            position: relative;
+        }
+
+        .warning-banner li::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            font-weight: 700;
+        }
+
+        .key-points {
+            background: white;
+            padding: 2.5rem;
+            border: 2px solid var(--grid-gray);
+            margin: 3rem 0;
+        }
+
+        .key-points h3 {
+            font-size: 1.75rem;
+            margin-bottom: 1.5rem;
+            color: var(--surveillance-red);
+            font-weight: 700;
+        }
+
+        .key-points ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .key-points li {
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            border-left: 3px solid var(--surveillance-red);
+            background: var(--paper-white);
+            font-weight: 500;
+        }
+
+        .footer {
+            background: var(--deep-black);
+            color: var(--paper-white);
+            padding: 3rem 2rem;
+            margin-top: 4rem;
+            text-align: center;
+        }
+
+        .footer-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .footer p {
+            opacity: 0.8;
+            margin-bottom: 1rem;
+        }
+
+        .source-link {
+            color: var(--surveillance-red);
+            text-decoration: none;
+            font-weight: 600;
+            border-bottom: 2px solid transparent;
+            transition: border-color 0.3s ease;
+        }
+
+        .source-link:hover {
+            border-bottom-color: var(--surveillance-red);
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 2rem 1rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            .container {
+                padding: 2rem 1rem;
+            }
+
+            .timeline {
+                padding-left: 2rem;
+            }
+
+            .stat-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .quote-text {
+                font-size: 1.25rem;
+            }
+
+            .section-title {
+                font-size: 1.75rem;
+            }
+        }
+
+        .scroll-indicator {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--surveillance-red);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 100;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .scroll-indicator.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .scroll-indicator:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(220, 38, 38, 0.4);
+        }
+
+        .section-wrapper {
+            margin: 4rem 0;
+            border: 2px solid var(--grid-gray);
+            background: white;
+            transition: all 0.3s ease;
+        }
+
+        .section-wrapper:hover {
+            border-color: var(--surveillance-red);
+            box-shadow: 0 4px 16px rgba(220, 38, 38, 0.1);
+        }
+
+        .section-header {
+            padding: 2rem;
+            cursor: pointer;
+            user-select: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--paper-white);
+            transition: background 0.3s ease;
+        }
+
+        .section-header:hover {
+            background: white;
+        }
+
+        .section-header h2 {
+            margin: 0;
+            font-size: 2rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        .expand-icon {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--surveillance-red);
+            transition: transform 0.3s ease;
+            font-family: 'Space Mono', monospace;
+        }
+
+        .section-wrapper.expanded .expand-icon {
+            transform: rotate(180deg);
+        }
+
+        .section-summary {
+            padding: 0 2rem 1rem 2rem;
+            color: var(--shadow-gray);
+            font-size: 1.1rem;
+            line-height: 1.7;
+        }
+
+        .section-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease, padding 0.3s ease;
+            padding: 0 2rem;
+        }
+
+        .section-wrapper.expanded .section-content {
+            max-height: 10000px;
+            padding: 0 2rem 2rem 2rem;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .detail-card {
+            background: var(--paper-white);
+            padding: 1.5rem;
+            border-left: 3px solid var(--surveillance-red);
+        }
+
+        .detail-card h4 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: var(--deep-black);
+        }
+
+        .detail-card p {
+            color: var(--shadow-gray);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .detail-list {
+            list-style: none;
+            padding: 0;
+            margin: 1.5rem 0;
+        }
+
+        .detail-list li {
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            background: var(--paper-white);
+            border-left: 3px solid var(--surveillance-red);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .detail-list strong {
+            color: var(--surveillance-red);
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        .click-hint {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--surveillance-red);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            opacity: 0.7;
+            margin-top: 0.5rem;
+        }
+
+        .subsection {
+            margin: 2rem 0;
+            padding: 1.5rem;
+            background: white;
+            border-top: 2px solid var(--grid-gray);
+        }
+
+        .subsection h3 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--surveillance-red);
+        }
+
+        .expanded-quote {
+            background: var(--paper-white);
+            padding: 2rem;
+            margin: 1.5rem 0;
+            border-left: 4px solid var(--surveillance-red);
+            font-style: italic;
+            color: var(--shadow-gray);
+        }
+
+        .data-point {
+            background: var(--deep-black);
+            color: white;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            border-left: 4px solid var(--surveillance-red);
+        }
+
+        .data-point .number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            font-family: 'Space Mono', monospace;
+            color: var(--surveillance-red);
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .data-point .label {
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-content">
+            <div class="classified-stamp">INVESTIGATIVE REPORT</div>
+            <h1>Weaponizing the Administrative Subpoena</h1>
+            <p class="subtitle">How the Department of Homeland Security uses secretive legal tools to target Americans and silence dissent</p>
+            <div class="redacted-bar"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="stat-grid">
+            <div class="stat-card">
+                <div class="stat-number">4</div>
+                <div class="stat-label">Sentences in an email that triggered federal investigation</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">28,622</div>
+                <div class="stat-label">Subpoenas Google received in first half of 2024 (15% increase)</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">7</div>
+                <div class="stat-label">Days given to challenge a subpoena you don't have a copy of</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">0</div>
+                <div class="stat-label">Judicial oversight required for administrative subpoenas</div>
+            </div>
+        </div>
+
+        <h2 class="section-title">Jon's Timeline: From Email to Investigation</h2>
+
+        <div class="section-wrapper" id="timeline-section">
+            <div class="section-header" onclick="toggleSection('timeline-section')">
+                <div>
+                    <h2>Jon's Journey: From Email to Investigation</h2>
+                    <p class="click-hint">Click to expand full timeline</p>
+                </div>
+                <span class="expand-icon">▼</span>
+            </div>
+            <div class="section-summary">
+                In just 5 hours and 1 minute, a retired insurance worker's four-sentence email urging mercy for an asylum seeker triggered a federal investigation that would lead to home visits, subpoenas, and constant surveillance anxiety.
+            </div>
+            <div class="section-content">
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-date">OCTOBER 30, 2024</div>
+                        <div class="timeline-content">
+                            <h3>The Email</h3>
+                            <p>Jon, a 67-year-old retiree in Philadelphia suburbs, reads Washington Post investigation about DHS trying to deport an Afghan asylum seeker. The immigrant, identified as "H," had begged federal officials to reconsider, telling them the Taliban would kill him if returned to Afghanistan.</p>
+                            <div class="expanded-quote">
+                                Jon found prosecutor Joseph Dernbach's email address on Florida's bar association website through a basic Google search. His complete message: "Mr. Dernbach, don't play Russian roulette with H's life. Err on the side of caution. There's a reason the US government along with many other governments don't recognise the Taliban. Apply principles of common sense and decency."
+                            </div>
+                            <p><strong>Time to write:</strong> 5 minutes. Jon signed with his first and last name and pressed send, hoping his plea would make a difference.</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-date">5 HOURS, 1 MINUTE LATER</div>
+                        <div class="timeline-content">
+                            <h3>The Notification</h3>
+                            <p>Jon was watching TV with his wife when an email from Google appeared. He didn't tell his wife right away, worried she would panic.</p>
+                            <div class="expanded-quote">
+                                "Google has received legal process from a Law Enforcement authority compelling the release of information related to your Google Account."<br><br>
+                                Type of legal process: "subpoena"<br>
+                                Authority: "Department of Homeland Security"
+                            </div>
+                            <p>Jon read the message a second time, then a third. It could be fake, he thought, or a mistake. Or maybe it had something to do with that four-sentence email.</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-date">THE NEXT FEW DAYS</div>
+                        <div class="timeline-content">
+                            <h3>The Impossible Challenge</h3>
+                            <p>Google gave Jon seven days to file a motion in federal court to prevent them from releasing his information. But there were problems:</p>
+                            <ul style="margin-top: 1rem; padding-left: 1.5rem;">
+                                <li>Google sent the notice from a "noreply" address</li>
+                                <li>They didn't provide a copy of the subpoena</li>
+                                <li>They didn't explain what information was requested</li>
+                                <li>No phone number to reach them</li>
+                                <li>No way to request more time</li>
+                            </ul>
+                            <p style="margin-top: 1rem;">Jon called immigration lawyer Judi Bernstein-Baker, 80, who asked: "How do you challenge a subpoena you don't have a copy of?" She thought: Unless you're rich, nobody can find an attorney to go to federal court in seven days.</p>
+                            <p>Jon tried to reach DHS through a maddening circuit of answering machines, dead numbers, and uninterested attendants. The federal court had no record of the subpoena. Through Reddit posts and news coverage, Jon worked out it was an administrative subpoena—requiring no judge or grand jury.</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-date">NOVEMBER 17, 2024</div>
+                        <div class="timeline-content">
+                            <h3>The Visit</h3>
+                            <p>9:30 AM. Through the window, Jon's wife saw them coming: "It's the police!" she screamed.</p>
+                            <p>On his porch stood a local officer in uniform with two men in slacks and sport coats carrying DHS badges.</p>
+                            <div class="expanded-quote">
+                                Jon, 5-foot-6, diabetic, with graying hair and a plodding British accent, tried not to panic. He'd seen videos of DHS encounters turning violent—even for women, teenagers, and old men. Inside, he could hear the dog yelping and his wife shouting, "Don't you have anything better to do?"
+                            </div>
+                            <p><strong>The questioning:</strong> The agents showed him a copy of his email to Dernbach. They wanted to "hear his side of the story." When asked how he knew Dernbach's email, Jon explained he found it through Google search. He showed them Google's notice—they seemed surprised, as if they hadn't seen it.</p>
+                            <p><strong>The threat assessment:</strong> The investigators agreed the email broke no law but pointed to mentions of "Russian roulette" and "Taliban." Perhaps the prosecutor felt threatened?</p>
+                            <p><strong>After 20 minutes:</strong> Jon asked if he'd be stopped at airports or put on a list. The men assured him: "Of course not. You have nothing to worry about."</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-date">NOVEMBER 21, 2024</div>
+                        <div class="timeline-content">
+                            <h3>The Revelation</h3>
+                            <p>22 days after the initial notification, Google finally provided Jon a copy of the subpoena (after a Washington Post reporter contacted them about his case).</p>
+                            <div class="data-point">
+                                <div class="number">What DHS Demanded:</div>
+                                <ul style="margin-top: 1rem; padding-left: 1.5rem;">
+                                    <li>Day, time, and duration of all online sessions since Sept 1</li>
+                                    <li>Every associated IP and physical address</li>
+                                    <li>List of each service used</li>
+                                    <li>Any alternate usernames and email addresses</li>
+                                    <li>Date account was opened</li>
+                                    <li>Credit card numbers</li>
+                                    <li>Driver's license number</li>
+                                    <li>Social Security number</li>
+                                </ul>
+                            </div>
+                            <p><strong>Another revelation:</strong> Google informed Jon it had "not yet responded" to DHS's demand. He'd assumed they provided everything weeks earlier, before the agents visited. Google never explained the delay.</p>
+                            <p><strong>The gag request:</strong> On the subpoena's final page, DHS had asked Google not to tell Jon: "Any such disclosure will impede the investigation and thereby interfere with the enforcement of federal law." Google ignored that request.</p>
+                            <p><strong>The terrifying implication:</strong> If Google never sent the information, how did those federal agents track him down?</p>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-date">DECEMBER 2024</div>
+                        <div class="timeline-content">
+                            <h3>The Aftermath</h3>
+                            <p>Just before Christmas, Jon and his wife left for Puerto Rico to celebrate their 40th anniversary. At the airport outside San Juan, they waited at baggage claim until every other passenger had left.</p>
+                            <p>"Is this a coincidence?" Jon asked his wife when their luggage finally arrived at the cruise ship.</p>
+                            <div class="data-point">
+                                <div class="label">In Jon's bag, a notice from TSA:</div>
+                                <div style="margin-top: 1rem; font-style: italic;">"Your bag was among those selected for physical inspection."</div>
+                                <div style="margin-top: 1rem;">It did not explain why.</div>
+                            </div>
+                            <p><strong>Legal response:</strong> ACLU agreed to represent Jon pro bono, filing a motion to quash in federal court on Monday, January 27, 2025. His attorneys accused DHS of violating the statute limiting administrative subpoenas to "immigration enforcement" and violating Jon's First Amendment rights.</p>
+                            <p><strong>Living with surveillance:</strong> Jon now wonders constantly: What if the U.S. government had investigated him in other ways? And what if it still was?</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3>Jon's Background: A Lifetime of Activism</h3>
+                    <p>Born in England to a Jewish family, Jon grew up hearing how his mother, at 20, joined an intelligence service during the Holocaust to help Britain fight the Nazis.</p>
+                    <ul class="detail-list">
+                        <li><strong>1978, Wales:</strong> While studying law and politics at Cardiff University, organized protest of Soviet oppression of Jews. Later traveled to USSR to visit ostracized families.</li>
+                        <li><strong>1980s, Israel:</strong> Demonstrated against West Bank resettlement movement.</li>
+                        <li><strong>1980s, Britain:</strong> Supported mine workers in dispute with PM Margaret Thatcher. Worked in British law representing social workers from London's poorest neighborhoods.</li>
+                        <li><strong>1989, United States:</strong> Moved to Pennsylvania to raise a family near Independence Hall. Applied for citizenship after watching President George H.W. Bush sign Immigration Act of 1990.</li>
+                        <li><strong>Recent years:</strong> After retiring from insurance work, enrolled at Villanova University's certificate program to help immigrants navigate the legal system. Attended No Kings rally, occasionally wrote to lawmakers.</li>
+                    </ul>
+                    <div class="expanded-quote">
+                        "He admired nothing more about the U.S. than the Constitution he'd studied before swearing his oath of allegiance. The rights it guaranteed made the country unlike any in the world, Jon thought, and he was proud to be part of it. Now, in his 27th year as a citizen, he was staring at his phone, terrified that the same country was trying to strip him of those rights."
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="quote-box">
+            <p class="quote-text">It doesn't take that much to make people look over their shoulder, to think twice before they speak again. That's why these kinds of subpoenas and other actions — the visits — are so pernicious.</p>
+            <p class="quote-attribution">— NATHAN FREED WESSLER, ACLU ATTORNEY</p>
+        </div>
+
+        <div class="section-wrapper" id="cases-section">
+            <div class="section-header" onclick="toggleSection('cases-section')">
+                <div>
+                    <h2>Pattern of Surveillance: Other Recent Cases</h2>
+                    <p class="click-hint">Click to expand case details</p>
+                </div>
+                <span class="expand-icon">▼</span>
+            </div>
+            <div class="section-summary">
+                Jon's case is not isolated. Since Trump's second term began, DHS has used administrative subpoenas against universities, hospitals, social media users, and anyone who dares to monitor or criticize immigration enforcement.
+            </div>
+            <div class="section-content">
+                <div class="case-studies">
+                    <div class="case-card">
+                        <div class="case-date">MARCH 2024</div>
+                        <h3>Columbia University Student</h3>
+                        <p>DHS issued two administrative subpoenas to Columbia for information on a student it sought to deport after she participated in pro-Palestinian protests on campus.</p>
+                        <div class="detail-grid" style="margin-top: 1.5rem;">
+                            <div class="detail-card">
+                                <h4>The Context</h4>
+                                <p>Student participated in campus demonstrations supporting Palestinian rights during heightened tensions over Israel-Gaza conflict.</p>
+                            </div>
+                            <div class="detail-card">
+                                <h4>The Demand</h4>
+                                <p>Two separate administrative subpoenas demanding student records and information from the university.</p>
+                            </div>
+                            <div class="detail-card">
+                                <h4>The Message</h4>
+                                <p>Political speech and protest activity can trigger deportation proceedings—even for students legally in the country.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="case-card">
+                        <div class="case-date">JULY 2024</div>
+                        <h3>Harvard University Records</h3>
+                        <p>DHS demanded broad employment records from Harvard with what the school's attorneys described as "unprecedented administrative subpoenas."</p>
+                        <div class="detail-grid" style="margin-top: 1.5rem;">
+                            <div class="detail-card">
+                                <h4>The Unprecedented Scope</h4>
+                                <p>Harvard's own attorneys called these subpoenas "unprecedented"—suggesting a scale or breadth beyond normal government requests.</p>
+                            </div>
+                            <div class="detail-card">
+                                <h4>Employment Records</h4>
+                                <p>Broad demands for employment information, potentially affecting large numbers of faculty, staff, or contractors.</p>
+                            </div>
+                            <div class="detail-card">
+                                <h4>Academic Freedom</h4>
+                                <p>Raises concerns about government intrusion into university operations and potential chilling effects on academic institutions.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="case-card">
+                        <div class="case-date">SEPTEMBER 2024</div>
+                        <h3>Instagram ICE Raid Monitors</h3>
+                        <p>DHS used administrative subpoena to identify Instagram users posting about ICE raids in Los Angeles. Government dropped the case after ACLU filed 40-page legal challenge.</p>
+                        <div class="detail-grid" style="margin-top: 1.5rem;">
+                            <div class="detail-card">
+                                <h4>The Monitoring</h4>
+                                <p>Instagram users were tracking and posting about ICE enforcement activities in Los Angeles—documenting government actions in public spaces.</p>
+                            </div>
+                            <div class="detail-card">
+                                <h4>DHS's Argument</h4>
+                                <p>Federal attorneys claimed the accounts "invited scrutiny" by posting pictures of ICE agents' faces, license plates, and weapons—suggesting this public documentation was somehow threatening.</p>
+                            </div>
+                            <div class="detail-card">
+                                <h4>The Outcome</h4>
+                                <p>After ACLU filed a comprehensive 40-page legal challenge, DHS withdrew the subpoena entirely—suggesting the government knew it couldn't defend the surveillance in court.</p>
+                            </div>
+                        </div>
+                        <div class="expanded-quote" style="margin-top: 1.5rem;">
+                            This case demonstrates both the government's willingness to surveil those who document ICE activities AND the power of legal pushback—when resources are available to challenge these subpoenas, DHS often backs down.
+                        </div>
+                    </div>
+
+                    <div class="case-card">
+                        <div class="case-date">DECEMBER 2024</div>
+                        <h3>Pennsylvania Facebook ICE Monitors</h3>
+                        <p>In Montgomery County, PA, DHS asked Meta to identify people behind Facebook and Instagram accounts tracking ICE raids. Government withdrew after legal challenge.</p>
+                        <div class="detail-grid" style="margin-top: 1.5rem;">
+                            <div class="detail-card">
+                                <h4>The Government's Claim</h4>
+                                <p>"John Doe, through his social media accounts, is threatening ICE agents to impede the performance of their duties."</p>
+                            </div>
+                            <div class="detail-card">
+                                <h4>The Evidence</h4>
+                                <p>Federal attorneys pointed to posts showing ICE agents' faces, license plates, and weapons—public information photographed in public spaces.</p>
+                            </div>
+                            <div class="detail-card">
+                                <h4>Pattern Recognition</h4>
+                                <p>Same playbook as LA case: claim documentation equals threats, withdraw when legally challenged. Shows systematic targeting of ICE monitors.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="case-card">
+                        <div class="case-date">LATE 2024</div>
+                        <h3>Minnesota Hospital Workers (7,000 People)</h3>
+                        <p>DHS demanded detailed personal information about 7,000 workers in a Minnesota health system whose staff had protested ICE's intrusion into one of its hospitals.</p>
+                        <div class="detail-grid" style="margin-top: 1.5rem;">
+                            <div class="detail-card">
+                                <h4>The Trigger</h4>
+                                <p>Hospital staff protested ICE entering their facility—raising concerns about patient safety, medical ethics, and the sanctity of healthcare spaces.</p>
+                            </div>
+                            <div class="detail-card">
+                                <h4>The Scope</h4>
+                                <p>7,000 workers—an unprecedented dragnet affecting an entire health system's workforce, the vast majority of whom likely had nothing to do with the protest.</p>
+                            </div>
+                            <div class="detail-card">
+                                <h4>The Chilling Effect</h4>
+                                <p>Healthcare workers now face surveillance for advocating patient safety. The message: defend immigrants or vulnerable populations, and we'll investigate thousands of your colleagues.</p>
+                            </div>
+                        </div>
+                        <div class="data-point" style="margin-top: 1.5rem;">
+                            <div class="number">7,000</div>
+                            <div class="label">The number of workers whose personal information DHS demanded—demonstrating how administrative subpoenas can enable mass surveillance far beyond legitimate investigative needs.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3>Common Patterns Across Cases</h3>
+                    <ul class="detail-list">
+                        <li><strong>First Amendment Activity:</strong> Nearly all cases involve people exercising constitutionally protected rights—protest, documentation of government activity, political speech.</li>
+                        <li><strong>Withdrawal When Challenged:</strong> In multiple cases, DHS withdrew subpoenas after facing legal opposition, suggesting weak legal foundation.</li>
+                        <li><strong>Targeting Critics:</strong> Pattern of targeting those who monitor, document, or criticize immigration enforcement activities.</li>
+                        <li><strong>Intimidation Over Prosecution:</strong> No evidence of successful prosecutions—the surveillance itself appears to be the point.</li>
+                        <li><strong>Escalating Scope:</strong> From individual students to 7,000 hospital workers—the scale of surveillance is expanding.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="warning-banner">
+            <h3>What Administrative Subpoenas Can Demand</h3>
+            <ul>
+                <li>Complete internet session history (dates, times, durations)</li>
+                <li>All IP addresses and physical addresses</li>
+                <li>Lists of every service used</li>
+                <li>Alternate usernames and email addresses</li>
+                <li>Account creation dates</li>
+                <li>Credit card numbers</li>
+                <li>Driver's license numbers</li>
+                <li>Social Security numbers</li>
+                <li>Employment records</li>
+                <li>University records</li>
+            </ul>
+        </div>
+
+        <div class="section-wrapper" id="how-it-works-section">
+            <div class="section-header" onclick="toggleSection('how-it-works-section')">
+                <div>
+                    <h2>How Administrative Subpoenas Work</h2>
+                    <p class="click-hint">Click to expand full details</p>
+                </div>
+                <span class="expand-icon">▼</span>
+            </div>
+            <div class="section-summary">
+                Administrative subpoenas are powerful legal weapons that require no judicial oversight, can be issued in minutes by mid-level officials, and give targeted individuals only days to mount a legal defense—often before they even receive a copy.
+            </div>
+            <div class="section-content">
+                <div class="key-points">
+                    <h3>The Crucial Differences from Judicial Subpoenas</h3>
+                    <ul>
+                        <li><strong>NO JUDICIAL OVERSIGHT:</strong> Unlike traditional subpoenas, administrative versions require no judge or grand jury approval—removing the constitutional check on government power.</li>
+                        <li><strong>ISSUED IN MINUTES:</strong> Federal officials throughout DHS, even in mid-level roles, can approve them with no external bureaucracy. Former investigators say they take "just minutes to write up."</li>
+                        <li><strong>SECRET BY DEFAULT:</strong> Government can request companies not notify users, though companies may ignore this request. Many users never learn they've been surveilled.</li>
+                        <li><strong>THOUSANDS ISSUED ANNUALLY:</strong> DHS not required to report numbers, but experts estimate tens of thousands per year—a surveillance apparatus operating in the shadows.</li>
+                        <li><strong>SEVEN-DAY CHALLENGE WINDOW:</strong> Users given only one week to file federal court motion to quash—often before receiving copy of subpoena, creating an impossible timeline.</li>
+                        <li><strong>NO RAMIFICATIONS FOR ABUSE:</strong> Even if courts find violations of constitutional rights, agency faces no requirement to stop the practice or face consequences.</li>
+                    </ul>
+                </div>
+
+                <div class="subsection">
+                    <h3>Historical Context: How We Got Here</h3>
+                    <p>The U.S. government has issued administrative subpoenas for decades, but their use expanded dramatically—and became far more controversial—after September 11, 2001.</p>
+                    <div class="detail-grid">
+                        <div class="detail-card">
+                            <h4>Post-9/11 Expansion</h4>
+                            <p>Justified as necessary for rapid response to terrorism threats, administrative subpoena powers were dramatically expanded across federal agencies.</p>
+                        </div>
+                        <div class="detail-card">
+                            <h4>Widespread Authority</h4>
+                            <p>A vast range of agencies—from FBI to Labor Department—can now deploy them for specific types of investigations, creating a patchwork of surveillance powers.</p>
+                        </div>
+                        <div class="detail-card">
+                            <h4>Previous Concerns</h4>
+                            <p>Even under previous administrations, the government faced accusations of overstepping laws and guidelines that restrict subpoena use.</p>
+                        </div>
+                    </div>
+                    <div class="expanded-quote" style="margin-top: 1.5rem;">
+                        "This vast administrative power has remained opaque even to those who receive these subpoenas and invisible to those it affects most." — Lindsay Nash, professor and researcher, Columbia Law Review
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3>The Government's Defense</h3>
+                    <p>Proponents describe administrative subpoenas as critical tools allowing investigators to avoid protracted judicial reviews to obtain information quickly.</p>
+                    <ul class="detail-list">
+                        <li><strong>Speed Advantage:</strong> With no external bureaucracy, government can obtain phone, financial, and internet records in days instead of weeks or months.</li>
+                        <li><strong>Child Protection:</strong> Cited use case: identifying someone sexually exploiting a child without delays from judicial review.</li>
+                        <li><strong>Drug Trafficking:</strong> Tracking suspected drug traffickers who might flee during lengthy court processes.</li>
+                        <li><strong>Immigration Enforcement:</strong> DHS claims authority under laws governing immigration investigations.</li>
+                    </ul>
+                    <div class="expanded-quote" style="margin-top: 1.5rem;">
+                        DHS Assistant Secretary Tricia McLaughlin's statement on Jon's case: "This subpoena was part of a criminal investigation. Homeland Security Investigations has 'broad administrative subpoena authority' under the law."
+                        <br><br>
+                        <em>Note: McLaughlin didn't say who was under criminal investigation, and DHS didn't answer questions about Jon's case or its broader use of administrative subpoenas.</em>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3>The Critics' Concerns</h3>
+                    <p>Civil rights groups and privacy advocates argue that the lack of independent oversight and the secrecy with which subpoenas can be wielded threaten core democratic principles.</p>
+                    <div class="data-point">
+                        <div class="label" style="font-size: 1.1rem; margin-bottom: 1rem;">Jennifer Granick, ACLU Attorney:</div>
+                        <p style="margin: 0;">"There's no oversight ahead of time, and there's no ramifications for having abused it after the fact. As we are increasingly in a world where unmasking critics is important to the administration, this type of legal process is ripe for that kind of abuse."</p>
+                    </div>
+                    <ul class="detail-list" style="margin-top: 1.5rem;">
+                        <li><strong>No Pre-Approval Check:</strong> Without judicial review, there's no neutral party evaluating whether the subpoena is justified, narrowly tailored, or constitutionally sound.</li>
+                        <li><strong>No Post-Issuance Accountability:</strong> Even when courts find abuse, there are typically no consequences for the officials who issued improper subpoenas.</li>
+                        <li><strong>Chilling Effect on Speech:</strong> Knowledge that criticizing government can trigger surveillance makes people "look over their shoulder, think twice before they speak again."</li>
+                        <li><strong>Disparate Impact:</strong> Only wealthy individuals or those with access to pro bono representation can effectively challenge these subpoenas in the seven-day window.</li>
+                        <li><strong>Secret Surveillance:</strong> If companies comply with non-disclosure requests, citizens can be surveilled without ever knowing—no oversight, no transparency, no accountability.</li>
+                    </ul>
+                </div>
+
+                <div class="subsection">
+                    <h3>What They Can Demand</h3>
+                    <p>The scope of information accessible through administrative subpoenas is extraordinarily broad:</p>
+                    <div class="detail-grid">
+                        <div class="detail-card">
+                            <h4>Internet Activity</h4>
+                            <p>Complete session history, all IP addresses, browsing patterns, service usage, account creation dates, alternate usernames</p>
+                        </div>
+                        <div class="detail-card">
+                            <h4>Financial Data</h4>
+                            <p>Credit card numbers, transaction histories, bank account information, payment patterns</p>
+                        </div>
+                        <div class="detail-card">
+                            <h4>Personal Identifiers</h4>
+                            <p>Social Security numbers, driver's license numbers, passport information, physical addresses</p>
+                        </div>
+                        <div class="detail-card">
+                            <h4>Employment & Education</h4>
+                            <p>University records, employment histories, institutional affiliations, personnel files</p>
+                        </div>
+                        <div class="detail-card">
+                            <h4>Communications Metadata</h4>
+                            <p>Who you contact, when, how often—everything except the content itself (which requires different legal process)</p>
+                        </div>
+                        <div class="detail-card">
+                            <h4>Location Data</h4>
+                            <p>IP address history can reveal location patterns, movements, and associations over time</p>
+                        </div>
+                    </div>
+                    <div class="expanded-quote" style="margin-top: 1.5rem;">
+                        The investigators who questioned Jon told him DHS couldn't obtain emails, documents, photos, or other <em>content</em> with an administrative subpoena—but the breadth of metadata they <em>can</em> access creates a detailed portrait of someone's life, associations, and activities.
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3>The Impossible Process</h3>
+                    <p>Jon's experience reveals how the system is "rigged to keep people in the dark":</p>
+                    <ul class="detail-list">
+                        <li><strong>Day 1:</strong> Google sends notification from "noreply" address—no way to respond with questions.</li>
+                        <li><strong>Day 1-7:</strong> Seven-day clock starts, but Google doesn't provide copy of subpoena or explain what information is requested.</li>
+                        <li><strong>No Extension Option:</strong> Google can extend deadline but never tells users this or provides way to request more time.</li>
+                        <li><strong>Court Has No Record:</strong> Administrative subpoenas don't go through courts, so calling the listed federal district yields no information.</li>
+                        <li><strong>Agency Unreachable:</strong> "Maddening, hours-long circuit of answering machines, dead numbers and uninterested attendants."</li>
+                        <li><strong>Rich vs. Poor Justice:</strong> "Unless you're rich, nobody can find an attorney to go to federal court in seven days."</li>
+                        <li><strong>No Copy Until Too Late:</strong> Jon received his subpoena copy 22 days after notification—only after Washington Post contacted Google.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="quote-box">
+            <p class="quote-text">There's no oversight ahead of time, and there's no ramifications for having abused it after the fact. As we are increasingly in a world where unmasking critics is important to the administration, this type of legal process is ripe for that kind of abuse.</p>
+            <p class="quote-attribution">— JENNIFER GRANICK, ACLU ATTORNEY</p>
+        </div>
+
+        <div class="section-wrapper" id="tech-companies-section">
+            <div class="section-header" onclick="toggleSection('tech-companies-section')">
+                <div>
+                    <h2>Tech Companies' Response & Transparency</h2>
+                    <p class="click-hint">Click to expand company policies</p>
+                </div>
+                <span class="expand-icon">▼</span>
+            </div>
+            <div class="section-summary">
+                Tech companies sit at the crossroads between government surveillance and user privacy. Their policies on notification, transparency, and resistance vary dramatically—with direct consequences for Americans' constitutional rights.
+            </div>
+            <div class="section-content">
+                <div class="key-points">
+                    <h3>Company Notification Policies</h3>
+                    <ul>
+                        <li><strong>NOTIFY USERS (Unless Prohibited):</strong> Google, Meta, Microsoft, Amazon, Apple, Snap — alert users to administrative subpoenas unless legally prohibited or in extenuating circumstances like life-threatening situations</li>
+                        <li><strong>NOTIFY ONLY IF REQUIRED BY LAW:</strong> T-Mobile, TikTok — notify users only when legally mandated, not as default practice</li>
+                        <li><strong>REFUSED TO DISCLOSE POLICY:</strong> Verizon, AT&T — wouldn't tell Washington Post whether they provide any notice</li>
+                        <li><strong>NO RESPONSE:</strong> X (formerly Twitter) — did not reply to questions about notification policies</li>
+                    </ul>
+                </div>
+
+                <div class="subsection">
+                    <h3>Record Subpoena Volume in 2024</h3>
+                    <div class="data-point">
+                        <div class="number">28,622</div>
+                        <div class="label">Subpoenas Google received in first half of 2024—a 15% increase over previous six months and the highest number since they began sharing data in 2012</div>
+                    </div>
+                    <p style="margin-top: 1.5rem;">Both Google and Meta received record numbers of subpoenas in the U.S. during the first half of 2024, as Trump began his second term.</p>
+                    <div class="expanded-quote" style="margin-top: 1.5rem;">
+                        <strong>Critical Gap in Transparency:</strong> These numbers don't differentiate between judicial and administrative subpoenas. This obscures the extent of warrantless surveillance happening without judicial oversight. The public cannot know how many of these 28,622 subpoenas involved a judge's approval versus being issued unilaterally by government officials.
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3>Google's Role in Jon's Case</h3>
+                    <p>Google's handling of Jon's subpoena reveals both the protection and limitations of company policies:</p>
+                    <ul class="detail-list">
+                        <li><strong>The Notification (Hour 5):</strong> Google alerted Jon to the subpoena five hours after DHS issued it—ignoring the government's request not to disclose. This notification was crucial: without it, Jon would never have known he was under surveillance.</li>
+                        <li><strong>The Catch-22 (Week 1):</strong> Notification came from "noreply" address with seven-day deadline to challenge—but no copy of the subpoena, no explanation of what data was requested, and no way to request more time.</li>
+                        <li><strong>The Delay (Week 3):</strong> Google didn't provide Jon the subpoena copy until 22 days later, and only after Washington Post contacted them—well past the seven-day challenge window.</li>
+                        <li><strong>The Protection (Ongoing):</strong> As of Jon's ACLU filing, Google had "not yet responded" to DHS's demand—protecting Jon's data even as the investigation continued.</li>
+                        <li><strong>The Silence (Throughout):</strong> Google never explained why it took 22 days to provide the subpoena copy, whether it could have extended the deadline, or how it decides when to comply versus resist.</li>
+                    </ul>
+                    <div class="expanded-quote" style="margin-top: 1.5rem;">
+                        Google spokesperson: "Our processes for handling law enforcement subpoenas are designed to protect users' privacy while meeting our legal obligations. We review all legal demands for legal validity, and we push back against those that are overbroad or improper, including objecting to some entirely."
+                        <br><br>
+                        <em>Translation: Google does resist some subpoenas—but won't say which ones, how often, or under what criteria. Users are left in the dark about whether their data is being protected or surrendered.</em>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3>What Google Can Reveal (Based on Jon's Subpoena)</h3>
+                    <div class="detail-grid">
+                        <div class="detail-card">
+                            <h4>Activity Logs</h4>
+                            <p><strong>Requested:</strong> Day, time, and duration of all online sessions since September 1<br><strong>Impact:</strong> Complete timeline of Jon's internet usage patterns</p>
+                        </div>
+                        <div class="detail-card">
+                            <h4>Location Data</h4>
+                            <p><strong>Requested:</strong> Every associated IP and physical address<br><strong>Impact:</strong> Reveals where Jon accesses internet, his movements, potential associates</p>
+                        </div>
+                        <div class="detail-card">
+                            <h4>Service Usage</h4>
+                            <p><strong>Requested:</strong> List of each Google service used<br><strong>Impact:</strong> Gmail, Maps, YouTube, Drive—reveals interests, activities, contacts</p>
+                        </div>
+                        <div class="detail-card">
+                            <h4>Alternative Identities</h4>
+                            <p><strong>Requested:</strong> Any alternate usernames and email addresses<br><strong>Impact:</strong> Exposes other online personas, additional surveillance targets</p>
+                        </div>
+                        <div class="detail-card">
+                            <h4>Account History</h4>
+                            <p><strong>Requested:</strong> Date account was opened<br><strong>Impact:</strong> Establishes how long someone has used Google services</p>
+                        </div>
+                        <div class="detail-card">
+                            <h4>Financial & Identity Data</h4>
+                            <p><strong>Requested:</strong> Credit card, driver's license, and Social Security numbers<br><strong>Impact:</strong> Creates comprehensive identity profile, potential for broader investigation</p>
+                        </div>
+                    </div>
+                    <div class="expanded-quote" style="margin-top: 1.5rem;">
+                        What's NOT included: Email content, documents, photos, or other files. DHS investigators told Jon they couldn't access content with an administrative subpoena—but the metadata they can access creates a detailed map of someone's digital life.
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3>The Transparency Problem</h3>
+                    <p>Large tech firms regularly publish "transparency reports" showing government data requests—but critical information is missing:</p>
+                    <ul class="detail-list">
+                        <li><strong>No Differentiation:</strong> Reports lump together judicial and administrative subpoenas despite fundamental differences in oversight and constitutional protection.</li>
+                        <li><strong>No Compliance Rates:</strong> Companies don't reveal how often they comply with versus resist administrative subpoenas.</li>
+                        <li><strong>No Criteria Disclosure:</strong> What makes a subpoena "overbroad or improper"? Companies won't say.</li>
+                        <li><strong>No User-Level Detail:</strong> Users can't find out if their specific data was requested or surrendered.</li>
+                        <li><strong>No Timing Information:</strong> How long do companies take to respond? When do they notify users? When do they provide subpoena copies? Unclear.</li>
+                    </ul>
+                    <div class="data-point" style="margin-top: 1.5rem;">
+                        <div class="label">The result:</div>
+                        <p style="margin-top: 1rem;">A surveillance system operating with minimal transparency, where users must trust that companies are protecting their rights—but have no way to verify those protections or hold anyone accountable when they fail.</p>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3>Comparison: Company by Company</h3>
+                    <div class="detail-grid">
+                        <div class="detail-card">
+                            <h4>Google</h4>
+                            <p><strong>Policy:</strong> Notify unless prohibited<br><strong>Jon's Case:</strong> Notified immediately, ignored gag request, delayed providing copy<br><strong>Rating:</strong> Protected user but process unclear</p>
+                        </div>
+                        <div class="detail-card">
+                            <h4>Meta</h4>
+                            <p><strong>Policy:</strong> Notify unless prohibited<br><strong>Cases:</strong> DHS targeted Instagram/Facebook ICE monitors<br><strong>Rating:</strong> Similar to Google</p>
+                        </div>
+                        <div class="detail-card">
+                            <h4>Microsoft, Amazon, Apple, Snap</h4>
+                            <p><strong>Policy:</strong> Notify unless prohibited or extenuating circumstances<br><strong>Rating:</strong> Pro-user disclosure stance</p>
+                        </div>
+                        <div class="detail-card">
+                            <h4>T-Mobile, TikTok</h4>
+                            <p><strong>Policy:</strong> Notify only when required by law<br><strong>Rating:</strong> Minimal user protection</p>
+                        </div>
+                        <div class="detail-card">
+                            <h4>Verizon, AT&T</h4>
+                            <p><strong>Policy:</strong> REFUSED TO DISCLOSE<br><strong>Rating:</strong> Complete lack of transparency</p>
+                        </div>
+                        <div class="detail-card">
+                            <h4>X (Twitter)</h4>
+                            <p><strong>Policy:</strong> NO RESPONSE TO INQUIRY<br><strong>Rating:</strong> Unknown, concerning silence</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3>The Seven-Day Trap</h3>
+                    <p>Even when companies notify users, the system is designed to prevent effective challenges:</p>
+                    <div class="detail-grid">
+                        <div class="detail-card">
+                            <h4>The Timeline</h4>
+                            <p>Seven days to file federal court motion—an impossible deadline for most Americans without pre-existing legal representation.</p>
+                        </div>
+                        <div class="detail-card">
+                            <h4>The Cost</h4>
+                            <p>Federal litigation requires attorneys, court filings, legal research. "Unless you're rich," one lawyer noted, most can't mount a defense.</p>
+                        </div>
+                        <div class="detail-card">
+                            <h4>The Information Gap</h4>
+                            <p>Companies often don't provide subpoena copy in time to challenge it—users must defend against unknown accusations.</p>
+                        </div>
+                        <div class="detail-card">
+                            <h4>The Outcome</h4>
+                            <p>Most subpoenas go unchallenged. Only those with resources or lucky enough to attract ACLU attention can fight back.</p>
+                        </div>
+                    </div>
+                    <div class="expanded-quote" style="margin-top: 1.5rem;">
+                        Jon was fortunate: his case attracted media attention and ACLU representation. Most Americans targeted by administrative subpoenas have neither. Their data is surrendered without a fight, their surveillance happens without oversight, and they may never know their constitutional rights were violated.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="warning-banner">
+            <h3>Record Subpoena Volume in 2024</h3>
+            <p>Both Google and Meta received record numbers of subpoenas in the U.S. during the first half of 2024, as Trump began his second term. Google received 28,622 subpoenas — a 15% increase over the previous six months and the highest number since they began sharing data in 2012.</p>
+            <p style="margin-top: 1rem; font-style: italic;">Note: These numbers don't differentiate between judicial and administrative subpoenas, obscuring the extent of warrantless surveillance.</p>
+        </div>
+
+        <div class="warning-banner">
+            <h3>The Chilling Effect in Action</h3>
+            <p>After Jon shared his story with fellow activists on a train to Philadelphia, one organizer realized the implications:</p>
+            <p style="margin-top: 1rem;"><em>"I organize this weekly gathering... called 'We the People Wednesdays.' The group takes on a different topic each week and writes postcards to public officials. This is exactly the kind of thing we do. And we tell people to sign their names and Zip codes. If that's subject to surveillance, then anything could be."</em></p>
+            <p style="margin-top: 1rem; font-weight: 700;">This is how democracy dies — not with mass arrests, but with subtle intimidation that makes people think twice before speaking.</p>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div class="footer-content">
+            <p><strong>This visualization is based on investigative reporting by The Washington Post</strong></p>
+            <p>Article by John Woodrow Cox | Published February 3, 2026</p>
+            <p style="margin-top: 2rem;">
+                <a href="#" class="source-link">Read the full investigation at The Washington Post</a>
+            </p>
+            <p style="margin-top: 2rem; font-size: 0.9rem; opacity: 0.7;">
+                "There are no real safeguards anymore, until people recognize that we're all potential targets." — Jon
+            </p>
+        </div>
+    </div>
+
+    <div class="scroll-indicator" id="scrollTop">↑</div>
+
+    <script>
+        // Toggle section expansion
+        function toggleSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            section.classList.toggle('expanded');
+        }
+
+        // Scroll to top functionality
+        const scrollIndicator = document.getElementById('scrollTop');
+        
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 500) {
+                scrollIndicator.classList.add('visible');
+            } else {
+                scrollIndicator.classList.remove('visible');
+            }
+        });
+
+        scrollIndicator.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Intersection Observer for fade-in animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animationPlayState = 'running';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all animated elements
+        document.querySelectorAll('.stat-card, .timeline-item, .case-card').forEach(el => {
+            el.style.animationPlayState = 'paused';
+            observer.observe(el);
+        });
+    </script>
+</body>
+</html>
