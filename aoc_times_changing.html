@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AOC: A New Voice for Changing Times</title>
+    <style>
+        body {
+            font-family: 'Georgia', serif;
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 20px;
+            background: linear-gradient(to bottom, #f5f5dc 0%, #fffaf0 100%);
+            color: #2c2c2c;
+            line-height: 1.8;
+        }
+        
+        .header-banner {
+            background: linear-gradient(135deg, #8b0000 0%, #dc143c 100%);
+            color: white;
+            padding: 30px;
+            margin: -20px -20px 30px -20px;
+            text-align: center;
+            border-bottom: 5px solid #660000;
+        }
+        
+        h1 {
+            font-size: 2.8em;
+            margin: 0 0 10px 0;
+            font-style: italic;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .subtitle {
+            font-size: 1.3em;
+            font-style: italic;
+            margin: 10px 0;
+            opacity: 0.9;
+        }
+        
+        .context-link {
+            margin-top: 15px;
+            padding: 10px 20px;
+            background-color: rgba(255,255,255,0.2);
+            border-radius: 5px;
+            display: inline-block;
+        }
+        
+        .context-link a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+        
+        .context-link a:hover {
+            text-decoration: underline;
+        }
+        
+        .dylan-quote {
+            text-align: center;
+            font-style: italic;
+            margin: 30px 0;
+            font-size: 1.2em;
+            color: #8b0000;
+            padding: 25px;
+            border-left: 5px solid #8b0000;
+            border-right: 5px solid #8b0000;
+            background-color: #fff;
+            font-weight: bold;
+        }
+        
+        h2 {
+            color: #8b0000;
+            border-bottom: 3px solid #8b0000;
+            padding-bottom: 8px;
+            margin-top: 40px;
+            font-style: italic;
+            font-size: 1.8em;
+        }
+        
+        details {
+            margin: 30px 0;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        details[open] {
+            box-shadow: 0 4px 12px rgba(139,0,0,0.2);
+        }
+        
+        summary {
+            cursor: pointer;
+            padding: 20px 25px;
+            background: linear-gradient(to right, #8b0000 0%, #dc143c 100%);
+            color: white;
+            font-size: 1.8em;
+            font-style: italic;
+            font-weight: bold;
+            list-style: none;
+            position: relative;
+            user-select: none;
+            transition: all 0.3s ease;
+        }
+        
+        summary::-webkit-details-marker {
+            display: none;
+        }
+        
+        summary::after {
+            content: "▼";
+            position: absolute;
+            right: 25px;
+            top: 50%;
+            transform: translateY(-50%) rotate(-90deg);
+            transition: transform 0.3s ease;
+            font-size: 0.8em;
+        }
+        
+        details[open] summary::after {
+            transform: translateY(-50%) rotate(0deg);
+        }
+        
+        summary:hover {
+            background: linear-gradient(to right, #660000 0%, #b01030 100%);
+        }
+        
+        .section-content {
+            padding: 25px;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        details h2 {
+            display: none;
+        }
+        
+        .intro-section {
+            font-size: 1.15em;
+            margin: 30px 0;
+            padding: 25px;
+            background: linear-gradient(to right, #fff 0%, #fffaf0 100%);
+            border-left: 5px solid #dc143c;
+            font-style: italic;
+        }
+        
+        .key-stat {
+            display: inline-block;
+            background-color: #8b0000;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-weight: bold;
+            margin: 0 2px;
+        }
+        
+        .highlight {
+            background-color: #fff3cd;
+            padding: 2px 5px;
+            border-radius: 2px;
+            font-weight: bold;
+            color: #8b0000;
+        }
+        
+        .parallel-box {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 30px 0;
+        }
+        
+        .parallel-item {
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .parallel-item h3 {
+            color: #8b0000;
+            margin-top: 0;
+            border-bottom: 2px solid #dc143c;
+            padding-bottom: 5px;
+        }
+        
+        .timeline-item {
+            margin: 20px 0;
+            padding: 20px;
+            background-color: #fff;
+            border-left: 5px solid #dc143c;
+            position: relative;
+        }
+        
+        .timeline-item::before {
+            content: "●";
+            position: absolute;
+            left: -13px;
+            top: 20px;
+            color: #8b0000;
+            font-size: 1.5em;
+            background-color: #f5f5dc;
+        }
+        
+        .quote-box {
+            margin: 25px 0;
+            padding: 20px;
+            background-color: #f8f8f8;
+            border-left: 5px solid #8b0000;
+            font-style: italic;
+            font-size: 1.1em;
+        }
+        
+        .quote-attribution {
+            text-align: right;
+            font-weight: bold;
+            color: #8b0000;
+            margin-top: 10px;
+        }
+        
+        .article-link {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background: linear-gradient(135deg, #8b0000 0%, #dc143c 100%);
+            border-radius: 10px;
+        }
+        
+        .article-link a {
+            color: white;
+            text-decoration: none;
+            font-size: 1.3em;
+            font-weight: bold;
+        }
+        
+        .article-link a:hover {
+            text-decoration: underline;
+        }
+        
+        .connections {
+            background-color: #fff3cd;
+            padding: 25px;
+            margin: 30px 0;
+            border-radius: 10px;
+            border: 3px solid #ffc107;
+        }
+        
+        .connections h3 {
+            color: #8b0000;
+            margin-top: 0;
+        }
+        
+        ul {
+            margin: 15px 0;
+        }
+        
+        li {
+            margin: 10px 0;
+            line-height: 1.6;
+        }
+        
+        footer {
+            margin-top: 50px;
+            padding-top: 20px;
+            border-top: 3px solid #8b0000;
+            text-align: center;
+            font-style: italic;
+            color: #666;
+        }
+        
+        @media (max-width: 768px) {
+            .parallel-box {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header-banner">
+        <h1>For the Loser Now Will Be Later to Win</h1>
+        <div class="subtitle">Alexandria Ocasio-Cortez and the Evolution of Democratic Resistance</div>
+        <div class="context-link">
+            <a href="https://jhnday.github.io/CrntEvnts/times_are_changin.html">← Back to "The Times They Are A-Changin'"</a>
+        </div>
+    </div>
+
+    <div class="dylan-quote">
+        "Come senators, congressmen<br>
+        Please heed the call<br>
+        Don't stand in the doorway<br>
+        Don't block up the hall<br>
+        For he that gets hurt<br>
+        Will be he who has stalled<br>
+        <strong>For the loser now will be later to win</strong><br>
+        For the times they are a-changin'"<br>
+        — Bob Dylan
+    </div>
+
+    <div class="intro-section">
+        Seven years ago, she was the insurgent. The disruptor. The progressive firebrand who toppled a Democratic establishment figure and arrived in Washington ready to fight—even against her own party. Now, in February 2026, as Trump's approval ratings sink and the MAGA movement fractures, Alexandria Ocasio-Cortez has emerged as something far more significant: a coalition builder, a mainstream power player, and potentially the future of a Democratic Party searching for its voice.
+    </div>
+
+    <details>
+        <summary>The Evolution: From Pelosi Protester to Party Leader</summary>
+        <div class="section-content">
+            <h2>The Evolution: From Pelosi Protester to Party Leader</h2>
+
+            <div class="parallel-box">
+                <div class="parallel-item">
+                    <h3>2019: The Outsider</h3>
+                    <ul>
+                        <li>Protested outside Nancy Pelosi's office</li>
+                        <li>Refused to pay DCCC dues</li>
+                        <li>Operated as progressive insurgent</li>
+                        <li>Challenged Democratic establishment</li>
+                        <li>Bernie Sanders-style lone wolf</li>
+                    </ul>
+                </div>
+                
+                <div class="parallel-item">
+                    <h3>2026: The Power Broker</h3>
+                    <ul>
+                        <li>Regular DCCC dues-paying member</li>
+                        <li>Supports moderate/mainstream Democrats</li>
+                        <li>Sought-after for fundraising and strategy</li>
+                        <li>Mentors young House colleagues</li>
+                        <li>Coalition builder across party spectrum</li>
+                    </ul>
+                </div>
+            </div>
+
+            <p>This isn't a story of selling out or compromising principles. It's something more interesting: a politician who realized that <span class="highlight">disruption alone doesn't build movements</span>—you need power, coalitions, and the ability to bring people along. While Trump's coalition fragments and his approval sinks to <span class="key-stat">38-44%</span>, AOC is building bridges.</p>
+        </div>
+    </details>
+
+    <details>
+        <summary>Rising as Others Fall: The Contrast</summary>
+        <div class="section-content">
+            <h2>Rising as Others Fall: The Contrast</h2>
+
+            <div class="timeline-item">
+                <strong>Trump's Numbers (January 2026):</strong>
+                <ul>
+                    <li>Overall approval: <span class="key-stat">38-44%</span></li>
+                    <li>Immigration approval: <span class="key-stat">39%</span> (record low)</li>
+                    <li>Economic approval: <span class="key-stat">70% negative</span></li>
+                    <li>Independent support: <span class="key-stat">29%</span> (collapsed)</li>
+                    <li>Americans who trust him to put country first: <span class="key-stat">37%</span></li>
+                </ul>
+            </div>
+
+            <div class="timeline-item">
+                <strong>AOC's Trajectory (February 2026):</strong>
+                <ul>
+                    <li>Social media views: <span class="key-stat">185 million</span> in January alone</li>
+                    <li>That's <span class="key-stat">2x more</span> than Senate Minority Leader Chuck Schumer</li>
+                    <li>Speaking at Munich Security Conference (next week)</li>
+                    <li>Courted by moderate Democrats in swing districts</li>
+                    <li>Viewed as having sharper instincts than D.C. consultants</li>
+                </ul>
+            </div>
+
+            <p>The parallel is striking. As Trump's "Golden Age" stumbles through its first year—<span class="key-stat">530 lawsuits</span>, MAGA infighting, conservative media pushback—AOC is ascending. She's not just surviving the political wilderness years; she's preparing for what comes next.</p>
+        </div>
+    </details>
+
+    <details>
+        <summary>The Munich Moment: Expanding the Brand</summary>
+        <div class="section-content">
+            <h2>The Munich Moment: Expanding the Brand</h2>
+
+            <p>Next week's trip to the Munich Security Conference represents AOC's most significant foreign policy foray. Foreign policy has never been her strength—she's built her brand on domestic economics, working-class politics, and social media savvy. But Munich is where heads of state go. It's where national security officials make their mark. It's where presidential candidates burnish their credentials.</p>
+
+            <div class="quote-box">
+                "She is someone who is engaged with parts of the world that are often not represented in Munich."
+                <div class="quote-attribution">— Matt Duss, Center for International Policy</div>
+            </div>
+
+            <p>Translation: She's not going to Munich to play the traditional game. She's going to present <span class="highlight">a left-wing alternative to Trump's shoot-from-the-hip approach</span>. At a moment when Trump's foreign policy has fractured MAGA (remember the Iran bombing debates? The H1-B visa fights? Tucker Carlson's criticisms?), AOC is positioning herself as the coherent alternative.</p>
+        </div>
+    </details>
+
+    <details>
+        <summary>Building Coalitions, Not Cults of Personality</summary>
+        <div class="section-content">
+            <h2>Building Coalitions, Not Cults of Personality</h2>
+
+            <div class="quote-box">
+                "She's a coalition builder. To her credit, [she has] sought out engaging with me and other frontline members from very competitive districts to hear what's going on for us, to get our take, to bounce ideas back and forth."
+                <div class="quote-attribution">— Rep. Pat Ryan (D-NY), moderate in swing district</div>
+            </div>
+
+            <p>This is the crucial difference. While Trump's movement built itself around personal loyalty—leading to the current MAGA civil war between Marjorie Taylor Greene, Tucker Carlson, Steve Bannon, and the Silicon Valley tech bros—AOC is building something more durable: <span class="highlight">actual coalitions based on shared policy goals</span>.</p>
+
+            <p>She's fundraising for Mary Peltola in Alaska, despite Peltola's support for oil drilling and gun rights that contradict AOC's positions. She's appearing at town halls in Republican-held upstate New York districts. She's helping moderate Democrats with communications strategy. She's doing the unglamorous work of coalition politics.</p>
+
+            <div class="connections">
+                <h3>🔗 Connecting to "The Times They Are A-Changin'"</h3>
+                
+                <p><strong>The Document Context:</strong> The existing "Times Are A-Changin'" analysis shows:</p>
+                <ul>
+                    <li>530 lawsuits against Trump administration</li>
+                    <li>Millions protesting in streets</li>
+                    <li>Institutions (Harvard, PBS, press) fighting back</li>
+                    <li>Conservative media turning on Trump</li>
+                    <li>MAGA movement fracturing internally</li>
+                    <li>Approval ratings in free fall</li>
+                </ul>
+                
+                <p><strong>How AOC Fits:</strong> She represents the <em>constructive</em> side of resistance—not just fighting against Trump, but building <em>toward</em> something. While institutions resist and courts sue, AOC is:</p>
+                <ul>
+                    <li><strong>Building the alternative coalition</strong> that can win when Trump's crumbles</li>
+                    <li><strong>Offering a populist economic message</strong> that addresses the same working-class concerns Trump exploited</li>
+                    <li><strong>Demonstrating that progressive politics can be mainstream</strong> rather than fringe</li>
+                    <li><strong>Showing how to build power</strong> without personality cults</li>
+                </ul>
+                
+                <p>Dylan sang: <em>"For the loser now will be later to win."</em> AOC was the "loser" in 2020 (Bernie's loss, progressive defeats, leftist marginalization). But she didn't rage-quit. She built bridges, refined her message, and positioned herself for the moment when the old order—Trump's order—begins to crack.</p>
+            </div>
+        </div>
+    </details>
+
+    <details>
+        <summary>The 2028 Question</summary>
+        <div class="section-content">
+            <h2>The 2028 Question</h2>
+
+            <p>Everyone's whispering about it. Presidential run? Challenge to Chuck Schumer for his Senate seat? Something else entirely? AOC isn't saying. Her allies describe her as someone who makes last-minute decisions and keeps her cards close.</p>
+
+            <div class="quote-box">
+                "That's her life—running for president, running for Senate, whatever it is, is a very big decision. I'm sure she's looking at all of the options right now."
+                <div class="quote-attribution">— Sen. Bernie Sanders</div>
+            </div>
+
+            <p>But here's what we know: At <span class="key-stat">36 years old</span>, with <span class="key-stat">185 million social media views</span> in a single month, a vast fundraising network, and increasing credibility among mainstream Democrats, she has options. Real options.</p>
+
+            <div class="parallel-box">
+                <div class="parallel-item">
+                    <h3>The Case For AOC</h3>
+                    <ul>
+                        <li>Energizes base like no other Democrat</li>
+                        <li>Instinctive communicator who breaks through</li>
+                        <li>Working-class economic message resonates</li>
+                        <li>Proven coalition builder</li>
+                        <li>Representative of generational change</li>
+                        <li>"Fighting Oligarchy" tour with Sanders drew massive crowds</li>
+                    </ul>
+                </div>
+                
+                <div class="parallel-item">
+                    <h3>The Skeptics' View</h3>
+                    <ul>
+                        <li>"Can't appeal to broad electorate"</li>
+                        <li>Deep-blue NYC district lacks swing-state experience</li>
+                        <li>Progressive = risky in purple states?</li>
+                        <li>Age and experience questions</li>
+                        <li>Some Democrats want "safer" candidate</li>
+                    </ul>
+                </div>
+            </div>
+
+            <p>But notice something: Those skeptical arguments sound a lot like what was said about Obama in 2006. And they ignore the fundamental reality of this moment: <span class="highlight">Democrats need someone who can articulate a coherent economic populist message while building a broad coalition</span>. That's exactly what AOC is demonstrating she can do.</p>
+        </div>
+    </details>
+
+    <details>
+        <summary>The Swimming vs. Sinking Moment</summary>
+        <div class="section-content">
+            <h2>The Swimming vs. Sinking Moment</h2>
+
+            <div class="quote-box">
+                "You better start swimmin' or you'll sink like a stone,<br>
+                For the times they are a-changin'"
+            </div>
+
+            <p>Trump is sinking. His approval at <span class="key-stat">38%</span>. His signature issue (immigration) underwater. His movement fragmenting. His economic policies criticized even by Fox News. <span class="key-stat">530 lawsuits</span> and counting. Conservative commentators openly questioning his judgment.</p>
+
+            <p>AOC is swimming. Not just surviving, but thriving. Building coalitions. Expanding her reach. Getting foreign policy briefings. Headlining the Munich Security Conference. Helping elect moderate Democrats. Becoming the Democratic politician other Democrats want advice from.</p>
+
+            <p>At a town hall in her district last week, she told constituents that their pressure on Democrats had given the party "spine" to fight harder. She's practicing what she preaches: <span class="highlight">bottom-up political power, coalition building, and long-term strategic thinking</span>.</p>
+        </div>
+    </details>
+
+    <details>
+        <summary>What It Means</summary>
+        <div class="section-content">
+            <h2>What It Means</h2>
+
+            <p>The existing "Times Are A-Changin'" document catalogs the resistance: lawsuits, protests, institutional pushback, media courage, MAGA fracturing. But resistance alone doesn't win. You need to <em>build</em> something.</p>
+
+            <p>That's what makes the AOC story significant. She represents the Democrats learning the lesson Trump's movement is forgetting: <span class="highlight">personality cults collapse, but coalitions endure</span>. Authoritarian impulses eventually trigger backlash, but democratic coalition-building creates sustainable power.</p>
+
+            <p>Seven years ago, she was Nancy Pelosi's antagonist. Today, she's the Democrat that moderate swing-district representatives seek out for advice. That's not betrayal of principles—that's political evolution. That's learning how to win.</p>
+
+            <p>Trump's coalition is discovering that movements built on personal loyalty fracture when the leader stumbles. AOC is building something different: a coalition based on shared economic vision, where moderates and progressives can find common ground, where the working-class populist message transcends ideology.</p>
+
+            <div class="dylan-quote">
+                "The line it is drawn, the curse it is cast<br>
+                The slow one now will later be fast<br>
+                As the present now will later be past<br>
+                The order is rapidly fadin'<br>
+                And the first one now will later be last<br>
+                <strong>For the times they are a-changin'</strong>"
+            </div>
+
+            <p>The order is rapidly fading. Trump's order. The MAGA movement's order. The old assumptions about what works in politics.</p>
+
+            <p>And the loser now? The progressive firebrand who couldn't win in 2020? Who was marginalized and dismissed?</p>
+
+            <p>She might be later to win.</p>
+
+            <p>The times, as Dylan promised, are a-changin'.</p>
+        </div>
+    </details>
+
+    <div class="article-link">
+        <a href="https://www.nytimes.com/2026/02/06/us/politics/alexandria-ocasio-cortez-democrats.html" target="_blank">
+            📰 Read the Full New York Times Article →
+        </a>
+    </div>
+
+    <footer>
+        <p><strong>Source:</strong><br>
+        "Alexandria Ocasio-Cortez Steps Onto a Wider Stage"<br>
+        By Kellen Browning and Reid J. Epstein<br>
+        <em>The New York Times</em>, February 6, 2026</p>
+        
+        <p style="margin-top: 20px;"><strong>Context Document:</strong><br>
+        <a href="https://jhnday.github.io/CrntEvnts/times_are_changin.html" style="color: #8b0000; text-decoration: none; font-weight: bold;">
+            "The Times They Are A-Changin': Resistance to the Authoritarian Project"
+        </a></p>
+        
+        <p style="margin-top: 30px; font-style: italic; color: #8b0000;">
+            Come gather 'round people, wherever you roam...<br>
+            The resistance builds coalitions.<br>
+            The swimmers don't sink.
+        </p>
+    </footer>
+</body>
+</html>
