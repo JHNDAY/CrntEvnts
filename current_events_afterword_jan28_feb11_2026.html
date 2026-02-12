@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mainstream News Analysis - January 28 - February 11, 2026</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .newsletter {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .header .date {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+
+        .header .subtitle {
+            font-size: 1rem;
+            opacity: 0.8;
+            font-style: italic;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 30px;
+        }
+
+        .section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .section-title {
+            font-size: 1.6rem;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            border-left: 4px solid #3498db;
+            padding: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background-color 0.3s ease;
+            border-radius: 5px;
+            background: #f8f9fa;
+        }
+
+        .section-title:hover {
+            background-color: #e9ecef;
+        }
+
+        .section-content {
+            transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+            overflow: hidden;
+        }
+
+        .section-content.collapsed {
+            max-height: 0;
+            opacity: 0;
+        }
+
+        .section-content.expanded {
+            max-height: 5000px;
+            opacity: 1;
+        }
+
+        .story {
+            margin-bottom: 25px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            border-left: 3px solid #3498db;
+        }
+
+        .story-headline {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+
+        .story-content {
+            font-size: 1rem;
+            line-height: 1.7;
+            margin-bottom: 15px;
+        }
+
+        .quote {
+            background: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 15px 20px;
+            margin: 15px 0;
+            font-style: italic;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .citation {
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: bold;
+            margin-top: 8px;
+        }
+
+        .key-facts {
+            background: #f0f8ff;
+            border: 1px solid #b3d9ff;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .key-facts-title {
+            font-weight: bold;
+            color: #2980b9;
+            margin-bottom: 10px;
+        }
+
+        .fact-list {
+            list-style-position: inside;
+            padding-left: 10px;
+        }
+
+        .fact-list li {
+            margin: 8px 0;
+            line-height: 1.5;
+        }
+
+        .stats-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            text-align: center;
+        }
+
+        .stats-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .breakdown-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        .breakdown-item {
+            background: white;
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .breakdown-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .breakdown-value {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .collapse-button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-top: 15px;
+            transition: background 0.3s ease;
+        }
+
+        .collapse-button:hover {
+            background: #2980b9;
+        }
+
+        .expand-icon {
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .source-link {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .source-link:hover {
+            text-decoration: underline;
+        }
+
+        .footer {
+            background: #2c3e50;
+            color: white;
+            padding: 30px;
+            line-height: 1.6;
+        }
+
+        .source-note {
+            font-size: 0.9rem;
+        }
+
+        .source-note a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        .source-note a:hover {
+            text-decoration: underline;
+        }
+
+        .intro-text {
+            background: #e8f4f8;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 5px solid #3498db;
+        }
+
+        .intro-text p {
+            margin-bottom: 10px;
+            line-height: 1.7;
+        }
+    </style>
+</head>
+<body>
+    <div class="newsletter">
+        <div class="header">
+            <h1>📰 Mainstream News Coverage</h1>
+            <div class="date">January 28 - February 11, 2026</div>
+            <div class="subtitle">Topics Discussed in Current Events Study Group</div>
+        </div>
+
+        <div class="content">
+            <div class="intro-text">
+                <p><strong>Overview:</strong> This document analyzes mainstream media coverage of topics discussed in the February 11, 2026 Current Events Study Group session. The period covers two weeks of intense news cycles featuring Supreme Court battles over presidential power, international diplomatic crises, entertainment industry controversies, and major environmental policy shifts.</p>
+                
+                <p><strong>Key Themes:</strong> Constitutional checks on executive authority, international tensions over Gaza conflict, conflicts of interest in media, economic data credibility, and environmental regulation rollbacks.</p>
+            </div>
+
+            <!-- Federal Reserve Independence -->
+            <div class="section">
+                <div class="section-title" onclick="toggleSection('fed-section')">
+                    Federal Reserve Independence: Lisa Cook Case
+                    <span class="expand-icon">▶</span>
+                </div>
+                
+                <div class="section-content collapsed" id="fed-section">
+                    <div class="story">
+                        <div class="story-headline">
+                            Supreme Court Skeptical of Trump's Authority to Fire Fed Governor
+                        </div>
+                        
+                        <div class="story-content">
+                            On January 21, 2026, the Supreme Court heard oral arguments in a landmark case testing presidential power over the Federal Reserve. <a href="https://www.cnn.com/2026/01/21/politics/takeaways-supreme-court-federal-reserve-lisa-cook-trump-power" class="source-link">CNN</a> reported that justices across the ideological spectrum expressed deep skepticism about President Trump's attempt to fire Fed Governor Lisa Cook based on unproven allegations of mortgage fraud.
+                        </div>
+
+                        <div class="quote">
+                            "What goes around comes around. Once these tools are unleashed, they're used by both sides."
+                        </div>
+                        <div class="citation">— Justice Brett Kavanaugh, warning about weaponizing removal power</div>
+
+                        <div class="key-facts">
+                            <div class="key-facts-title">The Constitutional Framework:</div>
+                            <ul class="fact-list">
+                                <li><strong>The Humphrey's Executor Precedent:</strong> 1935 Supreme Court case established Congress's authority to create agencies with "for cause" removal protections</li>
+                                <li><strong>Federal Reserve Act of 1913:</strong> Allows removal only "for cause" but doesn't define the term</li>
+                                <li><strong>Historic First:</strong> No president has fired a sitting Fed governor in the Fed's 112-year history</li>
+                                <li><strong>The Allegations:</strong> Trump fired Cook based on claims she misrepresented properties on mortgage applications—allegations Cook denies and that have never been proven in court</li>
+                            </ul>
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://www.cnbc.com/2026/01/21/supreme-court-trump-fed-lisa-cook-powell.html" class="source-link">CNBC</a> highlighted Justice Kavanaugh's pointed warning to Solicitor General D. John Sauer: "Your position that there's no judicial review, no process required, no remedy available, very low bar for cause — that the president alone determines — and that would weaken, if not shatter, the independence of the Federal Reserve."
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://www.washingtonpost.com/politics/2026/01/21/fed-lisa-cook-supreme-court-trump/" class="source-link">The Washington Post</a> noted that Cook's attorney Paul Clement emphasized the Fed's unique status. Fed Chairman Jerome Powell and former Fed chairs Ben Bernanke, Alan Greenspan, and Janet Yellen all filed briefs supporting Cook's position.
+                        </div>
+
+                        <div class="breakdown-grid">
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Date of Firing</div>
+                                <div class="breakdown-value">Aug 25, 2025</div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Lower Court Ruling</div>
+                                <div class="breakdown-value">Blocked Removal</div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Key Issue</div>
+                                <div class="breakdown-value">Due Process</div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Fed History</div>
+                                <div class="breakdown-value">112 Years</div>
+                            </div>
+                        </div>
+
+                        <div class="story-content">
+                            According to <a href="https://www.pbs.org/newshour/politics/listen-live-supreme-court-case-on-trumps-attempt-to-fire-federal-reserve-board-member-lisa-cook" class="source-link">PBS NewsHour</a>, Chief Justice Roberts questioned whether courts could be powerless to reinstate wrongfully fired officials, asking: "If you're correct that courts do not have authority to reinstate a removed officer, why are we wasting our time wondering if there's cause or not?"
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://www.cbsnews.com/news/supreme-court-lisa-cook-federal-reserve/" class="source-link">CBS News</a> reported that the case arose after Trump cited allegations from Bill Pulte, a senior Trump administration official, that Cook made misrepresentations on mortgage documents. Judge Jia Cobb ruled Cook was likely to succeed on her argument that her due-process rights were violated because she received no notice or opportunity for a hearing.
+                        </div>
+
+                        <div class="citation">Sources: <a href="https://www.cnn.com/2026/01/21/politics/takeaways-supreme-court-federal-reserve-lisa-cook-trump-power" class="source-link">CNN</a>, <a href="https://www.cnbc.com/2026/01/21/supreme-court-trump-fed-lisa-cook-powell.html" class="source-link">CNBC</a>, <a href="https://www.washingtonpost.com/politics/2026/01/21/fed-lisa-cook-supreme-court-trump/" class="source-link">Washington Post</a>, <a href="https://www.pbs.org/newshour/politics/listen-live-supreme-court-case-on-trumps-attempt-to-fire-federal-reserve-board-member-lisa-cook" class="source-link">PBS NewsHour</a>, <a href="https://www.cbsnews.com/news/supreme-court-lisa-cook-federal-reserve/" class="source-link">CBS News</a>, <a href="https://abcnews.go.com/Politics/trump-pressures-fed-supreme-court-weighs-bid-fire/story?id=129293559" class="source-link">ABC News</a>, <a href="https://www.washingtontimes.com/news/2026/jan/21/supreme-court-casts-doubt-trumps-firing-feds-lisa-cook/" class="source-link">Washington Times</a></div>
+                    </div>
+                    
+                    <button class="collapse-button" onclick="toggleSection('fed-section')">
+                        <span>▲</span> Collapse Section
+                    </button>
+                </div>
+            </div>
+
+            <!-- Israeli-South African Relations -->
+            <div class="section">
+                <div class="section-title" onclick="toggleSection('israel-sa-section')">
+                    Israeli-South African Diplomatic Crisis
+                    <span class="expand-icon">▶</span>
+                </div>
+                
+                <div class="section-content collapsed" id="israel-sa-section">
+                    <div class="story">
+                        <div class="story-headline">
+                            Mutual Expulsions Escalate Tensions Over Gaza Genocide Case
+                        </div>
+                        
+                        <div class="story-content">
+                            On January 30, 2026, South Africa expelled Israel's top diplomat, Ariel Seidman, the chargé d'affaires at the Israeli embassy. <a href="https://www.aljazeera.com/news/2026/1/30/south-africa-orders-expulsion-of-israeli-envoy-declared-persona-non-grata" class="source-link">Al Jazeera</a> reported that South Africa accused Seidman of "gross abuse of diplomatic privilege," including insulting attacks against President Cyril Ramaphosa on social media and failing to inform the government of visits by senior Israeli officials.
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://www.bloomberg.com/news/articles/2026-01-30/south-africa-expels-top-israeli-diplomat-risking-fresh-us-ire" class="source-link">Bloomberg</a> noted that Israel responded within hours by expelling South Africa's senior diplomatic representative, Shaun Edward Byneveldt, whom Pretoria identified as ambassador to Palestine, not Israel.
+                        </div>
+
+                        <div class="key-facts">
+                            <div class="key-facts-title">The Diplomatic Rupture:</div>
+                            <ul class="fact-list">
+                                <li><strong>Expulsion Date:</strong> January 30, 2026 - Seidman given 72 hours to leave</li>
+                                <li><strong>Stated Reasons:</strong> Insulting social media posts about President Ramaphosa, unauthorized visits by Israeli officials</li>
+                                <li><strong>Context:</strong> South Africa's ICJ genocide case against Israel over Gaza operations</li>
+                                <li><strong>Water Crisis Connection:</strong> Israeli diplomat David Saranga had been visiting to examine how Israel could help with Eastern Cape water purification</li>
+                            </ul>
+                        </div>
+
+                        <div class="story-content">
+                            According to <a href="https://www.sajr.co.za/expulsion-of-israeli-diplomat-sparks-backlash/" class="source-link">SA Jewish Report</a>, Chief Rabbi Dr. Warren Goldstein publicly condemned the move, stating: "South Africa's expulsion of Israel's senior diplomat is one of the most extreme diplomatic actions a government can take. It shows how much President Ramaphosa and his government hate Israel and the Jews — that the government is prepared to let its own people die rather than concede that its foreign policy on Israel is misguided."
+                        </div>
+
+                        <div class="quote">
+                            "South Africa's recent decision to expel Israel's top diplomat is another example of its poor foreign policy choices. Expelling a diplomat for calling out the African National Congress party's ties to Hamas and other antisemitic radicals prioritizes grievance politics over the good of South Africa and its citizens."
+                        </div>
+                        <div class="citation">— Tommy Pigott, U.S. State Department Deputy Spokesperson, February 3, 2026</div>
+
+                        <div class="story-content">
+                            <a href="https://www.moneyweb.co.za/news/south-africa/us-criticizes-south-africas-expulsion-of-top-israeli-diplomat/" class="source-link">Moneyweb</a> reported that the U.S. State Department issued a sharp rebuke, with Deputy Spokesperson Tommy Pigott calling the expulsion "another example of its poor foreign-policy choices."
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://www.jta.org/2026/01/30/global/diplomatic-ties-fray-further-as-south-africa-and-israel-kick-out-each-others-envoys" class="source-link">Jewish Telegraphic Agency</a> noted that the South African Zionist Federation described Seidman's expulsion as "staggering moral bankruptcy," arguing he was expelled "not for espionage, not for misconduct, not for breaching protocol — but for the unforgivable crime of helping South Africans get water."
+                        </div>
+
+                        <div class="breakdown-grid">
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Expulsion Notice</div>
+                                <div class="breakdown-value">72 Hours</div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">ICJ Case Filed</div>
+                                <div class="breakdown-value">Dec 2023</div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Countries Joined</div>
+                                <div class="breakdown-value">25+</div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Gaza Deaths</div>
+                                <div class="breakdown-value">71,660+</div>
+                            </div>
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://mg.co.za/politics/2026-01-31-south-africa-expels-israels-charge-daffaires-ariel-seidman/" class="source-link">Mail & Guardian</a> reported that South Africa's Department of International Relations cited "unacceptable violations of diplomatic norms and practice which pose a direct challenge to South Africa's sovereignty."
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://moderndiplomacy.eu/2026/02/04/u-s-condemns-south-africas-expulsion-of-israeli-diplomat-as-political-retaliation/" class="source-link">Modern Diplomacy</a> analyzed the expulsion as reflecting South Africa's willingness to translate moral opposition to Israel's Gaza operations into concrete diplomatic action, even at the cost of international backlash and deteriorating relations with the United States.
+                        </div>
+
+                        <div class="citation">Sources: <a href="https://www.aljazeera.com/news/2026/1/30/south-africa-orders-expulsion-of-israeli-envoy-declared-persona-non-grata" class="source-link">Al Jazeera</a>, <a href="https://www.bloomberg.com/news/articles/2026-01-30/south-africa-expels-top-israeli-diplomat-risking-fresh-us-ire" class="source-link">Bloomberg</a>, <a href="https://www.sajr.co.za/expulsion-of-israeli-diplomat-sparks-backlash/" class="source-link">SA Jewish Report</a>, <a href="https://www.moneyweb.co.za/news/south-africa/us-criticizes-south-africas-expulsion-of-top-israeli-diplomat/" class="source-link">Moneyweb</a>, <a href="https://www.jta.org/2026/01/30/global/diplomatic-ties-fray-further-as-south-africa-and-israel-kick-out-each-others-envoys" class="source-link">JTA</a>, <a href="https://mg.co.za/politics/2026-01-31-south-africa-expels-israels-charge-daffaires-ariel-seidman/" class="source-link">Mail & Guardian</a></div>
+                    </div>
+                    
+                    <button class="collapse-button" onclick="toggleSection('israel-sa-section')">
+                        <span>▲</span> Collapse Section
+                    </button>
+                </div>
+            </div>
+
+            <!-- Melania Documentary -->
+            <div class="section">
+                <div class="section-title" onclick="toggleSection('melania-section')">
+                    "Melania" Documentary: Box Office vs. Critical Reception
+                    <span class="expand-icon">▶</span>
+                </div>
+                
+                <div class="section-content collapsed" id="melania-section">
+                    <div class="story">
+                        <div class="story-headline">
+                            Amazon's $75 Million Investment Faces Historic Critical-Audience Divide
+                        </div>
+                        
+                        <div class="story-content">
+                            Brett Ratner's documentary "Melania," released January 30, 2026, generated unprecedented controversy over Amazon's $40 million acquisition price and $35 million marketing budget. <a href="https://techcrunch.com/2026/02/01/amazons-melania-documentary-makes-7m-on-opening-weekend/" class="source-link">TechCrunch</a> reported the film opened to $7.04 million, exceeding pre-release estimates but falling far short of profitability.
+                        </div>
+
+                        <div class="breakdown-grid">
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Acquisition Cost</div>
+                                <div class="breakdown-value">$40M</div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Marketing Budget</div>
+                                <div class="breakdown-value">$35M</div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Opening Weekend</div>
+                                <div class="breakdown-value">$7.04M</div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Second Weekend</div>
+                                <div class="breakdown-value">$2.37M</div>
+                            </div>
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://variety.com/2026/film/news/melania-rotten-tomatoes-audience-score-bots-1236654401/" class="source-link">Variety</a> reported that Rotten Tomatoes parent company Versant issued an unusual statement defending the film's 99% audience score against allegations of bot manipulation, stating: "Reviews displayed on the Popcornmeter are VERIFIED reviews, meaning it has been verified that users have bought a ticket to the film."
+                        </div>
+
+                        <div class="stats-box">
+                            <div class="stats-number">1.3</div>
+                            <div>IMDB Rating (out of 10) - Third-lowest rated film on the site</div>
+                        </div>
+
+                        <div class="key-facts">
+                            <div class="key-facts-title">The Rating Divide:</div>
+                            <ul class="fact-list">
+                                <li><strong>Critics Score:</strong> 5-10% on Rotten Tomatoes, 7% on Metacritic</li>
+                                <li><strong>Audience Score:</strong> 99% on Rotten Tomatoes (verified ticket buyers)</li>
+                                <li><strong>IMDB:</strong> 1.3/10 (55,000+ ratings) - briefly hit 1.1, becoming lowest-rated film on site</li>
+                                <li><strong>Historic Divide:</strong> Largest critics-audience gap in Rotten Tomatoes history</li>
+                            </ul>
+                        </div>
+
+                        <div class="story-content">
+                            According to <a href="https://www.rollingstone.com/politics/politics-news/melania-trump-doc-reviews-rotten-tomatoes-1235511549/" class="source-link">Rolling Stone</a>, critics uniformly panned the film as propaganda, with one review calling it "a preening, scowling void of pure nothingness." However, MAGA supporters arrived "in droves" to theaters, helping achieve the biggest opening for a documentary in a decade.
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://techcrunch.com/2026/02/08/amazons-melania-documentary-stumbles-in-second-weekend/" class="source-link">TechCrunch</a> reported that box office sales fell 67% in the second weekend to $2.37 million, placing ninth on the charts. A former Amazon film executive questioned whether the price tag could be motivated by anything other than "currying favor" with the Trump administration.
+                        </div>
+
+                        <div class="quote">
+                            "The $75 million project has been uniformly panned as propaganda, 'an obsequious, ring-kissing portrait of the current U.S. administration,' two hours of 'endless hell.'"
+                        </div>
+                        <div class="citation">— Rolling Stone characterizing critical consensus</div>
+
+                        <div class="story-content">
+                            <a href="https://en.wikipedia.org/wiki/Melania_(film)" class="source-link">Wikipedia</a> noted that Amazon's $40 million bid came in $26 million ahead of Disney's offer, with Amazon also committing to a theatrical release and follow-up docuseries. Melania Trump retained editorial control and was heavily involved in production.
+                        </div>
+
+                        <div class="breakdown-grid">
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Audience Demographics</div>
+                                <div class="breakdown-value">72% Female</div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Age Range</div>
+                                <div class="breakdown-value">83% Over 45</div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Racial Breakdown</div>
+                                <div class="breakdown-value">75% White</div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Theater Count</div>
+                                <div class="breakdown-value">2,000 (US)</div>
+                            </div>
+                        </div>
+
+                        <div class="citation">Sources: <a href="https://techcrunch.com/2026/02/01/amazons-melania-documentary-makes-7m-on-opening-weekend/" class="source-link">TechCrunch</a>, <a href="https://variety.com/2026/film/news/melania-rotten-tomatoes-audience-score-bots-1236654401/" class="source-link">Variety</a>, <a href="https://www.rollingstone.com/politics/politics-news/melania-trump-doc-reviews-rotten-tomatoes-1235511549/" class="source-link">Rolling Stone</a>, <a href="https://www.imdb.com/title/tt35291758/" class="source-link">IMDB</a>, <a href="https://www.rottentomatoes.com/m/melania" class="source-link">Rotten Tomatoes</a>, <a href="https://en.wikipedia.org/wiki/Melania_(film)" class="source-link">Wikipedia</a></div>
+                    </div>
+                    
+                    <button class="collapse-button" onclick="toggleSection('melania-section')">
+                        <span>▲</span> Collapse Section
+                    </button>
+                </div>
+            </div>
+
+            <!-- Jobs Report -->
+            <div class="section">
+                <div class="section-title" onclick="toggleSection('jobs-section')">
+                    January Jobs Report: Data Credibility Questions
+                    <span class="expand-icon">▶</span>
+                </div>
+                
+                <div class="section-content collapsed" id="jobs-section">
+                    <div class="story">
+                        <div class="story-headline">
+                            Strong January Numbers Overshadowed by Massive 2025 Downward Revisions
+                        </div>
+                        
+                        <div class="story-content">
+                            The Bureau of Labor Statistics released its January 2026 employment report on February 11, showing the economy added 130,000 jobs with unemployment falling to 4.3%. <a href="https://www.cnbc.com/2026/02/11/jobs-report-january-2026-.html" class="source-link">CNBC</a> reported the figure exceeded expectations but came alongside massive downward revisions showing 2025 was far weaker than initially reported.
+                        </div>
+
+                        <div class="breakdown-grid">
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Jobs Added (Jan)</div>
+                                <div class="breakdown-value">130,000</div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Unemployment Rate</div>
+                                <div class="breakdown-value">4.3%</div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">2025 Revision</div>
+                                <div class="breakdown-value">-403,000</div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Avg Monthly (2025)</div>
+                                <div class="breakdown-value">15,000</div>
+                            </div>
+                        </div>
+
+                        <div class="key-facts">
+                            <div class="key-facts-title">The Revision Story:</div>
+                            <ul class="fact-list">
+                                <li><strong>Initial 2025 Estimate:</strong> 584,000 jobs added for the year</li>
+                                <li><strong>Revised 2025 Total:</strong> 181,000 jobs — a downward revision of 403,000</li>
+                                <li><strong>Context:</strong> Trump fired BLS Commissioner Erika McEntarfer in August 2025 after criticizing large downward adjustments</li>
+                                <li><strong>Pattern:</strong> Every month in 2025 saw negative revisions</li>
+                            </ul>
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://thehill.com/business/5732904-us-jobs-report-january/" class="source-link">The Hill</a> reported that Chris Bangert-Drowns of the Washington Center for Equitable Growth noted: "U.S. jobs data released this morning showed signs of a rebounding labor market in January, with unemployment ticking down and a total 130,000 jobs added in January, driven mostly by hiring in the service sector."
+                        </div>
+
+                        <div class="quote">
+                            "GREAT JOBS NUMBERS, FAR GREATER THAN EXPECTED! The United States of America should be paying MUCH LESS on its Borrowings (BONDS!). We are again the strongest Country in the World, and should therefore be paying the LOWEST INTEREST RATE, by far."
+                        </div>
+                        <div class="citation">— President Trump on Truth Social, February 11, 2026</div>
+
+                        <div class="story-content">
+                            According to <a href="https://www.nbcnews.com/business/economy/january-jobs-revisions-trump-rcna258398" class="source-link">NBC News</a>, the January gains came almost entirely in health care (82,000) and social assistance (42,000) — sectors that have steadily risen for years due to the aging U.S. population. Manufacturing added only 5,000 jobs, its first increase since January 2024.
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://www.americanprogress.org/article/working-class-people-struggle-to-find-opportunities-in-trumps-economy/" class="source-link">Center for American Progress</a> analysis found that blue-collar industries (manufacturing, construction, logging, mining, transportation, warehousing, utilities) lost a cumulative 166,000 jobs from February 2025 to January 2026. Workers without college degrees made up only 24% of total job growth during this period.
+                        </div>
+
+                        <div class="breakdown-grid">
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Health Care Jobs</div>
+                                <div class="breakdown-value">+82,000</div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Federal Govt Jobs</div>
+                                <div class="breakdown-value">-34,000</div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Financial Activities</div>
+                                <div class="breakdown-value">-22,000</div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Wage Growth (Annual)</div>
+                                <div class="breakdown-value">3.7%</div>
+                            </div>
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://www.npr.org/2026/02/11/nx-s1-5708807/jobs-labor-unemployment-economy" class="source-link">NPR</a> quoted economist Christopher Waller: "Employers are reluctant to fire workers, but also very reluctant to hire. This indicates to me that there is considerable doubt about future employment growth and suggests that a substantial deterioration in the labor market is a significant risk."
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://www.newsweek.com/donald-trump-gets-major-boost-in-stronger-than-expected-jobs-report-11503208" class="source-link">Newsweek</a> reported that White House officials had been tempering expectations before the release, with National Economic Council Director Kevin Hassett telling CNBC to expect "slightly smaller job numbers" and trade adviser Peter Navarro saying expectations should be revised down "significantly" to adjust for deportations of undocumented workers.
+                        </div>
+
+                        <div class="citation">Sources: <a href="https://www.cnbc.com/2026/02/11/jobs-report-january-2026-.html" class="source-link">CNBC</a>, <a href="https://thehill.com/business/5732904-us-jobs-report-january/" class="source-link">The Hill</a>, <a href="https://www.nbcnews.com/business/economy/january-jobs-revisions-trump-rcna258398" class="source-link">NBC News</a>, <a href="https://www.americanprogress.org/article/working-class-people-struggle-to-find-opportunities-in-trumps-economy/" class="source-link">Center for American Progress</a>, <a href="https://www.npr.org/2026/02/11/nx-s1-5708807/jobs-labor-unemployment-economy" class="source-link">NPR</a>, <a href="https://www.bls.gov/news.release/empsit.nr0.htm" class="source-link">BLS Official Release</a></div>
+                    </div>
+                    
+                    <button class="collapse-button" onclick="toggleSection('jobs-section')">
+                        <span>▲</span> Collapse Section
+                    </button>
+                </div>
+            </div>
+
+            <!-- EPA Endangerment Finding -->
+            <div class="section">
+                <div class="section-title" onclick="toggleSection('epa-section')">
+                    EPA Endangerment Finding Revocation
+                    <span class="expand-icon">▶</span>
+                </div>
+                
+                <div class="section-content collapsed" id="epa-section">
+                    <div class="story">
+                        <div class="story-headline">
+                            "Largest Deregulatory Action in American History" Dismantles Climate Framework
+                        </div>
+                        
+                        <div class="story-content">
+                            On February 10, 2026, the White House announced that President Trump and EPA Administrator Lee Zeldin would formalize the rescission of the 2009 endangerment finding on February 12. <a href="https://www.cnbc.com/2026/02/10/epa-revoke-endangerment-finding-climate-regulations.html" class="source-link">CNBC</a> reported this represents the Trump administration's biggest attack on climate policy to date.
+                        </div>
+
+                        <div class="key-facts">
+                            <div class="key-facts-title">What is the Endangerment Finding?</div>
+                            <ul class="fact-list">
+                                <li><strong>Origin:</strong> 2009 Obama administration determination that greenhouse gases endanger public health and welfare</li>
+                                <li><strong>Legal Basis:</strong> 2007 Supreme Court ruling in Massachusetts v. EPA that greenhouse gases are air pollutants under Clean Air Act</li>
+                                <li><strong>Authority:</strong> Provides EPA statutory power to regulate motor vehicle emissions under Section 202(a) of Clean Air Act</li>
+                                <li><strong>Impact:</strong> Underpins nearly all climate regulations for vehicles, power plants, and other pollution sources</li>
+                            </ul>
+                        </div>
+
+                        <div class="quote">
+                            "This will be the largest deregulatory action in American history, and it will save the American people $1.3 trillion in crushing regulations."
+                        </div>
+                        <div class="citation">— White House Press Secretary Karoline Leavitt, February 10, 2026</div>
+
+                        <div class="story-content">
+                            <a href="https://www.upi.com/Top_News/US/2026/02/10/epa-endangerment-finding/9361770750139/" class="source-link">UPI</a> reported that revoking the finding removes EPA's statutory authority to regulate motor vehicle emissions. The finding had determined that carbon dioxide, methane, and other greenhouse gases fuel storms, drought, heat waves, wildfires, and rising seas.
+                        </div>
+
+                        <div class="breakdown-grid">
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Claimed Savings</div>
+                                <div class="breakdown-value">$1.3T</div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Per Vehicle Savings</div>
+                                <div class="breakdown-value">$2,400</div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Original Finding</div>
+                                <div class="breakdown-value">2009</div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Court Challenges</div>
+                                <div class="breakdown-value">All Rejected</div>
+                            </div>
+                        </div>
+
+                        <div class="story-content">
+                            According to <a href="https://www.nbcnews.com/science/climate-change/epa-to-repeal-endangerment-finding-climate-change-emissions-rcna258250" class="source-link">NBC News</a>, the EPA now claims the 2009 decision "unreasonably analyzed the scientific record" and that scientific underpinnings were too pessimistic. In its preliminary draft, EPA said the finding overstated heat wave risks and discounted benefits of increased carbon like plant growth.
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://www.euronews.com/green/2026/02/11/one-of-the-most-damaging-decisions-in-modern-history-trump-epa-to-repeal-key-climate-findi" class="source-link">Euronews</a> reported that EPA Administrator Lee Zeldin criticized predecessors in Democratic administrations, saying they were "willing to bankrupt the country" in efforts to combat climate change. Zeldin stated: "Democrats created this endangerment finding and then they are able to put all these regulations on vehicles, on airplanes, on stationary sources, to basically regulate out of existence segments of our economy."
+                        </div>
+
+                        <div class="quote">
+                            "The single biggest attack in U.S. history on federal authority to tackle the climate crisis. More and more people are suffering from man-made disasters, from heartbreaking flooding in Texas and North Carolina, to the horrific fire around Los Angeles, to the record heat waves that now hit every summer."
+                        </div>
+                        <div class="citation">— Manish Bapna, President and CEO, Natural Resources Defense Council</div>
+
+                        <div class="story-content">
+                            <a href="https://www.npr.org/2026/02/11/nx-s1-5678273/trump-epa-climate-change-endangerment" class="source-link">NPR</a> noted that the science EPA relied on for its proposed rule came from the Department of Energy's controversial Climate Working Group. Dozens of independent scientists issued a joint rebuttal saying the report was full of errors. A federal judge later ruled the Energy Department violated public records laws when creating the group.
+                        </div>
+
+                        <div class="story-content">
+                            Notably, <a href="https://www.cnbc.com/2026/02/10/epa-revoke-endangerment-finding-climate-regulations.html" class="source-link">CNBC</a> reported that Elon Musk's Tesla urged the administration in a September letter to uphold the endangerment finding, writing: "The Endangerment Finding – and the vehicle emissions standards which flow from it – have provided a stable regulatory platform for Tesla's extensive investments in product development and production."
+                        </div>
+
+                        <div class="key-facts">
+                            <div class="key-facts-title">Legal and Political Context:</div>
+                            <ul class="fact-list">
+                                <li><strong>Court History:</strong> Since 2007 Massachusetts v. EPA ruling, courts have uniformly rejected challenges to the finding, including 2023 DC Circuit decision</li>
+                                <li><strong>Senate Response:</strong> Minority Leader Chuck Schumer: "A corrupt giveaway to Big Oil, plain and simple"</li>
+                                <li><strong>Expected Challenges:</strong> Environmental groups promise immediate legal challenges</li>
+                                <li><strong>Industry Concerns:</strong> Some industry members worry eliminating the finding could trigger legal battles and state-by-state rules</li>
+                            </ul>
+                        </div>
+
+                        <div class="citation">Sources: <a href="https://www.cnbc.com/2026/02/10/epa-revoke-endangerment-finding-climate-regulations.html" class="source-link">CNBC</a>, <a href="https://www.upi.com/Top_News/US/2026/02/10/epa-endangerment-finding/9361770750139/" class="source-link">UPI</a>, <a href="https://www.nbcnews.com/science/climate-change/epa-to-repeal-endangerment-finding-climate-change-emissions-rcna258250" class="source-link">NBC News</a>, <a href="https://www.euronews.com/green/2026/02/11/one-of-the-most-damaging-decisions-in-modern-history-trump-epa-to-repeal-key-climate-findi" class="source-link">Euronews</a>, <a href="https://www.npr.org/2026/02/11/nx-s1-5678273/trump-epa-climate-change-endangerment" class="source-link">NPR</a>, <a href="https://www.sierraclub.org/sierra/epa-moves-roll-back-endangerment-finding-threatening-climate-action" class="source-link">Sierra Club</a></div>
+                    </div>
+                    
+                    <button class="collapse-button" onclick="toggleSection('epa-section')">
+                        <span>▲</span> Collapse Section
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <div class="source-note">
+                <strong>Newsletter compiled from:</strong> Mainstream media coverage analysis of topics discussed in the February 11, 2026 Current Events Study Group session. This document examines how major news publications covered the Supreme Court's Lisa Cook hearing, Israeli-South African diplomatic crisis, Melania documentary controversy, January jobs report, and EPA endangerment finding revocation during the period January 28 - February 11, 2026.<br><br>
+                
+                <strong>Publications Referenced:</strong><br>
+                • <a href="https://www.cnn.com/" class="source-link">CNN</a> - Supreme Court coverage and political analysis<br>
+                • <a href="https://www.cnbc.com/" class="source-link">CNBC</a> - Economic and business reporting<br>
+                • <a href="https://www.washingtonpost.com/" class="source-link">Washington Post</a> - Political and legal analysis<br>
+                • <a href="https://www.pbs.org/newshour/" class="source-link">PBS NewsHour</a> - Supreme Court oral arguments coverage<br>
+                • <a href="https://www.cbsnews.com/" class="source-link">CBS News</a> - Federal Reserve independence analysis<br>
+                • <a href="https://abcnews.go.com/" class="source-link">ABC News</a> - Supreme Court reporting<br>
+                • <a href="https://www.nbcnews.com/" class="source-link">NBC News</a> - Jobs data and climate policy coverage<br>
+                • <a href="https://www.aljazeera.com/" class="source-link">Al Jazeera</a> - International perspective on diplomatic crisis<br>
+                • <a href="https://www.bloomberg.com/" class="source-link">Bloomberg</a> - Financial and diplomatic analysis<br>
+                • <a href="https://www.npr.org/" class="source-link">NPR</a> - Jobs report and climate policy analysis<br>
+                • <a href="https://www.reuters.com/" class="source-link">Reuters</a> - International news coverage<br>
+                • <a href="https://www.jta.org/" class="source-link">Jewish Telegraphic Agency</a> - Jewish community perspectives<br>
+                • <a href="https://techcrunch.com/" class="source-link">TechCrunch</a> - Entertainment industry analysis<br>
+                • <a href="https://variety.com/" class="source-link">Variety</a> - Film industry reporting<br>
+                • <a href="https://www.rollingstone.com/" class="source-link">Rolling Stone</a> - Cultural and political analysis<br>
+                • <a href="https://www.imdb.com/" class="source-link">IMDB</a> - Film ratings and reviews<br>
+                • <a href="https://thehill.com/" class="source-link">The Hill</a> - Political news and analysis<br>
+                • <a href="https://www.upi.com/" class="source-link">UPI</a> - Wire service reporting<br>
+                • <a href="https://www.washingtontimes.com/" class="source-link">Washington Times</a> - Conservative perspective coverage<br>
+                • <a href="https://www.sierraclub.org/" class="source-link">Sierra Club</a> - Environmental advocacy perspective<br>
+                • <a href="https://www.americanprogress.org/" class="source-link">Center for American Progress</a> - Progressive policy analysis<br><br>
+
+                <strong>International Coverage:</strong><br>
+                • <a href="https://www.sajr.co.za/" class="source-link">SA Jewish Report</a> - South African Jewish community perspective<br>
+                • <a href="https://www.moneyweb.co.za/" class="source-link">Moneyweb</a> - South African financial news<br>
+                • <a href="https://mg.co.za/" class="source-link">Mail & Guardian</a> - South African investigative journalism<br>
+                • <a href="https://www.euronews.com/" class="source-link">Euronews</a> - European perspective on climate policy<br>
+                • <a href="https://moderndiplomacy.eu/" class="source-link">Modern Diplomacy</a> - International relations analysis<br><br>
+
+                <strong>Official Sources:</strong><br>
+                • <a href="https://www.bls.gov/" class="source-link">Bureau of Labor Statistics</a> - Employment data<br>
+                • <a href="https://www.whitehouse.gov/" class="source-link">The White House</a> - Official administration statements<br><br>
+
+                <strong>Methodology:</strong> This analysis examines actual mainstream media coverage of topics discussed in the February 11, 2026 Current Events Study Group session. All links direct to genuine news articles published between January 28 and February 11, 2026. Content represents mainstream media framing and analysis of these constitutional, international, economic, and environmental policy issues.<br><br>
+                
+                <strong>Note on Topics:</strong> The Current Events Study Group also discussed Bob Fishman's presentation on the Humphrey's Executor case and presidential power to fire agency heads (related to the Lisa Cook case); Michael Berger's comprehensive presentation on Israeli-South African relations covering the apartheid era through the current diplomatic crisis; the Cuba pressure campaign using oil as a weapon; and questions about economic data credibility following Trump's firing of BLS Commissioner Erika McEntarfer in August 2025.<br><br>
+                
+                <em>This newsletter compiles mainstream media perspectives on current events topics for educational and analytical purposes. All source links represent actual published coverage from major news organizations during the specified time period.</em>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            const isExpanded = section.classList.contains('expanded');
+            
+            if (isExpanded) {
+                section.classList.remove('expanded');
+                section.classList.add('collapsed');
+            } else {
+                section.classList.remove('collapsed');
+                section.classList.add('expanded');
+            }
+        }
+
+        // Add smooth scroll behavior
+        document.addEventListener('DOMContentLoaded', function() {
+            const titles = document.querySelectorAll('.section-title');
+            titles.forEach(title => {
+                title.addEventListener('click', function() {
+                    setTimeout(() => {
+                        const section = this.nextElementSibling;
+                        if (section.classList.contains('expanded')) {
+                            this.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                        }
+                    }, 100);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
