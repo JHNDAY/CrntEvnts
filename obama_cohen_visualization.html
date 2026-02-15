@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Obama-Cohen Interview Visualization</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #7e8ba3 100%);
+            color: #333;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        header {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            margin-bottom: 30px;
+        }
+        
+        h1 {
+            color: #1e3c72;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        h1 a {
+            color: #1e3c72;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        h1 a:hover {
+            color: #667eea;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 1.2em;
+        }
+        
+        .watch-link {
+            display: inline-block;
+            margin-top: 15px;
+            padding: 10px 20px;
+            background: #ff0000;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        
+        .watch-link:hover {
+            background: #cc0000;
+        }
+        
+        .interview-meta {
+            display: flex;
+            gap: 30px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #e0e0e0;
+        }
+        
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .meta-label {
+            font-weight: bold;
+            color: #1e3c72;
+        }
+        
+        .themes-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            margin-bottom: 30px;
+        }
+        
+        .section-title {
+            color: #1e3c72;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #2a5298;
+        }
+        
+        .themes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .theme-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            border-radius: 10px;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .theme-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+        
+        .theme-title {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .theme-topics {
+            font-size: 0.9em;
+            opacity: 0.9;
+            line-height: 1.6;
+        }
+        
+        .timeline {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            margin-bottom: 30px;
+        }
+        
+        .timeline-item {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+            position: relative;
+            padding-left: 30px;
+        }
+        
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 10px;
+            width: 15px;
+            height: 15px;
+            background: #667eea;
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 0 0 3px #667eea;
+        }
+        
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            left: 7px;
+            top: 25px;
+            width: 2px;
+            height: calc(100% + 10px);
+            background: #e0e0e0;
+        }
+        
+        .timeline-item:last-child::after {
+            display: none;
+        }
+        
+        .timeline-time {
+            color: #667eea;
+            font-weight: bold;
+            min-width: 80px;
+        }
+        
+        .timeline-content {
+            flex: 1;
+        }
+        
+        .timeline-topic {
+            font-weight: bold;
+            color: #1e3c72;
+            margin-bottom: 5px;
+        }
+        
+        .timeline-description {
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .timeline-description strong {
+            color: #1e3c72;
+            display: block;
+            margin-top: 10px;
+            margin-bottom: 5px;
+        }
+        
+        .timeline-description strong:first-child {
+            margin-top: 0;
+        }
+        
+        .timeline-description em {
+            color: #667eea;
+            font-style: normal;
+            font-weight: 600;
+        }
+        
+        .drilldown-toggle {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 16px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.9em;
+            transition: background 0.3s;
+        }
+        
+        .drilldown-toggle:hover {
+            background: #764ba2;
+        }
+        
+        .drilldown-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out;
+        }
+        
+        .drilldown-content.expanded {
+            max-height: 2000px;
+            transition: max-height 0.5s ease-in;
+        }
+        
+        .drilldown-details {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 2px dashed #e0e0e0;
+        }
+        
+        .key-quotes {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        
+        .quote-card {
+            background: #f8f9fa;
+            border-left: 5px solid #667eea;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        
+        .quote-text {
+            font-size: 1.1em;
+            font-style: italic;
+            color: #333;
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+        
+        .quote-context {
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            padding: 25px;
+            border-radius: 10px;
+            color: white;
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 3em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 1em;
+            opacity: 0.9;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.8em;
+            }
+            
+            .interview-meta {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .themes-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><a href="https://www.youtube.com/watch?v=uI-hgSE5QIw&t=2265s" target="_blank">Barack Obama Interview</a></h1>
+            <div class="subtitle">with Brian Tyler Cohen</div>
+            <a href="https://www.youtube.com/watch?v=uI-hgSE5QIw&t=2265s" target="_blank" class="watch-link">▶ Watch on YouTube</a>
+            <div class="interview-meta">
+                <div class="meta-item">
+                    <span class="meta-label">Duration:</span>
+                    <span>~47 minutes</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Format:</span>
+                    <span>Political Interview</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-label">Main Topics:</span>
+                    <span>Democracy, Political Strategy, Future Leadership</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="themes-section">
+            <h2 class="section-title">Key Themes</h2>
+            <div class="themes-grid">
+                <div class="theme-card">
+                    <div class="theme-title">🗣️ Political Discourse</div>
+                    <div class="theme-topics">
+                        • Devolution of civil dialogue<br>
+                        • Loss of decorum and shame<br>
+                        • Rise of cruel rhetoric<br>
+                        • Public response to extremism
+                    </div>
+                </div>
+                
+                <div class="theme-card">
+                    <div class="theme-title">⚖️ Democracy & Governance</div>
+                    <div class="theme-topics">
+                        • ICE operations in Minneapolis<br>
+                        • Community organizing response<br>
+                        • Rule of law challenges<br>
+                        • Citizen activism
+                    </div>
+                </div>
+                
+                <div class="theme-card">
+                    <div class="theme-title">🔵 Democratic Strategy</div>
+                    <div class="theme-topics">
+                        • Protection of norms vs. action<br>
+                        • Asymmetry in party tactics<br>
+                        • Filibuster frustrations<br>
+                        • Building coalitions
+                    </div>
+                </div>
+                
+                <div class="theme-card">
+                    <div class="theme-title">🤝 Party Unity</div>
+                    <div class="theme-topics">
+                        • Progressive vs. moderate tensions<br>
+                        • Shared core values<br>
+                        • Tactical differences only<br>
+                        • Local vs. national campaigns
+                    </div>
+                </div>
+                
+                <div class="theme-card">
+                    <div class="theme-title">🌟 Youth Engagement</div>
+                    <div class="theme-topics">
+                        • Mobilizing new voters<br>
+                        • Cultural connection<br>
+                        • Avoiding "scold" messaging<br>
+                        • Creating joyful movements
+                    </div>
+                </div>
+                
+                <div class="theme-card">
+                    <div class="theme-title">🏛️ Presidential Center</div>
+                    <div class="theme-topics">
+                        • Opening June 2025<br>
+                        • Focus on civic engagement<br>
+                        • Youth leadership development<br>
+                        • Not just a museum
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="timeline">
+            <h2 class="section-title">Conversation Flow</h2>
+            
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-time">00:00 - 04:47</div>
+                    <div class="timeline-topic">Opening: The Devolution of Discourse</div>
+                    <div class="timeline-description">Cohen asks about the unprecedented cruelty in political discourse, citing examples like Trump's racist imagery and Vance's white identity politics. Sets the stage for discussion of democratic norms.</div>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-time">04:47 - 06:25</div>
+                    <div class="timeline-topic">Obama's Response: Hope in Citizen Action</div>
+                    <div class="timeline-description">Obama reframes the narrative, highlighting the Minneapolis community response to ICE operations. Emphasizes that most Americans reject cruel behavior and that citizen organizing offers hope for democracy's future.</div>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-time">06:25 - 14:25</div>
+                    <div class="timeline-topic">Democratic Leadership & Strategic Asymmetry</div>
+                    <div class="timeline-description">Discussion of how Democrats protect norms while Republicans pursue goals "laws be damned." Obama acknowledges Democrats have the harder job but criticizes unwillingness to break institutional barriers like the filibuster.</div>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-time">14:25 - 27:18</div>
+                    <div class="timeline-topic">Party Unity & 2028 Strategy</div>
+                    <div class="timeline-description">
+                        <strong>Cohen's Question:</strong> How to avoid the 2016 Bernie-Hillary infighting between leftists/progressives and liberals/moderates?<br><br>
+                        
+                        Obama downplays progressive-moderate divisions, emphasizing shared values. Argues differences are tactical, not ideological. Uses Spanberger (VA) vs. Mondaire (NY) as examples of appropriate local variation.
+                        
+                        <button class="drilldown-toggle" onclick="toggleDrilldown('party-unity')">▼ Show Detailed Analysis</button>
+                        
+                        <div class="drilldown-content" id="party-unity">
+                            <div class="drilldown-details">
+                                <strong>Obama's Framework:</strong><br>
+                                • <em>Divisions are magnified by media</em> - The actual policy differences are smaller than portrayed<br>
+                                • <em>Shared core values</em> - Bernie Sanders, Nancy Pelosi, Chuck Schumer, Hakeem Jeffries, and AOC all believe in equality, non-discrimination, strong safety nets, and market regulation<br>
+                                • <em>Tactical differences only</em> - Arguments aren't about what to achieve, but how to get it done<br><br>
+                                
+                                <strong>Strategic Approach:</strong><br>
+                                • Embrace robust debate as healthy and necessary<br>
+                                • Avoid nationalizing every issue - recognize that different approaches work in different places<br>
+                                • Allow for ideological flexibility based on local context<br><br>
+                                
+                                <strong>Case Studies:</strong><br>
+                                • <em>Abigail Spanberger (Virginia)</em> - Ran a centrist campaign in a competitive district, won convincingly<br>
+                                • <em>Mondaire Jones (New York)</em> - Ran an explicitly socialist grassroots campaign, succeeded in NYC<br>
+                                • <em>Key insight</em> - Both approaches are valid; what works in New York City cannot win in Virginia, and that's okay<br><br>
+                                
+                                <strong>The Pragmatist's View:</strong> Stop treating tactical differences as existential battles. Focus on shared goals, let candidates run campaigns suited to their districts, and maintain party unity around core Democratic values.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-time">27:18 - 35:03</div>
+                    <div class="timeline-topic">Youth Mobilization & Cultural Connection</div>
+                    <div class="timeline-description">
+                        <strong>Cohen's Question:</strong> How do we remobilize young voters after Democrats lost their grip on culture?<br><br>
+                        
+                        Obama reflects on aging out of youth culture, emphasizes need for joy in politics, and criticizes Democrats for "scolding" and "virtue signaling" that alienates ordinary people. Stresses welcoming environment over litmus tests.
+                        
+                        <button class="drilldown-toggle" onclick="toggleDrilldown('youth-mobilization')">▼ Show Detailed Analysis</button>
+                        
+                        <div class="drilldown-content" id="youth-mobilization">
+                            <div class="drilldown-details">
+                                <strong>The Aging Out Reality:</strong><br>
+                                • <em>"I am 64 now"</em> - Obama acknowledges he's no longer young<br>
+                                • Half the references his daughters make about social media, TikTok, etc. - he doesn't know who they're talking about<br>
+                                • <em>"At some point, you age out"</em> - Natural lifecycle of political leadership<br>
+                                • Need candidates plugged into the zeitgeist, the times, and struggles people face looking toward the future<br><br>
+                                
+                                <strong>What Worked in 2008:</strong><br>
+                                • <em>Joy and community</em> - "Our campaign was fun. We built a community"<br>
+                                • Gave people a sense that being part of this meant doing something meaningful<br>
+                                • <em>Young people ran the campaigns</em> - They were empowered, not just used<br>
+                                • Created an environment that felt welcoming and exciting<br><br>
+                                
+                                <strong>The Cultural Problem Democrats Face:</strong><br>
+                                • <em>Sounding like scolds</em> - A certain way of talking about issues that felt judgmental<br>
+                                • <em>Virtue signaling</em> - Making it seem like ordinary folks had to meet litmus tests<br>
+                                • If people didn't say things in exactly the right way, they felt chastised<br>
+                                • This created an unwelcoming environment that turned people off<br><br>
+                                
+                                <strong>The Path Forward:</strong><br>
+                                • Tell a different story: <em>"None of us are perfect, all of us count, we can all learn from each other"</em><br>
+                                • Create a welcoming environment, not an exclusionary one<br>
+                                • <em>Return to joy and community building:</em><br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;→ Politics should feel fun and meaningful, not like a burden or obligation<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;→ Build community where people feel they belong to something larger<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;→ Give participants a sense of agency and purpose<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;→ Move away from doom-scrolling and negativity toward hope and action<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;→ Make participation feel like joining a movement, not just supporting a candidate<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;→ Celebrate shared values and progress rather than constantly criticizing<br>
+                                &nbsp;&nbsp;&nbsp;&nbsp;→ Create spaces (like the Presidential Center) where people can gather, connect, and be inspired<br>
+                                • Empower young leaders rather than just using them as volunteers
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-time">35:03 - 43:57</div>
+                    <div class="timeline-topic">Presidential Center & Civic Engagement</div>
+                    <div class="timeline-description">Obama discusses his post-presidency focus: lifting up new leaders through the Presidential Center. Opening June 2025, it will feature creative spaces and Chicago Public Library to reinvigorate civic participation.</div>
+                </div>
+            </div>
+            
+            <div class="timeline-item">
+                <div class="timeline-content">
+                    <div class="timeline-time">43:57 - 47:35</div>
+                    <div class="timeline-topic">Lightning Round</div>
+                    <div class="timeline-description">Playful rapid-fire questions about aliens (real but not in Area 51), wanting to meet the new Chicago Pope, and Tupac being "alive on my playlist."</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="key-quotes">
+            <h2 class="section-title">Notable Quotes</h2>
+            
+            <div class="quote-card">
+                <div class="quote-text">"The majority of the American people find this behavior deeply troubling... they still believe in decency, courtesy, kindness. There's this sort of clown show that's happening in social media and on television."</div>
+                <div class="quote-context">On the state of political discourse</div>
+            </div>
+            
+            <div class="quote-card">
+                <div class="quote-text">"That kind of heroic, sustained behavior in sub-zero weather by ordinary people is what should give us hope... it's going to be because we citizens are activated and paying attention and saying 'enough.'"</div>
+                <div class="quote-context">On the Minneapolis community response to ICE operations</div>
+            </div>
+            
+            <div class="quote-card">
+                <div class="quote-text">"We've got the harder job. We believe in government as a tool for good... Tearing stuff down doesn't require all that."</div>
+                <div class="quote-context">On the asymmetry between Democratic and Republican governance</div>
+            </div>
+            
+            <div class="quote-card">
+                <div class="quote-text">"The divisions in the Democratic party tend to get magnified in the media... Most of the time, the differences are tactical."</div>
+                <div class="quote-context">On progressive-moderate tensions</div>
+            </div>
+            
+            <div class="quote-card">
+                <div class="quote-text">"There was a certain way of talking about issues for Democrats where we sounded like scolds... If you want to create an environment that is welcoming, then the story we tell has to be: 'None of us are perfect, all of us count.'"</div>
+                <div class="quote-context">On Democrats' cultural messaging problem</div>
+            </div>
+            
+            <div class="quote-card">
+                <div class="quote-text">"It's not just a museum for Michelle's dresses; the heart of it is a music studio, a podcast recording space, and a Chicago Public Library."</div>
+                <div class="quote-context">On the Presidential Center's mission</div>
+            </div>
+        </div>
+
+        <div class="themes-section">
+            <h2 class="section-title">Interview Statistics</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">7</div>
+                    <div class="stat-label">Major Topics</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">6</div>
+                    <div class="stat-label">Key Themes</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">47</div>
+                    <div class="stat-label">Minutes</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">2028</div>
+                    <div class="stat-label">Election Focus</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function toggleDrilldown(id) {
+            const content = document.getElementById(id);
+            const button = event.target;
+            
+            if (content.classList.contains('expanded')) {
+                content.classList.remove('expanded');
+                button.textContent = '▼ Show Detailed Analysis';
+            } else {
+                content.classList.add('expanded');
+                button.textContent = '▲ Hide Detailed Analysis';
+            }
+        }
+    </script>
+</body>
+</html>

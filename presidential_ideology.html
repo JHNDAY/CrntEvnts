@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evolution of Presidential Ideology 1901-2025</title>
+    <script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        #chart {
+            margin: 20px 0;
+        }
+        .tooltip {
+            position: absolute;
+            background: rgba(0, 0, 0, 0.9);
+            color: white;
+            padding: 12px;
+            border-radius: 4px;
+            font-size: 13px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+            max-width: 300px;
+            line-height: 1.5;
+        }
+        .legend {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 4px;
+        }
+        .legend-item {
+            display: inline-block;
+            margin-right: 25px;
+            margin-bottom: 10px;
+        }
+        .legend-color {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            margin-right: 8px;
+            vertical-align: middle;
+            border-radius: 3px;
+        }
+        .era-label {
+            font-size: 11px;
+            fill: #666;
+            font-style: italic;
+        }
+        .controls {
+            margin: 20px 0;
+            text-align: center;
+        }
+        .control-btn {
+            padding: 8px 16px;
+            margin: 0 5px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        .control-btn.active {
+            background: #4a90e2;
+            color: white;
+            border-color: #4a90e2;
+        }
+        .control-btn:hover {
+            background: #e8e8e8;
+        }
+        .control-btn.active:hover {
+            background: #357abd;
+        }
+        .methodology {
+            margin: 20px 0;
+            padding: 15px;
+            background: #fff9e6;
+            border-left: 4px solid #f39c12;
+            border-radius: 4px;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+        .methodology h3 {
+            margin-top: 0;
+            color: #d68910;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Evolution of U.S. Presidential Ideology</h1>
+        <div class="subtitle">Theodore Roosevelt (1901) to Joe Biden (2025)</div>
+        
+        <div class="controls">
+            <button class="control-btn active" onclick="showView('ideology')">Ideological Spectrum</button>
+            <button class="control-btn" onclick="showView('party')">Party Alignment</button>
+            <button class="control-btn" onclick="showView('activist')">Activist vs. Limited Government</button>
+            <button class="control-btn" onclick="showView('corruption')">Corruption Level</button>
+            <button class="control-btn" onclick="showView('autocratic')">Autocratic Tendency</button>
+        </div>
+
+        <div id="chart"></div>
+        
+        <div class="legend">
+            <div class="legend-item">
+                <span class="legend-color" style="background: #e74c3c;"></span>
+                <span>Republican</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-color" style="background: #3498db;"></span>
+                <span>Democrat</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-color" style="background: #95a5a6;"></span>
+                <span>Progressive/Bull Moose</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-color" style="background: white; border: 3px dashed #ff9800; box-sizing: border-box;"></span>
+                <span>In Progress (Provisional)</span>
+            </div>
+        </div>
+
+        <div class="methodology">
+            <h3>⚠️ Methodology Note - Interpretive Assessments</h3>
+            <p><strong>Y-axis values are subjective scholarly judgments, NOT quantitative measurements or historical consensus.</strong> These ratings represent plausible inferences based on historical scholarship and documented events:</p>
+            <ul style="margin: 10px 0; font-size: 12px;">
+                <li><strong>Ideological Spectrum:</strong> Policy initiatives, regulatory philosophy, economic approach, political coalitions relative to their era</li>
+                <li><strong>Activist vs. Limited Government:</strong> Scope and expansion/contraction of federal power</li>
+                <li><strong>Corruption Level (0-5):</strong> Documented scandals, criminal convictions of officials, abuse of office for personal gain, cronyism, refusal to divest from business interests. Key distinction: Nixon attempted to hide corruption; Trump's was often conducted openly. Examples: Teapot Dome (Harding), Watergate (Nixon), emoluments violations/two impeachments/classified documents retention (Trump)</li>
+                <li><strong>Autocratic Tendency (0-5):</strong> Violations of democratic norms, attacks on institutions, suppression of dissent, power concentration, election integrity challenges. Examples: Sedition Act enforcement (Wilson), court-packing (FDR), Watergate abuses (Nixon), surveillance expansion (G.W. Bush), January 6th (Trump)</li>
+            </ul>
+            <p style="margin-top: 12px; font-size: 12px;"><strong>Critical caveat:</strong> Corruption and autocratic tendency measures are <em>especially</em> contentious and reflect interpretations that reasonable historians debate. These assessments draw on documented events but involve significant judgment about severity and context. Use these visualizations as conversation starters, not definitive verdicts.</p>
+            <div style="margin-top: 15px; padding: 12px; background: #fff3cd; border-left: 4px solid #ff9800; border-radius: 3px;">
+                <p style="margin: 0; font-size: 12px; color: #856404;"><strong>⚠️ PROVISIONAL ASSESSMENT - Trump 2nd Term (2025-present):</strong></p>
+                <p style="margin: 8px 0 0 0; font-size: 12px; color: #856404;">Assessing an ongoing administration presents unique challenges. Scores for Trump's second term are <strong>highly provisional</strong> and based on documented actions in the first 13 months: mass pardons of January 6th defendants, executive order assertions, loyalty-based personnel decisions, rhetoric about institutional opponents. Historical distance is essential for fair assessment—complete information, declassified documents, and scholarly consensus require years to develop. These scores will likely require significant revision. The tension between real-time civic engagement and historical perspective is itself an important pedagogical question.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="tooltip" id="tooltip"></div>
+
+    <script>
+        // Wait for d3 to load
+        if (typeof d3 === 'undefined') {
+            console.error('d3 failed to load');
+            document.getElementById('chart').innerHTML = '<p style="color: red; text-align: center;">Error loading visualization library. Please refresh the page.</p>';
+        }
+
+        const presidents = [
+            {name: "T. Roosevelt", party: "R", start: 1901, end: 1909, ideology: -1.5, activist: 3, corruption: 1, autocratic: 1, description: "Progressive Republican - Trust-busting, conservation, Square Deal"},
+            {name: "Taft", party: "R", start: 1909, end: 1913, ideology: 1, activist: 1, corruption: 0.5, autocratic: 0, description: "Conservative Republican - Continued some progressive policies but more cautious"},
+            {name: "Wilson", party: "D", start: 1913, end: 1921, ideology: -2, activist: 3, corruption: 0.5, autocratic: 3, description: "Progressive Democrat - Federal Reserve, labor rights, League of Nations; Sedition Act, segregated federal workforce"},
+            {name: "Harding", party: "R", start: 1921, end: 1923, ideology: 3, activist: -2, corruption: 4, autocratic: 0, description: "Conservative - Return to normalcy; Teapot Dome scandal, widespread cronyism"},
+            {name: "Coolidge", party: "R", start: 1923, end: 1929, ideology: 3.5, activist: -3, corruption: 0.5, autocratic: 0, description: "Very conservative - 'The business of America is business,' minimal intervention"},
+            {name: "Hoover", party: "R", start: 1929, end: 1933, ideology: 2.5, activist: -1, corruption: 0, autocratic: 0, description: "Conservative Republican - Initial reluctance to federal intervention in Depression"},
+            {name: "FDR (1st)", party: "D", start: 1933, end: 1937, ideology: -3, activist: 4, corruption: 1, autocratic: 1, description: "First New Deal - Banking reform, NRA, AAA, TVA, Social Security (1935)"},
+            {name: "FDR (2nd)", party: "D", start: 1937, end: 1941, ideology: -3.5, activist: 4.5, corruption: 1, autocratic: 2.5, description: "Second New Deal - Court-packing attempt, continued reforms, Fair Labor Standards Act"},
+            {name: "FDR (3rd)", party: "D", start: 1941, end: 1945, ideology: -2.5, activist: 4, corruption: 1, autocratic: 2, description: "WWII Leadership - War mobilization, unprecedented federal economic control, Japanese internment"},
+            {name: "FDR (4th)", party: "D", start: 1945, end: 1945.3, ideology: -2.5, activist: 4, corruption: 1, autocratic: 2, description: "Fourth term (died April 1945) - Planning postwar order, Yalta Conference"},
+            {name: "Truman", party: "D", start: 1945.3, end: 1953, ideology: -2, activist: 2, corruption: 1.5, autocratic: 1, description: "Fair Deal Liberal - Continued New Deal, labor rights, civil rights advocacy; some cronyism allegations"},
+            {name: "Eisenhower", party: "R", start: 1953, end: 1961, ideology: 0, activist: 0, corruption: 0.5, autocratic: 0.5, description: "Moderate Republican - Accepted New Deal framework, interstate highways"},
+            {name: "Kennedy", party: "D", start: 1961, end: 1963, ideology: -1.5, activist: 2, corruption: 1, autocratic: 1, description: "Liberal Democrat - New Frontier, space program, civil rights support; Bay of Pigs"},
+            {name: "L. Johnson", party: "D", start: 1963, end: 1969, ideology: -2.5, activist: 4, corruption: 1.5, autocratic: 1.5, description: "Great Society Liberal - Civil Rights, Medicare, War on Poverty; Vietnam escalation, credibility gap"},
+            {name: "Nixon", party: "R", start: 1969, end: 1974, ideology: 0.5, activist: 1, corruption: 4.5, autocratic: 4, description: "Moderate Republican - EPA created; Watergate, abuse of power, enemies list, resigned"},
+            {name: "Ford", party: "R", start: 1974, end: 1977, ideology: 1, activist: 0, corruption: 0, autocratic: 0, description: "Moderate-Conservative Republican - Continued Nixon policies, pardoned Nixon"},
+            {name: "Carter", party: "D", start: 1977, end: 1981, ideology: -1, activist: 1, corruption: 0, autocratic: 0, description: "Moderate Liberal - Deregulation, human rights, energy policy"},
+            {name: "Reagan", party: "R", start: 1981, end: 1989, ideology: 3, activist: -2, corruption: 2, autocratic: 1, description: "Conservative Revolution - Tax cuts, deregulation; Iran-Contra scandal"},
+            {name: "G.H.W. Bush", party: "R", start: 1989, end: 1993, ideology: 2, activist: -1, corruption: 0.5, autocratic: 0.5, description: "Conservative Republican - Continued Reagan policies with some moderation"},
+            {name: "Clinton", party: "D", start: 1993, end: 2001, ideology: -0.5, activist: 0, corruption: 1.5, autocratic: 0.5, description: "New Democrat/Third Way - Welfare reform, balanced budget; personal scandals, impeachment"},
+            {name: "G.W. Bush", party: "R", start: 2001, end: 2009, ideology: 2, activist: 1, corruption: 1, autocratic: 2.5, description: "Compassionate Conservative - Tax cuts, expanded Medicare; Iraq War, enhanced interrogation, warrantless surveillance"},
+            {name: "Obama", party: "D", start: 2009, end: 2017, ideology: -2, activist: 2, corruption: 0.5, autocratic: 1, description: "Progressive Liberal - ACA, stimulus, climate action, LGBTQ rights; drone strikes, executive actions"},
+            {name: "Trump", party: "R", start: 2017, end: 2021, ideology: 2.5, activist: 0, corruption: 5, autocratic: 4.5, description: "Populist Conservative - Emoluments violations, two impeachments, charity fraud, campaign finance violations, retention of classified documents, refused to divest businesses"},
+            {name: "Biden", party: "D", start: 2021, end: 2025, ideology: -1.5, activist: 3, corruption: 0.5, autocratic: 0, description: "Progressive Liberal - Infrastructure, climate investment, expanded social programs"},
+            {name: "Trump (2nd)", party: "R", start: 2025, end: 2026, ideology: 3, activist: 0.5, corruption: 5, autocratic: 5, inProgress: true, description: "PROVISIONAL - Second term in progress (Jan 2025-present): Mass pardons of Jan 6 defendants, executive order overreach claims, loyalty-based appointments, retribution rhetoric, institutional attacks. Scores subject to revision."}
+        ];
+
+        const eras = [
+            {name: "Progressive Era", start: 1901, end: 1920},
+            {name: "Conservative '20s", start: 1920, end: 1933},
+            {name: "New Deal Era", start: 1933, end: 1953},
+            {name: "Postwar Consensus", start: 1953, end: 1980},
+            {name: "Conservative Era", start: 1980, end: 2008},
+            {name: "Polarization", start: 2008, end: 2025}
+        ];
+
+        let currentView = 'ideology';
+
+        const margin = {top: 40, right: 60, bottom: 60, left: 80};
+        const width = 1300 - margin.left - margin.right;
+        const height = 600 - margin.top - margin.bottom;
+
+        function getYValue(d) {
+            if (currentView === 'ideology') return d.ideology;
+            if (currentView === 'party') return d.party === 'R' ? 1 : -1;
+            if (currentView === 'activist') return d.activist;
+            if (currentView === 'corruption') return d.corruption;
+            if (currentView === 'autocratic') return d.autocratic;
+        }
+
+        function getYLabel() {
+            if (currentView === 'ideology') return 'Ideological Position';
+            if (currentView === 'party') return 'Party Control';
+            if (currentView === 'activist') return 'Government Role';
+            if (currentView === 'corruption') return 'Corruption Level';
+            if (currentView === 'autocratic') return 'Autocratic Tendency';
+        }
+
+        function getYDomain() {
+            if (currentView === 'ideology') return [-4, 4];
+            if (currentView === 'party') return [-1.5, 1.5];
+            if (currentView === 'activist') return [-4, 5];
+            if (currentView === 'corruption') return [0, 5];
+            if (currentView === 'autocratic') return [0, 5];
+        }
+
+        function drawChart() {
+            d3.select("#chart").selectAll("*").remove();
+
+            const svg = d3.select("#chart")
+                .append("svg")
+                .attr("width", width + margin.left + margin.right)
+                .attr("height", height + margin.top + margin.bottom)
+                .append("g")
+                .attr("transform", `translate(${margin.left},${margin.top})`);
+
+            const x = d3.scaleLinear()
+                .domain([1900, 2026])
+                .range([0, width]);
+
+            const y = d3.scaleLinear()
+                .domain(getYDomain())
+                .range([height, 0]);
+
+            // Era backgrounds
+            eras.forEach(era => {
+                svg.append("rect")
+                    .attr("x", x(era.start))
+                    .attr("y", 0)
+                    .attr("width", x(era.end) - x(era.start))
+                    .attr("height", height)
+                    .attr("fill", "#f0f0f0")
+                    .attr("opacity", 0.3);
+                
+                svg.append("text")
+                    .attr("x", x((era.start + era.end) / 2))
+                    .attr("y", 15)
+                    .attr("text-anchor", "middle")
+                    .attr("class", "era-label")
+                    .text(era.name);
+            });
+
+            // Grid lines
+            svg.append("g")
+                .attr("class", "grid")
+                .attr("opacity", 0.1)
+                .call(d3.axisLeft(y)
+                    .tickSize(-width)
+                    .tickFormat(""));
+
+            // Zero line
+            svg.append("line")
+                .attr("x1", 0)
+                .attr("x2", width)
+                .attr("y1", y(0))
+                .attr("y2", y(0))
+                .attr("stroke", "#333")
+                .attr("stroke-width", 1)
+                .attr("stroke-dasharray", "5,5");
+
+            // Line path
+            const line = d3.line()
+                .x(d => x((d.start + d.end) / 2))
+                .y(d => y(getYValue(d)))
+                .curve(d3.curveCatmullRom.alpha(0.5));
+
+            svg.append("path")
+                .datum(presidents)
+                .attr("fill", "none")
+                .attr("stroke", "#666")
+                .attr("stroke-width", 2)
+                .attr("d", line);
+
+            // President points
+            const tooltip = d3.select("#tooltip");
+
+            svg.selectAll("circle")
+                .data(presidents)
+                .enter()
+                .append("circle")
+                .attr("cx", d => x((d.start + d.end) / 2))
+                .attr("cy", d => y(getYValue(d)))
+                .attr("r", 6)
+                .attr("fill", d => d.party === 'R' ? '#e74c3c' : '#3498db')
+                .attr("stroke", d => d.inProgress ? "#ff9800" : "#fff")
+                .attr("stroke-width", d => d.inProgress ? 3 : 2)
+                .attr("stroke-dasharray", d => d.inProgress ? "4,2" : "0")
+                .style("cursor", "pointer")
+                .style("opacity", d => d.inProgress ? 0.85 : 1)
+                .on("mouseover", function(event, d) {
+                    d3.select(this)
+                        .transition()
+                        .duration(200)
+                        .attr("r", 9);
+                    
+                    const prefix = d.inProgress ? "<strong style='color: #ff9800;'>⚠️ IN PROGRESS - PROVISIONAL</strong><br>" : "";
+                    tooltip
+                        .style("opacity", 1)
+                        .html(`
+                            ${prefix}
+                            <strong>${d.name}</strong> (${d.start}-${d.end}${d.inProgress ? ' ongoing' : ''})<br>
+                            ${d.party === 'R' ? 'Republican' : 'Democrat'}<br>
+                            ${d.description}
+                        `)
+                        .style("left", (event.pageX + 10) + "px")
+                        .style("top", (event.pageY - 10) + "px");
+                })
+                .on("mouseout", function() {
+                    d3.select(this)
+                        .transition()
+                        .duration(200)
+                        .attr("r", 6);
+                    
+                    tooltip.style("opacity", 0);
+                });
+
+            // Labels for some presidents
+            const labeledPresidents = presidents.filter((d, i) => 
+                i % 2 === 0 || ['FDR (1st)', 'FDR (2nd)', 'Reagan', 'Obama', 'Trump'].includes(d.name)
+            );
+
+            svg.selectAll(".president-label")
+                .data(labeledPresidents)
+                .enter()
+                .append("text")
+                .attr("x", d => x((d.start + d.end) / 2))
+                .attr("y", d => y(getYValue(d)) - 12)
+                .attr("text-anchor", "middle")
+                .attr("font-size", "10px")
+                .attr("fill", "#333")
+                .text(d => d.name);
+
+            // Axes
+            svg.append("g")
+                .attr("transform", `translate(0,${height})`)
+                .call(d3.axisBottom(x).tickFormat(d3.format("d")).ticks(12))
+                .selectAll("text")
+                .attr("font-size", "11px");
+
+            const yAxis = svg.append("g")
+                .call(d3.axisLeft(y));
+
+            if (currentView === 'ideology') {
+                yAxis.selectAll("text").text((d, i, nodes) => {
+                    if (d === 0) return "Centrist";
+                    if (d > 0) return d === 4 ? "Very Conservative" : "Conservative";
+                    if (d < 0) return d === -4 ? "Very Liberal" : "Liberal";
+                });
+            } else if (currentView === 'party') {
+                yAxis.selectAll("text").text((d) => {
+                    if (d > 0) return "Republican";
+                    if (d < 0) return "Democrat";
+                    return "Split";
+                });
+            } else if (currentView === 'activist') {
+                yAxis.selectAll("text").text((d, i, nodes) => {
+                    if (d === 0) return "Moderate";
+                    if (d > 0) return d >= 3 ? "Very Active" : "Active Gov't";
+                    if (d < 0) return d <= -3 ? "Very Limited" : "Limited Gov't";
+                });
+            } else if (currentView === 'corruption') {
+                yAxis.selectAll("text").text((d) => {
+                    if (d === 0) return "Clean";
+                    if (d === 1) return "Minor Issues";
+                    if (d === 2) return "Moderate";
+                    if (d === 3) return "Significant";
+                    if (d === 4) return "Major Scandal";
+                    if (d === 5) return "Severe";
+                    return d.toString();
+                });
+            } else if (currentView === 'autocratic') {
+                yAxis.selectAll("text").text((d) => {
+                    if (d === 0) return "Democratic Norms";
+                    if (d === 1) return "Minor Concerns";
+                    if (d === 2) return "Moderate";
+                    if (d === 3) return "Significant";
+                    if (d === 4) return "Major Violations";
+                    if (d === 5) return "Severe";
+                    return d.toString();
+                });
+            }
+
+            // Y-axis label
+            svg.append("text")
+                .attr("transform", "rotate(-90)")
+                .attr("y", -60)
+                .attr("x", -height / 2)
+                .attr("text-anchor", "middle")
+                .attr("font-size", "14px")
+                .attr("font-weight", "bold")
+                .text(getYLabel());
+
+            // X-axis label
+            svg.append("text")
+                .attr("x", width / 2)
+                .attr("y", height + 50)
+                .attr("text-anchor", "middle")
+                .attr("font-size", "14px")
+                .attr("font-weight", "bold")
+                .text("Year");
+        }
+
+        function showView(view) {
+            currentView = view;
+            document.querySelectorAll('.control-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            drawChart();
+        }
+
+        // Draw chart only if d3 is available
+        if (typeof d3 !== 'undefined') {
+            drawChart();
+        }
+    </script>
+</body>
+</html>
