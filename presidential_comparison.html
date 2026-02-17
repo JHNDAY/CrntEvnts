@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presidential Historians Comparison</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(to bottom right, #f8fafc, #e2e8f0);
+            min-height: 100vh;
+            padding: 1.5rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: linear-gradient(to right, #1e3a8a, #1e40af);
+            border-radius: 0.75rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 2.25rem;
+            font-weight: bold;
+            margin-bottom: 0.75rem;
+        }
+
+        .header p {
+            color: #bfdbfe;
+            font-size: 1.125rem;
+        }
+
+        .historian-tags {
+            margin-top: 1rem;
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .historian-tag {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+        }
+
+        .historians-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .historian-card {
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-top: 6px solid;
+        }
+
+        .historian-card:hover {
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .historian-card.active {
+            ring: 4px;
+            ring-offset: 2px;
+        }
+
+        .historian-name {
+            font-weight: bold;
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .framework-badge {
+            display: inline-block;
+            background: #f1f5f9;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: #475569;
+            margin-bottom: 1rem;
+        }
+
+        .focus-text {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 0.75rem;
+        }
+
+        .quote-box {
+            background: #f8fafc;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid;
+        }
+
+        .quote-box p {
+            font-size: 0.875rem;
+            font-style: italic;
+            color: #64748b;
+        }
+
+        .expanded-content {
+            margin-top: 1rem;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .emphasis-section {
+            margin-bottom: 1rem;
+        }
+
+        .emphasis-title {
+            font-weight: 600;
+            font-size: 0.875rem;
+            color: #475569;
+            margin-bottom: 0.5rem;
+        }
+
+        .emphasis-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .emphasis-list li {
+            font-size: 0.875rem;
+            color: #64748b;
+            padding-left: 1rem;
+            position: relative;
+            margin-bottom: 0.25rem;
+        }
+
+        .emphasis-list li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            font-weight: bold;
+        }
+
+        .approach-text {
+            padding-top: 0.75rem;
+            border-top: 1px solid #e2e8f0;
+            font-size: 0.875rem;
+            color: #64748b;
+        }
+
+        .comparison-section {
+            background: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #1e293b;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .icon {
+            width: 24px;
+            height: 24px;
+        }
+
+        .theme-card {
+            border: 2px solid #e2e8f0;
+            border-radius: 0.5rem;
+            padding: 1.25rem;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .theme-card:hover {
+            border-color: #60a5fa;
+        }
+
+        .theme-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .theme-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #1e293b;
+        }
+
+        .theme-comparison {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e2e8f0;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        .perspective-box {
+            padding: 1rem;
+            border-radius: 0.5rem;
+        }
+
+        .perspective-label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .perspective-text {
+            font-size: 0.875rem;
+            color: #475569;
+        }
+
+        .insights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .insight-card {
+            background: linear-gradient(to bottom right, #f0fdf4, #dcfce7);
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+            border-left: 4px solid #22c55e;
+        }
+
+        .insight-card.differences {
+            background: linear-gradient(to bottom right, #fff7ed, #fed7aa);
+            border-left-color: #f97316;
+        }
+
+        .insight-title {
+            font-size: 1.25rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .insight-title.consensus {
+            color: #166534;
+        }
+
+        .insight-title.differences {
+            color: #9a3412;
+        }
+
+        .insight-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .insight-list li {
+            display: flex;
+            align-items: start;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            color: #475569;
+        }
+
+        .insight-icon {
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .insight-icon.check {
+            color: #16a34a;
+        }
+
+        .insight-icon.diamond {
+            color: #ea580c;
+        }
+
+        .footer {
+            text-align: center;
+            color: #64748b;
+            font-size: 0.875rem;
+            margin-top: 2rem;
+        }
+
+        .footer p {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer .quote {
+            font-style: italic;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.75rem;
+            }
+
+            .historians-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Presidential Historians Compare</h1>
+            <p>Three Perspectives on Presidential Greatness • Presidents' Day 2026</p>
+            <div class="historian-tags">
+                <span class="historian-tag">Doris Kearns Goodwin</span>
+                <span class="historian-tag">Doug Brinkley</span>
+                <span class="historian-tag">Jon Meacham</span>
+            </div>
+        </div>
+
+        <!-- Historians Grid -->
+        <div class="historians-grid">
+            <!-- Doris Kearns Goodwin -->
+            <div class="historian-card" data-historian="goodwin" style="border-top-color: #16a085;">
+                <h3 class="historian-name" style="color: #16a085;">Doris Kearns Goodwin</h3>
+                <span class="framework-badge">Personal Virtues</span>
+                <p class="focus-text">Character & Moral Qualities</p>
+                <div class="quote-box" style="border-left-color: #16a085;">
+                    <p>"The greatest thing a president can do is the display of his character, setting an example and upholding the standards."</p>
+                </div>
+                <div class="expanded-content hidden" data-content="goodwin">
+                    <div class="emphasis-section">
+                        <p class="emphasis-title">Key Emphasis:</p>
+                        <ul class="emphasis-list" style="color: #16a085;">
+                            <li>Humility - surrounding himself with rivals</li>
+                            <li>Empathy - reconciliation without retribution</li>
+                            <li>Optimism - FDR changing national mood</li>
+                            <li>Character qualities you'd want in your children</li>
+                        </ul>
+                    </div>
+                    <div class="approach-text">
+                        Focuses on the internal moral qualities and character traits that make presidents great role models and examples for the nation.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Doug Brinkley -->
+            <div class="historian-card" data-historian="brinkley" style="border-top-color: #2980b9;">
+                <h3 class="historian-name" style="color: #2980b9;">Doug Brinkley</h3>
+                <span class="framework-badge">Tangible Contributions</span>
+                <p class="focus-text">Legacy & Achievements</p>
+                <div class="quote-box" style="border-left-color: #2980b9;">
+                    <p>"Abraham Lincoln gave us foundational documents: the Gettysburg Address, the Emancipation Proclamation..."</p>
+                </div>
+                <div class="expanded-content hidden" data-content="brinkley">
+                    <div class="emphasis-section">
+                        <p class="emphasis-title">Key Emphasis:</p>
+                        <ul class="emphasis-list" style="color: #2980b9;">
+                            <li>Lincoln's foundational documents</li>
+                            <li>Washington setting institutional precedents</li>
+                            <li>JFK's technological innovation (GPS, MRI, CAT scans)</li>
+                            <li>Theodore Roosevelt's conservation (234M acres)</li>
+                            <li>Carter's diplomatic achievements (Camp David)</li>
+                        </ul>
+                    </div>
+                    <div class="approach-text">
+                        Emphasizes concrete accomplishments and lasting institutional/environmental legacies that continue to benefit society.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Jon Meacham -->
+            <div class="historian-card" data-historian="meacham" style="border-top-color: #8e44ad;">
+                <h3 class="historian-name" style="color: #8e44ad;">Jon Meacham</h3>
+                <span class="framework-badge">Realistic Humanism</span>
+                <p class="focus-text">Human Complexity & Crisis Response</p>
+                <div class="quote-box" style="border-left-color: #8e44ad;">
+                    <p>"We don't elect statues. We don't elect remote icons. We elect human beings."</p>
+                </div>
+                <div class="expanded-content hidden" data-content="meacham">
+                    <div class="emphasis-section">
+                        <p class="emphasis-title">Key Emphasis:</p>
+                        <ul class="emphasis-list" style="color: #8e44ad;">
+                            <li>Presidents are flawed humans who rise to occasions</li>
+                            <li>Lincoln wasn't egalitarian until the very end</li>
+                            <li>Personal crisis response predicts leadership</li>
+                            <li>Getting 'big things right' despite imperfections</li>
+                            <li>Hope through human capability, not mythology</li>
+                        </ul>
+                    </div>
+                    <div class="approach-text">
+                        Emphasizes the humanity and imperfection of great presidents, focusing on how they responded to personal crises as predictors of national leadership.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comparative Analysis -->
+        <div class="comparison-section">
+            <h2 class="section-title">
+                <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: #eab308;">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path>
+                </svg>
+                Comparative Analysis: Common Themes, Different Lenses
+            </h2>
+
+            <!-- Theme: Lincoln -->
+            <div class="theme-card" data-theme="lincoln">
+                <div class="theme-header">
+                    <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: #2563eb;">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+                    </svg>
+                    <h3 class="theme-title">Lincoln as Model</h3>
+                </div>
+                <div class="theme-comparison hidden" data-comparison="lincoln">
+                    <div class="perspective-box" style="background: rgba(22, 160, 133, 0.08);">
+                        <p class="perspective-label" style="color: #16a085;">Goodwin's View</p>
+                        <p class="perspective-text">Humility (Team of Rivals) + Empathy (no retribution)</p>
+                    </div>
+                    <div class="perspective-box" style="background: rgba(41, 128, 185, 0.08);">
+                        <p class="perspective-label" style="color: #2980b9;">Brinkley's View</p>
+                        <p class="perspective-text">Foundational documents + #1 ranked president</p>
+                    </div>
+                    <div class="perspective-box" style="background: rgba(142, 68, 173, 0.08);">
+                        <p class="perspective-label" style="color: #8e44ad;">Meacham's View</p>
+                        <p class="perspective-text">Not an egalitarian until end, but got big things right</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Theme: Character -->
+            <div class="theme-card" data-theme="character">
+                <div class="theme-header">
+                    <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: #2563eb;">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <h3 class="theme-title">Character vs Achievement</h3>
+                </div>
+                <div class="theme-comparison hidden" data-comparison="character">
+                    <div class="perspective-box" style="background: rgba(22, 160, 133, 0.08);">
+                        <p class="perspective-label" style="color: #16a085;">Goodwin's View</p>
+                        <p class="perspective-text">Character IS the achievement - moral example</p>
+                    </div>
+                    <div class="perspective-box" style="background: rgba(41, 128, 185, 0.08);">
+                        <p class="perspective-label" style="color: #2980b9;">Brinkley's View</p>
+                        <p class="perspective-text">Achievement creates lasting legacy</p>
+                    </div>
+                    <div class="perspective-box" style="background: rgba(142, 68, 173, 0.08);">
+                        <p class="perspective-label" style="color: #8e44ad;">Meacham's View</p>
+                        <p class="perspective-text">Character shown through crisis response</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Theme: Theodore Roosevelt -->
+            <div class="theme-card" data-theme="roosevelt">
+                <div class="theme-header">
+                    <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: #2563eb;">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                    </svg>
+                    <h3 class="theme-title">Theodore Roosevelt</h3>
+                </div>
+                <div class="theme-comparison hidden" data-comparison="roosevelt">
+                    <div class="perspective-box" style="background: rgba(22, 160, 133, 0.08);">
+                        <p class="perspective-label" style="color: #16a085;">Goodwin's View</p>
+                        <p class="perspective-text">President of all the people</p>
+                    </div>
+                    <div class="perspective-box" style="background: rgba(41, 128, 185, 0.08);">
+                        <p class="perspective-label" style="color: #2980b9;">Brinkley's View</p>
+                        <p class="perspective-text">Conservation kingpin (234M acres saved)</p>
+                    </div>
+                    <div class="perspective-box" style="background: rgba(142, 68, 173, 0.08);">
+                        <p class="perspective-label" style="color: #8e44ad;">Meacham's View</p>
+                        <p class="perspective-text">Lost young wife - personal crisis shaped leadership</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Theme: Humanity -->
+            <div class="theme-card" data-theme="humanity">
+                <div class="theme-header">
+                    <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="color: #2563eb;">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
+                    </svg>
+                    <h3 class="theme-title">Presidential Humanity</h3>
+                </div>
+                <div class="theme-comparison hidden" data-comparison="humanity">
+                    <div class="perspective-box" style="background: rgba(22, 160, 133, 0.08);">
+                        <p class="perspective-label" style="color: #16a085;">Goodwin's View</p>
+                        <p class="perspective-text">Qualities you want in your kids and leaders</p>
+                    </div>
+                    <div class="perspective-box" style="background: rgba(41, 128, 185, 0.08);">
+                        <p class="perspective-label" style="color: #2980b9;">Brinkley's View</p>
+                        <p class="perspective-text">Human achievements with lasting impact</p>
+                    </div>
+                    <div class="perspective-box" style="background: rgba(142, 68, 173, 0.08);">
+                        <p class="perspective-label" style="color: #8e44ad;">Meacham's View</p>
+                        <p class="perspective-text">Flawed humans who rise to occasions</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key Insights -->
+        <div class="insights-grid">
+            <div class="insight-card">
+                <h3 class="insight-title consensus">Points of Consensus</h3>
+                <ul class="insight-list">
+                    <li>
+                        <span class="insight-icon check">✓</span>
+                        <span>Lincoln represents the pinnacle of presidential leadership</span>
+                    </li>
+                    <li>
+                        <span class="insight-icon check">✓</span>
+                        <span>Character and moral qualities matter more than partisan policy</span>
+                    </li>
+                    <li>
+                        <span class="insight-icon check">✓</span>
+                        <span>Theodore Roosevelt's conservation and FDR's optimism were transformative</span>
+                    </li>
+                    <li>
+                        <span class="insight-icon check">✓</span>
+                        <span>Presidents should inspire hope and set moral examples</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="insight-card differences">
+                <h3 class="insight-title differences">Distinct Perspectives</h3>
+                <ul class="insight-list">
+                    <li>
+                        <span class="insight-icon diamond">◆</span>
+                        <span><strong>Goodwin:</strong> Internal character qualities as the measure</span>
+                    </li>
+                    <li>
+                        <span class="insight-icon diamond">◆</span>
+                        <span><strong>Brinkley:</strong> External achievements and lasting legacies</span>
+                    </li>
+                    <li>
+                        <span class="insight-icon diamond">◆</span>
+                        <span><strong>Meacham:</strong> Human imperfection and crisis response</span>
+                    </li>
+                    <li>
+                        <span class="insight-icon diamond">◆</span>
+                        <span>All three offer complementary lenses, not competing views</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>Morning Joe • Presidents' Day Discussion • February 16, 2026</p>
+            <p class="quote">"The greatest presidents got big things right" — Jon Meacham</p>
+        </div>
+    </div>
+
+    <script>
+        // Historian card interactions
+        const historianCards = document.querySelectorAll('.historian-card');
+        let selectedHistorian = null;
+
+        historianCards.forEach(card => {
+            card.addEventListener('click', function() {
+                const historian = this.getAttribute('data-historian');
+                const content = this.querySelector(`[data-content="${historian}"]`);
+                
+                if (selectedHistorian === historian) {
+                    // Deselect
+                    content.classList.add('hidden');
+                    this.classList.remove('active');
+                    selectedHistorian = null;
+                } else {
+                    // Deselect previous
+                    if (selectedHistorian) {
+                        const prevCard = document.querySelector(`[data-historian="${selectedHistorian}"]`);
+                        const prevContent = prevCard.querySelector(`[data-content="${selectedHistorian}"]`);
+                        prevContent.classList.add('hidden');
+                        prevCard.classList.remove('active');
+                    }
+                    
+                    // Select new
+                    content.classList.remove('hidden');
+                    this.classList.add('active');
+                    selectedHistorian = historian;
+                }
+            });
+        });
+
+        // Theme card interactions
+        const themeCards = document.querySelectorAll('.theme-card');
+        let activeTheme = null;
+
+        themeCards.forEach(card => {
+            card.addEventListener('click', function() {
+                const theme = this.getAttribute('data-theme');
+                const comparison = this.querySelector(`[data-comparison="${theme}"]`);
+                
+                if (activeTheme === theme) {
+                    // Collapse
+                    comparison.classList.add('hidden');
+                    activeTheme = null;
+                } else {
+                    // Collapse previous
+                    if (activeTheme) {
+                        const prevCard = document.querySelector(`[data-theme="${activeTheme}"]`);
+                        const prevComparison = prevCard.querySelector(`[data-comparison="${activeTheme}"]`);
+                        prevComparison.classList.add('hidden');
+                    }
+                    
+                    // Expand new
+                    comparison.classList.remove('hidden');
+                    activeTheme = theme;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
