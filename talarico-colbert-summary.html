@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Talarico — Interview Summary</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;1,9..144,400&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f0e8;
+    --surface: #ede7d9;
+    --card: #ffffff;
+    --ink: #1a1410;
+    --muted: #7a6e62;
+    --accent: #c0392b;
+    --blue: #1a5276;
+    --gold: #b7860b;
+    --green: #1d5c3a;
+    --border: #d5cdc0;
+    --tag-bg: #1a1410;
+    --tag-text: #f5f0e8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    line-height: 1.6;
+  }
+
+  /* subtle paper texture */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 999;
+  }
+
+  header {
+    background: var(--ink);
+    color: var(--bg);
+    padding: 1.4rem 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+  }
+
+  .header-left h1 {
+    font-family: 'Fraunces', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+  }
+
+  .header-left h1 em {
+    color: #e8c97a;
+    font-style: italic;
+    font-weight: 300;
+  }
+
+  .header-left p {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    color: #8a8070;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-top: 0.3rem;
+  }
+
+  .header-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.2rem;
+  }
+
+  .header-right span {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    color: #8a8070;
+    letter-spacing: 0.1em;
+  }
+
+  .header-right strong {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: #e8c97a;
+    letter-spacing: 0.08em;
+  }
+
+  .yt-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    background: #ff0000;
+    color: #fff;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 5px 10px;
+    border-radius: 2px;
+    margin-top: 0.4rem;
+    transition: background 0.2s, transform 0.1s;
+  }
+
+  .yt-link:hover {
+    background: #cc0000;
+    transform: translateY(-1px);
+  }
+
+  .yt-link svg {
+    flex-shrink: 0;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2.5rem 2rem 4rem;
+  }
+
+  /* Overview strip */
+  .overview {
+    background: var(--ink);
+    color: var(--bg);
+    border-radius: 4px;
+    padding: 1.6rem 2rem;
+    margin-bottom: 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .overview::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 4px;
+    background: linear-gradient(180deg, #e8c97a, var(--accent));
+  }
+
+  .overview-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #8a8070;
+    margin-bottom: 0.7rem;
+  }
+
+  .overview p {
+    font-family: 'Fraunces', serif;
+    font-size: 1.05rem;
+    font-weight: 300;
+    font-style: italic;
+    line-height: 1.7;
+    color: #e8e0d5;
+    max-width: 720px;
+  }
+
+  /* Section headers */
+  .section-head {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 2.5rem 0 1.2rem;
+  }
+
+  .section-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    flex-shrink: 0;
+  }
+
+  .section-rule {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  .section-title {
+    font-family: 'Fraunces', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--ink);
+    flex-shrink: 0;
+  }
+
+  /* POV cards */
+  .pov-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    overflow: hidden;
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+
+  .pov-card:hover {
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    transform: translateY(-1px);
+  }
+
+  .pov-card-inner {
+    display: flex;
+  }
+
+  .pov-accent {
+    width: 5px;
+    flex-shrink: 0;
+  }
+
+  .pov-content {
+    padding: 1.2rem 1.5rem;
+    flex: 1;
+  }
+
+  .pov-topic {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: var(--tag-bg);
+    color: var(--tag-text);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    border-radius: 2px;
+    margin-bottom: 0.75rem;
+  }
+
+  .pov-summary {
+    font-size: 0.93rem;
+    color: #3a3028;
+    line-height: 1.7;
+    margin-bottom: 0.9rem;
+    font-weight: 300;
+  }
+
+  .pov-quote {
+    border-left: 3px solid var(--accent);
+    padding: 0.7rem 1rem;
+    background: #fdf8f0;
+    border-radius: 0 3px 3px 0;
+    margin-top: 0.8rem;
+  }
+
+  .pov-quote p {
+    font-family: 'Fraunces', serif;
+    font-size: 0.88rem;
+    font-style: italic;
+    color: var(--ink);
+    line-height: 1.65;
+  }
+
+  .pov-quote cite {
+    display: block;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+    margin-top: 0.4rem;
+    font-style: normal;
+  }
+
+  /* Color accents per topic */
+  .c-red { background: var(--accent); }
+  .c-blue { background: var(--blue); }
+  .c-gold { background: var(--gold); }
+  .c-green { background: var(--green); }
+  .c-brown { background: #7d5a3c; }
+
+  /* Quote accent match */
+  .c-red-q { border-left-color: var(--accent); }
+  .c-blue-q { border-left-color: var(--blue); }
+  .c-gold-q { border-left-color: var(--gold); }
+  .c-green-q { border-left-color: var(--green); }
+  .c-brown-q { border-left-color: #7d5a3c; }
+
+  /* Key themes grid */
+  .themes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1rem;
+    margin-top: 0.5rem;
+  }
+
+  .theme-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1.2rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .theme-card::after {
+    content: attr(data-icon);
+    position: absolute;
+    right: 1rem;
+    top: 0.8rem;
+    font-size: 1.6rem;
+    opacity: 0.12;
+  }
+
+  .theme-name {
+    font-family: 'Fraunces', serif;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 0.5rem;
+  }
+
+  .theme-desc {
+    font-size: 0.83rem;
+    color: var(--muted);
+    line-height: 1.6;
+    font-weight: 300;
+  }
+
+  .theme-tag {
+    display: inline-block;
+    margin-top: 0.6rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 2px;
+  }
+
+  /* Stat strip */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 2rem 0;
+  }
+
+  .stat {
+    background: var(--card);
+    padding: 1.2rem 1.4rem;
+    text-align: center;
+  }
+
+  .stat-val {
+    font-family: 'Fraunces', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 0.3rem;
+  }
+
+  .stat-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* Bottom takeaway */
+  .takeaway {
+    background: linear-gradient(135deg, #1a1410 0%, #2c2018 100%);
+    color: var(--bg);
+    border-radius: 4px;
+    padding: 2rem 2.2rem;
+    margin-top: 2.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .takeaway::before {
+    content: '"';
+    position: absolute;
+    right: 1.5rem;
+    top: -1rem;
+    font-family: 'Fraunces', serif;
+    font-size: 9rem;
+    color: rgba(232,201,122,0.08);
+    line-height: 1;
+  }
+
+  .takeaway-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #8a8070;
+    margin-bottom: 0.8rem;
+  }
+
+  .takeaway-quote {
+    font-family: 'Fraunces', serif;
+    font-size: 1.15rem;
+    font-style: italic;
+    font-weight: 300;
+    line-height: 1.75;
+    color: #e8e0d5;
+    max-width: 680px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .takeaway-attr {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    color: #e8c97a;
+    letter-spacing: 0.1em;
+    margin-top: 1rem;
+  }
+
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 1.2rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  footer span {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+  }
+
+  @media (max-width: 600px) {
+    header { padding: 1rem 1.2rem; }
+    .container { padding: 1.5rem 1rem 3rem; }
+    .pov-card-inner { flex-direction: column; }
+    .pov-accent { width: 100%; height: 5px; }
+    .section-title { font-size: 1.1rem; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <h1>James Talarico <em>on The Late Show</em></h1>
+    <p>Summary &amp; Point of View Analysis · Texas Senate Race · 2025</p>
+  </div>
+  <div class="header-right">
+    <span>Interview with</span>
+    <strong>Stephen Colbert</strong>
+    <span>YouTube-only segment</span>
+    <a class="yt-link" href="https://www.youtube.com/watch?v=oiTJ7Pz_59A" target="_blank" rel="noopener">
+      <svg width="14" height="10" viewBox="0 0 14 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M13.72 1.56A1.76 1.76 0 0 0 12.48.3C11.38 0 7 0 7 0S2.62 0 1.52.3A1.76 1.76 0 0 0 .28 1.56 18.4 18.4 0 0 0 0 5a18.4 18.4 0 0 0 .28 3.44A1.76 1.76 0 0 0 1.52 9.7C2.62 10 7 10 7 10s4.38 0 5.48-.3a1.76 1.76 0 0 0 1.24-1.26A18.4 18.4 0 0 0 14 5a18.4 18.4 0 0 0-.28-3.44Z" fill="white"/><path d="M5.6 7.14 9.24 5 5.6 2.86v4.28Z" fill="#ff0000"/></svg>
+      Watch on YouTube
+    </a>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- Overview -->
+  <div class="overview">
+    <div class="overview-label">Overview</div>
+    <p>Texas State Representative and Senate candidate James Talarico appeared on Colbert's Late Show YouTube segment, making the case that Texas is competitive in 2025 through a people-powered, grassroots campaign rooted in progressive Christian values, anti-corporate populism, and a direct challenge to what he calls the "smoke screen" of culture war politics.</p>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-val" style="color:var(--accent)">5</div>
+      <div class="stat-label">Topics Covered</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val" style="color:var(--blue)">14K</div>
+      <div class="stat-label">Volunteers Recruited</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val" style="color:var(--gold)">$0</div>
+      <div class="stat-label">From Corporate PACs</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val" style="color:var(--green)">8th</div>
+      <div class="stat-label">Generation Texan</div>
+    </div>
+    <div class="stat">
+      <div class="stat-val" style="color:#7d5a3c">14pt</div>
+      <div class="stat-label">Trump's 2024 TX Margin</div>
+    </div>
+  </div>
+
+  <!-- POV Section -->
+  <div class="section-head">
+    <span class="section-num">Section 01</span>
+    <div class="section-rule"></div>
+    <h2 class="section-title">Talarico's Point of View</h2>
+  </div>
+
+  <!-- Card 1: First Amendment -->
+  <div class="pov-card">
+    <div class="pov-card-inner">
+      <div class="pov-accent c-red"></div>
+      <div class="pov-content">
+        <span class="pov-topic">🎙 Media &amp; Free Speech</span>
+        <p class="pov-summary">Talarico frames the FCC's probes into <em>The View</em> and CBS not as financial decisions, but as a coordinated effort by the Trump administration to punish media voices critical of the president. He sees corporate executives capitulating to political pressure as the most dangerous form of censorship — one that comes from the top down rather than from public outrage.</p>
+        <div class="pov-quote c-red-q">
+          <p>"Corporate media executives are selling out the First Amendment to curry favor with corrupt politicians, and a threat to any of our First Amendment rights is a threat to all of our First Amendment rights."</p>
+          <cite>— Talarico, on media consolidation and political pressure</cite>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card 2: Texas -->
+  <div class="pov-card">
+    <div class="pov-card-inner">
+      <div class="pov-accent c-blue"></div>
+      <div class="pov-content">
+        <span class="pov-topic">🤠 Texas Is Flippable</span>
+        <p class="pov-summary">Despite Trump's 14-point 2024 margin, Talarico argues a grassroots backlash is building across the state. His evidence: thousands at rallies, 14,000 volunteers, shattered small-dollar fundraising records — all without corporate PAC money. He reports that non-Democrats are quietly approaching him at events, suggesting a silent coalition being built outside traditional party lines.</p>
+        <div class="pov-quote c-blue-q">
+          <p>"I can't tell you the number of people who come up to me at the end of these events and whisper, 'I'm not a Democrat,' like it's some kind of secret."</p>
+          <cite>— Talarico, on cross-partisan support forming in Texas</cite>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card 3: Faith -->
+  <div class="pov-card">
+    <div class="pov-card-inner">
+      <div class="pov-accent c-gold"></div>
+      <div class="pov-content">
+        <span class="pov-topic">✝ Faith &amp; Christian Nationalism</span>
+        <p class="pov-summary">As a Presbyterian seminarian, Talarico offers a theological counter-argument to the religious right. He contends that Christian nationalism is a corruption of the faith — a political project that inverts the proper relationship between belief and politics. He argues that Jesus's actual teachings center on care for the vulnerable, not on abortion or gay marriage, and that the separation of church and state protects the church's integrity as much as democracy's.</p>
+        <div class="pov-quote c-gold-q">
+          <p>"There is nothing Christian about Christian nationalism. It is the worship of power in the name of Christ. And it is a betrayal of Jesus of Nazareth… Your politics should grow out of your faith, not the other way around."</p>
+          <cite>— Talarico, on the religious right's co-optation of Christianity</cite>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card 4: Allred -->
+  <div class="pov-card">
+    <div class="pov-card-inner">
+      <div class="pov-accent c-brown"></div>
+      <div class="pov-content">
+        <span class="pov-topic">⚖ The Allred Controversy</span>
+        <p class="pov-summary">Talarico categorically denies a TikTok-spread quote attributing a racially-charged comment about Colin Allred to him. He acknowledges critiquing Allred's campaign strategy but says he would never attack a colleague on the basis of race. He says he called Allred directly and frames the episode as a reminder that intra-party conflict distracts from the real goal: winning in November.</p>
+        <div class="pov-quote c-brown-q">
+          <p>"My job in this moment is to try to lower the temperature — to remind us that we are all on the same team trying to change the politics of our state and our country."</p>
+          <cite>— Talarico, on Democratic unity ahead of the general election</cite>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Card 5: Culture Wars -->
+  <div class="pov-card">
+    <div class="pov-card-inner">
+      <div class="pov-accent c-green"></div>
+      <div class="pov-content">
+        <span class="pov-topic">🐱 Culture Wars as Distraction</span>
+        <p class="pov-summary">Using the "furries litter box" hoax as a case study, Talarico argues that manufactured culture war outrage — from bathrooms to school books — is a deliberate political strategy designed to prevent working-class voters from noticing economic policies that harm them. He describes this as the core dynamic of contemporary right-wing politics: using wedge social issues as cover for upward redistribution of wealth.</p>
+        <div class="pov-quote c-green-q">
+          <p>"They want us talking about furries and bathrooms so we don't realize that they are picking our pockets… The culture wars are a smoke screen because the real fight in this country is not left versus right — it's top versus bottom."</p>
+          <cite>— Talarico, on economic populism vs. cultural distraction</cite>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Key Themes -->
+  <div class="section-head">
+    <span class="section-num">Section 02</span>
+    <div class="section-rule"></div>
+    <h2 class="section-title">Key Themes</h2>
+  </div>
+
+  <div class="themes-grid">
+    <div class="theme-card" data-icon="⛪">
+      <div class="theme-name">Progressive Christianity</div>
+      <p class="theme-desc">Talarico positions his faith as the driver of his politics, reclaiming religious language from the right by grounding it in Matthew 25's call to feed, heal, and welcome.</p>
+      <span class="theme-tag" style="background:#fff3e0;color:var(--gold)">Theological</span>
+    </div>
+    <div class="theme-card" data-icon="🌿">
+      <div class="theme-name">Populism from Below</div>
+      <p class="theme-desc">His campaign is explicitly anti-corporate, rejecting PAC money and framing the primary conflict as economic class — top vs. bottom — rather than cultural identity.</p>
+      <span class="theme-tag" style="background:#e8f5e9;color:var(--green)">Economic</span>
+    </div>
+    <div class="theme-card" data-icon="📜">
+      <div class="theme-name">First Amendment Defense</div>
+      <p class="theme-desc">Whether on media freedom or church-state separation, Talarico consistently returns to First Amendment principles as both a constitutional and moral imperative.</p>
+      <span class="theme-tag" style="background:#fdecea;color:var(--accent)">Constitutional</span>
+    </div>
+    <div class="theme-card" data-icon="🗺">
+      <div class="theme-name">Texas Identity</div>
+      <p class="theme-desc">As an eighth-generation Texan whose family predates statehood, he uses his roots to challenge the notion that Texas conservatism is monolithic or inevitable.</p>
+      <span class="theme-tag" style="background:#e3f2fd;color:var(--blue)">Regional</span>
+    </div>
+    <div class="theme-card" data-icon="🎭">
+      <div class="theme-name">Anti-Culture War</div>
+      <p class="theme-desc">He repeatedly connects manufactured social controversies to economic misdirection, arguing voters are being manipulated away from their own material interests.</p>
+      <span class="theme-tag" style="background:#f3e5f5;color:#6a1b9a)">Strategic</span>
+    </div>
+    <div class="theme-card" data-icon="🤝">
+      <div class="theme-name">Coalition Building</div>
+      <p class="theme-desc">Talarico emphasizes unity over purity, reaching across party lines and within Democratic factions, aiming to build a broad enough coalition to overcome Texas's structural Republican advantage.</p>
+      <span class="theme-tag" style="background:#e0f7fa;color:#00695c">Electoral</span>
+    </div>
+  </div>
+
+  <!-- Bottom takeaway -->
+  <div class="takeaway">
+    <div class="takeaway-label">Signature Line</div>
+    <p class="takeaway-quote">"Don't tell me what you believe. Show me how you treat other people — and I'll tell you what you believe."</p>
+    <p class="takeaway-attr">— James Talarico · The Late Show, YouTube · 2025</p>
+  </div>
+
+</div>
+
+<footer>
+  <span>Source: <a href="https://www.youtube.com/watch?v=oiTJ7Pz_59A" target="_blank" rel="noopener" style="color:var(--accent);text-decoration:none;letter-spacing:0.08em;">The Late Show with Stephen Colbert — YouTube ↗</a></span>
+  <span>Summary visualization · 5 POV cards · 6 themes</span>
+</footer>
+
+</body>
+</html>
