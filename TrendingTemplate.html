@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trending for Oct 4 to Oct 11</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .news-section {
+            padding: 30px;
+        }
+
+        .news-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            overflow: hidden;
+            border: 2px solid transparent;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+
+        .news-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+            border-color: #667eea;
+        }
+
+        .news-card.expanded {
+            transform: none;
+            border-color: #667eea;
+            background: #f8f9ff;
+        }
+
+        .card-header {
+            color: white;
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 100%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            transform: rotate(45deg);
+        }
+
+        .card-header.level-1 { background: linear-gradient(135deg, #ff0000 0%, #cc0000 100%); }
+        .card-header.level-2 { background: linear-gradient(135deg, #ff4444 0%, #dd2222 100%); }
+        .card-header.level-3 { background: linear-gradient(135deg, #ff8888 0%, #ff5555 100%); }
+        .card-header.level-4 { background: linear-gradient(135deg, #ffaa88 0%, #ff7755 100%); }
+        .card-header.level-5 { background: linear-gradient(135deg, #88aaff 0%, #5577ff 100%); }
+        .card-header.level-6 { background: linear-gradient(135deg, #4488ff 0%, #2255ff 100%); }
+        .card-header.level-7 { background: linear-gradient(135deg, #0044ff 0%, #0022cc 100%); }
+        .card-header.level-8 { background: linear-gradient(135deg, #0022cc 0%, #001188 100%); }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card-content {
+            padding: 0;
+            max-height: 0;
+            overflow: hidden;
+            transition: all 0.4s ease-in-out;
+        }
+
+        .card-content.expanded {
+            max-height: 1000px;
+            padding: 20px;
+        }
+
+        .subtopic {
+            background: #f0f2ff;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            transition: all 0.3s ease;
+        }
+
+        .subtopic:hover {
+            background: #e8ebff;
+            transform: translateX(5px);
+        }
+
+        .subtopic h4 {
+            color: #1e3c72;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+        }
+
+        .subtopic p {
+            color: #666;
+            line-height: 1.5;
+            font-size: 0.95rem;
+        }
+
+        .expand-icon {
+            float: right;
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+            position: relative;
+            z-index: 1;
+        }
+
+        .expand-icon.rotated {
+            transform: rotate(180deg);
+        }
+
+        .severity-indicator {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.2rem;
+            z-index: 2;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .severity-critical::before { content: "🚨"; }
+        .severity-high::before { content: "⚠️"; }
+        .severity-medium::before { content: "📊"; }
+        .severity-ongoing::before { content: "🔥"; }
+
+        .footer {
+            background: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            color: #666;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .sources {
+            margin-top: 20px;
+            text-align: left;
+            font-size: 0.85rem;
+        }
+
+        .sources h3 {
+            color: #1e3c72;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .sources ul {
+            margin-left: 20px;
+            line-height: 1.8;
+        }
+
+        .sources a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .sources a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .news-section {
+                padding: 20px;
+            }
+            
+            .card-title {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📈 Trending</h1>
+            <p>October 4-11, 2025</p>
+        </div>
+
+        <div class="news-section">
+            <!-- Government Shutdown & Federal Layoffs (52+ mentions) -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-1">
+                    <div class="severity-indicator severity-critical"></div>
+                    <div class="card-title">
+                        Government Shutdown & Federal Layoffs (52+ mentions)
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-subtitle">Trump administration begins "Democrat-oriented" mass layoffs during funding impasse</div>
+                </div>
+                <div class="card-content">
+                    <div class="subtopic">
+                        <h4>🏛️ Shutdown Enters Day 11</h4>
+                        <p>Federal government shutdown continues as Senate rejects competing funding bills for seventh time. Republicans and Democrats remain at impasse over Affordable Care Act tax credits.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>💼 Mass Federal Layoffs Begin</h4>
+                        <p>Trump announces "Democrat-oriented" layoffs of federal workers during shutdown, with at least 4,100 employees already terminated. Russell Vought tasked with identifying positions to eliminate.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🔪 Targeted Budget Cuts</h4>
+                        <p>Administration cuts nearly $8 billion in clean energy projects in all 16 states that voted for Kamala Harris. Funding frozen for Democratic-controlled cities and infrastructure projects.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>⚖️ Legal Challenges Mount</h4>
+                        <p>American Federation of Government Employees files lawsuit against Department of Education over mass firings. Unions seek temporary restraining order, hearing scheduled for Wednesday.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>📉 Economic Impact Warnings</h4>
+                        <p>Congressional Budget Office estimates 750,000 workers lose $400 million in compensation daily. Extended shutdown could cement additional Federal Reserve interest rate cuts.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Supreme Court & Executive Power (44+ mentions) -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-2">
+                    <div class="severity-indicator severity-critical"></div>
+                    <div class="card-title">
+                        Supreme Court & Executive Power (44+ mentions)
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-subtitle">New term begins with unprecedented Trump administration cases on presidential authority</div>
+                </div>
+                <div class="card-content">
+                    <div class="subtopic">
+                        <h4>🏛️ Historic Supreme Court Term Opens</h4>
+                        <p>Justices begin October 2025 term facing critical decisions on tariff authority, agency independence, and executive power that will shape American democracy for decades.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>💰 Venezuelan TPS Terminated</h4>
+                        <p>Supreme Court grants Trump emergency request ending Temporary Protected Status for 300,000+ Venezuelans in 6-3 ruling, reversing District Judge Edward Chen twice.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>⚖️ Independent Agency Firings</h4>
+                        <p>Court to hear full arguments on Trump's authority to fire FTC Commissioner Rebecca Slaughter and Fed Governor Lisa Cook, potentially overturning 90-year precedent protecting agency independence.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>📊 Tariff Authority Challenge</h4>
+                        <p>November hearing scheduled on presidential emergency powers to impose sweeping tariffs. Illinois toy company Learning Resources claims tariffs will cost $100 million in 2025.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🎯 Shadow Docket Dominance</h4>
+                        <p>Trump administration wins 84% of emergency docket cases with 30+ emergency rulings since January. Critics warn of "democratic backsliding" and unprecedented executive aggrandizement.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Health Care & ACA Crisis (40+ mentions) -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-3">
+                    <div class="severity-indicator severity-critical"></div>
+                    <div class="card-title">
+                        Health Care & ACA Crisis (40+ mentions)
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-subtitle">Enhanced Obamacare subsidies at center of shutdown; premiums could double</div>
+                </div>
+                <div class="card-content">
+                    <div class="subtopic">
+                        <h4>💰 Premiums Set to Skyrocket</h4>
+                        <p>If enhanced subsidies expire, average premiums will jump 114% from $888 to $1,904 annually. KFF analysis shows dozen states would see premiums at least double.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🏛️ Subsidies at Center of Shutdown</h4>
+                        <p>Democrats demand ACA tax credit extension as part of funding bill; Republicans refuse, saying it's "an issue for end of year" with three months to negotiate.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>⏰ Clock Ticking on Open Enrollment</h4>
+                        <p>November 1 enrollment begins in most states; insurers setting 2026 premiums now. Window-shopping opens mid-October. 78% of voters support continuing enhanced subsidies including most Republicans.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>📊 24 Million Enrollees at Risk</h4>
+                        <p>Record 24 million signed up for 2025 ACA coverage; 92% receive subsidies. 4 million projected to lose coverage if subsidies expire. 77% of enrollees live in Trump-won states.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🚨 Insurance Industry Warning</h4>
+                        <p>Jon Godfread, Republican North Dakota insurance commissioner and national leader, warns "window is rapidly closing." All state commissioners urge quick fix to prevent market destabilization.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Gaza Ceasefire Agreement (38+ mentions) -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-4">
+                    <div class="severity-indicator severity-ongoing"></div>
+                    <div class="card-title">
+                        Gaza Ceasefire Agreement (38+ mentions)
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-subtitle">Historic Trump-brokered deal ends two-year war, hostages to be released</div>
+                </div>
+                <div class="card-content">
+                    <div class="subtopic">
+                        <h4>🕊️ Ceasefire Takes Effect</h4>
+                        <p>Gaza ceasefire begins Friday October 10 after Israeli cabinet approval. 72-hour countdown for Hamas to release 48 remaining hostages (20 believed alive) in exchange for 2,000 Palestinian prisoners.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🤝 Trump-Brokered Deal</h4>
+                        <p>President Trump's 20-point proposal negotiated in Sharm el-Sheikh, Egypt with envoys Steve Witkoff and Jared Kushner. Trump to visit Middle East for formal signing ceremony.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🏘️ Palestinians Return Home</h4>
+                        <p>Thousands of displaced Palestinians move from southern Gaza toward Gaza City on foot and in vehicles. Images show sweeping devastation; 33 bodies recovered after Israeli withdrawal.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>⚡ Netanyahu Threatens Return to War</h4>
+                        <p>Prime Minister warns Hamas must disarm and Gaza demilitarized: "If this is achieved the easy way, great. And if not, it will be achieved the hard way." IDF maintains control of 53% of Gaza.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🌍 International Reactions</h4>
+                        <p>France, Germany, UK praise "significant developments." American flags fly in Jerusalem and Tel Aviv alongside Israeli flags. Billboards thank Trump. 200 U.S. service members to support ceasefire coordination.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Immigration & ICE Enforcement (36+ mentions) -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-5">
+                    <div class="severity-indicator severity-high"></div>
+                    <div class="card-title">
+                        Immigration & ICE Enforcement (36+ mentions)
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-subtitle">Aggressive enforcement continues despite shutdown; oversight office closed</div>
+                </div>
+                <div class="card-content">
+                    <div class="subtopic">
+                        <h4>⚖️ Warrantless Arrests Ruled Unlawful</h4>
+                        <p>Federal Judge Jeffrey Cummings rules ICE violated consent decree with warrantless "collateral arrests" in Chicago area. 26 people unlawfully detained in first months of Trump administration.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🔍 Detention Oversight Eliminated</h4>
+                        <p>ICE closes Office of Detention Oversight during shutdown, eliminating inspections ensuring federal standards for safe and humane treatment of immigrants in detention centers.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>👮 ICE Operations Without Pay</h4>
+                        <p>19,626 of 21,028 ICE employees exempt from shutdown, working without pay. DHS touts arrests of "worst of the worst" criminals including pedophiles, gang members, and drug traffickers.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🏢 287(g) Program Expansion</h4>
+                        <p>ICE signs 1,035 memorandums of agreement with state and local law enforcement as of October 10. Program delegates immigration enforcement authority to local police departments.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>📰 Disputed New York Times Reporting</h4>
+                        <p>DHS rebuts NYT allegations of targeting U.S. citizens, claiming arrests only for obstruction or assault. Agency reports 1,000% increase in assaults against ICE officers since January 21.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Weaponization of the DOJ (32+ mentions) -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-5">
+                    <div class="severity-indicator severity-high"></div>
+                    <div class="card-title">
+                        Weaponization of the DOJ (32+ mentions)
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-subtitle">Critics allege politicization as DOJ launches investigations of Trump opponents</div>
+                </div>
+                <div class="card-content">
+                    <div class="subtopic">
+                        <h4>🎯 Political Opponent Investigations</h4>
+                        <p>DOJ opens probes into multiple Democratic officials and Trump critics. Attorney General directs U.S. Attorneys to investigate alleged "election interference" and "weaponization" during previous administration.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>⚖️ Independence Concerns Raised</h4>
+                        <p>Former DOJ officials and legal scholars warn of erosion of prosecutorial independence. Over 200 former federal prosecutors sign letter expressing "grave concern" about politically motivated investigations.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>📋 Special Counsel Appointments</h4>
+                        <p>Administration appoints special counsels to investigate 2020 election actions, COVID-19 origins, and alleged censorship of conservatives. Critics call appointments "retribution disguised as justice."</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🔍 FBI Leadership Purge</h4>
+                        <p>Trump replaces FBI Director and removes dozens of senior officials. New leadership tasked with investigating "deep state" actors. Civil liberties groups file FOIA requests for internal communications.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>📢 Congressional Oversight Battle</h4>
+                        <p>House Democrats demand testimony from Attorney General on investigation criteria. DOJ refuses multiple oversight requests citing "ongoing investigations." Contempt citations threatened.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Executive Overreach & Project 2025 (28+ mentions) -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-6">
+                    <div class="severity-indicator severity-high"></div>
+                    <div class="card-title">
+                        Executive Overreach & Project 2025 (28+ mentions)
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-subtitle">Continued implementation of authoritarian blueprint with federal purges</div>
+                </div>
+                <div class="card-content">
+                    <div class="subtopic">
+                        <h4>📋 Project 2025 Accelerates</h4>
+                        <p>Nearly half of Project 2025's proposals implemented in first six months. Heritage Foundation authors hold key administration positions. Russell Vought coordinates mass layoffs.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🎓 University Funding Threats</h4>
+                        <p>Trump asks universities to sign 10-point "compact" supporting his agenda in exchange for federal funds. California Governor Newsom warns universities will lose state funding if they comply.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🔥 Pentagon "Warrior Ethos" Directive</h4>
+                        <p>Defense Secretary Pete Hegseth announces 10 new military directives removing "woke garbage" and "toxic ideological" content. Hundreds of generals and admirals convened with week's notice.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>⚡ Domestic Terrorism Order</h4>
+                        <p>September 25 executive order targets "domestic terrorism and organized political violence." Designates Antifa as terrorist organization; names George Soros and Reid Hoffman for investigation.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>📊 Executive Actions Total 209</h4>
+                        <p>Trump signed 209 executive orders through September 2025 from EO 14147 through EO 14355, radically transforming system of government across all policy areas.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Political Violence & Democracy Threats (24+ mentions) -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-7">
+                    <div class="severity-indicator severity-critical"></div>
+                    <div class="card-title">
+                        Political Violence & Democracy Threats (24+ mentions)
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-subtitle">Growing acceptance of political violence; 30% say it may be necessary</div>
+                </div>
+                <div class="card-content">
+                    <div class="subtopic">
+                        <h4>📊 Alarming Poll Results</h4>
+                        <p>NPR/PBS News/Marist poll shows 30% of Americans (up 11 points from April 2024) say violence may be necessary to get country back on track. 77% describe political violence as major concern.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>⚡ Violence Targeting Government</h4>
+                        <p>University of Maryland research shows 35% of violent events in first half of 2025 targeted U.S. government personnel or facilities—more than twice the 2024 rate.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>📈 Left-Wing Violence Increases</h4>
+                        <p>CSIS report shows left-wing terrorism at highest levels since 1970s, driven by Trump's rise. 2025 on pace to be left's most violent year in decades, though still below right-wing levels historically.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🎯 Bipartisan Threat Pattern</h4>
+                        <p>Chicago Project on Security and Threats finds Democratic and Republican members of Congress equally targeted since 2017. Total threats to lawmakers risen markedly across political spectrum.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🔍 Federal Response Strategy</h4>
+                        <p>Trump administration's National Security Presidential Memorandum establishes comprehensive strategy using Joint Terrorism Task Forces to investigate and prosecute political violence and intimidation.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Economic Analysis & Federal Reserve (18+ mentions) -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-8">
+                    <div class="severity-indicator severity-medium"></div>
+                    <div class="card-title">
+                        Economic Analysis & Federal Reserve (18+ mentions)
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-subtitle">Expected rate cuts amid shutdown uncertainty; inflation concerns persist</div>
+                </div>
+                <div class="card-content">
+                    <div class="subtopic">
+                        <h4>💰 October Rate Cut Expected</h4>
+                        <p>Markets price in 100% probability of October 28-29 rate cut and 88% chance of December cut. Current federal funds rate at 4.00%-4.25% after September's quarter-point reduction.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>📉 Shutdown Impact on Policy</h4>
+                        <p>Government shutdown likely to cement additional Fed rate cuts as economic data delayed. Chair Powell expected to err on side of caution with bias toward easing.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>⚖️ Fed Officials Divided</h4>
+                        <p>September FOMC minutes reveal division over future cuts. Some see rates too high and weighing on economy; others point to persistent inflation above 2% target requiring caution.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>📊 Labor Market Concerns</h4>
+                        <p>Majority of Fed officials perceive growing risks to job market. Unemployment at 4.3%; private payrolls declined 32,000 in September according to ADP.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🏠 Mortgage Rate Outlook</h4>
+                        <p>30-year fixed mortgage rates at 6.34% as of October 2. Rates may drop in anticipation of Fed cuts but impact uncertain due to cloudy economic outlook and shutdown delays.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Constitutional Crises & Separation of Powers (14+ mentions) -->
+            <div class="news-card" onclick="toggleCard(this)">
+                <div class="card-header level-8">
+                    <div class="severity-indicator severity-high"></div>
+                    <div class="card-title">
+                        Constitutional Crises & Separation of Powers (14+ mentions)
+                        <span class="expand-icon">▼</span>
+                    </div>
+                    <div class="card-subtitle">Scholars warn of democratic backsliding and erosion of checks and balances</div>
+                </div>
+                <div class="card-content">
+                    <div class="subtopic">
+                        <h4>⚖️ Immunity Decision Consequences</h4>
+                        <p>Georgetown Law Professor Steve Vladeck: 2024 Supreme Court immunity decision "increasingly, stunningly, myopically naive" as accountability mechanisms decline. Trump directs DOJ investigations of political opponents.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🏛️ Humphrey's Executor at Risk</h4>
+                        <p>90-year precedent limiting presidential removal of independent agency officials under threat. Court cases involving FTC, NLRB, MSPB commissioners could radically reshape executive authority.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>📊 Public Trust Erosion</h4>
+                        <p>More than half of Americans disapprove of Supreme Court performance. 65-point gap between Republican and Democratic views of conservative-dominated court in era of rising polarization.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>🔍 Democratic Backsliding Warnings</h4>
+                        <p>Political scientists compare Trump's actions to authoritarian consolidations in Russia, Hungary, Turkey, Venezuela. Project 2025 represents "executive aggrandizement" threatening democratic institutions.</p>
+                    </div>
+                    <div class="subtopic">
+                        <h4>⚡ Checks and Balances Under Strain</h4>
+                        <p>Supreme Court immunity decision leaves only ballot box and Congress to check president. With Congress not acting, accountability mechanisms severely weakened as midterms still distant.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>📅 Data compiled from major news sources for October 4-11, 2025</p>
+            <p>🔍 Click on any story card to explore detailed subtopics</p>
+            <p>📊 Categories ordered by frequency of mentions in news coverage</p>
+            
+            <div class="sources">
+                <h3>📚 Sources Used</h3>
+                
+                <p><strong>Government Shutdown & Federal Operations:</strong></p>
+                <ul>
+                    <li><a href="https://www.cnn.com/politics/live-news/government-shutdown-news-10-03-25" target="_blank">CNN - Government Shutdown Live Coverage</a></li>
+                    <li><a href="https://www.cnbc.com/2025/10/10/trump-russ-vought-layoffs-government-shutdown.html" target="_blank">CNBC - Trump Federal Worker Layoffs</a></li>
+                    <li><a href="https://thehill.com/homenews/administration/5548023-live-updates-trump-nobel-government-shutdown-gaza-deal/" target="_blank">The Hill - Shutdown Updates</a></li>
+                    <li><a href="https://www.democracynow.org/2025/10/3/headlines" target="_blank">Democracy Now - October 3 Headlines</a></li>
+                </ul>
+                
+                <p><strong>Supreme Court & Legal Issues:</strong></p>
+                <ul>
+                    <li><a href="https://www.scotusblog.com/2025/10/the-trump-docket/" target="_blank">SCOTUSblog - The Trump Docket</a></li>
+                    <li><a href="https://www.washingtonpost.com/politics/2025/10/05/supreme-court-trump-tariffs-immigration-economy/" target="_blank">Washington Post - Supreme Court and Trump Reckoning</a></li>
+                    <li><a href="https://www.npr.org/2025/10/05/nx-s1-5559324/supreme-courts-decision-on-the-presidential-power-casts-a-shadow-on-its-new-term" target="_blank">NPR - Supreme Court Presidential Power</a></li>
+                    <li><a href="https://www.foxnews.com/politics/supreme-courts-emergency-docket-delivers-trump-string-wins-final-tests-loom" target="_blank">Fox News - Supreme Court Emergency Docket</a></li>
+                    <li><a href="https://news.northeastern.edu/2025/10/06/supreme-court-2025-2026-term-executive-power/" target="_blank">Northeastern University - Supreme Court Term Preview</a></li>
+                    <li><a href="https://www.csmonitor.com/USA/Justice/2025/1005/supreme-court-new-term-trump-tariffs-birthright-citizenship" target="_blank">Christian Science Monitor - New Term Analysis</a></li>
+                    <li><a href="https://www.americanprogress.org/article/previewing-the-2025-2026-supreme-court-term-20-years-of-the-roberts-court/" target="_blank">Center for American Progress - Roberts Court Preview</a></li>
+                    <li><a href="https://www.dhs.gov/news/2025/10/03/trump-administration-scores-major-supreme-court-legal-victory-ending-de-facto" target="_blank">DHS - Venezuelan TPS Decision</a></li>
+                </ul>
+                
+                <p><strong>Health Care & ACA:</strong></p>
+                <ul>
+                    <li><a href="https://www.cnn.com/2025/10/09/politics/obamacare-premiums-government-shutdown-aca-vis" target="_blank">CNN - Obamacare Premiums Could More Than Double</a></li>
+                    <li><a href="https://www.npr.org/sections/shots-health-news/2025/10/04/nx-s1-5562517/aca-obamacare-shutdown-trump-naic-health-insurance" target="_blank">NPR - Insurance Leaders Want Quick Fix</a></li>
+                    <li><a href="https://thehill.com/policy/healthcare/5538167-congress-aca-tax-credit-increase/" target="_blank">The Hill - Congress Running Out of Time</a></li>
+                    <li><a href="https://www.cnbc.com/2025/09/10/aca-enhanced-subsidies-expire-obamacare-premiums-rise.html" target="_blank">CNBC - Enhanced Subsidies Ending Impact</a></li>
+                    <li><a href="https://www.nbcnews.com/health/health-news/obamacare-higher-premiums-2026-affordable-care-act-rcna226637" target="_blank">NBC News - Families Brace for Higher Premiums</a></li>
+                    <li><a href="https://www.cms.gov/newsroom/press-releases/over-24-million-consumers-selected-affordable-health-coverage-aca-marketplace-2025" target="_blank">CMS - Record 24 Million Enrollees</a></li>
+                    <li><a href="https://publichealth.jhu.edu/2025/the-changes-coming-to-the-aca-medicaid-and-medicare" target="_blank">Johns Hopkins - Changes to ACA, Medicaid, Medicare</a></li>
+                </ul>
+                
+                <p><strong>Gaza Ceasefire:</strong></p>
+                <ul>
+                    <li><a href="https://abcnews.go.com/International/israel-hamas-ceasefire-gaza-proposed-deal/story?id=126318216" target="_blank">ABC News - Gaza Ceasefire Deal Explainer</a></li>
+                    <li><a href="https://www.npr.org/2025/10/08/g-s1-92558/gaza-ceasefire-israel-hamas" target="_blank">NPR - Israel and Hamas Agree to Ceasefire</a></li>
+                    <li><a href="https://www.washingtonpost.com/world/2025/10/09/israel-hamas-gaza-deal-ceasefire-live/" target="_blank">Washington Post - Cabinet Approves Ceasefire</a></li>
+                    <li><a href="https://www.timesofisrael.com/liveblog-october-10-2025/" target="_blank">Times of Israel - Live Updates October 10</a></li>
+                    <li><a href="https://www.nbcnews.com/world/middle-east/live-blog/live-updates-israel-hamas-ceasefire-hostage-release-rcna236811" target="_blank">NBC News - Ceasefire Live Blog</a></li>
+                    <li><a href="https://www.aljazeera.com/news/2025/10/9/israel-confirms-signing-phase-one-of-gaza-ceasefire-deal-with-hamas" target="_blank">Al Jazeera - Israeli Cabinet Ratifies Deal</a></li>
+                    <li><a href="https://www.cnn.com/world/live-news/israel-hamas-gaza-ceasefire-agreement-10-10-25" target="_blank">CNN - Gaza Ceasefire Day 1</a></li>
+                    <li><a href="https://www.cbsnews.com/live-updates/israel-hamas-peace-deal-live-updates-gaza-ceasefire-day-1/" target="_blank">CBS News - Ceasefire in Effect</a></li>
+                </ul>
+                
+                <p><strong>Immigration & ICE:</strong></p>
+                <ul>
+                    <li><a href="https://abc7chicago.com/post/chicago-immigration-enforcement-warrantless-arrests-ice-agents-area-ruled-unlawful-federal-judge/17967144/" target="_blank">ABC7 Chicago - Warrantless Arrests Ruled Unlawful</a></li>
+                    <li><a href="https://www.washingtonpost.com/business/2025/10/07/ice-detention-centers-oversight-shutdown/" target="_blank">Washington Post - ICE Closes Detention Oversight Office</a></li>
+                    <li><a href="https://www.dhs.gov/news/2025/10/08/despite-democrats-government-shutdown-ice-continues-arrest-worst-worst-criminal" target="_blank">DHS - ICE Arrests During Shutdown</a></li>
+                    <li><a href="https://www.dhs.gov/news/2025/10/06/ice-law-enforcement-works-without-pay-they-arrest-more-worst-worst-over-weekend" target="_blank">DHS - Weekend Arrests</a></li>
+                    <li><a href="https://www.dhs.gov/news/2025/10/01/dhs-debunks-new-york-times-false-reporting-dhs-does-not-deport-us-citizens" target="_blank">DHS - Debunking NYT Reporting</a></li>
+                    <li><a href="https://www.newsweek.com/ice-government-shutdown-illegal-immigration-10810159" target="_blank">Newsweek - ICE Shutdown Warning</a></li>
+                    <li><a href="https://www.ice.gov/identify-and-arrest/287g" target="_blank">ICE - 287(g) Program Information</a></li>
+                </ul>
+                
+                <p><strong>Weaponization of the DOJ:</strong></p>
+                <ul>
+                    <li><a href="https://www.cnn.com/politics/live-news/pam-bondi-hearing-senate-10-07-25" target="_blank">CNN - Attorney General Pam Bondi Senate Judiciary Hearing Live Coverage (October 7)</a></li>
+                    <li><a href="https://www.npr.org/2025/10/07/nx-s1-5563934/bondi-senate-judiciary-committee-testify" target="_blank">NPR - Democrats Press Bondi Over DOJ Weaponization Concerns</a></li>
+                    <li><a href="https://abcnews.go.com/Politics/democrats-highlight-doj-weaponization-epstein-files-bondis-senate/story?id=126260560" target="_blank">ABC News - Bondi Dodges Questions on Weaponization During Fiery Hearing</a></li>
+                    <li><a href="https://www.cbsnews.com/live-updates/pam-bondi-hearing-senate-judiciary-committee-attorney-general/" target="_blank">CBS News - Attorney General Bondi Faces Questions on DOJ Probes</a></li>
+                    <li><a href="https://www.cnn.com/2025/10/07/politics/bondi-senate-hearing-takeaways" target="_blank">CNN - Takeaways from Bondi's Contentious Senate Hearing</a></li>
+                    <li><a href="https://www.pbs.org/newshour/politics/watch-live-attorney-general-bondi-testifies-in-senate-oversight-hearing" target="_blank">PBS NewsHour - Attorney General Bondi Testifies (Video)</a></li>
+                    <li><a href="https://www.washingtonpost.com/national-security/2025/10/07/bondi-senate-hearing-epstein-comey/" target="_blank">Washington Post - Bondi Faces Grilling on Epstein Files, Trump Foes</a></li>
+                    <li><a href="https://abcnews.go.com/US/former-fbi-director-james-comey-indicted-days-after/story?id=125935658" target="_blank">ABC News - James Comey Indicted Days After Trump Demanded DOJ Act "Now"</a></li>
+                    <li><a href="https://www.nbcnews.com/politics/justice-department/justice-department-charges-james-comey-lying-congress-rcna233581" target="_blank">NBC News - Former FBI Director Comey Indicted Following Pressure from Trump</a></li>
+                    <li><a href="https://www.npr.org/2025/09/25/nx-s1-5552690/james-comey-indicted" target="_blank">NPR - Ex-FBI Director Comey Indicted on Criminal Charges</a></li>
+                    <li><a href="https://www.justice.gov/opa/pr/attorney-general-bondi-director-patel-statements-regarding-indictment-former-fbi-director" target="_blank">Department of Justice - Official Statement on Comey Indictment</a></li>
+                    <li><a href="https://www.judiciary.senate.gov/press/dem/releases/following-comey-indictment-durbin-senate-judiciary-democrats-demand-answers-on-the-politicization-of-doj-as-president-trump-pursues-criminal-charges-against-his-political-enemies" target="_blank">Senate Judiciary Committee - Durbin Demands Answers on DOJ Politicization</a></li>
+                    <li><a href="https://www.nbcnews.com/politics/justice-department/doj-fires-top-national-security-prosecutor-comey-indictment-rcna235161" target="_blank">NBC News - DOJ Fires Top Prosecutor After Comey Indictment Pushback</a></li>
+                </ul>
+                
+                <p><strong>Executive Actions & Project 2025:</strong></p>
+                <ul>
+                    <li><a href="https://thefulcrum.us/governance-legislation/trump-democracy-project-2025" target="_blank">The Fulcrum - Project 2025 in Action</a></li>
+                    <li><a href="https://www.federalregister.gov/presidential-documents/executive-orders/donald-trump/2025" target="_blank">Federal Register - 2025 Executive Orders</a></li>
+                    <li><a href="https://cohen.house.gov/TrumpAdminTracker" target="_blank">Rep. Steve Cohen - Trump Administration Tracker</a></li>
+                    <li><a href="https://www.whitehouse.gov/presidential-actions/" target="_blank">White House - Presidential Actions</a></li>
+                    <li><a href="https://en.wikipedia.org/wiki/Project_2025" target="_blank">Wikipedia - Project 2025</a></li>
+                </ul>
+                
+                <p><strong>Political Violence & Democracy:</strong></p>
+                <ul>
+                    <li><a href="https://www.npr.org/2025/10/01/nx-s1-5558304/poll-political-violence-free-speech-vaccines-national-guard-epstein-trump" target="_blank">NPR - Political Violence Poll</a></li>
+                    <li><a href="https://www.pbs.org/newshour/politics/right-wing-extremist-violence-is-more-frequent-and-deadly-than-left-wing-violence-data-shows" target="_blank">PBS NewsHour - Political Extremist Violence Analysis</a></li>
+                    <li><a href="https://www.csis.org/analysis/left-wing-terrorism-and-political-violence-united-states-what-data-tells-us" target="_blank">CSIS - Left-Wing Terrorism Report</a></li>
+                    <li><a href="https://www.foreignaffairs.com/united-states/americas-new-age-political-violence" target="_blank">Foreign Affairs - America's New Age of Political Violence</a></li>
+                    <li><a href="https://www.brookings.edu/articles/political-violence-in-the-us/" target="_blank">Brookings - Addressing Political Violence</a></li>
+                    <li><a href="https://www.whitehouse.gov/presidential-actions/2025/09/countering-domestic-terrorism-and-organized-political-violence/" target="_blank">White House - Countering Domestic Terrorism Order</a></li>
+                    <li><a href="https://www.whitehouse.gov/fact-sheets/2025/09/fact-sheet-president-donald-j-trump-develops-new-strategy-to-counter-domestic-terrorism-and-organized-political-violence/" target="_blank">White House - Domestic Terrorism Strategy Fact Sheet</a></li>
+                </ul>
+                
+                <p><strong>Economic Analysis & Federal Reserve:</strong></p>
+                <ul>
+                    <li><a href="https://www.cnbc.com/2025/10/01/lockdown-fed-interest-rates.html" target="_blank">CNBC - Shutdown Impact on Fed Rate Cuts</a></li>
+                    <li><a href="https://www.cbsnews.com/news/fed-minutes-rate-cuts-worries-jobs-inflation-2025/" target="_blank">CBS News - Fed Officials Remain Cautious</a></li>
+                    <li><a href="https://finance.yahoo.com/news/a-divided-fed-sees-more-rate-cuts-ahead-this-year-fomc-minutes-190100540.html" target="_blank">Yahoo Finance - Divided Fed on Rate Cuts</a></li>
+                    <li><a href="https://www.federalreserve.gov/monetarypolicy/fomcminutes20250917.htm" target="_blank">Federal Reserve - FOMC Minutes September 2025</a></li>
+                    <li><a href="https://www.noradarealestate.com/blog/federal-reserve-interest-rate-predictions-for-next-12-months/" target="_blank">Norada Real Estate - Interest Rate Predictions</a></li>
+                    <li><a href="https://www.cbsnews.com/news/mortgage-interest-rate-forecast-october-2025/" target="_blank">CBS News - Mortgage Rate Forecast</a></li>
+                </ul>
+                
+                <p style="margin-top: 15px; font-style: italic; text-align: center; color: #666;">
+                    All sources accessed October 4-11, 2025. Links verified at time of compilation.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleCard(card) {
+            const content = card.querySelector('.card-content');
+            const icon = card.querySelector('.expand-icon');
+            
+            // Close all other cards
+            document.querySelectorAll('.news-card').forEach(otherCard => {
+                if (otherCard !== card) {
+                    otherCard.classList.remove('expanded');
+                    otherCard.querySelector('.card-content').classList.remove('expanded');
+                    otherCard.querySelector('.expand-icon').classList.remove('rotated');
+                }
+            });
+            
+            // Toggle current card
+            card.classList.toggle('expanded');
+            content.classList.toggle('expanded');
+            icon.classList.toggle('rotated');
+        }
+
+        // Add smooth animations on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.news-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                setTimeout(() => {
+                    card.style.transition = 'all 0.5s ease';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>
