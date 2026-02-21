@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trending News: Feb 1–21, 2026 | Sources: CNN · MSNBC · NPR · NYT · WaPo · WSJ · FT · Guardian · Al Jazeera · Haaretz · The Young Turks · Chris Hedges · HCR · Geopolitical Futures</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #b3bfd6;
+            min-height: 100vh;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+
+        /* HEADER */
+        header {
+            background: linear-gradient(135deg, #1e2a5c 0%, #2a4a9a 60%, #3a6ac0 100%);
+            border-radius: 18px;
+            padding: 40px 40px 35px;
+            text-align: center;
+            margin-bottom: 30px;
+            box-shadow: 0 6px 24px rgba(20,40,100,0.35);
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            color: #ffffff;
+            margin-bottom: 12px;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+        }
+
+        header .date-range {
+            font-size: 1.05em;
+            color: rgba(220,230,255,0.9);
+            margin-bottom: 22px;
+            font-weight: 400;
+            letter-spacing: 1px;
+        }
+
+        /* Source pills row in header */
+        .sources-pills {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .source-pill {
+            background: rgba(255,255,255,0.15);
+            border: 1.5px solid rgba(255,255,255,0.5);
+            color: #ffffff;
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .source-pill:hover {
+            background: rgba(255,255,255,0.28);
+            border-color: rgba(255,255,255,0.85);
+        }
+
+        /* LEGEND */
+        .legend {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .legend-label { color: #3a4a68; font-size: 0.88em; }
+
+        .legend-bar {
+            height: 16px;
+            width: 220px;
+            border-radius: 8px;
+            background: linear-gradient(to right, #c62828, #d84315, #e65100, #f9a825, #2e7d32, #1565c0, #283593, #1a237e);
+        }
+
+        /* SECTION CARDS */
+        .section-card {
+            margin-bottom: 18px;
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 4px 16px rgba(60,80,120,0.2);
+        }
+
+        .section-header {
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 28px;
+            cursor: pointer;
+            border: none;
+            text-align: left;
+            font-size: 1.18em;
+            font-weight: 700;
+            color: #ffffff;
+            transition: filter 0.2s;
+            position: relative;
+        }
+
+        .section-header:hover { filter: brightness(1.1); }
+
+        .section-header .title-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .rank-badge {
+            background: rgba(0,0,0,0.3);
+            border-radius: 50%;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1em;
+            font-weight: 800;
+            flex-shrink: 0;
+        }
+
+        .mention-count {
+            background: rgba(0,0,0,0.25);
+            border-radius: 20px;
+            padding: 4px 14px;
+            font-size: 0.82em;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+        }
+
+        .chevron {
+            font-size: 1.1em;
+            transition: transform 0.3s ease;
+            margin-left: 10px;
+        }
+
+        .section-header.open .chevron { transform: rotate(180deg); }
+
+        /* Color scale: red → orange → gold → olive → teal → blue → indigo → navy */
+        .color-1 { background: linear-gradient(135deg, #b71c1c 0%, #c62828 100%); }
+        .color-2 { background: linear-gradient(135deg, #bf360c 0%, #d84315 100%); }
+        .color-3 { background: linear-gradient(135deg, #e65100 0%, #ef6c00 100%); }
+        .color-4 { background: linear-gradient(135deg, #f57f17 0%, #f9a825 100%); }
+        .color-5 { background: linear-gradient(135deg, #558b2f 0%, #33691e 100%); }
+        .color-6 { background: linear-gradient(135deg, #1565c0 0%, #0d47a1 100%); }
+        .color-7 { background: linear-gradient(135deg, #283593 0%, #1a237e 100%); }
+        .color-8 { background: linear-gradient(135deg, #1a237e 0%, #311b92 100%); }
+
+        /* SECTION BODY */
+        .section-body {
+            display: none;
+            background: #c5cee0;
+            border: 1px solid rgba(140,160,200,0.3);
+            border-top: none;
+            padding: 16px;
+        }
+
+        .section-body.open { display: block; }
+
+        /* Subtopic grid */
+        .subtopic-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+        }
+
+        @media(max-width: 900px) {
+            .subtopic-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media(max-width: 600px) {
+            .subtopic-grid { grid-template-columns: 1fr; }
+        }
+
+        /* SUBTOPIC */
+        .subtopic {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 20px 20px 16px;
+            box-shadow: 0 2px 8px rgba(40,60,120,0.10);
+            border: 1px solid rgba(180,195,225,0.5);
+        }
+
+        .subtopic:last-child { border-bottom: none; }
+
+        .subtopic-title {
+            font-size: 1.0em;
+            font-weight: 700;
+            color: #1e2a5a;
+            margin-bottom: 10px;
+        }
+
+        .subtopic-title::before {
+            content: none;
+        }
+
+        .subtopic-summary {
+            color: #4a5570;
+            font-size: 0.92em;
+            margin-bottom: 14px;
+            line-height: 1.55;
+        }
+
+        .source-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 7px;
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid rgba(180,195,225,0.45);
+        }
+
+        .source-link {
+            background: #f4f6fa;
+            border: 1px solid #c5cfe0;
+            color: #2a4a80;
+            padding: 3px 11px;
+            border-radius: 14px;
+            font-size: 0.78em;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .source-link:hover {
+            background: #dde6f5;
+            color: #1a3060;
+            border-color: #8aaad8;
+        }
+
+        /* SECTION INTRO */
+        .section-intro {
+            padding: 16px 28px 8px;
+            color: #4a5878;
+            font-size: 0.9em;
+            font-style: italic;
+            border-bottom: 1px solid rgba(160,180,210,0.3);
+        }
+
+        footer {
+            text-align: center;
+            color: #4a5878;
+            font-size: 0.82em;
+            padding: 24px;
+            margin-top: 10px;
+        }
+
+        @media(max-width: 700px) {
+            header h1 { font-size: 1.6em; }
+            .section-header { font-size: 1em; padding: 14px 18px; }
+            .subtopic { padding: 16px 18px; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <header>
+        <h1>🗞 Trending News from the Left · February 1–21, 2026</h1>
+        <div class="date-range">8 Categories &nbsp;·&nbsp; Ordered by coverage volume &nbsp;·&nbsp; 14 sources</div>
+        <div class="sources-pills">
+            <a href="https://www.cnn.com" target="_blank" class="source-pill">CNN</a>
+            <a href="https://www.msnbc.com" target="_blank" class="source-pill">MSNBC</a>
+            <a href="https://www.npr.org" target="_blank" class="source-pill">NPR</a>
+            <a href="https://www.nytimes.com" target="_blank" class="source-pill">New York Times</a>
+            <a href="https://www.washingtonpost.com" target="_blank" class="source-pill">Washington Post</a>
+            <a href="https://www.wsj.com" target="_blank" class="source-pill">Wall Street Journal</a>
+            <a href="https://www.ft.com" target="_blank" class="source-pill">Financial Times</a>
+            <a href="https://www.theguardian.com" target="_blank" class="source-pill">The Guardian</a>
+            <a href="https://www.aljazeera.com" target="_blank" class="source-pill">Al Jazeera</a>
+            <a href="https://www.haaretz.com" target="_blank" class="source-pill">Haaretz</a>
+            <a href="https://tytnetwork.com" target="_blank" class="source-pill">The Young Turks</a>
+            <a href="https://chrishedges.substack.com" target="_blank" class="source-pill">Chris Hedges</a>
+            <a href="https://heathercoxrichardson.substack.com" target="_blank" class="source-pill">Heather Cox Richardson</a>
+            <a href="https://geopoliticalfutures.com" target="_blank" class="source-pill">Geopolitical Futures</a>
+        </div>
+    </header>
+
+    <div class="legend">
+        <span class="legend-label">Most Coverage</span>
+        <div class="legend-bar"></div>
+        <span class="legend-label">Least Coverage</span>
+    </div>
+    <p style="text-align:center;color:#4a5878;font-size:0.85em;margin-bottom:22px;margin-top:-8px;">Click any category to expand · sections ordered by descending mention count</p>
+
+    <!-- ===================== 1. EPSTEIN FILES ===================== -->
+    <div class="section-card">
+        <button class="section-header color-1" onclick="toggle(this)">
+            <span class="title-left">
+                <span class="rank-badge">1</span>
+                Epstein Files: Release, Fallout & Congressional Battles
+            </span>
+            <span style="display:flex;align-items:center;gap:10px;">
+                <span class="mention-count">📰 ~340 articles</span>
+                <span class="chevron">▼</span>
+            </span>
+        </button>
+        <div class="section-body">
+            <div class="section-intro">The Justice Department's release of 3.5 million pages of Epstein files dominated headlines across nearly every outlet from Feb. 1 onward, triggering resignations, congressional hearings, bipartisan outrage, and international reverberations.</div>
+            <div class="subtopic-grid">
+            <div class="subtopic">
+                <div class="subtopic-title">DOJ Releases 3.5 Million Pages — Feb. 1 & Jan. 30 Productions</div>
+                <div class="subtopic-summary">The Department of Justice published over 3 million additional pages on Jan. 30 / Feb. 1, including 2,000+ videos and 180,000 images tied to the Epstein and Maxwell prosecutions and related FBI investigations. The release was mandated under the <em>Epstein Files Transparency Act</em> signed by Trump on Nov. 19, 2025. The DOJ stated no materials were withheld for political or embarrassment reasons — but critics quickly challenged that claim. Trump's name reportedly appears over 3,000 times in the files.</div>
+                <div class="source-links">
+                    <a href="https://www.justice.gov/opa/pr/department-justice-publishes-35-million-responsive-pages-compliance-epstein-files" class="source-link" target="_blank">DOJ Official Release</a>
+                    <a href="https://www.aljazeera.com/news/2026/2/10/struggling-to-navigate-the-epstein-files-here-is-a-visual-guide" class="source-link" target="_blank">Al Jazeera Visual Guide</a>
+                    <a href="https://en.wikipedia.org/wiki/Epstein_Files_Transparency_Act" class="source-link" target="_blank">Wikipedia Timeline</a>
+                </div>
+            </div>
+            <div class="subtopic">
+                <div class="subtopic-title">Congressional Access to Unredacted Files — DOJ Reading Room</div>
+                <div class="subtopic-summary">On Feb. 6, the DOJ announced members of Congress could view unredacted files in a supervised reading room, with no electronic devices. Lawmakers from both parties — including Reps. Maxwell Frost, Jared Moskowitz, and Suhas Subramanyam — described disturbing content after reviewing documents on Feb. 10–11. Frost said he'd only "scratched the tip of the iceberg." Moskowitz noted a list of co-conspirators would "surprise the public" because many were women.</div>
+                <div class="source-links">
+                    <a href="https://www.nbcnews.com/politics/congress/members-congress-view-unredacted-epstein-files-monday-rcna257836" class="source-link" target="_blank">NBC News</a>
+                    <a href="https://www.cnn.com/2026/02/15/politics/doj-epstein-files-prominent-people" class="source-link" target="_blank">CNN — 300+ Names</a>
+                </div>
+            </div>
+            <div class="subtopic">
+                <div class="subtopic-title">Bondi Testifies — DOJ Accused of Tracking Congressional Searches</div>
+                <div class="subtopic-summary">AG Pam Bondi and Commerce Secretary Howard Lutnick testified before Congress on the fifth file release. In a shocking development, Bondi was photographed holding a document titled "Jayapal Pramila Search History" — indicating the DOJ had tracked what lawmakers searched for in the unredacted files. Bipartisan outrage followed, with Speaker Johnson calling it "inappropriate." House Democrats launched an investigation on Feb. 13. Bondi defended the DOJ's redactions in a six-page letter to Congress on Feb. 14.</div>
+                <div class="source-links">
+                    <a href="https://en.wikipedia.org/wiki/Epstein_Files_Transparency_Act" class="source-link" target="_blank">Full Timeline</a>
+                    <a href="https://www.foxnews.com/us/ag-pam-bondi-announces-all-epstein-files-released-listing-high-profile-names" class="source-link" target="_blank">Fox News — Bondi Feb. 15</a>
+                </div>
+            </div>
+            <div class="subtopic">
+                <div class="subtopic-title">Resignations, Investigations & International Consequences</div>
+                <div class="subtopic-summary">By Feb. 19, the Washington Post documented "a wave of resignations and investigations" of powerful figures named in the files. UK PM Keir Starmer suggested Prince Andrew (Mountbatten-Windsor) should testify before Congress. Norway's PM criticized Crown Princess Mette-Marit's past association with Epstein. UN human rights experts issued a sharp statement warning that "resignations alone are not adequate substitutes for criminal accountability," and calling for lifting statutes of limitations on prosecution.</div>
+                <div class="source-links">
+                    <a href="https://www.washingtonpost.com/politics/2026/02/17/epstein-files-resignations-investigations/" class="source-link" target="_blank">WaPo — Resignations</a>
+                    <a href="https://www.ohchr.org/en/press-releases/2026/02/flawed-epstein-files-disclosures-undermine-accountability-grave-crimes" class="source-link" target="_blank">UN Human Rights</a>
+                </div>
+            </div>
+            <div class="subtopic">
+                <div class="subtopic-title">Redaction Controversy — Victims Exposed, Powerful Men Protected?</div>
+                <div class="subtopic-summary">Critics — including victims' advocates, legislators like Rep. Ro Khanna, and the UN — slammed the DOJ for "botched redactions" that exposed victims' identifying information while potentially shielding perpetrators. Khanna threatened to hold Bondi in contempt of Congress for withholding over 6 million total pages identified. The discrepancy between 3.5M released and 6M total collected became a major flashpoint. Rep. Thomas Massie declared: "It was not a hoax, I cannot be bullied, I am not done."</div>
+                <div class="source-links">
+                    <a href="https://www.ohchr.org/en/press-releases/2026/02/flawed-epstein-files-disclosures-undermine-accountability-grave-crimes" class="source-link" target="_blank">UN OHCHR</a>
+                    <a href="https://www.cnn.com/2026/02/15/politics/doj-epstein-files-prominent-people" class="source-link" target="_blank">CNN</a>
+                    <a href="https://en.wikipedia.org/wiki/Epstein_Files_Transparency_Act" class="source-link" target="_blank">Wikipedia</a>
+                </div>
+            </div>
+            </div><!-- /subtopic-grid -->
+        </div>
+    </div>
+
+    <!-- ===================== 2. ICE OPERATIONS ===================== -->
+    <div class="section-card">
+        <button class="section-header color-2" onclick="toggle(this)">
+            <span class="title-left">
+                <span class="rank-badge">2</span>
+                ICE Operations: Operation Metro Surge & National Crackdown
+            </span>
+            <span style="display:flex;align-items:center;gap:10px;">
+                <span class="mention-count">📰 ~290 articles</span>
+                <span class="chevron">▼</span>
+            </span>
+        </button>
+        <div class="section-body">
+            <div class="section-intro">Operation Metro Surge — the large-scale ICE deployment in Minnesota — continued through February, drawing massive national attention after two U.S. citizens were killed and protests swept the Twin Cities. Simultaneously, ICE enforcement intensified in Chicago, Nashville, and California.</div>
+            <div class="subtopic-grid">
+            <div class="subtopic">
+                <div class="subtopic-title">Operation Metro Surge — Twin Cities Under Siege</div>
+                <div class="subtopic-summary">The Trump administration's large-scale ICE deployment in Minneapolis–St. Paul — launched in December 2025 — continued throughout February. The operation resulted in thousands of arrests and triggered daily protests. By February, White House border czar Tom Homan announced the operation would end "next week," but enforcement remained intense through Feb. 20. As of Feb. 20, Reps. Ilhan Omar and Angie Craig visited a detention facility raising concerns about conditions.</div>
+                <div class="source-links">
+                    <a href="https://www.britannica.com/event/2025-26-Minnesota-ICE-Deployment" class="source-link" target="_blank">Britannica — Full Account</a>
+                    <a href="https://bringmethenews.com/minnesota-news/list-of-ice-raids-major-updates-in-minnesota-on-friday-feb-20" class="source-link" target="_blank">BMTN — Feb. 20 Updates</a>
+                </div>
+            </div>
+            <div class="subtopic">
+                <div class="subtopic-title">Deaths of U.S. Citizens — Renee Good & Alex Pretti</div>
+                <div class="subtopic-summary">Renee Good, a U.S. citizen, was shot and killed by an ICE officer on Jan. 7 in Minneapolis during an immigration operation. Alex Pretti, a 37-year-old ICU nurse and U.S. citizen, was fatally shot by ICE agents during an anti-ICE protest on Jan. 24. Both deaths triggered waves of protests, legal challenges by Minnesota officials, and statewide solidarity closures by hundreds of businesses. Minneapolis Park Board suspended evictions at rental properties in direct response to the crackdown.</div>
+                <div class="source-links">
+                    <a href="https://www.britannica.com/event/2025-26-Minnesota-ICE-Deployment" class="source-link" target="_blank">Britannica</a>
+                    <a href="https://hias.org/news/ice-raids-what-you-need-know/" class="source-link" target="_blank">HIAS — ICE Overview</a>
+                </div>
+            </div>
+            <div class="subtopic">
+                <div class="subtopic-title">Record Detention Numbers — 68,000+ Held, 73% With No Criminal Record</div>
+                <div class="subtopic-summary">As of Feb. 7, 68,289 immigrants were in ICE detention — the highest ever recorded, an 84% increase from January 2025. TRAC data showed 73.6% of detainees had no criminal conviction. Six people had already died in ICE custody since January 2026, following 2025's deadliest year in two decades (32 deaths). Critics note that ICE targets go far beyond Trump's stated focus on "violent criminals." ICE's workforce expanded by 120% following a Jan. 3 announcement adding 12,000+ agents.</div>
+                <div class="source-links">
+                    <a href="https://tracreports.org/immigration/quickfacts/" class="source-link" target="_blank">TRAC Immigration Data</a>
+                    <a href="https://hias.org/news/ice-raids-what-you-need-know/" class="source-link" target="_blank">HIAS</a>
+                    <a href="https://www.prisonpolicy.org/blog/2025/12/11/ice-jails-update/" class="source-link" target="_blank">Prison Policy Initiative</a>
+                </div>
+            </div>
+            <div class="subtopic">
+                <div class="subtopic-title">Chicago Apartment Raid — Lies About Tren de Aragua Exposed</div>
+                <div class="subtopic-summary">ProPublica obtained court documents revealing that a September 2025 Chicago apartment raid — in which agents descended by helicopter and zip-tied U.S. citizens — was motivated by allegations of squatting, not gang activity. Despite the DHS invoking Tren de Aragua, internal arrest records made no mention of the gang. An attorney called it "a brutal lie against the American public." The landlord had given federal agents verbal and written consent to enter the building.</div>
+                <div class="source-links">
+                    <a href="https://www.propublica.org/article/chicago-venezuela-immigration-ice-raid-landlord-tren-de-aragua" class="source-link" target="_blank">ProPublica</a>
+                </div>
+            </div>
+            <div class="subtopic">
+                <div class="subtopic-title">Nashville Raid Accountability — Misreported Stats, Abusive Conduct</div>
+                <div class="subtopic-summary">The Nashville Banner exposed a joint THP-ICE raid from summer 2025 in which agents competed to make the most immigration arrests, used racial slurs, and physically marked people's skin to tally arrests. State and city leaders called for accountability from the governor. ICE records showed the operation targeted demographics by appearance rather than criminal history. Rep. John Ray Clemmons demanded answers, and Nashville Mayor Freddie O'Connell condemned the operation as "more about separation than safety."</div>
+                <div class="source-links">
+                    <a href="https://nashvillebanner.com/2026/02/20/immigration-raid-nashville-accountability-calls/" class="source-link" target="_blank">Nashville Banner</a>
+                </div>
+            </div>
+            <div class="subtopic">
+                <div class="subtopic-title">California Standoff — 33,000 Detainer Requests Ignored</div>
+                <div class="subtopic-summary">ICE Acting Director Todd Lyons sent a letter to California AG Rob Bonta demanding he honor ICE detainers for 33,179 individuals in California jails — including those convicted of murder and sex offenses. California's sanctuary policies have prevented state and local law enforcement from notifying ICE of releases. The standoff represents the sharpest state-federal confrontation in immigration enforcement since Trump's second term began.</div>
+                <div class="source-links">
+                    <a href="https://www.ice.gov/newsroom" class="source-link" target="_blank">ICE Official Releases</a>
+                </div>
+            </div>
+            </div><!-- /subtopic-grid -->
+        </div>
+    </div>
+
+    <!-- ===================== 3. TRUMP REVERSALS ===================== -->
+    <div class="section-card">
+        <button class="section-header color-3" onclick="toggle(this)">
+            <span class="title-left">
+                <span class="rank-badge">3</span>
+                Trump Administration Reversals & Growing Liabilities
+            </span>
+            <span style="display:flex;align-items:center;gap:10px;">
+                <span class="mention-count">📰 ~240 articles</span>
+                <span class="chevron">▼</span>
+            </span>
+        </button>
+        <div class="section-body">
+            <div class="section-intro">The most dramatic development of the period: The Supreme Court struck down Trump's sweeping IEEPA tariffs 6-3 on Feb. 20. Courts also blocked health grants cuts, UCLA settlement, and immigration policies in rapid succession. Bloomberg documented courts halting Trump actions in more than half of 167 spending fights.</div>
+            <div class="subtopic-grid">
+            <div class="subtopic">
+                <div class="subtopic-title">Supreme Court Strikes Down IEEPA Tariffs — Feb. 20 Bombshell</div>
+                <div class="subtopic-summary">In a stunning 6-3 ruling on February 20, the Supreme Court held that Trump violated federal law when he imposed sweeping global tariffs under the International Emergency Economic Powers Act (IEEPA). Chief Justice Roberts wrote the majority opinion, finding that IEEPA does not explicitly authorize tariffs. The ruling invalidates country-by-country "reciprocal" tariffs and section 232 tariffs imposed under the emergency framework — though steel, aluminum, and other tariffs using different legal authorities remain in place. A defiant Trump vowed to impose a new 10% global tariff by executive order, while international markets reacted with relief. Business owners who had paid the tariffs expressed vindication.</div>
+                <div class="source-links">
+                    <a href="https://www.cnn.com/us/live-news/trump-administration-us-iran-02-20-26" class="source-link" target="_blank">CNN Live Coverage Feb. 20</a>
+                    <a href="https://www.nbcnews.com/politics/rcna244827" class="source-link" target="_blank">NBC News</a>
+                    <a href="https://www.housingwire.com/articles/supreme-court-trump-tariffs/" class="source-link" target="_blank">Analysis</a>
+                </div>
+            </div>
+            <div class="subtopic">
+                <div class="subtopic-title">Courts Block Health Grant Cuts to Democratic States</div>
+                <div class="subtopic-summary">On Feb. 13, a federal judge temporarily blocked the Trump administration from cutting $600 million in public health grants already allocated to four Democratic-led states. Courts had previously blocked cuts to billions for child care subsidies and other low-income programs. According to a Bloomberg review published Feb. 10, courts had halted Trump's funding cuts or the government had reversed course after lawsuits in more than half of 167 spending fights tracked since the start of the term.</div>
+                <div class="source-links">
+                    <a href="https://www.npr.org/2026/02/13/nx-s1-5713305/federal-funding-democratic-states-lawsuit" class="source-link" target="_blank">NPR</a>
+                    <a href="https://www.bloomberg.com/news/features/2026-02-10/trump-funding-cuts-face-court-pushback-despite-supreme-court-rulings" class="source-link" target="_blank">Bloomberg</a>
+                </div>
+            </div>
+            <div class="subtopic">
+                <div class="subtopic-title">Congress Fully Funds Health Agencies — Reversing RFK Cuts</div>
+                <div class="subtopic-summary">In a striking rebuke of the administration's own proposed budget, the bipartisan spending bill Trump signed in early February fully funded CDC, NIH, and other health agencies — a 180-degree reversal of the proposed cuts that would have halved biomedical research funding and eliminated entire CDC centers. Grantees and agency staff remained suspicious of the durability of the commitments, noting that actual implementation could still result in de facto cuts.</div>
+                <div class="source-links">
+                    <a href="https://www.npr.org/2026/02/04/nx-s1-5699465/congress-fully-funds-health-agencies-restoring-rfk-jr-s-cuts" class="source-link" target="_blank">NPR — Full Funding Restored</a>
+                </div>
+            </div>
+            <div class="subtopic">
+                <div class="subtopic-title">UCLA Settlement Appeal Dropped — Higher Education Battles Continue</div>
+                <div class="subtopic-summary">On Feb. 13, the Trump administration dropped its appeal of a court order blocking a proposed $1.2 billion UCLA settlement related to alleged civil rights violations. While abandoning the appeal, the administration said it would continue investigating the UC system and other campuses as part of its broader effort to reshape higher education. Critics noted the pattern of aggressive action followed by retreat when courts push back.</div>
+                <div class="source-links">
+                    <a href="https://lifesciences.ucla.edu/2026/02/trump-administration-drops-appeal-of-court-order-blocking-1-2-billion-ucla-settlement/" class="source-link" target="_blank">UCLA Life Sciences</a>
+                </div>
+            </div>
+            <div class="subtopic">
+                <div class="subtopic-title">239 Active Legal Challenges — The Litigation Tsunami</div>
+                <div class="subtopic-summary">By February, Lawfare's litigation tracker documented 239 active cases challenging Trump administration actions, with 17 Supreme Court stays or emergency orders already issued. The tracker noted 6 criminal prosecutions launched by the DOJ against political opponents, raising rule-of-law concerns. Courts had issued 9 summary judgments or permanent injunctions against the government, while the government won 8 such rulings — creating an uneven but active battleground.</div>
+                <div class="source-links">
+                    <a href="https://www.lawfaremedia.org/projects-series/trials-of-the-trump-administration/tracking-trump-administration-litigation" class="source-link" target="_blank">Lawfare Litigation Tracker</a>
+                    <a href="https://www.justsecurity.org/107087/tracker-litigation-legal-challenges-trump-administration/" class="source-link" target="_blank">Just Security</a>
+                </div>
+            </div>
+            </div><!-- /subtopic-grid -->
+        </div>
+    </div>
+
+    <!-- ===================== 4. MAGA FRACTURES ===================== -->
+    <div class="section-card">
+        <button class="section-header color-4" onclick="toggle(this)">
+            <span class="title-left">
+                <span class="rank-badge">4</span>
+                Fractures in the MAGA Coalition
+            </span>
+            <span style="display:flex;align-items:center;gap:10px;">
+                <span class="mention-count">📰 ~210 articles</span>
+                <span class="chevron">▼</span>
+            </span>
+        </button>
+        <div class="section-body">
+            <div class="section-intro">The Georgia 14th District special election, triggered by MTG's exit, exposed genuine fractures in Trump's coalition. Polls showed MAGA self-identification falling, while the Venezuela intervention created an isolationist vs. interventionist fault line within the movement.</div>
+            <div class="subtopic-grid">
+            <div class="subtopic">
+                <div class="subtopic-title">Georgia 14th Special Election — Trump's Endorsement Power Tested</div>
+                <div class="subtopic-summary">A crowded 18-candidate race for MTG's vacated House seat became a live test of Trump's grip on the Republican base. Trump endorsed Clay Fuller on Feb. 4 but confused reporters 12 days later by saying he still needed to "choose one." His preferred candidate faced a strong challenge from Colton Moore, who had been rebuffed by Trump in a text exchange. When Trump texted back that Moore was "too unpredictable," Moore highlighted it as a badge of honor. Democrats outperformed expectations in fundraising: the Democratic candidate raised more than the entire Republican field combined. The March 10 vote could be an early harbinger of midterm dynamics.</div>
+                <div class="source-links">
+                    <a href="https://dnyuz.com/2026/02/19/replacing-marjorie-taylor-greene-puts-trumps-control-of-maga-to-the-test/" class="source-link" target="_blank">DNYUZ/WaPo Analysis</a>
+                    <a href="https://www.thedupreereport.com/2026/02/georgia-special-election-trump/" class="source-link" target="_blank">Dupree Report</a>
+                </div>
+            </div>
+            <div class="subtopic">
+                <div class="subtopic-title">MAGA Self-ID Plunges 7 Points — NBC/Newsweek Polls</div>
+                <div class="subtopic-summary">An NBC News/SurveyMonkey poll found Republicans were now evenly split between "MAGA" and "traditional Republican" identities — down 7 percentage points from April 2025 for MAGA self-identification. Trump's overall approval remained underwater at 42% approve, 58% disapprove. Democrats led 53%–47% on who is better trusted to handle affordability. The "reluctant right" (1 in 5 Trump voters) was increasingly expressing regret — 25% said they have doubts about or regret their vote entirely.</div>
+                <div class="source-links">
+                    <a href="https://www.nbcnews.com/politics/politics-news/poll-trumps-maga-base-still-cracks-are-showing-ahead-2026-rcna248722" class="source-link" target="_blank">NBC News Poll</a>
+                    <a href="https://www.newsweek.com/republicans-identify-maga-poll-11211564" class="source-link" target="_blank">Newsweek</a>
+                    <a href="https://chicago.suntimes.com/columnists/2026/02/07/maga-trump-base-polls-republicans-conservatives-mona-charen" class="source-link" target="_blank">Chicago Sun-Times Analysis</a>
+                </div>
+            </div>
+            <div class="subtopic">
+                <div class="subtopic-title">Venezuela Intervention Splits Isolationists from Hawks</div>
+                <div class="subtopic-summary">Trump's military strike on Venezuela and capture of Maduro in early January created an ideological earthquake within MAGA. Marjorie Taylor Greene declared the strikes represented what "many in MAGA thought they voted to end." Rep. Thomas Massie told MAGA to "wake up," calling it about "OIL and REGIME CHANGE." But many conservative commentators quickly rallied behind the swift use of force, exposing the fault line between MAGA's neo-isolationist base and its hawkish wing. The Hudson Institute documented how this divide threatens Trump's evangelical-Catholic-Jewish coalition.</div>
+                <div class="source-links">
+                    <a href="https://thehill.com/newsletters/the-movement/5673701-trump-venezuela-intervention-maga/" class="source-link" target="_blank">The Hill — The Movement</a>
+                    <a href="https://www.hudson.org/politics-government/why-trump-coalition-cracking-michael-doran" class="source-link" target="_blank">Hudson Institute</a>
+                    <a href="https://jacobin.com/2026/01/maga-trump-imperialism-ice-spectacle" class="source-link" target="_blank">Jacobin Analysis</a>
+                </div>
+            </div>
+            <div class="subtopic">
+                <div class="subtopic-title">Musk-Trump Reconciliation — But Tensions Linger</div>
+                <div class="subtopic-summary">After a very public falling out over the summer — which included Musk accusing Trump of hiding in the Epstein files and his call for a new "America Party" — Elon Musk and Trump had a reconciliation dinner at Mar-a-Lago, with Musk declaring "2026 is going to be amazing!" Republican strategists celebrated the reunion as crucial for midterm fundraising. However, analysts noted that Musk's previous defection revealed the fragility of MAGA's tech-wing alliance.</div>
+                <div class="source-links">
+                    <a href="https://thehill.com/newsletters/the-movement/5673701-trump-venezuela-intervention-maga/" class="source-link" target="_blank">The Hill</a>
+                </div>
+            </div>
+            <div class="subtopic">
+                <div class="subtopic-title">Manhattan Institute Survey: "New Entrant" Republicans Unreliable</div>
+                <div class="subtopic-summary">A comprehensive Manhattan Institute survey of nearly 3,000 voters found that only 56% of "New Entrant Republicans" — the newer, more diverse members of the coalition — would "definitely" vote Republican in 2026 congressional elections, compared to 70% of "Core Republicans." These newer members are also more conspiratorial, more tolerant of political violence, and more liberal on immigration and social issues, creating an inherently unstable coalition.</div>
+                <div class="source-links">
+                    <a href="https://manhattan.institute/article/the-new-gop-survey-analysis-of-americans-overall-todays-republican-coalition-and-the-minorities-of-maga" class="source-link" target="_blank">Manhattan Institute</a>
+                </div>
+            </div>
+            </div><!-- /subtopic-grid -->
+        </div>
+    </div>
+
+    <!-- ===================== 5. AFFORDABILITY ===================== -->
+    <div class="section-card">
+        <button class="section-header color-5" onclick="toggle(this)">
+            <span class="title-left">
+                <span class="rank-badge">5</span>
+                Affordability: The Kitchen Table Crisis
+            </span>
+            <span style="display:flex;align-items:center;gap:10px;">
+                <span class="mention-count">📰 ~190 articles</span>
+                <span class="chevron">▼</span>
+            </span>
+        </button>
+        <div class="section-body">
+            <div class="section-intro">With the November midterms on the horizon, affordability has become the dominant domestic political issue. CPI data released Feb. 13 showed Jan. 2026 inflation at 2.4% year-over-year — but structural costs in housing, groceries, healthcare and debt service remain painfully elevated for ordinary Americans.</div>
+            <div class="subtopic-grid">
+            <div class="subtopic">
+                <div class="subtopic-title">January 2026 CPI — 2.4% Annual, But Housing & Food Keep Rising</div>
+                <div class="subtopic-summary">The Bureau of Labor Statistics released January 2026 CPI data on Feb. 13 showing a 0.2% monthly increase and 2.4% year-over-year rise. Shelter was the largest contributor. Food rose 0.2% monthly while energy fell 1.5%. While headline inflation has moderated sharply from its 2022 peak of 9.1%, cumulative price levels since 2020 remain 21–30% above pre-pandemic baselines in most essentials. Bloomberg characterized this as a "hangover" that shoppers plainly resent.</div>
+                <div class="source-links">
+                    <a href="https://www.bls.gov/news.release/cpi.nr0.htm" class="source-link" target="_blank">BLS CPI Release</a>
+                    <a href="https://www.bloomberg.com/graphics/2026-cost-of-living/" class="source-link" target="_blank">Bloomberg — Cost of Living</a>
+                </div>
+            </div>
+            <div class="subtopic">
+                <div class="subtopic-title">Grocery & Food Prices — Trump's "Day One" Promise Unfulfilled</div>
+                <div class="subtopic-summary">A Washington Times analysis documented that grocery costs were not falling as Trump promised. The Food & Water Watch noted household cost burdens expected to rise from $1,000 in 2025 to $1,300 per household in 2026 from tariff-related price increases, with Americans absorbing 96% of those costs. Trump called affordability concerns a "con job by the Democrats" and "fake" — even as his own data showed food prices up 3.1% year-over-year. Coffee, beef, and eggs were highlighted as particularly stubborn problem areas.</div>
+                <div class="source-links">
+                    <a href="https://www.washingtontimes.com/news/2026/feb/11/trump-bring-grocery-costs/" class="source-link" target="_blank">Washington Times</a>
+                    <a href="https://www.foodandwaterwatch.org/2026/02/10/the-5-worst-things-trump-officials-have-said-on-affordability/" class="source-link" target="_blank">Food & Water Watch</a>
+                </div>
+            </div>
+            <div class="subtopic">
+                <div class="subtopic-title">Housing — Homeownership Out of Reach, Delinquencies Surge</div>
+                <div class="subtopic-summary">Bloomberg reported that delinquency rates had climbed to their highest level in nearly a decade, and that a young married couple now needs 70% of annual household income for the average down payment. The median first-time homebuyer age recently hit 40. The Trump White House floated a 50-year mortgage proposal as a solution, but economists warned it would not address underlying supply constraints and could fuel further price inflation. Trump's tariffs are also raising the cost of construction materials, worsening the supply problem.</div>
+                <div class="source-links">
+                    <a href="https://www.bloomberg.com/graphics/2026-cost-of-living/" class="source-link" target="_blank">Bloomberg</a>
+                    <a href="https://thehill.com/business/5601009-trump-affordability-inflation-2026-midterms/" class="source-link" target="_blank">The Hill</a>
+                </div>
+            </div>
+            <div class="subtopic">
+                <div class="subtopic-title">ACA Premiums Doubling — 22 Million at Risk</div>
+                <div class="subtopic-summary">Enhanced ACA premium subsidies expired at the end of 2025. More than 22 million Americans enrolled in ACA marketplace plans now face premium increases that could more than double their monthly costs, according to KFF. At the same time, Trump and congressional Republicans slashed over $1 trillion from Medicaid, ripping health coverage from over 15 million Americans according to Protect Our Care. The two-thirds of Americans who say they worry about affording healthcare represents a political time bomb heading into November.</div>
+                <div class="source-links">
+                    <a href="https://www.cnbc.com/2025/12/24/affordability-is-a-buzzword-right-now-these-charts-show-why.html" class="source-link" target="_blank">CNBC</a>
+                    <a href="https://www.protectourcare.org/fact-sheet-one-year-of-rfk-jr-and-donald-trump-taking-a-wrecking-ball-to-health-care/" class="source-link" target="_blank">Protect Our Care</a>
+                </div>
+            </div>
+            <div class="subtopic">
+                <div class="subtopic-title">Trump "Wins on Affordability" Message — Political Pivot in Georgia</div>
+                <div class="subtopic-summary">Trump traveled to Rome, Georgia on Feb. 19 and declared he had "won" on affordability, touting slowing inflation and job growth above forecasts. The messaging signaled a political pivot toward economic optimism ahead of midterms. Polls show Democrats lead Republicans 48%–45% on the generic ballot, with a survey showing 74% of voters could be persuaded that prices are no longer a problem if they actually fell. Trump's prior dismissiveness of cost-of-living concerns appears to be giving way to a more deliberate economic messaging campaign.</div>
+                <div class="source-links">
+                    <a href="https://www.westhawaiitoday.com/2026/02/20/nation-world-news/trump-says-he-won-on-affordability-signaling-messaging-shift/" class="source-link" target="_blank">West Hawaii Today/AP</a>
+                    <a href="https://www.washingtonpost.com/business/2026/02/16/affordability-politics-cost-living-prices/" class="source-link" target="_blank">Washington Post</a>
+                </div>
+            </div>
+            </div><!-- /subtopic-grid -->
+        </div>
+    </div>
+
+    <!-- ===================== 6. LATIN AMERICA ===================== -->
+    <div class="section-card">
+        <button class="section-header color-6" onclick="toggle(this)">
+            <span class="title-left">
+                <span class="rank-badge">6</span>
+                Latin America: Monroe Doctrine Redux
+            </span>
+            <span style="display:flex;align-items:center;gap:10px;">
+                <span class="mention-count">📰 ~165 articles</span>
+                <span class="chevron">▼</span>
+            </span>
+        </button>
+        <div class="section-body">
+            <div class="section-intro">Following the dramatic capture of Maduro in early January, the Trump administration's "Donroe Doctrine" reshaped hemispheric relations throughout February. Energy diplomacy in Venezuela, a tense Petro summit, and the Panama Canal's Chinese port standoff dominated the regional agenda.</div>
+            <div class="subtopic-grid">
+            <div class="subtopic">
+                <div class="subtopic-title">Venezuela — U.S. Energy Secretary Visits Caracas, Oil Access Negotiated</div>
+                <div class="subtopic-summary">Energy Secretary Chris Wright arrived in Caracas on Feb. 11 for a three-day visit — the first cabinet-level U.S. visit since Maduro's ouster. Wright met with interim president Delcy Rodríguez, toured oil fields, and told reporters: "We're massively changing the viability of commercial business on the ground in Venezuela." The Trump administration began laying groundwork to control Venezuelan oil revenue. U.S. executives expressed interest but also skepticism about the security situation. Venezuela's chavista legislature had fast-tracked hydrocarbon sector reforms to attract foreign capital.</div>
+                <div class="source-links">
+                    <a href="https://www.as-coa.org/articles/trump-latin-america-opening-venezuela-closing-cuba-and-meeting-mexico" class="source-link" target="_blank">AS/COA</a>
+                    <a href="https://time.com/7343093/trump-venezuela-us-next-colombia-cuba-greenland-iran-mexico/" class="source-link" target="_blank">TIME</a>
+                </div>
+            </div>
+            <div class="subtopic">
+                <div class="subtopic-title">Trump–Petro Summit — Feb. 3 White House Meeting</div>
+                <div class="subtopic-summary">Colombian President Gustavo Petro — whom Trump had called a "sick man who likes making cocaine" — met Trump at the White House on Feb. 3, following a surprise phone call that broke months of hostility. Topics included drug trafficking, migration, border security with Venezuela, and Colombia's China ties. The meeting's unpredictability matched the leaders' personalities. Despite the thaw, the Trump administration remained concerned about Colombia's ELN guerrilla ties and FARC remnants. Colombian military officials stressed their decades-long security partnership with the U.S. remains critical for Venezuela's stabilization.</div>
+                <div class="source-links">
+                    <a href="https://www.chathamhouse.org/2026/02/trump-and-petros-unpredictable-meeting-could-be-pivotal-latin-america" class="source-link" target="_blank">Chatham House</a>
+                    <a href="https://www.as-coa.org/articles/one-year-trumps-impact-latin-america-and-whats-next" class="source-link" target="_blank">AS/COA — One Year</a>
+                </div>
+            </div>
+            <div class="subtopic">
+                <div class="subtopic-title">Panama Canal — Chinese Port Standoff Intensifies</div>
+                <div class="subtopic-summary">Panama's Supreme Court ruled Hong Kong-based CK Hutchison's port holdings at both ends of the canal unconstitutional on Feb. 11 — a major win for Washington. Beijing launched a regulatory review to block Hutchison's $23 billion sale of canal ports to a BlackRock-led group, demanding COSCO become an equal partner. The State Department warned: "Let this be a cautionary tale for the region and the world: cheap Chinese money costs sovereignty." U.S. warships now have expedited canal transit following Hegseth's January Panama visit.</div>
+                <div class="source-links">
+                    <a href="https://nationalinterest.org/feature/donald-trump-sets-his-sights-on-china-in-south-america" class="source-link" target="_blank">National Interest</a>
+                    <a href="https://www.as-coa.org/articles/trump-latin-america-opening-venezuela-closing-cuba-and-meeting-mexico" class="source-link" target="_blank">AS/COA</a>
+                </div>
+            </div>
+            <div class="subtopic">
+                <div class="subtopic-title">Argentina Trade Deal — US Beef Quotas Quintupled</div>
+                <div class="subtopic-summary">The U.S. signed a bilateral trade deal with Argentina on Feb. 5, eliminating tariffs on 200+ U.S. products and quintupling the Argentine beef quota for the U.S. market. The Trump administration celebrated potential effects on beef prices domestically, but U.S. ranchers were upset. Brazil was reviewing whether the deal violates Mercosur trade rules. The deal was part of a broader pattern of bilateral agreements replacing multilateral frameworks across Latin America.</div>
+                <div class="source-links">
+                    <a href="https://www.as-coa.org/articles/trump-latin-america-opening-venezuela-closing-cuba-and-meeting-mexico" class="source-link" target="_blank">AS/COA</a>
+                </div>
+            </div>
+            <div class="subtopic">
+                <div class="subtopic-title">Trump's "Donroe Doctrine" — Threats Across the Hemisphere</div>
+                <div class="subtopic-summary">CFR senior fellow Charles Kupchan characterized Trump's strategy as "neo-imperialism, not neo-isolationism" in a Jan. 7 analysis. Beyond Venezuela, Trump threatened Colombia ("Sounds good to me" when asked about military action), Cuba ("we'll end up talking about"), and Nicaragua. NPR traced the history of U.S. interventions showing mixed results — and warned that unlike Panama in 1989, Venezuela lacks "a clear exit plan." The Trump administration's first Board of Peace summit took place Feb. 19, with Argentina and Paraguay as founding members, each committing $1 billion.</div>
+                <div class="source-links">
+                    <a href="https://www.cfr.org/expert-brief/venezuela-and-beyond-trumps-america-first-rhetoric-masks-neo-imperialist-streak" class="source-link" target="_blank">CFR Analysis</a>
+                    <a href="https://www.npr.org/2026/01/02/nx-s1-5652133/us-venezuela-interventionism-caribbean-latin-america-history-trump" class="source-link" target="_blank">NPR History</a>
+                    <a href="https://www.axios.com/2026/01/07/trump-venezuela-greenland-countries-threats" class="source-link" target="_blank">Axios</a>
+                </div>
+            </div>
+            </div><!-- /subtopic-grid -->
+        </div>
+    </div>
+
+    <!-- ===================== 7. SUPREME COURT CASES ===================== -->
+    <div class="section-card">
+        <button class="section-header color-7" onclick="toggle(this)">
+            <span class="title-left">
+                <span class="rank-badge">7</span>
+                Supreme Court Cases: Power, Citizenship & Rights
+            </span>
+            <span style="display:flex;align-items:center;gap:10px;">
+                <span class="mention-count">📰 ~140 articles</span>
+                <span class="chevron">▼</span>
+            </span>
+        </button>
+        <div class="section-body">
+            <div class="section-intro">Beyond the tariff ruling, the Supreme Court faces a packed docket in 2026 with landmark cases on birthright citizenship, presidential firing power, transgender sports bans, and gun rights — each with sweeping constitutional implications.</div>
+            <div class="subtopic-grid">
+            <div class="subtopic">
+                <div class="subtopic-title">Birthright Citizenship — Trump v. Barbara Heads to SCOTUS</div>
+                <div class="subtopic-summary">The Supreme Court agreed in December 2025 to hear oral arguments in Trump v. Barbara, a challenge to Trump's Day One executive order seeking to deny birthright citizenship to children of undocumented immigrants or temporary visa holders. Arguments are expected February–April with a ruling by June. Every lower court has uniformly struck down the policy as unconstitutional under the 14th Amendment and over a century of precedent (Wong Kim Ark, 1898). If upheld, approximately 150,000 children born annually in the U.S. could be denied citizenship, plus an estimated 4.4 million U.S.-born children of undocumented parents.</div>
+                <div class="source-links">
+                    <a href="https://news.bloomberglaw.com/us-law-week/birthright-citizenship-tops-supreme-court-cases-to-watch-in-2026" class="source-link" target="_blank">Bloomberg Law</a>
+                    <a href="https://www.scotusblog.com/2025/12/supreme-court-agrees-to-hear-trumps-challenge-to-birthright-citizenship/" class="source-link" target="_blank">SCOTUSblog</a>
+                    <a href="https://www.aclu-nh.org/press-releases/supreme-court-to-hear-high-stakes-birthright-citizenship-challenge/" class="source-link" target="_blank">ACLU NH</a>
+                </div>
+            </div>
+            <div class="subtopic">
+                <div class="subtopic-title">Presidential Firing Power — FTC & Federal Reserve Cases</div>
+                <div class="subtopic-summary">Cases centered on Trump's attempted firing of Democrats on the Federal Trade Commission and Federal Reserve are pending at the Court. During December arguments, conservative justices signaled willingness to abandon precedent protecting members of independent commissions from at-will firing. Justice Brett Kavanaugh raised a possible exception for the Federal Reserve, preserving central bank independence — but the broader ruling could strip all independent agencies of removal protections, dramatically expanding executive power.</div>
+                <div class="source-links">
+                    <a href="https://news.bloomberglaw.com/us-law-week/birthright-citizenship-tops-supreme-court-cases-to-watch-in-2026" class="source-link" target="_blank">Bloomberg Law</a>
+                    <a href="https://www.axios.com/2026/01/01/2026-trump-supreme-court-cases-tariffs" class="source-link" target="_blank">Axios</a>
+                </div>
+            </div>
+            <div class="subtopic">
+                <div class="subtopic-title">Transgender Sports — West Virginia v. B.P.J. & Little v. Hecox</div>
+                <div class="subtopic-summary">The Court will rule on whether the 14th Amendment allows states to bar transgender women and girls from female sports teams. Cases challenging laws in West Virginia and Idaho — both blocked by lower courts as violating the Equal Protection Clause — will receive a definitive ruling with implications for state-level sports bans across the country. A ruling against the transgender athletes would validate dozens of similar state laws and reshape Title IX enforcement.</div>
+                <div class="source-links">
+                    <a href="https://news.bloomberglaw.com/us-law-week/birthright-citizenship-tops-supreme-court-cases-to-watch-in-2026" class="source-link" target="_blank">Bloomberg Law</a>
+                </div>
+            </div>
+            <div class="subtopic">
+                <div class="subtopic-title">Asylum "Metering" Policy — Noem v. Al Otro Lado</div>
+                <div class="subtopic-summary">The Supreme Court agreed to review a 9th Circuit ruling striking down the administration's "metering" policy, which allowed officials to turn back asylum seekers at the border without processing their claims. The administration argues the Ninth Circuit ruling strips the executive branch of a "critical tool" for managing border surges. Used in both the Obama and first Trump administrations before Biden rescinded it, a ruling in the administration's favor would restore and potentially expand border-turnaround authority.</div>
+                <div class="source-links">
+                    <a href="https://news.bloomberglaw.com/us-law-week/birthright-citizenship-tops-supreme-court-cases-to-watch-in-2026" class="source-link" target="_blank">Bloomberg Law</a>
+                </div>
+            </div>
+            <div class="subtopic">
+                <div class="subtopic-title">29 Emergency Orders Already — The Shadow Docket Expands</div>
+                <div class="subtopic-summary">As of Feb. 10, the Supreme Court had issued 29 emergency orders in cases related to the second Trump administration, with 2 pending applications and 3 withdrawn. The Trump administration filed 32 of the emergency applications. Critics argue the pace of emergency orders reveals the extent to which the administration uses the "shadow docket" to fast-track policy implementation, bypassing full merits briefing and argument.</div>
+                <div class="source-links">
+                    <a href="https://ballotpedia.org/Supreme_Court_emergency_orders_related_to_the_Trump_administration,_2025-2026" class="source-link" target="_blank">Ballotpedia</a>
+                </div>
+            </div>
+            </div><!-- /subtopic-grid -->
+        </div>
+    </div>
+
+    <!-- ===================== 8. GOVERNMENT HEALTH ===================== -->
+    <div class="section-card">
+        <button class="section-header color-8" onclick="toggle(this)">
+            <span class="title-left">
+                <span class="rank-badge">8</span>
+                Government-Sponsored Health: RFK, MAHA & Science Under Siege
+            </span>
+            <span style="display:flex;align-items:center;gap:10px;">
+                <span class="mention-count">📰 ~120 articles</span>
+                <span class="chevron">▼</span>
+            </span>
+        </button>
+        <div class="section-body">
+            <div class="section-intro">One year after RFK Jr.'s confirmation as HHS Secretary, a comprehensive reckoning documents: $1 trillion in Medicaid and ACA cuts, 20,000+ health worker departures, a measles outbreak, anti-vaccine advisory committees, and the FDA's leucovorin "autism cure" fiasco. Despite Congress restoring full agency funding in February, the underlying structural damage continues.</div>
+            <div class="subtopic-grid">
+            <div class="subtopic">
+                <div class="subtopic-title">One Year of RFK Jr. at HHS — The Damage Assessment</div>
+                <div class="subtopic-summary">Protect Our Care documented that over 15 million Americans lost health coverage through Medicaid and ACA cuts totaling $1 trillion. Over 20,500 health workers left or were pushed out of federal agencies. Over 750 hospitals and clinics face closure or reduced services. Drug prices rose 4% medically — faster than overall inflation. RFK Jr. spread vaccine misinformation while overseeing the largest measles outbreak in decades, including deaths of two unvaccinated children in Texas and an active outbreak in South Carolina.</div>
+                <div class="source-links">
+                    <a href="https://www.protectourcare.org/fact-sheet-one-year-of-rfk-jr-and-donald-trump-taking-a-wrecking-ball-to-health-care/" class="source-link" target="_blank">Protect Our Care</a>
+                    <a href="https://projects.propublica.org/federal-health-worker-cuts-rfk-trump-administration/" class="source-link" target="_blank">ProPublica — Worker Cuts</a>
+                </div>
+            </div>
+            <div class="subtopic">
+                <div class="subtopic-title">FDA Refuses Moderna's mRNA Flu Vaccine — "Arbitrary Government at Its Worst"</div>
+                <div class="subtopic-summary">The FDA issued a rare "refusal-to-file" decision for Moderna's mRNA flu vaccine application — a highly unusual move that contradicted earlier FDA feedback and stunned scientists. The Wall Street Journal called it "arbitrary government at its worst." The decision appears driven by MAHA ideology rather than scientific evidence. It followed FDA Commissioner Marty Makary's appointment and the cancellation of over $500 million in mRNA vaccine contracts. The Genetic Literacy Project documented the FDA's deepening "science freefall" under Makary and Kennedy.</div>
+                <div class="source-links">
+                    <a href="https://geneticliteracyproject.org/2026/02/16/trump-rfk-jr-s-fda-in-science-freefall-the-leucovorin-autism-cure-fiasco-is-one-of-many/" class="source-link" target="_blank">Genetic Literacy Project</a>
+                    <a href="https://www.biopharmadive.com/news/hhs-fda-restructuring-layoffs-tracker/741684/" class="source-link" target="_blank">BioPharma Dive</a>
+                </div>
+            </div>
+            <div class="subtopic">
+                <div class="subtopic-title">Leucovorin Autism "Cure" — MAHA Politics Overrides Science</div>
+                <div class="subtopic-summary">The FDA announced relabeling leucovorin (a chemotherapy adjunct) as a treatment for autism — despite no new clinical trials — after Trump bizarrely promoted it at Charlie Kirk's September funeral. The resulting parent demand created a national shortage of the drug, affecting patients who actually need it for chemotherapy. The episode — driven by social media pressure, not peer-reviewed evidence — has become emblematic of how MAHA ideology is compromising FDA's scientific independence and alarming career scientists.</div>
+                <div class="source-links">
+                    <a href="https://geneticliteracyproject.org/2026/02/16/trump-rfk-jr-s-fda-in-science-freefall-the-leucovorin-autism-cure-fiasco-is-one-of-many/" class="source-link" target="_blank">Genetic Literacy Project</a>
+                </div>
+            </div>
+            <div class="subtopic">
+                <div class="subtopic-title">Congress Restores Health Agency Funding — But Suspicion Remains</div>
+                <div class="subtopic-summary">The bipartisan spending bill Trump signed in early February fully funded the CDC, NIH, and other agencies — reversing the proposed budget that would have halved biomedical research, eliminated entire CDC centers, and dismantled the mental health agency. NPR noted that grantees and agency staff remain suspicious that real-world implementation will still result in de facto cuts, particularly given ongoing leadership hostility. NIH's proposed cut of $18 billion (38%) and CDC's $5 billion (54%) were not enacted, but the threat has rattled the scientific community.</div>
+                <div class="source-links">
+                    <a href="https://www.npr.org/2026/02/04/nx-s1-5699465/congress-fully-funds-health-agencies-restoring-rfk-jr-s-cuts" class="source-link" target="_blank">NPR</a>
+                    <a href="https://www.americanprogress.org/article/what-the-trump-administration-rfk-jr-and-the-maha-report-got-wrong-about-improving-childrens-health/" class="source-link" target="_blank">Center for American Progress</a>
+                </div>
+            </div>
+            <div class="subtopic">
+                <div class="subtopic-title">Research Funding Redistribution — Geographic Politics Over Merit</div>
+                <div class="subtopic-summary">HHS Secretary Kennedy and NIH Director Jay Bhattacharya are pursuing a policy of diverting research grants from major research hospitals in Boston, New York, and California to colleges in Iowa, Nebraska, and other red states. Boston hospitals complained to the Boston Globe about losing funds normally awarded on a merit basis. Critics note the ironic deployment of "geographic diversity" as a criterion that would be prohibited in other contexts. The policy puts "political redistribution" ahead of scientific excellence according to researchers.</div>
+                <div class="source-links">
+                    <a href="https://www.biopharmadive.com/news/hhs-fda-restructuring-layoffs-tracker/741684/" class="source-link" target="_blank">BioPharma Dive</a>
+                    <a href="https://www.americanprogress.org/article/what-the-trump-administration-rfk-jr-and-the-maha-report-got-wrong-about-improving-childrens-health/" class="source-link" target="_blank">Center for American Progress</a>
+                </div>
+            </div>
+            </div><!-- /subtopic-grid -->
+        </div>
+    </div>
+
+    <footer>
+        <p>Trending News Visualization · Current Events Discussion Group · BOLLI at Brandeis University</p>
+        <p style="margin-top:6px;">Coverage period: February 1–21, 2026 · Compiled from 14 major news sources</p>
+    </footer>
+
+</div>
+
+<script>
+    function toggle(btn) {
+        btn.classList.toggle('open');
+        const body = btn.nextElementSibling;
+        body.classList.toggle('open');
+    }
+</script>
+</body>
+</html>
