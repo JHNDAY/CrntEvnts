@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Media Landscape Navigator</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #deeaf6;
+    --surface: #eef4fb;
+    --surface2: #d0e2f2;
+    --border: #a8c4de;
+    --text: #0a0a0a;
+    --muted: #2a4a6a;
+    --accent: #1a4a8a;
+
+    --far-left: #6b2480;
+    --left: #1a3faa;
+    --center-left: #1a70c0;
+    --center: #1a8a4a;
+    --center-right: #b85a10;
+    --right: #b02020;
+    --far-right: #780a0a;
+    --heterodox: #5a4a20;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 400;
+    font-size: 18px;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  header {
+    padding: 2.5rem 2.5rem 2rem;
+    border-bottom: 2px solid var(--border);
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    background: #c8dff2;
+  }
+
+  .header-title h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.2rem, 5vw, 3.8rem);
+    font-weight: 900;
+    letter-spacing: -0.01em;
+    line-height: 1.1;
+    color: var(--text);
+  }
+
+  .header-title h1 span {
+    color: var(--accent);
+  }
+
+  .header-subtitle {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem;
+    color: var(--muted);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    margin-top: 0.5rem;
+    font-weight: 500;
+  }
+
+  .source-count {
+    font-family: 'Playfair Display', serif;
+    font-size: 3.5rem;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+  }
+  .source-count-label {
+    font-size: 0.95rem;
+    font-family: 'DM Sans', sans-serif;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-top: 0.2rem;
+  }
+
+  /* Spectrum bar */
+  .spectrum-section {
+    padding: 1.8rem 2.5rem;
+    border-bottom: 2px solid var(--border);
+    background: var(--surface);
+  }
+
+  .spectrum-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 600;
+    margin-bottom: 0.8rem;
+  }
+
+  .spectrum-bar {
+    height: 10px;
+    border-radius: 5px;
+    background: linear-gradient(to right, 
+      var(--far-left) 0%, 
+      var(--left) 16%, 
+      var(--center-left) 30%, 
+      var(--center) 50%, 
+      var(--center-right) 66%, 
+      var(--right) 82%, 
+      var(--far-right) 100%);
+    margin-bottom: 0.6rem;
+  }
+
+  .spectrum-labels {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    color: var(--muted);
+    font-weight: 600;
+    letter-spacing: 0.03em;
+  }
+
+  /* Filter controls */
+  .controls {
+    padding: 1.2rem 2.5rem;
+    border-bottom: 2px solid var(--border);
+    display: flex;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    align-items: center;
+    background: var(--surface);
+  }
+
+  .filter-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 700;
+    margin-right: 0.3rem;
+  }
+
+  .filter-btn {
+    padding: 0.5rem 1.1rem;
+    border-radius: 4px;
+    border: 2px solid var(--border);
+    background: white;
+    color: #1a1a1a;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+
+  .filter-btn:hover { border-color: var(--accent); color: var(--accent); background: #e8f0fa; }
+  .filter-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+
+  .divider { width: 2px; height: 28px; background: var(--border); margin: 0 0.2rem; }
+
+  /* Search */
+  .search-wrap {
+    margin-left: auto;
+    position: relative;
+  }
+
+  .search-input {
+    background: white;
+    border: 2px solid var(--border);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem;
+    font-weight: 500;
+    padding: 0.5rem 1rem 0.5rem 2.4rem;
+    border-radius: 4px;
+    outline: none;
+    width: 220px;
+    transition: border-color 0.2s;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.06);
+  }
+
+  .search-input:focus { border-color: var(--accent); }
+  .search-input::placeholder { color: #6a8aaa; }
+
+  .search-icon {
+    position: absolute;
+    left: 0.7rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--muted);
+    font-size: 1rem;
+  }
+
+  /* Grid */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+    gap: 2px;
+    background: var(--border);
+    border-top: 2px solid var(--border);
+  }
+
+  .card {
+    background: var(--surface);
+    padding: 2rem 2.2rem;
+    transition: background 0.2s;
+    animation: fadeIn 0.4s ease both;
+    cursor: default;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 6px;
+    background: var(--card-color, var(--muted));
+    transition: width 0.2s;
+  }
+
+  .card:hover {
+    background: #e0ecf8;
+  }
+
+  .card:hover::before {
+    width: 9px;
+  }
+
+  .card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .card-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+    color: #0a0a0a;
+    flex: 1;
+  }
+
+  .card-type-badge {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--muted);
+    border: 2px solid var(--border);
+    padding: 0.25rem 0.6rem;
+    border-radius: 4px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    font-weight: 600;
+    background: white;
+  }
+
+  .orientation-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-weight: 700;
+    padding: 0.35rem 0.8rem;
+    border-radius: 4px;
+    margin-bottom: 0.8rem;
+    background: color-mix(in srgb, var(--card-color, var(--muted)) 12%, white);
+    color: color-mix(in srgb, var(--card-color, var(--muted)) 100%, black);
+    border: 2px solid color-mix(in srgb, var(--card-color, var(--muted)) 40%, transparent);
+  }
+
+  .dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--card-color, var(--muted));
+    flex-shrink: 0;
+  }
+
+  .card-focus {
+    font-size: 0.9rem;
+    color: var(--muted);
+    margin-bottom: 0.75rem;
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+  }
+
+  .card-description {
+    font-size: 1rem;
+    line-height: 1.7;
+    color: #1a1a1a;
+    font-weight: 400;
+  }
+
+  .card.hidden {
+    display: none;
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* No results */
+  .no-results {
+    display: none;
+    grid-column: 1 / -1;
+    padding: 4rem;
+    text-align: center;
+    color: var(--muted);
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    font-style: italic;
+  }
+
+  /* Spectrum position dot */
+  .spectrum-position {
+    display: inline-block;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--card-color, var(--muted));
+    margin-right: 0.3rem;
+    vertical-align: middle;
+  }
+
+  footer {
+    padding: 2rem 2.5rem;
+    border-top: 2px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    background: #c8dff2;
+  }
+
+  .footer-note {
+    font-size: 0.95rem;
+    color: #1a2a3a;
+    font-family: 'DM Sans', sans-serif;
+    max-width: 600px;
+    line-height: 1.7;
+    font-weight: 400;
+  }
+
+  .footer-note strong {
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  /* Count display */
+  .showing-count {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    color: var(--muted);
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.9rem 2.5rem;
+    border-bottom: 2px solid var(--border);
+    background: var(--surface);
+  }
+
+  .showing-count span {
+    color: var(--accent);
+    font-weight: 700;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-title">
+    <h1>Media <span>Landscape</span></h1>
+    <div class="header-subtitle">Political orientation · topic focus · editorial perspective</div>
+  </div>
+  <div style="text-align:right">
+    <div class="source-count">26</div>
+    <div class="source-count-label">Sources Profiled</div>
+  </div>
+</header>
+
+<div class="spectrum-section">
+  <div class="spectrum-label">Political Orientation Spectrum</div>
+  <div class="spectrum-bar"></div>
+  <div class="spectrum-labels">
+    <span>Far Left</span>
+    <span>Left</span>
+    <span>Center-Left</span>
+    <span>Center</span>
+    <span>Center-Right</span>
+    <span>Right</span>
+    <span>Far Right</span>
+  </div>
+</div>
+
+<div class="controls">
+  <span class="filter-label">Filter</span>
+  <button class="filter-btn active" data-filter="all">All</button>
+  <div class="divider"></div>
+  <button class="filter-btn" data-filter="far-left">Far Left</button>
+  <button class="filter-btn" data-filter="left">Left</button>
+  <button class="filter-btn" data-filter="center-left">Center-Left</button>
+  <button class="filter-btn" data-filter="center">Center</button>
+  <button class="filter-btn" data-filter="center-right">Center-Right</button>
+  <button class="filter-btn" data-filter="right">Right</button>
+  <button class="filter-btn" data-filter="far-right">Far Right</button>
+  <button class="filter-btn" data-filter="heterodox">Heterodox</button>
+  <div class="divider"></div>
+  <button class="filter-btn" data-filter="international">International</button>
+  <div class="search-wrap">
+    <span class="search-icon">⌕</span>
+    <input type="text" class="search-input" placeholder="Search sources..." id="searchInput">
+  </div>
+</div>
+
+<div class="showing-count">Showing <span id="countDisplay">26</span> of 26 sources &nbsp;·&nbsp; <span id="filterHint" style="font-weight:400; color:#4a6a8a;">Tip: Hold <strong>Shift</strong> and click to select multiple filters</span></div>
+
+<div class="grid" id="grid">
+
+  <!-- Cards inserted by JS -->
+
+</div>
+
+<footer>
+  <div class="footer-note">
+    <strong>Methodological note:</strong> Orientation labels reflect editorial positioning and typical content framing, not formal endorsement. The left-right axis is increasingly insufficient — funding structure (ads, subscriptions, state, billionaire ownership) often reveals as much as stated ideology. Several sources (Dore, Carlson, Hedges) resist easy placement.
+  </div>
+  <div style="font-family: 'DM Mono', monospace; font-size:0.65rem; color: var(--muted); letter-spacing:0.08em;">
+    BOLLI · AI LITERACY · 2025
+  </div>
+</footer>
+
+<script>
+const sources = [
+  {
+    name: "New York Times",
+    type: "Newspaper",
+    orientation: "center-left",
+    orientationLabel: "Center-Left",
+    focus: "National & International · Politics · Culture · Investigative",
+    description: "Legacy print/digital newspaper that sets the agenda for elite liberal opinion. Strong investigative reporting; sometimes criticized for cultural insularity and progressive drift in its opinion and culture coverage.",
+  },
+  {
+    name: "Wall Street Journal",
+    type: "Newspaper",
+    orientation: "center-right",
+    orientationLabel: "Center-Right",
+    focus: "Finance · Business · Economics · Policy",
+    description: "Pro-market orientation with a notably bifurcated identity: its news desk operates relatively straight while its opinion pages lean firmly conservative. The two sections often diverge in tone and framing.",
+  },
+  {
+    name: "CNN",
+    type: "Cable / Streaming",
+    orientation: "center-left",
+    orientationLabel: "Center-Left",
+    focus: "Breaking News · Politics · National Affairs",
+    description: "Shifted from 'most trusted name in news' neutrality toward more opinionated presentation. Significant audience decline post-Trump era. Strong on breaking news infrastructure, uneven on editorial discipline.",
+  },
+  {
+    name: "NPR",
+    type: "Public Radio / Digital",
+    orientation: "center-left",
+    orientationLabel: "Center-Left",
+    focus: "Domestic Policy · Culture · Science · International",
+    description: "Educated professional-class audience; strong long-form audio journalism. Increasingly criticized from both the right and some centrists for ideological homogeneity in staff culture and story selection.",
+  },
+  {
+    name: "BBC",
+    type: "Public Broadcaster",
+    orientation: "center",
+    orientationLabel: "Center",
+    focus: "World News · UK Politics · Culture",
+    description: "Official nonpartisanship with mild institutional liberal tendencies. Broad international credibility; 'view from nowhere' approach draws both praise and criticism. Subject to ongoing UK political pressures over funding.",
+  },
+  {
+    name: "Bloomberg",
+    type: "Financial News",
+    orientation: "center",
+    orientationLabel: "Center / Technocratic",
+    focus: "Markets · Economics · Business · Policy",
+    description: "Data-driven with a pro-globalization, elite professional audience. Tends to treat economic and policy questions as technical rather than ideological, which is itself a political stance. High-quality financial journalism.",
+  },
+  {
+    name: "Politico",
+    type: "Digital / Print",
+    orientation: "center",
+    orientationLabel: "Center / Insider",
+    focus: "US Politics · Legislative Process · Policy",
+    description: "The bible of the professional political class. Excellent on process and horse-race coverage; sometimes criticized for treating political performance as sport rather than examining consequence for ordinary people.",
+  },
+  {
+    name: "Al Jazeera",
+    type: "International Broadcaster",
+    orientation: "center",
+    orientationLabel: "Center (Global South lean)",
+    focus: "World Affairs · Middle East · Human Rights",
+    description: "Qatari state-funded; fills a genuine gap in non-Western perspectives with strong Global South and pro-Palestinian orientation. State funding creates editorial complications on Gulf-specific stories.",
+  },
+  {
+    name: "The Guardian",
+    type: "Newspaper",
+    orientation: "center-left",
+    orientationLabel: "Center-Left",
+    focus: "Politics · Environment · Culture · Investigative",
+    description: "British newspaper with a strong US edition. More willing than US papers to take explicit editorial positions in news coverage. Particularly strong on climate change, social justice, and investigative journalism.",
+  },
+  {
+    name: "The Atlantic",
+    type: "Magazine / Digital",
+    orientation: "center-left",
+    orientationLabel: "Center-Left",
+    focus: "Ideas · Culture · Politics · Long-form Essays",
+    description: "Intellectual, culturally influential. Targets the educated professional class. Home to prominent liberal writers but occasionally publishes heterodox pieces. Significant cultural agenda-setting power.",
+  },
+  {
+    name: "Slate",
+    type: "Digital Magazine",
+    orientation: "center-left",
+    orientationLabel: "Center-Left",
+    focus: "Culture · Politics · Law · Technology",
+    description: "Proudly contrarian — built its brand on counterintuitive takes. Particularly strong legal commentary. Younger, educated, urban readership. Often more interested in being interesting than being reassuring.",
+  },
+  {
+    name: "The Nation",
+    type: "Magazine",
+    orientation: "left",
+    orientationLabel: "Left / Democratic Socialist",
+    focus: "Politics · Labor · Civil Liberties · Anti-War",
+    description: "Oldest continuously published US political magazine. Consistently anti-war and pro-labor; represents the intellectual left tradition. Essential for understanding democratic socialist and progressive-left arguments.",
+  },
+  {
+    name: "Common Dreams",
+    type: "Digital News",
+    orientation: "far-left",
+    orientationLabel: "Hard Left / Progressive",
+    focus: "Social Justice · Environment · Anti-War · Inequality",
+    description: "Explicitly advocacy-oriented rather than neutral. Aggregates progressive commentary with original reporting. Useful as a barometer of what the activist left is focused on and how it frames issues.",
+  },
+  {
+    name: "The Intercept",
+    type: "Digital Investigative",
+    orientation: "left",
+    orientationLabel: "Left / Libertarian-Left",
+    focus: "National Security · Surveillance · Civil Liberties",
+    description: "Founded by Glenn Greenwald and Jeremy Scahill post-Snowden. Rigorously critical of government overreach under both parties. Has experienced notable internal tensions and high-profile departures. Important for accountability journalism.",
+  },
+  {
+    name: "The Young Turks",
+    type: "Online Video / Podcast",
+    orientation: "left",
+    orientationLabel: "Progressive Left",
+    focus: "Politics · Social Issues · Corporate Power",
+    description: "Pioneer of progressive online media. Populist and combative in tone. Cenk Uygur's personal brand dominates the outlet. Built a large younger audience and played a significant role in shifting progressive media online.",
+  },
+  {
+    name: "Jimmy Dore",
+    type: "Independent Podcast",
+    orientation: "heterodox",
+    orientationLabel: "Populist / Heterodox",
+    focus: "Anti-Establishment · Foreign Policy · Political Critique",
+    description: "Started on TYT's left flank, broke with mainstream progressivism over COVID, Ukraine, and Democratic Party criticism. Now occupies an unusual populist space with crossover appeal to libertarians and some MAGA audience. Hard to place on a conventional axis.",
+  },
+  {
+    name: "Chris Hedges",
+    type: "Independent Journalist",
+    orientation: "far-left",
+    orientationLabel: "Hard Left / Democratic Socialist",
+    focus: "Empire · War · Corporate Capitalism · Philosophy",
+    description: "Pulitzer Prize-winning former NYT war correspondent. Uncompromising moral critique of American power rooted in Christian socialism and classical literature. Publishes largely independently after leaving mainstream platforms.",
+  },
+  {
+    name: "Daily Wire",
+    type: "Digital Media",
+    orientation: "right",
+    orientationLabel: "Hard Right / Conservative",
+    focus: "Politics · Culture War · Entertainment",
+    description: "Ben Shapiro's flagship, deliberately built as a conservative counter-establishment media ecosystem. Dominant in right-wing podcast and video. Very strong on culture war issues; audience engagement and loyalty-driven model.",
+  },
+  {
+    name: "National Review",
+    type: "Magazine / Digital",
+    orientation: "right",
+    orientationLabel: "Traditional Conservative",
+    focus: "Politics · Policy · Foreign Affairs",
+    description: "Founded by William F. Buckley; the voice of intellectual conservatism. Played a complicated role during the Trump era — initially 'Never Trump' then largely accommodating. Represents establishment conservative intellectual tradition.",
+  },
+  {
+    name: "Breitbart",
+    type: "Digital News",
+    orientation: "far-right",
+    orientationLabel: "Hard Right / Nationalist-Populist",
+    focus: "Immigration · Culture War · Politics",
+    description: "Steve Bannon's platform, central to the rise of Trump-era populist right. Deliberately provocative and aggressive. Significant influence on the right-wing media ecosystem and MAGA movement's framing of issues.",
+  },
+  {
+    name: "New York Post",
+    type: "Tabloid Newspaper",
+    orientation: "right",
+    orientationLabel: "Right / Conservative Populist",
+    focus: "Crime · Politics · Celebrity · Culture War",
+    description: "Murdoch-owned tabloid reliably Trumpist in recent years. Influential in setting right-wing media narratives; known for memorable front pages and editorial aggression. Significant reach in New York and national conservative media.",
+  },
+  {
+    name: "Tucker Carlson",
+    type: "Independent Podcast",
+    orientation: "right",
+    orientationLabel: "Nationalist-Populist Right",
+    focus: "Politics · Foreign Policy · Anti-Establishment",
+    description: "Former Fox News anchor; built a massive independent audience on X after departure. Blends traditional conservative and heterodox anti-interventionist positions. Significant influence on MAGA movement's foreign policy instincts.",
+  },
+  {
+    name: "The Dispatch",
+    type: "Digital Subscription",
+    orientation: "center-right",
+    orientationLabel: "Center-Right / Never Trump",
+    focus: "Politics · Policy · Foreign Affairs",
+    description: "Founded by Jonah Goldberg and Steve Hayes after leaving Fox News. Explicitly anti-Trump conservatism with serious policy journalism. Small but influential among professional conservatives seeking an alternative to MAGA media.",
+  },
+  {
+    name: "Mediaite",
+    type: "Digital Media Criticism",
+    orientation: "center",
+    orientationLabel: "Center (Slight Liberal Lean)",
+    focus: "Media Industry · Cable News · Political Commentary",
+    description: "Covers the media business and political media ecosystem. Useful for tracking what is being said across outlets. A mix of reporting and commentary; good barometer for media industry narratives and inter-outlet disputes.",
+  },
+  {
+    name: "Haaretz",
+    type: "Newspaper",
+    orientation: "center-left",
+    orientationLabel: "Left-Liberal (by Israeli standards)",
+    focus: "Israeli Politics · Palestinian Affairs · Security · Culture",
+    description: "Left-liberal by Israeli standards, placing it well left of the Israeli political mainstream. Consistently critical of occupation and settlement policy. Small circulation but outsized international influence; often called 'Israel's conscience.'",
+    tag: "international"
+  },
+  {
+    name: "Geopolitical Futures",
+    type: "Analytical Service",
+    orientation: "center",
+    orientationLabel: "Nonpartisan / Realist",
+    focus: "International Relations · Geopolitics · Strategic Forecasting",
+    description: "George Friedman's platform post-Stratfor. Applies geographic determinism framework to global affairs. Analytical rather than opinion-driven; often contrarian on conventional wisdom about great power dynamics and Western foreign policy.",
+    tag: "international"
+  },
+];
+
+const colorMap = {
+  'far-left': 'var(--far-left)',
+  'left': 'var(--left)',
+  'center-left': 'var(--center-left)',
+  'center': 'var(--center)',
+  'center-right': 'var(--center-right)',
+  'right': 'var(--right)',
+  'far-right': 'var(--far-right)',
+  'heterodox': 'var(--heterodox)',
+};
+
+function buildCards() {
+  const grid = document.getElementById('grid');
+  sources.forEach((s, i) => {
+    const color = colorMap[s.orientation] || 'var(--muted)';
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.dataset.orientation = s.orientation;
+    card.dataset.name = s.name.toLowerCase();
+    card.dataset.tag = s.tag || '';
+    card.style.setProperty('--card-color', color);
+    card.style.animationDelay = (i * 0.03) + 's';
+    card.innerHTML = `
+      <div class="card-header">
+        <div class="card-name">${s.name}</div>
+        <div class="card-type-badge">${s.type}</div>
+      </div>
+      <div class="orientation-pill">
+        <span class="dot"></span>
+        ${s.orientationLabel}
+      </div>
+      <div class="card-focus">${s.focus}</div>
+      <div class="card-description">${s.description}</div>
+    `;
+    grid.appendChild(card);
+  });
+
+  // no results msg
+  const noRes = document.createElement('div');
+  noRes.className = 'no-results';
+  noRes.id = 'noResults';
+  noRes.textContent = 'No sources match your filter.';
+  grid.appendChild(noRes);
+}
+
+function updateCount() {
+  const visible = document.querySelectorAll('.card:not(.hidden)').length;
+  document.getElementById('countDisplay').textContent = visible;
+}
+
+function applyFilters() {
+  const activeBtns = [...document.querySelectorAll('.filter-btn.active')];
+  const filters = activeBtns.map(b => b.dataset.filter);
+  const isAll = filters.includes('all') || filters.length === 0;
+  const search = document.getElementById('searchInput').value.toLowerCase().trim();
+
+  document.querySelectorAll('.card').forEach(card => {
+    const matchFilter = isAll
+      || filters.some(f => card.dataset.orientation === f)
+      || (filters.includes('international') && card.dataset.tag === 'international');
+    const matchSearch = !search || card.dataset.name.includes(search)
+      || card.querySelector('.card-description').textContent.toLowerCase().includes(search)
+      || card.querySelector('.card-focus').textContent.toLowerCase().includes(search);
+    card.classList.toggle('hidden', !(matchFilter && matchSearch));
+  });
+
+  const visible = document.querySelectorAll('.card:not(.hidden)').length;
+  document.getElementById('noResults').style.display = visible === 0 ? 'block' : 'none';
+  updateCount();
+}
+
+// Filter buttons — plain click selects only that one; Shift+click toggles additional filters
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', (e) => {
+    const allBtns = [...document.querySelectorAll('.filter-btn')];
+    const allBtn = document.querySelector('.filter-btn[data-filter="all"]');
+
+    if (e.shiftKey) {
+      if (btn.dataset.filter === 'all') {
+        // Shift+click All resets to just All
+        allBtns.forEach(b => b.classList.remove('active'));
+        allBtn.classList.add('active');
+      } else {
+        allBtn.classList.remove('active');
+        btn.classList.toggle('active');
+        // If nothing selected, fall back to All
+        const anyActive = allBtns.some(b => b.classList.contains('active'));
+        if (!anyActive) allBtn.classList.add('active');
+      }
+    } else {
+      // Plain click: select only this one
+      allBtns.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+    applyFilters();
+  });
+});
+
+// Search
+document.getElementById('searchInput').addEventListener('input', applyFilters);
+
+buildCards();
+updateCount();
+</script>
+</body>
+</html>
