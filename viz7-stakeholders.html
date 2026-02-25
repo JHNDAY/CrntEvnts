@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⑦  Stakeholders · BOLLI Current Events</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Serif+4:ital,wght@0,300;0,400;1,300&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:#0d1b2a; --gold:#c9a84c; --gold-light:#e8c97a;
+    --red:#c0392b; --green:#1e8449; --amber:#d4870a;
+    --blue:#1a5276; --teal:#148f87; --purple:#6c3483;
+    --text:#e8e0d0; --muted:#8a9bb0; --card:#1a2d42;
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--navy); color:var(--text); font-family:'Source Serif 4',serif; min-height:100vh; }
+
+  .viz-nav {
+    background:#080f18;
+    border-bottom:2px solid var(--gold);
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:0.5rem 1.25rem;
+    flex-wrap:nowrap;
+    gap:0.75rem;
+    position:sticky;
+    top:0;
+    z-index:100;
+    overflow-x:auto;
+  }
+  .nav-brand { font-family:'JetBrains Mono',monospace; font-size:0.6rem; color:var(--gold); letter-spacing:0.1em; text-transform:uppercase; white-space:nowrap; }
+  .nav-links { display:flex; gap:0.1rem; flex-wrap:nowrap; }
+  .nav-link { font-family:'JetBrains Mono',monospace; font-size:0.6rem; color:var(--muted); text-decoration:none; padding:0.25rem 0.6rem; border-radius:3px; border:1px solid transparent; transition:all 0.2s; white-space:nowrap; }
+  .nav-link:hover, .nav-link.active { color:var(--gold); border-color:var(--gold); }
+
+  .hero { padding:3rem 2rem 1.5rem; text-align:center; border-bottom:1px solid rgba(201,168,76,0.3); }
+  .viz-number { font-family:'JetBrains Mono',monospace; font-size:0.75rem; color:var(--gold); letter-spacing:0.2em; text-transform:uppercase; margin-bottom:0.5rem; }
+  .hero h1 { font-family:'Playfair Display',serif; font-size:clamp(1.8rem,4vw,3rem); font-weight:900; line-height:1.1; }
+  .hero h1 em { color:var(--gold); font-style:normal; }
+  .hero p { margin-top:0.75rem; color:var(--muted); font-style:italic; }
+  .discussion-prompt { margin:1rem auto 0; max-width:700px; background:rgba(201,168,76,0.08); border-left:3px solid var(--gold); padding:0.75rem 1rem; font-style:italic; font-size:0.9rem; color:var(--gold-light); text-align:left; border-radius:0 4px 4px 0; }
+
+  .main { max-width:960px; margin:2.5rem auto; padding:0 1.5rem 3rem; }
+
+  /* Sentiment meter */
+  .sentiment-row {
+    display:flex;
+    align-items:center;
+    gap:1rem;
+    margin-bottom:0.5rem;
+    font-size:0.8rem;
+  }
+  .sent-label { width:180px; flex-shrink:0; color:var(--muted); font-family:'JetBrains Mono',monospace; font-size:0.65rem; text-transform:uppercase; letter-spacing:0.07em; }
+  .sent-track { flex:1; height:8px; background:rgba(255,255,255,0.07); border-radius:4px; overflow:hidden; }
+  .sent-fill { height:100%; border-radius:4px; width:0; transition:width 1.1s cubic-bezier(0.25,0.46,0.45,0.94); }
+  .sent-emoji { font-size:1rem; width:28px; text-align:center; }
+
+  /* Group cards */
+  .groups-grid {
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:1.25rem;
+    margin-bottom:2rem;
+  }
+
+  .group-card {
+    background:var(--card);
+    border-radius:10px;
+    overflow:hidden;
+    animation:fadeUp 0.5s ease both;
+    border:1px solid rgba(255,255,255,0.06);
+  }
+  .g1{animation-delay:0.1s} .g2{animation-delay:0.15s} .g3{animation-delay:0.2s}
+  .g4{animation-delay:0.25s} .g5{animation-delay:0.3s} .g6{animation-delay:0.35s}
+  .g7{animation-delay:0.4s}
+  @keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+
+  .group-header {
+    display:flex;
+    align-items:center;
+    gap:0.75rem;
+    padding:1rem 1.25rem 0.85rem;
+    border-bottom:1px solid rgba(255,255,255,0.07);
+  }
+  .group-icon { font-size:1.6rem; flex-shrink:0; }
+  .group-name { font-family:'Playfair Display',serif; font-size:1rem; font-weight:700; }
+  .group-tag {
+    margin-left:auto;
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.6rem;
+    padding:0.2rem 0.45rem;
+    border-radius:3px;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    flex-shrink:0;
+  }
+
+  .tag-relief { background:rgba(30,107,62,0.25); color:#4fc87a; }
+  .tag-cautious { background:rgba(212,135,10,0.2); color:#f0a500; }
+  .tag-mixed { background:rgba(100,100,150,0.2); color:#a0a8d0; }
+  .tag-angry { background:rgba(192,57,43,0.25); color:#e57373; }
+  .tag-pleased { background:rgba(20,143,135,0.2); color:#4ecdc4; }
+  .tag-watching { background:rgba(108,52,131,0.2); color:#c39bd3; }
+
+  /* Color accent per card */
+  .gc-smallbiz .group-header { border-left:4px solid #4fc87a; }
+  .gc-largebiz .group-header { border-left:4px solid #f0a500; }
+  .gc-consumer .group-header { border-left:4px solid #5dade2; }
+  .gc-political .group-header { border-left:4px solid #a0a8d0; }
+  .gc-intl .group-header { border-left:4px solid #4ecdc4; }
+  .gc-trump .group-header { border-left:4px solid #e57373; }
+  .gc-global { grid-column:1/-1; }
+  .gc-global .group-header { border-left:4px solid #c39bd3; }
+
+  .group-body { padding:1rem 1.25rem; }
+
+  .reaction-list { list-style:none; margin-bottom:0.75rem; }
+  .reaction-list li {
+    display:flex;
+    gap:0.5rem;
+    padding:0.45rem 0;
+    border-top:1px solid rgba(255,255,255,0.05);
+    font-size:0.82rem;
+    line-height:1.5;
+    color:var(--muted);
+    align-items:flex-start;
+  }
+  .reaction-list li:first-child { border-top:none; }
+  .ri { flex-shrink:0; font-size:0.85rem; margin-top:0.1rem; }
+  .reaction-list li strong { color:var(--text); }
+
+  .quote-block {
+    background:rgba(255,255,255,0.04);
+    border-left:2px solid rgba(201,168,76,0.4);
+    padding:0.6rem 0.75rem;
+    margin-top:0.5rem;
+    font-style:italic;
+    font-size:0.8rem;
+    color:var(--gold-light);
+    border-radius:0 4px 4px 0;
+    line-height:1.5;
+  }
+  .quote-attr { font-style:normal; font-family:'JetBrains Mono',monospace; font-size:0.62rem; color:var(--muted); margin-top:0.3rem; display:block; }
+
+  /* Sentiment overview strip */
+  .sentiment-section {
+    background:var(--card);
+    border-radius:10px;
+    padding:1.5rem;
+    margin-bottom:2rem;
+  }
+  .sent-title { font-family:'Playfair Display',serif; font-size:1.1rem; margin-bottom:1.25rem; }
+  .sent-title span { color:var(--gold); }
+
+  /* Bottom takeaway */
+  .takeaway {
+    background:rgba(201,168,76,0.06);
+    border:1px solid rgba(201,168,76,0.25);
+    border-radius:8px;
+    padding:1.25rem 1.5rem;
+    font-size:0.86rem;
+    line-height:1.7;
+    color:var(--muted);
+  }
+  .takeaway strong { color:var(--gold); }
+  .takeaway a { color:var(--gold); }
+
+  @media(max-width:650px) { .groups-grid { grid-template-columns:1fr; } .gc-global { grid-column:1; } }
+</style>
+</head>
+<body>
+
+<nav class="viz-nav">
+  <div class="nav-brand">BOLLI Current Events · Feb 2026</div>
+  <div class="nav-links">
+    <a href="https://jhnday.github.io/CrntEvnts/viz1-timeline.html" class="nav-link">① Timeline</a>
+    <a href="https://jhnday.github.io/CrntEvnts/viz2-money.html" class="nav-link">② The Money</a>
+    <a href="https://jhnday.github.io/CrntEvnts/viz3-coalition.html" class="nav-link">③ 6-3 Court</a>
+    <a href="https://jhnday.github.io/CrntEvnts/viz4-tariffs-remain.html" class="nav-link">④ What Remains</a>
+    <a href="https://jhnday.github.io/CrntEvnts/viz5-refund.html" class="nav-link">⑤ Refund Cascade</a>
+    <a href="https://jhnday.github.io/CrntEvnts/viz6-spectrum.html" class="nav-link">⑥ Guardrails</a>
+    <a href="https://jhnday.github.io/CrntEvnts/viz7-stakeholders.html" class="nav-link active">⑦ Stakeholders</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="viz-number">Visualization ⑦ of VII</div>
+  <h1>Who <em>Reacted</em> — and How</h1>
+  <p>Small businesses · Large corporations · Consumers · Politicians · The World</p>
+  <div class="discussion-prompt">
+    💬 <strong>Discussion starter:</strong> The same ruling produced celebration from small business owners, cautious relief from multinationals, anger from Trump, and cheers from European leaders. What does it mean when a legal decision produces such wildly different reactions — and who is actually right about what it means?
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- Sentiment overview -->
+  <div class="sentiment-section">
+    <div class="sent-title">Reaction <span>At-a-Glance</span> — Across Stakeholder Groups</div>
+    <div class="sentiment-row">
+      <div class="sent-label">Small businesses</div>
+      <div class="sent-track"><div class="sent-fill" style="background:#4fc87a" id="s1"></div></div>
+      <div class="sent-emoji">🎉</div>
+    </div>
+    <div class="sentiment-row">
+      <div class="sent-label">Large importers</div>
+      <div class="sent-track"><div class="sent-fill" style="background:#a8d08d" id="s2"></div></div>
+      <div class="sent-emoji">😌</div>
+    </div>
+    <div class="sentiment-row">
+      <div class="sent-label">American consumers</div>
+      <div class="sent-track"><div class="sent-fill" style="background:#f0a500" id="s3"></div></div>
+      <div class="sent-emoji">😐</div>
+    </div>
+    <div class="sentiment-row">
+      <div class="sent-label">Trump / White House</div>
+      <div class="sent-track"><div class="sent-fill" style="background:#e57373" id="s4"></div></div>
+      <div class="sent-emoji">😡</div>
+    </div>
+    <div class="sentiment-row">
+      <div class="sent-label">GOP Congress (mixed)</div>
+      <div class="sent-track"><div class="sent-fill" style="background:#a0a8d0" id="s5"></div></div>
+      <div class="sent-emoji">🤷</div>
+    </div>
+    <div class="sentiment-row">
+      <div class="sent-label">EU / Europe</div>
+      <div class="sent-track"><div class="sent-fill" style="background:#4ecdc4" id="s6"></div></div>
+      <div class="sent-emoji">👏</div>
+    </div>
+    <div class="sentiment-row">
+      <div class="sent-label">China</div>
+      <div class="sent-track"><div class="sent-fill" style="background:#c39bd3" id="s7"></div></div>
+      <div class="sent-emoji">😏</div>
+    </div>
+    <div style="display:flex;justify-content:space-between;margin-top:0.75rem;font-family:'JetBrains Mono',monospace;font-size:0.6rem;color:var(--muted);letter-spacing:0.08em;">
+      <span>◀ UNHAPPY</span><span>NEUTRAL</span><span>RELIEVED / PLEASED ▶</span>
+    </div>
+  </div>
+
+  <!-- Group cards -->
+  <div class="groups-grid">
+
+    <!-- Small Business -->
+    <div class="group-card gc-smallbiz g1">
+      <div class="group-header">
+        <div class="group-icon">🏪</div>
+        <div class="group-name">Small Business Owners</div>
+        <div class="group-tag tag-relief">Relief</div>
+      </div>
+      <div class="group-body">
+        <ul class="reaction-list">
+          <li><span class="ri">⚖️</span><div><strong>They were the plaintiffs.</strong> Learning Resources Inc. and V.O.S. Selections — small importers — brought the case. The Liberty Justice Center represented them pro bono.</div></li>
+          <li><span class="ri">💬</span><div>MicroKits LLC founder David Levi: had been in a <strong>"constant state of worry"</strong> since tariffs were imposed. Said the ruling was a vindication.</div></li>
+          <li><span class="ri">🚲</span><div>Terry Precision Cycling CEO Nik Holm: <strong>"With this new legal clarity I can finally start growing my business again."</strong> Expecting many months before supply chains normalize.</div></li>
+          <li><span class="ri">💰</span><div>Liberty Justice Center building a <strong>centralized database and referral network</strong> to help small businesses navigate the refund process.</div></li>
+        </ul>
+        <div class="quote-block">
+          "The rule of law won."
+          <span class="quote-attr">— Sara Albrecht, Liberty Justice Center Chair</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Large Business -->
+    <div class="group-card gc-largebiz g2">
+      <div class="group-header">
+        <div class="group-icon">🏢</div>
+        <div class="group-name">Large Corporations &amp; Importers</div>
+        <div class="group-tag tag-cautious">Cautious Relief</div>
+      </div>
+      <div class="group-body">
+        <ul class="reaction-list">
+          <li><span class="ri">📦</span><div><strong>FedEx sued the government</strong> within days of the ruling, seeking to recoup tariff payments. Logistics giants have clear paper trails of payments — among the strongest refund claimants.</div></li>
+          <li><span class="ri">🌐</span><div>International Chamber of Commerce welcomed the ruling but warned companies: <strong>"Do not expect a simple process"</strong> — refund procedures are complex and unresolved.</div></li>
+          <li><span class="ri">📊</span><div>Markets reacted positively but with caution — analysts warned of a <strong>temporary import surge</strong> as companies rush to stock up before Trump's next tariff move.</div></li>
+          <li><span class="ri">⚠️</span><div>Companies that passed tariff costs to customers now face potential <strong>commercial demands from retailers</strong> wanting their share of any refund returned.</div></li>
+        </ul>
+        <div class="quote-block">
+          "Companies should not expect a simple process — the structure of U.S. customs law is complex."
+          <span class="quote-attr">— International Chamber of Commerce</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- American Consumers -->
+    <div class="group-card gc-consumer g3">
+      <div class="group-header">
+        <div class="group-icon">👨‍👩‍👧</div>
+        <div class="group-name">American Consumers</div>
+        <div class="group-tag tag-mixed">Limited Relief</div>
+      </div>
+      <div class="group-body">
+        <ul class="reaction-list">
+          <li><span class="ri">💸</span><div>Estimated <strong>$400–$1,600+ per household</strong> in higher prices absorbed over 2025 — on electronics, clothing, groceries, and household goods.</div></li>
+          <li><span class="ri">🚫</span><div><strong>No legal path to refunds.</strong> Consumers didn't pay the government directly — costs were passed through the supply chain. The money is gone from household budgets.</div></li>
+          <li><span class="ri">📉</span><div>Some relief expected as import prices gradually decline — but supply chains take <strong>months to normalize</strong>, and Trump's new 15% tariff partially offsets the gain.</div></li>
+          <li><span class="ri">🗳️</span><div>Public opinion on tariffs was already <strong>negative in polls</strong> — majorities opposed the broad tariffs even among some Republican voters.</div></li>
+        </ul>
+        <div class="quote-block">
+          "It will take time to recover from these tariffs."
+          <span class="quote-attr">— Terry Precision Cycling CEO, on behalf of customers</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Trump & White House -->
+    <div class="group-card gc-trump g4">
+      <div class="group-header">
+        <div class="group-icon">🏛️</div>
+        <div class="group-name">Trump &amp; The White House</div>
+        <div class="group-tag tag-angry">Defiant</div>
+      </div>
+      <div class="group-body">
+        <ul class="reaction-list">
+          <li><span class="ri">😤</span><div>Called ruling <strong>"deeply disappointing"</strong> and said he was <strong>"ashamed"</strong> of certain justices — targeting his own appointees Gorsuch and Barrett by name.</div></li>
+          <li><span class="ri">⚡</span><div><strong>Signed new 10% global tariff within hours</strong> under Section 122 of the Trade Act of 1974. Raised it to 15% the next day.</div></li>
+          <li><span class="ri">💬</span><div>On refunds: <strong>"I guess it has to get litigated for the next two years."</strong> Signaled no intention to voluntarily honor refund claims.</div></li>
+          <li><span class="ri">📋</span><div>Launched new <strong>Section 301 and Section 338 investigations</strong> to build legal basis for replacement tariffs. Treasury says revenue impact "virtually unchanged."</div></li>
+        </ul>
+        <div class="quote-block">
+          "I think it's an embarrassment to their families, you want to know the truth, the two of them."
+          <span class="quote-attr">— President Trump on Justices Gorsuch and Barrett, Feb 20, 2026</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- U.S. Political Reactions -->
+    <div class="group-card gc-political g5">
+      <div class="group-header">
+        <div class="group-icon">🏟️</div>
+        <div class="group-name">U.S. Political Reactions</div>
+        <div class="group-tag tag-mixed">Divided</div>
+      </div>
+      <div class="group-body">
+        <ul class="reaction-list">
+          <li><span class="ri">🔴</span><div><strong>Rep. Buddy Carter (R-GA):</strong> "The Supreme Court just undercut the President's ability to defend American workers… I'm outraged. It's clearly judicial overreach."</div></li>
+          <li><span class="ri">🟡</span><div><strong>Sen. Rand Paul (R-KY):</strong> Welcomed the ruling. "In defense of our Republic, the Court struck down using emergency powers to enact taxes. This ruling will also prevent a future President like AOC from using emergency powers to enact socialism."</div></li>
+          <li><span class="ri">🔵</span><div>Most <strong>Democratic lawmakers</strong> praised the ruling as a check on executive overreach — while noting the underlying tariff agenda continues via new legal authorities.</div></li>
+          <li><span class="ri">⚖️</span><div>Legal scholars widely noted this is the <strong>first major Supreme Court check</strong> on Trump's second-term executive actions after more than a year of lower court battles.</div></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- International -->
+    <div class="group-card gc-intl gc-global g6">
+      <div class="group-header">
+        <div class="group-icon">🌍</div>
+        <div class="group-name">International Reactions — Trading Partners &amp; Allies</div>
+        <div class="group-tag tag-pleased">Cautious Approval</div>
+      </div>
+      <div class="group-body">
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem">
+          <div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:0.65rem;color:#4ecdc4;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.5rem">🇪🇺 European Union</div>
+            <ul class="reaction-list">
+              <li><span class="ri">👏</span><div>France's Macron praised <strong>"the existence of checks and balances in democracies."</strong></div></li>
+              <li><span class="ri">⚔️</span><div>France's finance minister said EU has <strong>"tools to hit back"</strong> — signaling more combative posture.</div></li>
+              <li><span class="ri">🇩🇪</span><div>German Chancellor Merz expected lower tariff burden, raised prospect of refunds for German companies. Pledged a <strong>"coordinated European position."</strong></div></li>
+            </ul>
+          </div>
+          <div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:0.65rem;color:#c39bd3;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.5rem">🇨🇳 China</div>
+            <ul class="reaction-list">
+              <li><span class="ri">😏</span><div><strong>Leverage strengthened</strong> heading into April summit with Trump. CNBC: "China's leverage rises before high-stakes summit."</div></li>
+              <li><span class="ri">🤝</span><div>Trade deals negotiated under IEEPA umbrella now on <strong>uncertain legal footing</strong> — gives Beijing room to renegotiate terms.</div></li>
+              <li><span class="ri">📋</span><div>Watching closely whether U.S. Section 122 tariffs will be subject to new challenges — and whether refund process disrupts U.S. trade posture.</div></li>
+            </ul>
+          </div>
+          <div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:0.65rem;color:#f0a500;letter-spacing:0.1em;text-transform:uppercase;margin-bottom:0.5rem">🇬🇧 🇮🇳 🇨🇭 Others</div>
+            <ul class="reaction-list">
+              <li><span class="ri">🇬🇧</span><div>UK: Cautious welcome, monitoring how new Section 122 tariffs affect ongoing trade talks.</div></li>
+              <li><span class="ri">🇮🇳</span><div>India's trade delegation pausing further negotiations — wants to assess full legal impact before proceeding with $500B import commitment deal.</div></li>
+              <li><span class="ri">🇨🇭</span><div>Switzerland's Swissmem: <strong>"A good decision — but today's ruling doesn't win anything yet."</strong> Calling for binding free trade agreements.</div></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="takeaway">
+    <strong>The Takeaway:</strong> The ruling meant completely different things to different people — and that's the point. For small businesses who brought the case, it was a vindication. For large multinationals, cautious relief tempered by refund complexity. For consumers, little practical change. For Trump, a defeat he immediately routed around. For America's trading partners, a reminder that U.S. institutions still function — but uncertainty hasn't ended. See <a href="https://jhnday.github.io/CrntEvnts/viz5-refund.html">⑤ Refund Cascade</a> for who can actually recover their money, and <a href="https://jhnday.github.io/CrntEvnts/viz4-tariffs-remain.html">④ What Remains</a> for the new tariff regime everyone is now navigating.
+  </div>
+
+</div>
+
+<script>
+  const bars = [
+    {id:'s1', pct:92}, {id:'s2', pct:72}, {id:'s3', pct:40},
+    {id:'s4', pct:5},  {id:'s5', pct:48}, {id:'s6', pct:78}, {id:'s7', pct:62}
+  ];
+  setTimeout(() => {
+    bars.forEach(b => {
+      const el = document.getElementById(b.id);
+      if (el) el.style.width = b.pct + '%';
+    });
+  }, 300);
+</script>
+
+</body>
+</html>
