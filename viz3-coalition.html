@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>③  The 6-3 Court · BOLLI Current Events</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Serif+4:ital,wght@0,300;0,400;1,300&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0d1b2a; --navy2: #152336; --gold: #c9a84c; --gold-light: #e8c97a;
+    --red: #c0392b; --green: #1e8449; --blue: #1a5276;
+    --majority: #1e6b3e; --dissent: #7b241c; --text: #e8e0d0; --muted: #8a9bb0; --card: #1a2d42;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--navy); color: var(--text); font-family: 'Source Serif 4', serif; min-height: 100vh; }
+
+  .viz-nav {
+    background: #080f18;
+    border-bottom: 2px solid var(--gold);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 1.25rem;
+    flex-wrap: nowrap;
+    gap: 0.75rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    overflow-x: auto;
+  }
+  .nav-brand { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; color: var(--gold); letter-spacing: 0.1em; text-transform: uppercase; }
+  .nav-links { display: flex; gap: 0.1rem; flex-wrap: nowrap; }
+  .nav-link { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; color: var(--muted); text-decoration: none; padding: 0.25rem 0.6rem; border-radius: 3px; border: 1px solid transparent; transition: all 0.2s; letter-spacing: 0.05em; }
+  .nav-link:hover, .nav-link.active { color: var(--gold); border-color: var(--gold); }
+
+  .hero { padding: 3rem 2rem 1.5rem; text-align: center; border-bottom: 1px solid rgba(201,168,76,0.3); }
+  .viz-number { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--gold); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 0.5rem; }
+  .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem,4vw,3rem); font-weight: 900; line-height: 1.1; }
+  .hero h1 em { color: var(--gold); font-style: normal; }
+  .hero p { margin-top: 0.75rem; color: var(--muted); font-style: italic; }
+  .discussion-prompt { margin: 1rem auto 0; max-width: 700px; background: rgba(201,168,76,0.08); border-left: 3px solid var(--gold); padding: 0.75rem 1rem; font-style: italic; font-size: 0.9rem; color: var(--gold-light); text-align: left; border-radius: 0 4px 4px 0; }
+
+  .main { max-width: 900px; margin: 2.5rem auto; padding: 0 1.5rem 3rem; }
+
+  /* Bench visual */
+  .bench-label { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); text-align: center; margin-bottom: 1rem; }
+
+  .bench {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-bottom: 2.5rem;
+  }
+
+  .justice-card {
+    background: var(--card);
+    border-radius: 10px;
+    padding: 1.1rem 0.9rem;
+    width: 130px;
+    text-align: center;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    animation: popIn 0.4s ease both;
+    position: relative;
+  }
+  .justice-card:hover { transform: translateY(-4px); }
+
+  .justice-card.majority {
+    border-color: rgba(30,107,62,0.6);
+    background: linear-gradient(160deg, #162b1e, var(--card));
+    box-shadow: 0 0 18px rgba(30,107,62,0.2);
+  }
+  .justice-card.dissent {
+    border-color: rgba(123,36,28,0.6);
+    background: linear-gradient(160deg, #2b1616, var(--card));
+    box-shadow: 0 0 18px rgba(123,36,28,0.2);
+  }
+  .justice-card.majority-partial {
+    border-color: rgba(30,107,62,0.4);
+    border-style: dashed;
+    background: linear-gradient(160deg, #121f17, var(--card));
+  }
+
+  @keyframes popIn {
+    from { opacity:0; transform: scale(0.85); }
+    to { opacity:1; transform: scale(1); }
+  }
+  .j1 { animation-delay:0.05s; } .j2 { animation-delay:0.1s; } .j3 { animation-delay:0.15s; }
+  .j4 { animation-delay:0.2s; } .j5 { animation-delay:0.25s; } .j6 { animation-delay:0.3s; }
+  .j7 { animation-delay:0.35s; } .j8 { animation-delay:0.4s; } .j9 { animation-delay:0.45s; }
+
+  .justice-avatar {
+    width: 54px; height: 54px;
+    border-radius: 50%;
+    margin: 0 auto 0.6rem;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem;
+    font-weight: 900;
+    font-family: 'Playfair Display', serif;
+  }
+  .majority .justice-avatar { background: rgba(30,107,62,0.25); color: #4fc87a; border: 2px solid rgba(79,200,122,0.3); }
+  .dissent .justice-avatar { background: rgba(123,36,28,0.25); color: #e57373; border: 2px solid rgba(229,115,115,0.3); }
+  .majority-partial .justice-avatar { background: rgba(30,107,62,0.15); color: #4fc87a; border: 2px dashed rgba(79,200,122,0.3); }
+
+  .j-name { font-family: 'Playfair Display', serif; font-size: 0.9rem; font-weight: 700; margin-bottom: 0.2rem; }
+  .j-appointed { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; color: var(--muted); margin-bottom: 0.4rem; }
+  .j-role {
+    font-size: 0.7rem;
+    font-family: 'JetBrains Mono', monospace;
+    padding: 0.2rem 0.4rem;
+    border-radius: 3px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .majority .j-role { background: rgba(30,107,62,0.3); color: #4fc87a; }
+  .majority-partial .j-role { background: rgba(30,107,62,0.2); color: #4fc87a; }
+  .dissent .j-role { background: rgba(123,36,28,0.3); color: #e57373; }
+
+  .trump-tag {
+    position: absolute;
+    top: -8px; right: -8px;
+    background: #c0392b;
+    color: white;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.55rem;
+    padding: 0.15rem 0.35rem;
+    border-radius: 3px;
+    letter-spacing: 0.05em;
+  }
+
+  /* Summary banner */
+  .verdict-banner {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .v-majority, .v-dissent {
+    border-radius: 8px;
+    padding: 1.25rem;
+  }
+  .v-majority { background: rgba(30,107,62,0.12); border: 1px solid rgba(30,107,62,0.4); }
+  .v-dissent { background: rgba(123,36,28,0.12); border: 1px solid rgba(123,36,28,0.4); }
+  .v-head { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; margin-bottom: 0.5rem; }
+  .v-majority .v-head { color: #4fc87a; }
+  .v-dissent .v-head { color: #e57373; }
+  .v-text { font-size: 0.82rem; color: var(--muted); line-height: 1.6; }
+  .v-text em { color: var(--text); font-style: italic; }
+
+  .surprise-box {
+    background: rgba(201,168,76,0.08);
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 8px;
+    padding: 1.25rem;
+    font-size: 0.85rem;
+    line-height: 1.7;
+    color: var(--muted);
+    margin-bottom: 1.5rem;
+  }
+  .surprise-box strong { color: var(--gold); }
+  .surprise-box .quote { color: var(--gold-light); font-style: italic; display: block; margin-top: 0.5rem; padding-left: 1rem; border-left: 2px solid var(--gold); }
+
+  @media (max-width: 600px) { .verdict-banner { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<nav class="viz-nav">
+  <div class="nav-brand">BOLLI Current Events · Feb 2026</div>
+  <div class="nav-links">
+    <a href="https://jhnday.github.io/CrntEvnts/viz1-timeline.html" class="nav-link">① Timeline</a>
+    <a href="https://jhnday.github.io/CrntEvnts/viz2-money.html" class="nav-link">② The Money</a>
+    <a href="https://jhnday.github.io/CrntEvnts/viz3-coalition.html" class="nav-link active">③ 6-3 Court</a>
+    <a href="https://jhnday.github.io/CrntEvnts/viz4-tariffs-remain.html" class="nav-link">④ What Remains</a>
+    <a href="https://jhnday.github.io/CrntEvnts/viz5-refund.html" class="nav-link">⑤ Refund Cascade</a>
+    <a href="https://jhnday.github.io/CrntEvnts/viz6-spectrum.html" class="nav-link">⑥ Guardrails</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="viz-number">Visualization ③ of VI</div>
+  <h1>The Surprising <em>6-3 Coalition</em></h1>
+  <p>The vote that shocked Washington — and enraged the President</p>
+  <div class="discussion-prompt">
+    💬 <strong>Discussion starter:</strong> Trump called his own appointees Gorsuch and Barrett "an embarrassment to their families." Does judicial independence still work when the President attacks the judges by name? And note: this wasn't a liberal vs. conservative ruling.
+  </div>
+</div>
+
+<div class="main">
+  <div class="bench-label">The Supreme Court — Learning Resources v. Trump (Feb 20, 2026)</div>
+
+  <div class="bench">
+    <!-- Majority: Roberts, Gorsuch, Barrett, Sotomayor, Kagan, Jackson -->
+    <div class="justice-card majority j1">
+      <span class="trump-tag">Trump appt.</span>
+      <div class="justice-avatar">G</div>
+      <div class="j-name">Gorsuch</div>
+      <div class="j-appointed">Appointed by Trump '17</div>
+      <div class="j-role">Majority + MQD</div>
+    </div>
+    <div class="justice-card majority j2">
+      <span class="trump-tag">Trump appt.</span>
+      <div class="justice-avatar">B</div>
+      <div class="j-name">Barrett</div>
+      <div class="j-appointed">Appointed by Trump '20</div>
+      <div class="j-role">Majority + MQD</div>
+    </div>
+    <div class="justice-card majority j3" style="border-width:3px;">
+      <div class="justice-avatar" style="font-size:1.3rem">CJ</div>
+      <div class="j-name">Roberts</div>
+      <div class="j-appointed">Chief Justice — Bush '05</div>
+      <div class="j-role">Author — Majority</div>
+    </div>
+    <div class="justice-card majority-partial j4">
+      <div class="justice-avatar">So</div>
+      <div class="j-name">Sotomayor</div>
+      <div class="j-appointed">Appointed by Obama '09</div>
+      <div class="j-role">Majority (partial)</div>
+    </div>
+    <div class="justice-card majority-partial j5">
+      <div class="justice-avatar">K</div>
+      <div class="j-name">Kagan</div>
+      <div class="j-appointed">Appointed by Obama '10</div>
+      <div class="j-role">Majority (partial)</div>
+    </div>
+    <div class="justice-card majority-partial j6">
+      <div class="justice-avatar">J</div>
+      <div class="j-name">Jackson</div>
+      <div class="j-appointed">Appointed by Biden '22</div>
+      <div class="j-role">Majority (partial)</div>
+    </div>
+    <!-- Dissenters -->
+    <div class="justice-card dissent j7">
+      <div class="justice-avatar">T</div>
+      <div class="j-name">Thomas</div>
+      <div class="j-appointed">Appointed by Bush '91</div>
+      <div class="j-role">Dissent</div>
+    </div>
+    <div class="justice-card dissent j8">
+      <span class="trump-tag">Trump appt.</span>
+      <div class="justice-avatar">Kv</div>
+      <div class="j-name">Kavanaugh</div>
+      <div class="j-appointed">Appointed by Trump '18</div>
+      <div class="j-role">Dissent</div>
+    </div>
+    <div class="justice-card dissent j9">
+      <div class="justice-avatar">A</div>
+      <div class="j-name">Alito</div>
+      <div class="j-appointed">Appointed by Bush '06</div>
+      <div class="j-role">Dissent</div>
+    </div>
+  </div>
+
+  <div class="verdict-banner">
+    <div class="v-majority">
+      <div class="v-head">✓ The Majority Held (6 Justices)</div>
+      <div class="v-text">
+        <em>"IEEPA does not authorize the President to impose tariffs. Those words cannot bear such weight."</em> — Chief Justice Roberts<br><br>
+        Roberts, Gorsuch & Barrett invoked the <strong>Major Questions Doctrine</strong> — Congress must explicitly delegate powers of enormous consequence. Sotomayor, Kagan & Jackson agreed on the outcome via statutory interpretation alone, rejecting MQD but concurring in judgment. The decisive point: no president before Trump had ever read IEEPA to grant tariff power.
+      </div>
+    </div>
+    <div class="v-dissent">
+      <div class="v-head">✗ The Dissent (3 Justices)</div>
+      <div class="v-text">
+        Thomas, Alito & Kavanaugh argued IEEPA's text, historical practice, and foreign affairs precedents all support presidential tariff authority. Kavanaugh warned the ruling could force refunds of <strong>$160B+</strong> and destabilize existing trade agreements. He suggested other statutes may still authorize the same tariffs.
+      </div>
+    </div>
+  </div>
+
+  <div class="surprise-box">
+    <strong>The Plot Twist:</strong> Gorsuch and Barrett — both Trump appointees, both confirmed by a Republican Senate — joined the majority and invoked the "Major Questions Doctrine," a conservative legal principle ironically used against the president who appointed them. Trump had previously praised this doctrine when it was used to strike down Biden's student loan forgiveness.
+    <span class="quote">"I think their decision was terrible… It's an embarrassment to their families, you want to know the truth, the two of them." — President Trump, Feb 20, 2026</span>
+    <br><br>
+    Notably, Kavanaugh's dissent was arguably the most measured — he conceded the ruling might not "substantially constrain" tariff policy going forward, since other statutes exist. This may prove prophetic: see <a href="https://jhnday.github.io/CrntEvnts/viz4-tariffs-remain.html" style="color:var(--gold)">Visualization ④</a>.
+  </div>
+</div>
+
+</body>
+</html>

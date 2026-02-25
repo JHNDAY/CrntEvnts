@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>②  The Money · BOLLI Current Events</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Serif+4:ital,wght@0,300;0,400;1,300&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0d1b2a;
+    --navy2: #152336;
+    --gold: #c9a84c;
+    --gold-light: #e8c97a;
+    --red: #c0392b;
+    --green: #27ae60;
+    --blue: #2980b9;
+    --purple: #8e44ad;
+    --text: #e8e0d0;
+    --muted: #8a9bb0;
+    --card: #1a2d42;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--navy); color: var(--text); font-family: 'Source Serif 4', serif; min-height: 100vh; }
+
+  .viz-nav {
+    background: #080f18;
+    border-bottom: 2px solid var(--gold);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 1.25rem;
+    flex-wrap: nowrap;
+    gap: 0.75rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    overflow-x: auto;
+  }
+  .nav-brand { font-family: 'JetBrains Mono', monospace; font-size: 0.6rem; color: var(--gold); letter-spacing: 0.1em; text-transform: uppercase; }
+  .nav-links { display: flex; gap: 0.1rem; flex-wrap: nowrap; }
+  .nav-link {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--muted);
+    text-decoration: none;
+    padding: 0.25rem 0.6rem;
+    border-radius: 3px;
+    border: 1px solid transparent;
+    transition: all 0.2s;
+    letter-spacing: 0.05em;
+  }
+  .nav-link:hover, .nav-link.active { color: var(--gold); border-color: var(--gold); }
+
+  .hero {
+    padding: 3rem 2rem 1.5rem;
+    text-align: center;
+    border-bottom: 1px solid rgba(201,168,76,0.3);
+  }
+  .viz-number { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: var(--gold); letter-spacing: 0.2em; text-transform: uppercase; margin-bottom: 0.5rem; }
+  .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(1.8rem, 4vw, 3rem); font-weight: 900; line-height: 1.1; }
+  .hero h1 em { color: var(--gold); font-style: normal; }
+  .hero p { margin-top: 0.75rem; color: var(--muted); font-style: italic; }
+  .discussion-prompt {
+    margin: 1rem auto 0;
+    max-width: 700px;
+    background: rgba(201,168,76,0.08);
+    border-left: 3px solid var(--gold);
+    padding: 0.75rem 1rem;
+    font-style: italic;
+    font-size: 0.9rem;
+    color: var(--gold-light);
+    text-align: left;
+    border-radius: 0 4px 4px 0;
+  }
+
+  .main { max-width: 960px; margin: 2.5rem auto; padding: 0 1.5rem 3rem; }
+
+  /* Big number strip */
+  .stat-strip {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+  }
+  .stat-box {
+    background: var(--card);
+    border-radius: 8px;
+    padding: 1.5rem;
+    text-align: center;
+    border-top: 3px solid transparent;
+    animation: fadeUp 0.5s ease both;
+  }
+  .stat-box:nth-child(1) { border-color: var(--red); animation-delay: 0.1s; }
+  .stat-box:nth-child(2) { border-color: var(--muted); animation-delay: 0.2s; }
+  .stat-box:nth-child(3) { border-color: var(--gold); animation-delay: 0.3s; }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+
+  .stat-number {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 3vw, 2.6rem);
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 0.4rem;
+  }
+  .stat-label { font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); }
+  .stat-sub { font-size: 0.8rem; color: var(--muted); margin-top: 0.4rem; font-style: italic; }
+
+  /* Visual bar chart */
+  .chart-section { background: var(--card); border-radius: 10px; padding: 2rem; margin-bottom: 2rem; }
+  .chart-title { font-family: 'Playfair Display', serif; font-size: 1.2rem; margin-bottom: 1.5rem; }
+  .chart-title span { color: var(--gold); }
+
+  .bar-group { margin-bottom: 1.25rem; }
+  .bar-label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.4rem;
+    font-size: 0.85rem;
+  }
+  .bar-label .name { color: var(--text); }
+  .bar-label .val { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--gold); }
+  .bar-track { background: rgba(255,255,255,0.07); border-radius: 3px; height: 22px; overflow: hidden; }
+  .bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 1.2s cubic-bezier(0.25,0.46,0.45,0.94);
+    width: 0;
+  }
+  .bar-fill.animated { /* set by JS */ }
+
+  /* Donut placeholder — simple CSS rings */
+  .donut-wrap {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-bottom: 2rem;
+  }
+  .donut-section { background: var(--card); border-radius: 10px; padding: 2rem; }
+  .donut-title { font-family: 'Playfair Display', serif; font-size: 1.1rem; margin-bottom: 1rem; }
+
+  .donut-chart { position: relative; width: 160px; height: 160px; margin: 0 auto 1.5rem; }
+  .donut-chart svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+  .donut-center {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%,-50%);
+    text-align: center;
+  }
+  .donut-center .big { font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 900; line-height: 1; }
+  .donut-center .small { font-size: 0.65rem; color: var(--muted); font-family: 'JetBrains Mono', monospace; }
+
+  .legend-list { list-style: none; }
+  .legend-list li {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.82rem;
+    margin-bottom: 0.5rem;
+    color: var(--muted);
+  }
+  .legend-list li strong { color: var(--text); }
+  .leg-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+
+  .note-box {
+    background: rgba(192,57,43,0.1);
+    border: 1px solid rgba(192,57,43,0.3);
+    border-radius: 6px;
+    padding: 1rem 1.25rem;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: var(--muted);
+  }
+  .note-box strong { color: #e74c3c; }
+
+  @media (max-width: 600px) {
+    .stat-strip { grid-template-columns: 1fr; }
+    .donut-wrap { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="viz-nav">
+  <div class="nav-brand">BOLLI Current Events · Feb 2026</div>
+  <div class="nav-links">
+    <a href="https://jhnday.github.io/CrntEvnts/viz1-timeline.html" class="nav-link">① Timeline</a>
+    <a href="https://jhnday.github.io/CrntEvnts/viz2-money.html" class="nav-link active">② The Money</a>
+    <a href="https://jhnday.github.io/CrntEvnts/viz3-coalition.html" class="nav-link">③ 6-3 Court</a>
+    <a href="https://jhnday.github.io/CrntEvnts/viz4-tariffs-remain.html" class="nav-link">④ What Remains</a>
+    <a href="https://jhnday.github.io/CrntEvnts/viz5-refund.html" class="nav-link">⑤ Refund Cascade</a>
+    <a href="https://jhnday.github.io/CrntEvnts/viz6-spectrum.html" class="nav-link">⑥ Guardrails</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="viz-number">Visualization ② of VI</div>
+  <h1>The <em>Money</em></h1>
+  <p>$160 billion collected illegally — and a $1.4 trillion question</p>
+  <div class="discussion-prompt">
+    💬 <strong>Discussion starter:</strong> The government collected over $160 billion under a law it turns out didn't authorize it. Who should get that money back — and can a government in debt actually return it?
+  </div>
+</div>
+
+<div class="main">
+  <div class="stat-strip">
+    <div class="stat-box">
+      <div class="stat-number" style="color:var(--red)">$160B+</div>
+      <div class="stat-label">Illegally Collected</div>
+      <div class="stat-sub">IEEPA tariffs paid by U.S. importers, Feb 2025–Feb 2026</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-number" style="color:var(--muted)">$635B</div>
+      <div class="stat-label">Still Coming (Section 232)</div>
+      <div class="stat-sub">Steel, aluminum, autos — these tariffs remain in effect</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-number" style="color:var(--gold)">$1.4T</div>
+      <div class="stat-label">Wiped Off the Table</div>
+      <div class="stat-sub">Projected IEEPA revenue 2026–2035, now gone</div>
+    </div>
+  </div>
+
+  <div class="chart-section">
+    <div class="chart-title">Monthly IEEPA Tariff Collections — <span>Jan 2025 to Jan 2026</span></div>
+    <div class="bar-group">
+      <div class="bar-label"><span class="name">Feb 2025 — tariffs begin (China only)</span><span class="val">$0.8B</span></div>
+      <div class="bar-track"><div class="bar-fill" style="width:4%;background:rgba(192,57,43,0.5)" id="b1"></div></div>
+    </div>
+    <div class="bar-group">
+      <div class="bar-label"><span class="name">Mar 2025 — Canada & Mexico added</span><span class="val">$5.5B</span></div>
+      <div class="bar-track"><div class="bar-fill" style="background:rgba(192,57,43,0.55)" id="b2"></div></div>
+    </div>
+    <div class="bar-group">
+      <div class="bar-label"><span class="name">Apr 2025 — "Liberation Day" global tariffs</span><span class="val">$9.4B</span></div>
+      <div class="bar-track"><div class="bar-fill" style="background:rgba(192,57,43,0.6)" id="b3"></div></div>
+    </div>
+    <div class="bar-group">
+      <div class="bar-label"><span class="name">Jul 2025</span><span class="val">$15.4B</span></div>
+      <div class="bar-track"><div class="bar-fill" style="background:rgba(192,57,43,0.7)" id="b4"></div></div>
+    </div>
+    <div class="bar-group">
+      <div class="bar-label"><span class="name">Oct 2025</span><span class="val">$19.3B</span></div>
+      <div class="bar-track"><div class="bar-fill" style="background:rgba(192,57,43,0.8)" id="b5"></div></div>
+    </div>
+    <div class="bar-group">
+      <div class="bar-label"><span class="name">Jan 2026 — final full month before ruling</span><span class="val">$20.8B</span></div>
+      <div class="bar-track"><div class="bar-fill" style="background:var(--red)" id="b6"></div></div>
+    </div>
+    <div class="bar-group" style="margin-top:0.5rem">
+      <div class="bar-label"><span class="name" style="color:var(--gold);font-weight:600">▶ Section 232 tariffs (REMAIN — steel, aluminum, autos)</span><span class="val" style="color:var(--gold)">$635B (decade)</span></div>
+      <div class="bar-track"><div class="bar-fill" style="background:var(--gold)" id="b7"></div></div>
+    </div>
+  </div>
+
+  <div class="donut-wrap">
+    <div class="donut-section">
+      <div class="donut-title">What Share Was IEEPA?</div>
+      <div class="donut-chart">
+        <svg viewBox="0 0 36 36">
+          <circle cx="18" cy="18" r="15.9" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="3.8"/>
+          <!-- IEEPA ~50% of total duties -->
+          <circle cx="18" cy="18" r="15.9" fill="none" stroke="var(--red)" stroke-width="3.8"
+            stroke-dasharray="50 50" stroke-linecap="round"/>
+          <!-- Section 232 ~30% -->
+          <circle cx="18" cy="18" r="15.9" fill="none" stroke="var(--gold)" stroke-width="3.8"
+            stroke-dasharray="30 70" stroke-dashoffset="-50" stroke-linecap="round"/>
+        </svg>
+        <div class="donut-center">
+          <div class="big">~50%</div>
+          <div class="small">was IEEPA</div>
+        </div>
+      </div>
+      <ul class="legend-list">
+        <li><div class="leg-dot" style="background:var(--red)"></div><div><strong>IEEPA tariffs (~50%)</strong> — struck down</div></li>
+        <li><div class="leg-dot" style="background:var(--gold)"></div><div><strong>Section 232 (~30%)</strong> — still in effect</div></li>
+        <li><div class="leg-dot" style="background:rgba(255,255,255,0.2)"></div><div><strong>Other duties (~20%)</strong> — pre-Trump baseline</div></li>
+      </ul>
+    </div>
+
+    <div class="donut-section">
+      <div class="donut-title">The Projected Decade Gap</div>
+      <div class="donut-chart">
+        <svg viewBox="0 0 36 36">
+          <circle cx="18" cy="18" r="15.9" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="3.8"/>
+          <circle cx="18" cy="18" r="15.9" fill="none" stroke="var(--muted)" stroke-width="3.8"
+            stroke-dasharray="31 69" stroke-linecap="round"/>
+          <circle cx="18" cy="18" r="15.9" fill="none" stroke="var(--red)" stroke-width="3.8"
+            stroke-dasharray="69 31" stroke-dashoffset="-31" stroke-linecap="round"/>
+        </svg>
+        <div class="donut-center">
+          <div class="big" style="color:var(--red)">$1.4T</div>
+          <div class="small">now gone</div>
+        </div>
+      </div>
+      <ul class="legend-list">
+        <li><div class="leg-dot" style="background:var(--red)"></div><div><strong>IEEPA projected (2026–2035): $1.4T</strong> — eliminated</div></li>
+        <li><div class="leg-dot" style="background:var(--muted)"></div><div><strong>Section 232 projected: $635B</strong> — remains</div></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="note-box">
+    <strong>The Refund Problem:</strong> The $160B+ was collected from U.S. importers — not foreign governments. Those importers mostly passed costs to retailers, who passed them to consumers. Even if courts order refunds, the money has already flowed downstream. Treasury Secretary Bessent says revenue will be "virtually unchanged" via new Section 122/301/338 tariffs — but legal battles over refunds could drag on for years. See <a href="https://jhnday.github.io/CrntEvnts/viz5-refund.html" style="color:var(--gold)">Visualization ⑤</a> for the full cascade.
+  </div>
+</div>
+
+<script>
+  const bars = [
+    {id:'b1', pct:4}, {id:'b2', pct:26}, {id:'b3', pct:45},
+    {id:'b4', pct:74}, {id:'b5', pct:93}, {id:'b6', pct:100}, {id:'b7', pct:76}
+  ];
+  setTimeout(() => {
+    bars.forEach(b => {
+      const el = document.getElementById(b.id);
+      if (el) el.style.width = b.pct + '%';
+    });
+  }, 300);
+</script>
+
+</body>
+</html>

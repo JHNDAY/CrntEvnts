@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>④  What Tariffs Remain · BOLLI Current Events</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Serif+4:ital,wght@0,300;0,400;1,300&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:#0d1b2a; --gold:#c9a84c; --gold-light:#e8c97a;
+    --red:#c0392b; --green:#1e8449; --amber:#d4870a;
+    --text:#e8e0d0; --muted:#8a9bb0; --card:#1a2d42;
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--navy); color:var(--text); font-family:'Source Serif 4',serif; min-height:100vh; }
+
+  .viz-nav {
+    background: #080f18;
+    border-bottom: 2px solid var(--gold);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 1.25rem;
+    flex-wrap: nowrap;
+    gap: 0.75rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    overflow-x: auto;
+  }
+  .nav-brand { font-family:'JetBrains Mono',monospace; font-size:0.6rem; color:var(--gold); letter-spacing:0.1em; text-transform:uppercase; }
+  .nav-links { display:flex; gap:0.1rem; flex-wrap:wrap; }
+  .nav-link { font-family:'JetBrains Mono',monospace; font-size:0.6rem; color:var(--muted); text-decoration:none; padding:0.25rem 0.6rem; border-radius:3px; border:1px solid transparent; transition:all 0.2s; }
+  .nav-link:hover, .nav-link.active { color:var(--gold); border-color:var(--gold); }
+
+  .hero { padding:3rem 2rem 1.5rem; text-align:center; border-bottom:1px solid rgba(201,168,76,0.3); }
+  .viz-number { font-family:'JetBrains Mono',monospace; font-size:0.75rem; color:var(--gold); letter-spacing:0.2em; text-transform:uppercase; margin-bottom:0.5rem; }
+  .hero h1 { font-family:'Playfair Display',serif; font-size:clamp(1.8rem,4vw,3rem); font-weight:900; line-height:1.1; }
+  .hero h1 em { color:var(--gold); font-style:normal; }
+  .hero p { margin-top:0.75rem; color:var(--muted); font-style:italic; }
+  .discussion-prompt { margin:1rem auto 0; max-width:700px; background:rgba(201,168,76,0.08); border-left:3px solid var(--gold); padding:0.75rem 1rem; font-style:italic; font-size:0.9rem; color:var(--gold-light); text-align:left; border-radius:0 4px 4px 0; }
+
+  .main { max-width:960px; margin:2.5rem auto; padding:0 1.5rem 3rem; }
+
+  /* Status legend */
+  .status-key {
+    display:flex; gap:1.5rem; justify-content:center; flex-wrap:wrap;
+    margin-bottom:2rem;
+  }
+  .sk { display:flex; align-items:center; gap:0.4rem; font-family:'JetBrains Mono',monospace; font-size:0.7rem; letter-spacing:0.08em; }
+  .sk-dot { width:12px; height:12px; border-radius:2px; }
+
+  /* Comparison table */
+  .compare-grid {
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:1.25rem;
+    margin-bottom:2rem;
+  }
+
+  .col-card {
+    border-radius:10px;
+    overflow:hidden;
+    animation:fadeUp 0.5s ease both;
+  }
+  .col-card:nth-child(1) { animation-delay:0.1s; }
+  .col-card:nth-child(2) { animation-delay:0.2s; }
+  .col-card:nth-child(3) { animation-delay:0.3s; }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+
+  .col-header {
+    padding:1rem 1.25rem;
+    font-family:'Playfair Display',serif;
+    font-size:1rem;
+    font-weight:700;
+  }
+  .col-body { background:var(--card); padding:1.25rem; flex:1; }
+
+  .col-struck .col-header { background:rgba(192,57,43,0.25); border-bottom:2px solid var(--red); }
+  .col-remain .col-header { background:rgba(201,168,76,0.15); border-bottom:2px solid var(--gold); }
+  .col-new .col-header { background:rgba(212,135,10,0.15); border-bottom:2px solid var(--amber); }
+
+  .col-header .status-badge {
+    display:inline-block;
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.6rem;
+    padding:0.2rem 0.4rem;
+    border-radius:3px;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    margin-bottom:0.4rem;
+  }
+  .col-struck .status-badge { background:rgba(192,57,43,0.3); color:#e57373; }
+  .col-remain .status-badge { background:rgba(201,168,76,0.2); color:var(--gold); }
+  .col-new .status-badge { background:rgba(212,135,10,0.2); color:#f0a500; }
+
+  .col-stat {
+    font-family:'Playfair Display',serif;
+    font-size:1.5rem;
+    font-weight:900;
+    margin:0.75rem 0 0.3rem;
+  }
+  .col-struck .col-stat { color:var(--red); }
+  .col-remain .col-stat { color:var(--gold); }
+  .col-new .col-stat { color:var(--amber); }
+
+  .col-stat-label { font-family:'JetBrains Mono',monospace; font-size:0.65rem; color:var(--muted); letter-spacing:0.08em; text-transform:uppercase; margin-bottom:1rem; }
+
+  .item-list { list-style:none; }
+  .item-list li {
+    display:flex;
+    align-items:flex-start;
+    gap:0.5rem;
+    padding:0.5rem 0;
+    border-top:1px solid rgba(255,255,255,0.06);
+    font-size:0.82rem;
+    line-height:1.5;
+    color:var(--muted);
+  }
+  .item-list li:first-child { border-top:none; }
+  .item-list li strong { color:var(--text); display:block; }
+  .item-icon { font-size:0.9rem; flex-shrink:0; margin-top:0.1rem; }
+
+  /* Authority note */
+  .authority-chain {
+    background:var(--card);
+    border-radius:10px;
+    padding:1.5rem;
+    margin-bottom:1.5rem;
+  }
+  .auth-title { font-family:'Playfair Display',serif; font-size:1.1rem; margin-bottom:1rem; }
+  .auth-title span { color:var(--gold); }
+
+  .auth-items { display:flex; gap:0; flex-direction:column; }
+  .auth-item {
+    display:flex; align-items:stretch; gap:1rem;
+    padding-bottom:1rem;
+    position:relative;
+  }
+  .auth-item::before {
+    content:'';
+    position:absolute;
+    left:16px; top:34px; bottom:0;
+    width:2px;
+    background:rgba(255,255,255,0.1);
+  }
+  .auth-item:last-child::before { display:none; }
+  .auth-num {
+    width:34px; height:34px; border-radius:50%;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'JetBrains Mono',monospace; font-size:0.75rem; font-weight:600;
+    flex-shrink:0; z-index:1;
+  }
+  .auth-content { flex:1; }
+  .auth-name { font-weight:700; font-size:0.9rem; margin-bottom:0.2rem; }
+  .auth-desc { font-size:0.78rem; color:var(--muted); line-height:1.5; }
+  .auth-limit { font-size:0.72rem; font-family:'JetBrains Mono',monospace; margin-top:0.25rem; padding:0.2rem 0.4rem; border-radius:3px; display:inline-block; }
+
+  .bottom-note { background:rgba(212,135,10,0.1); border:1px solid rgba(212,135,10,0.3); border-radius:6px; padding:1rem 1.25rem; font-size:0.85rem; color:var(--muted); line-height:1.6; }
+  .bottom-note strong { color:var(--amber); }
+
+  @media (max-width:700px) { .compare-grid { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+
+<nav class="viz-nav">
+  <div class="nav-brand">BOLLI Current Events · Feb 2026</div>
+  <div class="nav-links">
+    <a href="https://jhnday.github.io/CrntEvnts/viz1-timeline.html" class="nav-link">① Timeline</a>
+    <a href="https://jhnday.github.io/CrntEvnts/viz2-money.html" class="nav-link">② The Money</a>
+    <a href="https://jhnday.github.io/CrntEvnts/viz3-coalition.html" class="nav-link">③ 6-3 Court</a>
+    <a href="https://jhnday.github.io/CrntEvnts/viz4-tariffs-remain.html" class="nav-link active">④ What Remains</a>
+    <a href="https://jhnday.github.io/CrntEvnts/viz5-refund.html" class="nav-link">⑤ Refund Cascade</a>
+    <a href="https://jhnday.github.io/CrntEvnts/viz6-spectrum.html" class="nav-link">⑥ Guardrails</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="viz-number">Visualization ④ of VI</div>
+  <h1>What <em>Remains?</em></h1>
+  <p>The ruling struck down IEEPA tariffs — but tariffs are far from over</p>
+  <div class="discussion-prompt">
+    💬 <strong>Discussion starter:</strong> Treasury says revenue will be "virtually unchanged." If the President can quickly route around the Court's ruling, how meaningful was the decision? Is this a victory for checks and balances — or just a detour?
+  </div>
+</div>
+
+<div class="main">
+  <div class="status-key">
+    <div class="sk"><div class="sk-dot" style="background:var(--red)"></div> STRUCK DOWN</div>
+    <div class="sk"><div class="sk-dot" style="background:var(--gold)"></div> REMAINS IN EFFECT</div>
+    <div class="sk"><div class="sk-dot" style="background:var(--amber)"></div> NEW WORKAROUND</div>
+  </div>
+
+  <div class="compare-grid">
+    <!-- Column 1: Struck Down -->
+    <div class="col-card col-struck">
+      <div class="col-header">
+        <div class="status-badge">✗ Struck Down</div>
+        <div>IEEPA Tariffs</div>
+      </div>
+      <div class="col-body">
+        <div class="col-stat">$160B+</div>
+        <div class="col-stat-label">Illegally collected · Refunds pending</div>
+        <ul class="item-list">
+          <li><span class="item-icon">🇨🇳</span><div><strong>China — up to 145%</strong>Fentanyl + trade deficit emergency tariffs</div></li>
+          <li><span class="item-icon">🇨🇦</span><div><strong>Canada — 25%</strong>Border/fentanyl emergency</div></li>
+          <li><span class="item-icon">🇲🇽</span><div><strong>Mexico — 25%</strong>Border/fentanyl emergency</div></li>
+          <li><span class="item-icon">🌍</span><div><strong>"Liberation Day" — 10%+ universal</strong>All trading partners — "reciprocal" tariffs</div></li>
+          <li><span class="item-icon">🇧🇷</span><div><strong>Brazil — punitive tariffs</strong>Related to Brazilian election dispute</div></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Column 2: Still in Effect -->
+    <div class="col-card col-remain">
+      <div class="col-header">
+        <div class="status-badge">✓ Still in Effect</div>
+        <div>Section 232 Tariffs</div>
+      </div>
+      <div class="col-body">
+        <div class="col-stat">$635B</div>
+        <div class="col-stat-label">Projected 10-year revenue · Unaffected</div>
+        <ul class="item-list">
+          <li><span class="item-icon">⚙️</span><div><strong>Steel — 25%</strong>National security justification — Trade Expansion Act 1962</div></li>
+          <li><span class="item-icon">🏗️</span><div><strong>Aluminum — 25%</strong>Same authority · global application</div></li>
+          <li><span class="item-icon">🚗</span><div><strong>Autos & auto parts — 25%</strong>Passenger vehicles, light trucks</div></li>
+          <li><span class="item-icon">🚛</span><div><strong>Heavy trucks — 25%</strong>Medium and heavy-duty commercial vehicles</div></li>
+          <li><span class="item-icon">💻</span><div><strong>Semiconductors — varies</strong>Critical supply chain protection</div></li>
+          <li><span class="item-icon">🪵</span><div><strong>Lumber & timber</strong>Ongoing Section 232 investigation</div></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Column 3: New Workarounds -->
+    <div class="col-card col-new">
+      <div class="col-header">
+        <div class="status-badge">⚡ New Route</div>
+        <div>Trump's Workarounds</div>
+      </div>
+      <div class="col-body">
+        <div class="col-stat">10-15%</div>
+        <div class="col-stat-label">Global — signed same day as ruling</div>
+        <ul class="item-list">
+          <li><span class="item-icon">📋</span><div><strong>Section 122 (Trade Act 1974) — 10%→15%</strong>Balance-of-payments authority. Signed within hours of ruling. More procedural limits.</div></li>
+          <li><span class="item-icon">📋</span><div><strong>Section 301 investigations launched</strong>Unfair trade practices. Used against China previously. More process required.</div></li>
+          <li><span class="item-icon">📋</span><div><strong>Section 338 (Tariff Act 1930)</strong>Rarely used. Broad authority but untested at scale.</div></li>
+          <li><span class="item-icon">⚠️</span><div><strong>Key difference:</strong>All carry procedural steps IEEPA skipped — investigations, findings, waiting periods.</div></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="authority-chain">
+    <div class="auth-title">The Legal Authority Chain — <span>How Presidents Can Impose Tariffs</span></div>
+    <div class="auth-items">
+      <div class="auth-item">
+        <div class="auth-num" style="background:rgba(192,57,43,0.3);color:#e57373;">✗</div>
+        <div class="auth-content">
+          <div class="auth-name" style="color:#e57373;">IEEPA (1977) — STRUCK DOWN</div>
+          <div class="auth-desc">Emergency powers for genuine national security threats. No prior president used this for tariffs. Court: "regulate importation" ≠ power to tax.</div>
+          <span class="auth-limit" style="background:rgba(192,57,43,0.2);color:#e57373;">No procedural limits — which is why Trump used it</span>
+        </div>
+      </div>
+      <div class="auth-item">
+        <div class="auth-num" style="background:rgba(201,168,76,0.2);color:var(--gold);">✓</div>
+        <div class="auth-content">
+          <div class="auth-name" style="color:var(--gold);">Section 232 (Trade Expansion Act 1962) — INTACT</div>
+          <div class="auth-desc">National security tariffs — steel, aluminum, autos. Commerce Dept. investigation required. Time-tested in courts.</div>
+          <span class="auth-limit" style="background:rgba(201,168,76,0.15);color:var(--gold);">Requires national security finding — but broadly interpreted</span>
+        </div>
+      </div>
+      <div class="auth-item">
+        <div class="auth-num" style="background:rgba(212,135,10,0.2);color:var(--amber);">~</div>
+        <div class="auth-content">
+          <div class="auth-name" style="color:var(--amber);">Section 122 (Trade Act 1974) — Trump's new choice</div>
+          <div class="auth-desc">Balance-of-payments authority. Used within hours of ruling. Limited to 150 days without Congressional approval. Global application.</div>
+          <span class="auth-limit" style="background:rgba(212,135,10,0.15);color:var(--amber);">150-day limit — Congress can override — being tested in courts</span>
+        </div>
+      </div>
+      <div class="auth-item">
+        <div class="auth-num" style="background:rgba(255,255,255,0.08);color:var(--muted);">?</div>
+        <div class="auth-content">
+          <div class="auth-name">Section 301 (Trade Act 1974) + Section 338 (1930)</div>
+          <div class="auth-desc">Used against China in Trump's first term. Requires investigation and findings of unfair practices. Section 338 almost never used — authority untested.</div>
+          <span class="auth-limit" style="background:rgba(255,255,255,0.07);color:var(--muted);">Procedural requirements add time — but courts have upheld broadly</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="bottom-note">
+    <strong>Bottom line:</strong> The Court's ruling is real — it struck down the legal basis Trump preferred because it had zero procedural guardrails. But the tariff ecosystem is vast. Treasury estimates the alternative authorities will produce "virtually unchanged revenue." The key difference is that these tools require investigations, findings, and sometimes Congressional involvement — meaning future courts and lawmakers have more hooks to challenge them. Whether that matters depends on whether those institutions are willing to use them.
+  </div>
+</div>
+
+</body>
+</html>

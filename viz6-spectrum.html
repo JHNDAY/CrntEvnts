@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⑥  Guardrails · BOLLI Current Events</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Serif+4:ital,wght@0,300;0,400;1,300&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:#0d1b2a; --gold:#c9a84c; --gold-light:#e8c97a;
+    --red:#c0392b; --green:#1e8449; --amber:#d4870a;
+    --text:#e8e0d0; --muted:#8a9bb0; --card:#1a2d42;
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--navy); color:var(--text); font-family:'Source Serif 4',serif; min-height:100vh; }
+
+  .viz-nav {
+    background: #080f18;
+    border-bottom: 2px solid var(--gold);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 1.25rem;
+    flex-wrap: nowrap;
+    gap: 0.75rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    overflow-x: auto;
+  }
+  .nav-brand { font-family:'JetBrains Mono',monospace; font-size:0.6rem; color:var(--gold); letter-spacing:0.1em; text-transform:uppercase; }
+  .nav-links { display:flex; gap:0.1rem; flex-wrap:wrap; }
+  .nav-link { font-family:'JetBrains Mono',monospace; font-size:0.6rem; color:var(--muted); text-decoration:none; padding:0.25rem 0.6rem; border-radius:3px; border:1px solid transparent; transition:all 0.2s; }
+  .nav-link:hover, .nav-link.active { color:var(--gold); border-color:var(--gold); }
+
+  .hero { padding:3rem 2rem 1.5rem; text-align:center; border-bottom:1px solid rgba(201,168,76,0.3); }
+  .viz-number { font-family:'JetBrains Mono',monospace; font-size:0.75rem; color:var(--gold); letter-spacing:0.2em; text-transform:uppercase; margin-bottom:0.5rem; }
+  .hero h1 { font-family:'Playfair Display',serif; font-size:clamp(1.8rem,4vw,3rem); font-weight:900; line-height:1.1; }
+  .hero h1 em { color:var(--gold); font-style:normal; }
+  .hero p { margin-top:0.75rem; color:var(--muted); font-style:italic; }
+  .discussion-prompt { margin:1rem auto 0; max-width:700px; background:rgba(201,168,76,0.08); border-left:3px solid var(--gold); padding:0.75rem 1rem; font-style:italic; font-size:0.9rem; color:var(--gold-light); text-align:left; border-radius:0 4px 4px 0; }
+
+  .main { max-width:900px; margin:2.5rem auto; padding:0 1.5rem 3rem; }
+
+  /* Historical spectrum */
+  .spectrum-section { margin-bottom:2.5rem; }
+  .section-title { font-family:'Playfair Display',serif; font-size:1.2rem; margin-bottom:0.3rem; }
+  .section-title span { color:var(--gold); }
+  .section-sub { font-size:0.83rem; color:var(--muted); margin-bottom:1.5rem; font-style:italic; }
+
+  .spectrum-bar {
+    position:relative;
+    height:16px;
+    border-radius:8px;
+    background:linear-gradient(to right, #1a5e20, #a8a800, #c97a00, #8b1515);
+    margin-bottom:2.5rem;
+    margin-top:1rem;
+  }
+  .spectrum-labels {
+    display:flex;
+    justify-content:space-between;
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.6rem;
+    color:var(--muted);
+    margin-bottom:2rem;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+  }
+  .spectrum-labels span:first-child { color:#4fc87a; }
+  .spectrum-labels span:last-child { color:#e57373; }
+
+  /* Events on spectrum */
+  .events-grid {
+    display:grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap:1rem;
+    margin-bottom:2rem;
+  }
+  .event-marker {
+    background:var(--card);
+    border-radius:8px;
+    padding:1rem 1.1rem;
+    border-left:4px solid transparent;
+    animation:slideIn 0.5s ease both;
+    position:relative;
+  }
+  .event-marker::before {
+    content: attr(data-power);
+    position:absolute;
+    top:0.75rem; right:0.75rem;
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.55rem;
+    padding:0.15rem 0.35rem;
+    border-radius:3px;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+  }
+  .power-low { border-color:#1a5e20; }
+  .power-low::before { background:rgba(26,94,32,0.3); color:#4fc87a; content:'UPHELD'; }
+  .power-med { border-color:#c97a00; }
+  .power-med::before { background:rgba(201,122,0,0.3); color:#f0a500; content:'CONTESTED'; }
+  .power-high { border-color:#8b1515; }
+  .power-high::before { background:rgba(139,21,21,0.3); color:#e57373; content:'OVERREACH'; }
+  .power-now { border-color:var(--gold); border-width:3px; background:linear-gradient(135deg,rgba(201,168,76,0.07),var(--card)); }
+  .power-now::before { background:rgba(201,168,76,0.25); color:var(--gold); content:'TODAY'; }
+
+  .em1 { animation-delay:0.1s; } .em2 { animation-delay:0.15s; } .em3 { animation-delay:0.2s; }
+  .em4 { animation-delay:0.25s; } .em5 { animation-delay:0.3s; } .em6 { animation-delay:0.35s; }
+  .em7 { animation-delay:0.4s; } .em8 { animation-delay:0.45s; }
+  @keyframes slideIn { from{opacity:0;transform:translateX(-10px)} to{opacity:1;transform:translateX(0)} }
+
+  .em-year { font-family:'JetBrains Mono',monospace; font-size:0.65rem; color:var(--muted); letter-spacing:0.1em; margin-bottom:0.3rem; }
+  .em-event { font-family:'Playfair Display',serif; font-size:0.95rem; font-weight:700; margin-bottom:0.35rem; }
+  .em-desc { font-size:0.78rem; color:var(--muted); line-height:1.5; }
+  .em-outcome { display:inline-block; margin-top:0.4rem; font-size:0.72rem; font-family:'JetBrains Mono',monospace; padding:0.2rem 0.4rem; border-radius:3px; }
+
+  /* Three-way debate */
+  .debate-section {
+    margin-bottom:2rem;
+  }
+  .debate-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; }
+  .debate-card { background:var(--card); border-radius:8px; padding:1.25rem; border-top:3px solid transparent; }
+  .debate-card:nth-child(1) { border-color:var(--green); }
+  .debate-card:nth-child(2) { border-color:var(--gold); }
+  .debate-card:nth-child(3) { border-color:var(--red); }
+  .debate-label { font-family:'JetBrains Mono',monospace; font-size:0.62rem; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:0.5rem; }
+  .debate-card:nth-child(1) .debate-label { color:#4fc87a; }
+  .debate-card:nth-child(2) .debate-label { color:var(--gold); }
+  .debate-card:nth-child(3) .debate-label { color:#e57373; }
+  .debate-pos { font-family:'Playfair Display',serif; font-size:0.95rem; font-weight:700; margin-bottom:0.5rem; }
+  .debate-arg { font-size:0.8rem; color:var(--muted); line-height:1.6; }
+  .debate-who { margin-top:0.5rem; font-size:0.72rem; font-family:'JetBrains Mono',monospace; color:rgba(255,255,255,0.35); }
+
+  /* Bob Dylan closing */
+  .dylan-box {
+    background:linear-gradient(135deg, rgba(201,168,76,0.06), rgba(13,27,42,0));
+    border:1px solid rgba(201,168,76,0.25);
+    border-radius:10px;
+    padding:2rem;
+    text-align:center;
+    margin-top:2rem;
+  }
+  .dylan-title { font-family:'Playfair Display',serif; font-size:1.3rem; font-weight:900; color:var(--gold); margin-bottom:1rem; }
+  .dylan-questions {
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:0.75rem;
+    text-align:left;
+    margin-top:1.25rem;
+  }
+  .dq {
+    background:rgba(255,255,255,0.04);
+    border-radius:6px;
+    padding:0.75rem;
+    font-size:0.82rem;
+    color:var(--muted);
+    line-height:1.5;
+    border-left:2px solid rgba(201,168,76,0.3);
+  }
+  .dq strong { color:var(--gold-light); display:block; margin-bottom:0.2rem; }
+
+  @media(max-width:650px) {
+    .events-grid { grid-template-columns:1fr; }
+    .debate-grid { grid-template-columns:1fr; }
+    .dylan-questions { grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="viz-nav">
+  <div class="nav-brand">BOLLI Current Events · Feb 2026</div>
+  <div class="nav-links">
+    <a href="https://jhnday.github.io/CrntEvnts/viz1-timeline.html" class="nav-link">① Timeline</a>
+    <a href="https://jhnday.github.io/CrntEvnts/viz2-money.html" class="nav-link">② The Money</a>
+    <a href="https://jhnday.github.io/CrntEvnts/viz3-coalition.html" class="nav-link">③ 6-3 Court</a>
+    <a href="https://jhnday.github.io/CrntEvnts/viz4-tariffs-remain.html" class="nav-link">④ What Remains</a>
+    <a href="https://jhnday.github.io/CrntEvnts/viz5-refund.html" class="nav-link">⑤ Refund Cascade</a>
+    <a href="https://jhnday.github.io/CrntEvnts/viz6-spectrum.html" class="nav-link active">⑥ Guardrails</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="viz-number">Visualization ⑥ of VI</div>
+  <h1>Guardrails Against an <em>Imperial Presidency</em></h1>
+  <p>Is this ruling a speed bump or a structural defense? Are the times really a-changin'?</p>
+  <div class="discussion-prompt">
+    💬 <strong>Discussion starter:</strong> This is the first major Supreme Court check on Trump since his return to power. Legal scholar Frank Bowman called it "the first time the Supreme Court has stepped in and attempted to do something about Trump's generalized attack on the rule of law." Do you agree? Is this a turning point?
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- Spectrum bar -->
+  <div class="spectrum-section">
+    <div class="section-title">Historical Spectrum of Presidential Power — <span>Where Does This Moment Fall?</span></div>
+    <div class="section-sub">From constitutional boundaries observed to executive overreach unchecked</div>
+    <div class="spectrum-bar"></div>
+    <div class="spectrum-labels">
+      <span>◀ Congress holds power</span>
+      <span>Negotiated</span>
+      <span>Presidential expansion</span>
+      <span>Overreach unchecked ▶</span>
+    </div>
+
+    <div class="events-grid">
+      <div class="event-marker power-low em1">
+        <div class="em-year">1952 — Truman</div>
+        <div class="em-event">Steel Mill Seizure — Youngstown</div>
+        <div class="em-desc">Truman seizes steel mills during Korean War to prevent a strike. Supreme Court rules 6-3: presidential power has limits even in wartime without Congressional authority.</div>
+        <span class="em-outcome" style="background:rgba(26,94,32,0.25);color:#4fc87a;">Court holds the line → Foundational precedent</span>
+      </div>
+
+      <div class="event-marker power-med em2">
+        <div class="em-year">1973 — Nixon</div>
+        <div class="em-event">War Powers Act Passed Over Veto</div>
+        <div class="em-desc">Congress reasserts control over military deployments after Vietnam. Nixon vetoes it; Congress overrides. Demonstrates that institutional pushback can work — but compliance was never fully enforced.</div>
+        <span class="em-outcome" style="background:rgba(201,122,0,0.25);color:#f0a500;">Law passed — but rarely enforced since</span>
+      </div>
+
+      <div class="event-marker power-low em3">
+        <div class="em-year">1974 — Nixon</div>
+        <div class="em-event">Watergate: Resignation Under Pressure</div>
+        <div class="em-desc">Courts, Congress, and press act together. Nixon loses Supreme Court battle over tapes 8-0. Resigns before impeachment. Classic example of all three branches — plus public opinion — functioning as designed.</div>
+        <span class="em-outcome" style="background:rgba(26,94,32,0.25);color:#4fc87a;">System worked — under extreme pressure</span>
+      </div>
+
+      <div class="event-marker power-med em4">
+        <div class="em-year">2001-2008 — Bush</div>
+        <div class="em-event">Post-9/11 Executive Expansion</div>
+        <div class="em-desc">Surveillance programs, enhanced interrogation, Guantanamo, signing statements. Courts pushed back selectively; Congress largely deferred. Emergency framing enabled enormous expansion of executive authority.</div>
+        <span class="em-outcome" style="background:rgba(201,122,0,0.25);color:#f0a500;">Partial checks — some overreach normalized</span>
+      </div>
+
+      <div class="event-marker power-med em5">
+        <div class="em-year">2022 — Biden</div>
+        <div class="em-event">Student Loan Forgiveness Blocked</div>
+        <div class="em-desc">Biden invokes HEROES Act to forgive $400B+ in student debt. Roberts-led Court strikes it down using Major Questions Doctrine — the same doctrine now applied to Trump's tariffs. Same tool, different party.</div>
+        <span class="em-outcome" style="background:rgba(201,122,0,0.25);color:#f0a500;">MQD cuts both ways — lesson for today</span>
+      </div>
+
+      <div class="event-marker power-high em6">
+        <div class="em-year">2025 — Trump II</div>
+        <div class="em-event">Executive Orders on Immigration, Agencies, Tariffs</div>
+        <div class="em-desc">Unprecedented pace of executive action across immigration, federal workforce, foreign aid, and trade. Lower courts issue hundreds of blocks — many stayed or overturned on appeal. The system is under maximum stress.</div>
+        <span class="em-outcome" style="background:rgba(139,21,21,0.25);color:#e57373;">Ongoing — courts mixed in response</span>
+      </div>
+
+      <div class="event-marker power-now em7">
+        <div class="em-year">Feb 20, 2026 — TODAY</div>
+        <div class="em-event">Supreme Court Strikes Down IEEPA Tariffs — 6-3</div>
+        <div class="em-desc">First major SCOTUS ruling against Trump's second-term executive actions. Roberts uses the Major Questions Doctrine — previously a conservative tool against Biden — against Trump. Two Trump appointees defect. Trump immediately finds a workaround.</div>
+        <span class="em-outcome" style="background:rgba(201,168,76,0.2);color:var(--gold);">Real check — but not a shutdown of tariff agenda</span>
+      </div>
+
+      <div class="event-marker power-high em8">
+        <div class="em-year">Open Question — What Comes Next?</div>
+        <div class="em-event">Is This a Turning Point — or Just One Vote?</div>
+        <div class="em-desc">The ruling is narrow — statutory, not constitutional. Trump routed around it within hours. The Court did not say the President can't impose tariffs — only that IEEPA wasn't the right vehicle. The guardrail is procedural, not absolute.</div>
+        <span class="em-outcome" style="background:rgba(139,21,21,0.2);color:#e57373;">Undetermined — depends on what comes next</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Three-way debate -->
+  <div class="debate-section">
+    <div class="section-title">Three Views on Whether the <span>Guardrails Are Holding</span></div>
+    <div class="section-sub">Your group's task: where do you come down?</div>
+    <div class="debate-grid">
+      <div class="debate-card">
+        <div class="debate-label">View A — Optimistic</div>
+        <div class="debate-pos">"The System Worked"</div>
+        <div class="debate-arg">Courts at every level ruled the same way. A 6-3 coalition crossed ideological lines. Even Trump's own appointees applied the law. The Major Questions Doctrine created a precedent that will constrain future presidents of both parties. Rand Paul called it a victory for the Republic.</div>
+        <div class="debate-who">→ Rand Paul, constitutional conservatives, judicial independence advocates</div>
+      </div>
+      <div class="debate-card">
+        <div class="debate-label">View B — Cautious</div>
+        <div class="debate-pos">"A Speed Bump, Not a Wall"</div>
+        <div class="debate-arg">The ruling is narrow — it only bars IEEPA as the vehicle, not tariffs themselves. Trump was back at his desk signing new tariffs within hours. Treasury says revenue will be "virtually unchanged." The procedure changed; the policy didn't. Kavanaugh said so in his dissent.</div>
+        <div class="debate-who">→ Most trade economists, legal scholars, business community</div>
+      </div>
+      <div class="debate-card">
+        <div class="debate-label">View C — Skeptical</div>
+        <div class="debate-pos">"Too Little, Too Late"</div>
+        <div class="debate-arg">It took 13 months and $160 billion collected before the Court acted. Trump now attacks the justices by name and questions their loyalty. Compliance is assumed, not guaranteed. What if a future executive simply refuses to honor a court ruling? The ruling relies on goodwill that may be eroding.</div>
+        <div class="debate-who">→ Legal scholars worried about rule of law, historians of democratic backsliding</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dylan closing -->
+  <div class="dylan-box">
+    <div class="dylan-title">🎸 "The Times They Are A-Changin'" — Discussion Themes</div>
+    <div style="font-size:0.85rem;color:var(--muted);font-style:italic;">Are we watching the old order bend — or break? And which direction are things really changing?</div>
+    <div class="dylan-questions">
+      <div class="dq">
+        <strong>On judicial independence:</strong>
+        Trump attacked two of his own appointees by name. Does this undermine the Court's authority — or demonstrate that it functions independently even under pressure?
+      </div>
+      <div class="dq">
+        <strong>On the Founders' design:</strong>
+        The ruling turned on three words: "regulate ... importation." The Founders gave Congress the taxing power. Is this a feature or a bug — that a 1977 law can have such large consequences in 2026?
+      </div>
+      <div class="dq">
+        <strong>On democratic change:</strong>
+        Trump was elected partly on tariffs as policy. Does a court striking them down represent democracy working (rule of law) or working against it (unelected judges overriding a mandate)?
+      </div>
+      <div class="dq">
+        <strong>On the times changing:</strong>
+        Dylan's song was about civil rights and generational change. Is today's moment a similar inflection — the old consensus about presidential power giving way to something new? Or are we cycling back to older patterns?
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

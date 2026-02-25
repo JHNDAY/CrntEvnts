@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⑤  Refund Cascade · BOLLI Current Events</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Serif+4:ital,wght@0,300;0,400;1,300&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy:#0d1b2a; --gold:#c9a84c; --gold-light:#e8c97a;
+    --red:#c0392b; --green:#1e8449; --amber:#d4870a;
+    --text:#e8e0d0; --muted:#8a9bb0; --card:#1a2d42;
+    --teal:#148f87;
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { background:var(--navy); color:var(--text); font-family:'Source Serif 4',serif; min-height:100vh; }
+
+  .viz-nav {
+    background: #080f18;
+    border-bottom: 2px solid var(--gold);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem 1.25rem;
+    flex-wrap: nowrap;
+    gap: 0.75rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    overflow-x: auto;
+  }
+  .nav-brand { font-family:'JetBrains Mono',monospace; font-size:0.6rem; color:var(--gold); letter-spacing:0.1em; text-transform:uppercase; }
+  .nav-links { display:flex; gap:0.1rem; flex-wrap:wrap; }
+  .nav-link { font-family:'JetBrains Mono',monospace; font-size:0.6rem; color:var(--muted); text-decoration:none; padding:0.25rem 0.6rem; border-radius:3px; border:1px solid transparent; transition:all 0.2s; }
+  .nav-link:hover, .nav-link.active { color:var(--gold); border-color:var(--gold); }
+
+  .hero { padding:3rem 2rem 1.5rem; text-align:center; border-bottom:1px solid rgba(201,168,76,0.3); }
+  .viz-number { font-family:'JetBrains Mono',monospace; font-size:0.75rem; color:var(--gold); letter-spacing:0.2em; text-transform:uppercase; margin-bottom:0.5rem; }
+  .hero h1 { font-family:'Playfair Display',serif; font-size:clamp(1.8rem,4vw,3rem); font-weight:900; line-height:1.1; }
+  .hero h1 em { color:var(--gold); font-style:normal; }
+  .hero p { margin-top:0.75rem; color:var(--muted); font-style:italic; }
+  .discussion-prompt { margin:1rem auto 0; max-width:700px; background:rgba(201,168,76,0.08); border-left:3px solid var(--gold); padding:0.75rem 1rem; font-style:italic; font-size:0.9rem; color:var(--gold-light); text-align:left; border-radius:0 4px 4px 0; }
+
+  .main { max-width:860px; margin:2.5rem auto; padding:0 1.5rem 3rem; }
+
+  /* Cascade flow */
+  .cascade { position:relative; }
+
+  .cascade-node {
+    background:var(--card);
+    border-radius:10px;
+    padding:1.25rem 1.5rem;
+    margin-bottom:0;
+    border: 2px solid transparent;
+    position:relative;
+    animation:fadeIn 0.5s ease both;
+  }
+  .cn1 { animation-delay:0.1s; }
+  .cn2 { animation-delay:0.2s; }
+  .cn3 { animation-delay:0.3s; }
+  .cn4 { animation-delay:0.4s; }
+  .cn5 { animation-delay:0.5s; }
+  @keyframes fadeIn { from{opacity:0;transform:translateX(-12px)} to{opacity:1;transform:translateX(0)} }
+
+  .node-government { border-color:rgba(192,57,43,0.4); background:linear-gradient(135deg,#1e1010,var(--card)); }
+  .node-importer { border-color:rgba(41,128,185,0.4); background:linear-gradient(135deg,#10161e,var(--card)); }
+  .node-retailer { border-color:rgba(201,168,76,0.3); background:linear-gradient(135deg,#1a1510,var(--card)); }
+  .node-consumer { border-color:rgba(30,107,62,0.3); background:linear-gradient(135deg,#101a12,var(--card)); }
+  .node-question { border-color:rgba(139,90,43,0.4); background:linear-gradient(135deg,#1a1208,var(--card)); border-style:dashed; }
+
+  .node-icon { font-size:2rem; margin-bottom:0.5rem; }
+  .node-who { font-family:'JetBrains Mono',monospace; font-size:0.65rem; letter-spacing:0.15em; text-transform:uppercase; margin-bottom:0.3rem; }
+  .node-government .node-who { color:#e57373; }
+  .node-importer .node-who { color:#5dade2; }
+  .node-retailer .node-who { color:var(--gold); }
+  .node-consumer .node-who { color:#4fc87a; }
+  .node-question .node-who { color:var(--amber); }
+
+  .node-title { font-family:'Playfair Display',serif; font-size:1.1rem; font-weight:700; margin-bottom:0.5rem; }
+  .node-desc { font-size:0.84rem; color:var(--muted); line-height:1.6; }
+  .node-amount {
+    display:inline-block;
+    margin-top:0.6rem;
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.8rem;
+    font-weight:600;
+    padding:0.25rem 0.6rem;
+    border-radius:4px;
+  }
+  .node-government .node-amount { background:rgba(192,57,43,0.2); color:#e57373; }
+  .node-importer .node-amount { background:rgba(41,128,185,0.2); color:#5dade2; }
+  .node-retailer .node-amount { background:rgba(201,168,76,0.15); color:var(--gold); }
+  .node-consumer .node-amount { background:rgba(30,107,62,0.15); color:#4fc87a; }
+  .node-question .node-amount { background:rgba(139,90,43,0.15); color:var(--amber); }
+
+  /* Arrow connector */
+  .arrow-down {
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    margin:0.25rem 0;
+    gap:0;
+  }
+  .arrow-line { width:2px; height:28px; background:linear-gradient(to bottom, rgba(255,255,255,0.2), rgba(255,255,255,0.05)); }
+  .arrow-head { color:rgba(255,255,255,0.3); font-size:1.2rem; line-height:1; margin-top:-2px; }
+  .arrow-label { font-family:'JetBrains Mono',monospace; font-size:0.65rem; color:var(--muted); letter-spacing:0.1em; margin-top:0.1rem; }
+
+  /* Who gets refund table */
+  .refund-table {
+    background:var(--card);
+    border-radius:10px;
+    overflow:hidden;
+    margin-bottom:1.5rem;
+    margin-top:1.5rem;
+  }
+  .rt-header {
+    display:grid;
+    grid-template-columns:2fr 1fr 1fr 1fr;
+    gap:0;
+    background:rgba(201,168,76,0.1);
+    border-bottom:2px solid rgba(201,168,76,0.3);
+    padding:0.75rem 1.25rem;
+  }
+  .rt-header div { font-family:'JetBrains Mono',monospace; font-size:0.65rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold); }
+  .rt-row {
+    display:grid;
+    grid-template-columns:2fr 1fr 1fr 1fr;
+    padding:0.85rem 1.25rem;
+    border-bottom:1px solid rgba(255,255,255,0.06);
+    font-size:0.83rem;
+    align-items:center;
+  }
+  .rt-row:last-child { border-bottom:none; }
+  .rt-name { font-weight:600; color:var(--text); }
+  .rt-paid { color:var(--muted); }
+  .status-chip {
+    font-family:'JetBrains Mono',monospace;
+    font-size:0.62rem;
+    padding:0.2rem 0.45rem;
+    border-radius:3px;
+    text-transform:uppercase;
+  }
+  .s-yes { background:rgba(30,107,62,0.25); color:#4fc87a; }
+  .s-maybe { background:rgba(212,135,10,0.2); color:var(--amber); }
+  .s-unlikely { background:rgba(192,57,43,0.2); color:#e57373; }
+  .rt-note { font-size:0.75rem; color:var(--muted); font-style:italic; }
+
+  .bottom-note { background:rgba(192,57,43,0.1); border:1px solid rgba(192,57,43,0.3); border-radius:6px; padding:1rem 1.25rem; font-size:0.85rem; color:var(--muted); line-height:1.6; margin-top:0; }
+  .bottom-note strong { color:#e57373; }
+
+  @media(max-width:600px) { .rt-header,.rt-row { grid-template-columns:2fr 1fr; } .rt-header div:nth-child(3), .rt-header div:nth-child(4), .rt-row > *:nth-child(3), .rt-row > *:nth-child(4) { display:none; } }
+</style>
+</head>
+<body>
+
+<nav class="viz-nav">
+  <div class="nav-brand">BOLLI Current Events · Feb 2026</div>
+  <div class="nav-links">
+    <a href="https://jhnday.github.io/CrntEvnts/viz1-timeline.html" class="nav-link">① Timeline</a>
+    <a href="https://jhnday.github.io/CrntEvnts/viz2-money.html" class="nav-link">② The Money</a>
+    <a href="https://jhnday.github.io/CrntEvnts/viz3-coalition.html" class="nav-link">③ 6-3 Court</a>
+    <a href="https://jhnday.github.io/CrntEvnts/viz4-tariffs-remain.html" class="nav-link">④ What Remains</a>
+    <a href="https://jhnday.github.io/CrntEvnts/viz5-refund.html" class="nav-link active">⑤ Refund Cascade</a>
+    <a href="https://jhnday.github.io/CrntEvnts/viz6-spectrum.html" class="nav-link">⑥ Guardrails</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="viz-number">Visualization ⑤ of VI</div>
+  <h1>The <em>Refund Cascade</em></h1>
+  <p>$160 billion flowed from importers to retailers to consumers — who gets it back?</p>
+  <div class="discussion-prompt">
+    💬 <strong>Discussion starter:</strong> The money was collected illegally. But it's already been spent — by businesses passing costs along, and by consumers paying higher prices. Trump says he won't voluntarily refund it. Is this theft? Who has standing to demand the money back?
+  </div>
+</div>
+
+<div class="main">
+  <div class="cascade">
+
+    <div class="cascade-node node-government cn1">
+      <div class="node-icon">🏛️</div>
+      <div class="node-who">U.S. Government — Customs & Border Protection</div>
+      <div class="node-title">Collected $160B+ in Tariff Payments</div>
+      <div class="node-desc">From February 2025 through February 20, 2026. The Supreme Court says this was unauthorized. The money sits in the Treasury. The Court did NOT order refunds — it remanded refund questions to the Court of International Trade.</div>
+      <span class="node-amount">$160B+ in U.S. Treasury</span>
+    </div>
+
+    <div class="arrow-down">
+      <div class="arrow-line"></div>
+      <div class="arrow-head">▼</div>
+      <div class="arrow-label">Tariff payments flowed FROM importers TO government</div>
+    </div>
+
+    <div class="cascade-node node-importer cn2">
+      <div class="node-icon">🏭</div>
+      <div class="node-who">Level 1 — U.S. Importers (Companies paying tariffs directly)</div>
+      <div class="node-title">~2,000 Companies Filed Claims — Including FedEx</div>
+      <div class="node-desc">Importers — manufacturers, retailers, logistics companies — paid the tariffs directly to CBP. They have the clearest legal standing. They have <strong>180 days</strong> from "liquidation" of goods to file protests with CBP. Many already filed. But: did they pass the costs on?</div>
+      <span class="node-amount">Strongest claim — but complex if costs passed on</span>
+    </div>
+
+    <div class="arrow-down">
+      <div class="arrow-line"></div>
+      <div class="arrow-head">▼</div>
+      <div class="arrow-label">Most importers passed tariff costs to retailers via price increases</div>
+    </div>
+
+    <div class="cascade-node node-retailer cn3">
+      <div class="node-icon">🏪</div>
+      <div class="node-who">Level 2 — Retailers & Businesses (Passed-along costs)</div>
+      <div class="node-title">Paid Tariff Surcharges — May Demand Their Share Back</div>
+      <div class="node-desc">Retailers paid higher wholesale prices that included tariff costs. Some importers issued explicit "tariff surcharges" that retailers tracked. If an importer receives a refund, those retailers may have legal grounds to demand their contribution be returned — opening a wave of commercial litigation between companies.</div>
+      <span class="node-amount">Indirect claim — may sue importers for portion</span>
+    </div>
+
+    <div class="arrow-down">
+      <div class="arrow-line"></div>
+      <div class="arrow-head">▼</div>
+      <div class="arrow-label">Retailers passed costs to consumers via higher prices on everyday goods</div>
+    </div>
+
+    <div class="cascade-node node-consumer cn4">
+      <div class="node-icon">👤</div>
+      <div class="node-who">Level 3 — American Consumers (End of the chain)</div>
+      <div class="node-title">Paid Higher Prices — Virtually No Legal Path to Refunds</div>
+      <div class="node-desc">American households paid an estimated <strong>$400–$1,600+ extra per year</strong> on goods ranging from electronics to groceries to clothing. They have no legal standing to sue — they didn't pay the government directly. The money is simply gone from their pockets. This is the invisible cost the ruling cannot undo.</div>
+      <span class="node-amount">No legal recourse — costs absorbed permanently</span>
+    </div>
+
+    <div class="arrow-down">
+      <div class="arrow-line"></div>
+      <div class="arrow-head">▼</div>
+      <div class="arrow-label">Meanwhile, in Washington...</div>
+    </div>
+
+    <div class="cascade-node node-question cn5">
+      <div class="node-icon">⚖️</div>
+      <div class="node-who">The Unanswered Question — Courts & Congress</div>
+      <div class="node-title">Trump Says No Refunds. Courts Will Decide.</div>
+      <div class="node-desc">Trump: <em>"I guess it has to get litigated for the next two years."</em> The Court of International Trade now handles ~2,000 pending cases. CBP must respond to protests within 30 days. If CBP denies, companies can appeal to federal courts. Justice Kavanaugh estimated the government "may be required to refund billions" — but the process could take years and Congress could theoretically legislate to block refunds.</div>
+      <span class="node-amount">Years of litigation ahead · Trump resisting</span>
+    </div>
+
+  </div>
+
+  <div class="refund-table">
+    <div class="rt-header">
+      <div>Who Paid?</div>
+      <div>Claim Strength</div>
+      <div>Legal Path</div>
+      <div>Notes</div>
+    </div>
+    <div class="rt-row">
+      <div class="rt-name">🏭 Large importers (FedEx, Amazon, etc.)</div>
+      <div><span class="status-chip s-maybe">Likely</span></div>
+      <div class="rt-paid">CBP protest → CIT → Federal Court</div>
+      <div class="rt-note">FedEx already sued. 180-day window matters.</div>
+    </div>
+    <div class="rt-row">
+      <div class="rt-name">🏪 Small business importers</div>
+      <div><span class="status-chip s-yes">Strong</span></div>
+      <div class="rt-paid">Liberty Justice Center building database + referral network</div>
+      <div class="rt-note">Biggest political sympathy — were the plaintiffs</div>
+    </div>
+    <div class="rt-row">
+      <div class="rt-name">🏬 Retailers who paid surcharges</div>
+      <div><span class="status-chip s-maybe">Uncertain</span></div>
+      <div class="rt-paid">Commercial litigation against importers</div>
+      <div class="rt-note">Depends on contract terms + documented surcharges</div>
+    </div>
+    <div class="rt-row">
+      <div class="rt-name">👤 American consumers</div>
+      <div><span class="status-chip s-unlikely">None</span></div>
+      <div class="rt-paid">No legal standing</div>
+      <div class="rt-note">Costs were absorbed through price increases</div>
+    </div>
+    <div class="rt-row">
+      <div class="rt-name">🌍 Foreign governments</div>
+      <div><span class="status-chip s-unlikely">None</span></div>
+      <div class="rt-paid">Tariffs paid by U.S. importers, not foreign countries</div>
+      <div class="rt-note">Common misconception — tariffs are a domestic tax</div>
+    </div>
+  </div>
+
+  <div class="bottom-note">
+    <strong>The $400/household reality:</strong> Tax Foundation estimates U.S. households will still pay an average of $400 extra in 2026 due to remaining Section 232 tariffs — even after the IEEPA tariffs are gone. The $160B in IEEPA costs paid since 2025? Mostly absorbed permanently by American businesses and consumers with no path to recovery. This is the human cost the legal ruling cannot undo. See <a href="https://jhnday.github.io/CrntEvnts/viz2-money.html" style="color:var(--gold)">Visualization ②</a> for the full fiscal picture.
+  </div>
+</div>
+
+</body>
+</html>
