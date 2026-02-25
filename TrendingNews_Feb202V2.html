@@ -1,0 +1,1146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trending News · Current Events Overview · BOLLI Discussion Group</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      background: #a8c4e8;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+    }
+
+    /* ── HEADER ──────────────────────────────────────────── */
+    .header {
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #667eea 100%);
+      padding: 36px 32px 28px;
+      text-align: center;
+      color: white;
+    }
+
+    .header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .header .subtitle {
+      font-size: 0.95rem;
+      opacity: 0.85;
+      margin-bottom: 18px;
+      letter-spacing: 0.04em;
+    }
+
+    /* ── SOURCE PILLS ────────────────────────────────────── */
+    .sources-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: center;
+      margin-top: 14px;
+    }
+
+    .sources-bar a {
+      font-size: 11px;
+      color: #fff;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 4px;
+      padding: 3px 10px;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .sources-bar a:hover {
+      background: rgba(255,255,255,0.35);
+    }
+
+    /* ── LEGEND ──────────────────────────────────────────── */
+    .legend {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 20px 10px;
+      font-size: 12px;
+      color: #555;
+      background: #a8c4e8;
+    }
+    .legend-bar {
+      width: 160px;
+      height: 7px;
+      border-radius: 4px;
+      background: linear-gradient(90deg, #cc0000, #ff6600, #ff9944, #ffcc55, #44aa77, #2a7fcc, #1a5fa8, #5533aa, #3a1f77);
+    }
+
+    /* ── INSTRUCTIONS ────────────────────────────────────── */
+    .instructions {
+      text-align: center;
+      font-size: 12px;
+      color: #888;
+      padding-bottom: 12px;
+      letter-spacing: 0.03em;
+      background: #a8c4e8;
+    }
+
+    /* ── TOPIC CARDS ─────────────────────────────────────── */
+    .topics-list {
+      padding: 0 20px 30px;
+      background: #a8c4e8;
+    }
+
+    .card {
+      margin-bottom: 12px;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      padding: 16px 20px;
+      cursor: pointer;
+      user-select: none;
+      color: white;
+      position: relative;
+      gap: 12px;
+      transition: filter 0.2s;
+    }
+    .card-header:hover { filter: brightness(1.08); }
+
+    .level-1 { background: linear-gradient(135deg, #cc0000 0%, #990000 100%); }
+    .level-2 { background: linear-gradient(135deg, #e63000 0%, #c02000 100%); }
+    .level-3 { background: linear-gradient(135deg, #e86a00 0%, #c05000 100%); }
+    .level-4 { background: linear-gradient(135deg, #d4a000 0%, #a07800 100%); }
+    .level-5 { background: linear-gradient(135deg, #2e9e5a 0%, #1a7040 100%); }
+    .level-6 { background: linear-gradient(135deg, #2a7fcc 0%, #1a5a99 100%); }
+    .level-7 { background: linear-gradient(135deg, #1a5fa8 0%, #0e3d70 100%); }
+    .level-8 { background: linear-gradient(135deg, #4422aa 0%, #2d1277 100%); }
+    .level-9 { background: linear-gradient(135deg, #5533aa 0%, #3a1f77 100%); }
+
+    .card-rank {
+      font-size: 11px;
+      opacity: 0.7;
+      min-width: 22px;
+    }
+
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+      flex: 1;
+    }
+
+    .card-count {
+      font-size: 12px;
+      background: rgba(0,0,0,0.25);
+      padding: 3px 10px;
+      border-radius: 12px;
+      white-space: nowrap;
+    }
+
+    .card-chevron {
+      font-size: 16px;
+      opacity: 0.8;
+      transition: transform 0.3s ease;
+    }
+    .card-chevron.rotated { transform: rotate(180deg); }
+
+    /* ── CARD BODY ───────────────────────────────────────── */
+    .card-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease-in-out;
+      background: #b8ccec;
+    }
+    .card-body.expanded { max-height: 2800px; }
+
+    .card-body-inner {
+      padding: 18px 20px 20px;
+      border-top: 2px solid rgba(102,126,234,0.25);
+    }
+
+    /* ── SUBTOPIC CARDS ──────────────────────────────────── */
+    .subtopics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .subtopic {
+      background: white;
+      border-left: 3px solid #667eea;
+      border-radius: 6px;
+      padding: 11px 14px;
+      box-shadow: 0 2px 6px rgba(102,126,234,0.12);
+    }
+
+    .subtopic-src {
+      margin-top: 8px;
+      padding-top: 6px;
+      border-top: 1px solid rgba(102,126,234,0.2);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+    .subtopic-src a {
+      font-size: 10px;
+      color: #2a5298;
+      background: #eef2ff;
+      border: 1px solid #c7d2fe;
+      border-radius: 3px;
+      padding: 2px 7px;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .subtopic-src a:hover {
+      background: #667eea;
+      color: white;
+      border-color: #667eea;
+    }
+
+    .subtopic-title {
+      font-weight: 600;
+      color: #1e3c72;
+      font-size: 0.875rem;
+      margin-bottom: 5px;
+    }
+
+    .subtopic-detail {
+      font-size: 0.78rem;
+      color: #555;
+      line-height: 1.55;
+    }
+
+    /* ── SECTION SOURCES ─────────────────────────────────── */
+    .section-sources {
+      font-size: 11px;
+      color: #888;
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+    }
+    .section-sources strong { color: #555; }
+    .section-sources a {
+      color: #2a5298;
+      text-decoration: none;
+      background: #eef2ff;
+      padding: 2px 8px;
+      border-radius: 3px;
+    }
+    .section-sources a:hover {
+      background: #667eea;
+      color: white;
+    }
+
+    /* ── FOOTER ──────────────────────────────────────────── */
+    .footer {
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+      color: rgba(255,255,255,0.8);
+      text-align: center;
+      padding: 22px 20px;
+      font-size: 11px;
+      line-height: 1.8;
+    }
+    .footer a {
+      color: #a8c4ff;
+      text-decoration: none;
+    }
+    .footer a:hover { text-decoration: underline; color: #fff; }
+
+    @media (max-width: 600px) {
+      .subtopics-grid { grid-template-columns: 1fr; }
+      .header h1 { font-size: 1.4rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- ══ HEADER ══════════════════════════════════════════ -->
+  <div class="header">
+    <h1>📰 Trending News — A Progressive View</h1>
+    <div class="subtitle">9 Categories &nbsp;·&nbsp; Ordered by coverage volume &nbsp;·&nbsp; 14 sources</div>
+
+    <div class="sources-bar">
+      <a href="https://cnn.com" target="_blank">CNN</a>
+      <a href="https://msnbc.com" target="_blank">MSNBC</a>
+      <a href="https://npr.org" target="_blank">NPR</a>
+      <a href="https://nytimes.com" target="_blank">New York Times</a>
+      <a href="https://washingtonpost.com" target="_blank">Washington Post</a>
+      <a href="https://wsj.com" target="_blank">Wall Street Journal</a>
+      <a href="https://ft.com" target="_blank">Financial Times</a>
+      <a href="https://theguardian.com" target="_blank">The Guardian</a>
+      <a href="https://aljazeera.com" target="_blank">Al Jazeera</a>
+      <a href="https://haaretz.com" target="_blank">Haaretz</a>
+      <a href="https://tyt.com" target="_blank">The Young Turks</a>
+      <a href="https://chrishedges.substack.com" target="_blank">Chris Hedges</a>
+      <a href="https://heathercoxrichardson.substack.com" target="_blank">Heather Cox Richardson</a>
+      <a href="https://geopoliticalfutures.com" target="_blank">Geopolitical Futures</a>
+    </div>
+  </div>
+
+  <!-- ── LEGEND ── -->
+  <div class="legend">
+    <span>Most coverage</span>
+    <div class="legend-bar"></div>
+    <span>Least coverage</span>
+  </div>
+  <div class="instructions">Click any category to expand · sections ordered by descending mention count</div>
+
+  <!-- ══ TOPICS ══════════════════════════════════════════ -->
+  <div class="topics-list">
+
+    <!-- 1. TRUMP ADMINISTRATION - EXPOSURE AND SETBACKS -->
+    <div class="card">
+      <div class="card-header level-1" onclick="toggle(this)">
+        <span class="card-rank">01</span>
+        <span class="card-title">Trump Administration — Exposure &amp; Setbacks</span>
+        <span class="card-count">62 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+
+            <div class="subtopic">
+              <div class="subtopic-title">SCOTUS Strikes Down IEEPA Tariffs</div>
+              <div class="subtopic-detail">In a 6-3 ruling (Learning Resources v. Trump), the Supreme Court invalidated Trump's broad use of emergency economic powers to impose "reciprocal tariffs," forcing the administration to fall back on a narrower 15% global tariff under Section 122 — limited to 150 days without Congress. Over $133B in collected tariff revenue may require refunds.</div>
+              <div class="subtopic-src">
+                <a href="https://washingtonpost.com/business/" target="_blank">WaPo Business</a>
+                <a href="https://nytimes.com/section/business" target="_blank">NYT Business</a>
+                <a href="https://wsj.com/economy/trade" target="_blank">WSJ Trade</a>
+                <a href="https://ft.com/trade" target="_blank">FT Trade</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Courts Force DOGE Transparency</div>
+              <div class="subtopic-detail">A NY federal judge compelled the government to disclose the names of DOGE employees and contractors (Feb. 17). A Maryland judge ruled Musk cannot be shielded from testimony about USAID's dissolution, while a DC judge ordered DOJ to investigate Musk's phone numbers used during his White House tenure. Plaintiffs' win rate against the administration exceeds 60%.</div>
+              <div class="subtopic-src">
+                <a href="https://washingtonpost.com/national-security/" target="_blank">WaPo Nat'l Security</a>
+                <a href="https://nytimes.com/section/technology" target="_blank">NYT Tech</a>
+                <a href="https://theguardian.com/us-news" target="_blank">Guardian US</a>
+                <a href="https://npr.org/sections/politics" target="_blank">NPR Politics</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Trump Floats Canceling 2026 Elections</div>
+              <div class="subtopic-detail">Trump floated canceling the midterm elections citing anticipated losses and distrust in the system; White House called it a "joke." He separately said elections should be "nationalized" to prevent voter fraud. Voting rights groups warned the statements represent a dangerous pattern of undermining democratic norms.</div>
+              <div class="subtopic-src">
+                <a href="https://washingtonpost.com/politics/" target="_blank">WaPo Politics</a>
+                <a href="https://nytimes.com/section/us/politics" target="_blank">NYT Politics</a>
+                <a href="https://msnbc.com/politics" target="_blank">MSNBC</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Government Shutdown — DHS Funding Standoff</div>
+              <div class="subtopic-detail">A partial government shutdown continued as both parties remained deadlocked over DHS funding. Senate Democrats insisted on ICE conduct reforms; Republicans refused any conditions on immigration enforcement. The impasse extended into the final week of February with no resolution in sight.</div>
+              <div class="subtopic-src">
+                <a href="https://cnn.com/politics" target="_blank">CNN Politics</a>
+                <a href="https://nytimes.com/section/us/politics" target="_blank">NYT Politics</a>
+                <a href="https://washingtonpost.com/politics/" target="_blank">WaPo Politics</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Musk Departure Aftermath &amp; DOGE Legacy</div>
+              <div class="subtopic-detail">Though DOGE's official footprint diminished, ongoing lawsuits expose a trail of misrepresentations to courts, data security breaches at Social Security Administration, and conflicts of interest. A DOJ filing revealed DOGE communicated with an unidentified "political advocacy group" about SSA records — described as a "bombshell" by advocacy groups.</div>
+              <div class="subtopic-src">
+                <a href="https://washingtonpost.com/politics/" target="_blank">WaPo Politics</a>
+                <a href="https://theguardian.com/us-news/doge" target="_blank">Guardian DOGE</a>
+                <a href="https://tyt.com" target="_blank">TYT</a>
+                <a href="https://heathercoxrichardson.substack.com" target="_blank">H.C. Richardson</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Trump vs. Judiciary — Impeachment Threats</div>
+              <div class="subtopic-detail">Trump demanded the impeachment of Judge James Boasberg after he temporarily halted deportations under the Alien Enemies Act, calling him a "grandstander." Speaker Johnson echoed calls to impeach judges who block Trump's agenda. Over 15 administration appeals pending simultaneously; legal scholars note the judicial branch is "standing the hell up."</div>
+              <div class="subtopic-src">
+                <a href="https://nytimes.com/section/us/politics" target="_blank">NYT Politics</a>
+                <a href="https://cnn.com/politics" target="_blank">CNN Politics</a>
+                <a href="https://theguardian.com/us-news" target="_blank">Guardian US</a>
+                <a href="https://msnbc.com/politics" target="_blank">MSNBC</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Venezuela Intervention Fallout</div>
+              <div class="subtopic-detail">The January 3 raid to capture Nicolás Maduro reverberates into February with congressional scrutiny, legal challenges over war powers, and regional diplomatic fallout. Critics label the operation an unconstitutional "war of choice." Heather Cox Richardson and Chris Hedges analyze the intervention as empire-building under a Monroe Doctrine corollary.</div>
+              <div class="subtopic-src">
+                <a href="https://heathercoxrichardson.substack.com" target="_blank">H.C. Richardson</a>
+                <a href="https://chrishedges.substack.com" target="_blank">Chris Hedges</a>
+                <a href="https://theguardian.com/us-news" target="_blank">Guardian US</a>
+                <a href="https://aljazeera.com/news/us" target="_blank">Al Jazeera US</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">State of the Union — High-Stakes Pivot</div>
+              <div class="subtopic-detail">Trump's SOTU on February 25 looms as a "precarious junction" amid Supreme Court setbacks, a partial shutdown, declining approval, and MAGA fractures. Analysts note he must reframe his narrative after the tariff ruling, judicial pushback, and the Ukraine peace talks impasse — all undermining his "great dealmaker" image.</div>
+              <div class="subtopic-src">
+                <a href="https://nytimes.com/section/us/politics" target="_blank">NYT Politics</a>
+                <a href="https://washingtonpost.com/politics/" target="_blank">WaPo Politics</a>
+                <a href="https://cnn.com/politics" target="_blank">CNN Politics</a>
+              </div>
+            </div>
+
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://nytimes.com" target="_blank">NYT</a>
+            <a href="https://washingtonpost.com" target="_blank">WaPo</a>
+            <a href="https://cnn.com" target="_blank">CNN</a>
+            <a href="https://msnbc.com" target="_blank">MSNBC</a>
+            <a href="https://wsj.com" target="_blank">WSJ</a>
+            <a href="https://ft.com" target="_blank">FT</a>
+            <a href="https://theguardian.com" target="_blank">Guardian</a>
+            <a href="https://heathercoxrichardson.substack.com" target="_blank">H.C. Richardson</a>
+            <a href="https://tyt.com" target="_blank">TYT</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. IMMIGRATION AND ICE -->
+    <div class="card">
+      <div class="card-header level-2" onclick="toggle(this)">
+        <span class="card-rank">02</span>
+        <span class="card-title">Immigration and ICE</span>
+        <span class="card-count">57 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+
+            <div class="subtopic">
+              <div class="subtopic-title">Minneapolis ICE Killing &amp; Nationwide Protests</div>
+              <div class="subtopic-detail">Federal agents fatally shot a man in south Minneapolis, sparking massive nationwide protests. An ICU nurse, Alex Pretti, was among those killed in earlier operations. The incidents ignited a Senate vote blocking DHS funding without ICE conduct reforms. ACLU of Minnesota called for immediate federal withdrawal from the state.</div>
+              <div class="subtopic-src">
+                <a href="https://washingtonpost.com/immigration/" target="_blank">WaPo Immigration</a>
+                <a href="https://nytimes.com/section/us" target="_blank">NYT US</a>
+                <a href="https://cnn.com/us" target="_blank">CNN US</a>
+                <a href="https://msnbc.com/politics" target="_blank">MSNBC</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Only 14% of ICE Arrests Were Violent Criminals</div>
+              <div class="subtopic-detail">An internal DHS document obtained by CBS News revealed that of nearly 400,000 ICE arrests in Trump's first year, less than 14% involved charges or convictions for violent offenses — directly contradicting White House claims of targeting "the worst of the worst." About 153,000 arrests were purely administrative (no criminal record). A WaPo/ABC/Ipsos poll found 58% now say Trump has gone "too far" on deportations.</div>
+              <div class="subtopic-src">
+                <a href="https://washingtonpost.com/immigration/2026/02/20/trump-immigration-poll-ice/" target="_blank">WaPo Immigration Poll</a>
+                <a href="https://nytimes.com/section/us" target="_blank">NYT US</a>
+                <a href="https://npr.org/sections/politics" target="_blank">NPR Politics</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">ICE Detention Expansion — $38.3 Billion Plan</div>
+              <div class="subtopic-detail">An internal ICE memo revealed a $38.3 billion plan to expand detention to 92,600 beds via eight mega-centers holding up to 10,000 each, operational by late 2026. ICE has quietly purchased warehouses in AZ, GA, MD, PA, and TX. As of early February, 68,289 people were in ICE detention — 73.6% with no criminal conviction.</div>
+              <div class="subtopic-src">
+                <a href="https://washingtonpost.com/immigration/" target="_blank">WaPo Immigration</a>
+                <a href="https://nytimes.com/section/us" target="_blank">NYT US</a>
+                <a href="https://theguardian.com/us-news" target="_blank">Guardian US</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Courts vs. ICE — Widespread Order Violations</div>
+              <div class="subtopic-detail">Chief District Judge Schiltz (MN) compiled a list of 94 court orders ICE violated in 74 cases. A NJ court identified 56 additional violations through mid-February. Courts have blocked deportations under the Alien Enemies Act, Guantanamo transfers of immigrants without legal access, and raids on religious sites.</div>
+              <div class="subtopic-src">
+                <a href="https://nytimes.com/section/us/politics" target="_blank">NYT Politics</a>
+                <a href="https://aljazeera.com/news/us" target="_blank">Al Jazeera US</a>
+                <a href="https://theguardian.com/us-news" target="_blank">Guardian US</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Alien Enemies Act — Escalating Legal Battle</div>
+              <div class="subtopic-detail">Trump invoked the 1798 Alien Enemies Act against Tren de Aragua to accelerate deportations. Judge Boasberg blocked its use; Trump called for the judge's impeachment. The SCOTUS earlier ruled that individuals must receive due process hearings before AEA removal. A December 2025 ruling ordered the return of Venezuelans sent to El Salvador's CECOT prison.</div>
+              <div class="subtopic-src">
+                <a href="https://nytimes.com/section/us/politics" target="_blank">NYT Politics</a>
+                <a href="https://washingtonpost.com/immigration/" target="_blank">WaPo Immigration</a>
+                <a href="https://cnn.com/politics" target="_blank">CNN Politics</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Racial Profiling Lawsuits — Wilder, Chicago, Minneapolis</div>
+              <div class="subtopic-detail">The ACLU filed a class action (Feb. 10) challenging a 2025 ICE raid on a family event in Wilder, Idaho, where 400 spectators — including US citizens — were detained for 4 hours at gunpoint. Separate suits challenge racial profiling in Chicago and Minneapolis operations. These are the first major due process challenges to ICE tactics on ethnic grounds.</div>
+              <div class="subtopic-src">
+                <a href="https://washingtonpost.com/immigration/" target="_blank">WaPo Immigration</a>
+                <a href="https://npr.org/sections/politics" target="_blank">NPR Politics</a>
+                <a href="https://theguardian.com/us-news" target="_blank">Guardian US</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Third-Country Deportations — $1M+ Per Person</div>
+              <div class="subtopic-detail">A Senate Foreign Relations Committee Democratic report found the US is paying some receiving governments more than $1 million per deportee for "safe third country" agreements. Countries receiving deportees have documented records of corruption, human rights abuses, and trafficking, raising concerns that US funds may facilitate abuse.</div>
+              <div class="subtopic-src">
+                <a href="https://washingtonpost.com/immigration/" target="_blank">WaPo Immigration</a>
+                <a href="https://nytimes.com/section/us" target="_blank">NYT US</a>
+                <a href="https://aljazeera.com/news/us" target="_blank">Al Jazeera</a>
+              </div>
+            </div>
+
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://nytimes.com" target="_blank">NYT</a>
+            <a href="https://washingtonpost.com" target="_blank">WaPo</a>
+            <a href="https://cnn.com" target="_blank">CNN</a>
+            <a href="https://msnbc.com" target="_blank">MSNBC</a>
+            <a href="https://npr.org" target="_blank">NPR</a>
+            <a href="https://aljazeera.com" target="_blank">Al Jazeera</a>
+            <a href="https://theguardian.com" target="_blank">Guardian</a>
+            <a href="https://tyt.com" target="_blank">TYT</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. LEGAL ISSUES AND CIVIL RIGHTS -->
+    <div class="card">
+      <div class="card-header level-3" onclick="toggle(this)">
+        <span class="card-rank">03</span>
+        <span class="card-title">Legal Issues and Civil Rights</span>
+        <span class="card-count">51 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+
+            <div class="subtopic">
+              <div class="subtopic-title">Birthright Citizenship Headed to SCOTUS</div>
+              <div class="subtopic-detail">The ACLU and partners filed a Supreme Court merits brief (Feb. 19) in Trump v. Barbara, arguing the 14th Amendment's birthright citizenship guarantee is settled constitutional law. Oral arguments set for April 1. Every lower court has blocked Trump's EO. The case is one of the most consequential constitutional challenges of the second term.</div>
+              <div class="subtopic-src">
+                <a href="https://nytimes.com/section/us/politics" target="_blank">NYT Politics</a>
+                <a href="https://washingtonpost.com/politics/courts-law/" target="_blank">WaPo Courts</a>
+                <a href="https://npr.org/sections/politics" target="_blank">NPR Politics</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">200+ Plaintiff Wins Against Trump Administration</div>
+              <div class="subtopic-detail">Litigation trackers record over 200 plaintiff wins against Trump executive actions (51 fully blocked, 109 temporarily blocked, 33 blocked pending appeal). The ACLU alone filed 230+ legal actions with a 64% success rate. SCOTUSblog called the federal judiciary "the snapback" — noting courts are checking the president "forcefully."</div>
+              <div class="subtopic-src">
+                <a href="https://nytimes.com/section/us/politics" target="_blank">NYT Politics</a>
+                <a href="https://theguardian.com/us-news" target="_blank">Guardian US</a>
+                <a href="https://washingtonpost.com/politics/courts-law/" target="_blank">WaPo Courts</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">DEI Rollback — Education Directive Vacated</div>
+              <div class="subtopic-detail">The ACLU won a lawsuit in New Hampshire forcing the DOE to concede and vacate its Feb. 2025 "Dear Colleague" directive restricting DEI in schools. A final order was issued, marking a major victory for academic freedom. Separate ACLU challenges target HUD and DOE disparate-impact standard rollbacks.</div>
+              <div class="subtopic-src">
+                <a href="https://washingtonpost.com/education/" target="_blank">WaPo Education</a>
+                <a href="https://nytimes.com/section/us" target="_blank">NYT US</a>
+                <a href="https://npr.org/sections/education" target="_blank">NPR Education</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Transgender Rights — SCOTUS Passport Ruling</div>
+              <div class="subtopic-detail">The Supreme Court stayed a lower court injunction protecting accurate passports for trans people, permitting Trump's policy pending further litigation. The ACLU and partners continued fighting in lower courts; activist Zaya — a prominent plaintiff — urged public resistance through visibility rather than retreat.</div>
+              <div class="subtopic-src">
+                <a href="https://washingtonpost.com/politics/" target="_blank">WaPo Politics</a>
+                <a href="https://nytimes.com/section/us" target="_blank">NYT US</a>
+                <a href="https://msnbc.com/politics" target="_blank">MSNBC</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Free Speech — Pro-Palestinian Student Arrests</div>
+              <div class="subtopic-detail">The ACLU secured release of international scholars Mahmoud Khalil, Rümeysa Öztürk, Mohsen Mahdawi, and Dr. Badar Khan Suri, detained by the Trump administration for pro-Palestinian speech. Cases are now landmark First Amendment tests over whether non-citizen political expression is protected against government deportation retaliation.</div>
+              <div class="subtopic-src">
+                <a href="https://theguardian.com/us-news" target="_blank">Guardian US</a>
+                <a href="https://nytimes.com/section/us" target="_blank">NYT US</a>
+                <a href="https://aljazeera.com/news/us" target="_blank">Al Jazeera</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">AG Bondi's DOJ — Weaponization Concerns</div>
+              <div class="subtopic-detail">Attorney General Pam Bondi's January directives — including "Ending Illegal DEI," reviving the federal death penalty, and instructing attorneys to act as the president's lawyers — drew sustained concern from civil liberties groups. Critics warn the DOJ has been effectively converted from independent law enforcer to presidential political weapon.</div>
+              <div class="subtopic-src">
+                <a href="https://washingtonpost.com/politics/courts-law/" target="_blank">WaPo Courts</a>
+                <a href="https://nytimes.com/section/us/politics" target="_blank">NYT Politics</a>
+                <a href="https://msnbc.com/politics" target="_blank">MSNBC</a>
+                <a href="https://heathercoxrichardson.substack.com" target="_blank">H.C. Richardson</a>
+              </div>
+            </div>
+
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://nytimes.com" target="_blank">NYT</a>
+            <a href="https://washingtonpost.com" target="_blank">WaPo</a>
+            <a href="https://npr.org" target="_blank">NPR</a>
+            <a href="https://msnbc.com" target="_blank">MSNBC</a>
+            <a href="https://theguardian.com" target="_blank">Guardian</a>
+            <a href="https://aljazeera.com" target="_blank">Al Jazeera</a>
+            <a href="https://heathercoxrichardson.substack.com" target="_blank">H.C. Richardson</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. FRACTURES IN THE MAGA COALITION -->
+    <div class="card">
+      <div class="card-header level-4" onclick="toggle(this)">
+        <span class="card-rank">04</span>
+        <span class="card-title">Fractures in the MAGA Coalition</span>
+        <span class="card-count">44 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+
+            <div class="subtopic">
+              <div class="subtopic-title">MTG Resigned — Georgia Special Election</div>
+              <div class="subtopic-detail">Marjorie Taylor Greene resigned from Congress in January 2026 after a public rift with Trump over foreign policy priorities. Trump endorsed Clay Fuller in the March 10 special election for her GA-14 seat; rival Colton Moore (favored by some MAGA activists) was rebuffed. With a razor-thin House majority, any dissenters can tank Trump's legislative agenda.</div>
+              <div class="subtopic-src">
+                <a href="https://washingtonpost.com/politics/" target="_blank">WaPo Politics</a>
+                <a href="https://nytimes.com/section/us/politics" target="_blank">NYT Politics</a>
+                <a href="https://cnn.com/politics" target="_blank">CNN Politics</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Venezuela Intervention Splits Isolationists</div>
+              <div class="subtopic-detail">The January 2026 military raid on Venezuela to capture Maduro fractured America First isolationists. Greene and Rep. Thomas Massie called it "regime change for oil." Conservative commentators who previously opposed foreign wars quickly pivoted to support. The episode redefines "America First" as potentially interventionist — alarming the MAGA base.</div>
+              <div class="subtopic-src">
+                <a href="https://wsj.com/politics" target="_blank">WSJ Politics</a>
+                <a href="https://nytimes.com/section/us/politics" target="_blank">NYT Politics</a>
+                <a href="https://theguardian.com/us-news" target="_blank">Guardian US</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">MAGA Identification Drops 7 Points</div>
+              <div class="subtopic-detail">An NBC News poll found the share of Republicans identifying as MAGA dropped 7 points since April 2025, with a corresponding rise in traditional GOP identification. Trump's approval stands at 42%; 64% say the country is on the wrong track. Democrats lead the generic congressional ballot by 7 points (YouGov) — the widest gap this cycle.</div>
+              <div class="subtopic-src">
+                <a href="https://washingtonpost.com/politics/" target="_blank">WaPo Politics</a>
+                <a href="https://nytimes.com/section/us/politics" target="_blank">NYT Politics</a>
+                <a href="https://ft.com/world/us-politics" target="_blank">FT US Politics</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">House Speaker Johnson Under Cross-Pressures</div>
+              <div class="subtopic-detail">Freedom Caucus members threaten a motion to vacate if spending cuts are insufficient, while moderates resist Medicaid trims. ACA subsidy extensions are another flashpoint. With his majority at 220-215, Johnson faces irreconcilable demands from both wings. Heather Cox Richardson draws historical parallels to prior GOP coalition collapses.</div>
+              <div class="subtopic-src">
+                <a href="https://nytimes.com/section/us/politics" target="_blank">NYT Congress</a>
+                <a href="https://washingtonpost.com/congress/" target="_blank">WaPo Congress</a>
+                <a href="https://heathercoxrichardson.substack.com" target="_blank">H.C. Richardson</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Farm-State Republicans vs. Tariff Fallout</div>
+              <div class="subtopic-detail">Agriculture-state Republicans — alarmed by retaliatory tariffs from Canada and China targeting soybeans, pork, and corn — are signaling breaks with Trump's trade agenda. The SCOTUS tariff ruling compounded the uncertainty, forcing a mid-February reset that still leaves agribusiness exposed. GOP senators from Iowa, Nebraska, and Kansas are increasingly vocal.</div>
+              <div class="subtopic-src">
+                <a href="https://wsj.com/economy/trade" target="_blank">WSJ Trade</a>
+                <a href="https://ft.com/trade" target="_blank">FT Trade</a>
+                <a href="https://npr.org/sections/economy" target="_blank">NPR Economy</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Ukraine Aid — Republican Senators Push Back</div>
+              <div class="subtopic-detail">A bloc of Senate Republicans — including Lindsey Graham and several foreign policy hawks — is resisting Trump's pro-Russia tilt, insisting on continued military support for Ukraine. The Munich Security Conference (Feb. 14) heightened the divide as Europeans urged the US to maintain commitments. Rubio's speech was notably more balanced than the administration's actions.</div>
+              <div class="subtopic-src">
+                <a href="https://washingtonpost.com/national-security/" target="_blank">WaPo Nat'l Security</a>
+                <a href="https://ft.com/world/us-politics" target="_blank">FT US Politics</a>
+                <a href="https://nytimes.com/section/world/europe" target="_blank">NYT Europe</a>
+              </div>
+            </div>
+
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://nytimes.com" target="_blank">NYT</a>
+            <a href="https://washingtonpost.com" target="_blank">WaPo</a>
+            <a href="https://cnn.com" target="_blank">CNN</a>
+            <a href="https://wsj.com" target="_blank">WSJ</a>
+            <a href="https://ft.com" target="_blank">FT</a>
+            <a href="https://heathercoxrichardson.substack.com" target="_blank">H.C. Richardson</a>
+            <a href="https://tyt.com" target="_blank">TYT</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. MIDDLE EAST -->
+    <div class="card">
+      <div class="card-header level-5" onclick="toggle(this)">
+        <span class="card-rank">05</span>
+        <span class="card-title">Middle East</span>
+        <span class="card-count">39 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+
+            <div class="subtopic">
+              <div class="subtopic-title">Gaza Phase 2 — Fragile Transition</div>
+              <div class="subtopic-detail">Phase 2 of Trump's 20-point Gaza plan began in mid-January with Steve Witkoff declaring a shift to "demilitarization, technocratic governance, and reconstruction." Over 600 Palestinians killed since the Oct. 2025 ceasefire; Israel struck a Gaza hospital (Feb. 3), killing 19. Hamas has rejected demands to disarm; an Israeli official issued a 60-day ultimatum threatening renewed war.</div>
+              <div class="subtopic-src">
+                <a href="https://cnn.com/2026/02/02/middleeast/israel-authorizes-reopening-of-rafah-intl" target="_blank">CNN: Rafah Opens</a>
+                <a href="https://aljazeera.com/news/2026/2/17/hamas-rejects-netanyahu-aides-60-day-ultimatum-for-group-to-disarm" target="_blank">AJ: Disarmament</a>
+                <a href="https://haaretz.com" target="_blank">Haaretz</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Rafah Crossing Reopens — Limited Access</div>
+              <div class="subtopic-detail">On February 2, the Rafah border crossing with Egypt reopened for the first time since May 2024 — initially allowing only 50 people per day, with the EU Border Assistance Mission operating it. Over 20,000 patients await medical evacuation; many face steep fees (thousands of dollars) to exit. Full reconstruction-scale access remains elusive.</div>
+              <div class="subtopic-src">
+                <a href="https://cnn.com/2026/02/02/middleeast/israel-authorizes-reopening-of-rafah-intl" target="_blank">CNN: Rafah Opens</a>
+                <a href="https://aljazeera.com" target="_blank">Al Jazeera</a>
+                <a href="https://theguardian.com/world/middleeast" target="_blank">Guardian Middle East</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Board of Peace — Weak Launch</div>
+              <div class="subtopic-detail">Trump's "Board of Peace," formally launched at Davos (Jan. 22), has had a troubled debut. France, UK, China, India, and the Vatican declined to join; fewer than half of invited nations responded positively. The Vatican expressed concern it would supersede UN authority. Critics call it an "unaccountable" institution lacking international legitimacy.</div>
+              <div class="subtopic-src">
+                <a href="https://ft.com/world/middle-east" target="_blank">FT Middle East</a>
+                <a href="https://theguardian.com/world/middleeast" target="_blank">Guardian Middle East</a>
+                <a href="https://aljazeera.com/news" target="_blank">Al Jazeera</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Continued Israeli Military Operations</div>
+              <div class="subtopic-detail">Despite the ceasefire, the IDF conducted 113+ documented ceasefire violations since October, including strikes in northern Gaza, Khan Younis, and a Feb. 20 airstrike on a Hamas command center in Lebanon's Ain al-Hilweh camp. Palestinian authorities count 1,520 Israeli ceasefire violations. Gaza health ministry reports total death toll above 71,000.</div>
+              <div class="subtopic-src">
+                <a href="https://aljazeera.com/news" target="_blank">Al Jazeera</a>
+                <a href="https://haaretz.com" target="_blank">Haaretz</a>
+                <a href="https://theguardian.com/world/middleeast" target="_blank">Guardian Middle East</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">West Bank — Annexation Fears and Settler Violence</div>
+              <div class="subtopic-detail">Israeli Finance Minister Smotrich's E1 settlement plan — described as burying any two-state solution — continues into 2026. The UN Security Council met Feb. 12 in closed session on rising West Bank settler violence and displacement (highest levels since 1967). The US reiterated Trump opposes formal West Bank annexation, but took no concrete action to halt it.</div>
+              <div class="subtopic-src">
+                <a href="https://haaretz.com" target="_blank">Haaretz</a>
+                <a href="https://aljazeera.com/news" target="_blank">Al Jazeera</a>
+                <a href="https://washingtonpost.com/world/middle-east/" target="_blank">WaPo Middle East</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">UNRWA Under Siege</div>
+              <div class="subtopic-detail">Israeli laws banning state engagement with UNRWA, bulldozers demolishing UNRWA HQ in East Jerusalem, and withheld Palestinian clearance revenues ($2.5B) are crippling the UN's main Gaza relief agency. NGO access restrictions and slow approval processes have slashed aid deliveries below the agreed 600 trucks/day — averaging just 145 trucks/day at times.</div>
+              <div class="subtopic-src">
+                <a href="https://aljazeera.com/news" target="_blank">Al Jazeera</a>
+                <a href="https://theguardian.com/world/middleeast" target="_blank">Guardian Middle East</a>
+                <a href="https://nytimes.com/section/world/middleeast" target="_blank">NYT Middle East</a>
+              </div>
+            </div>
+
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://nytimes.com" target="_blank">NYT</a>
+            <a href="https://washingtonpost.com" target="_blank">WaPo</a>
+            <a href="https://cnn.com" target="_blank">CNN</a>
+            <a href="https://aljazeera.com" target="_blank">Al Jazeera</a>
+            <a href="https://haaretz.com" target="_blank">Haaretz</a>
+            <a href="https://ft.com" target="_blank">FT</a>
+            <a href="https://theguardian.com" target="_blank">Guardian</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. ELECTORAL POLITICS AND RELATED MISCHIEF -->
+    <div class="card">
+      <div class="card-header level-6" onclick="toggle(this)">
+        <span class="card-rank">06</span>
+        <span class="card-title">Electoral Politics and Related Mischief</span>
+        <span class="card-count">34 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+
+            <div class="subtopic">
+              <div class="subtopic-title">Democrats Lead Generic Ballot by 7+ Points</div>
+              <div class="subtopic-detail">A Feb. 13–16 Economist/YouGov poll found Democrats leading 47-40% among registered voters — the largest gap this cycle. A Fox News poll (Jan.) showed a similar 52-46% Democratic advantage. Analysts note historical midterm patterns favor the party out of power, and Trump's declining approval amplifies the risk to Republicans in competitive districts.</div>
+              <div class="subtopic-src">
+                <a href="https://washingtonpost.com/politics/" target="_blank">WaPo Politics</a>
+                <a href="https://nytimes.com/section/us/politics" target="_blank">NYT Politics</a>
+                <a href="https://npr.org/sections/politics" target="_blank">NPR Politics</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Trump Floats Election Cancellation &amp; Nationalization</div>
+              <div class="subtopic-detail">Trump publicly floated canceling the 2026 midterms, with the White House later claiming he was "joking." He separately called for federalizing elections to "prevent voter fraud." The Washington Post reported that the administration is pursuing mid-decade congressional redistricting, prosecution of political opponents, and voting rule changes to undermine confidence in midterm results.</div>
+              <div class="subtopic-src">
+                <a href="https://washingtonpost.com/politics/" target="_blank">WaPo Politics</a>
+                <a href="https://nytimes.com/section/us/politics" target="_blank">NYT Politics</a>
+                <a href="https://msnbc.com/politics" target="_blank">MSNBC</a>
+                <a href="https://heathercoxrichardson.substack.com" target="_blank">H.C. Richardson</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Mid-Decade Redistricting in Texas, NC, Missouri, CA</div>
+              <div class="subtopic-detail">Four states implemented new congressional maps for 2026 — California (Prop 50), Texas, Missouri, and North Carolina — reshaping competitive district landscapes. Courts have mandated new maps in Ohio and Utah. Republicans sought to block Ohio's court-ordered map. Democrats need a net gain of 3 House seats and 4 Senate seats to retake both chambers.</div>
+              <div class="subtopic-src">
+                <a href="https://nytimes.com/section/us/politics" target="_blank">NYT Politics</a>
+                <a href="https://washingtonpost.com/politics/" target="_blank">WaPo Politics</a>
+                <a href="https://wsj.com/politics" target="_blank">WSJ Politics</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Georgia GA-14 Special Election — High Stakes</div>
+              <div class="subtopic-detail">The March 10 special election for MTG's vacated Georgia seat features Trump-endorsed Clay Fuller against primary rival Colton Moore. Any Democratic pickup or GOP runoff could further erode the razor-thin House majority. Local officials warn this is "the absolute best chance a Democrat will ever have" in this deep-red district if Republicans fracture the vote.</div>
+              <div class="subtopic-src">
+                <a href="https://washingtonpost.com/politics/" target="_blank">WaPo Politics</a>
+                <a href="https://nytimes.com/section/us/politics" target="_blank">NYT Politics</a>
+                <a href="https://cnn.com/politics" target="_blank">CNN Politics</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Senate Map — Democratic Opportunities</div>
+              <div class="subtopic-detail">Democrats see pick-up chances in Maine, North Carolina, Ohio, and Alaska, while defending Georgia (Ossoff) and Michigan (open seat). Sen. Collins formally launched her reelection campaign in February 2026 under primary pressure from the right. Mitch McConnell's Kentucky seat is now an open race after his retirement announcement. Democrats need 4 net seats for the Senate majority.</div>
+              <div class="subtopic-src">
+                <a href="https://nytimes.com/section/us/politics" target="_blank">NYT Politics</a>
+                <a href="https://washingtonpost.com/politics/" target="_blank">WaPo Politics</a>
+                <a href="https://ft.com/world/us-politics" target="_blank">FT US Politics</a>
+              </div>
+            </div>
+
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://nytimes.com" target="_blank">NYT</a>
+            <a href="https://washingtonpost.com" target="_blank">WaPo</a>
+            <a href="https://cnn.com" target="_blank">CNN</a>
+            <a href="https://msnbc.com" target="_blank">MSNBC</a>
+            <a href="https://wsj.com" target="_blank">WSJ</a>
+            <a href="https://heathercoxrichardson.substack.com" target="_blank">H.C. Richardson</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. RELATIONS AMONG U.S., RUSSIA, AND CHINA -->
+    <div class="card">
+      <div class="card-header level-7" onclick="toggle(this)">
+        <span class="card-rank">07</span>
+        <span class="card-title">Relations Among U.S., Russia, and China</span>
+        <span class="card-count">29 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+
+            <div class="subtopic">
+              <div class="subtopic-title">Geneva Peace Talks Collapse — Ukraine Stalemate</div>
+              <div class="subtopic-detail">US-brokered Ukraine-Russia talks in Geneva (Feb. 18–19) ended after just two hours on the second day. Zelensky accused Russia of stalling and said positions "differ significantly." Russia launched a missile strike on the opening day of talks. The US mediation team (Witkoff and Kushner) continues shuttling between Moscow and Kyiv, but territorial disputes remain unresolved.</div>
+              <div class="subtopic-src">
+                <a href="https://aljazeera.com/news/2026/2/18/russia-ukraine-talks-all-the-mediation-efforts-and-where-they-stand" target="_blank">Al Jazeera: Talks</a>
+                <a href="https://washingtonpost.com/national-security/" target="_blank">WaPo Nat'l Security</a>
+                <a href="https://ft.com/world/europe" target="_blank">FT Europe</a>
+                <a href="https://nytimes.com/section/world/europe" target="_blank">NYT Europe</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">US-Russia Military Dialogue Restored</div>
+              <div class="subtopic-detail">The US and Russia agreed to resume high-level military-to-military talks suspended before the 2022 Ukraine invasion — the most significant security step in Trump's Russia reset. This coincided with the expiration of the last major nuclear treaty (New START follow-on). The WaPo called it "the latest sign" of normalization with Moscow even as Ukraine burns.</div>
+              <div class="subtopic-src">
+                <a href="https://washingtonpost.com/national-security/2026/02/05/us-russia-military-talks/" target="_blank">WaPo: US-Russia Talks</a>
+                <a href="https://ft.com/world/europe" target="_blank">FT Europe</a>
+                <a href="https://nytimes.com/section/world/europe" target="_blank">NYT Europe</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">"Reverse Nixon" — Wedge Strategy Against China-Russia</div>
+              <div class="subtopic-detail">VP Vance told the WSJ the US aims to end Russia's "little brother" status with China by normalizing US-Russia relations. Strategists call it a "reverse Nixon" — using Russia to contain China. Chinese officials are "nervous," according to analysts, fearing a US-Russia reset would leave Beijing geopolitically exposed, especially regarding Taiwan.</div>
+              <div class="subtopic-src">
+                <a href="https://wsj.com/politics" target="_blank">WSJ Politics</a>
+                <a href="https://ft.com/world/asia-pacific" target="_blank">FT Asia</a>
+                <a href="https://nytimes.com/section/world/asia" target="_blank">NYT Asia</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Munich Security Conference — European Alarm</div>
+              <div class="subtopic-detail">Zelensky and European leaders used Munich (Feb. 14) to plead for continued support and express alarm at US-Russia rapprochement. Rubio's speech was notably measured compared to Vance's 2025 address but avoided Ukraine, tariffs, and Greenland. European nations are racing to boost defense spending amid NATO commitment uncertainty from Washington.</div>
+              <div class="subtopic-src">
+                <a href="https://ft.com/world/europe" target="_blank">FT Europe</a>
+                <a href="https://theguardian.com/world/europe" target="_blank">Guardian Europe</a>
+                <a href="https://nytimes.com/section/world/europe" target="_blank">NYT Europe</a>
+                <a href="https://geopoliticalfutures.com" target="_blank">Geopolitical Futures</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">China Publicly Backs Peace — Privately Worried</div>
+              <div class="subtopic-detail">Chinese FM Wang Yi at the G20 in South Africa (Feb. 21) expressed support for US-Russia peace talks and offered to play a "constructive role." Privately, experts say Beijing fears a Trump-Putin reset that loosens Russia from China's orbit and frees US strategic attention for the Pacific. China's preferred outcome is continued US entanglement in Europe.</div>
+              <div class="subtopic-src">
+                <a href="https://ft.com/world/asia-pacific" target="_blank">FT Asia</a>
+                <a href="https://nytimes.com/section/world/asia" target="_blank">NYT Asia</a>
+                <a href="https://theguardian.com/world/china" target="_blank">Guardian China</a>
+                <a href="https://geopoliticalfutures.com" target="_blank">Geopolitical Futures</a>
+              </div>
+            </div>
+
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://nytimes.com" target="_blank">NYT</a>
+            <a href="https://washingtonpost.com" target="_blank">WaPo</a>
+            <a href="https://ft.com" target="_blank">FT</a>
+            <a href="https://wsj.com" target="_blank">WSJ</a>
+            <a href="https://aljazeera.com" target="_blank">Al Jazeera</a>
+            <a href="https://theguardian.com" target="_blank">Guardian</a>
+            <a href="https://geopoliticalfutures.com" target="_blank">Geopolitical Futures</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 8. WESTERN HEMISPHERE (EXCLUDING U.S.) -->
+    <div class="card">
+      <div class="card-header level-8" onclick="toggle(this)">
+        <span class="card-rank">08</span>
+        <span class="card-title">Western Hemisphere (Excluding U.S.)</span>
+        <span class="card-count">25 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+
+            <div class="subtopic">
+              <div class="subtopic-title">Canada — Tariff War &amp; Sovereignty Tension</div>
+              <div class="subtopic-detail">PM Mark Carney's government faces the fallout of Trump's IEEPA tariff invalidation (Feb. 20) and the replacement 15% global tariff. Canada-US trade — one-third of Canada's economy — remains under pressure. Trump's continued jokes about making Canada the "51st state" have become a domestic political issue for Canadian parties heading toward elections.</div>
+              <div class="subtopic-src">
+                <a href="https://washingtonpost.com/world/canada/" target="_blank">WaPo Canada</a>
+                <a href="https://theguardian.com/world/canada" target="_blank">Guardian Canada</a>
+                <a href="https://ft.com/world/americas" target="_blank">FT Americas</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Mexico — USMCA Review &amp; Cartel Tensions</div>
+              <div class="subtopic-detail">The formal USMCA public consultation process began, with review due July 1, 2026. Mexico navigates pressure to impose tariffs on China and share water resources under US threat. Trump has threatened military action against Mexican cartels; analysts warn a direct US incursion could trigger an alliance between Mexico's military and the very cartels Washington seeks to destroy.</div>
+              <div class="subtopic-src">
+                <a href="https://nytimes.com/section/world/americas" target="_blank">NYT Americas</a>
+                <a href="https://ft.com/world/americas" target="_blank">FT Americas</a>
+                <a href="https://wsj.com/world/americas" target="_blank">WSJ Americas</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Venezuela Post-Maduro — Occupation Fallout</div>
+              <div class="subtopic-detail">Following the January 3 US military operation capturing Maduro, Venezuela faces a power vacuum. Congressional critics of both parties question the legal authority for the operation and its aftermath. Al Jazeera and Chris Hedges provide sustained analysis of the occupation's parallels with earlier US regime-change operations in Latin America.</div>
+              <div class="subtopic-src">
+                <a href="https://aljazeera.com/news/americas" target="_blank">Al Jazeera Americas</a>
+                <a href="https://chrishedges.substack.com" target="_blank">Chris Hedges</a>
+                <a href="https://theguardian.com/world/venezuela" target="_blank">Guardian Venezuela</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Greenland — Annexation Push Continues</div>
+              <div class="subtopic-detail">Trump's campaign to acquire Greenland escalated in February, invoking Arctic security and resource interests. Denmark and Greenland's government reiterated "sovereignty is not negotiable." EU leaders condemned the pressure. NATO allies expressed private concern that coercive tactics against a member state undermine the alliance's credibility.</div>
+              <div class="subtopic-src">
+                <a href="https://ft.com/world/europe" target="_blank">FT Europe</a>
+                <a href="https://theguardian.com/world/europe" target="_blank">Guardian Europe</a>
+                <a href="https://nytimes.com/section/world/europe" target="_blank">NYT Europe</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Brazil — Trade War Repositioning</div>
+              <div class="subtopic-detail">Brazil's Lula met Trump on the sidelines of an ASEAN summit to contest the 50% tariff on Brazilian goods — the highest globally. After the SCOTUS invalidation of IEEPA tariffs, Brazil now faces the 15% global tariff under Section 122. Key agricultural and industrial exports receive some product-specific exemptions. Bilateral relations remain tense but under negotiation.</div>
+              <div class="subtopic-src">
+                <a href="https://ft.com/world/americas" target="_blank">FT Americas</a>
+                <a href="https://nytimes.com/section/world/americas" target="_blank">NYT Americas</a>
+                <a href="https://aljazeera.com/news/americas" target="_blank">Al Jazeera Americas</a>
+              </div>
+            </div>
+
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://nytimes.com" target="_blank">NYT</a>
+            <a href="https://washingtonpost.com" target="_blank">WaPo</a>
+            <a href="https://ft.com" target="_blank">FT</a>
+            <a href="https://wsj.com" target="_blank">WSJ</a>
+            <a href="https://aljazeera.com" target="_blank">Al Jazeera</a>
+            <a href="https://theguardian.com" target="_blank">Guardian</a>
+            <a href="https://chrishedges.substack.com" target="_blank">Chris Hedges</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 9. HEALTH AND HEALTHCARE -->
+    <div class="card">
+      <div class="card-header level-9" onclick="toggle(this)">
+        <span class="card-rank">09</span>
+        <span class="card-title">Health and Healthcare</span>
+        <span class="card-count">22 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+
+            <div class="subtopic">
+              <div class="subtopic-title">RFK Jr. — One Year of Public Health Damage</div>
+              <div class="subtopic-detail">After one year at HHS, RFK Jr. has overseen the loss of 2,400 PhD-level scientists across NIH, FDA, and CDC; canceled $1.4B in research grants; fired four NIH directors; and added autism-vaccine misinformation to CDC's website. Less than half of Americans now trust health agencies to make science-backed decisions (KFF survey, Feb. 2026).</div>
+              <div class="subtopic-src">
+                <a href="https://washingtonpost.com/health/2026/02/13/rfk-jr-health-department-shake-up/" target="_blank">WaPo: HHS Shake-Up</a>
+                <a href="https://npr.org/sections/health-shots" target="_blank">NPR Health</a>
+                <a href="https://nytimes.com/section/health" target="_blank">NYT Health</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">HHS Leadership Shake-Up — Midterm Stabilization</div>
+              <div class="subtopic-detail">The White House pushed out several HHS deputies — including CDC interim director Jim O'Neill — in mid-February, elevating new senior counselors for FDA and CMS ahead of the midterms. Kennedy announced the overhaul as "accelerating the MAHA agenda," but insiders describe it as damage control for an agency "rattled by internal fights and controversial messages."</div>
+              <div class="subtopic-src">
+                <a href="https://washingtonpost.com/health/2026/02/13/rfk-jr-health-department-shake-up/" target="_blank">WaPo: HHS Shake-Up</a>
+                <a href="https://nytimes.com/section/health" target="_blank">NYT Health</a>
+                <a href="https://msnbc.com/politics" target="_blank">MSNBC</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">NIH Research Crisis — $1.4B Lost</div>
+              <div class="subtopic-detail">After a year of grant terminations and reinstatements (via court orders), NIH-funded researchers lost approximately $1.4B in combined NIH and NSF funding. New grant awards fell 24% in 2025. More than half of NIH's 27 institutes currently lack permanent directors. Scientists describe a potential "irreversible" loss of US scientific leadership.</div>
+              <div class="subtopic-src">
+                <a href="https://nytimes.com/section/science" target="_blank">NYT Science</a>
+                <a href="https://washingtonpost.com/science/" target="_blank">WaPo Science</a>
+                <a href="https://theguardian.com/science" target="_blank">Guardian Science</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Vaccine Policy Reversals &amp; Autism Misinformation</div>
+              <div class="subtopic-detail">Kennedy's newly appointed Interagency Autism Coordinating Committee (IACC) — stocked with vaccine skeptics — is expected to meet this spring to pursue research linking vaccines to autism. Kennedy also directed the CDC in November to add a disclaimer contradicting its own position that vaccines don't cause autism, while technically keeping the old language to satisfy a Senate deal.</div>
+              <div class="subtopic-src">
+                <a href="https://washingtonpost.com/health/" target="_blank">WaPo Health</a>
+                <a href="https://npr.org/sections/health-shots" target="_blank">NPR Health</a>
+                <a href="https://tyt.com" target="_blank">TYT</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Medicaid Cuts Loom in "Big Beautiful Bill"</div>
+              <div class="subtopic-detail">The One Big Beautiful Bill (signed July 2025) includes work requirements and per-capita caps that analysts say will cut Medicaid substantially. Democrats are "sharpening criticism of MAHA for midterm elections." The ACA's enhanced subsidies also face expiration without congressional renewal, threatening coverage for millions of marketplace enrollees.</div>
+              <div class="subtopic-src">
+                <a href="https://nytimes.com/section/health" target="_blank">NYT Health</a>
+                <a href="https://washingtonpost.com/health/" target="_blank">WaPo Health</a>
+                <a href="https://cnn.com/health" target="_blank">CNN Health</a>
+                <a href="https://msnbc.com/politics" target="_blank">MSNBC</a>
+              </div>
+            </div>
+
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://nytimes.com" target="_blank">NYT</a>
+            <a href="https://washingtonpost.com" target="_blank">WaPo</a>
+            <a href="https://cnn.com" target="_blank">CNN</a>
+            <a href="https://npr.org" target="_blank">NPR</a>
+            <a href="https://msnbc.com" target="_blank">MSNBC</a>
+            <a href="https://theguardian.com" target="_blank">Guardian</a>
+            <a href="https://tyt.com" target="_blank">TYT</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /topics-list -->
+
+  <!-- ══ FOOTER ══════════════════════════════════════════ -->
+  <div class="footer">
+    <div>
+      Compiled for BOLLI Current Events Discussion Group · 9 Categories · Coverage synthesized across 14 outlets<br/>
+      Sources: 
+      <a href="https://cnn.com" target="_blank">CNN</a> ·
+      <a href="https://msnbc.com" target="_blank">MSNBC</a> ·
+      <a href="https://npr.org" target="_blank">NPR</a> ·
+      <a href="https://nytimes.com" target="_blank">NYT</a> ·
+      <a href="https://washingtonpost.com" target="_blank">WaPo</a> ·
+      <a href="https://wsj.com" target="_blank">WSJ</a> ·
+      <a href="https://ft.com" target="_blank">FT</a> ·
+      <a href="https://theguardian.com" target="_blank">Guardian</a> ·
+      <a href="https://aljazeera.com" target="_blank">Al Jazeera</a> ·
+      <a href="https://haaretz.com" target="_blank">Haaretz</a> ·
+      <a href="https://tyt.com" target="_blank">TYT</a> ·
+      <a href="https://chrishedges.substack.com" target="_blank">Chris Hedges</a> ·
+      <a href="https://heathercoxrichardson.substack.com" target="_blank">H.C. Richardson</a> ·
+      <a href="https://geopoliticalfutures.com" target="_blank">Geopolitical Futures</a>
+    </div>
+    <div style="opacity:0.6; font-size:10px; margin-top:6px;">
+      Coverage period: February 1–24, 2026 · Topic counts reflect estimated cross-outlet mention volume
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<script>
+  function toggle(header) {
+    const body = header.nextElementSibling;
+    const chevron = header.querySelector('.card-chevron');
+    const isOpen = body.classList.contains('expanded');
+
+    // Collapse all
+    document.querySelectorAll('.card-body').forEach(b => b.classList.remove('expanded'));
+    document.querySelectorAll('.card-chevron').forEach(c => c.classList.remove('rotated'));
+
+    // Expand clicked (if it was closed)
+    if (!isOpen) {
+      body.classList.add('expanded');
+      chevron.classList.add('rotated');
+      setTimeout(() => header.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
+    }
+  }
+</script>
+</body>
+</html>
