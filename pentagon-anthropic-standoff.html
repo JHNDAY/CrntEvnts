@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pentagon vs. Anthropic — AI at War</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Libre+Baskerville:ital@0;1&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0d0d0d;
+    --paper: #f5f0e8;
+    --red: #c0392b;
+    --gold: #b8860b;
+    --mist: #d4cfc5;
+    --accent-blue: #1a3a5c;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Libre Baskerville', Georgia, serif;
+    overflow-x: hidden;
+  }
+
+  /* MASTHEAD */
+  .masthead {
+    border-top: 4px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
+    padding: 12px 0 10px;
+    text-align: center;
+    background: var(--paper);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+  .masthead-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 4px;
+  }
+  .masthead-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+  }
+  .masthead-date {
+    font-family: 'Space Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 2px;
+    color: #666;
+    margin-top: 4px;
+  }
+  .masthead-source {
+    margin-top: 6px;
+  }
+  .masthead-source a {
+    font-family: 'Space Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--red);
+    text-decoration: none;
+    border-bottom: 1px solid var(--red);
+    padding-bottom: 1px;
+    transition: opacity 0.2s;
+  }
+  .masthead-source a:hover {
+    opacity: 0.7;
+  }
+
+  /* HERO */
+  .hero {
+    padding: 60px 40px 40px;
+    max-width: 900px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .hero-kicker {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .hero-kicker::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--red);
+    opacity: 0.4;
+  }
+
+  .hero-headline {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(38px, 7vw, 72px);
+    font-weight: 900;
+    line-height: 1.0;
+    letter-spacing: -1px;
+    margin-bottom: 24px;
+    opacity: 0;
+    animation: fadeUp 0.9s ease 0.1s forwards;
+  }
+  .hero-headline em {
+    font-style: italic;
+    color: var(--red);
+  }
+
+  .hero-deck {
+    font-size: 17px;
+    line-height: 1.6;
+    color: #333;
+    border-left: 3px solid var(--red);
+    padding-left: 20px;
+    margin-bottom: 32px;
+    max-width: 620px;
+    opacity: 0;
+    animation: fadeUp 0.9s ease 0.3s forwards;
+  }
+
+  .hero-byline {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #555;
+    margin-bottom: 8px;
+    opacity: 0;
+    animation: fadeUp 0.9s ease 0.5s forwards;
+  }
+
+  .deadline-banner {
+    background: var(--red);
+    color: white;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 10px 20px;
+    display: inline-block;
+    margin-top: 12px;
+    animation: pulse 2s ease-in-out infinite;
+    opacity: 0;
+    animation: fadeUp 0.9s ease 0.6s forwards, pulse 2s ease-in-out 1s infinite;
+  }
+
+  /* DIVIDER */
+  .section-rule {
+    border: none;
+    border-top: 1px solid var(--ink);
+    margin: 40px auto;
+    max-width: 900px;
+    position: relative;
+  }
+  .section-rule::after {
+    content: '◆';
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--paper);
+    padding: 0 10px;
+    font-size: 12px;
+  }
+
+  /* CONFLICT GRAPHIC */
+  .conflict-section {
+    max-width: 900px;
+    margin: 0 auto 60px;
+    padding: 0 40px;
+  }
+
+  .conflict-header {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #666;
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  .conflict-arena {
+    display: grid;
+    grid-template-columns: 1fr 80px 1fr;
+    gap: 0;
+    align-items: start;
+  }
+
+  .side {
+    padding: 30px;
+    border: 1px solid var(--ink);
+    position: relative;
+    opacity: 0;
+    animation: slideIn 0.8s ease forwards;
+  }
+
+  .side-pentagon {
+    background: var(--accent-blue);
+    color: white;
+    border-color: var(--accent-blue);
+    animation-delay: 0.3s;
+  }
+  .side-anthropic {
+    background: white;
+    animation-delay: 0.5s;
+  }
+
+  .side-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    opacity: 0.7;
+  }
+
+  .side-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 24px;
+    font-weight: 900;
+    margin-bottom: 20px;
+    line-height: 1;
+  }
+  .side-pentagon .side-name { color: white; }
+  .side-anthropic .side-name { color: var(--ink); }
+
+  .side-position {
+    font-size: 13px;
+    line-height: 1.7;
+    margin-bottom: 16px;
+  }
+  .side-pentagon .side-position { color: rgba(255,255,255,0.85); }
+
+  .position-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 12px;
+    padding: 10px;
+    border: 1px solid rgba(255,255,255,0.15);
+    font-size: 12.5px;
+  }
+  .side-anthropic .position-item {
+    border-color: rgba(0,0,0,0.1);
+  }
+
+  .position-icon {
+    font-size: 16px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .threat-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 1px;
+    padding: 3px 8px;
+    margin-top: 16px;
+    display: inline-block;
+  }
+  .side-pentagon .threat-tag {
+    background: rgba(255,255,255,0.15);
+    color: white;
+  }
+  .side-anthropic .threat-tag {
+    background: var(--red);
+    color: white;
+  }
+
+  .vs-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 60px;
+  }
+  .vs-badge {
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: var(--red);
+    color: white;
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 900;
+    font-style: italic;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid var(--ink);
+    box-shadow: 4px 4px 0 var(--ink);
+    z-index: 2;
+  }
+
+  /* STAKES SECTION */
+  .stakes-section {
+    max-width: 900px;
+    margin: 0 auto 60px;
+    padding: 0 40px;
+  }
+
+  .stakes-header {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 700;
+    font-style: italic;
+    margin-bottom: 8px;
+  }
+
+  .stakes-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--ink);
+    border: 1px solid var(--ink);
+    margin-top: 24px;
+  }
+
+  .stake-card {
+    background: var(--paper);
+    padding: 24px;
+    position: relative;
+    opacity: 0;
+    animation: fadeUp 0.7s ease forwards;
+  }
+  .stake-card:nth-child(1) { animation-delay: 0.1s; }
+  .stake-card:nth-child(2) { animation-delay: 0.2s; }
+  .stake-card:nth-child(3) { animation-delay: 0.3s; }
+
+  .stake-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 48px;
+    font-weight: 900;
+    color: var(--red);
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .stake-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #555;
+    margin-bottom: 10px;
+  }
+
+  .stake-desc {
+    font-size: 13px;
+    line-height: 1.6;
+    color: #333;
+  }
+
+  /* TIMELINE */
+  .timeline-section {
+    max-width: 900px;
+    margin: 0 auto 60px;
+    padding: 0 40px;
+  }
+
+  .timeline-header {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 700;
+    font-style: italic;
+    margin-bottom: 24px;
+  }
+
+  .timeline {
+    position: relative;
+    padding-left: 24px;
+    border-left: 2px solid var(--ink);
+  }
+
+  .timeline-item {
+    position: relative;
+    margin-bottom: 28px;
+    opacity: 0;
+    animation: slideRight 0.6s ease forwards;
+  }
+  .timeline-item:nth-child(1) { animation-delay: 0.1s; }
+  .timeline-item:nth-child(2) { animation-delay: 0.2s; }
+  .timeline-item:nth-child(3) { animation-delay: 0.3s; }
+  .timeline-item:nth-child(4) { animation-delay: 0.4s; }
+  .timeline-item:nth-child(5) { animation-delay: 0.5s; }
+
+  .timeline-dot {
+    position: absolute;
+    left: -30px;
+    top: 5px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: var(--ink);
+    border: 2px solid var(--paper);
+    outline: 1px solid var(--ink);
+  }
+  .timeline-dot.hot { background: var(--red); outline-color: var(--red); }
+
+  .timeline-date {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 4px;
+  }
+
+  .timeline-text {
+    font-size: 14px;
+    line-height: 1.6;
+    max-width: 600px;
+  }
+
+  /* PULLQUOTES */
+  .pullquotes-section {
+    background: var(--accent-blue);
+    padding: 60px 40px;
+    margin: 0 auto 60px;
+  }
+
+  .pullquotes-inner {
+    max-width: 900px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+  }
+
+  .pullquote {
+    color: white;
+    border-top: 2px solid rgba(255,255,255,0.3);
+    padding-top: 20px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards;
+  }
+  .pullquote:nth-child(1) { animation-delay: 0.2s; }
+  .pullquote:nth-child(2) { animation-delay: 0.4s; }
+
+  .pullquote-text {
+    font-family: 'Playfair Display', serif;
+    font-size: 19px;
+    font-style: italic;
+    font-weight: 700;
+    line-height: 1.45;
+    margin-bottom: 16px;
+    color: rgba(255,255,255,0.95);
+  }
+
+  .pullquote-attribution {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.55);
+  }
+
+  /* GLOBAL CONTEXT */
+  .global-section {
+    max-width: 900px;
+    margin: 0 auto 60px;
+    padding: 0 40px;
+  }
+
+  .global-header {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 700;
+    font-style: italic;
+    margin-bottom: 24px;
+  }
+
+  .context-blocks {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .context-block {
+    padding: 24px;
+    border: 1px solid rgba(0,0,0,0.15);
+    position: relative;
+    opacity: 0;
+    animation: fadeUp 0.7s ease forwards;
+  }
+  .context-block:nth-child(1) { animation-delay: 0.1s; }
+  .context-block:nth-child(2) { animation-delay: 0.2s; }
+  .context-block:nth-child(3) { animation-delay: 0.3s; }
+  .context-block:nth-child(4) { animation-delay: 0.4s; }
+
+  .context-emoji {
+    font-size: 28px;
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .context-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+
+  .context-text {
+    font-size: 13px;
+    line-height: 1.65;
+    color: #444;
+  }
+
+  /* EMPLOYEE VOICES */
+  .voices-section {
+    background: #1a1a1a;
+    padding: 60px 40px;
+    margin-bottom: 60px;
+  }
+
+  .voices-inner {
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  .voices-kicker {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 16px;
+  }
+
+  .voices-headline {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 900;
+    color: white;
+    margin-bottom: 32px;
+    line-height: 1.2;
+  }
+
+  .voices-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  .voice-card {
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 20px;
+    color: white;
+  }
+
+  .voice-count {
+    font-family: 'Playfair Display', serif;
+    font-size: 40px;
+    font-weight: 900;
+    color: var(--red);
+    line-height: 1;
+  }
+
+  .voice-company {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    margin: 8px 0;
+  }
+
+  .voice-action {
+    font-size: 13px;
+    color: rgba(255,255,255,0.75);
+    line-height: 1.5;
+  }
+
+  /* FOOTER */
+  .article-footer {
+    max-width: 900px;
+    margin: 0 auto 80px;
+    padding: 0 40px;
+    border-top: 3px double var(--ink);
+    padding-top: 40px;
+  }
+
+  .footer-analysis {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-style: italic;
+    line-height: 1.7;
+    color: #333;
+    max-width: 660px;
+  }
+
+  .footer-meta {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: #888;
+    margin-top: 24px;
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes slideRight {
+    from { opacity: 0; transform: translateX(-12px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.75; }
+  }
+
+  @media (max-width: 640px) {
+    .conflict-arena { grid-template-columns: 1fr; }
+    .vs-center { padding: 12px 0; }
+    .stakes-grid { grid-template-columns: 1fr; }
+    .pullquotes-inner { grid-template-columns: 1fr; }
+    .context-blocks { grid-template-columns: 1fr; }
+    .voices-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- MASTHEAD -->
+<header class="masthead">
+  <div class="masthead-label">Special Report · National Security</div>
+  <div class="masthead-title">The A.I. War Dispatch</div>
+  <div class="masthead-date">Friday, February 27, 2026 · 5:01 PM Deadline</div>
+  <div class="masthead-source">
+    <a href="https://www.nytimes.com/2026/02/27/technology/defense-department-anthropic-ai-safety.html" target="_blank" rel="noopener">Read the original → The New York Times</a>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-kicker">⚡ Breaking Standoff</div>
+  <h1 class="hero-headline">
+    Pentagon vs.<br><em>Anthropic:</em><br>Who Controls<br>A.I. at War?
+  </h1>
+  <p class="hero-deck">
+    A $200 million contract dispute over Claude is reshaping the global debate on artificial intelligence in warfare — and who gets to decide where the limits are drawn.
+  </p>
+  <div class="hero-byline">By Adam Satariano · Julian E. Barnes · Sheera Frenkel — The New York Times</div>
+  <div class="deadline-banner">⏱ DEADLINE: 5:01 PM ET TODAY · DEFENSE PRODUCTION ACT THREATENED</div>
+</section>
+
+<hr class="section-rule">
+
+<!-- CONFLICT ARENA -->
+<section class="conflict-section">
+  <div class="conflict-header">The Standoff — Two Immovable Positions</div>
+  <div class="conflict-arena">
+
+    <div class="side side-pentagon">
+      <div class="side-label">The Government</div>
+      <div class="side-name">The Pentagon</div>
+      <div class="position-item">
+        <span class="position-icon">🎖</span>
+        <span>A.I. must be available for <strong>all lawful purposes</strong>. A contractor cannot limit how national security tools are used.</span>
+      </div>
+      <div class="position-item">
+        <span class="position-icon">🚀</span>
+        <span>Wants to aggressively integrate A.I. in war planning and weapons development under Sec. Hegseth's mandate.</span>
+      </div>
+      <div class="position-item">
+        <span class="position-icon">⚖️</span>
+        <span>"Just as a weapons manufacturer does not determine where its missiles are dropped."</span>
+      </div>
+      <span class="threat-tag">THREAT: Defense Production Act · Supply Chain Designation</span>
+    </div>
+
+    <div class="vs-center">
+      <div class="vs-badge">vs.</div>
+    </div>
+
+    <div class="side side-anthropic">
+      <div class="side-label">The Company</div>
+      <div class="side-name">Anthropic</div>
+      <div class="position-item">
+        <span class="position-icon">🛡</span>
+        <span>Cannot in good conscience allow Claude to enable <strong>mass domestic surveillance</strong> of Americans.</span>
+      </div>
+      <div class="position-item">
+        <span class="position-icon">🤖</span>
+        <span>Refuses to permit use in <strong>fully autonomous weapons</strong> with no humans in the decision loop.</span>
+      </div>
+      <div class="position-item">
+        <span class="position-icon">💬</span>
+        <span>CEO Dario Amodei: "We are prepared to lose this contract and help DOD transition to another provider."</span>
+      </div>
+      <span class="threat-tag">PREPARED TO WALK AWAY</span>
+    </div>
+  </div>
+</section>
+
+<hr class="section-rule">
+
+<!-- STAKES -->
+<section class="stakes-section">
+  <div class="stakes-header">The Numbers at Stake</div>
+  <p style="color:#555;font-size:14px;margin-top:4px;">Scale of the confrontation — and the industry behind it.</p>
+  <div class="stakes-grid">
+    <div class="stake-card">
+      <div class="stake-number">$200M</div>
+      <div class="stake-label">Contract Value</div>
+      <div class="stake-desc">The classified Pentagon contract for Anthropic's A.I. that triggered the standoff — but the real stakes are far larger.</div>
+    </div>
+    <div class="stake-card">
+      <div class="stake-number">$380B</div>
+      <div class="stake-label">Anthropic Valuation</div>
+      <div class="stake-desc">The five-year-old A.I. safety company is now one of the most valuable startups in the world.</div>
+    </div>
+    <div class="stake-card">
+      <div class="stake-number">225+</div>
+      <div class="stake-label">Employees in Revolt</div>
+      <div class="stake-desc">OpenAI and Google employees signed open letters calling on leaders to refuse the Pentagon's demands.</div>
+    </div>
+  </div>
+</section>
+
+<hr class="section-rule">
+
+<!-- TIMELINE -->
+<section class="timeline-section">
+  <div class="timeline-header">How We Got Here</div>
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-date">November 2024</div>
+      <div class="timeline-text">The Ukraine war accelerates autonomous drone warfare, shifting A.I. in weapons from theory to battlefield reality.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-date">January 20, 2025</div>
+      <div class="timeline-text">Trump revokes Biden-era A.I. safety executive orders. A.I. regulation becomes a secondary priority across Washington.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-date">January 9, 2026</div>
+      <div class="timeline-text">Sec. Hegseth publishes memo calling for A.I. companies to remove all restrictions from their technologies. Anthropic is singled out.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-date">February 26–27, 2026</div>
+      <div class="timeline-text">Pentagon and Anthropic go public. Hegseth threatens the Defense Production Act. Amodei refuses. Google and OpenAI employees revolt.</div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-dot hot"></div>
+      <div class="timeline-date">TODAY — 5:01 PM</div>
+      <div class="timeline-text"><strong>Deadline.</strong> The moment of resolution — or escalation into unprecedented government action against a technology company.</div>
+    </div>
+  </div>
+</section>
+
+<!-- PULLQUOTES -->
+<section class="pullquotes-section">
+  <div class="pullquotes-inner">
+    <div class="pullquote">
+      <div class="pullquote-text">"As A.I. becomes more powerful, the incentives to use it become much stronger — while appetite to talk about its risks has gone down."</div>
+      <div class="pullquote-attribution">Helen Toner · Georgetown University · Former OpenAI Board Member</div>
+    </div>
+    <div class="pullquote">
+      <div class="pullquote-text">"This is really about the power of the state to determine how A.I. is deployed in the world versus companies."</div>
+      <div class="pullquote-attribution">Robert Trager · Oxford University · Martin A.I. Governance Initiative</div>
+    </div>
+  </div>
+</section>
+
+<!-- GLOBAL CONTEXT -->
+<section class="global-section">
+  <div class="global-header">The Wider World</div>
+  <div class="context-blocks">
+    <div class="context-block">
+      <span class="context-emoji">🇪🇺</span>
+      <div class="context-title">Europe Reverses Course</div>
+      <div class="context-text">The EU, which passed landmark A.I. regulations in 2024, is now considering rolling provisions back as competitive pressure from the U.S. mounts.</div>
+    </div>
+    <div class="context-block">
+      <span class="context-emoji">🇺🇳</span>
+      <div class="context-title">UN Treaty Stalled</div>
+      <div class="context-text">A multi-year effort to ban certain autonomous A.I. weapons remains blocked — opposed by the U.S., Russia, and other major powers.</div>
+    </div>
+    <div class="context-block">
+      <span class="context-emoji">🇺🇦</span>
+      <div class="context-title">Ukraine: The Proving Ground</div>
+      <div class="context-text">Drone warfare has made autonomous weapons a present reality, not a future concern — reshaping every military's calculus on A.I. investment.</div>
+    </div>
+    <div class="context-block">
+      <span class="context-emoji">🌐</span>
+      <div class="context-title">The 2023 Bletchley Pledge</div>
+      <div class="context-text">A coalition of 28 nations including the U.S. and China once agreed to address A.I. safety risks together. That consensus has largely evaporated.</div>
+    </div>
+  </div>
+</section>
+
+<!-- EMPLOYEE VOICES -->
+<section class="voices-section">
+  <div class="voices-inner">
+    <div class="voices-kicker">Employee Resistance</div>
+    <div class="voices-headline">Silicon Valley Workers Push Back Against Their Own Leaders</div>
+    <div class="voices-grid">
+      <div class="voice-card">
+        <div class="voice-count">~50</div>
+        <div class="voice-company">OpenAI Employees</div>
+        <div class="voice-action">Signed a letter calling on leadership to "refuse the Department of War's current demands."</div>
+      </div>
+      <div class="voice-card">
+        <div class="voice-count">175+</div>
+        <div class="voice-company">Google Employees</div>
+        <div class="voice-action">Joined OpenAI workers in a joint letter urging tech leaders to hold firm against Pentagon pressure.</div>
+      </div>
+      <div class="voice-card">
+        <div class="voice-count">100+</div>
+        <div class="voice-company">Google A.I. Teams</div>
+        <div class="voice-action">Separately wrote to company leadership expressing concern about Pentagon A.I. projects and surveillance risks.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER ANALYSIS -->
+<section class="article-footer">
+  <div class="footer-analysis">
+    "Something like this dispute was inevitable. Because the technology is advancing so quickly, we're having these debates now. A.I. has moved from being in a niche conversation to something really at the center of global power."
+    <br><br>
+    — Michael C. Horowitz, former Biden-era Pentagon A.I. advisor
+  </div>
+  <div class="footer-meta">
+    Source: <a href="https://www.nytimes.com/2026/02/27/technology/defense-department-anthropic-ai-safety.html" target="_blank" rel="noopener" style="color: var(--red); text-decoration: none; letter-spacing: 1px; font-family: 'Space Mono', monospace; font-size: 9px;">The New York Times · Feb. 27, 2026</a>
+    &nbsp;·&nbsp; Satariano, Barnes, Frenkel
+    &nbsp;·&nbsp; Visualization: Claude / Anthropic
+  </div>
+</section>
+
+</body>
+</html>
