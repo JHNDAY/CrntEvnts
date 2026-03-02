@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Haass: An Unnecessary War of Choice — Analysis</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;1,8..60,300&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0a0a0a;
+    --paper: #f5f0e8;
+    --crimson: #b01c2e;
+    --crimson-deep: #7a1020;
+    --gold: #c8a84b;
+    --slate: #2a2f3a;
+    --mist: #ddd8cc;
+    --accent-blue: #1a3a5c;
+    --cross-ref: #1a4a2e;
+    --cross-ref-bg: #eaf4ec;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Source Serif 4', Georgia, serif;
+    font-weight: 300;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ─── MASTHEAD ─── */
+  .masthead {
+    background: var(--ink);
+    color: var(--paper);
+    text-align: center;
+    padding: 1.2rem 2rem 1rem;
+    border-bottom: 4px solid var(--crimson);
+  }
+  .masthead-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.4rem;
+  }
+  .masthead h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.4rem, 4vw, 2.2rem);
+    font-weight: 900;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+  .masthead-meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    color: #888;
+    margin-top: 0.6rem;
+  }
+  .masthead a { color: var(--gold); text-decoration: none; }
+
+  /* ─── CONTEXT BANNER ─── */
+  .context-banner {
+    background: #1a3a5c;
+    color: white;
+    padding: 0.7rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.07em;
+  }
+  .context-tag {
+    background: var(--gold);
+    color: var(--ink);
+    padding: 0.15rem 0.6rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    flex-shrink: 0;
+    text-transform: uppercase;
+  }
+
+  /* ─── HERO ─── */
+  .hero {
+    padding: 3rem 2rem 2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .hero-headline {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    font-weight: 900;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    padding-bottom: 1.2rem;
+    border-bottom: 3px solid var(--ink);
+    position: relative;
+  }
+  .hero-headline::before {
+    content: '';
+    position: absolute;
+    bottom: -3px; left: 0;
+    width: 6rem; height: 6px;
+    background: var(--crimson);
+  }
+  .hero-dek {
+    font-size: 1.1rem;
+    font-style: italic;
+    color: #444;
+    line-height: 1.6;
+    margin-top: 1.5rem;
+    max-width: 780px;
+  }
+
+  /* ─── BYLINE ─── */
+  .byline-bar {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0.8rem 2rem;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    border-bottom: 1px solid var(--mist);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    color: #666;
+    text-transform: uppercase;
+    flex-wrap: wrap;
+  }
+  .byline-bar strong { color: var(--ink); }
+
+  /* ─── KEY VERDICT STRIP ─── */
+  .verdict-strip {
+    background: var(--crimson-deep);
+    color: white;
+    padding: 2rem;
+    margin: 2rem auto;
+    max-width: 1100px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+  }
+  .verdict-item {
+    padding: 0.8rem 1.5rem;
+    border-right: 1px solid rgba(255,255,255,0.2);
+    opacity: 0;
+    transform: translateY(15px);
+    animation: fadeUp 0.5s ease forwards;
+  }
+  .verdict-item:nth-child(1) { animation-delay: 0.1s; }
+  .verdict-item:nth-child(2) { animation-delay: 0.25s; }
+  .verdict-item:nth-child(3) { animation-delay: 0.4s; }
+  .verdict-item:nth-child(4) { animation-delay: 0.55s; border-right: none; }
+  @keyframes fadeUp { to { opacity:1; transform:translateY(0); } }
+  .verdict-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.4rem;
+  }
+  .verdict-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+  .verdict-sub {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.7);
+    margin-top: 0.3rem;
+    font-style: italic;
+  }
+
+  /* ─── MAIN LAYOUT ─── */
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 2rem;
+  }
+
+  /* ─── CLUSTER HEADERS ─── */
+  .cluster {
+    margin: 2.5rem 0 1rem;
+  }
+  .cluster-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--gold);
+    background: var(--slate);
+    display: inline-block;
+    padding: 0.3rem 0.8rem;
+    margin-bottom: 0.5rem;
+  }
+  .cluster-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--slate);
+    border-bottom: 2px solid var(--mist);
+    padding-bottom: 0.5rem;
+  }
+
+  /* ─── POINT CARDS ─── */
+  .points-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin: 1rem 0 2rem;
+  }
+  .points-grid.three-col {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+  .point-card {
+    background: white;
+    border: 1px solid var(--mist);
+    border-top: 4px solid var(--slate);
+    padding: 1.2rem 1.4rem;
+    position: relative;
+  }
+  .point-card.flagged {
+    border-top-color: var(--crimson);
+  }
+  .point-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: var(--mist);
+    position: absolute;
+    top: 0.5rem;
+    right: 1rem;
+    line-height: 1;
+  }
+  .point-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--crimson);
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+  }
+  .point-body {
+    font-size: 0.88rem;
+    line-height: 1.65;
+    color: #333;
+  }
+
+  /* ─── CROSS-REFERENCE CALLOUTS ─── */
+  .cross-ref {
+    background: var(--cross-ref-bg);
+    border-left: 4px solid var(--cross-ref);
+    padding: 0.7rem 1rem;
+    margin-top: 0.8rem;
+    font-size: 0.78rem;
+    color: var(--cross-ref);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.02em;
+    line-height: 1.5;
+  }
+  .cross-ref-tag {
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    font-size: 0.55rem;
+    margin-bottom: 0.2rem;
+    display: block;
+    color: #1a4a2e;
+  }
+
+  /* ─── KEY QUOTE ─── */
+  .haass-quote {
+    background: var(--slate);
+    color: white;
+    padding: 2rem 2.5rem;
+    margin: 2.5rem 0;
+    border-left: 6px solid var(--gold);
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-style: italic;
+    line-height: 1.5;
+  }
+  .haass-quote cite {
+    display: block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    color: var(--gold);
+    margin-top: 0.8rem;
+    font-style: normal;
+  }
+
+  /* ─── SYNTHESIS TABLE ─── */
+  .synthesis {
+    background: #f0eadd;
+    border: 2px solid var(--mist);
+    padding: 2rem;
+    margin: 2rem 0;
+  }
+  .synthesis-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--crimson);
+  }
+  .syn-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--mist);
+    margin-bottom: 1px;
+  }
+  .syn-cell {
+    background: white;
+    padding: 0.8rem 1rem;
+    font-size: 0.85rem;
+  }
+  .syn-cell.label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #666;
+    background: #f8f5ef;
+    font-weight: 600;
+  }
+  .syn-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+    background: var(--slate);
+    margin-bottom: 1px;
+  }
+  .syn-header-cell {
+    background: var(--slate);
+    color: var(--gold);
+    padding: 0.5rem 1rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  /* ─── HISTORICAL PARALLELS ─── */
+  .parallels {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin: 1rem 0 2rem;
+  }
+  .parallel-card {
+    border: 1px solid var(--mist);
+    padding: 1.2rem;
+    background: white;
+  }
+  .parallel-case {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 1rem;
+    margin-bottom: 0.3rem;
+    color: var(--crimson-deep);
+  }
+  .parallel-lesson {
+    font-size: 0.82rem;
+    color: #444;
+    line-height: 1.5;
+  }
+  .parallel-icon {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  /* ─── FOOTER ─── */
+  .story-footer {
+    background: var(--ink);
+    color: #aaa;
+    text-align: center;
+    padding: 2rem;
+    margin-top: 3rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+  }
+  .story-footer a { color: var(--gold); text-decoration: none; }
+
+  /* ─── SECTION RULE ─── */
+  .section-rule { border: none; border-top: 1px solid #ccc; margin: 1.5rem 0; }
+  .section-hed {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: #999;
+    margin-bottom: 0.8rem;
+  }
+
+  @media (max-width: 750px) {
+    .verdict-strip { grid-template-columns: 1fr 1fr; }
+    .points-grid { grid-template-columns: 1fr; }
+    .points-grid.three-col { grid-template-columns: 1fr; }
+    .parallels { grid-template-columns: 1fr; }
+    .syn-row, .syn-header { grid-template-columns: 1fr; }
+    .container { padding: 0 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- MASTHEAD -->
+<header class="masthead">
+  <div class="masthead-label">Richard Haass · Substack — Special Edition</div>
+  <h1>An Unnecessary War of Choice</h1>
+  <div class="masthead-meta">
+    February 28, 2026 &nbsp;|&nbsp; Foreign Policy Analysis &nbsp;|&nbsp;
+    <a href="https://www.washingtonpost.com/politics/2026/02/28/trump-iran-decision-saudi-arabia-israel/" target="_blank">
+      ↗ Read WaPo: "Inside the Iran Decision"
+    </a>
+  </div>
+</header>
+
+<!-- CONTEXT BANNER -->
+<div class="context-banner">
+  <span class="context-tag">Analysis</span>
+  Richard Haass (Fmr. President, Council on Foreign Relations) issues 13 critiques of the Iran strikes · Cross-referenced with Washington Post reporting on the decision
+</div>
+
+<!-- HERO -->
+<section class="hero">
+  <h2 class="hero-headline">Thirteen Reasons the Iran War Was a Mistake</h2>
+  <div class="hero-dek">
+    Richard Haass, former president of the Council on Foreign Relations and director of policy planning at the State Department under President George W. Bush, offers a systematic dissection of why the February 28 strikes on Iran represent a strategic error — one driven by political ambition rather than military necessity.
+  </div>
+</section>
+
+<!-- BYLINE -->
+<div class="byline-bar">
+  <span><strong>Author:</strong> Richard Haass</span>
+  <span><strong>Published:</strong> Feb. 28, 2026</span>
+  <span><strong>Platform:</strong> Substack</span>
+  <span><strong>Cross-ref:</strong> Washington Post, "Inside the Iran Decision"</span>
+</div>
+
+<!-- VERDICT STRIP -->
+<div class="verdict-strip">
+  <div class="verdict-item">
+    <div class="verdict-label">Classification</div>
+    <div class="verdict-value">War of Choice</div>
+    <div class="verdict-sub">Alternatives — diplomacy, sanctions — were still viable</div>
+  </div>
+  <div class="verdict-item">
+    <div class="verdict-label">Legal Standing</div>
+    <div class="verdict-value">None</div>
+    <div class="verdict-sub">Preventive war has no basis under international law</div>
+  </div>
+  <div class="verdict-item">
+    <div class="verdict-label">Goal Achievability</div>
+    <div class="verdict-value">Highly Doubtful</div>
+    <div class="verdict-sub">Regime change requires ground presence; air power alone cannot deliver it</div>
+  </div>
+  <div class="verdict-item">
+    <div class="verdict-label">Haass Verdict</div>
+    <div class="verdict-value">Strategic Overreach</div>
+    <div class="verdict-sub">Maximum ambition, minimum means, maximum risk</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!--  CLUSTER 1: WAR CLASSIFICATION                 -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="container">
+
+  <div class="cluster">
+    <div class="cluster-label">Points 1–2</div>
+    <div class="cluster-title">War Classification &amp; Legal Status</div>
+  </div>
+
+  <div class="points-grid">
+    <div class="point-card flagged">
+      <div class="point-number">01</div>
+      <div class="point-title">War of Choice</div>
+      <div class="point-body">
+        The United States had other policy options available. Diplomacy appeared to have promise in preventing Iran from developing nuclear weapons, and increased economic pressure had the potential to precipitate regime change over time. This was not a forced response — it was a decision.
+      </div>
+      <div class="cross-ref">
+        <span class="cross-ref-tag">↗ WaPo Cross-Reference</span>
+        Reporting confirms U.S. intelligence assessed Iran posed no direct threat to the American mainland for at least a decade — yet the White House proceeded anyway, driven by lobbying from Israel's Netanyahu and Saudi Crown Prince MBS.
+      </div>
+    </div>
+    <div class="point-card flagged">
+      <div class="point-number">02</div>
+      <div class="point-title">Preventive, Not Preemptive</div>
+      <div class="point-body">
+        Iran posed no imminent threat to vital U.S. interests. It was not on the verge of becoming a nuclear weapons state, nor was it about to use existing weapons against the U.S. This distinction matters enormously: preemptive war is legally defensible; preventive war is not. A world where nations freely conduct preventive strikes would be a world of endless conflict.
+      </div>
+      <div class="cross-ref">
+        <span class="cross-ref-tag">↗ WaPo Cross-Reference</span>
+        The intelligence callout in WaPo's "Intelligence Disconnect" section confirms this directly: U.S. agencies assessed Iran was "unlikely to pose a direct threat to the U.S. mainland within the next decade" — yet the decision to strike proceeded.
+      </div>
+    </div>
+  </div>
+
+  <!-- HAASS QUOTE 1 -->
+  <div class="haass-quote">
+    "A world in which countries believe they have the right to undertake preventive strikes against those they judge to be threats would be a world of frequent conflict. That is why such actions have no standing under international law."
+    <cite>— Richard Haass, Point 2</cite>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!--  CLUSTER 2: OBJECTIVES & MILITARY LIMITS       -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <div class="cluster">
+    <div class="cluster-label">Points 3–5</div>
+    <div class="cluster-title">The Regime Change Objective: Military vs. Political</div>
+  </div>
+
+  <div class="points-grid three-col">
+    <div class="point-card">
+      <div class="point-number">03</div>
+      <div class="point-title">Political Goal ≠ Military Outcome</div>
+      <div class="point-body">
+        Regime change is political, not military. Force can destroy and kill, but it cannot on its own install a new government. A viable alternative and enabling conditions are required. Gaza and Hamas show that regimes absorb enormous punishment and survive. Every day the Iranian regime stands will be framed as its own victory.
+      </div>
+    </div>
+    <div class="point-card">
+      <div class="point-number">04</div>
+      <div class="point-title">Ouster ≠ Successful Change</div>
+      <div class="point-body">
+        Even if the clerical regime fell, security forces are best positioned to fill the vacuum — not a democratic alternative. Those forces would likely continue Iran's existing foreign policy objectives that the U.S. finds objectionable. Removing a leader is not the same as transforming a state.
+      </div>
+    </div>
+    <div class="point-card">
+      <div class="point-number">05</div>
+      <div class="point-title">Decapitation Unlikely to Decide</div>
+      <div class="point-body">
+        Targeting leadership ("decapitation") may have occurred with Khamenei's death, but is unlikely to prove decisive. The regime has institutionalized itself over nearly 50 years, and had weeks of warning to improve succession planning as military tension rose.
+      </div>
+      <div class="cross-ref">
+        <span class="cross-ref-tag">↗ WaPo Cross-Reference</span>
+        WaPo confirms Khamenei was killed in a strike timed to a leadership meeting — yet Iran's Assembly of Experts immediately moved to name a successor, validating Haass's institutionalization argument.
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!--  CLUSTER 3: PREPARATION & PRECEDENT            -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <div class="cluster">
+    <div class="cluster-label">Points 6–8</div>
+    <div class="cluster-title">Preparation, Precedent &amp; the Libya Parallel</div>
+  </div>
+
+  <div class="points-grid">
+    <div class="point-card">
+      <div class="point-number">06</div>
+      <div class="point-title">No Opposition in Waiting</div>
+      <div class="point-body">
+        The Trump administration called for regime change without preparing the conditions for an alternative to succeed. The Iranian political opposition is not united, not functioning as a government-in-waiting, and not positioned to accept defections or provide security in a power vacuum.
+      </div>
+    </div>
+    <div class="point-card">
+      <div class="point-number">07</div>
+      <div class="point-title">History Requires Boots on the Ground</div>
+      <div class="point-body">
+        Successful regime change historically requires a physical, on-the-ground presence. Germany, Japan, Panama — and failures in Iraq and Afghanistan — all bear this out. An occupation of Iran is inconceivable given the country's size and capacity for resistance.
+      </div>
+    </div>
+  </div>
+
+  <!-- HISTORICAL PARALLELS -->
+  <div class="section-hed" style="margin-top:1rem;">Historical Parallels Cited by Haass</div>
+  <div class="parallels">
+    <div class="parallel-card">
+      <div class="parallel-icon">🇩🇪🇯🇵</div>
+      <div class="parallel-case">Germany &amp; Japan (1945)</div>
+      <div class="parallel-lesson">Successful regime change required full occupation, years of presence, and massive resources. The conditions in Iran bear no resemblance.</div>
+    </div>
+    <div class="parallel-card">
+      <div class="parallel-icon">🇱🇾</div>
+      <div class="parallel-case">Libya (2011)</div>
+      <div class="parallel-lesson">Western air power ousted Gaddafi but no follow-through ensued — leaving the country in chaos. Haass calls this the closest recent parallel to Iran.</div>
+    </div>
+    <div class="parallel-card">
+      <div class="parallel-icon">🇮🇶</div>
+      <div class="parallel-case">Iraq (2003)</div>
+      <div class="parallel-lesson">Another preventive war of choice in the Middle East. Cost the U.S. enormously. Haass directly parallels the 2003 decision to the current Iran strikes.
+        <div class="cross-ref" style="margin-top:0.6rem;">
+          <span class="cross-ref-tag">↗ WaPo note</span>
+          WaPo's reporting confirms no Congressional authorization was sought — echoing the same constitutional controversies that surrounded Iraq in 2003.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="points-grid" style="margin-top:0;">
+    <div class="point-card flagged">
+      <div class="point-number">08</div>
+      <div class="point-title">Maximum Goal, Minimum Means</div>
+      <div class="point-body">
+        The administration chose the most ambitious foreign policy objective — regime change — while deploying limited means. It rejected a narrower goal (degrading nuclear and missile capabilities alone) in favor of the maximalist aim. The Libya parallel looms large: air power achieved ouster but not order.
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!--  CLUSTER 4: STRATEGIC CONTRADICTIONS           -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <div class="cluster">
+    <div class="cluster-label">Points 9–11</div>
+    <div class="cluster-title">Strategic Contradictions Within the Trump Doctrine</div>
+  </div>
+
+  <div class="points-grid three-col">
+    <div class="point-card flagged">
+      <div class="point-number">09</div>
+      <div class="point-title">Contradicts Trump's Own Doctrine</div>
+      <div class="point-body">
+        This is an administration that has shown no interest in regime change or democracy promotion elsewhere, nor an appetite for costly foreign ventures — precisely what Trump promised to end. Why Iran, why now? No clear evidence the regime was on the edge of collapse.
+      </div>
+      <div class="cross-ref">
+        <span class="cross-ref-tag">↗ WaPo Cross-Reference</span>
+        WaPo's reporting reveals the driver: private lobbying by Netanyahu and MBS — not a new Iranian provocation. The "why now" may be explained by geopolitical pressure rather than strategic necessity.
+      </div>
+    </div>
+    <div class="point-card flagged">
+      <div class="point-number">10</div>
+      <div class="point-title">The Armada Trap</div>
+      <div class="point-body">
+        Assembling a massive military presence — Trump's "armada" — after verbal threats failed created its own pressure to act, since forces couldn't be held at high readiness indefinitely. The <em>means</em> of policy drove the <em>ends</em>: the decision to attack. This is the reverse of how policy should be determined.
+      </div>
+      <div class="cross-ref">
+        <span class="cross-ref-tag">↗ WaPo Cross-Reference</span>
+        WaPo's timeline confirms weeks of military buildup preceded the strike. The armada's presence was a known precursor — validating Haass's point that military deployment created its own momentum toward action.
+      </div>
+    </div>
+    <div class="point-card flagged">
+      <div class="point-number">11</div>
+      <div class="point-title">Wrong Theater for U.S. Priorities</div>
+      <div class="point-body">
+        The U.S. has opted yet again for a massive commitment in the Middle East — at odds with the administration's own National Security Strategy and with the reality that the greatest challenges to U.S. interests lie in Europe and the Indo-Pacific. Putin and Xi are both, likely, pleased.
+      </div>
+    </div>
+  </div>
+
+  <!-- QUOTE 2 -->
+  <div class="haass-quote">
+    "The means of policy played a large role in determining the ends of policy, namely, the decision to attack. This is obviously the reverse of how policy should be determined."
+    <cite>— Richard Haass, Point 10</cite>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!--  CLUSTER 5: CONSEQUENCES                       -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <div class="cluster">
+    <div class="cluster-label">Points 12–13</div>
+    <div class="cluster-title">Consequences &amp; Overconfidence</div>
+  </div>
+
+  <div class="points-grid">
+    <div class="point-card">
+      <div class="point-number">12</div>
+      <div class="point-title">An Unprepared Public &amp; Base</div>
+      <div class="point-body">
+        The American people were not prepared for this war. Trump did not use his State of the Union address to make the case for striking Iran. A prolonged war will unsettle markets, spike energy prices, and potentially trigger attacks on American installations and personnel worldwide.
+      </div>
+      <div class="cross-ref">
+        <span class="cross-ref-tag">↗ WaPo Cross-Reference</span>
+        WaPo's "Global Disruption" consequence card confirms immediate effects: Dubai International Airport — the world's busiest international hub — closed following Iranian retaliation, and markets began bracing for energy shock amid Strait of Hormuz concerns.
+      </div>
+    </div>
+    <div class="point-card">
+      <div class="point-number">13</div>
+      <div class="point-title">Overconfidence from Prior Cheap Wins</div>
+      <div class="point-body">
+        Last year's bombing of Iranian nuclear sites and the Venezuela intervention may have convinced Trump that ambitious ends are achievable with limited means at low cost. History warns otherwise. Regime change is easier called for than carried out — and while only one side begins a war, it takes two to end it. Iran now votes on how big and how long this becomes.
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!--  SYNTHESIS TABLE                               -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <hr class="section-rule">
+  <div class="synthesis">
+    <div class="synthesis-title">Haass vs. WaPo: Where the Analyses Converge</div>
+    <div class="syn-header">
+      <div class="syn-header-cell">Haass Critique</div>
+      <div class="syn-header-cell">WaPo Reporting Confirmation</div>
+    </div>
+    <div class="syn-row">
+      <div class="syn-cell label">No Imminent Threat (Point 2)</div>
+      <div class="syn-cell label">Intelligence Assessment Overruled</div>
+    </div>
+    <div class="syn-row">
+      <div class="syn-cell">Iran posed no imminent threat; this was preventive, not preemptive war.</div>
+      <div class="syn-cell">U.S. intelligence agencies assessed Iran posed no direct threat to the U.S. mainland within a decade. The strike proceeded anyway.</div>
+    </div>
+    <div class="syn-row">
+      <div class="syn-cell label">Decapitation &amp; Succession (Point 5)</div>
+      <div class="syn-cell label">Assembly of Experts Convened</div>
+    </div>
+    <div class="syn-row">
+      <div class="syn-cell">Killing top leaders won't end an institutionalized regime; succession is planned for.</div>
+      <div class="syn-cell">With Khamenei killed, Iranian authorities moved immediately to convene the 88-member Assembly of Experts to name a successor.</div>
+    </div>
+    <div class="syn-row">
+      <div class="syn-cell label">Armada Creates Pressure (Point 10)</div>
+      <div class="syn-cell label">Military Buildup Preceded Strike</div>
+    </div>
+    <div class="syn-row">
+      <div class="syn-cell">Deploying forces without a clear plan locks in the decision to act.</div>
+      <div class="syn-cell">WaPo's timeline shows weeks of military positioning — the "armada" was in place before any final diplomatic outcome was known.</div>
+    </div>
+    <div class="syn-row">
+      <div class="syn-cell label">Why Now? (Point 9)</div>
+      <div class="syn-cell label">Allied Lobbying: Netanyahu + MBS</div>
+    </div>
+    <div class="syn-row">
+      <div class="syn-cell">No evidence the Iranian regime was on the edge of collapse. The timing is mysterious.</div>
+      <div class="syn-cell">WaPo reveals the driver: coordinated private lobbying by Netanyahu (longstanding) and MBS (multiple calls in February), not a new Iranian provocation.</div>
+    </div>
+    <div class="syn-row">
+      <div class="syn-cell label">Economic &amp; Global Disruption (Point 12)</div>
+      <div class="syn-cell label">Dubai Airport Closed; Markets Shaken</div>
+    </div>
+    <div class="syn-row">
+      <div class="syn-cell">War will unsettle markets and spike energy prices.</div>
+      <div class="syn-cell">WaPo confirms Dubai International Airport closed following Iranian strikes; Wall Street braced for energy shock and Strait of Hormuz closure fears.</div>
+    </div>
+  </div>
+
+  <!-- FINAL QUOTE -->
+  <div class="haass-quote">
+    "While it only takes one side to begin a war, it takes two to end it. Iran now has a vote in how big this conflict becomes and how long it endures."
+    <cite>— Richard Haass, Point 13 (closing)</cite>
+  </div>
+
+</div><!-- /container -->
+
+<!-- FOOTER -->
+<footer class="story-footer">
+  <div>
+    Analysis based on Richard Haass, <strong style="color:#ccc">"An Unnecessary War of Choice"</strong> · Substack · February 28, 2026
+  </div>
+  <div style="margin-top:0.5rem;">
+    Cross-referenced with:
+    <a href="https://www.washingtonpost.com/politics/2026/02/28/trump-iran-decision-saudi-arabia-israel/" target="_blank">
+      Washington Post — "Inside the Iran Decision" ↗
+    </a>
+  </div>
+  <div style="margin-top:0.8rem; color:#555; font-size:0.55rem;">
+    This visualization is an independent editorial summary for educational purposes (BOLLI / AI Literacy). All facts sourced from referenced articles.
+  </div>
+</footer>
+
+</body>
+</html>
