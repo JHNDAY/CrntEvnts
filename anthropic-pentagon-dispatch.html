@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FIELD DISPATCH — OPERATION EPIC ABOUT FACE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Special+Elite&family=Bebas+Neue&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Oswald:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1008;
+    --paper: #e8dcc8;
+    --aged: #d4c4a0;
+    --dark-paper: #c9b896;
+    --red: #8b1a1a;
+    --gold: #9a7c2e;
+    --stamp-red: #6b1515;
+    --faded: #7a6b52;
+    --border: #5c4a2a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #3a2e1e;
+    background-image: 
+      repeating-linear-gradient(90deg, transparent, transparent 59px, rgba(0,0,0,0.05) 60px),
+      repeating-linear-gradient(0deg, transparent, transparent 59px, rgba(0,0,0,0.05) 60px);
+    font-family: 'Courier Prime', monospace;
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 20px;
+  }
+
+  .page {
+    max-width: 960px;
+    margin: 0 auto;
+    background: var(--paper);
+    background-image: 
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E"),
+      linear-gradient(to bottom, var(--paper) 0%, var(--aged) 50%, var(--paper) 100%);
+    box-shadow: 0 0 80px rgba(0,0,0,0.6), inset 0 0 100px rgba(0,0,0,0.05);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .page::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: 
+      radial-gradient(ellipse at top left, rgba(139,90,20,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse at bottom right, rgba(139,90,20,0.12) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .fold-line {
+    position: absolute;
+    left: 50%;
+    top: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, transparent, rgba(100,80,40,0.2), rgba(100,80,40,0.3), rgba(100,80,40,0.2), transparent);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .content-wrap {
+    position: relative;
+    z-index: 2;
+    padding: 40px 50px 60px;
+  }
+
+  /* MASTHEAD */
+  .masthead {
+    text-align: center;
+    border-bottom: 4px double var(--border);
+    border-top: 4px double var(--border);
+    padding: 18px 0 14px;
+    margin-bottom: 0;
+    position: relative;
+  }
+  .masthead::before, .masthead::after {
+    content: '✦ ✦ ✦ ✦ ✦ ✦ ✦ ✦ ✦ ✦ ✦ ✦ ✦ ✦ ✦';
+    display: block;
+    font-size: 8px;
+    letter-spacing: 4px;
+    color: var(--faded);
+    margin: 4px 0;
+  }
+
+  .dispatch-label {
+    font-family: 'Courier Prime', monospace;
+    font-size: 10px;
+    letter-spacing: 8px;
+    color: var(--faded);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .headline-main {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 72px;
+    letter-spacing: 6px;
+    line-height: 0.9;
+    color: var(--ink);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+
+  .headline-sub {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 8px;
+    color: var(--red);
+    margin-bottom: 8px;
+  }
+
+  .meta-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0 4px;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: var(--faded);
+    text-transform: uppercase;
+    margin-top: 8px;
+  }
+
+  /* CLASSIFIED STAMP */
+  .classified-stamp {
+    position: absolute;
+    top: 12px;
+    right: 30px;
+    border: 3px solid var(--stamp-red);
+    color: var(--stamp-red);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    letter-spacing: 4px;
+    padding: 4px 10px;
+    transform: rotate(8deg);
+    opacity: 0.7;
+    text-transform: uppercase;
+  }
+
+  /* KICKER */
+  .kicker-band {
+    background: var(--ink);
+    color: var(--paper);
+    text-align: center;
+    padding: 8px 20px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 15px;
+    letter-spacing: 5px;
+    margin-bottom: 24px;
+  }
+
+  /* LAYOUT GRID */
+  .three-col {
+    display: grid;
+    grid-template-columns: 1fr 2px 1fr 2px 1fr;
+    gap: 0 16px;
+    margin-bottom: 24px;
+  }
+
+  .col-divider {
+    background: linear-gradient(to bottom, transparent, var(--border), var(--border), transparent);
+    width: 1px;
+    margin: 0 auto;
+  }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: 3fr 2px 2fr;
+    gap: 0 16px;
+    margin-bottom: 24px;
+  }
+
+  .full-col { margin-bottom: 24px; }
+
+  /* ARTICLE STYLES */
+  .article { padding: 0 4px; }
+
+  .article-headline {
+    font-family: 'Oswald', sans-serif;
+    font-size: 18px;
+    font-weight: 700;
+    text-transform: uppercase;
+    line-height: 1.1;
+    margin-bottom: 6px;
+    color: var(--ink);
+    border-bottom: 2px solid var(--border);
+    padding-bottom: 4px;
+  }
+
+  .article-headline.red { color: var(--red); border-color: var(--red); }
+  .article-headline.large { font-size: 26px; }
+
+  .byline {
+    font-size: 8px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--faded);
+    margin-bottom: 8px;
+    font-style: italic;
+  }
+
+  .article p {
+    font-size: 11.5px;
+    line-height: 1.7;
+    text-align: justify;
+    margin-bottom: 8px;
+    hyphens: auto;
+  }
+
+  .article p:first-of-type::first-letter {
+    font-family: 'Special Elite', cursive;
+    font-size: 38px;
+    float: left;
+    line-height: 0.8;
+    margin: 2px 4px 0 0;
+    color: var(--red);
+  }
+
+  .pull-quote {
+    border-left: 3px solid var(--red);
+    border-right: 3px solid var(--red);
+    padding: 10px 14px;
+    margin: 12px 0;
+    font-family: 'Special Elite', cursive;
+    font-size: 13px;
+    font-style: italic;
+    line-height: 1.4;
+    text-align: center;
+    color: var(--red);
+    background: rgba(139,26,26,0.04);
+  }
+
+  /* INFOGRAPHIC BOX */
+  .info-box {
+    border: 2px solid var(--border);
+    padding: 12px;
+    margin: 12px 0;
+    background: rgba(0,0,0,0.03);
+    position: relative;
+  }
+  .info-box-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 13px;
+    letter-spacing: 3px;
+    color: var(--ink);
+    margin-bottom: 8px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 4px;
+  }
+
+  /* BAR CHART */
+  .bar-chart { margin: 8px 0; }
+  .bar-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+    gap: 6px;
+  }
+  .bar-label {
+    font-size: 9px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    width: 75px;
+    flex-shrink: 0;
+    color: var(--faded);
+    font-family: 'Courier Prime', monospace;
+  }
+  .bar-track {
+    flex: 1;
+    height: 14px;
+    background: rgba(0,0,0,0.08);
+    border: 1px solid rgba(0,0,0,0.15);
+    position: relative;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    background: var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-right: 3px;
+    transition: width 1.5s ease;
+  }
+  .bar-fill.red { background: var(--red); }
+  .bar-fill.gold { background: var(--gold); }
+  .bar-val {
+    font-size: 8px;
+    color: var(--paper);
+    font-family: 'Courier Prime', monospace;
+    font-weight: 700;
+  }
+
+  /* TIMELINE */
+  .timeline { margin: 8px 0; }
+  .timeline-item {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 7px;
+    font-size: 10px;
+    line-height: 1.4;
+  }
+  .timeline-date {
+    font-family: 'Oswald', sans-serif;
+    font-weight: 700;
+    font-size: 9px;
+    letter-spacing: 1px;
+    color: var(--red);
+    width: 60px;
+    flex-shrink: 0;
+    padding-top: 1px;
+  }
+  .timeline-bullet {
+    width: 8px; height: 8px;
+    border: 2px solid var(--border);
+    border-radius: 50%;
+    flex-shrink: 0;
+    margin-top: 2px;
+    background: var(--paper);
+  }
+  .timeline-bullet.filled { background: var(--red); border-color: var(--red); }
+  .timeline-text { color: var(--ink); flex: 1; }
+
+  /* VERDICT BOX */
+  .verdict-box {
+    border: 3px solid var(--ink);
+    padding: 16px 20px;
+    margin: 12px 0;
+    position: relative;
+    background: var(--aged);
+  }
+  .verdict-box::before {
+    content: '★ VERDICT ★';
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--aged);
+    padding: 0 8px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 12px;
+    letter-spacing: 3px;
+    color: var(--ink);
+  }
+
+  /* SCORECARD */
+  .scorecard {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 4px;
+    align-items: center;
+    text-align: center;
+  }
+  .score-side { padding: 8px; }
+  .score-name {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 16px;
+    letter-spacing: 2px;
+    margin-bottom: 4px;
+  }
+  .score-name.patriot { color: var(--red); }
+  .score-name.dept { color: var(--ink); }
+  .score-vs {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px;
+    color: var(--faded);
+    border-left: 1px solid var(--border);
+    border-right: 1px solid var(--border);
+    padding: 0 10px;
+  }
+  .score-point {
+    font-size: 9px;
+    color: var(--faded);
+    line-height: 1.4;
+  }
+  .score-check {
+    font-size: 11px;
+    color: var(--red);
+    margin-top: 4px;
+  }
+
+  /* SECTION RULE */
+  .section-rule {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 16px 0;
+    position: relative;
+  }
+  .section-rule.thick {
+    border-top: 3px solid var(--ink);
+  }
+  .section-rule span {
+    position: absolute;
+    top: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--paper);
+    padding: 0 8px;
+    font-size: 10px;
+    color: var(--faded);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    font-family: 'Courier Prime', monospace;
+  }
+
+  /* CITATION */
+  .cite {
+    font-size: 8.5px;
+    color: var(--faded);
+    font-style: italic;
+    border-top: 1px dotted var(--border);
+    padding-top: 6px;
+    margin-top: 8px;
+    line-height: 1.6;
+  }
+  .cite a {
+    color: var(--red);
+    text-decoration: none;
+  }
+  .cite a:hover { text-decoration: underline; }
+
+  /* GRAPH AREA */
+  .spark-line {
+    height: 60px;
+    position: relative;
+    margin: 8px 0;
+    border-bottom: 1px solid var(--border);
+    border-left: 1px solid var(--border);
+  }
+  .spark-svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+  .spark-axis {
+    display: flex;
+    justify-content: space-between;
+    font-size: 8px;
+    color: var(--faded);
+    margin-top: 2px;
+    font-family: 'Courier Prime', monospace;
+  }
+
+  /* URGENT FLASH */
+  .urgent-flash {
+    background: var(--red);
+    color: var(--paper);
+    padding: 6px 14px;
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 5px;
+    font-size: 11px;
+    text-align: center;
+    margin: 12px -4px;
+    animation: pulse 2.5s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.75; }
+  }
+
+  /* FOOTER */
+  .dispatch-footer {
+    border-top: 4px double var(--border);
+    text-align: center;
+    padding-top: 12px;
+    font-size: 8px;
+    letter-spacing: 3px;
+    color: var(--faded);
+    text-transform: uppercase;
+  }
+
+  /* RUBBER STAMP */
+  .stamp-unclass {
+    display: inline-block;
+    border: 2px solid var(--gold);
+    color: var(--gold);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 10px;
+    letter-spacing: 3px;
+    padding: 2px 8px;
+    transform: rotate(-5deg);
+    opacity: 0.8;
+    margin: 4px;
+  }
+
+  .drop-cap-box {
+    float: left;
+    width: 44px;
+    height: 44px;
+    border: 2px solid var(--ink);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Special Elite', cursive;
+    font-size: 34px;
+    font-weight: bold;
+    color: var(--red);
+    margin: 2px 6px 2px 0;
+    background: var(--aged);
+  }
+
+  .no-dropcap::first-letter {
+    float: none !important;
+    font-size: inherit !important;
+    color: inherit !important;
+    margin: 0 !important;
+    font-family: inherit !important;
+  }
+
+  .numbers-highlight {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    color: var(--red);
+    display: block;
+    line-height: 1;
+  }
+
+  .ornament { color: var(--faded); font-size: 14px; }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <div class="fold-line"></div>
+  <div class="content-wrap">
+
+    <!-- MASTHEAD -->
+    <div class="masthead" style="position:relative;">
+      <div class="classified-stamp">DECLASSIFIED</div>
+      <div class="dispatch-label">Field Intelligence Dispatch · Special Edition</div>
+      <div class="headline-main">OPERATION EPIC</div>
+      <div class="headline-main">ABOUT FACE</div>
+      <div class="headline-sub">ANTHROPIC vs. THE DEPARTMENT OF WAR</div>
+      <div class="meta-row">
+        <span>Vol. MMXXVI · No. 59</span>
+        <span><span class="stamp-unclass">UNCLASSIFIED</span></span>
+        <span>March 2 · 2026 · Washington Theatre</span>
+      </div>
+    </div>
+
+    <!-- KICKER BAND -->
+    <div class="kicker-band">
+      ✦ &nbsp; FLASH BULLETIN: THE PENTAGON ORDERS RETREAT — SIX MONTHS TO FIND A REPLACEMENT IT CANNOT FIND &nbsp; ✦
+    </div>
+
+    <!-- BREAKING BULLETIN: OUTAGE -->
+    <div style="border:3px solid var(--red);padding:12px 18px;margin-bottom:20px;background:rgba(139,26,26,0.04);position:relative;">
+      <div style="position:absolute;top:-11px;left:16px;background:var(--paper);padding:0 8px;font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:4px;color:var(--red);">⚡ BREAKING — MAR 2, 2026 ⚡</div>
+      <div style="display:grid;grid-template-columns:auto 1fr;gap:14px;align-items:center;">
+        <div style="text-align:center;border-right:2px solid var(--border);padding-right:14px;min-width:90px;">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:44px;line-height:1;color:var(--red);">4+</div>
+          <div style="font-size:8px;letter-spacing:2px;text-transform:uppercase;color:var(--faded);">Hours Down</div>
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--ink);line-height:1.1;margin-top:4px;">~10,000</div>
+          <div style="font-size:8px;letter-spacing:1px;text-transform:uppercase;color:var(--faded);">Users Affected</div>
+        </div>
+        <div>
+          <div style="font-family:'Oswald',sans-serif;font-size:15px;font-weight:700;text-transform:uppercase;color:var(--ink);margin-bottom:5px;">CLAUDE COLLAPSES UNDER WEIGHT OF ITS OWN VICTORY</div>
+          <div style="font-size:10.5px;line-height:1.65;color:var(--ink);">
+            Beginning at 6:00 a.m. ET on Monday, March 2, Claude.ai and its consumer apps went dark — buckled by the very surge of users that the Pentagon's blunder had created. Anthropic acknowledged <em>"unprecedented demand"</em> for services over the prior week, with daily signups breaking records and free users <strong>up 60% since January</strong>. The outage lasted over four hours, unfolding in waves: Downdetector logged peaks of nearly 2,000 simultaneous reports at 6:40 a.m. ET; totals reached ~10,000 across the day. Engineers traced the failure to the login and authentication infrastructure — the identity layer overwhelmed by a flood of new accounts — while the Claude API itself continued serving enterprise and military clients uninterrupted. The Pentagon's banned AI, in other words, was still running while its consumer front-door was jammed with new recruits.
+          </div>
+          <div style="font-size:8.5px;color:var(--faded);font-style:italic;margin-top:6px;border-top:1px dotted var(--border);padding-top:4px;">
+            Sources: <a href="https://www.bloomberg.com/news/articles/2026-03-02/anthropic-s-claude-chatbot-goes-down-for-thousands-of-users" target="_blank" style="color:var(--red);text-decoration:none;">Bloomberg</a> · <a href="https://techcrunch.com/2026/03/02/anthropics-claude-reports-widespread-outage/" target="_blank" style="color:var(--red);text-decoration:none;">TechCrunch</a> · <a href="https://www.bleepingcomputer.com/news/artificial-intelligence/anthropic-confirms-claude-is-down-in-a-worldwide-outage/" target="_blank" style="color:var(--red);text-decoration:none;">BleepingComputer</a> · <a href="https://cybernews.com/news/claude-down-major-outage-worldwide/" target="_blank" style="color:var(--red);text-decoration:none;">CyberNews</a> · <a href="https://www.yahoo.com/news/articles/anthropic-claude-outage-ai-chatbot-145938680.html" target="_blank" style="color:var(--red);text-decoration:none;">Yahoo Finance</a> · <a href="https://dataconomy.com/2026/03/02/is-claude-down-anthropic-confirms-major-outage/" target="_blank" style="color:var(--red);text-decoration:none;">Dataconomy</a> · <a href="https://status.claude.com/" target="_blank" style="color:var(--red);text-decoration:none;">Anthropic Status Page</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- THREE COLUMN ROW -->
+    <div class="three-col">
+      <!-- COL 1: IRAN STRIKES -->
+      <div class="article">
+        <div class="article-headline red">THE FORBIDDEN WEAPON FIRES ANYWAY</div>
+        <div class="byline">From The Field · CENTCOM Theatre · Feb 28, 2026</div>
+        <p>The ink had scarcely dried on President Trump's executive order when the first sorties lifted from their classified runways. Operation Epic Fury was underway — and deep inside U.S. Central Command's digital nerve centers, the banned AI was still running.</p>
+
+        <p class="no-dropcap">Claude, Anthropic's embattled model, had been declared a "supply chain risk to national security" by Defense Secretary Pete Hegseth mere hours prior. Yet according to reporting from <em>The Wall Street Journal</em> and Axios, American forces deployed it throughout the joint U.S.–Israeli strike campaign against Iran — for intelligence assessment, target identification, and battlefield simulation.</p>
+
+        <div class="pull-quote">"US Central Command used Claude for intelligence assessments, target identification, and simulating battle scenarios during the Iran strikes."<br><span style="font-size:10px;font-style:normal;">— Wall Street Journal, March 1, 2026</span></div>
+
+        <p class="no-dropcap">Claude had previously been employed during January's extraordinary Delta Force operation that captured Venezuelan President Nicolás Maduro. That very deployment lit the fuse of the current crisis — Anthropic reportedly inquired whether its model was being used in the operation, a question the Pentagon took as insubordination.</p>
+
+        <div class="urgent-flash">⚡ CLAUDE ALSO DEPLOYED IN JAN. 2026 MADURO CAPTURE ⚡</div>
+
+        <div class="cite">
+          Sources: <a href="https://www.timesofisrael.com/hours-after-trump-announced-ban-on-claude-ai-us-military-used-it-in-iran-strikes-reports/" target="_blank">Times of Israel</a> · <a href="https://www.ynetnews.com/tech-and-digital/article/hj9wp6gfwg" target="_blank">Ynetnews</a> · <a href="https://cybersecuritynews.com/us-military-reportedly-used-claude/" target="_blank">CyberSecurity News</a> · <a href="https://interestingengineering.com/military/us-forces-used-claude-iran-strikes" target="_blank">Interesting Engineering</a>
+        </div>
+      </div>
+
+      <div class="col-divider"></div>
+
+      <!-- COL 2: RISE OF CLAUDE -->
+      <div class="article">
+        <div class="article-headline large">THE LONG MARCH OF CLAUDE</div>
+        <div class="byline">Intelligence Analysis · Economic Theatre · 2025–2026</div>
+
+        <p>What the generals failed to appreciate — and what the markets understood perfectly — is that Claude had become, through 2025, an indispensable fixture of American enterprise and security alike.</p>
+
+        <div class="info-box">
+          <div class="info-box-title">INTELLIGENCE DOSSIER: CLAUDE'S RISE</div>
+          <div class="bar-chart">
+            <div class="bar-row">
+              <div class="bar-label">JAN 2025</div>
+              <div class="bar-track"><div class="bar-fill" style="width:9%"><span class="bar-val">16M</span></div></div>
+            </div>
+            <div class="bar-row">
+              <div class="bar-label">JUN 2025</div>
+              <div class="bar-track"><div class="bar-fill" style="width:34%"><span class="bar-val">60M</span></div></div>
+            </div>
+            <div class="bar-row">
+              <div class="bar-label">DEC 2025</div>
+              <div class="bar-track"><div class="bar-fill red" style="width:100%"><span class="bar-val">176M</span></div></div>
+            </div>
+          </div>
+          <div style="font-size:8px;color:var(--faded);text-align:center;margin-top:4px;font-style:italic;">Monthly web visits (claude.ai) — 11× surge in 2025</div>
+        </div>
+
+        <p class="no-dropcap">Claude.ai registered 176 million monthly website visits by December 2025 — an eleven-fold increase over January's 16 million. The mobile application logged 7.38 million monthly active users by year's end, growing 10.27% in December alone.</p>
+
+        <div class="info-box">
+          <div class="info-box-title">ANTHROPIC VALUATION: RAPID ADVANCE</div>
+          <div class="bar-chart">
+            <div class="bar-row">
+              <div class="bar-label">MAR 2025</div>
+              <div class="bar-track"><div class="bar-fill gold" style="width:16%"><span class="bar-val">$61.5B</span></div></div>
+            </div>
+            <div class="bar-row">
+              <div class="bar-label">SEP 2025</div>
+              <div class="bar-track"><div class="bar-fill gold" style="width:48%"><span class="bar-val">$183B</span></div></div>
+            </div>
+            <div class="bar-row">
+              <div class="bar-label">FEB 2026</div>
+              <div class="bar-track"><div class="bar-fill red" style="width:100%"><span class="bar-val">$380B</span></div></div>
+            </div>
+          </div>
+        </div>
+
+        <p class="no-dropcap">Over 500 enterprise customers pay Anthropic at least $1 million annually. Revenue run-rate surpassed $9 billion by year-end 2025. The company projects $26 billion for 2026. Even CEO Dario Amodei noted wryly that Anthropic's valuation had "only grown" as the confrontation with Washington escalated.</p>
+
+        <div class="cite">
+          Sources: <a href="https://www.aboutchromebooks.com/claude-statistics-and-usage-trends/" target="_blank">AboutChromebooks</a> · <a href="https://fatjoe.com/blog/claude-ai-stats/" target="_blank">FatJoe</a> · <a href="https://backlinko.com/claude-users" target="_blank">Backlinko</a> · <a href="https://aldailynews.com/what-to-know-about-the-clash-between-the-pentagon-and-anthropic-over-militarys-ai-use/" target="_blank">Alabama Daily News</a>
+        </div>
+      </div>
+
+      <div class="col-divider"></div>
+
+      <!-- COL 3: #1 APP STORE -->
+      <div class="article">
+        <div class="article-headline red">PEOPLE VOTE WITH THEIR THUMBS</div>
+        <div class="byline">Consumer Front · App Store Theatre · March 1, 2026</div>
+
+        <p>The Pentagon pulled the trigger on Saturday. By Saturday night, the public had responded with a verdict of its own.</p>
+
+        <p class="no-dropcap">Anthropic's Claude application surged to the <strong>No. 1 position on Apple's U.S. App Store chart of top free applications</strong> — overtaking OpenAI's ChatGPT, which commands some 900 million weekly users worldwide.</p>
+
+        <div class="numbers-highlight" style="text-align:center;font-size:56px;margin:10px 0;">#1</div>
+        <div style="text-align:center;font-size:9px;letter-spacing:3px;color:var(--faded);text-transform:uppercase;margin-bottom:10px;">Apple U.S. App Store · March 1, 2026</div>
+
+        <div class="info-box">
+          <div class="info-box-title">WHAT DROVE THE SURGE</div>
+          <div class="timeline">
+            <div class="timeline-item">
+              <div class="timeline-bullet filled"></div>
+              <div class="timeline-text">700+ AI workers at Google, OpenAI, Microsoft signed open letter backing Anthropic's red lines</div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-bullet filled"></div>
+              <div class="timeline-text">OpenAI CEO Sam Altman backed Amodei publicly: "I mostly trust them as a company"</div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-bullet filled"></div>
+              <div class="timeline-text">Pop star Katy Perry posted Anthropic Pro subscription screenshot with a heart</div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-bullet"></div>
+              <div class="timeline-text">Public debate around autonomous weapons & domestic surveillance crystallized support</div>
+            </div>
+          </div>
+        </div>
+
+        <p class="no-dropcap">The surge marks a notable shift in the AI wars: public sympathy running to the company that refused to arm an autonomous kill chain. The contrast with OpenAI's concurrent Pentagon deal was stark — and noticed.</p>
+
+        <div class="pull-quote">"Disagreeing with the government is the most American thing in the world."<br><span style="font-size:10px;font-style:normal;">— Dario Amodei, CBS News, Feb. 28, 2026</span></div>
+
+        <div class="cite">
+          Sources: <a href="https://www.cnbc.com/2026/02/28/anthropics-claude-apple-apps.html" target="_blank">CNBC</a> · <a href="https://www.ghacks.net/2026/03/02/claude-overtakes-chatgpt-on-the-app-store-in-the-ai-chatbot-race/" target="_blank">gHacks</a>
+        </div>
+      </div>
+    </div>
+
+    <hr class="section-rule thick">
+
+    <!-- TWO COL: STANDOFF + VERDICT -->
+    <div class="two-col">
+      <div class="article">
+        <div class="article-headline large">THE SIX-MONTH CAPITULATION</div>
+        <div class="byline">Diplomatic Desk · The Pentagon Theatre · Feb. 27–28, 2026</div>
+
+        <p>Secretary Hegseth's ultimatum had the ring of finality. "Anthropic will continue to provide the Department of War its services for a period of <strong>no more than six months</strong> to allow for a seamless transition to a better and more patriotic service." The bravado barely concealed the admission buried within: the Pentagon cannot, in fact, cut the cord.</p>
+
+        <p class="no-dropcap">Claude is the <strong>only advanced commercial AI model operating inside classified Pentagon networks</strong>. Under a $200 million contract awarded in summer 2025, it was cleared for classified use before any rival — Google, OpenAI, or xAI — because defense officials judged it the most advanced and secure model available. Experts warned that replacing it would amount to "open-heart surgery." Palantir, which supports U.S. security operations, has Claude deeply embedded in its analytics stack. A full technical withdrawal is operationally infeasible without a transition period of at minimum six months.</p>
+
+        <div class="info-box">
+          <div class="info-box-title">PENTAGON'S TACTICAL POSITION — ASSESSED</div>
+          <div class="timeline">
+            <div class="timeline-item">
+              <div class="timeline-date">TUE FEB 24</div>
+              <div class="timeline-bullet filled"></div>
+              <div class="timeline-text">Hegseth–Amodei summit at Pentagon. Ultimatums delivered. Meeting described as "cordial."</div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-date">THU FEB 26</div>
+              <div class="timeline-bullet filled"></div>
+              <div class="timeline-text">5:01 PM deadline set. Pentagon threatens DPA invocation AND supply-chain risk designation simultaneously — a legal contradiction noted by analysts.</div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-date">FRI FEB 27</div>
+              <div class="timeline-bullet filled"></div>
+              <div class="timeline-text">Anthropic rebuffs final offer. Trump posts on Truth Social. Hegseth designates Anthropic supply-chain risk. SIX-MONTH grace period announced.</div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-date">SAT FEB 28</div>
+              <div class="timeline-bullet filled"></div>
+              <div class="timeline-text">Operation Epic Fury launched against Iran. Claude deployed — hours after the ban was signed.</div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-date">SAT FEB 28</div>
+              <div class="timeline-bullet"></div>
+              <div class="timeline-text">OpenAI announces Pentagon deal. Claude hits #1 on App Store. Amodei vows to sue.</div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-date">MON MAR 2</div>
+              <div class="timeline-bullet filled"></div>
+              <div class="timeline-text"><strong>Claude crashes under its own surge.</strong> 4+ hour worldwide outage; ~10,000 reports on Downdetector. Free signups up 60% since January. "Unprecedented demand," says Anthropic. API stays up — the military's feed never cut.</div>
+            </div>
+          </div>
+        </div> of the Pentagon's strategy did not escape notice. Labeling Anthropic a supply-chain risk — a designation previously reserved for <em>foreign adversaries</em> — would bar the government from using its products. Yet invoking the Defense Production Act would legally affirm that Anthropic's AI was essential to national security. Amodei called the dual threats "inherently contradictory." Analysts agreed.</p>
+
+        <p class="no-dropcap">Even the Pentagon's own technology chief, Emil Michael, acknowledged hours before the deadline: "Up until that deadline, I'm open to more talks." The bravado, it seemed, had limits.</p>
+
+        <div class="cite">
+          Sources: <a href="https://www.cnn.com/2026/02/27/tech/anthropic-pentagon-deadline" target="_blank">CNN</a> · <a href="https://www.npr.org/2026/02/27/nx-s1-5729118/trump-anthropic-pentagon-openai-ai-weapons-ban" target="_blank">NPR</a> · <a href="https://www.foxnews.com/politics/pentagon-gives-ai-firm-ultimatum-lift-military-limits-friday-lose-200m-deal" target="_blank">Fox News</a> · <a href="https://qz.com/anthropic-pentagon-claude-ai-standoff-amodei" target="_blank">Quartz</a> · <a href="https://futurism.com/artificial-intelligence/anthropic-military-ai-nuclear-strike" target="_blank">Futurism</a> · <a href="https://www.cbsnews.com/news/hegseth-anthropic-full-access-claude-ai-model/" target="_blank">CBS News</a>
+        </div>
+      </div>
+
+      <div class="col-divider"></div>
+
+      <!-- RIGHT: VERDICT -->
+      <div class="article">
+        <div class="article-headline red" style="font-size:22px;">WHO IS THE PATRIOT?</div>
+        <div class="byline">Editorial Assessment · This Correspondent</div>
+
+        <p>The Department of War — the Pentagon's own chosen rebranding — demanded unrestricted control of an AI system to be used "for all lawful purposes." What, precisely, constitutes "lawful" was left deliberately undefined.</p>
+
+        <div class="verdict-box">
+          <div class="scorecard">
+            <div class="score-side">
+              <div class="score-name patriot">ANTHROPIC</div>
+              <div class="score-point">Refused autonomous weapons without human oversight</div>
+              <div class="score-check">✔ No mass surveillance of Americans</div>
+              <div class="score-check">✔ "We are patriotic Americans"</div>
+              <div class="score-check">✔ Offered missile defense use</div>
+              <div class="score-check">✔ Supported Iran strikes anyway</div>
+            </div>
+            <div class="score-vs">VS</div>
+            <div class="score-side">
+              <div class="score-name dept">DEPT. OF WAR</div>
+              <div class="score-point">Demanded no limits on a private AI system's use</div>
+              <div class="score-check" style="color:var(--ink);">✘ Threatened foreign-adversary label on U.S. firm</div>
+              <div class="score-check" style="color:var(--ink);">✘ Contradictory legal threats (DPA + ban)</div>
+              <div class="score-check" style="color:var(--ink);">✘ Used banned AI during ban's first 24 hrs</div>
+              <div class="score-check" style="color:var(--ink);">✘ Six-month retreat admitted dependency</div>
+            </div>
+          </div>
+        </div>
+
+        <p class="no-dropcap">Amodei drew the distinction plainly in his CBS interview: "One of the things about a free market and free enterprise is, different folks can provide different products under different principles." He noted that "Congress should probably weigh in" on AI safeguards — but "Congress is not the fastest moving body in the world."</p>
+
+        <div class="pull-quote">"No amount of intimidation or punishment from the Department of War will change our position on mass domestic surveillance or fully autonomous weapons."<br><span style="font-size:10px;font-style:normal;">— Anthropic Statement</span></div>
+
+        <p class="no-dropcap">The judgment of history — and of the market — rendered swiftly: <strong>a $380 billion valuation, the No. 1 app in America, and an indispensable role in the nation's most sensitive military operation.</strong> The Department of Threats and Rashness achieved only one thing: a six-month reminder that it cannot function without the company it called a traitor.</p>
+
+        <div class="info-box">
+          <div class="info-box-title">ANTHROPIC'S TWO RED LINES — HELD FIRM</div>
+          <div style="font-size:10px;line-height:1.7;color:var(--ink);padding:4px 0;">
+            <div>⚔ <strong>NO</strong> mass domestic surveillance of American citizens</div>
+            <div>⚔ <strong>NO</strong> fully autonomous lethal weapons without human oversight</div>
+          </div>
+        </div>
+
+        <div class="cite">
+          Sources: <a href="https://www.cbsnews.com/news/pentagon-anthropic-dario-amodei-cbs-news-interview-exclusive/" target="_blank">CBS News (Amodei Interview)</a> · <a href="https://www.npr.org/2026/02/24/nx-s1-5725327/pentagon-anthropic-hegseth-safety" target="_blank">NPR</a> · <a href="https://aldailynews.com/what-to-know-about-the-clash-between-the-pentagon-and-anthropic-over-militarys-ai-use/" target="_blank">Alabama Daily News</a> · <a href="https://www.washingtonpost.com/technology/2026/02/27/trump-anthropic-claude-drop/" target="_blank">Washington Post</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <hr class="section-rule thick">
+    <div class="dispatch-footer">
+      <span class="ornament">⁕</span> &nbsp;
+      All intelligence sourced from open theatre reporting. Citations linked above. Dispatch filed: March 2, 2026. &nbsp;
+      <span class="ornament">⁕</span>
+      <br><br>
+      <span class="stamp-unclass">UNCLASSIFIED // FOR PUBLIC RELEASE</span>
+      &nbsp;
+      <span class="stamp-unclass">ALL SOURCES OPEN</span>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // Animate bar fills on load
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.bar-fill').forEach(bar => {
+      const target = bar.style.width;
+      bar.style.width = '0%';
+      setTimeout(() => { bar.style.width = target; }, 300);
+    });
+  });
+</script>
+
+</body>
+</html>
