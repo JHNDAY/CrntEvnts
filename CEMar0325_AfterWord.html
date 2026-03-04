@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mainstream News Analysis — Current Events Discussion</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .newsletter {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header h1 { font-size: 2.2rem; margin-bottom: 10px; font-weight: bold; }
+        .header .subtitle { font-size: 1rem; opacity: 0.8; font-style: italic; }
+        .header .period { font-size: 0.95rem; opacity: 0.75; margin-top: 8px; letter-spacing: 0.04em; }
+
+        .content { padding: 30px; }
+
+        .section { margin-bottom: 30px; border-bottom: 1px solid #eee; padding-bottom: 30px; }
+        .section:last-child { border-bottom: none; margin-bottom: 0; }
+
+        .section-title {
+            font-size: 1.6rem;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            border-left: 4px solid #3498db;
+            padding: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background-color 0.3s ease;
+            border-radius: 5px;
+            background: #f8f9fa;
+        }
+        .section-title:hover { background-color: #e9ecef; }
+
+        .section-content { transition: max-height 0.3s ease-out, opacity 0.3s ease-out; overflow: hidden; }
+        .section-content.collapsed { max-height: 0; opacity: 0; }
+        .section-content.expanded { max-height: 6000px; opacity: 1; }
+
+        .story {
+            margin-bottom: 25px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            border-left: 3px solid #3498db;
+        }
+
+        .story-headline { font-size: 1.3rem; font-weight: bold; color: #2c3e50; margin-bottom: 12px; line-height: 1.3; }
+        .story-content { font-size: 1rem; line-height: 1.7; margin-bottom: 15px; }
+
+        .quote {
+            background: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 15px 20px;
+            margin: 15px 0;
+            font-style: italic;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .citation { font-size: 0.9rem; color: #666; font-weight: bold; margin-top: 8px; }
+
+        .key-facts {
+            background: #f0f8ff;
+            border: 1px solid #b3d9ff;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .key-facts-title { font-weight: bold; color: #2980b9; margin-bottom: 10px; }
+        .fact-list { margin-left: 20px; }
+        .fact-list li { margin-bottom: 5px; }
+
+        .stats-box {
+            background: linear-gradient(135deg, #ff7b7b 0%, #ff416c 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            text-align: center;
+        }
+        .stats-number { font-size: 2rem; font-weight: bold; margin-bottom: 5px; }
+
+        .breakdown-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 15px; margin: 20px 0; }
+        .breakdown-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 3px solid #e74c3c;
+            text-align: center;
+        }
+        .breakdown-label { font-size: 0.9rem; color: #666; margin-bottom: 5px; }
+        .breakdown-value { font-size: 1.2rem; font-weight: bold; color: #2c3e50; }
+
+        .warning {
+            background: #ffe6e6;
+            border: 1px solid #ffb3b3;
+            color: #d63031;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .footer { background: #2c3e50; color: white; padding: 25px 30px; text-align: center; }
+        .source-note { font-size: 0.85rem; opacity: 0.8; line-height: 1.5; }
+        .source-link { color: #74b9ff; text-decoration: none; }
+        .source-link:hover { text-decoration: underline; }
+
+        .expand-icon { font-size: 1.5rem; color: #3498db; transition: transform 0.3s ease; }
+
+        .collapse-button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: background-color 0.3s ease;
+            width: 150px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .collapse-button:hover { background: #2980b9; }
+
+        @media (max-width: 768px) {
+            .header h1 { font-size: 1.8rem; }
+            .content { padding: 20px; }
+            .breakdown-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+    <script>
+        function toggleSection(sectionId) {
+            const content = document.getElementById(sectionId);
+            const icon = document.querySelector(`[onclick="toggleSection('${sectionId}')"] .expand-icon`);
+            if (content.classList.contains('collapsed')) {
+                content.classList.remove('collapsed');
+                content.classList.add('expanded');
+                icon.textContent = '▼';
+            } else {
+                content.classList.add('collapsed');
+                content.classList.remove('expanded');
+                icon.textContent = '▶';
+            }
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.section-content').forEach(c => c.classList.add('collapsed'));
+        });
+    </script>
+</head>
+<body>
+<div class="newsletter">
+
+    <!-- HEADER -->
+    <div class="header">
+        <h1>Mainstream Media Coverage Analysis</h1>
+        <div class="subtitle">Of Topics Discussed in the Current Affairs Session</div>
+        <div class="period">Coverage Period: February 18 – March 3, 2026</div>
+    </div>
+
+    <div class="content">
+
+        <!-- ══════════════════════════════════════════════════
+             SECTION 1 — OPERATION EPIC FURY / IRAN
+        ══════════════════════════════════════════════════ -->
+        <div class="section">
+            <div class="section-title" onclick="toggleSection('iran-section')">
+                Operation Epic Fury: The U.S.–Israel Strike on Iran
+                <span class="expand-icon">▶</span>
+            </div>
+            <div class="section-content collapsed" id="iran-section">
+
+                <div class="story">
+                    <div class="story-headline">U.S. and Israel Launch Sweeping Air Campaign; Supreme Leader Khamenei Killed</div>
+                    <div class="story-content">
+                        On the morning of February 28, 2026, the United States and Israel launched a coordinated air campaign against Iran — striking hundreds of missile sites, air-defense installations, and regime leadership. The operation, dubbed <strong>"Operation Epic Fury,"</strong> killed Supreme Leader Ayatollah Ali Khamenei and marked the most consequential military action of the Trump presidency.
+                    </div>
+                    <div class="story-content">
+                        <a href="https://www.washingtonpost.com/national-security/2026/02/28/us-israel-military-operation-epic-fury-iran/" class="source-link">Washington Post</a> reported that Tomahawk and air-launched missiles eliminated Iranian air defenses, naval assets, and layers of regime leadership in a single bold daytime assault. Trump confirmed Khamenei's death late on Saturday afternoon and alleged that much of Iran's senior command structure was also eliminated.
+                    </div>
+                    <div class="quote">
+                        "The United States and Israel launched strikes across Iran in a bold daytime attack Saturday that struck hundreds of missile and air defense sites and eliminated layers of leadership in the Iranian regime, most significant among them the country's supreme leader, Ayatollah Ali Khamenei."
+                    </div>
+                    <div class="citation">— <a href="https://www.washingtonpost.com/national-security/2026/02/28/us-israel-military-operation-epic-fury-iran/" class="source-link">Washington Post</a>, February 28, 2026</div>
+                    <div class="story-content">
+                        <a href="https://www.nbcnews.com/world/iran/us-israel-attacks-iran-protests-nuclear-talks-rcna253784" class="source-link">NBC News</a> reported that Secretary of State Marco Rubio briefed seven of eight "Gang of Eight" congressional leaders moments before the strikes — a notification most Democrats characterized as a fait accompli rather than consultation. Senate Minority Leader Chuck Schumer stated: "Iran must never be allowed to attain a nuclear weapon, but the American people do not want another endless and costly war in the Middle East."
+                    </div>
+                    <div class="citation">Sources: <a href="https://www.washingtonpost.com/national-security/2026/02/28/us-israel-military-operation-epic-fury-iran/" class="source-link">Washington Post</a>, <a href="https://www.nbcnews.com/world/iran/us-israel-attacks-iran-protests-nuclear-talks-rcna253784" class="source-link">NBC News</a></div>
+                </div>
+
+                <div class="story">
+                    <div class="story-headline">Saudi and Israeli Lobbying Drove the Decision; U.S. Intelligence Saw No Imminent Threat</div>
+                    <div class="story-content">
+                        <a href="https://www.washingtonpost.com/politics/2026/02/28/trump-iran-decision-saudi-arabia-israel/" class="source-link">Washington Post</a>, citing four people familiar with the matter, reported that the attack followed weeks of lobbying by Israel and Saudi Arabia. U.S. intelligence had assessed no imminent nuclear threat from Iran — directly contradicting the administration's stated justifications. The joint date of attack was reportedly agreed during Netanyahu's Washington visit two weeks prior to the strikes.
+                    </div>
+                    <div class="key-facts">
+                        <div class="key-facts-title">The Administration's Shifting Justifications (as discussed in session):</div>
+                        <ul class="fact-list">
+                            <li><strong>Re-obliteration:</strong> Prior June 2025 strikes claimed to have already "obliterated" Iran's nuclear capacity — now reversed</li>
+                            <li><strong>Nuclear timeline:</strong> Officials claimed Iran was "weeks from a bomb"; intelligence assessed it as years away</li>
+                            <li><strong>Ballistic missiles:</strong> Cited as threat; analysts placed full ICBM capability 10+ years out</li>
+                            <li><strong>Regime change:</strong> The stated goal — with no post-strike governance plan in place</li>
+                            <li><strong>Israel would act anyway:</strong> Rubio's fallback — that a nation of 10 million people "led the way" and the U.S. had to follow</li>
+                        </ul>
+                    </div>
+                    <div class="story-content">
+                        The <a href="https://www.cfr.org/articles/gauging-the-impact-of-massive-u-s-israeli-strikes-on-iran" class="source-link">Council on Foreign Relations</a> noted that Iranian Foreign Minister Araghchi had tabled proposals during February 2026 Oman-mediated talks — including multi-year suspension of uranium enrichment — when the bombs fell. CFR Fellow Steven Cook wrote that the administration "opted for military attacks while the talks were unfolding," potentially foreclosing diplomacy for a generation. Oman's Foreign Minister, who mediated the talks, said he had been "confident a peace deal is within our reach."
+                    </div>
+                    <div class="citation">Sources: <a href="https://www.washingtonpost.com/politics/2026/02/28/trump-iran-decision-saudi-arabia-israel/" class="source-link">Washington Post</a>, <a href="https://www.cfr.org/articles/gauging-the-impact-of-massive-u-s-israeli-strikes-on-iran" class="source-link">Council on Foreign Relations</a>, <a href="https://commonslibrary.parliament.uk/research-briefings/cbp-10521/" class="source-link">UK House of Commons Library</a></div>
+                </div>
+
+                <div class="story">
+                    <div class="story-headline">"No Plan for What Comes Next": Analysts Warn of Post-Strike Vacuum</div>
+                    <div class="story-content">
+                        <a href="https://www.washingtonpost.com/national-security/2026/03/02/iran-regime-change-trump/" class="source-link">Washington Post</a> (March 2) reported that within hours of the strikes, the U.S. found itself in a "familiar but unsettling position: the swift removal of a global foe, only to confront an aftermath that history suggests will prove difficult to navigate."
+                    </div>
+                    <div class="story-content">
+                        Tom Friedman's analysis — cited in session by Hilary and Geoff Kent — argued Trump "doesn't know what he's going to do next." Trump's own statements escalated rapidly: from "about a week" to "a few weeks" to not ruling out boots on the ground. <a href="https://www.washingtonpost.com/world/2026/03/02/us-israel-iran-hezbollah-military-strikes-live-updates/" class="source-link">Washington Post live coverage</a> on March 3 confirmed six American service members had already been killed.
+                    </div>
+                    <div class="stats-box">
+                        <div class="stats-number">59%</div>
+                        <div>American disapproval of the Iran strikes — CNN poll, March 2026<br>
+                        <small style="opacity:0.85">vs. 20% approval &nbsp;|&nbsp; Independents aligned with disapprovers</small></div>
+                    </div>
+                    <div class="story-content">
+                        The <a href="https://commonslibrary.parliament.uk/research-briefings/cbp-10521/" class="source-link">UK House of Commons Library</a> research briefing noted that Iran responded by striking U.S. bases across the region and Israeli territory, and that the UK's RAF Cyprus base was hit by an Iranian drone. Canada's and Australia's prime ministers expressed public support for the operation — a nuance Jeff Kent raised against the dominant narrative of allied opposition.
+                    </div>
+                    <div class="citation">Sources: <a href="https://www.washingtonpost.com/national-security/2026/03/02/iran-regime-change-trump/" class="source-link">Washington Post (Mar 2)</a>, <a href="https://www.washingtonpost.com/world/2026/03/02/us-israel-iran-hezbollah-military-strikes-live-updates/" class="source-link">Washington Post live (Mar 3)</a>, <a href="https://commonslibrary.parliament.uk/research-briefings/cbp-10521/" class="source-link">UK House of Commons Library</a></div>
+                </div>
+
+                <div class="story">
+                    <div class="story-headline">Scholars Question Gulf-State Financial Entanglements Behind the Decision</div>
+                    <div class="story-content">
+                        Yale historian Timothy Snyder and scholar Andrew Tenenbaum — cited prominently in the session — raised the question of whether Gulf-state payments to Trump-linked entities constituted a conflict of interest in the strike decision. George Model summarized: the figure discussed across the Gulf states' financial relationships with the Trump orbit totaled approximately $4.4 billion.
+                    </div>
+                    <div class="breakdown-grid">
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Qatar — aircraft gift to Trump</div>
+                            <div class="breakdown-value">~$400M</div>
+                        </div>
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">UAE — Trump crypto fund</div>
+                            <div class="breakdown-value">~$1B</div>
+                        </div>
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Gulf SWF → Kushner vehicle</div>
+                            <div class="breakdown-value">$2B</div>
+                        </div>
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Total Gulf orbit (discussed)</div>
+                            <div class="breakdown-value">~$4.4B</div>
+                        </div>
+                    </div>
+                    <div class="story-content">
+                        Snyder's framing, as quoted in session: "Given the stupefyingly overt corruption of the Trump administration, one must ask if the U.S. armed forces are now being used on a per-hire basis." Andrew Tenenbaum concluded that Trump "probably doesn't have any plan at all — generally not a good idea when one goes to war." An online meme labeling the strikes "Operation Epstein Fury" gained wide circulation, linking the timing to renewed Epstein file disclosures.
+                    </div>
+                    <div class="citation">Sources: Session discussion citing Timothy Snyder (Yale), Andrew Tenenbaum; <a href="https://www.washingtonpost.com/opinions/2026/02/28/iran-war-strikes-bombing-trump-nuclear/" class="source-link">Washington Post Opinion (Feb 28)</a></div>
+                </div>
+
+                <div class="story">
+                    <div class="story-headline">Historical Background: Iran–Iraq War and the Limits of Force</div>
+                    <div class="story-content">
+                        Session participant Sally Fleschner provided historical framing rooted in the 1980–88 Iran–Iraq War. After the 1979 revolution weakened Iran, Saddam Hussein exploited the opening to reclaim the Shatt al-Arab waterway. After eight years and hundreds of thousands of casualties, Iraq ultimately conceded the territory back. The lesson drawn: Iran has absorbed devastating punishment and reconstituted repeatedly.
+                    </div>
+                    <div class="story-content">
+                        Fleschner recommended the 2025 book <strong><em>King of Kings</em></strong> — a journalist's 500-page account tracing U.S.–Iran relations from the 1953 CIA-backed coup through the hostage crisis — as essential background for a story in which "so much propaganda and misinformation" has accumulated over decades. She also noted that Khamenei was reportedly already incapacitated before the strikes, raising questions about how much decision-making power he actually held.
+                    </div>
+                    <div class="key-facts">
+                        <div class="key-facts-title">Key Historical Markers Referenced in Session:</div>
+                        <ul class="fact-list">
+                            <li>1953 — CIA/MI6-backed coup restores the Shah; seeds of lasting Iranian mistrust of Washington</li>
+                            <li>1979 — Islamic Revolution; Shah deposed; 444-day hostage crisis begins</li>
+                            <li>1980–88 — Iran–Iraq War; Saddam initially backed by the U.S.</li>
+                            <li>June 2025 — First round of U.S. strikes claimed to "obliterate" Iran's nuclear capacity</li>
+                            <li>Dec 2025–Jan 2026 — Mass Iranian protests; IRGC crackdowns kill thousands</li>
+                            <li>Feb 2026 — Oman-mediated nuclear talks show movement; strikes launched mid-negotiation</li>
+                            <li>Feb 28, 2026 — Operation Epic Fury launched; Khamenei killed</li>
+                        </ul>
+                    </div>
+                    <div class="citation">Sources: <a href="https://www.washingtonpost.com/world/2026/02/23/israel-iran-war-preparations-trump/" class="source-link">Washington Post (Feb 23)</a>, <a href="https://www.cfr.org/articles/gauging-the-impact-of-massive-u-s-israeli-strikes-on-iran" class="source-link">Council on Foreign Relations</a>, session discussion</div>
+                </div>
+
+                <button class="collapse-button" onclick="toggleSection('iran-section')">
+                    <span>▲</span> Collapse Section
+                </button>
+            </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════════════
+             SECTION 2 — ANTHROPIC / PENTAGON
+        ══════════════════════════════════════════════════ -->
+        <div class="section">
+            <div class="section-title" onclick="toggleSection('anthropic-section')">
+                The Anthropic–Pentagon Standoff: AI Ethics vs. Military Power
+                <span class="expand-icon">▶</span>
+            </div>
+            <div class="section-content collapsed" id="anthropic-section">
+
+                <div class="story">
+                    <div class="story-headline">Anthropic Refuses Pentagon Demands; Hegseth Bans the Company from All Military Work</div>
+                    <div class="story-content">
+                        In the days surrounding the Iran strikes, a parallel confrontation unfolded in Silicon Valley. Anthropic — the AI company founded by former OpenAI researchers Dario and Daniela Amodei — refused Pentagon demands to remove two safeguards from its Claude AI models: a prohibition on use for <strong>mass domestic surveillance of U.S. citizens</strong>, and a prohibition on <strong>fully autonomous weapons systems</strong> without human decision-making in the loop.
+                    </div>
+                    <div class="story-content">
+                        <a href="https://www.bloomberg.com/news/articles/2026-02-26/anthropic-spurns-latest-pentagon-bid-to-defuse-feud-over-ai-work" class="source-link">Bloomberg</a> reported that on February 27, Anthropic rejected the Pentagon's final offer. CEO Dario Amodei stated: "These threats do not change our position: we cannot in good conscience accede to their request." Trump then ordered the entire federal government to cease use of Anthropic products.
+                    </div>
+                    <div class="story-content">
+                        <a href="https://www.npr.org/2026/02/27/nx-s1-5729118/trump-anthropic-pentagon-openai-ai-weapons-ban" class="source-link">NPR</a> reported that Defense Secretary Pete Hegseth — using the Pentagon's "Department of War" rebranding — designated Anthropic a "supply-chain risk to national security," directing that no contractor, supplier, or partner doing business with the U.S. military could conduct any commercial activity with Anthropic. The contract at stake was worth up to $200 million.
+                    </div>
+                    <div class="quote">
+                        "Disagreeing with the government is the most American thing in the world, and we are patriots. In everything we have done here, we have stood up for the values of this country."
+                    </div>
+                    <div class="citation">— Dario Amodei, CEO of Anthropic, February 27, 2026 (quoted in session by John Day)</div>
+                    <div class="key-facts">
+                        <div class="key-facts-title">Anthropic's Two Non-Negotiable Red Lines:</div>
+                        <ul class="fact-list">
+                            <li><strong>No domestic surveillance:</strong> AI not to be used to monitor U.S. citizens — a First and Fourth Amendment concern given the administration's stated domestic adversaries</li>
+                            <li><strong>No fully autonomous weapons:</strong> Human decision-makers must remain in the loop; current frontier AI models not reliable enough for lethal autonomous targeting</li>
+                        </ul>
+                    </div>
+                    <div class="citation">Sources: <a href="https://www.bloomberg.com/news/articles/2026-02-26/anthropic-spurns-latest-pentagon-bid-to-defuse-feud-over-ai-work" class="source-link">Bloomberg</a>, <a href="https://www.npr.org/2026/02/27/nx-s1-5729118/trump-anthropic-pentagon-openai-ai-weapons-ban" class="source-link">NPR</a>, <a href="https://edition.cnn.com/2026/02/26/business/video/anthropic-rejects-latest-pentagon-offer-contract-digvid" class="source-link">CNN Business</a></div>
+                </div>
+
+                <div class="story">
+                    <div class="story-headline">OpenAI Steps In — But CEO's Mixed Signals Draw Sharp Criticism</div>
+                    <div class="story-content">
+                        Within hours of the Trump ban, <a href="https://www.npr.org/2026/02/27/nx-s1-5729118/trump-anthropic-pentagon-openai-ai-weapons-ban" class="source-link">NPR</a> reported that OpenAI announced a deal with the Pentagon to fill the void. Sam Altman publicly stated he shared the same "red lines" as Anthropic — opposing domestic surveillance and autonomous weapons — yet signed the contract anyway. John Day told the group he cancelled his ChatGPT subscription that morning.
+                    </div>
+                    <div class="story-content">
+                        OpenAI co-founder Ilya Sutskever posted on X: "It's extremely good that Anthropic has not backed down, and it's significant that OpenAI has taken a similar stance." Ralph Loomis offered a more direct analysis: the outcome had nothing to do with the arguments on the merits — it was entirely about which companies had funded Trump's inauguration. OpenAI had; Anthropic had not.
+                    </div>
+                    <div class="citation">Sources: <a href="https://www.npr.org/2026/02/27/nx-s1-5729118/trump-anthropic-pentagon-openai-ai-weapons-ban" class="source-link">NPR</a>, <a href="https://techcrunch.com/2026/02/27/pentagon-moves-to-designate-anthropic-as-a-supply-chain-risk/" class="source-link">TechCrunch</a></div>
+                </div>
+
+                <div class="story">
+                    <div class="story-headline">Claude Surges to No. 1 in the App Store — Then Crashes Under a Solidarity Wave</div>
+                    <div class="story-content">
+                        <a href="https://techcrunch.com/2026/03/01/anthropics-claude-rises-to-no-2-in-the-app-store-following-pentagon-dispute/" class="source-link">TechCrunch</a> reported that Anthropic's Claude app rose to the No. 1 position on the App Store following the dispute — a striking reversal in which the administration's attempt to destroy a company's reputation instead delivered its greatest public endorsement. As John Day put it to the group: "People vote with their thumbs."
+                    </div>
+                    <div class="story-content">
+                        John Day described how his BOLLI Current Events portal — which runs on Claude — went dark for most of the day of the confrontation. The surge of new users signing up in solidarity had overwhelmed Anthropic's servers. The system did maintain service for existing military customers throughout the outage.
+                    </div>
+                    <div class="stats-box">
+                        <div class="stats-number">#1</div>
+                        <div>Claude's App Store ranking immediately after the Pentagon standoff<br>
+                        <small style="opacity:0.85">Driven by a surge of solidarity signups from the American public</small></div>
+                    </div>
+                    <div class="citation">Sources: <a href="https://techcrunch.com/2026/03/01/anthropics-claude-rises-to-no-2-in-the-app-store-following-pentagon-dispute/" class="source-link">TechCrunch</a>, <a href="https://thehill.com/policy/technology/5763323-pentagon-stuns-silicon-valley-with-anthropic-ban/" class="source-link">The Hill</a></div>
+                </div>
+
+                <div class="story">
+                    <div class="story-headline">The Forbidden Weapon Was Already Deployed: AI Targeting in the Iran Strikes</div>
+                    <div class="story-content">
+                        A deeply ironic coda emerged over the weekend: the AI-assisted targeting capabilities the Pentagon had fought to compel Anthropic to enable were already operational in the Iran strikes. Emerging reporting, cited by John Day, indicated that AI-assisted target identification was critical to executing Operation Epic Fury — the very capability Anthropic had refused to authorize for autonomous use.
+                    </div>
+                    <div class="story-content">
+                        <a href="https://theconversation.com/the-pentagon-strongarmed-ai-firms-before-iran-strikes-in-dark-news-for-the-future-of-ethical-ai-277198" class="source-link">The Conversation</a> analyzed the implications: "Questions about ethical AI may go out the window when democratic norms are collapsing." <a href="https://www.cnbc.com/2026/02/27/defense-anthropic-ai-war-risks-hegseth-amodei.html" class="source-link">CNBC</a> quoted defense analyst Joe Scheidler: "We shouldn't be in a place where private companies feel that they have leverage over the U.S. government." Anthropic disputed that Hegseth had any statutory authority to extend the ban to non-military contractors and pledged to challenge the designation in federal court.
+                    </div>
+                    <div class="story-content">
+                        Anthropic announced a six-month transition period to help the Pentagon migrate its systems to OpenAI — an act of institutional generosity that John Day contrasted with how the Trump administration typically treats adversaries it defeats.
+                    </div>
+                    <div class="citation">Sources: <a href="https://theconversation.com/the-pentagon-strongarmed-ai-firms-before-iran-strikes-in-dark-news-for-the-future-of-ethical-ai-277198" class="source-link">The Conversation</a>, <a href="https://www.cnbc.com/2026/02/27/defense-anthropic-ai-war-risks-hegseth-amodei.html" class="source-link">CNBC</a>, <a href="https://techcrunch.com/2026/02/27/pentagon-moves-to-designate-anthropic-as-a-supply-chain-risk/" class="source-link">TechCrunch</a></div>
+                </div>
+
+                <button class="collapse-button" onclick="toggleSection('anthropic-section')">
+                    <span>▲</span> Collapse Section
+                </button>
+            </div>
+        </div>
+
+        <!-- ══════════════════════════════════════════════════
+             SECTION 3 — POLITICAL BACKDROP
+        ══════════════════════════════════════════════════ -->
+        <div class="section">
+            <div class="section-title" onclick="toggleSection('politics-section')">
+                Political Backdrop: Epstein Files, Harvard, and the Pattern of Distraction
+                <span class="expand-icon">▶</span>
+            </div>
+            <div class="section-content collapsed" id="politics-section">
+
+                <div class="story">
+                    <div class="story-headline">Epstein File Disclosures Re-Emerge Days Before the Iran Strikes</div>
+                    <div class="story-content">
+                        Multiple session participants — Lois Sockol, Alan Rashba, Ralph Loomis, and George Model — identified a convergence of damaging stories in the week before the Iran strikes. New Epstein file claims — that documents place Trump in proximity to a minor, and that if Trump were to be deposed, Hillary Clinton and Melania Trump should also face depositions — were seen as the most politically volatile of several simultaneous pressures.
+                    </div>
+                    <div class="quote">
+                        "I think today, and yesterday, I read nothing about the Epstein files. In other words, I think it's diversion — part of it is diversion."
+                    </div>
+                    <div class="citation">— Lois Sockol, session participant, March 3, 2026</div>
+                    <div class="key-facts">
+                        <div class="key-facts-title">Converging Pressures Cited by Session Participants (Ralph Loomis: "7 or 8 real problems bearing down on the White House"):</div>
+                        <ul class="fact-list">
+                            <li>Epstein file disclosures — new witness claims; deposition pressure intensifying</li>
+                            <li>Law-firm extortion orders — abandoned in court, then reasserted within hours</li>
+                            <li>Harvard funding fight — $1B threat issued by Trump after reading Times settlement story</li>
+                            <li>Core inflation at 0.8% for the month — annualized near 10%, contradicting administration messaging</li>
+                            <li>Wall Street Journal headline: "We are trying to achieve our goals before we run out of munitions"</li>
+                            <li>Declining approval ratings and Venezuela-comparison backlash</li>
+                        </ul>
+                    </div>
+                    <div class="citation">Sources: Session discussion; <a href="https://www.washingtonpost.com/world/2026/03/02/us-israel-iran-hezbollah-military-strikes-live-updates/" class="source-link">Washington Post live coverage (Mar 3)</a></div>
+                </div>
+
+                <div class="story">
+                    <div class="story-headline">Harvard and the Law Firms: Governance by Reactive Impulse</div>
+                    <div class="story-content">
+                        Ralph Loomis recounted that the <em>New York Times</em> reported a Harvard funding settlement two weeks earlier. Within 24 hours, Trump personally announced a $1 billion charge against Harvard — reportedly triggered by seeing the Times article. Loomis's read: "Somebody had shown him the article and he went absolutely berserk." The session took this as emblematic of an administration that governs by reaction to press coverage, driven by personal animus.
+                    </div>
+                    <div class="story-content">
+                        The law-firm extortion orders followed a similar arc: publicly abandoned, then reasserted the same morning of the group's session. Courts have generally blocked these orders on constitutional grounds, but the whipsaw creates a climate of institutional intimidation regardless of legal outcome.
+                    </div>
+                    <div class="warning">
+                        George Model's closing electoral framing: "Today is exactly 16 months from the 2024 election. It is only 8 months until the midterms. We are one-third of the way between the 2024 and 2028 elections." Both the Iran strikes and the Anthropic standoff should be read against that timeline — and against the question of which institutions, public or private, are defending democratic norms.
+                    </div>
+                    <div class="citation">Sources: Session discussion; <a href="https://www.washingtonpost.com/national-security/2026/03/02/iran-regime-change-trump/" class="source-link">Washington Post analysis (Mar 2)</a></div>
+                </div>
+
+                <button class="collapse-button" onclick="toggleSection('politics-section')">
+                    <span>▲</span> Collapse Section
+                </button>
+            </div>
+        </div>
+
+
+
+    </div><!-- /content -->
+
+    <!-- FOOTER -->
+    <div class="footer">
+        <div class="source-note">
+            <strong>Newsletter compiled from:</strong> Mainstream media coverage of topics discussed in the BOLLI Current Events Discussion Group session, March 3, 2026. Coverage period: February 18 – March 3, 2026.<br><br>
+
+            <strong>Primary Publications Referenced:</strong><br>
+            • <a href="https://www.washingtonpost.com/" class="source-link">Washington Post</a> — Iran strikes coverage, decision analysis, diplomatic background, regime-change reporting<br>
+            • <a href="https://www.nbcnews.com/" class="source-link">NBC News</a> — Operation Epic Fury; congressional notification reporting<br>
+            • <a href="https://www.cfr.org/" class="source-link">Council on Foreign Relations</a> — Impact assessment; diplomatic talks analysis<br>
+            • <a href="https://commonslibrary.parliament.uk/" class="source-link">UK House of Commons Library</a> — Research briefing on U.S.–Israel strikes on Iran<br>
+            • <a href="https://www.bloomberg.com/" class="source-link">Bloomberg</a> — Anthropic contract dispute; CEO statement reporting<br>
+            • <a href="https://www.npr.org/" class="source-link">NPR</a> — OpenAI Pentagon deal; Anthropic ban; supply-chain designation<br>
+            • <a href="https://techcrunch.com/" class="source-link">TechCrunch</a> — App Store surge; supply-chain designation details; Anthropic response<br>
+            • <a href="https://edition.cnn.com/" class="source-link">CNN Business</a> — Anthropic contract rejection video reporting<br>
+            • <a href="https://www.cnbc.com/" class="source-link">CNBC</a> — AI warfare balance-of-power analysis; defense analyst commentary<br>
+            • <a href="https://thehill.com/" class="source-link">The Hill</a> — Pentagon ban shock waves in Silicon Valley<br>
+            • <a href="https://theconversation.com/" class="source-link">The Conversation</a> — Ethical AI and democratic norms analysis<br><br>
+
+            <strong>Session-Cited Analysts and Scholars:</strong><br>
+            • Timothy Snyder (Yale) — on Gulf-state financial entanglements and per-hire military power<br>
+            • Andrew Tenenbaum — on absence of strategic planning; "generally not a good idea when one goes to war"<br>
+            • Tom Nichols — on the odds for pessimists and celebrants alike<br>
+            • Tom Friedman — on Trump's absence of a post-strike plan<br>
+            • Richard Haass — on exhausted diplomacy and the risks of regime-change framing<br><br>
+
+            <strong>Recommended Reading from Session:</strong><br>
+            • <em>King of Kings</em> (2025) — journalist account of U.S.–Iran relations from the 1953 coup through the hostage crisis (recommended by Sally Fleschner)<br><br>
+
+            <strong>Methodology:</strong> This analysis examines how mainstream media outlets covered the topics discussed in the March 3, 2026 session of the BOLLI Current Events Discussion Group. Direct links to sourced articles are provided throughout. Quoted material is drawn from published reporting or the session transcript. Financial figures cited reflect claims made in session by participants referencing scholarly analyses.<br><br>
+
+            <em>This newsletter compiles mainstream media perspectives on current events topics for educational and analytical purposes within the BOLLI Current Events Discussion Group portal.</em><br><br>
+
+            <a href="https://jhnday.github.io/CrntEvnts/current_affairs_central.html" class="source-link">↩ Return to Current Affairs Portal</a>
+        </div>
+    </div>
+
+</div><!-- /newsletter -->
+</body>
+</html>
