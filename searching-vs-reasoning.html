@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Discussion Prompt — Searching vs. Reasoning</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Source+Code+Pro:wght@300;400;600&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f5f1ea;
+    --ink: #2c2a26;
+    --deep: #2a4a7f;
+    --accent: #c0392b;
+    --gold: #b07d2e;
+    --light-blue: #dce8f5;
+    --mid: #7a7060;
+    --border: #d8d0c0;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Lato', sans-serif;
+    min-height: 100vh;
+    padding: 3rem 2rem 4rem;
+  }
+
+  .page {
+    max-width: 720px;
+    margin: 0 auto;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+    padding: 2.8rem 3rem;
+  }
+
+  .header {
+    border-bottom: 3px solid var(--border);
+    padding-bottom: 1.2rem;
+    margin-bottom: 1.6rem;
+  }
+  .session-tag {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--mid);
+    margin-bottom: 0.6rem;
+  }
+  .central-question {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.5rem, 4vw, 2rem);
+    line-height: 1.2;
+    color: var(--ink);
+    margin-bottom: 0.4rem;
+  }
+  .central-question em { color: var(--deep); font-style: italic; }
+  .accent-rule {
+    height: 3px;
+    width: 80px;
+    background: linear-gradient(90deg, var(--accent), var(--gold));
+    margin-top: 1rem;
+  }
+
+  .framing {
+    font-size: 1rem;
+    line-height: 1.75;
+    color: #3e3a34;
+    margin-bottom: 1.8rem;
+  }
+  .framing strong { color: var(--ink); }
+
+  /* two-column comparison */
+  .compare-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.2rem;
+    margin-bottom: 1.8rem;
+  }
+  @media (max-width: 540px) { .compare-grid { grid-template-columns: 1fr; } }
+
+  .compare-card {
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .compare-card .card-head {
+    padding: 0.6rem 1rem;
+    font-family: 'Source Code Pro', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: #fff;
+  }
+  .compare-card.search .card-head { background: var(--mid); }
+  .compare-card.reason .card-head { background: var(--deep); }
+  .compare-card .card-body {
+    padding: 0.9rem 1rem;
+    font-size: 0.92rem;
+    line-height: 1.6;
+    color: #3e3a34;
+    background: #faf8f4;
+  }
+  .compare-card .card-body p + p { margin-top: 0.5rem; }
+
+  .answer-box {
+    border-left: 4px solid var(--accent);
+    background: #fdf8f4;
+    padding: 1rem 1.3rem;
+    margin-bottom: 1.8rem;
+    border-radius: 0 3px 3px 0;
+  }
+  .answer-box .label {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+  }
+  .answer-box p {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.05rem;
+    line-height: 1.65;
+    color: #4a4540;
+  }
+
+  .section-head {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--mid);
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 0.4rem;
+    margin-bottom: 1.1rem;
+  }
+
+  .questions {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 1.8rem;
+  }
+  .q-item {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+  .q-num {
+    flex-shrink: 0;
+    width: 1.6rem; height: 1.6rem;
+    border-radius: 50%;
+    border: 1.5px solid var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Source Code Pro', monospace;
+    font-size: 0.72rem;
+    color: var(--accent);
+    margin-top: 0.15rem;
+  }
+  .q-item p {
+    font-size: 0.97rem;
+    line-height: 1.6;
+    color: #3a3630;
+  }
+  .q-item p strong {
+    color: var(--deep);
+    display: block;
+    margin-bottom: 0.15rem;
+  }
+
+  .context-box {
+    background: var(--light-blue);
+    border: 1px solid #a8c4e0;
+    border-radius: 4px;
+    padding: 1.1rem 1.3rem;
+    margin-bottom: 1.8rem;
+  }
+  .context-box .label {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--deep);
+    margin-bottom: 0.6rem;
+  }
+  .context-box p {
+    font-size: 0.92rem;
+    line-height: 1.65;
+    color: #2a3f60;
+  }
+
+  .punchline {
+    background: var(--deep);
+    color: #fff;
+    border-radius: 4px;
+    padding: 1.1rem 1.4rem;
+    margin-bottom: 1.8rem;
+  }
+  .punchline .label {
+    font-family: 'Source Code Pro', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #8ab0d8;
+    margin-bottom: 0.5rem;
+  }
+  .punchline p {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.05rem;
+    line-height: 1.6;
+    color: #e8eef8;
+  }
+
+  .footer {
+    border-top: 1px solid var(--border);
+    padding-top: 1rem;
+    font-family: 'Source Code Pro', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    color: #bbb4aa;
+    display: flex;
+    justify-content: space-between;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <p class="session-tag">BOLLI Current Events · AI Special Edition · March 10, 2026</p>
+    <h1 class="central-question">What's the difference between<br>AI <em>searching</em> the web and AI <em>reasoning</em> about it?</h1>
+    <div class="accent-rule"></div>
+  </div>
+
+  <p class="framing">
+    When people say "AI looked it up," they're often collapsing two very different
+    activities into one. <strong>Searching is mechanical. Reasoning is interpretive.</strong>
+    Understanding the gap between them is essential to knowing when to trust
+    what AI tells you — and when to be skeptical.
+  </p>
+
+  <div class="compare-grid">
+    <div class="compare-card search">
+      <div class="card-head">Searching the Web</div>
+      <div class="card-body">
+        <p>Sends a query, retrieves documents, pulls back text that matches.</p>
+        <p>Fairly mechanical — not unlike what Google does.</p>
+        <p>The result is a pile of raw material: sources, snippets, links.</p>
+        <p><em>Like going to the library and pulling books off the shelf.</em></p>
+      </div>
+    </div>
+    <div class="compare-card reason">
+      <div class="card-head">Reasoning About It</div>
+      <div class="card-body">
+        <p>Reads across sources, notices contradictions, weighs credibility.</p>
+        <p>Synthesizes a common thread and composes a coherent response.</p>
+        <p>This is analysis — not retrieval.</p>
+        <p><em>Like sitting down, reading the books, and forming a view.</em></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="answer-box">
+    <p class="label">The Core Distinction</p>
+    <p>"The searching part is fairly trustworthy — either a source exists or it doesn't.
+       The reasoning part is where AI can go wrong in subtle ways: sounding confident
+       while drawing a faulty inference, or being persuasive even when it's wrong."</p>
+  </div>
+
+  <p class="section-head">Discussion Questions</p>
+
+  <div class="questions">
+
+    <div class="q-item">
+      <div class="q-num">1</div>
+      <p><strong>Have you ever caught AI being confidently wrong?</strong>
+        If the reasoning layer can fail silently — without any obvious signal —
+        how do you know when to verify and when to trust?</p>
+    </div>
+
+    <div class="q-item">
+      <div class="q-num">2</div>
+      <p><strong>Does fluency create false confidence?</strong>
+        A well-constructed sentence feels authoritative. Does the smoothness of AI prose
+        make it harder to stay skeptical — even when you know you should be?</p>
+    </div>
+
+    <div class="q-item">
+      <div class="q-num">3</div>
+      <p><strong>What human reasoning instincts does AI lack?</strong>
+        A journalist senses when something "doesn't add up." A historian recognizes
+        anachronism. A scientist spots a confounded variable. Can AI develop
+        those instincts — or are they irreducibly human?</p>
+    </div>
+
+    <div class="q-item">
+      <div class="q-num">4</div>
+      <p><strong>Is this different from how we already consume news?</strong>
+        Pundits and columnists also "reason" about what they've read, and we trust
+        some more than others. Is AI reasoning fundamentally different — or just
+        a new version of the same problem?</p>
+    </div>
+
+    <div class="q-item">
+      <div class="q-num">5</div>
+      <p><strong>What would "good enough" AI reasoning look like to you?</strong>
+        Not perfect — just trustworthy enough for daily use. What conditions
+        would have to be met before you'd rely on it without checking?</p>
+    </div>
+
+  </div>
+
+  <div class="context-box">
+    <p class="label">Something to Keep in Mind</p>
+    <p>Most people assume that if AI found it on the web, it must be true. The real
+       risk isn't in the finding — it's in the reasoning layer on top. AI has no
+       instinct for irony, no nose for a planted story, no alarm that fires when
+       two credible-sounding sources are actually citing each other in a circle.</p>
+  </div>
+
+  <div class="punchline">
+    <p class="label">The Punchline Worth Sitting With</p>
+    <p>The danger isn't that AI will tell you something obviously false.
+       The danger is that it will tell you something subtly wrong —
+       in a voice so assured you never think to check.</p>
+  </div>
+
+  <div class="footer">
+    <span>BOLLI Current Events Discussion Group</span>
+    <span>jhnday.github.io/CrntEvnts</span>
+  </div>
+
+</div>
+</body>
+</html>
