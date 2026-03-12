@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Unanticipated Role Reversal</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Lora:ital,wght@0,400;0,500;0,600;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ivory: #eef3fa;
+    --parchment: #dce8f5;
+    --ink: #0d1b2e;
+    --navy: #0a3060;
+    --rust: #1565c0;
+    --amber: #1e88e5;
+    --sage: #0d47a1;
+    --gold: #64b5f6;
+    --muted: #3a5a80;
+    --light-rule: rgba(13,27,46,0.12);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background-color: var(--ivory);
+    color: var(--ink);
+    font-family: 'Lora', Georgia, serif;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ─── MASTHEAD ───────────────────────────────────────────── */
+  .masthead {
+    background: var(--navy);
+    padding: 14px 60px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 3px solid var(--gold);
+  }
+  .masthead-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+  }
+  .masthead-date {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: rgba(212,168,67,0.6);
+    letter-spacing: 1px;
+  }
+
+  /* ─── HERO ───────────────────────────────────────────────── */
+  .hero {
+    padding: 70px 60px 50px;
+    border-bottom: 2px solid var(--light-rule);
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 28px,
+      var(--light-rule) 28px,
+      var(--light-rule) 29px
+    );
+    pointer-events: none;
+    opacity: 0.4;
+  }
+  .kicker {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--rust);
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .kicker::before {
+    content: '';
+    display: inline-block;
+    width: 32px;
+    height: 2px;
+    background: var(--rust);
+  }
+  h1.headline {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(44px, 6vw, 84px);
+    font-weight: 900;
+    line-height: 1.0;
+    color: var(--ink);
+    max-width: 820px;
+    margin-bottom: 24px;
+    letter-spacing: -1px;
+  }
+  h1.headline em {
+    font-style: italic;
+    color: var(--navy);
+  }
+  .deck {
+    font-size: 20px;
+    font-style: italic;
+    color: var(--muted);
+    max-width: 680px;
+    line-height: 1.6;
+    margin-bottom: 32px;
+    font-family: 'Lora', serif;
+  }
+  .byline {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    text-transform: uppercase;
+    padding-top: 20px;
+    border-top: 1px solid var(--light-rule);
+    display: inline-block;
+  }
+
+  /* ─── CROSSING PATHS DIAGRAM ─────────────────────────────── */
+  .diagram-section {
+    padding: 60px 60px 50px;
+    background: #0a3060;
+    position: relative;
+    overflow: hidden;
+  }
+  .diagram-section::before {
+    content: 'X';
+    font-family: 'Playfair Display', serif;
+    font-size: 600px;
+    font-weight: 900;
+    color: rgba(255,255,255,0.025);
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    line-height: 1;
+  }
+  .diagram-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 40px;
+    text-align: center;
+  }
+
+  .crossroads {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 0;
+    align-items: stretch;
+    max-width: 1000px;
+    margin: 0 auto;
+    position: relative;
+  }
+
+  .path-card {
+    padding: 36px 40px;
+    position: relative;
+  }
+  .path-card.liberal {
+    background: rgba(13,71,161,0.35);
+    border: 1px solid rgba(13,71,161,0.6);
+    border-right: none;
+    clip-path: polygon(0 0, 100% 0, 85% 100%, 0 100%);
+    padding-right: 70px;
+  }
+  .path-card.coding {
+    background: rgba(21,101,192,0.35);
+    border: 1px solid rgba(21,101,192,0.6);
+    border-left: none;
+    clip-path: polygon(15% 0, 100% 0, 100% 100%, 0% 100%);
+    padding-left: 70px;
+  }
+
+  .cross-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    position: relative;
+  }
+  .cross-icon {
+    width: 72px;
+    height: 72px;
+    background: #64b5f6;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    color: #0a3060;
+    font-weight: 900;
+    flex-shrink: 0;
+    box-shadow: 0 0 0 8px rgba(100,181,246,0.15);
+  }
+
+  .path-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .path-card.liberal .path-label { color: #90caf9; }
+  .path-card.coding .path-label { color: #bbdefb; }
+
+  .path-direction {
+    font-family: 'Playfair Display', serif;
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .path-card.liberal .path-direction { color: #bbdefb; }
+  .path-card.coding .path-direction { color: #e3f2fd; }
+
+  .arrow-up { color: #6fcf97; }
+  .arrow-down { color: #eb5757; }
+
+  .path-stat {
+    font-size: 13px;
+    color: rgba(245,240,232,0.75);
+    line-height: 1.6;
+  }
+  .stat-number {
+    font-family: 'DM Mono', monospace;
+    font-size: 28px;
+    font-weight: 400;
+    display: block;
+    color: white;
+    margin: 8px 0 4px;
+  }
+  .stat-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: rgba(245,240,232,0.45);
+  }
+
+  /* ─── STATS ROW ──────────────────────────────────────────── */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-bottom: 2px solid var(--light-rule);
+  }
+  .stat-cell {
+    padding: 32px 36px;
+    border-right: 1px solid var(--light-rule);
+    animation: fadeInUp 0.6s ease both;
+  }
+  .stat-cell:last-child { border-right: none; }
+  .stat-cell:nth-child(1) { animation-delay: 0.1s; }
+  .stat-cell:nth-child(2) { animation-delay: 0.2s; }
+  .stat-cell:nth-child(3) { animation-delay: 0.3s; }
+  .stat-cell:nth-child(4) { animation-delay: 0.4s; }
+
+  .stat-big {
+    font-family: 'Playfair Display', serif;
+    font-size: 48px;
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .stat-big.up { color: var(--sage); }
+  .stat-big.down { color: var(--rust); }
+  .stat-meta {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+  .stat-desc {
+    font-size: 13px;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* ─── BODY CONTENT ───────────────────────────────────────── */
+  .content-grid {
+    display: grid;
+    grid-template-columns: 1fr 340px;
+    gap: 0;
+    padding: 60px;
+    border-bottom: 2px solid var(--light-rule);
+  }
+  .main-body { padding-right: 60px; border-right: 1px solid var(--light-rule); }
+  .sidebar { padding-left: 40px; }
+
+  h2.section-head {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--navy);
+    position: relative;
+  }
+  h2.section-head::before {
+    content: attr(data-number);
+    position: absolute;
+    right: 0;
+    top: 0;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    font-weight: 400;
+  }
+
+  .body-text {
+    font-size: 16px;
+    line-height: 1.85;
+    color: var(--ink);
+    margin-bottom: 20px;
+    column-count: 2;
+    column-gap: 40px;
+    column-rule: 1px solid var(--light-rule);
+  }
+  .body-text p { margin-bottom: 16px; break-inside: avoid; }
+
+  cite-link {
+    display: inline;
+  }
+  cite-link a {
+    color: var(--navy);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(28,43,74,0.35);
+    font-size: 0.85em;
+    vertical-align: super;
+    font-family: 'DM Mono', monospace;
+    padding: 0 2px;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  cite-link a:hover {
+    color: var(--rust);
+    border-color: var(--rust);
+  }
+
+  .pull-quote {
+    grid-column: 1 / -1;
+    padding: 36px 60px;
+    background: #0a3060;
+    margin: 0 -60px 40px;
+    border-left: 6px solid #64b5f6;
+  }
+  .pull-quote blockquote {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(20px, 2.5vw, 26px);
+    font-weight: 400;
+    font-style: italic;
+    color: var(--ivory);
+    max-width: 820px;
+    line-height: 1.5;
+  }
+  .pull-quote cite {
+    display: block;
+    margin-top: 14px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: #64b5f6;
+    font-style: normal;
+    text-transform: uppercase;
+  }
+
+  /* ─── SIDEBAR ELEMENTS ───────────────────────────────────── */
+  .sidebar-card {
+    background: var(--parchment);
+    border: 1px solid rgba(26,20,16,0.1);
+    padding: 24px 26px;
+    margin-bottom: 28px;
+    position: relative;
+  }
+  .sidebar-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 4px;
+    height: 100%;
+  }
+  .sidebar-card.green::before { background: #1565c0; }
+  .sidebar-card.red::before { background: #1e88e5; }
+  .sidebar-card.gold::before { background: #64b5f6; }
+
+  .sidebar-head {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 14px;
+  }
+  .sidebar-list {
+    list-style: none;
+    padding: 0;
+  }
+  .sidebar-list li {
+    font-size: 14px;
+    color: var(--ink);
+    padding: 7px 0;
+    border-bottom: 1px solid rgba(26,20,16,0.08);
+    line-height: 1.5;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .sidebar-list li:last-child { border-bottom: none; }
+  .sidebar-list li::before {
+    content: '→';
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .sidebar-card.green .sidebar-list li::before { color: #1565c0; }
+  .sidebar-card.red .sidebar-list li::before { color: #1e88e5; }
+  .sidebar-card.gold .sidebar-list li::before { color: #64b5f6; }
+
+  /* ─── META SECTION ───────────────────────────────────────── */
+  .meta-section {
+    background: #061a35;
+    padding: 60px;
+    color: var(--ivory);
+  }
+  .meta-head {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    font-weight: 700;
+    font-style: italic;
+    color: #90caf9;
+    margin-bottom: 8px;
+  }
+  .meta-sub {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(144,202,249,0.6);
+    margin-bottom: 36px;
+  }
+  .meta-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+  }
+  .meta-block {
+    border-top: 1px solid rgba(245,240,232,0.15);
+    padding-top: 20px;
+  }
+  .meta-block-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #64b5f6;
+    margin-bottom: 12px;
+  }
+  .meta-block p {
+    font-size: 15px;
+    line-height: 1.75;
+    color: rgba(238,243,250,0.8);
+  }
+  .meta-highlight {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 17px;
+    color: #e3f2fd;
+  }
+
+  /* ─── CITATIONS FOOTER ───────────────────────────────────── */
+  .citations {
+    padding: 40px 60px;
+    background: var(--parchment);
+    border-top: 2px solid var(--light-rule);
+  }
+  .citations h3 {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 20px;
+  }
+  .citation-list {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px 40px;
+  }
+  .citation-list li {
+    font-size: 12px;
+    color: var(--muted);
+    display: flex;
+    gap: 10px;
+    align-items: flex-start;
+    line-height: 1.5;
+  }
+  .citation-list li .num {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: #1e88e5;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+  .citation-list a {
+    color: var(--navy);
+    text-decoration: none;
+  }
+  .citation-list a:hover { text-decoration: underline; }
+
+  /* ─── ANIMATIONS ─────────────────────────────────────────── */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .hero { animation: fadeInUp 0.7s ease 0.1s both; }
+
+  /* ─── RESPONSIVE ─────────────────────────────────────────── */
+  @media (max-width: 900px) {
+    .masthead, .hero, .content-grid, .meta-section, .citations { padding: 30px; }
+    .body-text { column-count: 1; }
+    .content-grid { grid-template-columns: 1fr; }
+    .main-body { padding-right: 0; border-right: none; border-bottom: 1px solid var(--light-rule); padding-bottom: 30px; margin-bottom: 30px; }
+    .sidebar { padding-left: 0; }
+    .stats-row { grid-template-columns: 1fr 1fr; }
+    .meta-grid { grid-template-columns: 1fr; }
+    .citation-list { grid-template-columns: 1fr; }
+    .crossroads { grid-template-columns: 1fr; }
+    .path-card.liberal, .path-card.coding { clip-path: none; padding: 24px; border: 1px solid rgba(255,255,255,0.1); }
+    .cross-center { padding: 20px 0; }
+    .pull-quote { margin: 0 -30px 30px; padding: 30px; }
+    .diagram-section { padding: 40px 30px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- MASTHEAD -->
+<div class="masthead">
+  <div class="masthead-label">Education &amp; The Future of Work · Special Report</div>
+  <div class="masthead-date">March 2026</div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="kicker">The AI Disruption Report</div>
+  <h1 class="headline">The <em>Unanticipated</em><br>Role Reversal</h1>
+  <p class="deck">How the rise of generative AI has quietly inverted the career value of two once-divergent educational tracks — placing the humanities scholar and the software engineer on a collision course no one predicted.</p>
+  <div class="byline">Analysis · Spring 2026</div>
+</div>
+
+<!-- CROSSING PATHS DIAGRAM -->
+<div class="diagram-section">
+  <div class="diagram-title">Two Paths · One Intersection</div>
+  <div class="crossroads">
+    <div class="path-card liberal">
+      <div class="path-label">Liberal Arts</div>
+      <div class="path-direction"><span class="arrow-up">↑</span> Rising</div>
+      <div class="path-stat">
+        <span class="stat-number">3.0%</span>
+        <span class="stat-label">Art History Unemployment, 2025</span>
+      </div>
+      <div class="path-stat" style="margin-top:16px">
+        <span class="stat-number">3.2%</span>
+        <span class="stat-label">Philosophy Unemployment, 2025</span>
+      </div>
+    </div>
+    <div class="cross-center">
+      <div class="cross-icon">✕</div>
+    </div>
+    <div class="path-card coding">
+      <div class="path-label">Computer Science</div>
+      <div class="path-direction"><span class="arrow-down">↓</span> Falling</div>
+      <div class="path-stat">
+        <span class="stat-number">6.1%</span>
+        <span class="stat-label">CS Graduate Unemployment, 2025</span>
+      </div>
+      <div class="path-stat" style="margin-top:16px">
+        <span class="stat-number">7.5%</span>
+        <span class="stat-label">Computer Engineering Unemployment, 2025</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- STATS ROW -->
+<div class="stats-row">
+  <div class="stat-cell">
+    <div class="stat-big down">−20%</div>
+    <div class="stat-meta">Stanford Study, 2025</div>
+    <div class="stat-desc">Decline in employment for software developers aged 22–25 since late 2022 peak.</div>
+  </div>
+  <div class="stat-cell">
+    <div class="stat-big down">−55%</div>
+    <div class="stat-meta">SignalFire / 15 Largest Tech Cos.</div>
+    <div class="stat-desc">Drop in hiring of new CS graduates at America's 15 largest tech companies since 2019.</div>
+  </div>
+  <div class="stat-cell">
+    <div class="stat-big up">+14%</div>
+    <div class="stat-meta">McKinsey, by 2030</div>
+    <div class="stat-desc">Projected rise in demand for social and emotional skills in the U.S. workforce.</div>
+  </div>
+  <div class="stat-cell">
+    <div class="stat-big up">65%</div>
+    <div class="stat-meta">Coursera, 2025</div>
+    <div class="stat-desc">Of employers who cite soft skills as the single biggest gap among new graduates.</div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="content-grid">
+  <div class="main-body">
+
+    <h2 class="section-head" data-number="I">The Collapse No One Saw Coming</h2>
+    <div class="body-text">
+      <p>For more than a decade, the career advice was almost laughably simple: study computer science, learn to code, and prosperity would follow. Universities obliged, doubling CS enrollment — from 51,696 bachelor's degrees in 2013–2014 to 112,720 by 2022–2023.<cite-link><a href="https://www.finalroundai.com/blog/computer-science-graduates-face-worst-job-market-in-decades" target="_blank">[1]</a></cite-link> The machine was working exactly as designed, right up until the moment it wasn't.</p>
+      <p>In 2025, the Federal Reserve Bank of New York's data revealed something close to a statistical paradox: CS graduates were registering 6.1% unemployment — nearly double the 3.2% rate of philosophy majors, and worse than journalism graduates at 4.4%.<cite-link><a href="https://www.finalroundai.com/blog/computer-science-graduates-face-worst-job-market-in-decades" target="_blank">[1]</a></cite-link> Art history majors, for so long the punchline of every STEM-vs.-humanities debate, came in at just 3.0%.</p>
+      <p>How did this happen? Two forces converged simultaneously. First, generative AI tools capable of writing, debugging, and scaffolding code arrived in force. Second, major tech companies that had over-hired aggressively in 2021–2022 began shedding payroll: over 100,000 tech workers lost jobs in 2025, following more than 150,000 layoffs in 2024.<cite-link><a href="https://www.finalroundai.com/blog/computer-science-graduates-face-worst-job-market-in-decades" target="_blank">[1]</a></cite-link> New graduates walked into a saturated market competing against experienced engineers and AI systems simultaneously.</p>
+      <p>A Stanford Digital Economy Study tracking payroll records from ADP — America's largest payroll processor — documented the split with unusual precision. Employment for young and older software developers moved in lockstep until late 2022. Then the lines diverged sharply. By July 2025, employment for developers aged 22–25 had fallen nearly 20% from peak.<cite-link><a href="https://stackoverflow.blog/2025/12/26/ai-vs-gen-z/" target="_blank">[2]</a></cite-link> Senior developers, who carry years of contextual judgment that AI cannot easily replicate, were largely unaffected. The study suggests AI is particularly adept at replacing exactly what computer science programs teach: the coding syntax and basic algorithms of a classroom education.<cite-link><a href="https://www.finalroundai.com/blog/stanford-study-shows-young-software-developers-losing-jobs-to-ai" target="_blank">[3]</a></cite-link></p>
+    </div>
+
+    <div class="pull-quote">
+      <blockquote>"Computer science graduates are entering the worst job market in decades — nearly double the unemployment rate of philosophy majors. This completely flips what students were told about CS being a safe career choice."</blockquote>
+      <cite>— FinalRound AI Analysis, 2025 | Federal Reserve Bank of New York Data</cite>
+    </div>
+
+    <h2 class="section-head" data-number="II">Why Humanities Skills Resist Automation</h2>
+    <div class="body-text">
+      <p>The puzzle of why liberal arts skills are proving surprisingly durable in an AI economy resolves once you understand what AI can and cannot do. Generative AI excels at codified, repeatable, digitally tractable tasks — writing boilerplate code, summarizing documents, generating images from text. What it lacks is the capacity for genuine contextual judgment, moral reasoning, empathy, and the navigation of ambiguous human situations.</p>
+      <p>McKinsey projects that by 2030, demand for social and emotional skills in the United States will rise by 14%, as employers seek graduates who can bring genuine human understanding to complex challenges.<cite-link><a href="https://www.ccdaily.com/2025/09/why-liberal-arts-matter-even-in-the-age-of-ai/" target="_blank">[4]</a></cite-link> LinkedIn's 2023 Workplace Learning Report identified management, communication, leadership, research, and analysis as the most persistently sought-after skills across all industries — the very competencies a liberal arts education is designed to cultivate.<cite-link><a href="https://www.ccdaily.com/2025/09/why-liberal-arts-matter-even-in-the-age-of-ai/" target="_blank">[4]</a></cite-link></p>
+      <p>Deloitte's 2025 Global Gen Z and Millennial Survey found that younger generations, despite being digital natives, place greater value on soft skills — empathy, leadership, adaptability — than on technical credentials in an AI-driven workplace.<cite-link><a href="https://www.ccdaily.com/2025/09/why-liberal-arts-matter-even-in-the-age-of-ai/" target="_blank">[4]</a></cite-link> Employers are discovering that in a world where any team member can now generate code in seconds, the scarce resource is the person who can decide what to build, why it matters, and who it might harm — and communicate that persuasively to stakeholders across a table.</p>
+      <p>Perhaps most strikingly, Information Week published analysis in early 2025 arguing that liberal arts graduates may actually become the best programmers of the AI era — not because they can code, but because they can direct AI to code.<cite-link><a href="https://www.informationweek.com/it-leadership/why-liberal-arts-grads-could-be-the-best-programmers-of-the-ai-era" target="_blank">[5]</a></cite-link> The future of software development, the analysis suggested, belongs to adaptable, big-picture thinkers who can guide AI tools, understand nuanced problems, and construct meaningful solutions — traits more reliably cultivated by wrestling with Tolstoy and Thucydides than by memorizing sorting algorithms.</p>
+    </div>
+
+    <h2 class="section-head" data-number="III">The Prompt Engineer Is a Humanist</h2>
+    <div class="body-text">
+      <p>New job titles are arriving in force: AI Ethicist, Prompt Engineer, AI Product Strategist, Responsible AI Specialist, Conversational Designer. Each one requires a combination of technological literacy and humanistic depth. The person evaluating whether an AI-generated medical summary is safe to show a patient is not primarily doing software engineering. They are doing moral philosophy.</p>
+      <p>Emerging roles in AI ethics and cultural data analysis are increasingly attracting humanities graduates, according to educational observers.<cite-link><a href="https://shooliniuniversity.com/blog/why-liberal-arts-will-thrive-in-the-age-of-ai-and-technology/" target="_blank">[6]</a></cite-link> The Chronicle of Higher Education's 2025 webinar on workforce preparation captured the shift in a single line: employers want to see not just what graduates know, but how they think, learn, connect, adapt, and lead.<cite-link><a href="https://www.lanterncollegecounseling.com/insights/how-liberal-arts-engineering-degrees-prepare-students-for-an-ai-future" target="_blank">[7]</a></cite-link></p>
+      <p>David Meerman Scott, writing in January 2025, frames this as the triumph of adaptability over specialization: in a world where entire industries are disrupted every few years, being narrowly trained for a single task is increasingly a liability, while being broadly trained to think, learn, and adapt is increasingly an asset.<cite-link><a href="https://www.davidmeermanscott.com/blog/the-future-proof-value-of-a-liberal-arts-education-in-the-age-of-ai" target="_blank">[8]</a></cite-link> That, in a single sentence, describes what four years of reading Montaigne and arguing about Kantian ethics is supposed to do.</p>
+      <p>As Inc. Magazine noted in July 2025, 65% of employers cite soft skills as the top gap among new graduates.<cite-link><a href="https://www.inc.com/jessica-stillman/the-rise-of-ai-will-make-liberal-arts-degrees-popular-again-heres-why/91206953" target="_blank">[9]</a></cite-link> Where do you learn empathy, the ability to probe the deep weirdness of people, and comfort with change and difficult trade-offs? By wrestling with the long, messy, beautiful history of human art and thought — in other words, by studying the humanities.</p>
+    </div>
+
+  </div>
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+
+    <div class="sidebar-card green">
+      <div class="sidebar-head">Rising: What AI Can't Replace</div>
+      <ul class="sidebar-list">
+        <li>Critical thinking &amp; ethical judgment</li>
+        <li>Empathy and cross-cultural communication</li>
+        <li>Narrative construction and persuasion</li>
+        <li>Comfort with ambiguity and contradiction</li>
+        <li>AI prompting and directing AI tools</li>
+        <li>Values-based decision-making</li>
+        <li>AI ethics and policy analysis</li>
+      </ul>
+    </div>
+
+    <div class="sidebar-card red">
+      <div class="sidebar-head">Falling: What AI Now Does</div>
+      <ul class="sidebar-list">
+        <li>Writing boilerplate and repetitive code</li>
+        <li>Debugging common programming errors</li>
+        <li>Scaffolding standard applications</li>
+        <li>Generating documentation automatically</li>
+        <li>Entry-level data transformation</li>
+        <li>Web UI design &amp; mockup generation</li>
+        <li>Basic software testing &amp; QA</li>
+      </ul>
+    </div>
+
+    <div class="sidebar-card gold">
+      <div class="sidebar-head">New Job Categories Emerging</div>
+      <ul class="sidebar-list">
+        <li>AI Ethicist / Responsible AI Lead</li>
+        <li>Prompt Engineer / AI Interaction Designer</li>
+        <li>AI Product Strategist</li>
+        <li>Cultural Data Analyst</li>
+        <li>Conversational Interface Designer</li>
+        <li>AI Governance Specialist</li>
+        <li>Human-AI Collaboration Trainer</li>
+      </ul>
+    </div>
+
+    <div style="padding: 20px 0; border-top: 1px solid var(--light-rule); margin-top: 8px;">
+      <div style="font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); margin-bottom: 12px;">Washington Post, March 2025</div>
+      <p style="font-family: 'Playfair Display', serif; font-style: italic; font-size: 15px; color: var(--navy); line-height: 1.6;">"Learning to code was supposedly the salvation of millions of liberal arts majors. But now programming jobs are plummeting."</p>
+      <a href="https://www.washingtonpost.com/business/2025/03/14/programming-jobs-lost-artificial-intelligence/" target="_blank" style="display: inline-block; margin-top: 10px; font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 2px; color: #1565c0; text-decoration: none; text-transform: uppercase;">Read the full column →</a>
+    </div>
+
+  </div>
+</div>
+
+<!-- META SECTION: THE SELF-REFERENTIAL OBSERVATION -->
+<div class="meta-section">
+  <div class="meta-head">The Mirror Argument</div>
+  <div class="meta-sub">How This Very Document Proves the Point</div>
+  <div class="meta-grid">
+    <div class="meta-block">
+      <div class="meta-block-title">What Produced This Visualization</div>
+      <p>This document was not coded by a programmer. It was produced by a person — a retired data analyst and educator with a Ph.D. in statistical physics and decades of experience in research and analysis — who directed an AI to write it. The human contributor supplied the central argument, the framing metaphor, the editorial sensibility, the thematic structure, and the judgment about which evidence to include. <span class="meta-highlight">The "labor" of writing HTML was done entirely by Claude.</span></p>
+    </div>
+    <div class="meta-block">
+      <div class="meta-block-title">What Skills Were Actually Required</div>
+      <p>The skills that made this possible were not programming skills. They were the ability to identify a meaningful intellectual argument, to structure an inquiry, to evaluate sources critically, to communicate a complex idea with clarity and editorial purpose, and to direct an AI collaborator with sufficient precision to produce something useful. <span class="meta-highlight">These are the exact skills a liberal arts education is designed to develop.</span></p>
+    </div>
+    <div class="meta-block">
+      <div class="meta-block-title">The Inversion in Practice</div>
+      <p>A decade ago, creating an interactive HTML visualization required either coding skills or an expensive developer. Today, it requires the ability to think clearly, write well, and communicate with an AI. The person who cannot code but who can reason, argue, and direct has gained a powerful capability. The person who can only code has lost a monopoly. <span class="meta-highlight">This is the role reversal, illustrated in real time.</span></p>
+    </div>
+    <div class="meta-block">
+      <div class="meta-block-title">The Deeper Irony</div>
+      <p>The AI that produced this HTML — Claude — was itself built by engineers and researchers who combined deep technical knowledge with philosophy, ethics, linguistics, cognitive science, and policy thinking. The most consequential AI systems of this era were designed by teams that included humanists precisely because building beneficial AI requires exactly the judgment that humanistic education cultivates. <span class="meta-highlight">The humanities didn't just survive the AI age. They helped create it.</span></p>
+    </div>
+  </div>
+</div>
+
+<!-- CITATIONS -->
+<div class="citations">
+  <h3>Sources &amp; Citations</h3>
+  <ol class="citation-list">
+    <li>
+      <span class="num">[1]</span>
+      <span><a href="https://www.finalroundai.com/blog/computer-science-graduates-face-worst-job-market-in-decades" target="_blank">FinalRound AI — "Computer Science Graduates Face Worst Job Market in Decades"</a> — Federal Reserve Bank of New York data; CS unemployment 6.1%, philosophy 3.2%, art history 3.0% (2025)</span>
+    </li>
+    <li>
+      <span class="num">[2]</span>
+      <span><a href="https://stackoverflow.blog/2025/12/26/ai-vs-gen-z/" target="_blank">Stack Overflow Blog — "AI vs Gen Z: How AI has changed the career pathway for junior developers"</a> — Entry-level tech hiring down 25% YoY (2024); Stanford ADP study</span>
+    </li>
+    <li>
+      <span class="num">[3]</span>
+      <span><a href="https://www.finalroundai.com/blog/stanford-study-shows-young-software-developers-losing-jobs-to-ai" target="_blank">FinalRound AI — "Young Software Developers Losing Jobs to AI, Stanford Study Confirms"</a> — 20% decline in employment for developers aged 22–25 since peak, 2025</span>
+    </li>
+    <li>
+      <span class="num">[4]</span>
+      <span><a href="https://www.ccdaily.com/2025/09/why-liberal-arts-matter-even-in-the-age-of-ai/" target="_blank">Community College Daily — "Why Liberal Arts Matter — Even in the Age of AI"</a> — Deloitte 2025 survey; McKinsey +14% soft skill demand by 2030; LinkedIn Workplace Report</span>
+    </li>
+    <li>
+      <span class="num">[5]</span>
+      <span><a href="https://www.informationweek.com/it-leadership/why-liberal-arts-grads-could-be-the-best-programmers-of-the-ai-era" target="_blank">InformationWeek — "Why Liberal Arts Grads Could Be the Best Programmers of the AI Era"</a> — Feb. 2025</span>
+    </li>
+    <li>
+      <span class="num">[6]</span>
+      <span><a href="https://shooliniuniversity.com/blog/why-liberal-arts-will-thrive-in-the-age-of-ai-and-technology/" target="_blank">Shoolini University — "Liberal Arts in the Age of AI and Technology"</a> — Emerging roles in AI ethics and cultural data analysis (2025)</span>
+    </li>
+    <li>
+      <span class="num">[7]</span>
+      <span><a href="https://www.lanterncollegecounseling.com/insights/how-liberal-arts-engineering-degrees-prepare-students-for-an-ai-future" target="_blank">Lantern College Counseling — "How Liberal Arts Engineering Degrees Prepare Students for an AI Future"</a> — Chronicle of Higher Education webinar, June 2025; "durable skills"</span>
+    </li>
+    <li>
+      <span class="num">[8]</span>
+      <span><a href="https://www.davidmeermanscott.com/blog/the-future-proof-value-of-a-liberal-arts-education-in-the-age-of-ai" target="_blank">David Meerman Scott — "The Future-Proof Value of a Liberal Arts Education in the Age of AI"</a> — Jan. 2025; adaptability over narrow specialization</span>
+    </li>
+    <li>
+      <span class="num">[9]</span>
+      <span><a href="https://www.inc.com/jessica-stillman/the-rise-of-ai-will-make-liberal-arts-degrees-popular-again-heres-why/91206953" target="_blank">Inc. Magazine — "The Rise of AI Will Make Liberal Arts Degrees Popular Again"</a> — July 2025; Coursera 2025 Micro-Credentials Impact Report; 65% of employers cite soft skills gap</span>
+    </li>
+    <li>
+      <span class="num">[10]</span>
+      <span><a href="https://www.washingtonpost.com/business/2025/03/14/programming-jobs-lost-artificial-intelligence/" target="_blank">Washington Post — "More than a quarter of computer-programming jobs just vanished"</a> — March 2025; programming job decline acceleration</span>
+    </li>
+    <li>
+      <span class="num">[11]</span>
+      <span><a href="https://sfstandard.com/2026/02/19/ai-writes-code-now-s-left-software-engineers/" target="_blank">SF Standard — "AI writes the code now. What's left for software engineers?"</a> — Feb. 2026; UC system CS enrollment fell 6% (2025), 3% (2024); 55% new-grad hiring drop, SignalFire</span>
+    </li>
+    <li>
+      <span class="num">[12]</span>
+      <span><a href="https://www.ceibs.edu/new-papers-columns/27435" target="_blank">CEIBS — "Dying or Evolving: Where next for liberal arts in the age of AI?"</a> — LinkedIn 2024 Global Talent Trends; 65% of job skills to change by 2030</span>
+    </li>
+  </ol>
+</div>
+
+</body>
+</html>
