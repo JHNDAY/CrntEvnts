@@ -1,0 +1,1256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>POWER IN THE HEADLINES — SESSION 03 BRIEFING</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Bebas+Neue&family=IBM+Plex+Sans:wght@300;400;600&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080b0f;
+    --surface: #0d1117;
+    --surface2: #111820;
+    --border: #1e2d3d;
+    --amber: #f5a623;
+    --red: #e63946;
+    --green: #2ecc71;
+    --blue: #4fc3f7;
+    --text: #c9d1d9;
+    --muted: #6e7681;
+    --glow-amber: rgba(245,166,35,0.15);
+    --glow-red: rgba(230,57,70,0.15);
+    --glow-green: rgba(46,204,113,0.12);
+    --glow-blue: rgba(79,195,247,0.12);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* scanline effect */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.03) 2px, rgba(0,0,0,0.03) 4px);
+    pointer-events: none;
+    z-index: 9999;
+  }
+
+  /* ── HEADER ── */
+  header {
+    border-bottom: 1px solid var(--border);
+    padding: 18px 32px 14px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    position: sticky;
+    top: 0;
+    background: var(--bg);
+    z-index: 100;
+    animation: fadeDown 0.6s ease both;
+  }
+
+  .header-left { display: flex; flex-direction: column; gap: 2px; }
+
+  .classif {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.25em;
+    color: var(--red);
+    text-transform: uppercase;
+  }
+
+  h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 28px;
+    letter-spacing: 0.08em;
+    color: #fff;
+    line-height: 1;
+  }
+
+  .subtitle {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+
+  .header-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+  }
+
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(230,57,70,0.15);
+    border: 1px solid var(--red);
+    border-radius: 3px;
+    padding: 3px 10px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--red);
+    letter-spacing: 0.08em;
+  }
+
+  .pulse {
+    width: 6px; height: 6px;
+    background: var(--red);
+    border-radius: 50%;
+    animation: pulse 1.4s ease infinite;
+  }
+
+  /* ── MAIN GRID ── */
+  main {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 28px 24px 60px;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  /* ── SECTION HEADERS ── */
+  .section-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.3em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* ── CARDS ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 20px 22px;
+    position: relative;
+    overflow: hidden;
+    animation: fadeUp 0.5s ease both;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+  }
+
+  .card.amber::before { background: linear-gradient(90deg, var(--amber), transparent); }
+  .card.red::before   { background: linear-gradient(90deg, var(--red), transparent); }
+  .card.green::before { background: linear-gradient(90deg, var(--green), transparent); }
+  .card.blue::before  { background: linear-gradient(90deg, var(--blue), transparent); }
+
+  .card-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 20px;
+    letter-spacing: 0.06em;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .card.amber .card-title { color: var(--amber); }
+  .card.red   .card-title { color: var(--red); }
+  .card.green .card-title { color: var(--green); }
+  .card.blue  .card-title { color: var(--blue); }
+
+  .card-icon { font-size: 18px; }
+
+  /* ── THREE-COLUMN PANEL ── */
+  .three-col {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  /* ── TIMELINE ── */
+  .timeline {
+    position: relative;
+    padding-left: 20px;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 6px; top: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--amber), transparent);
+  }
+
+  .tl-item {
+    position: relative;
+    margin-bottom: 14px;
+    animation: fadeLeft 0.4s ease both;
+  }
+
+  .tl-item::before {
+    content: '';
+    position: absolute;
+    left: -17px; top: 6px;
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--amber);
+    box-shadow: 0 0 8px var(--amber);
+  }
+
+  .tl-date {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    color: var(--amber);
+    letter-spacing: 0.12em;
+    margin-bottom: 2px;
+  }
+
+  .tl-text {
+    font-size: 12px;
+    color: var(--text);
+    line-height: 1.5;
+  }
+
+  /* ── STAT BLOCKS ── */
+  .stat-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .stat-box {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 14px 12px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    animation: fadeUp 0.5s ease both;
+  }
+
+  .stat-box.amber { border-color: rgba(245,166,35,0.4); background: var(--glow-amber); }
+  .stat-box.red   { border-color: rgba(230,57,70,0.4);  background: var(--glow-red); }
+  .stat-box.green { border-color: rgba(46,204,113,0.3); background: var(--glow-green); }
+  .stat-box.blue  { border-color: rgba(79,195,247,0.3); background: var(--glow-blue); }
+
+  .stat-val {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 30px;
+    line-height: 1;
+    margin-bottom: 3px;
+  }
+
+  .stat-box.amber .stat-val { color: var(--amber); }
+  .stat-box.red   .stat-val { color: var(--red); }
+  .stat-box.green .stat-val { color: var(--green); }
+  .stat-box.blue  .stat-val { color: var(--blue); }
+
+  .stat-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    line-height: 1.3;
+  }
+
+  /* ── CHAIN ITEMS (cascade effects) ── */
+  .chain {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .chain-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(30,45,61,0.6);
+    animation: fadeLeft 0.4s ease both;
+  }
+
+  .chain-item:last-child { border-bottom: none; }
+
+  .chain-arrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 18px;
+    color: var(--muted);
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .chain-content {}
+  .chain-head {
+    font-weight: 600;
+    font-size: 12px;
+    color: #fff;
+    margin-bottom: 2px;
+  }
+  .chain-body { font-size: 11px; color: var(--muted); line-height: 1.5; }
+
+  /* ── VOICE QUOTES ── */
+  .quote-block {
+    border-left: 2px solid;
+    padding: 8px 14px;
+    margin-bottom: 10px;
+    background: rgba(255,255,255,0.02);
+    border-radius: 0 3px 3px 0;
+    animation: fadeLeft 0.4s ease both;
+  }
+
+  .quote-block.amber { border-color: var(--amber); }
+  .quote-block.red   { border-color: var(--red); }
+  .quote-block.green { border-color: var(--green); }
+  .quote-block.blue  { border-color: var(--blue); }
+
+  .quote-text {
+    font-size: 12px;
+    color: var(--text);
+    line-height: 1.55;
+    font-style: italic;
+    margin-bottom: 4px;
+  }
+
+  .quote-attr {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+  }
+
+  /* ── THREAT MATRIX ── */
+  .matrix {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .matrix-cell {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 12px 14px;
+    animation: fadeUp 0.5s ease both;
+  }
+
+  .matrix-cell-head {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    color: var(--amber);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .matrix-cell ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .matrix-cell ul li {
+    font-size: 11px;
+    color: var(--text);
+    padding: 2px 0;
+    padding-left: 12px;
+    position: relative;
+  }
+
+  .matrix-cell ul li::before {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    color: var(--muted);
+    font-size: 9px;
+  }
+
+  /* ── OIL WEAPON SECTION ── */
+  .pathway-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  .pathway {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 16px;
+    position: relative;
+    animation: fadeUp 0.5s ease both;
+  }
+
+  .pathway.highlight-green {
+    border-color: rgba(46,204,113,0.4);
+    background: var(--glow-green);
+  }
+
+  .pathway.highlight-red {
+    border-color: rgba(230,57,70,0.4);
+    background: var(--glow-red);
+  }
+
+  .pathway-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+
+  .pathway.highlight-green .pathway-label { color: var(--green); }
+  .pathway.highlight-red .pathway-label   { color: var(--red); }
+  .pathway-label.neutral { color: var(--muted); }
+
+  .pathway-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 17px;
+    color: #fff;
+    margin-bottom: 10px;
+    letter-spacing: 0.05em;
+  }
+
+  .pathway ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  .pathway ul li {
+    font-size: 12px;
+    color: var(--text);
+    padding: 3px 0;
+    padding-left: 14px;
+    position: relative;
+    border-bottom: 1px solid rgba(30,45,61,0.5);
+    line-height: 1.4;
+  }
+
+  .pathway ul li:last-child { border-bottom: none; }
+
+  .pathway ul li::before {
+    content: '→';
+    position: absolute;
+    left: 0;
+    font-size: 10px;
+  }
+
+  .pathway.highlight-green ul li::before { color: var(--green); }
+  .pathway.highlight-red   ul li::before { color: var(--red); }
+
+  /* ── CLOSING INSIGHT ── */
+  .insight-bar {
+    background: linear-gradient(135deg, rgba(245,166,35,0.08), rgba(46,204,113,0.06));
+    border: 1px solid rgba(245,166,35,0.3);
+    border-radius: 4px;
+    padding: 20px 24px;
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    gap: 24px;
+    align-items: center;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .insight-text {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.7;
+  }
+
+  .insight-text strong { color: var(--amber); }
+
+  .insight-pull {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px;
+    color: var(--green);
+    line-height: 1.2;
+    letter-spacing: 0.04em;
+    text-align: right;
+  }
+
+  /* ── OIL PRICE CHART ── */
+  .chart-wrap {
+    position: relative;
+    height: 120px;
+    margin: 14px 0 8px;
+  }
+
+  canvas#oilChart {
+    width: 100%;
+    height: 100%;
+  }
+
+  .chart-labels {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  /* ── SUPPLY CHAIN CASCADE ── */
+  .cascade {
+    display: flex;
+    align-items: flex-start;
+    gap: 0;
+    overflow-x: auto;
+    padding-bottom: 8px;
+  }
+
+  .casc-node {
+    min-width: 110px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 10px 10px;
+    flex-shrink: 0;
+    position: relative;
+    animation: fadeLeft 0.4s ease both;
+  }
+
+  .casc-node.node-red   { border-color: rgba(230,57,70,0.5); }
+  .casc-node.node-amber { border-color: rgba(245,166,35,0.5); }
+  .casc-node.node-blue  { border-color: rgba(79,195,247,0.5); }
+  .casc-node.node-green { border-color: rgba(46,204,113,0.5); }
+
+  .casc-connector {
+    display: flex;
+    align-items: center;
+    padding: 0 6px;
+    color: var(--red);
+    font-size: 16px;
+    flex-shrink: 0;
+    align-self: center;
+  }
+
+  .casc-top {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 8px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 3px;
+  }
+
+  .casc-main {
+    font-weight: 600;
+    font-size: 11px;
+    color: #fff;
+    margin-bottom: 2px;
+  }
+
+  .casc-sub {
+    font-size: 10px;
+    color: var(--muted);
+    line-height: 1.3;
+  }
+
+  /* ── ASYMMETRY COMPARISON ── */
+  .asym-grid {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 12px;
+    align-items: center;
+  }
+
+  .asym-side {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 14px;
+  }
+
+  .asym-side.us { border-color: rgba(79,195,247,0.4); }
+  .asym-side.ir { border-color: rgba(230,57,70,0.4); }
+
+  .asym-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  .asym-side.us .asym-label { color: var(--blue); }
+  .asym-side.ir .asym-label { color: var(--red); }
+
+  .asym-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 4px 0;
+    border-bottom: 1px solid rgba(30,45,61,0.5);
+    font-size: 11px;
+  }
+
+  .asym-row:last-child { border-bottom: none; }
+  .asym-key { color: var(--muted); }
+  .asym-val { font-weight: 600; color: #fff; font-family: 'IBM Plex Mono', monospace; font-size: 11px; }
+  .asym-val.bad  { color: var(--red); }
+  .asym-val.good { color: var(--green); }
+
+  .vs-badge {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 24px;
+    color: var(--amber);
+    text-align: center;
+  }
+
+  /* ── DECARBONIZATION METER ── */
+  .trigger-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .trigger-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    animation: fadeLeft 0.4s ease both;
+  }
+
+  .trigger-icon { font-size: 15px; flex-shrink: 0; }
+
+  .trigger-bar-wrap {
+    flex: 1;
+    height: 4px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .trigger-bar {
+    height: 100%;
+    border-radius: 2px;
+    animation: barGrow 1.2s ease both;
+    animation-delay: 0.5s;
+  }
+
+  @keyframes barGrow {
+    from { width: 0; }
+  }
+
+  .trigger-bar.green { background: var(--green); }
+  .trigger-bar.amber { background: var(--amber); }
+  .trigger-bar.red   { background: var(--red); }
+  .trigger-bar.blue  { background: var(--blue); }
+
+  .trigger-pct {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+    min-width: 28px;
+    text-align: right;
+  }
+
+  .trigger-label { font-size: 11px; color: var(--text); flex: 0 0 180px; }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeDown {
+    from { opacity: 0; transform: translateY(-12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeLeft {
+    from { opacity: 0; transform: translateX(-10px); }
+    to   { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 6px var(--red); }
+    50%       { opacity: 0.4; box-shadow: none; }
+  }
+
+  /* stagger children */
+  .tl-item:nth-child(1) { animation-delay: 0.05s; }
+  .tl-item:nth-child(2) { animation-delay: 0.1s; }
+  .tl-item:nth-child(3) { animation-delay: 0.15s; }
+  .tl-item:nth-child(4) { animation-delay: 0.2s; }
+  .tl-item:nth-child(5) { animation-delay: 0.25s; }
+  .tl-item:nth-child(6) { animation-delay: 0.3s; }
+  .tl-item:nth-child(7) { animation-delay: 0.35s; }
+  .tl-item:nth-child(8) { animation-delay: 0.4s; }
+
+  .stat-box:nth-child(1) { animation-delay: 0.05s; }
+  .stat-box:nth-child(2) { animation-delay: 0.12s; }
+  .stat-box:nth-child(3) { animation-delay: 0.19s; }
+  .stat-box:nth-child(4) { animation-delay: 0.26s; }
+
+  .three-col .card:nth-child(1) { animation-delay: 0.05s; }
+  .three-col .card:nth-child(2) { animation-delay: 0.12s; }
+  .three-col .card:nth-child(3) { animation-delay: 0.19s; }
+
+  .trigger-row:nth-child(1) { animation-delay: 0.05s; }
+  .trigger-row:nth-child(2) { animation-delay: 0.1s; }
+  .trigger-row:nth-child(3) { animation-delay: 0.15s; }
+  .trigger-row:nth-child(4) { animation-delay: 0.2s; }
+  .trigger-row:nth-child(5) { animation-delay: 0.25s; }
+
+  /* ── DIVIDER ── */
+  .divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+    margin: 4px 0;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 20px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    color: var(--muted);
+    letter-spacing: 0.12em;
+    border-top: 1px solid var(--border);
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .three-col { grid-template-columns: 1fr; }
+    .stat-grid { grid-template-columns: repeat(2, 1fr); }
+    .pathway-grid { grid-template-columns: 1fr; }
+    .matrix { grid-template-columns: 1fr; }
+    .asym-grid { grid-template-columns: 1fr; }
+    .insight-bar { grid-template-columns: 1fr; }
+    .insight-pull { text-align: left; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <span class="classif">▌ Session Intelligence Report · Power in the Headlines · Session 03</span>
+    <h1>IRAN WAR: GEOPOLITICS, OIL & THE ENERGY INFLECTION</h1>
+    <span class="subtitle">Zoom Discussion Group · BOLLI · March 2026 · Facilitator: S. McKnight</span>
+  </div>
+  <div class="header-meta">
+    <div class="status-pill"><div class="pulse"></div>ACTIVE CRISIS</div>
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--muted);margin-top:4px;">
+      Strait of Hormuz: CLOSED &nbsp;|&nbsp; WTI Range: $81–$119/bbl &nbsp;|&nbsp; Barrels offline: ~100M
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- ═══════════════════════════════════════════
+       PART I — GEOPOLITICAL FALLOUT
+  ════════════════════════════════════════════ -->
+  <div class="section-label">01 &mdash; Geopolitical Fallout of the Declared War on Iran</div>
+
+  <!-- Stat row -->
+  <div class="stat-grid">
+    <div class="stat-box red">
+      <div class="stat-val">150+</div>
+      <div class="stat-label">US casualties<br>(White House est.)</div>
+    </div>
+    <div class="stat-box amber">
+      <div class="stat-val">$11.3B</div>
+      <div class="stat-label">Week 1 cost<br>(Pentagon to Congress)</div>
+    </div>
+    <div class="stat-box amber">
+      <div class="stat-val">$5B</div>
+      <div class="stat-label">Munitions expended<br>in first 48 hours</div>
+    </div>
+    <div class="stat-box red">
+      <div class="stat-val">0</div>
+      <div class="stat-label">Historical cases where<br>airstrikes achieved regime change<br><em style="font-style:normal;font-size:8px;">(Robert Pape research)</em></div>
+    </div>
+  </div>
+
+  <!-- Three column: Timeline | Asymmetry | Regional cascade -->
+  <div class="three-col">
+
+    <!-- Timeline of the war's first 10 days -->
+    <div class="card amber">
+      <div class="card-title"><span class="card-icon">📅</span> 10-Day War Chronology</div>
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-date">FEB 27 — TOM COTTON</div>
+          <div class="tl-text">Iran declared "imminent threat" — a talking point Bibi Netanyahu has deployed since the 1990s.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-date">FEB 28 — AIRSTRIKES</div>
+          <div class="tl-text">US–Israel coalition strikes kill Supreme Leader Ali Khamenei &amp; family during Ramadan. New, more radical son elevated.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-date">MAR 1 — TRUMP</div>
+          <div class="tl-text">"Victory in 3–4 days." Revised to 4–6 weeks the next day. Then: "Wars can be fought forever. Also this isn't a war."</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-date">MAR 5 — PENTAGON</div>
+          <div class="tl-text">Internal planning horizon extended to at least September. Bahrain installations obliterated in opening minutes.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-date">MAR 6 — KURDS / TOYOTA</div>
+          <div class="tl-text">US re-arms Kurds on Iran's western border. Reports of ~10,000 Toyota trucks purchased in Erbil — a land war signal.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-date">MAR 7 — TRUMP</div>
+          <div class="tl-text">"Trump will decide when Iran has unconditionally surrendered." Read by some as open off-ramp. Or not.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-date">MAR 9 — HEGSETH</div>
+          <div class="tl-text">"Iran war is pretty much over. But also just beginning." Iran must be totally defeated.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-date">ONGOING — STRAIT CLOSED</div>
+          <div class="tl-text">Multiple tankers destroyed. IRGC drones and ballistic missiles hit Oman, Saudi, Kuwait, Qatar infrastructure.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Asymmetric warfare -->
+    <div class="card red">
+      <div class="card-title"><span class="card-icon">⚔️</span> Asymmetric Warfare</div>
+      <div class="asym-grid" style="grid-template-columns:1fr auto 1fr;">
+        <div class="asym-side us">
+          <div class="asym-label">US–Israel Coalition</div>
+          <div class="asym-row"><span class="asym-key">Patriot missile</span><span class="asym-val bad">$4M+</span></div>
+          <div class="asym-row"><span class="asym-key">Production rate</span><span class="asym-val bad">~dozen/yr</span></div>
+          <div class="asym-row"><span class="asym-key">Stock status</span><span class="asym-val bad">Near depleted</span></div>
+          <div class="asym-row"><span class="asym-key">Topography</span><span class="asym-val bad">Hostile mountains</span></div>
+          <div class="asym-row"><span class="asym-key">State Dept</span><span class="asym-val bad">Gutted by DOGE</span></div>
+          <div class="asym-row"><span class="asym-key">Diplomats</span><span class="asym-val bad">Kushner + Witkoff</span></div>
+        </div>
+        <div class="vs-badge">VS</div>
+        <div class="asym-side ir">
+          <div class="asym-label">Iran / IRGC</div>
+          <div class="asym-row"><span class="asym-key">Shahad drone</span><span class="asym-val good">$35K</span></div>
+          <div class="asym-row"><span class="asym-key">Supply depth</span><span class="asym-val good">Enormous stockpile</span></div>
+          <div class="asym-row"><span class="asym-key">Sanctions resilience</span><span class="asym-val good">Decades hardened</span></div>
+          <div class="asym-row"><span class="asym-key">Terrain advantage</span><span class="asym-val good">Mountains everywhere</span></div>
+          <div class="asym-row"><span class="asym-key">Planning horizon</span><span class="asym-val good">Decades-long prep</span></div>
+          <div class="asym-row"><span class="asym-key">Motivation</span><span class="asym-val good">Ayatollah killed</span></div>
+        </div>
+      </div>
+      <div style="margin-top:12px;">
+        <div class="quote-block red">
+          <div class="quote-text">"Ukraine is helping the US figure out how to deal with Iranian drones — because they've been under attack by them for 3–4 years. That's an ironic turn of events."</div>
+          <div class="quote-attr">— Peter Shapiro</div>
+        </div>
+        <div class="quote-block amber">
+          <div class="quote-text">"The Ukrainians have developed a Shahad-killer drone for $1,000–$2,000 — under duress, with limited resources. Classic innovation under necessity."</div>
+          <div class="quote-attr">— John Day (citing MIT / DARPA work by Alan Epstein)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Regional / global cascade -->
+    <div class="card blue">
+      <div class="card-title"><span class="card-icon">🌐</span> Geopolitical Cascade</div>
+      <div class="chain">
+        <div class="chain-item">
+          <div class="chain-arrow">→</div>
+          <div class="chain-content">
+            <div class="chain-head">Rally-Around-the-Flag Effect</div>
+            <div class="chain-body">Killing the Ayatollah during Ramadan unified Iranian public behind the regime — even those who hated it. Parallels London Blitz, Hanoi bombing (Bob Fishman). Airstrikes never produce regime change (R. Pape).</div>
+          </div>
+        </div>
+        <div class="chain-item">
+          <div class="chain-arrow">→</div>
+          <div class="chain-content">
+            <div class="chain-head">Nuclear Calculus Shifts</div>
+            <div class="chain-body">New, younger, more radical Supreme Leader now sees a nuclear weapon as the only true security guarantee. The assassination accelerated — not deterred — Iran's motivation to develop it.</div>
+          </div>
+        </div>
+        <div class="chain-item">
+          <div class="chain-arrow">→</div>
+          <div class="chain-content">
+            <div class="chain-head">China's Taiwan Window</div>
+            <div class="chain-body">US Patriots drawn from South Korea (angering Beijing). Asia-Pacific defenses hollowed. Is this Xi's Putin moment — or a cautionary lesson? The quagmire analogy may cut both ways. (Eric Fortess, Scott McKnight)</div>
+          </div>
+        </div>
+        <div class="chain-item">
+          <div class="chain-arrow">→</div>
+          <div class="chain-content">
+            <div class="chain-head">Gulf Monarchies Exposed</div>
+            <div class="chain-body">Saudi, Qatar, Kuwait, UAE built their security architecture on US umbrella — now visibly shattered. Oman (former Iran broker) also struck. The entire petrodollar recycling system is under stress.</div>
+          </div>
+        </div>
+        <div class="chain-item">
+          <div class="chain-arrow">→</div>
+          <div class="chain-content">
+            <div class="chain-head">Netanyahu as Constraining Force</div>
+            <div class="chain-body">Trump may want out; Bibi prevents it. Question of why Israel exercises such outsize influence on US foreign policy — Christian Zionist bloc (Huckabee, Graham), Netanyahu "in Trump's head" (Shapiro).</div>
+          </div>
+        </div>
+        <div class="chain-item">
+          <div class="chain-arrow">→</div>
+          <div class="chain-content">
+            <div class="chain-head">Anti-Semitism Blowback Risk</div>
+            <div class="chain-body">Bob Fishman's warning: as casualties mount and pain spreads, American public will seek scapegoats. Historical precedent (WWI stab-in-the-back myth) is troubling. Unbridled support for Israel may be doing more harm than good.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ═══════════════════════════════════════════
+       PART II — ECONOMIC IMPACT
+  ════════════════════════════════════════════ -->
+  <div class="section-label">02 &mdash; Economic Impact: Oil Prices, Supply Chains & Cascading Fragility</div>
+
+  <!-- Oil price chart + stats -->
+  <div style="display:grid;grid-template-columns:2fr 1fr;gap:20px;">
+    <div class="card amber">
+      <div class="card-title"><span class="card-icon">📈</span> Brent / WTI Price Shock</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:8px;">Illustrative price trajectory &mdash; week of declared war (Feb 28 – Mar 9)</div>
+      <div class="chart-wrap">
+        <canvas id="oilChart"></canvas>
+      </div>
+      <div class="chart-labels">
+        <span>Feb 27<br>Pre-War</span>
+        <span>Feb 28<br>Strike</span>
+        <span>Mar 1<br>Escalate</span>
+        <span>Mar 3<br>Wright Lie</span>
+        <span>Mar 5<br>Pentagon</span>
+        <span>Mar 7<br>Peak</span>
+        <span>Mar 9<br>Volatile</span>
+      </div>
+      <div style="margin-top:10px;font-size:11px;color:var(--muted);">
+        <span style="color:var(--amber);">★</span> Secretary Wright tweeted the Strait was reopened (lie) → prices fell 8%, then rose 5.5% when tweet deleted. Someone made a hell of a lot of money.
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:14px;">
+      <div class="card red" style="flex:1;">
+        <div class="card-title" style="font-size:16px;"><span class="card-icon">🛢️</span> Strait of Hormuz: CLOSED</div>
+        <div class="chain">
+          <div class="chain-item">
+            <div class="chain-arrow">→</div>
+            <div class="chain-content">
+              <div class="chain-head">~100M barrels offline globally</div>
+              <div class="chain-body">Pre-war: 16.5M bbl/day through Hormuz. Now 5.5M flowing via alternative pipelines — ⅓ of prior volume.</div>
+            </div>
+          </div>
+          <div class="chain-item">
+            <div class="chain-arrow">→</div>
+            <div class="chain-content">
+              <div class="chain-head">SPR Release: largest in history</div>
+              <div class="chain-body">IAEA member nations release 400M barrels. Buys 4 days of world supply. Temporary lid only.</div>
+            </div>
+          </div>
+          <div class="chain-item">
+            <div class="chain-arrow">→</div>
+            <div class="chain-content">
+              <div class="chain-head">US sanctions on Russia lifted</div>
+              <div class="chain-body">India re-permitted to buy Rosneft / Lukoil barrels. Sanctions as foreign policy tool further eroded.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card amber" style="flex:0;">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--muted);letter-spacing:0.1em;margin-bottom:6px;">MASSACHUSETTS PUMP PRICE</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--amber);line-height:1;">$3.49<span style="font-size:16px;color:var(--muted);"> / gal</span></div>
+        <div style="font-size:10px;color:var(--muted);">With SPR lid. Could reach $4–$5 without it. $30/bbl above pre-war baseline.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Supply chain cascade -->
+  <div class="card red">
+    <div class="card-title"><span class="card-icon">⛓️</span> Beyond Barrels: The Hidden Supply Chain Fractures</div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:14px;">The Strait of Hormuz is a chokepoint for far more than crude oil. Cascading effects identified in session:</div>
+    <div class="cascade">
+      <div class="casc-node node-red">
+        <div class="casc-top">Origin</div>
+        <div class="casc-main">Strait Closed</div>
+        <div class="casc-sub">~100M barrels offline; refineries bombed</div>
+      </div>
+      <div class="casc-connector">→</div>
+      <div class="casc-node node-amber">
+        <div class="casc-top">Sulfur</div>
+        <div class="casc-main">92% from oil refining</div>
+        <div class="casc-sub">→ Sulfuric acid; copper, cobalt, nickel extraction; EV batteries</div>
+      </div>
+      <div class="casc-connector">→</div>
+      <div class="casc-node node-amber">
+        <div class="casc-top">Fertilizer</div>
+        <div class="casc-main">33% of world feedstock</div>
+        <div class="casc-sub">Synthetic nitrogen feeds ~half global population (India, Brazil)</div>
+      </div>
+      <div class="casc-connector">→</div>
+      <div class="casc-node node-blue">
+        <div class="casc-top">Qatar LNG → Taiwan</div>
+        <div class="casc-main">30% of Taiwan's LNG</div>
+        <div class="casc-sub">~1 week natural gas reserve; TSMC uses 10% of Taiwan's electricity</div>
+      </div>
+      <div class="casc-connector">→</div>
+      <div class="casc-node node-red">
+        <div class="casc-top">TSMC Chips</div>
+        <div class="casc-main">No gas → no power</div>
+        <div class="casc-sub">No chips → global semiconductor supply shock</div>
+      </div>
+      <div class="casc-connector">→</div>
+      <div class="casc-node node-amber">
+        <div class="casc-top">Inbound Food</div>
+        <div class="casc-main">Gulf import dependency</div>
+        <div class="casc-sub">Cars, computers, food — all move through Hormuz into region</div>
+      </div>
+      <div class="casc-connector">→</div>
+      <div class="casc-node node-red">
+        <div class="casc-top">Global Inflation</div>
+        <div class="casc-main">Distributed pain</div>
+        <div class="casc-sub">Diesel, shipping, fertilizer → price of bread, eggs, everything</div>
+      </div>
+    </div>
+    <div style="margin-top:14px;">
+      <div class="quote-block amber">
+        <div class="quote-text">"When are we gonna realize that this global economy we've created is really very fragile? A ship got stuck in the Suez Canal and it wrought havoc. Now we have the Strait of Hormuz."</div>
+        <div class="quote-attr">— Art Shearman</div>
+      </div>
+      <div class="quote-block blue">
+        <div class="quote-text">"Phosphorus — on which our entire industrial agricultural system is completely dependent — largest global reserve is in Morocco. And Bob Halpin added it to the list."</div>
+        <div class="quote-attr">— Bob Halpin</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- ═══════════════════════════════════════════
+       PART III — OIL AS WEAPON & ENERGY INFLECTION
+  ════════════════════════════════════════════ -->
+  <div class="section-label">03 &mdash; Oil as Weapon & the Potential Acceleration Toward Non-Carbon Energy</div>
+
+  <div class="pathway-grid">
+    <div class="pathway highlight-red">
+      <div class="pathway-label">Iran's Leverage</div>
+      <div class="pathway-title">Oil as a Weapon of Attrition</div>
+      <ul>
+        <li>Iran, not the US, likely decides when this war ends — they control supply disruption duration</li>
+        <li>Strait of Hormuz closure: the "thought experiment" academics said could never happen — has happened</li>
+        <li>Oman (previous Iran–West broker) struck; regional off-ramps eliminated</li>
+        <li>Tankers are "sitting ducks" — infrastructure takes years to rebuild, Hormuz could be mined</li>
+        <li>Iran has decades of stockpiles, dispersed production — bombing does not destroy their capacity</li>
+        <li>Deals to let China through the Strait quietly? Iran's geopolitical leverage is maximum now</li>
+        <li>Continued high oil prices sustain Putin's Russia, keeping Ukraine quagmire going (Dave Chosiad)</li>
+      </ul>
+    </div>
+
+    <div class="pathway highlight-red">
+      <div class="pathway-label">Fortress America Temptation</div>
+      <div class="pathway-title">The Self-Sufficiency Gambit</div>
+      <ul>
+        <li>US is world's largest oil producer; with Canada + Venezuela = hemispheric sufficiency</li>
+        <li>At $100+/barrel, Texas and Alberta wells that were uneconomic become viable</li>
+        <li>Administration could cap domestic pump price politically to avoid $5/gallon pain</li>
+        <li>But: domestic oil at $120/bbl is inherently inflationary — raises price of everything (Bob Halpin)</li>
+        <li>Breaks below $100/bbl → domestic wells go offline again; no stability</li>
+        <li>"Europe, that's your problem" (Shapiro): isolationism + one major war = schizophrenic foreign policy</li>
+        <li>Trump's "Fortress America" instinct clashes with the Feb 28 decision to enter the war</li>
+      </ul>
+    </div>
+
+    <div class="pathway highlight-green">
+      <div class="pathway-label">The Energy Inflection Point</div>
+      <div class="pathway-title">Oil Crisis as Green Energy Accelerant</div>
+      <ul>
+        <li>$4–$5/gallon gas is a powerful economic signal toward EVs, hybrids, solar (Shapiro, Halpin)</li>
+        <li>Electricity: only 4% traded across borders — inherently local &amp; sovereign vs. oil's global chains</li>
+        <li>Greening the grid = strategic flexibility; renewables can come online faster than oil pipelines</li>
+        <li>"Price goes up like a rocket and drops like a feather" — if sustained, changes consumer behavior durably</li>
+        <li>Decarbonization also defunds authoritarian petrostates: Russia, Iran, Gulf monarchies (McKnight)</li>
+        <li>Solar on rooftops becomes economically attractive at sustained $120/bbl</li>
+        <li>Key question for the course: demand destruction vs. switching to alternatives vs. new fossil sources</li>
+      </ul>
+    </div>
+
+    <div class="pathway highlight-red" style="border-color:rgba(245,166,35,0.4);background:var(--glow-amber);">
+      <div class="pathway-label neutral" style="color:var(--amber);">The Political Counter-Force</div>
+      <div class="pathway-title">Trump Admin's Fossil Fuel Lock-In</div>
+      <ul>
+        <li>Energy Secretary Chris Wright: "reliability" framing — dismisses intermittency of solar/wind</li>
+        <li>Chris Wright lied about Hormuz reopening → caused $billions in market manipulation</li>
+        <li>Admin dismantling green energy programs, opposing grid modernization</li>
+        <li>Political capture by utilities: "I sell electricity to you — I don't want your rooftop solar"</li>
+        <li>Battery-making, solar PV, EVs — industries born after globalization, never built domestically</li>
+        <li>Sulfur from disrupted refineries also disrupts EV battery supply chain (cobalt, nickel, copper)</li>
+        <li>DOGE cuts $200M film budgets but week-1 war cost = $11.3B — fiscal contradiction (McKnight)</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Trigger meter for clean energy acceleration -->
+  <div class="card green">
+    <div class="card-title"><span class="card-icon">⚡</span> Signals Favoring Clean Energy Acceleration (Discussion Assessment)</div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:14px;">Session participants assessed multiple drivers. Relative signal strength derived from discussion emphasis:</div>
+    <div class="trigger-list">
+      <div class="trigger-row">
+        <div class="trigger-icon">💵</div>
+        <div class="trigger-label">Oil price shock ($4–5/gal gas)</div>
+        <div class="trigger-bar-wrap"><div class="trigger-bar green" style="width:90%;"></div></div>
+        <div class="trigger-pct">STRONG</div>
+      </div>
+      <div class="trigger-row">
+        <div class="trigger-icon">🔒</div>
+        <div class="trigger-label">Energy sovereignty argument (local electricity)</div>
+        <div class="trigger-bar-wrap"><div class="trigger-bar green" style="width:82%;"></div></div>
+        <div class="trigger-pct">STRONG</div>
+      </div>
+      <div class="trigger-row">
+        <div class="trigger-icon">🌏</div>
+        <div class="trigger-label">Defunding petrostates (Russia, Iran, Gulf)</div>
+        <div class="trigger-bar-wrap"><div class="trigger-bar amber" style="width:70%;"></div></div>
+        <div class="trigger-pct">MEDIUM</div>
+      </div>
+      <div class="trigger-row">
+        <div class="trigger-icon">🏭</div>
+        <div class="trigger-label">Supply chain fragility = industrial policy impetus</div>
+        <div class="trigger-bar-wrap"><div class="trigger-bar amber" style="width:58%;"></div></div>
+        <div class="trigger-pct">MEDIUM</div>
+      </div>
+      <div class="trigger-row">
+        <div class="trigger-icon">🏛️</div>
+        <div class="trigger-label">Political will (current admin strongly opposed)</div>
+        <div class="trigger-bar-wrap"><div class="trigger-bar red" style="width:15%;"></div></div>
+        <div class="trigger-pct">WEAK</div>
+      </div>
+    </div>
+    <div style="margin-top:14px;">
+      <div class="quote-block green">
+        <div class="quote-text">"When the price of oil sustains an inflationary impact, putting a solar panel on your roof becomes a lot more attractive — and pulls us in the direction most of us would like to go."</div>
+        <div class="quote-attr">— Bob Halpin</div>
+      </div>
+      <div class="quote-block green">
+        <div class="quote-text">"Sustaining oil dependence continues to empower some of the world's worst governments. Decarbonization is also about undermining and getting rid of them."</div>
+        <div class="quote-attr">— Scott McKnight (closing remarks)</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Closing synthesis -->
+  <div class="insight-bar">
+    <div class="insight-text">
+      The session surfaced a profound irony: <strong>the very war launched partly to neutralize Iran's nuclear threat</strong> may have made Iran's nuclear calculations more aggressive, unified its population, depleted Western missile stocks, exposed Gulf Monarchy fragility, and created a window for China over Taiwan — while simultaneously generating the highest oil prices in years. The question the group posed for coming weeks: does this crisis <strong>destroy demand for fossil fuels</strong> (pushing toward EVs and renewables), or does it <strong>lock in new fossil supply</strong> from the Western hemisphere? The answer likely depends on how long the disruption lasts — and whether political will can overcome the fossil fuel industry's grip on policy. As McKnight put it: <em>"It's going to be the Iranians who decide when this is finished."</em>
+    </div>
+    <div class="insight-pull">THE STRAIT CLOSED. NOW WHAT POWERS THE WORLD?</div>
+  </div>
+
+</main>
+
+<footer>
+  POWER IN THE HEADLINES · SESSION 03 · BOLLI CURRENT EVENTS · MARCH 2026 · INTELLIGENCE SYNTHESIS DOCUMENT
+</footer>
+
+<script>
+// Oil price chart using canvas
+const canvas = document.getElementById('oilChart');
+const ctx = canvas.getContext('2d');
+
+function drawChart() {
+  const W = canvas.offsetWidth;
+  const H = canvas.offsetHeight;
+  canvas.width = W;
+  canvas.height = H;
+
+  // Data: approximate WTI price trajectory
+  const data = [62, 68, 88, 119, 95, 108, 112, 90];
+  const labels = data.length;
+  const min = 50, max = 130;
+  const pad = { l: 36, r: 10, t: 10, b: 10 };
+
+  const scaleX = (i) => pad.l + (i / (labels - 1)) * (W - pad.l - pad.r);
+  const scaleY = (v) => H - pad.b - ((v - min) / (max - min)) * (H - pad.t - pad.b);
+
+  // Grid lines
+  ctx.strokeStyle = 'rgba(30,45,61,0.8)';
+  ctx.lineWidth = 1;
+  [60, 80, 100, 120].forEach(v => {
+    const y = scaleY(v);
+    ctx.beginPath();
+    ctx.moveTo(pad.l, y);
+    ctx.lineTo(W - pad.r, y);
+    ctx.stroke();
+    ctx.fillStyle = '#6e7681';
+    ctx.font = '9px IBM Plex Mono';
+    ctx.textAlign = 'right';
+    ctx.fillText('$' + v, pad.l - 4, y + 3);
+  });
+
+  // Fill under line
+  const grad = ctx.createLinearGradient(0, 0, 0, H);
+  grad.addColorStop(0, 'rgba(245,166,35,0.25)');
+  grad.addColorStop(1, 'rgba(245,166,35,0.01)');
+  ctx.beginPath();
+  ctx.moveTo(scaleX(0), scaleY(data[0]));
+  data.forEach((v, i) => { if (i > 0) ctx.lineTo(scaleX(i), scaleY(v)); });
+  ctx.lineTo(scaleX(labels - 1), H - pad.b);
+  ctx.lineTo(scaleX(0), H - pad.b);
+  ctx.closePath();
+  ctx.fillStyle = grad;
+  ctx.fill();
+
+  // Line
+  ctx.beginPath();
+  ctx.strokeStyle = '#f5a623';
+  ctx.lineWidth = 2;
+  ctx.lineJoin = 'round';
+  data.forEach((v, i) => {
+    i === 0 ? ctx.moveTo(scaleX(i), scaleY(v)) : ctx.lineTo(scaleX(i), scaleY(v));
+  });
+  ctx.stroke();
+
+  // Dots + peak annotation
+  data.forEach((v, i) => {
+    ctx.beginPath();
+    ctx.arc(scaleX(i), scaleY(v), 3.5, 0, Math.PI * 2);
+    ctx.fillStyle = v === Math.max(...data) ? '#e63946' : '#f5a623';
+    ctx.fill();
+    if (v === Math.max(...data)) {
+      ctx.fillStyle = '#e63946';
+      ctx.font = 'bold 10px IBM Plex Mono';
+      ctx.textAlign = 'center';
+      ctx.fillText('$' + v, scaleX(i), scaleY(v) - 8);
+    }
+  });
+
+  // $100 danger line
+  ctx.setLineDash([4, 3]);
+  ctx.strokeStyle = 'rgba(230,57,70,0.5)';
+  ctx.lineWidth = 1;
+  const y100 = scaleY(100);
+  ctx.beginPath();
+  ctx.moveTo(pad.l, y100);
+  ctx.lineTo(W - pad.r, y100);
+  ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle = 'rgba(230,57,70,0.8)';
+  ctx.font = '8px IBM Plex Mono';
+  ctx.textAlign = 'left';
+  ctx.fillText('$100 pain threshold', pad.l + 4, y100 - 3);
+}
+
+window.addEventListener('load', drawChart);
+window.addEventListener('resize', drawChart);
+</script>
+
+</body>
+</html>

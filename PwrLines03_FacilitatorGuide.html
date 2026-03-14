@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Power Lines — Session 03 Facilitator Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:          #181c20;
+  --surface:     #1e2329;
+  --surface2:    #252b33;
+  --surface3:    #2c333d;
+  --border:      #333d4a;
+  --border-lite: #2a3340;
+
+  --txt:         #d4dae3;
+  --txt-mid:     #8e99a8;
+  --txt-dim:     #5a6472;
+
+  --gold:        #c9a84c;
+  --gold-dim:    rgba(201,168,76,0.15);
+  --gold-glow:   rgba(201,168,76,0.08);
+
+  --red:         #c0392b;
+  --red-dim:     rgba(192,57,43,0.14);
+
+  --blue:        #2980b9;
+  --blue-dim:    rgba(41,128,185,0.13);
+
+  --green:       #27ae60;
+  --green-dim:   rgba(39,174,96,0.13);
+
+  --purple:      #8e44ad;
+  --purple-dim:  rgba(142,68,173,0.13);
+
+  --teal:        #16a085;
+  --teal-dim:    rgba(22,160,133,0.13);
+
+  --orange:      #d35400;
+  --orange-dim:  rgba(211,84,0,0.13);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--txt);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  line-height: 1.65;
+  min-height: 100vh;
+}
+
+/* ── HEADER ── */
+.hdr {
+  background: linear-gradient(135deg, #0f1215 0%, #1a2030 100%);
+  border-bottom: 1px solid var(--border);
+  padding: 28px 36px 22px;
+  position: sticky;
+  top: 0;
+  z-index: 200;
+}
+
+.hdr-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 14px;
+}
+
+.hdr-eyebrow {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.28em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 5px;
+}
+
+.hdr-title {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.2;
+}
+
+.hdr-sub {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  color: var(--txt-mid);
+  margin-top: 4px;
+  font-style: italic;
+}
+
+.hdr-controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.ctrl-btn {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 6px 14px;
+  border-radius: 3px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--txt-mid);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+.ctrl-btn:hover { background: var(--surface3); color: var(--txt); border-color: var(--txt-mid); }
+.ctrl-btn.primary { background: var(--gold-dim); border-color: var(--gold); color: var(--gold); }
+.ctrl-btn.primary:hover { background: var(--gold); color: var(--bg); }
+
+/* Progress bar */
+.progress-bar {
+  height: 2px;
+  background: var(--border-lite);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-top: 14px;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold), #e8c86e);
+  border-radius: 2px;
+  transition: width 0.3s ease;
+  width: 0%;
+}
+
+/* Point count legend */
+.legend {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+.leg-item {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: 'DM Mono', monospace;
+  font-size: 8.5px;
+  letter-spacing: 0.1em;
+  color: var(--txt-dim);
+  text-transform: uppercase;
+}
+.leg-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ── MAIN ── */
+main {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 32px 24px 80px;
+}
+
+/* ── POINT (outer accordion) ── */
+.point {
+  margin-bottom: 10px;
+  border-radius: 5px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  transition: border-color 0.2s;
+}
+.point:hover { border-color: var(--border); }
+.point.open  { border-color: var(--border); }
+
+/* Color accent strips */
+.point[data-color="gold"]   .point-hdr { border-left: 3px solid var(--gold); }
+.point[data-color="red"]    .point-hdr { border-left: 3px solid var(--red); }
+.point[data-color="blue"]   .point-hdr { border-left: 3px solid var(--blue); }
+.point[data-color="green"]  .point-hdr { border-left: 3px solid var(--green); }
+.point[data-color="purple"] .point-hdr { border-left: 3px solid var(--purple); }
+.point[data-color="teal"]   .point-hdr { border-left: 3px solid var(--teal); }
+.point[data-color="orange"] .point-hdr { border-left: 3px solid var(--orange); }
+
+.point[data-color="gold"]   .point-num { color: var(--gold); }
+.point[data-color="red"]    .point-num { color: var(--red); }
+.point[data-color="blue"]   .point-num { color: var(--blue); }
+.point[data-color="green"]  .point-num { color: var(--green); }
+.point[data-color="purple"] .point-num { color: var(--purple); }
+.point[data-color="teal"]   .point-num { color: var(--teal); }
+.point[data-color="orange"] .point-num { color: var(--orange); }
+
+.point[data-color="gold"].open   { border-color: rgba(201,168,76,0.35); }
+.point[data-color="red"].open    { border-color: rgba(192,57,43,0.35); }
+.point[data-color="blue"].open   { border-color: rgba(41,128,185,0.35); }
+.point[data-color="green"].open  { border-color: rgba(39,174,96,0.35); }
+.point[data-color="purple"].open { border-color: rgba(142,68,173,0.35); }
+.point[data-color="teal"].open   { border-color: rgba(22,160,133,0.35); }
+.point[data-color="orange"].open { border-color: rgba(211,84,0,0.35); }
+
+/* ── POINT HEADER ── */
+.point-hdr {
+  background: var(--surface);
+  padding: 16px 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  user-select: none;
+  transition: background 0.15s;
+}
+.point-hdr:hover { background: var(--surface2); }
+.point.open .point-hdr { background: var(--surface2); }
+
+.point-num {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  font-weight: 500;
+  flex-shrink: 0;
+  min-width: 22px;
+}
+
+.point-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--txt-dim);
+  flex-shrink: 0;
+  min-width: 110px;
+}
+
+.point-title {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 15px;
+  color: #fff;
+  flex: 1;
+  line-height: 1.35;
+}
+
+.point-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.voice-tags {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.vtag {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px;
+  letter-spacing: 0.08em;
+  border-radius: 2px;
+  padding: 3px 8px;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.point[data-color="gold"]   .vtag { background: rgba(201,168,76,0.18);  border: 1px solid rgba(201,168,76,0.45); color: var(--gold); }
+.point[data-color="red"]    .vtag { background: rgba(192,57,43,0.18);   border: 1px solid rgba(192,57,43,0.45);  color: #e05a4a; }
+.point[data-color="blue"]   .vtag { background: rgba(41,128,185,0.18);  border: 1px solid rgba(41,128,185,0.45); color: #5aadde; }
+.point[data-color="green"]  .vtag { background: rgba(39,174,96,0.18);   border: 1px solid rgba(39,174,96,0.45);  color: #3dd68c; }
+.point[data-color="purple"] .vtag { background: rgba(142,68,173,0.18);  border: 1px solid rgba(142,68,173,0.45); color: #b07de0; }
+.point[data-color="teal"]   .vtag { background: rgba(22,160,133,0.18);  border: 1px solid rgba(22,160,133,0.45); color: #2ed2b0; }
+.point[data-color="orange"] .vtag { background: rgba(211,84,0,0.18);    border: 1px solid rgba(211,84,0,0.45);   color: #f07830; }
+
+.chevron {
+  width: 18px;
+  height: 18px;
+  color: var(--txt-dim);
+  transition: transform 0.25s ease;
+  flex-shrink: 0;
+}
+.point.open .chevron { transform: rotate(180deg); }
+
+/* ── POINT BODY (outer drilldown) ── */
+.point-body {
+  display: none;
+  background: var(--surface);
+  border-top: 1px solid var(--border-lite);
+}
+.point.open .point-body { display: block; }
+
+/* Sub-section tabs */
+.tabs {
+  display: flex;
+  border-bottom: 1px solid var(--border-lite);
+  background: var(--bg);
+}
+.tab {
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  padding: 10px 18px;
+  cursor: pointer;
+  color: var(--txt-dim);
+  border-bottom: 2px solid transparent;
+  transition: color 0.15s, border-color 0.15s;
+}
+.tab:hover { color: var(--txt-mid); }
+.tab.active { color: #fff; }
+.point[data-color="gold"]   .tab.active { border-color: var(--gold); color: var(--gold); }
+.point[data-color="red"]    .tab.active { border-color: var(--red);  color: var(--red); }
+.point[data-color="blue"]   .tab.active { border-color: var(--blue); color: var(--blue); }
+.point[data-color="green"]  .tab.active { border-color: var(--green); color: var(--green); }
+.point[data-color="purple"] .tab.active { border-color: var(--purple); color: var(--purple); }
+.point[data-color="teal"]   .tab.active { border-color: var(--teal); color: var(--teal); }
+.point[data-color="orange"] .tab.active { border-color: var(--orange); color: var(--orange); }
+
+/* Tab panels */
+.tab-panel { display: none; padding: 22px 24px; }
+.tab-panel.active { display: block; }
+
+/* ── SUMMARY PANEL ── */
+.summary-lead {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 13.5px;
+  font-style: italic;
+  color: var(--txt-mid);
+  line-height: 1.7;
+  margin-bottom: 16px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border-lite);
+}
+
+.bullet-list {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.bullet-list li {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  font-size: 13px;
+  color: var(--txt);
+  line-height: 1.55;
+}
+.bullet-list li::before {
+  content: '▸';
+  font-size: 10px;
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+.point[data-color="gold"]   .bullet-list li::before { color: var(--gold); }
+.point[data-color="red"]    .bullet-list li::before { color: var(--red); }
+.point[data-color="blue"]   .bullet-list li::before { color: var(--blue); }
+.point[data-color="green"]  .bullet-list li::before { color: var(--green); }
+.point[data-color="purple"] .bullet-list li::before { color: var(--purple); }
+.point[data-color="teal"]   .bullet-list li::before { color: var(--teal); }
+.point[data-color="orange"] .bullet-list li::before { color: var(--orange); }
+
+/* ── QUESTIONS PANEL ── */
+.q-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.q-item {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 14px 16px 14px 44px;
+  position: relative;
+  transition: background 0.15s;
+}
+.q-item:hover { background: var(--surface3); }
+.q-num {
+  position: absolute;
+  left: 14px;
+  top: 14px;
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+.point[data-color="gold"]   .q-num { color: var(--gold); }
+.point[data-color="red"]    .q-num { color: var(--red); }
+.point[data-color="blue"]   .q-num { color: var(--blue); }
+.point[data-color="green"]  .q-num { color: var(--green); }
+.point[data-color="purple"] .q-num { color: var(--purple); }
+.point[data-color="teal"]   .q-num { color: var(--teal); }
+.point[data-color="orange"] .q-num { color: var(--orange); }
+
+.q-text {
+  font-size: 13.5px;
+  color: var(--txt);
+  line-height: 1.6;
+}
+.q-intent {
+  margin-top: 6px;
+  font-size: 11px;
+  color: var(--txt-dim);
+  font-style: italic;
+}
+
+/* ── DETAILS PANEL ── */
+.detail-group {
+  margin-bottom: 18px;
+}
+.detail-group:last-child { margin-bottom: 0; }
+
+.detail-source {
+  font-family: 'DM Mono', monospace;
+  font-size: 8.5px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--txt-dim);
+  margin-bottom: 8px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid var(--border-lite);
+}
+
+.detail-items {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.detail-item {
+  display: flex;
+  gap: 10px;
+  font-size: 12.5px;
+  color: var(--txt-mid);
+  line-height: 1.5;
+  padding: 8px 10px;
+  background: var(--bg);
+  border-radius: 3px;
+  border: 1px solid var(--border-lite);
+}
+.detail-item::before {
+  content: '—';
+  color: var(--txt-dim);
+  flex-shrink: 0;
+  font-size: 11px;
+  margin-top: 1px;
+}
+
+.quote-callout {
+  background: var(--surface3);
+  border-left: 3px solid;
+  border-radius: 0 3px 3px 0;
+  padding: 10px 14px;
+  margin-top: 10px;
+}
+.point[data-color="gold"]   .quote-callout { border-color: var(--gold); }
+.point[data-color="red"]    .quote-callout { border-color: var(--red); }
+.point[data-color="blue"]   .quote-callout { border-color: var(--blue); }
+.point[data-color="green"]  .quote-callout { border-color: var(--green); }
+.point[data-color="purple"] .quote-callout { border-color: var(--purple); }
+.point[data-color="teal"]   .quote-callout { border-color: var(--teal); }
+.point[data-color="orange"] .quote-callout { border-color: var(--orange); }
+
+.quote-callout .qt {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 12.5px;
+  font-style: italic;
+  color: var(--txt);
+  line-height: 1.6;
+  margin-bottom: 4px;
+}
+.quote-callout .qa {
+  font-family: 'DM Mono', monospace;
+  font-size: 8px;
+  color: var(--txt-dim);
+  letter-spacing: 0.1em;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.point.open .point-body { animation: slideDown 0.22s ease both; }
+
+/* ── FOOTER ── */
+footer {
+  text-align: center;
+  padding: 24px;
+  font-family: 'DM Mono', monospace;
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  color: var(--txt-dim);
+  border-top: 1px solid var(--border);
+}
+
+@media (max-width: 680px) {
+  .hdr-top { flex-direction: column; }
+  .point-label { display: none; }
+  .voice-tags { display: none; }
+  .tabs { overflow-x: auto; }
+  .tab { white-space: nowrap; }
+}
+</style>
+</head>
+<body>
+
+<header class="hdr">
+  <div class="hdr-top">
+    <div>
+      <div class="hdr-eyebrow">Power Lines · Session 03 Mar 12 · Facilitator Guide · March 2026</div>
+      <div class="hdr-title">The Iran War: Discussion Guide</div>
+      <div class="hdr-sub">Click any point to expand · Each section contains summary, questions, and supporting detail</div>
+    </div>
+    <div class="hdr-controls">
+      <button class="ctrl-btn" onclick="collapseAll()">Collapse All</button>
+      <button class="ctrl-btn primary" onclick="expandAll()">Expand All</button>
+    </div>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="legend">
+    <div class="leg-item"><div class="leg-dot" style="background:var(--gold)"></div>War &amp; Diplomacy</div>
+    <div class="leg-item"><div class="leg-dot" style="background:var(--red)"></div>Military</div>
+    <div class="leg-item"><div class="leg-dot" style="background:var(--orange)"></div>Geopolitical Blunder</div>
+    <div class="leg-item"><div class="leg-dot" style="background:var(--blue)"></div>Global Strategy</div>
+    <div class="leg-item"><div class="leg-dot" style="background:var(--teal)"></div>Energy Economics</div>
+    <div class="leg-item"><div class="leg-dot" style="background:var(--green)"></div>Energy Transition</div>
+    <div class="leg-item"><div class="leg-dot" style="background:var(--purple)"></div>Historical Lens</div>
+  </div>
+</header>
+
+<main>
+
+<!-- ══════════════════════════════════════════════
+     POINT 1 — War's Opening Moves
+══════════════════════════════════════════════ -->
+<div class="point" data-color="gold" data-index="0">
+  <div class="point-hdr" onclick="togglePoint(this)">
+    <span class="point-num">01</span>
+    <span class="point-label">War &amp; Diplomacy</span>
+    <span class="point-title">The War's Opening Moves: A Cascade of Contradictions</span>
+    <div class="point-meta">
+      <div class="voice-tags">
+        <span class="vtag">McKnight</span><span class="vtag">Fishman</span>
+      </div>
+      <svg class="chevron" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+    </div>
+  </div>
+  <div class="point-body">
+    <div class="tabs">
+      <div class="tab active" onclick="showTab(this,'summary')">Summary</div>
+      <div class="tab" onclick="showTab(this,'questions')">Discussion Questions</div>
+      <div class="tab" onclick="showTab(this,'details')">Supporting Details</div>
+    </div>
+    <div class="tab-panel active" data-panel="summary">
+      <div class="summary-lead">In ten days, the administration moved from "victory in 3–4 days" to "wars can be fought forever." The messaging was not just inconsistent — it was daily and self-contradictory, signaling a leadership with no coherent strategy.</div>
+      <ul class="bullet-list">
+        <li>Feb 27: Tom Cotton labels Iran an "imminent threat" — a claim Bibi Netanyahu has made since the 1990s</li>
+        <li>Feb 28: US–Israel airstrikes kill Supreme Leader Khamenei and family — during Ramadan</li>
+        <li>Mar 1: Trump promises victory in 3–4 days, revised to 4–6 weeks the next day, then "wars can be fought forever"</li>
+        <li>Mar 5: Pentagon plans internally for war through at least September</li>
+        <li>Mar 6: US re-arms Kurds on Iran's western border; ~10,000 Toyota trucks purchased in Erbil — a land-war signal</li>
+        <li>Mar 7: Trump declares he will decide when Iran has "unconditionally surrendered"</li>
+        <li>Mar 9: Hegseth — "war is pretty much over. But also just beginning."</li>
+        <li>A media blackout followed: satellite footage placed on a two-week delay; Pentagon bans photographers from briefings</li>
+      </ul>
+    </div>
+    <div class="tab-panel" data-panel="questions">
+      <div class="q-list">
+        <div class="q-item">
+          <span class="q-num">Q1</span>
+          <div class="q-text">The administration cycled through four contradictory positions on war duration in under ten days. What does this pattern reveal about decision-making structure — is this strategic ambiguity, or genuine incoherence?</div>
+          <div class="q-intent">Intent: Distinguish deliberate fog-of-war from actual leadership failure</div>
+        </div>
+        <div class="q-item">
+          <span class="q-num">Q2</span>
+          <div class="q-text">The Ayatollah was killed during Ramadan, and the opening strike reportedly killed approximately 150 girls in an acknowledged US strike. What are the strategic costs of these specifics — and does the administration appear to have weighed them?</div>
+          <div class="q-intent">Intent: Probe the moral and strategic dimensions of opening-day targeting choices</div>
+        </div>
+        <div class="q-item">
+          <span class="q-num">Q3</span>
+          <div class="q-text">The purchase of ~10,000 Toyota trucks in Erbil is a classic indicator of ground-war logistics staging. Are we watching the opening moves of a land invasion? What would that mean for the conflict's duration and scope?</div>
+          <div class="q-intent">Intent: Connect logistical signals to strategic trajectory</div>
+        </div>
+        <div class="q-item">
+          <span class="q-num">Q4</span>
+          <div class="q-text">Media blackouts and satellite footage delays have been imposed. What information are we not getting — and how does that affect a democracy's ability to evaluate a war its government is waging?</div>
+          <div class="q-intent">Intent: Press on the democratic accountability dimension</div>
+        </div>
+      </div>
+    </div>
+    <div class="tab-panel" data-panel="details">
+      <div class="detail-group">
+        <div class="detail-source">From the Session Transcript</div>
+        <div class="detail-items">
+          <div class="detail-item">McKnight: "March 1 — 'victory in 3–4 days.' March 2 — '4–6 weeks, no forever wars.' March 3 — 'wars can be fought forever. Also this isn't a war.'"</div>
+          <div class="detail-item">McKnight: "March 9 — Hegseth says the war is 'pretty much over. But also just beginning. Iran must be totally defeated.'"</div>
+          <div class="detail-item">McKnight: "Satellite companies originally barred from live footage, now on a two-week delay. That's not a great sign."</div>
+          <div class="detail-item">McKnight: "Art Shearman noted the Pentagon has now disallowed photographers from briefings — because one published an unflattering picture of Hegseth."</div>
+        </div>
+      </div>
+      <div class="detail-group">
+        <div class="detail-source">Key Facts &amp; Context</div>
+        <div class="detail-items">
+          <div class="detail-item">Trump declared he would decide when Iran had "unconditionally surrendered" — interpreted by some as an open off-ramp, by others as a blank check for escalation</div>
+          <div class="detail-item">Week 1 cost: $11.3B (Pentagon to Congress) — approximately $1B per day</div>
+          <div class="detail-item">First two days: $5B in munitions expended — an unprecedented burn rate</div>
+        </div>
+      </div>
+      <div class="quote-callout">
+        <div class="qt">"Fact-based feeling. Remember we had alternative facts? That was Trump 1.0. Now we have fact-based feelings for Trump 2.0."</div>
+        <div class="qa">— Scott McKnight</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     POINT 2 — Asymmetric Warfare
+══════════════════════════════════════════════ -->
+<div class="point" data-color="red" data-index="1">
+  <div class="point-hdr" onclick="togglePoint(this)">
+    <span class="point-num">02</span>
+    <span class="point-label">Military</span>
+    <span class="point-title">Asymmetric Warfare: The US Is Running Out of Ammunition</span>
+    <div class="point-meta">
+      <div class="voice-tags">
+        <span class="vtag">Day</span><span class="vtag">Fortess</span><span class="vtag">McKnight</span>
+      </div>
+      <svg class="chevron" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+    </div>
+  </div>
+  <div class="point-body">
+    <div class="tabs">
+      <div class="tab active" onclick="showTab(this,'summary')">Summary</div>
+      <div class="tab" onclick="showTab(this,'questions')">Discussion Questions</div>
+      <div class="tab" onclick="showTab(this,'details')">Supporting Details</div>
+    </div>
+    <div class="tab-panel active" data-panel="summary">
+      <div class="summary-lead">The fundamental military economics of this war are upside-down: the US is spending millions to destroy thousands. Iran's drone arsenal is vast, cheap, and battle-tested. US Patriots are nearly depleted, produced at a trickle, and now being pulled from South Korea.</div>
+      <ul class="bullet-list">
+        <li>US Patriot missile: $4M+ each. Iranian Shahad drone: ~$35,000. The US is shooting down drones at a 100:1 cost ratio</li>
+        <li>The US had "a few hundred" Patriots at the start; most are now expended; production runs ~a dozen per year</li>
+        <li>Patriots are now being pulled from South Korea — alarming China and undermining confidence in US allies from Japan to Poland</li>
+        <li>Iran has enormous stockpiles of drones and ballistic missiles — dispersed, hardened, and practically inexhaustible at this scale</li>
+        <li>Ukraine (a US aid recipient) has developed a $1–2K Shahad-killer drone — better suited to this threat than anything the US has fielded</li>
+        <li>DARPA's micro-swarm concept (MIT's Alan Epstein, 15 years ago) is now being realized in Ukrainian battlefield innovation</li>
+        <li>US and Israel are simply not built — structurally or economically — for sustained attritional drone warfare</li>
+      </ul>
+    </div>
+    <div class="tab-panel" data-panel="questions">
+      <div class="q-list">
+        <div class="q-item">
+          <span class="q-num">Q1</span>
+          <div class="q-text">We're firing $4M missiles to destroy $35K drones — at near-zero stock remaining. Did no one in the planning process run this arithmetic before Feb 28? What does the absence of that calculus tell us about how this war was decided?</div>
+          <div class="q-intent">Intent: Focus on pre-war planning failure and civilian-military decision-making</div>
+        </div>
+        <div class="q-item">
+          <span class="q-num">Q2</span>
+          <div class="q-text">Ukraine — which we arm — has already solved part of this problem with a $1–2K counter-drone weapon. Why is the most advanced military in the world learning battlefield innovation from a country under siege? What does this say about how the Pentagon prioritizes R&amp;D?</div>
+          <div class="q-intent">Intent: Draw out the innovation / industrial base argument</div>
+        </div>
+        <div class="q-item">
+          <span class="q-num">Q3</span>
+          <div class="q-text">Moving Patriots from South Korea weakens our deterrent vis-à-vis both North Korea and China simultaneously. Is there a point at which our military commitments in the Middle East structurally undermine our ability to honor our Pacific commitments?</div>
+          <div class="q-intent">Intent: Connect the regional to the global security picture</div>
+        </div>
+        <div class="q-item">
+          <span class="q-num">Q4</span>
+          <div class="q-text">John Day suggested DARPA's micro-swarm concept from 15 years ago anticipated this problem — but wasn't pursued because it wasn't "big and shiny." Is the US military-industrial complex structurally incapable of investing in cheap, replicable solutions at scale?</div>
+          <div class="q-intent">Intent: Explore the political economy of defense procurement</div>
+        </div>
+      </div>
+    </div>
+    <div class="tab-panel" data-panel="details">
+      <div class="detail-group">
+        <div class="detail-source">From the Session — Eric Fortess</div>
+        <div class="detail-items">
+          <div class="detail-item">"We're using $4M+ Patriot missiles to shoot down $35K Shahads. We had a few hundred. We've used most. They're produced at a few dozen — maybe a dozen — a year."</div>
+          <div class="detail-item">"If you were China, this is a good time to look at Taiwan — because the ammo to go after them is not available. China uses swarms. They've used swarms since the era of arrows."</div>
+        </div>
+      </div>
+      <div class="detail-group">
+        <div class="detail-source">From the Session — John Day</div>
+        <div class="detail-items">
+          <div class="detail-item">Alan Epstein at MIT was leading a DARPA effort 10–15 years ago to develop micro-machine swarms — flying vehicles delivering kinetic energy to targets at low cost</div>
+          <div class="detail-item">Ukrainians adapted this concept under battlefield necessity: a Shahad-killer drone for $1,000–$2,000 — a textbook case of innovation under duress</div>
+          <div class="detail-item">DARPA tends to overlook cheap-but-effective solutions because they're not "big and shiny or minuscule and invincible" — a structural bias in US defense R&amp;D</div>
+        </div>
+      </div>
+      <div class="quote-callout">
+        <div class="qt">"We're going to exhaust our inventory of high-cost missiles and drain our treasury trying to keep up with them."</div>
+        <div class="qa">— John Day, 00:03:44</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     POINT 3 — Iran Controls the Timeline
+══════════════════════════════════════════════ -->
+<div class="point" data-color="orange" data-index="2">
+  <div class="point-hdr" onclick="togglePoint(this)">
+    <span class="point-num">03</span>
+    <span class="point-label">Geopolitical Blunder</span>
+    <span class="point-title">Iran Holds the Off-Switch — Not the United States</span>
+    <div class="point-meta">
+      <div class="voice-tags">
+        <span class="vtag">McKnight</span><span class="vtag">Fortess</span><span class="vtag">Shapiro</span>
+      </div>
+      <svg class="chevron" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+    </div>
+  </div>
+  <div class="point-body">
+    <div class="tabs">
+      <div class="tab active" onclick="showTab(this,'summary')">Summary</div>
+      <div class="tab" onclick="showTab(this,'questions')">Discussion Questions</div>
+      <div class="tab" onclick="showTab(this,'details')">Supporting Details</div>
+    </div>
+    <div class="tab-panel active" data-panel="summary">
+      <div class="summary-lead">Despite US declarations of victory, the structural reality is that Iran — not Washington — will decide when and how this conflict ends. Iran controls the Strait, the pace of attrition, and the conditions for any diplomatic opening.</div>
+      <ul class="bullet-list">
+        <li>Iran controls the Hormuz closure — the single choke point on which the global oil economy depends</li>
+        <li>Iran has dispersed production sites, deep stockpiles, and mountainous terrain that nullifies air superiority</li>
+        <li>Iran has lived under sanctions for decades — economic isolation is not a new or decisive pressure</li>
+        <li>The killing of the Ayatollah during Ramadan unified the Iranian public, including those who opposed the regime, against the US</li>
+        <li>A new, younger, more radical Supreme Leader now sees a nuclear deterrent as the only true security guarantee</li>
+        <li>Trump can declare victory at any moment — but Iran is under no obligation to stop fighting</li>
+        <li>The traditional diplomatic back-channel (Oman) has been struck; no obvious off-ramp architecture remains</li>
+      </ul>
+    </div>
+    <div class="tab-panel" data-panel="questions">
+      <div class="q-list">
+        <div class="q-item">
+          <span class="q-num">Q1</span>
+          <div class="q-text">If Trump declares "mission accomplished," Iran is free to continue asymmetric attacks on US interests globally — cyber, infrastructure, homeland. What would a genuine ceasefire look like, and who would broker it now that Oman has been targeted?</div>
+          <div class="q-intent">Intent: Force the group to think concretely about exit architecture</div>
+        </div>
+        <div class="q-item">
+          <span class="q-num">Q2</span>
+          <div class="q-text">The new Supreme Leader's family was killed in the opening strikes. He is younger and more radical. The group concluded he will now pursue nuclear weapons as the only real deterrent. Is there anything the US can do at this point to change that calculus?</div>
+          <div class="q-intent">Intent: Probe the nuclear proliferation consequences of the war</div>
+        </div>
+        <div class="q-item">
+          <span class="q-num">Q3</span>
+          <div class="q-text">Peter Shapiro noted that Iran probably doesn't want to keep being bombed — so if Trump declares victory and Bibi backs off, Iran may accept a ceasefire. Is there a scenario where both sides declare victory simultaneously and both are half-right?</div>
+          <div class="q-intent">Intent: Explore face-saving mutual de-escalation scenarios</div>
+        </div>
+        <div class="q-item">
+          <span class="q-num">Q4</span>
+          <div class="q-text">McKnight says "it's going to be the Iranians who decide when this is finished." What signals would tell us Iran is moving toward a negotiated end — versus preparing for a long attritional campaign?</div>
+          <div class="q-intent">Intent: Develop analytical indicators to watch</div>
+        </div>
+      </div>
+    </div>
+    <div class="tab-panel" data-panel="details">
+      <div class="detail-group">
+        <div class="detail-source">Terrain &amp; Strategic Position</div>
+        <div class="detail-items">
+          <div class="detail-item">Iran is largely mountainous — McKnight: "This is not a desert kingdom. Mountains, mountains, mountains. It is made for making imperial armies die."</div>
+          <div class="detail-item">Iran has planned for this scenario for decades — dispersed underground facilities, stockpiled weapons, hardened command structure</div>
+          <div class="detail-item">Sanctions have almost no coercive power at this point — Iran has had 40+ years to adapt its economy to isolation</div>
+        </div>
+      </div>
+      <div class="detail-group">
+        <div class="detail-source">Diplomatic Landscape</div>
+        <div class="detail-items">
+          <div class="detail-item">Oman — traditionally the Iran–West back-channel — was struck in the opening days of the war; that architecture is gone</div>
+          <div class="detail-item">State Department has been gutted by DOGE; career regional experts have retired or been fired</div>
+          <div class="detail-item">Negotiators in place: Kushner and Witkoff — real estate background, no regional expertise</div>
+        </div>
+      </div>
+      <div class="quote-callout">
+        <div class="qt">"In many ways it's going to be the Iranians who decide when this is finished. That's the general thesis here."</div>
+        <div class="qa">— Scott McKnight, 00:25:41</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     POINT 4 — Airstrikes Never Work
+══════════════════════════════════════════════ -->
+<div class="point" data-color="purple" data-index="3">
+  <div class="point-hdr" onclick="togglePoint(this)">
+    <span class="point-num">04</span>
+    <span class="point-label">Historical Lens</span>
+    <span class="point-title">Airstrikes Have Never Once Produced Regime Change</span>
+    <div class="point-meta">
+      <div class="voice-tags">
+        <span class="vtag">Fishman</span><span class="vtag">McKnight</span>
+      </div>
+      <svg class="chevron" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+    </div>
+  </div>
+  <div class="point-body">
+    <div class="tabs">
+      <div class="tab active" onclick="showTab(this,'summary')">Summary</div>
+      <div class="tab" onclick="showTab(this,'questions')">Discussion Questions</div>
+      <div class="tab" onclick="showTab(this,'details')">Supporting Details</div>
+    </div>
+    <div class="tab-panel active" data-panel="summary">
+      <div class="summary-lead">Political scientist Robert Pape has documented exhaustively that airstrikes to achieve regime change have a success rate of zero. The session treated this not as controversial but as established fact — and asked why the US keeps doing it anyway.</div>
+      <ul class="bullet-list">
+        <li>Robert Pape (U. Chicago) ran the regression across all modern cases: airstrikes to achieve political objectives have never worked</li>
+        <li>The mechanism is well understood: external bombardment converts internal opposition into national resistance — "us vs. them" shifts from regime vs. citizens to nation vs. invader</li>
+        <li>Historical cases adduced by the group: German bombing of London, US bombing of Hanoi, Iraq, Afghanistan</li>
+        <li>You can kill a leader — but the result is typically a more radical, more motivated successor with a unified population behind them</li>
+        <li>The new Iranian Supreme Leader is younger, more radical, and was personally motivated by the killing of his family</li>
+        <li>The US seems to have learned this lesson from the sugar-high of the Maduro operation in Venezuela — and misapplied it catastrophically</li>
+      </ul>
+    </div>
+    <div class="tab-panel" data-panel="questions">
+      <div class="q-list">
+        <div class="q-item">
+          <span class="q-num">Q1</span>
+          <div class="q-text">Pape's research is unambiguous and decades old. Why do US administrations — across parties — keep reaching for airstrikes as a political tool when the evidence against it is so clear? Is this ignorance, political pressure, or something else?</div>
+          <div class="q-intent">Intent: Explore the gap between academic knowledge and policy practice</div>
+        </div>
+        <div class="q-item">
+          <span class="q-num">Q2</span>
+          <div class="q-text">The London Blitz, the bombing of Hanoi, shock-and-awe in Baghdad — the group listed these as analogues. Are there any cases where external military force successfully produced the political outcome the attacker sought? Does Iran fit any of those patterns?</div>
+          <div class="q-intent">Intent: Steel-man the opposing view before rejecting it</div>
+        </div>
+        <div class="q-item">
+          <span class="q-num">Q3</span>
+          <div class="q-text">McKnight suggested the "sugar high" from toppling Maduro in Venezuela may have given the administration false confidence. How much does recent success at one type of operation distort decision-making for a fundamentally different one?</div>
+          <div class="q-intent">Intent: Examine the cognitive biases behind strategic miscalculation</div>
+        </div>
+      </div>
+    </div>
+    <div class="tab-panel" data-panel="details">
+      <div class="detail-group">
+        <div class="detail-source">Pape's Research — Referenced by McKnight</div>
+        <div class="detail-items">
+          <div class="detail-item">Robert Pape (University of Chicago) — "Bombing to Win" and subsequent work: airstrikes to compel political change have a success rate of zero across all documented modern cases</div>
+          <div class="detail-item">The mechanism: external attack triggers the "us vs. them" switch — even citizens who oppose a regime unite behind it against a foreign invader</div>
+          <div class="detail-item">McKnight: "It never works precisely because of what Bob made clear — you rally that population around even the unpopular leading group. Very simple, straightforward logic."</div>
+        </div>
+      </div>
+      <div class="detail-group">
+        <div class="detail-source">Historical Parallels Cited in Session</div>
+        <div class="detail-items">
+          <div class="detail-item">German bombing of London (WWII) — strengthened British resolve, did not produce surrender or regime change</div>
+          <div class="detail-item">US bombing of Hanoi (Vietnam War) — North Vietnam continued fighting; US withdrew; Hanoi reunified the country</div>
+          <div class="detail-item">Iraq (2003): shock and awe destroyed infrastructure; did not produce a stable, US-aligned political outcome</div>
+          <div class="detail-item">Afghanistan (2001–2021): twenty years of air superiority did not prevent Taliban restoration</div>
+        </div>
+      </div>
+      <div class="quote-callout">
+        <div class="qt">"We keep frickin' doing it. And we probably got a sugar high from getting Maduro so quickly. This is not Venezuela. Very, very clearly not."</div>
+        <div class="qa">— Scott McKnight, 00:28:09</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     POINT 5 — Netanyahu Constraint
+══════════════════════════════════════════════ -->
+<div class="point" data-color="gold" data-index="4">
+  <div class="point-hdr" onclick="togglePoint(this)">
+    <span class="point-num">05</span>
+    <span class="point-label">War &amp; Diplomacy</span>
+    <span class="point-title">The Netanyahu Constraint: Who Is Actually Running This War?</span>
+    <div class="point-meta">
+      <div class="voice-tags">
+        <span class="vtag">McKnight</span><span class="vtag">Shapiro</span><span class="vtag">Fishman</span>
+      </div>
+      <svg class="chevron" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+    </div>
+  </div>
+  <div class="point-body">
+    <div class="tabs">
+      <div class="tab active" onclick="showTab(this,'summary')">Summary</div>
+      <div class="tab" onclick="showTab(this,'questions')">Discussion Questions</div>
+      <div class="tab" onclick="showTab(this,'details')">Supporting Details</div>
+    </div>
+    <div class="tab-panel active" data-panel="summary">
+      <div class="summary-lead">A recurring thread through the session: even if Trump wants to exit the war, Netanyahu appears to be a structural constraint on that exit. The session asked — without fully answering — how this situation came to be.</div>
+      <ul class="bullet-list">
+        <li>Peter Shapiro: Netanyahu is "a lot smarter than Trump" and has gotten "into Trump's head" — making it very difficult for Trump to override him</li>
+        <li>Bob Fishman: the administration "got played" — Israel said "we're going in, you're with us or against us" and the US simply said yes, without thinking through consequences</li>
+        <li>Christian Zionists (Huckabee, Graham) are a vocal policy-shaping constituency — their eschatological view treats Jews as caretakers of the Holy Land until conversion, not as genuine allies</li>
+        <li>John Day: this Christian Zionist view is "not a healthy one" and may be doing more damage to Jewish people than it prevents</li>
+        <li>Bob Fishman warns: as pain mounts and the public seeks blame, a backlash "not just against Israel but against Jews generally" becomes plausible — echoing WWI-era "stab in the back" dynamics</li>
+        <li>McKnight: Israel is not built for total, sustained war — the country cannot mobilize indefinitely, unlike Iran which has been hardened by decades of sanctions</li>
+      </ul>
+    </div>
+    <div class="tab-panel" data-panel="questions">
+      <div class="q-list">
+        <div class="q-item">
+          <span class="q-num">Q1</span>
+          <div class="q-text">McKnight asked the group's most uncomfortable question directly: "Why does Israel have so much influence on this, and frankly, any topic related to US foreign policy?" Is this a feature of the relationship — or a bug that has metastasized?</div>
+          <div class="q-intent">Intent: Open the structural question about the US–Israel relationship</div>
+        </div>
+        <div class="q-item">
+          <span class="q-num">Q2</span>
+          <div class="q-text">Bob Fishman warned of a long-term blowback risk — not against Israel specifically, but against Jewish people globally — as economic pain mounts and the public seeks scapegoats. Is this concern supported by historical precedent? What would the warning signs look like?</div>
+          <div class="q-intent">Intent: Take the antisemitism risk seriously as a strategic — not just moral — concern</div>
+        </div>
+        <div class="q-item">
+          <span class="q-num">Q3</span>
+          <div class="q-text">Christian Zionist politicians (Huckabee, Graham) are actively calling for US troops to fight for Israel. Art Shearman said flatly: "I don't think they're helping — they're using." Do you agree? What does that use look like in practice?</div>
+          <div class="q-intent">Intent: Probe the motivations behind Christian Zionist political support</div>
+        </div>
+      </div>
+    </div>
+    <div class="tab-panel" data-panel="details">
+      <div class="detail-group">
+        <div class="detail-source">From the Session</div>
+        <div class="detail-items">
+          <div class="detail-item">Shapiro: "Netanyahu is probably convinced Trump, with his limited intellectual capacity, that this is something they gotta keep doing — until Trump feels enough pain to say, 'I can't anymore.'"</div>
+          <div class="detail-item">Fishman: "They opened Pandora's box. I think when enough people realize the role of Israel in this, there will be blowback against Jews generally — not necessarily tomorrow, but a couple of months from now."</div>
+          <div class="detail-item">John Day: Christian Zionists view Jews as "caretakers of the Holy Land" — with an end-game of Jewish conversion to Christianity. "Not a healthy view by any means."</div>
+          <div class="detail-item">Art Shearman: "I don't believe for a minute they think they're helping. They're using. Using for their own ends."</div>
+        </div>
+      </div>
+      <div class="quote-callout">
+        <div class="qt">"Trump may want to end the war, but Netanyahu will not allow it. What happened? How did we get to this point?"</div>
+        <div class="qa">— Scott McKnight, 00:11:01</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     POINT 6 — Oil Price Shock
+══════════════════════════════════════════════ -->
+<div class="point" data-color="teal" data-index="5">
+  <div class="point-hdr" onclick="togglePoint(this)">
+    <span class="point-num">06</span>
+    <span class="point-label">Energy Economics</span>
+    <span class="point-title">Oil Price Shock: The Immediate Economic Pain Is Real and Growing</span>
+    <div class="point-meta">
+      <div class="voice-tags">
+        <span class="vtag">Semuels</span><span class="vtag">McKnight</span><span class="vtag">Halpin</span>
+      </div>
+      <svg class="chevron" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+    </div>
+  </div>
+  <div class="point-body">
+    <div class="tabs">
+      <div class="tab active" onclick="showTab(this,'summary')">Summary</div>
+      <div class="tab" onclick="showTab(this,'questions')">Discussion Questions</div>
+      <div class="tab" onclick="showTab(this,'details')">Supporting Details</div>
+    </div>
+    <div class="tab-panel active" data-panel="summary">
+      <div class="summary-lead">The Strait of Hormuz is effectively closed. The largest strategic petroleum reserve release in history buys four days. Oil markets swung $38/barrel in a single week. And the Energy Secretary lied — on camera — about the Strait being open.</div>
+      <ul class="bullet-list">
+        <li>Pre-war: ~16.5M barrels/day flowed through Hormuz. Now: ~5.5M via alternate pipelines — roughly one-third of prior volume</li>
+        <li>~100 million barrels offline from the global economy; facilities in Oman, Saudi Arabia, Kuwait, Qatar struck</li>
+        <li>G7 nations released the largest-ever strategic petroleum reserve: 400M barrels — equivalent to 4 days of global supply</li>
+        <li>WTI price swung from ~$62 to $119 in a single week; the one-day trading range was $81–$119</li>
+        <li>Massachusetts pump price: $3.49/gallon — with SPR keeping a lid. Could reach $4–$5 if Hormuz remains closed</li>
+        <li>Energy Secretary Chris Wright falsely announced US Navy had escorted a tanker through Hormuz; prices fell 8%; tweet deleted; prices jumped 5.5% — McKnight: "someone made a hell of a lot of money"</li>
+        <li>US re-permitted India to buy Russian oil (Rosneft/Lukoil) — sanctions as a foreign policy tool further eroded</li>
+      </ul>
+    </div>
+    <div class="tab-panel" data-panel="questions">
+      <div class="q-list">
+        <div class="q-item">
+          <span class="q-num">Q1</span>
+          <div class="q-text">The Energy Secretary made a false public statement that moved oil prices 8% — then someone deleted the tweet and prices moved 5.5% in the other direction. This is textbook market manipulation. Who has jurisdiction? Is anyone investigating? Should we expect accountability?</div>
+          <div class="q-intent">Intent: Press on the market manipulation and accountability question</div>
+        </div>
+        <div class="q-item">
+          <span class="q-num">Q2</span>
+          <div class="q-text">The SPR release buys four days. What happens on day five? Beyond the SPR, what tools does the US government actually have to contain prices if Hormuz remains closed for weeks or months? Is there a ceiling at which those tools run out?</div>
+          <div class="q-intent">Intent: Map the actual policy options and their limits</div>
+        </div>
+        <div class="q-item">
+          <span class="q-num">Q3</span>
+          <div class="q-text">Trump says "short-term pain, long-term gain." What would the long-term gain actually have to look like to justify current prices — and current casualties? Is there any articulated theory of victory that makes this tradeoff rational?</div>
+          <div class="q-intent">Intent: Force evaluation of the administration's stated cost-benefit logic</div>
+        </div>
+        <div class="q-item">
+          <span class="q-num">Q4</span>
+          <div class="q-text">Bob Halpin noted that sustained high oil prices make rooftop solar economically attractive. If $4–5/gallon gas persists for six months, does that produce a durable shift in consumer behavior — or do people just wait it out and return to old habits?</div>
+          <div class="q-intent">Intent: Connect the short-term pain to the long-term energy transition question</div>
+        </div>
+      </div>
+    </div>
+    <div class="tab-panel" data-panel="details">
+      <div class="detail-group">
+        <div class="detail-source">Key Numbers</div>
+        <div class="detail-items">
+          <div class="detail-item">Pre-war Hormuz flow: ~16.5M barrels/day. Current flow via alternate pipelines: ~5.5M bbl/day — one-third of prior volume</div>
+          <div class="detail-item">SPR release: 400M barrels = 4 days of world supply. Largest in history — and still temporary</div>
+          <div class="detail-item">WTI single-week range: $81–$119. At $90/barrel, that's $30 more than the start of the year</div>
+          <div class="detail-item">At $100+/barrel, domestic Texas and Alberta wells that were uneconomical become viable — but they are inherently inflationary (Bob Halpin)</div>
+        </div>
+      </div>
+      <div class="detail-group">
+        <div class="detail-source">The Wright Incident</div>
+        <div class="detail-items">
+          <div class="detail-item">Energy Secretary Chris Wright announced (at a press conference at an oil facility) that the US Navy had escorted a tanker through Hormuz — this was false</div>
+          <div class="detail-item">Oil prices fell 8% on the announcement; the tweet was deleted; prices jumped 5.5%</div>
+          <div class="detail-item">Wright's team blamed "the intern." McKnight: "You can lie to traders maybe once. You won't fool them again."</div>
+        </div>
+      </div>
+      <div class="quote-callout">
+        <div class="qt">"Things are going well when you start doing the biggest release of petroleum ever in history. That's a sign that — no, we were expecting this, this was in our contingency plans, everything's going just delightful."</div>
+        <div class="qa">— Scott McKnight, 00:14:52</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     POINT 7 — Hidden Supply Chain Fractures
+══════════════════════════════════════════════ -->
+<div class="point" data-color="blue" data-index="6">
+  <div class="point-hdr" onclick="togglePoint(this)">
+    <span class="point-num">07</span>
+    <span class="point-label">Global Strategy</span>
+    <span class="point-title">Beyond Oil: The Hidden Supply Chain Fractures No One Is Talking About</span>
+    <div class="point-meta">
+      <div class="voice-tags">
+        <span class="vtag">McKnight</span><span class="vtag">Halpin</span><span class="vtag">Shearman</span>
+      </div>
+      <svg class="chevron" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+    </div>
+  </div>
+  <div class="point-body">
+    <div class="tabs">
+      <div class="tab active" onclick="showTab(this,'summary')">Summary</div>
+      <div class="tab" onclick="showTab(this,'questions')">Discussion Questions</div>
+      <div class="tab" onclick="showTab(this,'details')">Supporting Details</div>
+    </div>
+    <div class="tab-panel active" data-panel="summary">
+      <div class="summary-lead">The Strait of Hormuz is not just an oil chokepoint. It is a nexus for sulfur, fertilizer, LNG for Taiwan's chip fabs, and inbound food for the Gulf. The cascading effects reach batteries, semiconductors, and global food supply.</div>
+      <ul class="bullet-list">
+        <li><strong>Sulfur:</strong> 92% of the world's sulfur comes from oil and gas refining. Sulfuric acid is essential to extracting copper, cobalt, and nickel — the core materials for EV batteries and data center infrastructure</li>
+        <li><strong>Fertilizer:</strong> 33% of the world's fertilizer feedstock moves through Hormuz. Synthetic nitrogen fertilizer feeds roughly half the world's population — India, Brazil, and much of the Global South depend on it</li>
+        <li><strong>Taiwan LNG → Chips:</strong> Qatar ships ~30% of Taiwan's LNG through Hormuz. Taiwan has ~one week of natural gas reserves. TSMC alone uses 10% of Taiwan's electricity. No gas → no power → no chips</li>
+        <li><strong>Inbound food:</strong> Gulf nations are extreme food import-dependent — cars, computers, and food all flow in through Hormuz</li>
+        <li><strong>Phosphorus:</strong> Bob Halpin added that phosphorus — on which industrial agriculture is completely dependent — has its largest global reserve in Morocco</li>
+        <li>Art Shearman's framing: "When are we going to realize that this global economy we've created is really very fragile?" The Ever Given in Suez was a warning. This is the test</li>
+      </ul>
+    </div>
+    <div class="tab-panel" data-panel="questions">
+      <div class="q-list">
+        <div class="q-item">
+          <span class="q-num">Q1</span>
+          <div class="q-text">If Taiwan's TSMC runs out of LNG and loses power, the global semiconductor supply chain stops. This is not a theoretical risk — it's a one-week countdown. Has the US government publicly acknowledged this? What's the contingency plan?</div>
+          <div class="q-intent">Intent: Make the Taiwan chip supply chain consequence concrete and urgent</div>
+        </div>
+        <div class="q-item">
+          <span class="q-num">Q2</span>
+          <div class="q-text">33% of global fertilizer feedstock flows through Hormuz. A sustained closure means food price spikes in India, Brazil, and sub-Saharan Africa — nations that had nothing to do with this war. What are the geopolitical consequences of inadvertently destabilizing the Global South?</div>
+          <div class="q-intent">Intent: Broaden the frame beyond US/Iran to global humanitarian and political consequences</div>
+        </div>
+        <div class="q-item">
+          <span class="q-num">Q3</span>
+          <div class="q-text">Art Shearman asked when we'll realize how fragile the global economy is. John Day offered a defense of globalization's achievements. Can both be true — and if so, what is the right policy response: deglobalize, or build resilience within globalized systems?</div>
+          <div class="q-intent">Intent: Draw out the globalization debate seeded in the session</div>
+        </div>
+      </div>
+    </div>
+    <div class="tab-panel" data-panel="details">
+      <div class="detail-group">
+        <div class="detail-source">Cascade Chain</div>
+        <div class="detail-items">
+          <div class="detail-item">Strait Closes → Sulfur (92% from oil refining) → Sulfuric acid → Copper, cobalt, nickel extraction → EV batteries and data centers disrupted</div>
+          <div class="detail-item">Strait Closes → Qatar LNG (30% of Taiwan's supply) → TSMC (10% of Taiwan's electricity) → Advanced chip production halts</div>
+          <div class="detail-item">Strait Closes → Fertilizer feedstock (33% of world supply) → Synthetic nitrogen → Food production shock in India, Brazil, Global South</div>
+          <div class="detail-item">Strait Closes → Inbound food, cars, computers to Gulf nations also disrupted — the region imports nearly everything it doesn't produce in oil</div>
+        </div>
+      </div>
+      <div class="detail-group">
+        <div class="detail-source">McKnight Summary Quote</div>
+      </div>
+      <div class="quote-callout">
+        <div class="qt">"No gas, no power, no chips. We end up in this cascading effect. 33% of the world's fertilizer feedstock. Synthetic nitrogen is vital to about half the world's population food supply."</div>
+        <div class="qa">— Scott McKnight, 00:62:03</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     POINT 8 — China / Taiwan Window
+══════════════════════════════════════════════ -->
+<div class="point" data-color="blue" data-index="7">
+  <div class="point-hdr" onclick="togglePoint(this)">
+    <span class="point-num">08</span>
+    <span class="point-label">Global Strategy</span>
+    <span class="point-title">The China / Taiwan Window: Opportunity or Cautionary Tale?</span>
+    <div class="point-meta">
+      <div class="voice-tags">
+        <span class="vtag">Fortess</span><span class="vtag">McKnight</span><span class="vtag">Shearman</span>
+      </div>
+      <svg class="chevron" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+    </div>
+  </div>
+  <div class="point-body">
+    <div class="tabs">
+      <div class="tab active" onclick="showTab(this,'summary')">Summary</div>
+      <div class="tab" onclick="showTab(this,'questions')">Discussion Questions</div>
+      <div class="tab" onclick="showTab(this,'details')">Supporting Details</div>
+    </div>
+    <div class="tab-panel active" data-panel="summary">
+      <div class="summary-lead">The session raised — without resolving — whether Xi Jinping sees the Iran war as his Taiwan opportunity, or as a cautionary quagmire warning. Both readings are plausible, and the answer has civilizational stakes.</div>
+      <ul class="bullet-list">
+        <li>US Patriots pulled from South Korea to the Middle East — directly weakening the Asia-Pacific deterrence architecture</li>
+        <li>US allies in Japan, South Korea, Taiwan, and Poland are watching: defense systems can be dismantled and redeployed at any moment</li>
+        <li>Eric Fortess: "This is a good time to look at Taiwan — the ammo to go after them is not available"</li>
+        <li>The counter-argument: Putin couldn't take Ukraine despite massive material advantages; now the US is stuck in a Middle East quagmire — is this the lesson Xi draws?</li>
+        <li>McKnight: trying a ground invasion of Taiwan would be "the cataclysmic one — the war to end all wars, and not in the good way"</li>
+        <li>China has been practicing swarm tactics since the era of arrows — their drone capacity likely dwarfs Iran's, and the US has already demonstrated it cannot defend against sustained swarms</li>
+      </ul>
+    </div>
+    <div class="tab-panel" data-panel="questions">
+      <div class="q-list">
+        <div class="q-item">
+          <span class="q-num">Q1</span>
+          <div class="q-text">Xi Jinping is watching two US quagmires simultaneously — Ukraine (via Russia) and now Iran. Does this make him more cautious about Taiwan, or more opportunistic? What signals in Chinese state media, military deployments, or diplomatic moves would help us read his calculus?</div>
+          <div class="q-intent">Intent: Develop analytical indicators for Xi's actual decision-making</div>
+        </div>
+        <div class="q-item">
+          <span class="q-num">Q2</span>
+          <div class="q-text">By pulling Patriots from South Korea, the US has weakened deterrence against both North Korea and China simultaneously. Is there a threshold beyond which our Pacific allies begin making independent security arrangements — with China, or with each other — because they can no longer rely on the US umbrella?</div>
+          <div class="q-intent">Intent: Explore the alliance credibility consequences</div>
+        </div>
+        <div class="q-item">
+          <span class="q-num">Q3</span>
+          <div class="q-text">Taiwan gets 30% of its LNG from Qatar through Hormuz. TSMC has about a week of natural gas reserves. If the Strait stays closed, Taiwan's chip production stops regardless of whether China does anything. Does Iran inadvertently hand China a semiconductor win without firing a shot?</div>
+          <div class="q-intent">Intent: Connect the supply chain and the Taiwan strategic picture</div>
+        </div>
+      </div>
+    </div>
+    <div class="tab-panel" data-panel="details">
+      <div class="detail-group">
+        <div class="detail-source">From the Session</div>
+        <div class="detail-items">
+          <div class="detail-item">Fortess: "All China has to do is launch a few swarms and realize when our defenses have been used up — then everything they do is from a position of superiority."</div>
+          <div class="detail-item">McKnight: "A Chinese attempt to take Taiwan might be the last one. The cataclysmic one. The war to end all wars, not in the good way."</div>
+          <div class="detail-item">Shearman: "Moving Patriots from South Korea is not making Seoul happy. It's probably making Xi happy."</div>
+          <div class="detail-item">McKnight noted a 2022 parallel: when Russia invaded Ukraine, the same "Taiwan window" question arose — and Xi did not act. Is this the second time he passes? Or does he act this time?</div>
+        </div>
+      </div>
+      <div class="quote-callout">
+        <div class="qt">"Is this a learning lesson for Xi Jinping that even a great power with all obvious material advantages still can't get what it wants?"</div>
+        <div class="qa">— Scott McKnight, 00:31:55</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     POINT 9 — Energy Transition Inflection
+══════════════════════════════════════════════ -->
+<div class="point" data-color="green" data-index="8">
+  <div class="point-hdr" onclick="togglePoint(this)">
+    <span class="point-num">09</span>
+    <span class="point-label">Energy Transition</span>
+    <span class="point-title">The Oil Crisis as Latent Accelerant for Clean Energy — If the Pain Sustains</span>
+    <div class="point-meta">
+      <div class="voice-tags">
+        <span class="vtag">Halpin</span><span class="vtag">Shapiro</span><span class="vtag">McKnight</span>
+      </div>
+      <svg class="chevron" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"/></svg>
+    </div>
+  </div>
+  <div class="point-body">
+    <div class="tabs">
+      <div class="tab active" onclick="showTab(this,'summary')">Summary</div>
+      <div class="tab" onclick="showTab(this,'questions')">Discussion Questions</div>
+      <div class="tab" onclick="showTab(this,'details')">Supporting Details</div>
+    </div>
+    <div class="tab-panel active" data-panel="summary">
+      <div class="summary-lead">The session's closing frame: sustained high oil prices are the strongest possible economic signal toward EVs, solar, and grid decarbonization. But the political counter-force — the current administration's fossil-fuel lock-in — is formidable. The question is whether pain lasts long enough to overcome it.</div>
+      <ul class="bullet-list">
+        <li>$4–$5/gallon gas historically shifts consumer behavior toward EVs and hybrids — the economic signal is powerful if sustained</li>
+        <li>Electricity: only 4% is traded across borders — it is inherently local and sovereign, unlike oil which requires vast, vulnerable global supply chains</li>
+        <li>A greened, distributed grid can bring new resources online faster than oil pipelines — strategic flexibility that centralized fossil fuel systems cannot match</li>
+        <li>Decarbonization also defunds authoritarian petrostates: Russia, Iran, Gulf monarchies — McKnight's closing moral argument</li>
+        <li>The current administration's Energy Secretary frames renewables as "unreliable" — political capture by utilities and fossil fuel interests is the dominant counter-force</li>
+        <li>Dave Chosiad's explicit challenge: the group never heard the strongest version of the administration's case against the all-sources grid — that conversation was promised for next session</li>
+        <li>Battery-making, solar PV, EVs — industries born after globalization, never built domestically at scale; rebuilding them requires following before leading</li>
+      </ul>
+    </div>
+    <div class="tab-panel" data-panel="questions">
+      <div class="q-list">
+        <div class="q-item">
+          <span class="q-num">Q1</span>
+          <div class="q-text">Dave Chosiad explicitly asked the group to hear the strongest case for the administration's "reliability over renewables" position — and the session ran out of time. What IS the best version of that argument? Where does it succeed on its own terms, and where does it fail?</div>
+          <div class="q-intent">Intent: Complete the unfinished conversation from Session 03</div>
+        </div>
+        <div class="q-item">
+          <span class="q-num">Q2</span>
+          <div class="q-text">McKnight argued that decarbonization is geopolitical disarmament — it defunds Russia, Iran, and the Gulf monarchies simultaneously. Why hasn't this national security framing become the dominant argument for clean energy, one that could attract bipartisan support? What has blocked it?</div>
+          <div class="q-intent">Intent: Probe why a strong argument hasn't broken through politically</div>
+        </div>
+        <div class="q-item">
+          <span class="q-num">Q3</span>
+          <div class="q-text">Bob Halpin pointed out that scaling renewables requires global supply chains for panels, batteries, and turbines — supply chains that themselves flow through vulnerable chokepoints. Does the Hormuz closure undercut the green energy supply chain as much as the oil supply chain?</div>
+          <div class="q-intent">Intent: Stress-test the clean energy accelerant thesis</div>
+        </div>
+        <div class="q-item">
+          <span class="q-num">Q4</span>
+          <div class="q-text">Peter Shapiro noted that "the price of gas goes up like a rocket and drops like a feather." If pain is temporary, does consumer behavior actually shift — or do people just wait it out? What duration of high prices is needed to produce durable structural change in energy consumption?</div>
+          <div class="q-intent">Intent: Examine the conditions under which price signals produce lasting behavior change</div>
+        </div>
+      </div>
+    </div>
+    <div class="tab-panel" data-panel="details">
+      <div class="detail-group">
+        <div class="detail-source">The Electricity Sovereignty Argument</div>
+        <div class="detail-items">
+          <div class="detail-item">Only 4% of electricity is traded across borders — making it inherently a local, sovereign resource vs. oil's dependence on long, vulnerable global chains</div>
+          <div class="detail-item">A PBS NewsHour segment the night before the session covered grid flexibility: distributed renewable resources can respond to demand spikes faster than centralized fossil fuel systems</div>
+          <div class="detail-item">Bob Halpin: "The constraints that the oil distribution system faces — a pipe through which you can only move so many resources — versus the speed with which you can bring additional resources online through an electric system less dependent on those resources."</div>
+        </div>
+      </div>
+      <div class="detail-group">
+        <div class="detail-source">The Political Capture Counter-Force</div>
+        <div class="detail-items">
+          <div class="detail-item">Chris Wright (Energy Secretary): "reliability" framing — dismisses solar/wind intermittency; fallback to baseload fossil fuels and coal</div>
+          <div class="detail-item">McKnight on utility capture: "I sell electricity to you. I don't want your rooftop solar. You're running a restaurant — you don't want people bringing in their homemade bread."</div>
+          <div class="detail-item">Battery-making, solar PV, and EV manufacturing are industries born after globalization became dominant — the US has never built them at scale domestically</div>
+        </div>
+      </div>
+      <div class="quote-callout">
+        <div class="qt">"Sustaining oil dependence continues to empower some of the worst governments on Earth. This decarbonization movement — it's also about undermining and hopefully getting rid of them."</div>
+        <div class="qa">— Scott McKnight (closing remarks), 00:85:40</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<footer>
+  POWER LINES · SESSION 03 MAR 12 FACILITATOR GUIDE · MARCH 2026 · ALL SECTIONS COLLAPSE/EXPAND INDEPENDENTLY
+</footer>
+
+<script>
+// ── TOGGLE POINT (outer accordion)
+function togglePoint(hdr) {
+  const point = hdr.closest('.point');
+  const wasOpen = point.classList.contains('open');
+  point.classList.toggle('open', !wasOpen);
+  updateProgress();
+}
+
+// ── SHOW TAB (inner tabs)
+function showTab(tabEl, panelName) {
+  const body = tabEl.closest('.point-body');
+  body.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t === tabEl));
+  body.querySelectorAll('.tab-panel').forEach(p => {
+    p.classList.toggle('active', p.dataset.panel === panelName);
+  });
+}
+
+// ── EXPAND / COLLAPSE ALL
+function expandAll() {
+  document.querySelectorAll('.point').forEach(p => p.classList.add('open'));
+  updateProgress();
+}
+function collapseAll() {
+  document.querySelectorAll('.point').forEach(p => p.classList.remove('open'));
+  updateProgress();
+}
+
+// ── PROGRESS BAR
+function updateProgress() {
+  const all = document.querySelectorAll('.point').length;
+  const open = document.querySelectorAll('.point.open').length;
+  document.getElementById('progressFill').style.width = (open / all * 100) + '%';
+}
+
+// Keyboard: Escape collapses all
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') collapseAll();
+});
+</script>
+
+</body>
+</html>
