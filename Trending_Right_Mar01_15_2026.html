@@ -1,0 +1,1010 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trending News from the Right — March 1–15, 2026</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      background: #a8c4e8;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #667eea 100%);
+      padding: 36px 32px 28px;
+      text-align: center;
+      color: white;
+    }
+
+    .header h1 {
+      font-size: 1.85rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .header .subtitle {
+      font-size: 0.95rem;
+      opacity: 0.85;
+      margin-bottom: 18px;
+      letter-spacing: 0.04em;
+    }
+
+    .sources-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: center;
+      margin-top: 14px;
+    }
+
+    .sources-bar a {
+      font-size: 11px;
+      color: #fff;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 4px;
+      padding: 3px 10px;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .sources-bar a:hover { background: rgba(255,255,255,0.35); }
+
+    .legend {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 20px 10px;
+      font-size: 12px;
+      color: #555;
+      background: #a8c4e8;
+    }
+    .legend-bar {
+      width: 160px;
+      height: 7px;
+      border-radius: 4px;
+      background: linear-gradient(90deg, #cc0000, #e86a00, #c0a000, #2e9e6a, #2a7fcc, #5533aa);
+    }
+
+    .instructions {
+      text-align: center;
+      font-size: 12px;
+      color: #888;
+      padding-bottom: 12px;
+      letter-spacing: 0.03em;
+      background: #a8c4e8;
+    }
+
+    .topics-list {
+      padding: 0 20px 30px;
+      background: #a8c4e8;
+    }
+
+    .card {
+      margin-bottom: 12px;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      padding: 16px 20px;
+      cursor: pointer;
+      user-select: none;
+      color: white;
+      position: relative;
+      gap: 12px;
+      transition: filter 0.2s;
+    }
+    .card-header:hover { filter: brightness(1.08); }
+
+    .level-1  { background: linear-gradient(135deg, #cc0000 0%, #990000 100%); }
+    .level-2  { background: linear-gradient(135deg, #e03000 0%, #b02000 100%); }
+    .level-3  { background: linear-gradient(135deg, #e86a00 0%, #c04800 100%); }
+    .level-4  { background: linear-gradient(135deg, #d48000 0%, #a86000 100%); }
+    .level-5  { background: linear-gradient(135deg, #b09000 0%, #887000 100%); }
+    .level-6  { background: linear-gradient(135deg, #4a9e3a 0%, #307020 100%); }
+    .level-7  { background: linear-gradient(135deg, #2e9e7a 0%, #1a7050 100%); }
+    .level-8  { background: linear-gradient(135deg, #1a8aaa 0%, #0a6070 100%); }
+    .level-9  { background: linear-gradient(135deg, #2a7fcc 0%, #1a5a99 100%); }
+    .level-10 { background: linear-gradient(135deg, #1a5fa8 0%, #0e3d70 100%); }
+    .level-11 { background: linear-gradient(135deg, #5533aa 0%, #3a1f77 100%); }
+
+    .card-rank { font-size: 11px; opacity: 0.7; min-width: 22px; }
+    .card-title { font-size: 1.05rem; font-weight: 600; flex: 1; }
+    .card-count {
+      font-size: 12px;
+      background: rgba(0,0,0,0.25);
+      padding: 3px 10px;
+      border-radius: 12px;
+      white-space: nowrap;
+    }
+    .card-chevron { font-size: 16px; opacity: 0.8; transition: transform 0.3s ease; }
+    .card-chevron.rotated { transform: rotate(180deg); }
+
+    .card-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease-in-out;
+      background: #b8ccec;
+    }
+    .card-body.expanded { max-height: 2800px; }
+
+    .card-body-inner {
+      padding: 18px 20px 20px;
+      border-top: 2px solid rgba(102,126,234,0.25);
+    }
+
+    .subtopics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .subtopic {
+      background: white;
+      border-left: 3px solid #667eea;
+      border-radius: 6px;
+      padding: 11px 14px;
+      box-shadow: 0 2px 6px rgba(102,126,234,0.12);
+    }
+
+    .subtopic-src {
+      margin-top: 8px;
+      padding-top: 6px;
+      border-top: 1px solid rgba(102,126,234,0.2);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+    .subtopic-src a {
+      font-size: 10px;
+      color: #2a5298;
+      background: #eef2ff;
+      border: 1px solid #c7d2fe;
+      border-radius: 3px;
+      padding: 2px 7px;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .subtopic-src a:hover {
+      background: #667eea;
+      color: white;
+      border-color: #667eea;
+    }
+
+    .subtopic-title {
+      font-weight: 600;
+      color: #1e3c72;
+      font-size: 0.875rem;
+      margin-bottom: 5px;
+    }
+
+    .subtopic-detail {
+      font-size: 0.78rem;
+      color: #555;
+      line-height: 1.55;
+    }
+
+    .section-sources {
+      font-size: 11px;
+      color: #888;
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+    }
+    .section-sources strong { color: #555; }
+    .section-sources a {
+      color: #2a5298;
+      text-decoration: none;
+      background: #eef2ff;
+      padding: 2px 8px;
+      border-radius: 3px;
+    }
+    .section-sources a:hover { background: #667eea; color: white; }
+
+    .footer {
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+      color: rgba(255,255,255,0.8);
+      text-align: center;
+      padding: 22px 20px;
+      font-size: 11px;
+      line-height: 1.8;
+    }
+    .footer a { color: #a8c4ff; text-decoration: none; }
+    .footer a:hover { text-decoration: underline; color: #fff; }
+
+    @media (max-width: 600px) {
+      .subtopics-grid { grid-template-columns: 1fr; }
+      .header h1 { font-size: 1.4rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- ══ HEADER ══════════════════════════════════════════ -->
+  <div class="header">
+    <h1>📰 Trending News from the Right · March 1–15, 2026</h1>
+    <div class="subtitle">11 Categories &nbsp;·&nbsp; Ordered by coverage volume &nbsp;·&nbsp; 7 conservative &amp; center-right sources</div>
+
+    <div class="sources-bar">
+      <a href="https://www.wsj.com" target="_blank">Wall Street Journal</a>
+      <a href="https://thedispatch.com" target="_blank">The Dispatch</a>
+      <a href="https://www.nationalreview.com" target="_blank">National Review</a>
+      <a href="https://www.dailywire.com" target="_blank">Daily Wire</a>
+      <a href="https://nypost.com" target="_blank">New York Post</a>
+      <a href="https://tuckercarlson.com" target="_blank">Tucker Carlson</a>
+      <a href="https://www.breitbart.com" target="_blank">Breitbart</a>
+    </div>
+  </div>
+
+  <div class="legend">
+    <span>Most coverage</span>
+    <div class="legend-bar"></div>
+    <span>Least coverage</span>
+  </div>
+  <div class="instructions">Click any category to expand · sections ordered by descending mention count</div>
+
+  <div class="topics-list">
+
+    <!-- 1. MIDDLE EAST -->
+    <div class="card">
+      <div class="card-header level-1" onclick="toggle(this)">
+        <span class="card-rank">01</span>
+        <span class="card-title">Middle East — Operation Epic Fury &amp; the Iran War</span>
+        <span class="card-count">55 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+
+            <div class="subtopic">
+              <div class="subtopic-title">A Historic US-Israel Military Alliance Forged in Battle</div>
+              <div class="subtopic-detail">The Wall Street Journal editorial page argued that Operation Epic Fury represents "the rise of a full-blown warfighting alliance between Israel and the US" — a historic strategic realignment. WSJ columnists Yaakov Katz and Gil Troy wrote that Khamenei "created the conditions for the most powerful military alliance the region has ever seen." The Daily Wire and Breitbart framed the strikes as the fulfillment of decades of strategic necessity, citing Iran's 47-year "Death to America" ideology, proxy terror network, and nuclear ambitions. National Review backed the action as long overdue given Iran's role as the world's foremost state sponsor of terrorism.</div>
+              <div class="subtopic-src">
+                <a href="https://www.wsj.com/opinion" target="_blank">WSJ Opinion</a>
+                <a href="https://www.nationalreview.com" target="_blank">National Review</a>
+                <a href="https://www.dailywire.com" target="_blank">Daily Wire</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Military Successes: 5,000+ Targets Hit, Iranian Capabilities Degraded</div>
+              <div class="subtopic-detail">WSJ reported US CENTCOM had struck more than 5,000 Iranian targets and damaged or destroyed more than 50 Iranian ships. Defense Secretary Hegseth told Congress that Iran's missile volume is "down 90%" and drone volume "down 95%." Bloomberg's analysis — cited favorably by WSJ — showed 1,879 US-Israeli hits versus 823 Iranian counter-strikes, with Iran's ability to threaten Israel "fundamentally diminished." Breitbart's live coverage of Operation Epic Fury highlighted US military performance as "stunning." The New York Post emphasized the campaign's speed and precision as a model for modern air power projection.</div>
+              <div class="subtopic-src">
+                <a href="https://www.wsj.com" target="_blank">WSJ: Military Coverage</a>
+                <a href="https://nypost.com" target="_blank">New York Post</a>
+                <a href="https://www.breitbart.com" target="_blank">Breitbart: Epic Fury</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Iran's Energy Warfare: Hormuz Threat &amp; Oil Price Surge</div>
+              <div class="subtopic-detail">The Wall Street Journal reported extensively on Iran laying mines in the Strait of Hormuz and targeting Gulf oil infrastructure, noting that two strategic bypass pipelines in Saudi Arabia and the UAE — "the only ways to get a significant amount of oil out of the Persian Gulf" — remain crucial. WSJ reported that if Iran succeeds in shutting down Hormuz, "it would essentially grant Tehran control over the world's energy markets." The IEA announced the largest oil reserves release in its history — 400 million barrels — in response to the price surge. The Dispatch analyzed the economic stakes for American consumers as oil briefly touched $120/barrel.</div>
+              <div class="subtopic-src">
+                <a href="https://www.wsj.com" target="_blank">WSJ: Energy Coverage</a>
+                <a href="https://thedispatch.com" target="_blank">The Dispatch</a>
+                <a href="https://nypost.com" target="_blank">New York Post</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Endgame Debate: Regime Change vs. Nuclear Denuclearization</div>
+              <div class="subtopic-detail">The WSJ editorial board raised the strategic question: if Trump proclaims victory and stops the bombing without toppling the regime, "it could soothe global markets but leave in place Iran's theocratic regime — angry, defiant and in possession of its nuclear stockpile." National Review argued the mission must go further than degrading capabilities; the regime itself must be changed or face permanent pressure. The Dispatch published a measured analysis noting that Trump's stated objective — "unconditional surrender" — may be unachievable without ground forces, while The Daily Wire framed the campaign as the only credible response to decades of multigenerational Iranian aggression.</div>
+              <div class="subtopic-src">
+                <a href="https://www.wsj.com/opinion" target="_blank">WSJ: Strategy Analysis</a>
+                <a href="https://thedispatch.com" target="_blank">The Dispatch: Endgame</a>
+                <a href="https://www.nationalreview.com" target="_blank">National Review</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Iran's New Supreme Leader &amp; Regime Survival Question</div>
+              <div class="subtopic-detail">The Wall Street Journal's reporting on Mojtaba Khamenei's appointment as the new supreme leader raised the question of whether a generational leadership change opens a diplomatic off-ramp or entrenches hardline IRGC control. WSJ cited Trump's Venezuela playbook — "I have to be involved in the appointment, like with Delcy" — as the White House model for Iran. National Review warned against premature optimism, arguing the IRGC (not clerics) now holds real power. Breitbart highlighted Iranian diaspora protesters outside the White House chanting "Don't let them kill us" and wearing "Make Iran Great Again" hats as evidence of genuine popular support for regime change.</div>
+              <div class="subtopic-src">
+                <a href="https://www.wsj.com" target="_blank">WSJ: New Leadership</a>
+                <a href="https://www.nationalreview.com" target="_blank">National Review</a>
+                <a href="https://www.breitbart.com" target="_blank">Breitbart: Iranian Diaspora</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Tucker Carlson vs. Trump: The MAGA War Over Iran</div>
+              <div class="subtopic-detail">Tucker Carlson broke publicly with the Trump administration on March 1, calling Operation Epic Fury "absolutely disgusting and evil" in an interview with ABC News, saying it would "shuffle the deck in a profound way." Trump responded: "Tucker has lost his way. I knew that a long time ago, and he's not MAGA." By March 14, Carlson claimed the CIA had prepared a criminal referral against him under FARA for texting Iranian contacts before the war. "They read my texts," he said on X. The Dispatch and National Review both sharply criticized Carlson — with National Review calling his rhetoric "Tehran's most effective English-language propaganda" — while Daily Wire covered the feud as a test of what "America First" means in practice.</div>
+              <div class="subtopic-src">
+                <a href="https://tuckercarlson.com" target="_blank">Tucker Carlson Network</a>
+                <a href="https://thedispatch.com" target="_blank">The Dispatch</a>
+                <a href="https://www.nationalreview.com" target="_blank">National Review</a>
+              </div>
+            </div>
+
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://www.wsj.com" target="_blank">WSJ</a>
+            <a href="https://www.nationalreview.com" target="_blank">National Review</a>
+            <a href="https://thedispatch.com" target="_blank">The Dispatch</a>
+            <a href="https://www.dailywire.com" target="_blank">Daily Wire</a>
+            <a href="https://nypost.com" target="_blank">NY Post</a>
+            <a href="https://www.breitbart.com" target="_blank">Breitbart</a>
+            <a href="https://tuckercarlson.com" target="_blank">Tucker Carlson</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. MAGA COALITION FRACTURES -->
+    <div class="card">
+      <div class="card-header level-2" onclick="toggle(this)">
+        <span class="card-rank">02</span>
+        <span class="card-title">Fractures in the MAGA Coalition</span>
+        <span class="card-count">42 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+
+            <div class="subtopic">
+              <div class="subtopic-title">Carlson, Kelly, Rogan vs. Cruz, Hannity, Graham on Iran</div>
+              <div class="subtopic-detail">The most intense intra-right feud of the period pitted the anti-interventionist wing (Carlson, Megyn Kelly, Joe Rogan) against the hawkish wing (Ted Cruz, Sean Hannity, Lindsey Graham). Carlson mocked Cruz and "all the other dumbos" backing the Iran strikes. Cruz shot back: "Tucker Carlson is the single most dangerous demagogue in this country." The Dispatch framed the divide as "the most consequential intellectual split on the right since the Iraq War," noting it mirrors a fundamental disagreement about what "America First" actually means for foreign policy. Breitbart covered the feud from the pro-war perspective, amplifying Trump's dismissal of Carlson as "not MAGA."</div>
+              <div class="subtopic-src">
+                <a href="https://tuckercarlson.com" target="_blank">Tucker Carlson Network</a>
+                <a href="https://thedispatch.com" target="_blank">The Dispatch</a>
+                <a href="https://www.breitbart.com" target="_blank">Breitbart</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">MTG's Break with Trump — the Epstein Catalyst &amp; Iran Dissent</div>
+              <div class="subtopic-detail">Former Rep. Marjorie Taylor Greene publicly condemned the Iran war on X with profanity-laced posts ("We voted for America First and ZERO wars"). Her falling out with Trump — which began over the Epstein files discharge petition — is now complete and public. The New York Post covered Greene's statement alongside Tucker Carlson's, noting that this was the most high-profile intra-MAGA rupture since the original MAGA coalition was assembled. National Review analyzed the Greene phenomenon as representing the "America First" populist wing's disillusionment — and warned that Trump's dismissal of anti-war voices could cost him in 2026 among the very voters who were most enthusiastic in 2024.</div>
+              <div class="subtopic-src">
+                <a href="https://nypost.com" target="_blank">New York Post</a>
+                <a href="https://www.nationalreview.com" target="_blank">National Review</a>
+                <a href="https://thedispatch.com" target="_blank">The Dispatch</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Mass Deportation Coalition Pushes Back on White House Messaging</div>
+              <div class="subtopic-detail">Breitbart and the New York Post reported that a group of Trump allies — including former CBP acting commissioner Mark Morgan and former Blackwater CEO Erik Prince — formed the "Mass Deportation Coalition" to resist the White House's guidance to soften deportation messaging. The group commissioned a poll showing 66% of likely midterm voters support deporting those who enter illegally. Breitbart framed the White House messaging shift as a potential political mistake, while the Daily Wire argued that Republicans must own their immigration record rather than retreat from it ahead of the midterms.</div>
+              <div class="subtopic-src">
+                <a href="https://www.breitbart.com" target="_blank">Breitbart</a>
+                <a href="https://nypost.com" target="_blank">New York Post</a>
+                <a href="https://www.dailywire.com" target="_blank">Daily Wire</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">AI Divide: Bannon's Tech Populism vs. Musk-Aligned MAGA</div>
+              <div class="subtopic-detail">The Dispatch documented a growing fault line within the MAGA coalition over AI policy — pitting tech-libertarian figures (aligned with Musk and OpenAI) against Steve Bannon's anti-tech populist "War Room" network, which views Silicon Valley AI companies with deep suspicion. Bannon has called AI companies a threat to working-class jobs and warned they represent the new "globalist elite." The WSJ analyzed how the Pentagon's deal with OpenAI — signed hours after Trump said agencies should stop using Anthropic's AI — illustrated the rapid commercialization of AI warfare and the competing pressures on the administration from different MAGA factions.</div>
+              <div class="subtopic-src">
+                <a href="https://thedispatch.com" target="_blank">The Dispatch</a>
+                <a href="https://www.wsj.com" target="_blank">WSJ</a>
+                <a href="https://www.breitbart.com" target="_blank">Breitbart</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">MAGA Self-Identification Hits Record High Despite High-Profile Defections</div>
+              <div class="subtopic-detail">An Economist/YouGov poll conducted March 6–9 found that MAGA self-identification among Republicans hit a new record high of nearly two-thirds — with Trump consolidating the label around himself by expelling dissenters. Trump told reporters: "MAGA is Trump. MAGA's not the other two." Breitbart framed this as evidence that the coalition is stronger than critics claim, while The Dispatch argued the polling masks a real ideological fissure: the loyalist bloc is consolidating around Trump personally rather than around a coherent foreign policy philosophy, which could create fragility if the Iran war goes badly.</div>
+              <div class="subtopic-src">
+                <a href="https://www.breitbart.com" target="_blank">Breitbart</a>
+                <a href="https://thedispatch.com" target="_blank">The Dispatch</a>
+                <a href="https://www.nationalreview.com" target="_blank">National Review</a>
+              </div>
+            </div>
+
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://tuckercarlson.com" target="_blank">Tucker Carlson</a>
+            <a href="https://thedispatch.com" target="_blank">The Dispatch</a>
+            <a href="https://www.nationalreview.com" target="_blank">National Review</a>
+            <a href="https://www.breitbart.com" target="_blank">Breitbart</a>
+            <a href="https://nypost.com" target="_blank">NY Post</a>
+            <a href="https://www.dailywire.com" target="_blank">Daily Wire</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. ICE OPERATIONS -->
+    <div class="card">
+      <div class="card-header level-3" onclick="toggle(this)">
+        <span class="card-rank">03</span>
+        <span class="card-title">ICE Operations — Defending the Deportation Mandate</span>
+        <span class="card-count">36 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+
+            <div class="subtopic">
+              <div class="subtopic-title">Criminal Alien Arrests: WSJ Details Nashville Journalist Case, Subway Attack</div>
+              <div class="subtopic-detail">The Wall Street Journal reported on a federal court ordering ICE to justify the detention of a Nashville journalist — a case the administration cited as an example of courts overstepping into executive enforcement authority. Breitbart and the New York Post led with the arrest of a four-times-deported criminal illegal alien who shoved an 83-year-old veteran onto New York City subway tracks. Breitbart's daily "WOW.DHS.GOV" summaries catalogued arrests of criminal aliens — including pedophiles, murderers, MS-13 members, and sex offenders — as evidence that the deportation program is targeting dangerous criminals first and foremost.</div>
+              <div class="subtopic-src">
+                <a href="https://www.wsj.com" target="_blank">WSJ: Nashville Journalist</a>
+                <a href="https://www.breitbart.com" target="_blank">Breitbart: Arrests</a>
+                <a href="https://nypost.com" target="_blank">New York Post</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Sanctuary City Showdown: NJ, Virginia, Minnesota</div>
+              <div class="subtopic-detail">Breitbart and the New York Post covered ICE's escalating confrontation with sanctuary jurisdictions — including ICE's demand that New Jersey officials not release a criminal alien accused of sexually assaulting a minor under 15. The New York Post framed Virginia Governor Spanberger's ban on ICE cooperation as a political liability ahead of 2026 midterms. Breitbart reported that DHS formally called out Spanberger in a news release, and highlighted that states cooperating with ICE (Tennessee, Kentucky) are growing their partnerships while blue states are digging in — creating a jurisdictional patchwork that is hampering enforcement.</div>
+              <div class="subtopic-src">
+                <a href="https://www.breitbart.com" target="_blank">Breitbart: Sanctuary Cities</a>
+                <a href="https://nypost.com" target="_blank">New York Post</a>
+                <a href="https://www.wsj.com" target="_blank">WSJ</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Minneapolis Killings: ICE Defends Agents, Breitbart Counters Left Narrative</div>
+              <div class="subtopic-detail">Breitbart consistently pushed back against the left's framing of the Minneapolis ICE killings — arguing the agents acted lawfully when confronted by individuals who "weaponized their vehicles" against federal officers. The New York Post noted that Mayor Frey's statement ("Get the f*** out of Minneapolis") represented an unprecedented politicization of federal law enforcement. The Daily Wire argued that the DOJ investigation of the agents — not the criminal aliens — represented "lawfare against law enforcement." National Review took a more nuanced view, acknowledging the tragic dimension while defending the overall enforcement mandate.</div>
+              <div class="subtopic-src">
+                <a href="https://www.breitbart.com" target="_blank">Breitbart: Minneapolis</a>
+                <a href="https://nypost.com" target="_blank">New York Post</a>
+                <a href="https://www.dailywire.com" target="_blank">Daily Wire</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">SAVE America Act: Voter ID + Immigration Link</div>
+              <div class="subtopic-detail">Breitbart and the Daily Wire reported that Trump vowed not to sign further legislation until Congress passes the SAVE America Act — requiring passport or birth certificate proof of citizenship to register to vote. Trump argued the bill is essential to stop non-citizens from voting and to maintain the integrity of the 2026 midterms. The WSJ editorial board offered qualified support, noting the bill's voter ID requirements are in line with most democratic countries globally. Senate Republicans were divided, with Breitbart reporting the vote math as "coming down to the wire" and the Daily Wire calling its passage essential to the administration's midterm strategy.</div>
+              <div class="subtopic-src">
+                <a href="https://www.breitbart.com" target="_blank">Breitbart: SAVE Act</a>
+                <a href="https://www.dailywire.com" target="_blank">Daily Wire</a>
+                <a href="https://www.wsj.com" target="_blank">WSJ: Editorial</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">ICE Detention Expansion: 100,000+ Beds as Public Safety Infrastructure</div>
+              <div class="subtopic-detail">Breitbart framed the $45 billion detention expansion funded through the One Big Beautiful Bill Act as essential public safety infrastructure, not punitive overreach. The New York Post highlighted ICE Houston's arrest of more than 400 criminal illegal alien child sex offenders in Trump's first year as proof the mandate is being executed responsibly. The WSJ reported on the Broadview, Illinois facility controversy — where advocates alleged an "impunity zone" — while the administration's response, covered by Breitbart, denied the characterization and cited routine enforcement procedures and legal compliance.</div>
+              <div class="subtopic-src">
+                <a href="https://www.breitbart.com" target="_blank">Breitbart: Detention</a>
+                <a href="https://nypost.com" target="_blank">NY Post</a>
+                <a href="https://www.wsj.com" target="_blank">WSJ: Broadview</a>
+              </div>
+            </div>
+
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://www.wsj.com" target="_blank">WSJ</a>
+            <a href="https://www.breitbart.com" target="_blank">Breitbart</a>
+            <a href="https://nypost.com" target="_blank">NY Post</a>
+            <a href="https://www.dailywire.com" target="_blank">Daily Wire</a>
+            <a href="https://www.nationalreview.com" target="_blank">National Review</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. TRUMP ADMIN REVERSALS -->
+    <div class="card">
+      <div class="card-header level-4" onclick="toggle(this)">
+        <span class="card-rank">04</span>
+        <span class="card-title">Trump Administration Reversals &amp; Growing Liabilities</span>
+        <span class="card-count">28 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+
+            <div class="subtopic">
+              <div class="subtopic-title">SCOTUS IEEPA Tariff Ruling: WSJ Calls it a "Setback" but Not Fatal</div>
+              <div class="subtopic-detail">The Wall Street Journal's editorial board — while broadly supportive of the tariff agenda — acknowledged the February 20 Supreme Court ruling as a legal setback requiring the administration to rebuild trade authority on sounder legal footing. Treasury Secretary Scott Bessent told Congress that tariffs will be "effectively back to their old rate within five months" via Section 301 and Section 232 investigations. The Dispatch published a more critical analysis, noting the court's ruling exposed the administration's lack of statutory preparation. National Review argued that the outcome vindicated judicial restraint — and that Congress, not the executive, is the proper authority for setting tariffs.</div>
+              <div class="subtopic-src">
+                <a href="https://www.wsj.com/opinion" target="_blank">WSJ Editorial</a>
+                <a href="https://thedispatch.com" target="_blank">The Dispatch</a>
+                <a href="https://www.nationalreview.com" target="_blank">National Review</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">DOJ Law Firm EO Reversal: Administration Doubles Down</div>
+              <div class="subtopic-detail">Breitbart and the New York Post framed the DOJ's March 3 reversal on law firm executive orders as the administration holding the line against politically hostile firms that "hired Trump's perceived enemies and took on cases he opposed." The WSJ covered the reversal more critically, calling the 24-hour about-face an "unexplained reversal" that reflected poorly on DOJ management and White House communications. National Review published an editorial arguing that while the executive orders themselves were constitutionally defensible, the erratic back-and-forth undermined the administration's credibility and handed ammunition to critics who question the rule of law.</div>
+              <div class="subtopic-src">
+                <a href="https://www.breitbart.com" target="_blank">Breitbart</a>
+                <a href="https://nypost.com" target="_blank">New York Post</a>
+                <a href="https://www.nationalreview.com" target="_blank">National Review</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Russia Oil Sanctions Waiver — Energy Strategy or Concession?</div>
+              <div class="subtopic-detail">The Wall Street Journal reported that Putin hasn't been shy about "gloating over the upside of the Iran conflict for Russia, as oil prices surge and the US reevaluates its punitive measures on Russian crude." The 30-day Russia oil sanctions waiver drew mixed conservative reactions: the WSJ editorial board called it a necessary energy-stability measure given $120/barrel oil; The Dispatch raised concerns that it rewards Moscow with financial relief at a moment when Russia-Iran alignment should be met with pressure rather than concessions. National Review argued any sanctions relief must be paired with explicit conditions tied to Ukraine peace progress.</div>
+              <div class="subtopic-src">
+                <a href="https://www.wsj.com" target="_blank">WSJ: Russia Oil</a>
+                <a href="https://thedispatch.com" target="_blank">The Dispatch</a>
+                <a href="https://www.nationalreview.com" target="_blank">National Review</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Haitian TPS SCOTUS Request — Closing Immigration Loopholes</div>
+              <div class="subtopic-detail">Breitbart and the Daily Wire reported the administration's March 11 emergency SCOTUS request to pause Haitian TPS protections as an essential step in closing what they frame as "humanitarian parole and TPS loopholes" exploited by hundreds of thousands who have outlived the original emergency conditions. The New York Post's editorial board backed the move, arguing that TPS was never intended to provide indefinite residence and that courts have repeatedly overstepped their authority to block executive immigration action. WSJ's news coverage noted the administration is simultaneously pursuing Syrian and other TPS cases in a unified legal strategy to establish precedent.</div>
+              <div class="subtopic-src">
+                <a href="https://www.breitbart.com" target="_blank">Breitbart</a>
+                <a href="https://nypost.com" target="_blank">New York Post</a>
+                <a href="https://www.dailywire.com" target="_blank">Daily Wire</a>
+              </div>
+            </div>
+
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://www.wsj.com" target="_blank">WSJ</a>
+            <a href="https://thedispatch.com" target="_blank">The Dispatch</a>
+            <a href="https://www.nationalreview.com" target="_blank">National Review</a>
+            <a href="https://www.breitbart.com" target="_blank">Breitbart</a>
+            <a href="https://nypost.com" target="_blank">NY Post</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. EPSTEIN FILES -->
+    <div class="card">
+      <div class="card-header level-5" onclick="toggle(this)">
+        <span class="card-rank">05</span>
+        <span class="card-title">Epstein Files — Democrat Ties, NPR "Hoax," &amp; Clinton Testimony</span>
+        <span class="card-count">26 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+
+            <div class="subtopic">
+              <div class="subtopic-title">Breitbart: NPR's "Trump Allegations" Are a Hoax</div>
+              <div class="subtopic-detail">Breitbart's John Nolte published an extensive debunking piece arguing that NPR's reporting on the previously withheld FBI memos was a politically timed "hoax" — noting the story was dropped on the day of Trump's State of the Union address. Breitbart pointed out that the woman's first FBI interview contained no mention of Trump, and that she had withdrawn her lawsuit against Epstein's estate. An administration official told Breitbart: "These non-credible accusations against President Trump were in the SDNY files and listed as duplicative files, and therefore not legally required to be released." Breitbart also noted the Biden DOJ had these files for four years and never charged Trump.</div>
+              <div class="subtopic-src">
+                <a href="https://www.breitbart.com" target="_blank">Breitbart: NPR Hoax</a>
+                <a href="https://nypost.com" target="_blank">New York Post</a>
+                <a href="https://www.dailywire.com" target="_blank">Daily Wire</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Clinton Testimony &amp; Democrat-Epstein Connections</div>
+              <div class="subtopic-detail">The New York Post led coverage of Bill Clinton's House Oversight deposition (Feb 28–Mar 2), noting his admission that Larry Summers introduced him to Epstein. Breitbart covered the newly released Epstein files revelation that Clinton appeared in a hot tub in undated photos alongside a woman resembling Ghislaine Maxwell. White House Communications Director Steven Cheung tweeted "Slick Willy! @BillClinton just chillin" after the photos surfaced. The Daily Wire emphasized the asymmetric media coverage — arguing that comparable revelations about a Republican figure would dominate news cycles — while the NY Post called Clinton's testimony "devastating" and demanded a full investigation into Democratic figures linked to Epstein.</div>
+              <div class="subtopic-src">
+                <a href="https://nypost.com" target="_blank">New York Post: Clinton</a>
+                <a href="https://www.breitbart.com" target="_blank">Breitbart: Clinton Photos</a>
+                <a href="https://www.dailywire.com" target="_blank">Daily Wire</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Elite Network Exposed: Wall Street, Silicon Valley &amp; Media Ties</div>
+              <div class="subtopic-detail">Breitbart published an extensive investigation revealing emails between author Michael Wolff and Jeffrey Epstein showing their collaboration to undermine Trump's 2016 candidacy — including Wolff asking Epstein whether he should "make Trump an anti-Trump voice" and workshopping strategy against him. The New York Post highlighted Commerce Secretary Howard Lutnick's planned congressional testimony about Epstein contacts. Breitbart's reporting framed the Epstein files as exposing a concentrated, bipartisan elite network that conspired against Trump — with Democrats far more implicated than the White House's critics acknowledge.</div>
+              <div class="subtopic-src">
+                <a href="https://www.breitbart.com" target="_blank">Breitbart: Wolff-Epstein</a>
+                <a href="https://nypost.com" target="_blank">New York Post</a>
+                <a href="https://www.wsj.com" target="_blank">WSJ</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Transparency Debate: Was DOJ Compliant with Epstein Act?</div>
+              <div class="subtopic-detail">The WSJ examined whether the DOJ followed the Epstein Files Transparency Act's mandates, reporting that the administration released over 3 million pages of material but that critics alleged extensive and potentially illegal redactions. The Dispatch took a more skeptical view of the administration's handling, acknowledging that bipartisan legislation forced the release and that the initial withholding of the FBI interview memos — however they were coded — created a damaging political narrative. National Review argued that the Trump administration's transparency record on Epstein was ultimately better than any prior administration, even if the execution was messy.</div>
+              <div class="subtopic-src">
+                <a href="https://www.wsj.com" target="_blank">WSJ: Transparency</a>
+                <a href="https://thedispatch.com" target="_blank">The Dispatch</a>
+                <a href="https://www.nationalreview.com" target="_blank">National Review</a>
+              </div>
+            </div>
+
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://www.breitbart.com" target="_blank">Breitbart</a>
+            <a href="https://nypost.com" target="_blank">NY Post</a>
+            <a href="https://www.dailywire.com" target="_blank">Daily Wire</a>
+            <a href="https://www.wsj.com" target="_blank">WSJ</a>
+            <a href="https://thedispatch.com" target="_blank">The Dispatch</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. UKRAINE -->
+    <div class="card">
+      <div class="card-header level-6" onclick="toggle(this)">
+        <span class="card-rank">06</span>
+        <span class="card-title">Ukraine — "America First" Peace or Prolonged Stalemate?</span>
+        <span class="card-count">22 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+
+            <div class="subtopic">
+              <div class="subtopic-title">Iran War Delays Peace Talks — But Trump Keeps Up Pressure</div>
+              <div class="subtopic-detail">The WSJ reported that US-brokered trilateral talks were postponed due to the Iran war but that the Trump administration remains committed to finalizing a deal before July 4 — the 250th anniversary of American independence. Treasury Secretary Bessent confirmed Trump is eager to deliver on his campaign promise to end the war quickly. The Daily Wire interviewed defense analysts who argued that the Iran war paradoxically creates leverage over Russia: Moscow benefits from high oil prices but fears a US military now demonstrably willing to act decisively in the Middle East. Tucker Carlson argued the delay showed Trump had been "captured" by neoconservatives at the expense of his America First domestic agenda.</div>
+              <div class="subtopic-src">
+                <a href="https://www.wsj.com" target="_blank">WSJ: Peace Talks</a>
+                <a href="https://www.dailywire.com" target="_blank">Daily Wire: Analysis</a>
+                <a href="https://tuckercarlson.com" target="_blank">Tucker Carlson</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">National Review: Ukraine Deal Must Not Reward Russian Aggression</div>
+              <div class="subtopic-detail">National Review published analysis warning that a Ukraine peace deal that ratifies Russian territorial gains would "hollow out the rules-based international order" and "schedule the next war." The magazine — representing a hawkish conservative tradition at odds with the Tucker Carlson isolationist wing — argued that Trump's "America First" framework is compatible with holding Russia accountable, since a weak Ukraine settlement emboldens China over Taiwan. The Dispatch similarly argued that security guarantees must be substantive, not cosmetic, and that the administration should resist Putin's demand to cap Ukraine's military size. WSJ's news coverage confirmed that territory remains the core impasse.</div>
+              <div class="subtopic-src">
+                <a href="https://www.nationalreview.com" target="_blank">National Review</a>
+                <a href="https://thedispatch.com" target="_blank">The Dispatch</a>
+                <a href="https://www.wsj.com" target="_blank">WSJ</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Tucker Carlson: Ukraine War Is "America's Unnecessary Entanglement"</div>
+              <div class="subtopic-detail">Tucker Carlson has consistently argued that the Ukraine war is a legacy of neoconservative globalism that Trump should extricate the US from — even at significant cost to Ukraine's territorial integrity. He challenged the premise that the US has a security interest in Ukraine's eastern borders, arguing that American taxpayers have subsidized a war that primarily benefits European nations unwilling to fund their own defense. Carlson's break with Trump over Iran has intensified his focus on the Ukraine issue as part of the same "America Last" foreign policy pattern he believes has overtaken the administration. National Review pushed back sharply, calling Carlson's framing "Putin-adjacent propaganda."</div>
+              <div class="subtopic-src">
+                <a href="https://tuckercarlson.com" target="_blank">Tucker Carlson Network</a>
+                <a href="https://www.nationalreview.com" target="_blank">National Review: Rebuttal</a>
+                <a href="https://thedispatch.com" target="_blank">The Dispatch</a>
+              </div>
+            </div>
+
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://www.wsj.com" target="_blank">WSJ</a>
+            <a href="https://www.nationalreview.com" target="_blank">National Review</a>
+            <a href="https://thedispatch.com" target="_blank">The Dispatch</a>
+            <a href="https://www.dailywire.com" target="_blank">Daily Wire</a>
+            <a href="https://tuckercarlson.com" target="_blank">Tucker Carlson</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. LATIN AMERICA & CANADA -->
+    <div class="card">
+      <div class="card-header level-7" onclick="toggle(this)">
+        <span class="card-rank">07</span>
+        <span class="card-title">Latin America &amp; Canada — Tariff Strategy &amp; Hemisphere Doctrine</span>
+        <span class="card-count">20 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+
+            <div class="subtopic">
+              <div class="subtopic-title">WSJ: Administration Rebuilds Tariff Arsenal via Section 301 &amp; 232</div>
+              <div class="subtopic-detail">The Wall Street Journal reported that despite the SCOTUS IEEPA ruling, Treasury Secretary Scott Bessent is confident tariffs will "effectively return to where they stood before the Supreme Court" within five months, using Section 301 (trade) and Section 232 (national security) authorities. WSJ editorial writers argued that while IEEPA was the wrong legal vehicle, the underlying trade goals — rebalancing deficits and reducing dependence on adversarial supply chains — remain legitimate and achievable. Breitbart framed the ruling as a setback, not a defeat, noting that Section 301 investigations launched March 11-12 against 15+ countries represent the administration's determination to press forward.</div>
+              <div class="subtopic-src">
+                <a href="https://www.wsj.com" target="_blank">WSJ: Trade Strategy</a>
+                <a href="https://www.breitbart.com" target="_blank">Breitbart: Tariff Rebuild</a>
+                <a href="https://thedispatch.com" target="_blank">The Dispatch</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">USMCA 2026: Canada "Playing Both Sides" on China</div>
+              <div class="subtopic-detail">The WSJ reported on Trump threatening to block the opening of the Gordie Howe International Bridge — citing Canada's growing trade relationship with China and one-sided contract terms. The New York Post's editorial board argued Canada has been "playing both sides" of the US-China rivalry while enjoying preferential USMCA access — and that the July 2026 USMCA review represents an opportunity to demand genuine reciprocity. Breitbart reported a House vote to repeal Canadian tariffs (219-211 with some Republican defectors) as an example of congressional weakness on trade — and noted Trump's threat of "political consequences" for GOP members who voted against the measure.</div>
+              <div class="subtopic-src">
+                <a href="https://www.wsj.com" target="_blank">WSJ: USMCA</a>
+                <a href="https://nypost.com" target="_blank">New York Post</a>
+                <a href="https://www.breitbart.com" target="_blank">Breitbart</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Venezuela: Maduro Removal as "Trump Corollary" to Monroe Doctrine</div>
+              <div class="subtopic-detail">The WSJ framed the January capture of Nicolás Maduro and the installation of a more cooperative interim government as a test of the Trump administration's "Trump Corollary" to the Monroe Doctrine — asserting hemispheric dominance and denying adversaries (China, Russia, Iran) regional footholds. Breitbart reported Venezuela agreeing to turn over 30–50 million barrels of oil to the US as evidence that muscular hemisphere policy produces tangible results. The Daily Wire and National Review both supported the action as consistent with a long history of US involvement in Latin American affairs, and argued it demonstrates credibility that makes both Iran and China reassess their own regional ambitions.</div>
+              <div class="subtopic-src">
+                <a href="https://www.wsj.com" target="_blank">WSJ: Monroe Doctrine</a>
+                <a href="https://www.breitbart.com" target="_blank">Breitbart: Venezuela Oil</a>
+                <a href="https://www.nationalreview.com" target="_blank">National Review</a>
+              </div>
+            </div>
+
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://www.wsj.com" target="_blank">WSJ</a>
+            <a href="https://www.breitbart.com" target="_blank">Breitbart</a>
+            <a href="https://nypost.com" target="_blank">NY Post</a>
+            <a href="https://thedispatch.com" target="_blank">The Dispatch</a>
+            <a href="https://www.nationalreview.com" target="_blank">National Review</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 8. US-CHINA-RUSSIA -->
+    <div class="card">
+      <div class="card-header level-8" onclick="toggle(this)">
+        <span class="card-rank">08</span>
+        <span class="card-title">Relations Among US, China, and Russia</span>
+        <span class="card-count">18 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+
+            <div class="subtopic">
+              <div class="subtopic-title">Russia-Iran Alignment: WSJ Warns of Putin "Gloating"</div>
+              <div class="subtopic-detail">The Wall Street Journal warned that Putin is actively "gloating" over the Iran conflict — with Russian oil prices doubling in 12 days as Hormuz disruptions cut global supply. National Review argued that Russia's provision of drone technology to Iran represents a direct assault on American security interests, and that the 30-day Russia oil sanctions waiver is at best a temporary energy measure and at worst a strategic concession to a hostile power actively supporting America's enemies. Senator Rick Scott said bluntly: "I believe Putin is helping Iran — he hates us." The Dispatch called for conditioning any further sanctions relief on verifiable Russia ceasing technology transfers to Iran.</div>
+              <div class="subtopic-src">
+                <a href="https://www.wsj.com" target="_blank">WSJ: Putin Gloating</a>
+                <a href="https://www.nationalreview.com" target="_blank">National Review</a>
+                <a href="https://thedispatch.com" target="_blank">The Dispatch</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">China: Condemning Strikes While Preserving Trade Relations</div>
+              <div class="subtopic-detail">The WSJ reported that despite China's condemnation of the Iran strikes, "high-level US-China trade negotiations are proceeding as planned." WSJ columnists noted the irony that China has diversified its energy supply away from the Gulf, meaning Hormuz disruptions hurt China's economy even as Beijing performatively backs Tehran. Breitbart highlighted an exclusive story from an administration official claiming "China threatened to detain all Panamanian-flagged vessels at Chinese ports" — a sign of escalating economic leverage competition. National Review argued China is playing a double game — condemning the US publicly while privately calculating that Iran's weakening removes a troublesome regional actor from its own periphery.</div>
+              <div class="subtopic-src">
+                <a href="https://www.wsj.com" target="_blank">WSJ: China Trade</a>
+                <a href="https://www.breitbart.com" target="_blank">Breitbart: China Vessels</a>
+                <a href="https://www.nationalreview.com" target="_blank">National Review</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">AI Race vs. China: Pentagon's OpenAI Deal vs. Anthropic Dispute</div>
+              <div class="subtopic-detail">The WSJ reported on the Pentagon striking a deal with OpenAI hours after Trump ordered agencies to stop using Anthropic's AI — framing it as a critical step in maintaining AI superiority over China. The NYPost published excerpts of Breitbart social media director Wynton Hall's book <em>Code Red</em>, which argues that conservatives must engage seriously with AI policy to prevent China from "enslaving the world" with its AI systems. National Review and The Dispatch both emphasized that the AI arms race with China — not domestic content policy disputes — is the central technological contest of the decade, and that the administration must not allow political disputes with individual AI companies to undermine national security AI readiness.</div>
+              <div class="subtopic-src">
+                <a href="https://www.wsj.com" target="_blank">WSJ: AI Pentagon Deal</a>
+                <a href="https://nypost.com" target="_blank">NY Post: Code Red</a>
+                <a href="https://www.nationalreview.com" target="_blank">National Review</a>
+              </div>
+            </div>
+
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://www.wsj.com" target="_blank">WSJ</a>
+            <a href="https://www.nationalreview.com" target="_blank">National Review</a>
+            <a href="https://thedispatch.com" target="_blank">The Dispatch</a>
+            <a href="https://www.breitbart.com" target="_blank">Breitbart</a>
+            <a href="https://nypost.com" target="_blank">NY Post</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 9. SCOTUS & LEGAL -->
+    <div class="card">
+      <div class="card-header level-9" onclick="toggle(this)">
+        <span class="card-rank">09</span>
+        <span class="card-title">Supreme Court &amp; Other Legal Issues</span>
+        <span class="card-count">16 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+
+            <div class="subtopic">
+              <div class="subtopic-title">IEEPA Ruling: Judicial Overreach or Constitutional Correction?</div>
+              <div class="subtopic-detail">National Review published a nuanced take: the 6-3 IEEPA ruling was constitutionally correct insofar as IEEPA never explicitly authorized tariffs, but the court's assertion of authority over executive trade decisions raises its own separation-of-powers concerns. The Dispatch argued the ruling was a straightforward application of textualism by the conservative majority — noting that Justices Gorsuch and Barrett questioned whether the broad delegation would be a "one-way ratchet" of congressional power. Trump and Vance attacked the ruling publicly, calling the justices "lawless" — rhetoric that Breitbart amplified but that The Dispatch and National Review warned could damage the conservative judicial project built over decades.</div>
+              <div class="subtopic-src">
+                <a href="https://www.nationalreview.com" target="_blank">National Review</a>
+                <a href="https://thedispatch.com" target="_blank">The Dispatch: Textualism</a>
+                <a href="https://www.breitbart.com" target="_blank">Breitbart</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Trump v. Slaughter: Presidential Removal Power &amp; the Fed</div>
+              <div class="subtopic-detail">The Wall Street Journal and National Review flagged <em>Trump v. Slaughter</em> — testing presidential authority to remove FTC Commissioner Rebecca Slaughter — as the term's most consequential case for executive power. WSJ's editorial board backed Trump's position, arguing that independent agencies with binding regulatory authority should be accountable to democratically elected presidents. National Review published a careful analysis noting that even conservatives disagree on whether overturning <em>Humphrey's Executor</em> would extend to the Federal Reserve — an outcome that could unsettle markets. The Dispatch expressed concern that removing regulatory independence could politicize monetary policy and threaten economic stability.</div>
+              <div class="subtopic-src">
+                <a href="https://www.wsj.com/opinion" target="_blank">WSJ Editorial</a>
+                <a href="https://www.nationalreview.com" target="_blank">National Review</a>
+                <a href="https://thedispatch.com" target="_blank">The Dispatch</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Birthright Citizenship Challenge — Constitutional Showdown Looms</div>
+              <div class="subtopic-detail">Breitbart and the New York Post covered the administration's continued push to narrow automatic birthright citizenship for children of undocumented immigrants — arguing that the 14th Amendment's "subject to the jurisdiction thereof" clause was never intended to apply to illegal aliens. The WSJ editorial board expressed cautious support, calling it a "serious constitutional argument" that deserves Supreme Court consideration rather than circuit-court veto. National Review ran a detailed legal analysis arguing the administration's reading of the 14th Amendment is historically defensible and should be heard by SCOTUS. The Dispatch acknowledged the legal debate but warned the administration's EO-first approach may hand the case to a hostile lower-court majority.</div>
+              <div class="subtopic-src">
+                <a href="https://www.breitbart.com" target="_blank">Breitbart</a>
+                <a href="https://nypost.com" target="_blank">New York Post</a>
+                <a href="https://www.nationalreview.com" target="_blank">National Review: Analysis</a>
+              </div>
+            </div>
+
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://www.wsj.com" target="_blank">WSJ</a>
+            <a href="https://www.nationalreview.com" target="_blank">National Review</a>
+            <a href="https://thedispatch.com" target="_blank">The Dispatch</a>
+            <a href="https://www.breitbart.com" target="_blank">Breitbart</a>
+            <a href="https://nypost.com" target="_blank">NY Post</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 10. HEALTHCARE -->
+    <div class="card">
+      <div class="card-header level-10" onclick="toggle(this)">
+        <span class="card-rank">10</span>
+        <span class="card-title">Government Oversight of Health Care</span>
+        <span class="card-count">14 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+
+            <div class="subtopic">
+              <div class="subtopic-title">MAHA vs. MAGA: RFK Jr.'s Pesticide Fight Splits the Right</div>
+              <div class="subtopic-detail">The Wall Street Journal and National Review covered RFK Jr.'s promotion of a controversial pesticide as the latest front in the MAHA (Make America Healthy Again) vs. mainstream-conservative divide. Politico magazine (co-linked by WSJ readers) reported that "MAHA moms" — a key grassroots constituency — are furious with the administration over the pesticide stance, creating a rift between the food-safety wing of the MAHA movement and the chemical-agriculture lobby aligned with traditional GOP interests. The Dispatch argued that RFK Jr.'s tenure at HHS is "inconsistent and ideologically incoherent" — praising some deregulatory moves at FDA while criticizing anti-vaccine messaging that has damaged public health credibility.</div>
+              <div class="subtopic-src">
+                <a href="https://www.wsj.com" target="_blank">WSJ: MAHA Coverage</a>
+                <a href="https://thedispatch.com" target="_blank">The Dispatch: RFK Jr.</a>
+                <a href="https://www.nationalreview.com" target="_blank">National Review</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Medicaid Fraud Crackdown: Vance Goes on the Road with Dr. Oz</div>
+              <div class="subtopic-detail">Breitbart and the New York Post covered VP Vance's announcement of a $260 million Medicaid fraud moratorium in Minnesota favorably — calling it the first step in a broader effort to eliminate what the administration says is systemic fraud in blue-state Medicaid programs. The NY Post highlighted a Breitbart-connected investigation revealing that Minnesota Democrats had "blocked auditors from tackling an avalanche of Somali fraud." National Review supported the fraud-fighting mission in principle but cautioned that Medicaid restructuring requires congressional action and work-requirement implementation to be sustainable, not just ad hoc enforcement actions.</div>
+              <div class="subtopic-src">
+                <a href="https://www.breitbart.com" target="_blank">Breitbart: MN Medicaid</a>
+                <a href="https://nypost.com" target="_blank">New York Post</a>
+                <a href="https://www.nationalreview.com" target="_blank">National Review</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">FDA Biosimilar Deregulation: A Pro-Market Healthcare Win</div>
+              <div class="subtopic-detail">The Wall Street Journal reported favorably on the FDA's plan to loosen testing requirements for biosimilar drugs — a deregulatory move expected to reduce drug development costs by $20 million per biosimilar and increase competition against branded biologics. WSJ's health coverage framed this as a genuine MAHA-aligned win that advances both affordability and innovation. The Dispatch called it "the most substantive and defensible thing RFK Jr. has done at HHS" — a market-driven approach that could actually lower drug prices. Breitbart highlighted the policy as evidence that the administration's health agenda goes beyond culture-war vaccine debates to deliver tangible cost reductions for patients.</div>
+              <div class="subtopic-src">
+                <a href="https://www.wsj.com" target="_blank">WSJ: FDA Biosimilars</a>
+                <a href="https://thedispatch.com" target="_blank">The Dispatch</a>
+                <a href="https://www.breitbart.com" target="_blank">Breitbart</a>
+              </div>
+            </div>
+
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://www.wsj.com" target="_blank">WSJ</a>
+            <a href="https://thedispatch.com" target="_blank">The Dispatch</a>
+            <a href="https://www.nationalreview.com" target="_blank">National Review</a>
+            <a href="https://www.breitbart.com" target="_blank">Breitbart</a>
+            <a href="https://nypost.com" target="_blank">NY Post</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 11. ELECTORAL POLITICS -->
+    <div class="card">
+      <div class="card-header level-11" onclick="toggle(this)">
+        <span class="card-rank">11</span>
+        <span class="card-title">Electoral Politics — 2026 Midterms &amp; SAVE America Act</span>
+        <span class="card-count">12 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+
+            <div class="subtopic">
+              <div class="subtopic-title">SAVE America Act: Trump's Election Integrity Push</div>
+              <div class="subtopic-detail">Breitbart and the Daily Wire reported that Trump threatened to withhold his signature from all future legislation until the SAVE America Act passes — requiring proof of citizenship (passport or birth certificate) to register to vote. The administration argues the bill closes a critical loophole that allows non-citizens to potentially register and vote. The New York Post's editorial board backed the bill strongly, calling it "common sense election security" consistent with requirements in most democratic nations. The Dispatch published a more skeptical analysis, acknowledging the policy is broadly popular but noting that evidence of actual noncitizen voting fraud is minimal and that implementation could disenfranchise eligible citizens lacking required documents.</div>
+              <div class="subtopic-src">
+                <a href="https://www.breitbart.com" target="_blank">Breitbart: SAVE Act</a>
+                <a href="https://nypost.com" target="_blank">New York Post</a>
+                <a href="https://thedispatch.com" target="_blank">The Dispatch: Analysis</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Georgia-14 Special Election: Trump's Endorsement Test</div>
+              <div class="subtopic-detail">Breitbart covered the Georgia-14 special election closely as a test of Trump's post-MTG coalition maintenance. Trump-backed candidate Clay Fuller — endorsed at a Rome, Georgia rally — advanced to an April 7 runoff against Democrat Shawn Harris. Breitbart framed the race as proof that Trump's endorsement still carries enormous weight in deep-red districts, while noting that some Republican voters expressed independent preferences. The New York Post warned that allowing the seat to flip to Democrats — which would further slim the GOP House majority — would be a political disaster for the administration. National Review cautioned that MTG's district should not have been competitive at all, and that the special election is a warning sign.</div>
+              <div class="subtopic-src">
+                <a href="https://www.breitbart.com" target="_blank">Breitbart: GA-14</a>
+                <a href="https://nypost.com" target="_blank">New York Post</a>
+                <a href="https://www.nationalreview.com" target="_blank">National Review</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Iran War Polling: Risk to GOP Midterms as Anti-War Sentiment Builds</div>
+              <div class="subtopic-detail">National Review published a candid assessment that the Iran war poses "real midterm risk" for Republicans — noting that polling shows Trump voters who oppose foreign wars are genuinely demoralized and that without sustained visible military success, the coalition could fracture before November. The Dispatch tracked early polling showing that independents disapprove of the Iran war by wide margins. Tucker Carlson argued on Piers Morgan's show that the "majority of people who voted for Trump feel let down" and that their reaction is not anger but heartbreak: "I can't believe he did this to us." National Review acknowledged the political vulnerability while maintaining that the strategic case for the war is sound regardless of electoral consequences.</div>
+              <div class="subtopic-src">
+                <a href="https://www.nationalreview.com" target="_blank">National Review: Midterm Risk</a>
+                <a href="https://thedispatch.com" target="_blank">The Dispatch</a>
+                <a href="https://tuckercarlson.com" target="_blank">Tucker Carlson</a>
+              </div>
+            </div>
+
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://www.breitbart.com" target="_blank">Breitbart</a>
+            <a href="https://nypost.com" target="_blank">NY Post</a>
+            <a href="https://thedispatch.com" target="_blank">The Dispatch</a>
+            <a href="https://www.nationalreview.com" target="_blank">National Review</a>
+            <a href="https://tuckercarlson.com" target="_blank">Tucker Carlson</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /topics-list -->
+
+  <!-- ══ FOOTER ══════════════════════════════════════════ -->
+  <div class="footer">
+    <div>
+      <strong>Sources cited in this report:</strong><br>
+      <a href="https://www.wsj.com" target="_blank">Wall Street Journal</a> &nbsp;·&nbsp;
+      <a href="https://thedispatch.com" target="_blank">The Dispatch</a> &nbsp;·&nbsp;
+      <a href="https://www.nationalreview.com" target="_blank">National Review</a> &nbsp;·&nbsp;
+      <a href="https://www.dailywire.com" target="_blank">Daily Wire</a> &nbsp;·&nbsp;
+      <a href="https://nypost.com" target="_blank">New York Post</a> &nbsp;·&nbsp;
+      <a href="https://tuckercarlson.com" target="_blank">Tucker Carlson Network</a> &nbsp;·&nbsp;
+      <a href="https://www.breitbart.com" target="_blank">Breitbart</a>
+    </div>
+    <div style="margin-top: 10px; opacity:0.65; font-size:10px;">
+      Compiled for BOLLI Current Events Discussion Group &nbsp;·&nbsp;
+      Coverage synthesized across 7 conservative &amp; center-right outlets &nbsp;·&nbsp;
+      March 1–15, 2026 &nbsp;·&nbsp; <a href="https://jhnday.github.io/CrntEvnts" target="_blank">jhnday.github.io/CrntEvnts</a>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<script>
+  function toggle(header) {
+    const body = header.nextElementSibling;
+    const chevron = header.querySelector('.card-chevron');
+    const isOpen = body.classList.contains('expanded');
+
+    document.querySelectorAll('.card-body').forEach(b => b.classList.remove('expanded'));
+    document.querySelectorAll('.card-chevron').forEach(c => c.classList.remove('rotated'));
+
+    if (!isOpen) {
+      body.classList.add('expanded');
+      chevron.classList.add('rotated');
+      setTimeout(() => header.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
+    }
+  }
+</script>
+</body>
+</html>

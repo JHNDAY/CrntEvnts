@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trending News from the Center — March 1–15, 2026</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      background: #a8c4e8;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+    }
+
+    /* ── HEADER ──────────────────────────────────────────── */
+    .header {
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #667eea 100%);
+      padding: 36px 32px 28px;
+      text-align: center;
+      color: white;
+    }
+
+    .header h1 {
+      font-size: 1.85rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .header .subtitle {
+      font-size: 0.95rem;
+      opacity: 0.85;
+      margin-bottom: 18px;
+      letter-spacing: 0.04em;
+    }
+
+    /* ── SOURCE PILLS ────────────────────────────────────── */
+    .sources-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: center;
+      margin-top: 14px;
+    }
+
+    .sources-bar a {
+      font-size: 11px;
+      color: #fff;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 4px;
+      padding: 3px 10px;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .sources-bar a:hover {
+      background: rgba(255,255,255,0.35);
+    }
+
+    /* ── LEGEND ──────────────────────────────────────────── */
+    .legend {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 20px 10px;
+      font-size: 12px;
+      color: #555;
+      background: #a8c4e8;
+    }
+    .legend-bar {
+      width: 160px;
+      height: 7px;
+      border-radius: 4px;
+      background: linear-gradient(90deg, #cc0000, #e86a00, #c0a000, #2e9e6a, #2a7fcc, #5533aa);
+    }
+
+    /* ── INSTRUCTIONS ────────────────────────────────────── */
+    .instructions {
+      text-align: center;
+      font-size: 12px;
+      color: #888;
+      padding-bottom: 12px;
+      letter-spacing: 0.03em;
+      background: #a8c4e8;
+    }
+
+    /* ── TOPIC CARDS ─────────────────────────────────────── */
+    .topics-list {
+      padding: 0 20px 30px;
+      background: #a8c4e8;
+    }
+
+    .card {
+      margin-bottom: 12px;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      padding: 16px 20px;
+      cursor: pointer;
+      user-select: none;
+      color: white;
+      position: relative;
+      gap: 12px;
+      transition: filter 0.2s;
+    }
+    .card-header:hover { filter: brightness(1.08); }
+
+    .level-1  { background: linear-gradient(135deg, #cc0000 0%, #990000 100%); }
+    .level-2  { background: linear-gradient(135deg, #e03000 0%, #b02000 100%); }
+    .level-3  { background: linear-gradient(135deg, #e86a00 0%, #c04800 100%); }
+    .level-4  { background: linear-gradient(135deg, #d48000 0%, #a86000 100%); }
+    .level-5  { background: linear-gradient(135deg, #b09000 0%, #887000 100%); }
+    .level-6  { background: linear-gradient(135deg, #4a9e3a 0%, #307020 100%); }
+    .level-7  { background: linear-gradient(135deg, #2e9e7a 0%, #1a7050 100%); }
+    .level-8  { background: linear-gradient(135deg, #1a8aaa 0%, #0a6070 100%); }
+    .level-9  { background: linear-gradient(135deg, #2a7fcc 0%, #1a5a99 100%); }
+    .level-10 { background: linear-gradient(135deg, #1a5fa8 0%, #0e3d70 100%); }
+    .level-11 { background: linear-gradient(135deg, #5533aa 0%, #3a1f77 100%); }
+
+    .card-rank {
+      font-size: 11px;
+      opacity: 0.7;
+      min-width: 22px;
+    }
+
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+      flex: 1;
+    }
+
+    .card-count {
+      font-size: 12px;
+      background: rgba(0,0,0,0.25);
+      padding: 3px 10px;
+      border-radius: 12px;
+      white-space: nowrap;
+    }
+
+    .card-chevron {
+      font-size: 16px;
+      opacity: 0.8;
+      transition: transform 0.3s ease;
+    }
+    .card-chevron.rotated { transform: rotate(180deg); }
+
+    /* ── CARD BODY ───────────────────────────────────────── */
+    .card-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease-in-out;
+      background: #b8ccec;
+    }
+    .card-body.expanded { max-height: 2800px; }
+
+    .card-body-inner {
+      padding: 18px 20px 20px;
+      border-top: 2px solid rgba(102,126,234,0.25);
+    }
+
+    /* ── SUBTOPIC CARDS ──────────────────────────────────── */
+    .subtopics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .subtopic {
+      background: white;
+      border-left: 3px solid #667eea;
+      border-radius: 6px;
+      padding: 11px 14px;
+      box-shadow: 0 2px 6px rgba(102,126,234,0.12);
+    }
+
+    .subtopic-src {
+      margin-top: 8px;
+      padding-top: 6px;
+      border-top: 1px solid rgba(102,126,234,0.2);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+    .subtopic-src a {
+      font-size: 10px;
+      color: #2a5298;
+      background: #eef2ff;
+      border: 1px solid #c7d2fe;
+      border-radius: 3px;
+      padding: 2px 7px;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .subtopic-src a:hover {
+      background: #667eea;
+      color: white;
+      border-color: #667eea;
+    }
+
+    .subtopic-title {
+      font-weight: 600;
+      color: #1e3c72;
+      font-size: 0.875rem;
+      margin-bottom: 5px;
+    }
+
+    .subtopic-detail {
+      font-size: 0.78rem;
+      color: #555;
+      line-height: 1.55;
+    }
+
+    /* ── SECTION SOURCES ─────────────────────────────────── */
+    .section-sources {
+      font-size: 11px;
+      color: #888;
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+    }
+    .section-sources strong { color: #555; }
+    .section-sources a {
+      color: #2a5298;
+      text-decoration: none;
+      background: #eef2ff;
+      padding: 2px 8px;
+      border-radius: 3px;
+    }
+    .section-sources a:hover {
+      background: #667eea;
+      color: white;
+    }
+
+    /* ── FOOTER ──────────────────────────────────────────── */
+    .footer {
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+      color: rgba(255,255,255,0.8);
+      text-align: center;
+      padding: 22px 20px;
+      font-size: 11px;
+      line-height: 1.8;
+    }
+    .footer a {
+      color: #a8c4ff;
+      text-decoration: none;
+    }
+    .footer a:hover { text-decoration: underline; color: #fff; }
+
+    @media (max-width: 600px) {
+      .subtopics-grid { grid-template-columns: 1fr; }
+      .header h1 { font-size: 1.4rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- ══ HEADER ══════════════════════════════════════════ -->
+  <div class="header">
+    <h1>📰 Trending News from the Center · March 1–15, 2026</h1>
+    <div class="subtitle">11 Categories &nbsp;·&nbsp; Ordered by coverage volume &nbsp;·&nbsp; 6 mainstream &amp; analytical sources</div>
+
+    <div class="sources-bar">
+      <a href="https://www.bbc.com/news" target="_blank">BBC</a>
+      <a href="https://www.bloomberg.com" target="_blank">Bloomberg</a>
+      <a href="https://www.politico.com" target="_blank">Politico</a>
+      <a href="https://www.aljazeera.com" target="_blank">Al Jazeera</a>
+      <a href="https://www.mediaite.com" target="_blank">Mediaite</a>
+      <a href="https://geopoliticalfutures.com" target="_blank">Geopolitical Futures</a>
+    </div>
+  </div>
+
+  <!-- ── LEGEND ── -->
+  <div class="legend">
+    <span>Most coverage</span>
+    <div class="legend-bar"></div>
+    <span>Least coverage</span>
+  </div>
+  <div class="instructions">Click any category to expand · sections ordered by descending mention count</div>
+
+  <!-- ══ TOPICS ══════════════════════════════════════════ -->
+  <div class="topics-list">
+
+    <!-- 1. MIDDLE EAST -->
+    <div class="card">
+      <div class="card-header level-1" onclick="toggle(this)">
+        <span class="card-rank">01</span>
+        <span class="card-title">Middle East — US-Israel War on Iran</span>
+        <span class="card-count">54 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+
+            <div class="subtopic">
+              <div class="subtopic-title">Operation Epic Fury: Opening Strikes &amp; Khamenei Killed (Feb 28)</div>
+              <div class="subtopic-detail">On February 28, 2026, US and Israeli forces launched nearly 900 strikes in 12 hours against Iran's military infrastructure and leadership. Supreme Leader Ali Khamenei was killed in the opening salvo. Israel said it used over 1,200 bombs in 24 hours; a US official confirmed dozens of US carrier-based strikes. A missile struck a girls' school in Minab, killing ~170. Mojtaba Khamenei was named new supreme leader by the Council of Experts. Trump stated four objectives: eliminate Iran's nuclear program, degrade ballistic missiles, neutralize its navy and drone arsenal, and sever control of proxies.</div>
+              <div class="subtopic-src">
+                <a href="https://www.bloomberg.com/news/articles/2026-03-03/trump-pledges-whatever-it-takes-on-iran-as-war-widens" target="_blank">Bloomberg: War Widens</a>
+                <a href="https://geopoliticalfutures.com/first-thoughts-on-the-attack-on-iran/" target="_blank">GPF: First Thoughts</a>
+                <a href="https://www.bbc.com/news/world/middle-east" target="_blank">BBC: Middle East</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Iran's Doctrine of Protracted War</div>
+              <div class="subtopic-detail">Bloomberg tracked 823 documented Iranian airstrikes (483 intercepted) from Feb 28–Mar 13. Iran increasingly targeted economic assets — energy infrastructure, data centers, and airports — rather than just military sites. Geopolitical Futures analyst George Friedman argued "the war between Iran and the US-Israeli coalition is unlikely to produce a rapid or decisive outcome" and that Iran is pursuing a doctrine of protracted asymmetric conflict. Pentagon's Hegseth reported Iran's missile volume "down 90%" and drone volume "down 95%" by March 13, but attacks continued.</div>
+              <div class="subtopic-src">
+                <a href="https://www.bloomberg.com/graphics/2026-iran-war-middle-east-strike-targets-map/" target="_blank">Bloomberg: Strike Map</a>
+                <a href="https://geopoliticalfutures.com/irans-doctrine-of-protracted-war/" target="_blank">GPF: Protracted War</a>
+                <a href="https://www.aljazeera.com/news/2026/3/14/iran-war-what-is-happening-on-day-15-of-us-israel-attacks" target="_blank">Al Jazeera: Day 15</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Unclear War Aims: Regime Change vs. Denuclearization</div>
+              <div class="subtopic-detail">Bloomberg's analysis noted the US-Israeli campaign's endgame "remains unclear," with experts warning: "if you don't know what you're fighting for, you don't know when to stop." Trump called for "unconditional surrender" and Iranian regime change, but some Pentagon officials privately questioned the strategy amid depleting munitions stocks. Geopolitical Futures' George Friedman assessed that while Trump would ideally like the Iranian people to "rise up," the minimum US objective is a regime that abandons nuclear weapons — setting up a potential mismatch with Israeli regime-change goals.</div>
+              <div class="subtopic-src">
+                <a href="https://www.bloomberg.com/graphics/2026-iran-map-trump-israel-strikes/" target="_blank">Bloomberg: Unclear Aims</a>
+                <a href="https://geopoliticalfutures.com/george-friedman-on-americas-real-iran-goals-regime-change-or-regional-reset/" target="_blank">GPF: Real US Goals</a>
+                <a href="https://www.bbc.com/news/world/us-canada" target="_blank">BBC: US &amp; Canada</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Energy Crisis: Hormuz Blockade &amp; Oil at $120/bbl</div>
+              <div class="subtopic-detail">Iran targeted Gulf oil infrastructure — including Aramco's Ras Tanura plant and Qatar's Ras Laffan gas facility — prompting precautionary shutdowns and force majeures. Oil prices hit near $120 per barrel, "making record moves," with severe daily volatility. Bloomberg reported Iran was mulling allowing tankers through Hormuz only if oil is traded in Chinese yuan. Trump struck military targets on Kharg Island but spared oil infrastructure "for reasons of decency," while threatening to hit it if Iran continues blocking shipping. The Strait of Hormuz crisis has global food security implications, with 50% of global urea exports transiting the strait.</div>
+              <div class="subtopic-src">
+                <a href="https://www.bloomberg.com/news/articles/2026-03-11/iran-war-us-israel-steer-conflict-using-lessons-learned-from-2025-clash" target="_blank">Bloomberg: Lessons Learned</a>
+                <a href="https://www.aljazeera.com/news/liveblog/2026/3/14/iran-war-live-pentagon-vows-to-ramp-up-us-military-campaign-against-iran" target="_blank">Al Jazeera: Live Blog</a>
+                <a href="https://geopoliticalfutures.com/a-summary-of-the-iran-war-so-far/" target="_blank">GPF: War Summary</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Regional Escalation: Lebanon, Gulf States, Turkey</div>
+              <div class="subtopic-detail">Hezbollah resumed missile and drone fire at Israel from Lebanon, triggering Israel's largest airstrikes on Lebanon since October 2023. At least 773 people were killed in Lebanon by March 14. NATO intercepted a third Iranian missile over Turkey's airspace. Saudi Arabia, Qatar, Kuwait, and Bahrain suffered Iranian drone and missile strikes; Dubai International Airport was temporarily forced to reduce operations. Bloomberg noted Qatar's energy minister warned Gulf states might shut down production if Iranian strikes on LNG infrastructure continued. UNESCO urged protection of Iranian world heritage sites damaged by strikes.</div>
+              <div class="subtopic-src">
+                <a href="https://www.bloomberg.com/news/newsletters/2026-03-03/iran-conflict-reaches-into-every-corner-of-global-news" target="_blank">Bloomberg: Global Impact</a>
+                <a href="https://www.aljazeera.com/news/2026/3/1/us-israel-attacks-on-iran-death-toll-and-injuries-live-tracker" target="_blank">Al Jazeera: Death Tracker</a>
+                <a href="https://www.bbc.com/news/world/middle-east" target="_blank">BBC: Middle East</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">New Strategic Reality: Iran Post-War</div>
+              <div class="subtopic-detail">Geopolitical Futures argued that Iran's government will "never be the same again" even if the regime survives. Theocrats have been surpassed by the IRGC over recent decades, and the war accelerates that internal power shift. Bloomberg's Hal Brands called the conflict "the rise of a full-blown warfighting alliance between Israel and the US" — a historic development largely overlooked amid tactical news. Analysts debated whether a weakened IRGC opens a path to a new, more pragmatic Iranian leadership, or whether regime collapse creates dangerous instability that could spill across borders.</div>
+              <div class="subtopic-src">
+                <a href="https://geopoliticalfutures.com/how-the-iran-war-creates-a-new-strategic-environment/" target="_blank">GPF: New Strategic Environment</a>
+                <a href="https://www.bloomberg.com/opinion/articles/2026-03-03/iran-war-israel-is-america-s-not-so-secret-weapon" target="_blank">Bloomberg Opinion: Israel Alliance</a>
+                <a href="https://www.aljazeera.com/news/2026/3/4/russia-china-raise-diplomatic-voices-against-us-israeli-attacks-on-iran" target="_blank">Al Jazeera: Russia-China Response</a>
+              </div>
+            </div>
+
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://www.bloomberg.com" target="_blank">Bloomberg</a>
+            <a href="https://geopoliticalfutures.com" target="_blank">Geopolitical Futures</a>
+            <a href="https://www.aljazeera.com" target="_blank">Al Jazeera</a>
+            <a href="https://www.bbc.com/news" target="_blank">BBC</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. UKRAINE -->
+    <div class="card">
+      <div class="card-header level-2" onclick="toggle(this)">
+        <span class="card-rank">02</span>
+        <span class="card-title">Ukraine — Peace Talks Stalled Amid Iran Distraction</span>
+        <span class="card-count">38 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+
+            <div class="subtopic">
+              <div class="subtopic-title">Territorial Impasse: Russia Demands All of Donbas</div>
+              <div class="subtopic-detail">Bloomberg reported that Russia "increasingly considers there's no point to continue US-led peace talks unless Kyiv is willing to cede territory." Putin's core demand — that Ukraine relinquish all of Donbas, including the 20% Russia has not yet captured — remains unacceptable to Kyiv. Bloomberg's own assessment was blunt: "Four years into Putin's war, the Ukraine peace push is stalling," with peace talks "deadlocked and fighting largely at a stalemate." NATO states Poland and Estonia warned the US that Putin is "buying time" in peace talks with no genuine intention to end the war.</div>
+              <div class="subtopic-src">
+                <a href="https://www.bloomberg.com/news/articles/2026-02-27/how-russia-ukraine-peace-talks-are-at-impasse-over-donbas-and-other-territory" target="_blank">Bloomberg: Donbas Impasse</a>
+                <a href="https://www.bloomberg.com/news/articles/2026-02-10/russia-aims-only-to-buy-time-in-peace-talks-spy-report-says" target="_blank">Bloomberg: Russia Buying Time</a>
+                <a href="https://www.aljazeera.com/news/2026/3/5/ukraine-russia-free-200-pows-each-in-latest-swap-amid-stalled-peace-talks" target="_blank">Al Jazeera: POW Swap</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Iran War Postpones Trilateral Talks</div>
+              <div class="subtopic-detail">US-brokered peace talks planned for Abu Dhabi in early March were postponed indefinitely once the Iran war erupted. Bloomberg confirmed that with UAE airspace closed and US diplomatic bandwidth consumed by Iran, the meetings — already in their third round — could not proceed. Zelenskyy announced the next round is rescheduled to March 16–22. US envoy Steve Witkoff told Bloomberg TV: "We're seeing signs that both sides are weary and tired. Hopefully that's the beginning inflection point." Politico noted Trump is also eager to conclude a deal before the July 4 Independence Day celebrations.</div>
+              <div class="subtopic-src">
+                <a href="https://www.bloomberg.com/news/articles/2026-03-05/ukraine-says-peace-talks-with-russia-on-hold-due-to-iran-war" target="_blank">Bloomberg: Talks On Hold</a>
+                <a href="https://www.bloomberg.com/news/articles/2026-03-02/russia-ukraine-plan-for-us-led-peace-talks-despite-war-in-iran" target="_blank">Bloomberg: Still Planning</a>
+                <a href="https://www.bbc.com/news/world/europe" target="_blank">BBC: Europe</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Russia's War Budget Stretched Thin</div>
+              <div class="subtopic-detail">Bloomberg reported that Putin "faces a narrowing window to reach a peace deal" as Russia wrestles with a widening budget gap of up to 1.2 trillion rubles ($16 billion) needed to balance key fiscal indicators. Russian war budget spending is on track to exceed planned levels if additional military outlays are required. Rising oil prices from the Hormuz crisis paradoxically benefit Moscow's energy revenues — partially offsetting the fiscal pressure. The Trump administration's 30-day waiver on Russian oil sanctions further loosened the financial squeeze, prompting European criticism.</div>
+              <div class="subtopic-src">
+                <a href="https://www.bloomberg.com/news/articles/2026-01-31/putin-s-war-budget-faces-growing-strains-as-peace-talks-resume" target="_blank">Bloomberg: War Budget</a>
+                <a href="https://www.aljazeera.com/news/2026/3/5/ukraine-russia-free-200-pows-each-in-latest-swap-amid-stalled-peace-talks" target="_blank">Al Jazeera: POW Context</a>
+                <a href="https://geopoliticalfutures.com" target="_blank">Geopolitical Futures</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">EU Pressure: "Put Pressure on Russia, Not Ukraine"</div>
+              <div class="subtopic-detail">EU High Representative Kaja Kallas told Bloomberg TV that the US strategy of pressing Ukraine in peace talks "hasn't really delivered in one year" and argued Trump should apply leverage to Russia instead: "Their approach has been to put pressure on the victim, on Ukraine." France and the UK have offered "coalition of the willing" troops as post-ceasefire security guarantors, with Macron pledging "several thousand" troops for military hubs on Ukrainian territory. US envoys Witkoff and Kushner attended the Paris coalition summit — the first time US officials joined those talks.</div>
+              <div class="subtopic-src">
+                <a href="https://www.bloomberg.com/news/articles/2026-02-24/us-must-pressure-russia-over-ukraine-to-advance-peace-eu-says" target="_blank">Bloomberg: EU Pressure</a>
+                <a href="https://www.bloomberg.com/news/articles/2026-02-24/four-years-into-putin-s-war-the-ukraine-peace-push-is-stalling" target="_blank">Bloomberg: 4 Years In</a>
+                <a href="https://www.aljazeera.com/news/2026/1/6/ukraine-talks-in-paris-yield-significant-progress-on-security-pledges" target="_blank">Al Jazeera: Paris Summit</a>
+              </div>
+            </div>
+
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://www.bloomberg.com" target="_blank">Bloomberg</a>
+            <a href="https://www.aljazeera.com" target="_blank">Al Jazeera</a>
+            <a href="https://www.bbc.com/news" target="_blank">BBC</a>
+            <a href="https://www.politico.com" target="_blank">Politico</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. LATIN AMERICA & CANADA -->
+    <div class="card">
+      <div class="card-header level-3" onclick="toggle(this)">
+        <span class="card-rank">03</span>
+        <span class="card-title">Latin America &amp; Canada — Post-IEEPA Tariff Chaos</span>
+        <span class="card-count">34 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+
+            <div class="subtopic">
+              <div class="subtopic-title">SCOTUS Kills IEEPA Tariffs — Post-Ruling Fallout (Feb 20)</div>
+              <div class="subtopic-detail">Bloomberg's live-blog coverage of the February 20 Supreme Court ruling (6-3) became one of the most-read stories of the period. The Court struck down Trump's use of IEEPA to impose sweeping tariffs on Canada, Mexico, and the rest of the world — calling it the president's "biggest legal defeat since he returned to the White House." Al Jazeera reported the world is "grappling with the legal and economic fallout" as governments and markets scrambled. Trump called the ruling "a disgrace" and promptly imposed a new 10% global tariff under Section 122 — which 24 states then sued to block by March 5.</div>
+              <div class="subtopic-src">
+                <a href="https://www.bloomberg.com/news/articles/2026-02-20/trump-s-global-tariffs-struck-down-by-us-supreme-court" target="_blank">Bloomberg: SCOTUS Strikes Down</a>
+                <a href="https://www.aljazeera.com/news/2026/2/21/trump-tariff-reactions" target="_blank">Al Jazeera: World Reacts</a>
+                <a href="https://www.bloomberg.com/news/articles/2026-03-05/trump-s-new-tariffs-face-legal-challenge-by-group-of-states" target="_blank">Bloomberg: States Sue</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Canada Trade Relationship at Inflection Point</div>
+              <div class="subtopic-detail">Al Jazeera reported Trump declared USMCA "irrelevant to the US" in January 2026. The mandatory USMCA 2026 review — beginning July 1 — now occurs against a backdrop of legal chaos. Canada imposed 25% retaliatory tariffs on $107 billion of US goods; the House voted 219-211 in February to repeal Canadian tariffs (a rare bipartisan rebuke Trump threatened to veto). Trump threatened to block the opening of the Gordie Howe International Bridge over Canada's trade dealings with China. Bloomberg noted the bilateral trade relationship — $550 billion annually — is one of the world's largest and most integrated.</div>
+              <div class="subtopic-src">
+                <a href="https://www.aljazeera.com/economy/2026/1/13/trump-says-trade-agreement-with-mexico-canada-irrelevant-to-us" target="_blank">Al Jazeera: USMCA Irrelevant</a>
+                <a href="https://www.bloomberg.com/news/articles/2026-02-24/trump-s-tariff-options-after-supreme-court-defeat-sections-122-338-and-more" target="_blank">Bloomberg: Tariff Options</a>
+                <a href="https://www.bbc.com/news/world/us-canada" target="_blank">BBC: US-Canada</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Section 122 &amp; Section 301 — New Legal Battles</div>
+              <div class="subtopic-detail">After the IEEPA defeat, Bloomberg tracked Trump's pivot to alternative legal authorities. Section 122 (balance-of-payments authority) allows a 15% global tariff for only 150 days; Section 301 investigations (launched against 15+ countries on March 11-12) take months and require elaborate procedural steps. CBP told a court it could not comply with the ordered IEEPA refund process; it proposed a new ACE-based system expected to be ready by mid-April. Bloomberg estimated the total IEEPA tariff refund exposure at $100–175 billion — a potential massive fiscal event if courts enforce it.</div>
+              <div class="subtopic-src">
+                <a href="https://www.bloomberg.com/news/articles/2026-02-24/trump-s-tariff-options-after-supreme-court-defeat-sections-122-338-and-more" target="_blank">Bloomberg: Legal Options</a>
+                <a href="https://www.bloomberg.com/news/articles/2026-03-05/trump-s-new-tariffs-face-legal-challenge-by-group-of-states" target="_blank">Bloomberg: New Challenge</a>
+                <a href="https://www.politico.com" target="_blank">Politico: Trade Coverage</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">De Minimis Legal Fight Revived (Mar 9)</div>
+              <div class="subtopic-detail">Bloomberg reported (March 9) that a US trade court revived a legal challenge to Trump's elimination of the de minimis tariff exemption for low-value imports — a change that significantly affects online retailers, small businesses, and consumers who purchase directly from overseas. The de minimis case had been held pending the IEEPA ruling; now it proceeds as a separate track. Bloomberg noted the financial stakes for online retail and small importers are significant, with the case expected to proceed to a full hearing.</div>
+              <div class="subtopic-src">
+                <a href="https://www.bloomberg.com/news/articles/2026-03-09/legal-fight-reopens-over-trump-s-push-to-tax-low-value-imports" target="_blank">Bloomberg: De Minimis Fight</a>
+                <a href="https://www.aljazeera.com" target="_blank">Al Jazeera</a>
+                <a href="https://www.politico.com" target="_blank">Politico</a>
+              </div>
+            </div>
+
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://www.bloomberg.com" target="_blank">Bloomberg</a>
+            <a href="https://www.aljazeera.com" target="_blank">Al Jazeera</a>
+            <a href="https://www.bbc.com/news" target="_blank">BBC</a>
+            <a href="https://www.politico.com" target="_blank">Politico</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. TRUMP REVERSALS -->
+    <div class="card">
+      <div class="card-header level-4" onclick="toggle(this)">
+        <span class="card-rank">04</span>
+        <span class="card-title">Trump Administration Reversals &amp; Growing Liabilities</span>
+        <span class="card-count">30 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+
+            <div class="subtopic">
+              <div class="subtopic-title">DOJ Law Firm About-Face (Mar 3)</div>
+              <div class="subtopic-detail">Politico and Bloomberg reported the DOJ's 24-hour reversal on March 3 as a rare moment of public embarrassment for the administration. On Monday night, the DOJ told the DC Circuit it was abandoning its appeals against Perkins Coie, WilmerHale, Jenner &amp; Block, and Susman Godfrey — firms that had won court battles against Trump's punitive executive orders. Tuesday morning, DOJ reversed course without explanation. Bloomberg called it an "unexplained about-face." Mediaite noted the whiplash raised questions about whether Boris Epshteyn — a key Trump outside adviser who negotiated many firm capitulation deals — had intervened.</div>
+              <div class="subtopic-src">
+                <a href="https://www.politico.com" target="_blank">Politico: DOJ Law Firms</a>
+                <a href="https://www.bloomberg.com" target="_blank">Bloomberg: DOJ Reversal</a>
+                <a href="https://www.mediaite.com" target="_blank">Mediaite: Analysis</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Tariff "TACO" Dynamic: Constant Reversal Pattern</div>
+              <div class="subtopic-detail">Bloomberg's ongoing coverage of Trump's tariff volatility — tagged by critics as "TACO" (Trump Always Chickens Out) — documented a consistent pattern of tariff imposition, reversal, partial exemption, and reimposition. Bloomberg reported that US importers are navigating "a series of back-and-forth tariff implementations and reversals, embedding a sense of uncertainty within the American psyche." The Section 122 tariff imposed February 24 was immediately under legal challenge by March 5. Politico reported Trump and Vance attacked SCOTUS justices as "lawless" over the tariff ruling — adding an institutional confrontation dimension.</div>
+              <div class="subtopic-src">
+                <a href="https://www.bloomberg.com/news/articles/2026-02-24/trump-s-tariff-options-after-supreme-court-defeat-sections-122-338-and-more" target="_blank">Bloomberg: After Defeat</a>
+                <a href="https://www.politico.com" target="_blank">Politico: SCOTUS Confrontation</a>
+                <a href="https://www.aljazeera.com/news/2026/2/21/trump-tariff-reactions" target="_blank">Al Jazeera: Reactions</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Russia Oil Sanctions Waiver — Strategic or Problematic?</div>
+              <div class="subtopic-detail">The Trump administration's March 12 decision to grant a 30-day waiver on certain Russian oil sanctions drew analytical attention from Bloomberg and Geopolitical Futures. Bloomberg noted Geopolitical Futures' observation that Russia "stands to benefit greatly from the destruction of oil production in the Middle East," and the Russia oil waiver comes as Moscow-aligned Iran is fighting the US. Al Jazeera reported the waiver applied to Russian oil already in transit and was framed as an energy stability measure. Critics noted the administration's positioning appears to reward Russia even as Ukraine peace talks stall.</div>
+              <div class="subtopic-src">
+                <a href="https://geopoliticalfutures.com/a-summary-of-the-iran-war-so-far/" target="_blank">GPF: Russia Benefiting</a>
+                <a href="https://www.bloomberg.com" target="_blank">Bloomberg: Sanctions Waiver</a>
+                <a href="https://www.aljazeera.com" target="_blank">Al Jazeera: Waiver Coverage</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Haitian TPS: Admin Asks SCOTUS for Emergency Stay (Mar 11)</div>
+              <div class="subtopic-detail">Politico and Bloomberg reported that the Trump administration on March 11 sought an emergency Supreme Court stay to override a lower court ruling barring termination of Haitian Temporary Protected Status. The administration simultaneously asked SCOTUS to take up a parallel Syrian TPS case. Solicitor General Sauer argued the cases "cry out for immediate resolution." The move would potentially expose hundreds of thousands of Haitian immigrants to immediate deportation proceedings. Mediaite noted the move was part of a broader strategy to roll back all remaining TPS designations across multiple nationalities before the 2026 midterms.</div>
+              <div class="subtopic-src">
+                <a href="https://www.politico.com" target="_blank">Politico: TPS/SCOTUS</a>
+                <a href="https://www.bloomberg.com" target="_blank">Bloomberg: TPS Case</a>
+                <a href="https://www.aljazeera.com" target="_blank">Al Jazeera: Immigration Coverage</a>
+              </div>
+            </div>
+
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://www.bloomberg.com" target="_blank">Bloomberg</a>
+            <a href="https://www.politico.com" target="_blank">Politico</a>
+            <a href="https://www.aljazeera.com" target="_blank">Al Jazeera</a>
+            <a href="https://www.mediaite.com" target="_blank">Mediaite</a>
+            <a href="https://geopoliticalfutures.com" target="_blank">Geopolitical Futures</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. EPSTEIN FILES -->
+    <div class="card">
+      <div class="card-header level-5" onclick="toggle(this)">
+        <span class="card-rank">05</span>
+        <span class="card-title">Epstein Files — Congressional &amp; DOJ Scrutiny</span>
+        <span class="card-count">27 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+
+            <div class="subtopic">
+              <div class="subtopic-title">Missing FBI Memos Released With Unverified Trump Claim (Mar 5–6)</div>
+              <div class="subtopic-detail">Bloomberg (Mar 6) reported the DOJ released additional Epstein documents including FBI interview notes containing "an unverified claim against Donald Trump" — that a woman alleged she was forced to perform oral sex on Trump in the 1980s when she was a minor, after being introduced to him by Epstein. Bloomberg noted the claims were "unverified" and that authorities have not accused Trump of any wrongdoing. Al Jazeera reported Politico first broke the disclosures and that White House press secretary Leavitt called them "completely baseless accusations, backed by zero credible evidence." The DOJ said the documents had been "incorrectly coded as duplicative."</div>
+              <div class="subtopic-src">
+                <a href="https://www.bloomberg.com/news/articles/2026-03-06/latest-epstein-release-includes-unverified-claim-against-trump" target="_blank">Bloomberg: Unverified Claim</a>
+                <a href="https://www.aljazeera.com/news/2026/3/6/epstein-files-with-claims-against-trump-released-by-us-justice-department" target="_blank">Al Jazeera: Files Released</a>
+                <a href="https://www.politico.com" target="_blank">Politico: Original Disclosure</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Did DOJ Follow the Law on Redactions? (Mar 4)</div>
+              <div class="subtopic-detail">Bloomberg's analytical piece (Mar 4) asked the key legal question: did the DOJ comply with the Epstein Files Transparency Act — passed last year with bipartisan support — or did it violate the law through extensive redactions and non-disclosures? The Act required full disclosure. Critics said blacking out names of "powerful individuals and potential predators" violated the statute. Democrats said "the DOJ appears to have illegally withheld FBI interviews with this survivor," per Bloomberg. The DOJ's Deputy AG Todd Blanche denied any attempt to protect Trump specifically and said privacy of victims was the overriding redaction principle.</div>
+              <div class="subtopic-src">
+                <a href="https://www.bloomberg.com/news/articles/2026-03-04/did-the-doj-follow-the-law-with-epstein-files-redactions" target="_blank">Bloomberg: DOJ &amp; the Law</a>
+                <a href="https://www.bloomberg.com/news/articles/2026-02-24/democrat-says-doj-withheld-epstein-files-on-trump-abuse-claim" target="_blank">Bloomberg: Democrat's Claim</a>
+                <a href="https://www.politico.com" target="_blank">Politico: Congressional Response</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Wall Street &amp; Silicon Valley Connections Probed</div>
+              <div class="subtopic-detail">Bloomberg tracked the congressional investigation into Epstein's elite financial network. Goldman's top lawyer, Commerce Secretary Howard Lutnick (who pledged to testify), and Apollo's Marc Rowan were all linked to Epstein files. Bloomberg's story on "How Jeffrey Epstein Used Reid Hoffman to Court Silicon Valley's Elite" drew major traffic. Pam Bondi was subpoenaed by the House panel (Mar 4) to testify on file handling. Bill Gates and Leon Black were asked to testify. Bill Clinton testified Feb 28–Mar 2, confirming that Larry Summers introduced him to Epstein.</div>
+              <div class="subtopic-src">
+                <a href="https://www.bloomberg.com/latest/jeffrey-epstein" target="_blank">Bloomberg: Epstein Latest</a>
+                <a href="https://www.politico.com" target="_blank">Politico: Congressional Probe</a>
+                <a href="https://www.mediaite.com" target="_blank">Mediaite: Media Coverage</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Iran War "Buries" Epstein Coverage</div>
+              <div class="subtopic-detail">Al Jazeera noted that the Epstein revelations — which had been "reverberating around the world" in the days before the Iran strikes — were abruptly eclipsed by the war. Republican Congressman Thomas Massie, who helped push the Epstein Files Transparency Act, stated pointedly: "Bombing a country on the other side of the globe won't make the Epstein files go away." Mediaite tracked the cable news coverage shift — from wall-to-wall Epstein discussion to near-total Iran coverage within 48 hours of the strikes, noting the political benefit to the administration from the news displacement effect.</div>
+              <div class="subtopic-src">
+                <a href="https://www.aljazeera.com/news/2026/3/6/epstein-files-with-claims-against-trump-released-by-us-justice-department" target="_blank">Al Jazeera: Context</a>
+                <a href="https://www.mediaite.com" target="_blank">Mediaite: Media Shift</a>
+                <a href="https://www.politico.com" target="_blank">Politico: Political Context</a>
+              </div>
+            </div>
+
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://www.bloomberg.com" target="_blank">Bloomberg</a>
+            <a href="https://www.aljazeera.com" target="_blank">Al Jazeera</a>
+            <a href="https://www.politico.com" target="_blank">Politico</a>
+            <a href="https://www.mediaite.com" target="_blank">Mediaite</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. MAGA FRACTURES -->
+    <div class="card">
+      <div class="card-header level-6" onclick="toggle(this)">
+        <span class="card-rank">06</span>
+        <span class="card-title">Fractures in the MAGA Coalition</span>
+        <span class="card-count">24 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+
+            <div class="subtopic">
+              <div class="subtopic-title">Iran War Splits MAGA's Dovish &amp; Hawkish Wings</div>
+              <div class="subtopic-detail">Politico reported that the Iran war has "fractured MAGA" along its most fundamental fault line — "America First" non-interventionism vs. neoconservative hawkishness. Tucker Carlson, Megyn Kelly, and Steve Bannon criticized the strikes from the right. Trump responded sharply: "MAGA is Trump. MAGA's not the other two," in an interview responding to Carlson and Kelly. Mediaite tracked the media ecosystem response, noting that pro-Trump outlets were divided on coverage framing. The Economist/YouGov poll (Mar 6–9) paradoxically found MAGA self-identification among Republicans had reached a new record high of almost two-thirds — driven by Trump loyalists consolidating around his definition of the movement.</div>
+              <div class="subtopic-src">
+                <a href="https://www.politico.com" target="_blank">Politico: MAGA Split</a>
+                <a href="https://www.mediaite.com" target="_blank">Mediaite: Media Framing</a>
+                <a href="https://www.bloomberg.com" target="_blank">Bloomberg: Coalition Analysis</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Mass Deportation Coalition vs. White House Messaging</div>
+              <div class="subtopic-detail">Politico broke the story (Mar 12) that a team of Trump allies — including former CBP acting commissioner Mark Morgan and former Blackwater CEO Erik Prince — formed a "Mass Deportation Coalition" lobbying group after growing "irate" at the White House's instruction to GOP lawmakers to soften mass deportation messaging. White House deputy chief of staff James Blair told House Republicans to emphasize targeting criminals only. Politico noted the coalition commissioned a poll showing 66% of likely midterm voters support deporting those who enter illegally — but separate Politico polling showed 49% say Trump's approach is "too aggressive."</div>
+              <div class="subtopic-src">
+                <a href="https://www.politico.com" target="_blank">Politico: Mass Deportation Coalition</a>
+                <a href="https://www.mediaite.com" target="_blank">Mediaite: Coverage</a>
+                <a href="https://www.bloomberg.com" target="_blank">Bloomberg</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">MTG Georgia Special Election &amp; Trump Endorsement Test</div>
+              <div class="subtopic-detail">Politico covered the Georgia-14 special election closely as a test of Trump's post-MTG influence in the district. Trump endorsed Clay Fuller (a district attorney) who called himself a "MAGA warrior" at a Trump rally. A Democrat — Shawn Harris — advanced to the April 7 runoff, raising the possibility of a seat flip. Mediaite reported that some Republican voters at the Rome, Georgia rally expressed reservations about the endorsement, with one attendee telling reporters: "I don't just blindly follow what [Trump] says." The race became the first congressional test of Trump's coalition-holding power after the MTG rupture.</div>
+              <div class="subtopic-src">
+                <a href="https://www.politico.com" target="_blank">Politico: GA-14 Race</a>
+                <a href="https://www.mediaite.com" target="_blank">Mediaite: Election Coverage</a>
+                <a href="https://www.bloomberg.com" target="_blank">Bloomberg: Political Context</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">AI Creates New Fault Line in MAGA</div>
+              <div class="subtopic-detail">Politico reported that the push to deregulate AI is exposing a MAGA coalition divide between tech-aligned figures (backing Musk's AI agenda) and populist conservatives aligned with Bannon, who called AI companies a threat and leads an "anti-tech populism" movement. Major AI companies have hired hundreds of lobbyists and donated millions to AI-friendly super PACs ahead of midterms. Steve Bannon has said of AI-aligned lawmakers: "We're going to fight like hell." Politico and Bloomberg noted the tension between tech-libertarian and traditional MAGA voters could become a defining midterm issue, particularly as AI job displacement becomes more tangible.</div>
+              <div class="subtopic-src">
+                <a href="https://www.politico.com" target="_blank">Politico: AI/MAGA Divide</a>
+                <a href="https://www.bloomberg.com" target="_blank">Bloomberg: Tech Politics</a>
+                <a href="https://www.mediaite.com" target="_blank">Mediaite: Bannon Coverage</a>
+              </div>
+            </div>
+
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://www.politico.com" target="_blank">Politico</a>
+            <a href="https://www.bloomberg.com" target="_blank">Bloomberg</a>
+            <a href="https://www.mediaite.com" target="_blank">Mediaite</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. US-CHINA-RUSSIA -->
+    <div class="card">
+      <div class="card-header level-7" onclick="toggle(this)">
+        <span class="card-rank">07</span>
+        <span class="card-title">Relations Among US, China, and Russia</span>
+        <span class="card-count">22 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+
+            <div class="subtopic">
+              <div class="subtopic-title">China Condemns Iran Strikes While Preserving US Trade Talks</div>
+              <div class="subtopic-detail">Al Jazeera reported China's foreign minister condemned the US-Israel strikes on Iran as "a grave violation of Iran's sovereignty." Geopolitical Futures' analysis noted China "confirmed that Trump would meet with President Xi Jinping in late March (earlier than the original date)" even as it condemned the attacks — illustrating Beijing's careful balancing act. George Friedman assessed that China is "unlikely to provide military assistance to Iran" because high oil prices from the conflict hurt China's export-dependent economy. China's foreign minister Wang Yi called 2026 "a big year" for China-US relations with a high-level summit "on the agenda."</div>
+              <div class="subtopic-src">
+                <a href="https://www.aljazeera.com/news/2026/3/4/russia-china-raise-diplomatic-voices-against-us-israeli-attacks-on-iran" target="_blank">Al Jazeera: China-Russia Voices</a>
+                <a href="https://geopoliticalfutures.com/a-summary-of-the-iran-war-so-far/" target="_blank">GPF: China Assessment</a>
+                <a href="https://www.bloomberg.com" target="_blank">Bloomberg: China-US Relations</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Russia Benefits from Iran War Strategically</div>
+              <div class="subtopic-detail">Geopolitical Futures and Bloomberg both noted Russia's paradoxical strategic windfall from the Iran war: rising oil prices (briefly near $120/bbl) boost Russia's energy revenues even as the Iran war is fought by Russia's adversaries. Bloomberg reported high-level US-China trade negotiations are "proceeding as planned" despite the war, and Russia oil sanctions are being loosened. Geopolitical Futures observed that "the war in the Middle East and resulting restrictions on hydrocarbon supplies through the Strait of Hormuz appear to be working in Russia's favor." Putin offered to help mediate the Iran conflict in his phone call with Trump on March 10.</div>
+              <div class="subtopic-src">
+                <a href="https://geopoliticalfutures.com/a-summary-of-the-iran-war-so-far/" target="_blank">GPF: Russia Benefits</a>
+                <a href="https://www.bloomberg.com" target="_blank">Bloomberg: Trade Negotiations</a>
+                <a href="https://www.aljazeera.com" target="_blank">Al Jazeera</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Section 301 Trade Probes Target China &amp; Allies</div>
+              <div class="subtopic-detail">Bloomberg and Politico reported that after the IEEPA defeat, the administration launched Section 301 investigations against China, the EU, Japan, South Korea, and 12 other countries (Mar 11–12) for alleged forced labor violations — building a new legal scaffolding for tariffs. The announcement immediately complicated ongoing US-China trade negotiations. Bloomberg noted the investigations represent a slower, more legally sound route to reimposing tariffs — but add months of uncertainty. The ongoing China tariff truce (extended to November 2026) was not immediately affected by the IEEPA ruling, as it rests on separate bilateral agreements.</div>
+              <div class="subtopic-src">
+                <a href="https://www.bloomberg.com" target="_blank">Bloomberg: Section 301</a>
+                <a href="https://www.politico.com" target="_blank">Politico: Trade Policy</a>
+                <a href="https://www.aljazeera.com" target="_blank">Al Jazeera: Global Trade</a>
+              </div>
+            </div>
+
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://geopoliticalfutures.com" target="_blank">Geopolitical Futures</a>
+            <a href="https://www.bloomberg.com" target="_blank">Bloomberg</a>
+            <a href="https://www.aljazeera.com" target="_blank">Al Jazeera</a>
+            <a href="https://www.politico.com" target="_blank">Politico</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 8. ICE OPERATIONS -->
+    <div class="card">
+      <div class="card-header level-8" onclick="toggle(this)">
+        <span class="card-rank">08</span>
+        <span class="card-title">ICE Operations — Enforcement Surge &amp; State Pushback</span>
+        <span class="card-count">19 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+
+            <div class="subtopic">
+              <div class="subtopic-title">Minneapolis Shooting Sparks Nationwide Protests</div>
+              <div class="subtopic-detail">Politico covered the killing of Renée Macklin Good and Alex Pretti — two US citizens killed by ICE agents in Minneapolis in January 2026 — as generating continuing political fallout through March. Politico's analysis of the "Mass Deportation Coalition" (Mar 12) noted the killings were the direct trigger for the White House's instruction to soften deportation messaging. Mediaite tracked the cable news battle over the shootings. Politico reported that the DOJ's civil rights division opened an investigation into Pretti's death, coordinated with the FBI and DHS civil rights teams.</div>
+              <div class="subtopic-src">
+                <a href="https://www.politico.com" target="_blank">Politico: Mass Deportation Coalition</a>
+                <a href="https://www.mediaite.com" target="_blank">Mediaite: Coverage</a>
+                <a href="https://www.bbc.com/news/world/us-canada" target="_blank">BBC: US Coverage</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Red vs. Blue State Divide on ICE Cooperation Deepens</div>
+              <div class="subtopic-detail">Politico reported a widening red-blue divide on immigration enforcement: Tennessee lawmakers advanced legislation making it impossible to buy cars or receive government benefits without legal status; Kentucky followed a similar path. New York Governor Hochul announced legislation expanding sanctuary protections; Illinois, Maine, and Massachusetts also moved to limit cooperation. Prosecutors in Philadelphia and California signaled they were "considering criminal charges against federal agents." Bloomberg tracked the political implications, noting that polls show the deportation campaign is increasingly unpopular even with some Trump 2024 voters.</div>
+              <div class="subtopic-src">
+                <a href="https://www.politico.com" target="_blank">Politico: State Divide</a>
+                <a href="https://www.bloomberg.com" target="_blank">Bloomberg: Polling</a>
+                <a href="https://www.aljazeera.com" target="_blank">Al Jazeera</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">White House Softens Messaging — "Focus on Criminals Only"</div>
+              <div class="subtopic-detail">Politico's March 12 scoop revealed that White House deputy chief of staff James Blair directed House Republicans to stop using "mass deportation" language and instead emphasize targeting criminals. The "Mass Deportation Coalition" of Trump allies formed specifically to push back on this retreat, fearing it would undermine turnout ahead of the midterms. Mediaite noted the messaging battle played out publicly — with Politico's poll showing a majority of Trump-adjacent voters support broader deportations, while other surveys showed 58% of all Americans say Trump has "gone too far." Bloomberg noted no senior administration official publicly embraced the softer message.</div>
+              <div class="subtopic-src">
+                <a href="https://www.politico.com" target="_blank">Politico: Messaging Shift</a>
+                <a href="https://www.mediaite.com" target="_blank">Mediaite: Media Reaction</a>
+                <a href="https://www.bloomberg.com" target="_blank">Bloomberg: Polling Context</a>
+              </div>
+            </div>
+
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://www.politico.com" target="_blank">Politico</a>
+            <a href="https://www.bloomberg.com" target="_blank">Bloomberg</a>
+            <a href="https://www.mediaite.com" target="_blank">Mediaite</a>
+            <a href="https://www.aljazeera.com" target="_blank">Al Jazeera</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 9. SCOTUS & LEGAL -->
+    <div class="card">
+      <div class="card-header level-9" onclick="toggle(this)">
+        <span class="card-rank">09</span>
+        <span class="card-title">Supreme Court &amp; Other Legal Issues</span>
+        <span class="card-count">17 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+
+            <div class="subtopic">
+              <div class="subtopic-title">Learning Resources v. Trump: SCOTUS IEEPA Tariff Ruling (Feb 20)</div>
+              <div class="subtopic-detail">Bloomberg called the 6-3 ruling in <em>Learning Resources v. Trump</em> (Feb 20) Trump's "biggest legal defeat since he returned to the White House," wiping out the legal scaffolding for sweeping IEEPA-based tariffs. Bloomberg's CEO interview with Rick Woldenberg of Learning Resources provided a business perspective on the landmark ruling. Bloomberg's analysis noted the refund exposure of $100–175 billion could provide major economic stimulus — but CBP told a court it was "not possible" to immediately comply with ordered refund procedures. Trump called the ruling "a disgrace" and began seeking alternative tariff authorities within days.</div>
+              <div class="subtopic-src">
+                <a href="https://www.bloomberg.com/news/articles/2026-02-20/trump-s-global-tariffs-struck-down-by-us-supreme-court" target="_blank">Bloomberg: Ruling</a>
+                <a href="https://www.bloomberg.com/news/videos/2026-02-23/ceo-who-challenged-trump-s-tariffs-on-scotus-decision-video" target="_blank">Bloomberg: CEO Interview</a>
+                <a href="https://www.aljazeera.com/news/2026/2/21/trump-tariff-reactions" target="_blank">Al Jazeera: Global Reactions</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Trump v. Slaughter — FTC Independence &amp; the Federal Reserve</div>
+              <div class="subtopic-detail">Bloomberg and Politico flagged <em>Trump v. Slaughter</em> — the case involving the firing of Democratic FTC Commissioner Rebecca Slaughter — as the term's highest-stakes sleeper case. If the Court overturns <em>Humphrey's Executor</em> and grants presidents unchecked removal authority over independent agencies, the Federal Reserve's independence could be next. Bloomberg noted that even if the Court rules for Slaughter on the firing itself, a separate question — whether courts can order reinstatement vs. backpay only — limits the practical impact. Politico's legal team called this "the case most likely to reshape American regulatory architecture" in 2026.</div>
+              <div class="subtopic-src">
+                <a href="https://www.bloomberg.com" target="_blank">Bloomberg: Slaughter Case</a>
+                <a href="https://www.politico.com" target="_blank">Politico: SCOTUS Analysis</a>
+                <a href="https://www.bbc.com/news/world/us-canada" target="_blank">BBC: US Courts</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Section 122 Tariffs: 24 States File Court Challenge (Mar 5)</div>
+              <div class="subtopic-detail">Bloomberg reported that 24 states filed a legal challenge to Trump's new Section 122 tariffs at the Court of International Trade on March 5, arguing the administration exceeds its statutory authority, violates separation of powers, and runs afoul of the APA. The filing came just days after the IEEPA ruling. Bloomberg's tariff tracker documented CBP's acknowledgment that the refund process for IEEPA duties — estimated at $100–175 billion — would not be ready until mid-April. Politico noted Trump and Vance attacked the Supreme Court justices who struck down IEEPA tariffs as "lawless," raising concerns about executive-judicial branch tensions.</div>
+              <div class="subtopic-src">
+                <a href="https://www.bloomberg.com/news/articles/2026-03-05/trump-s-new-tariffs-face-legal-challenge-by-group-of-states" target="_blank">Bloomberg: 24 States Challenge</a>
+                <a href="https://www.politico.com" target="_blank">Politico: Court-SCOTUS Tensions</a>
+                <a href="https://www.aljazeera.com" target="_blank">Al Jazeera</a>
+              </div>
+            </div>
+
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://www.bloomberg.com" target="_blank">Bloomberg</a>
+            <a href="https://www.politico.com" target="_blank">Politico</a>
+            <a href="https://www.aljazeera.com" target="_blank">Al Jazeera</a>
+            <a href="https://www.bbc.com/news" target="_blank">BBC</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 10. HEALTHCARE -->
+    <div class="card">
+      <div class="card-header level-10" onclick="toggle(this)">
+        <span class="card-rank">10</span>
+        <span class="card-title">Government Oversight of Health Care</span>
+        <span class="card-count">16 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+
+            <div class="subtopic">
+              <div class="subtopic-title">RFK Jr.'s "Very Bad Week" — Surgery, Surgeon General, FDA Departure (Mar 12)</div>
+              <div class="subtopic-detail">Bloomberg and Politico reported a cascade of bad news for RFK Jr. in the week of March 10–13: the HHS secretary underwent rotator cuff surgery; his ally's nomination for surgeon general was "teetering"; the controversial head of the FDA vaccine center resigned; and a new University of Pennsylvania survey showed Americans trust government health officials less than they trust Anthony Fauci. Bloomberg's health reporter Anna Edney and Politico Magazine contributor Joanne Kenen described the week as RFK Jr.'s worst since taking office. The findings came as MAHA supporters are furious with RFK Jr.'s promotion of a controversial pesticide.</div>
+              <div class="subtopic-src">
+                <a href="https://www.bloomberg.com" target="_blank">Bloomberg: RFK Jr. Health</a>
+                <a href="https://www.politico.com" target="_blank">Politico: MAHA Divide</a>
+                <a href="https://www.bbc.com/news" target="_blank">BBC</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Vance Targets Minnesota Medicaid with $260M Fraud Crackdown</div>
+              <div class="subtopic-detail">Politico reported that Vice President Vance launched a high-profile fraud crackdown in Minnesota's Medicaid program — announcing a nearly $260 million moratorium on Medicaid funding. Bloomberg's health reporters noted this is part of a broader CMS targeting of Democratic-led states' Medicaid programs, alongside new scrutiny of Medicare Advantage plans. Politico's health analysts warned that "attacking health care is rarely a politically sound move" ahead of midterms, with healthcare cost concerns dominating voter priorities. Dr. Oz, head of CMS, told Bloomberg he believes "millions may be fraudulently enrolled" in ACA coverage.</div>
+              <div class="subtopic-src">
+                <a href="https://www.politico.com" target="_blank">Politico: Medicaid Fraud</a>
+                <a href="https://www.bloomberg.com" target="_blank">Bloomberg: Healthcare Coverage</a>
+                <a href="https://www.bbc.com/news" target="_blank">BBC</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">NIH Funding Delays Worry Research Community</div>
+              <div class="subtopic-detail">Bloomberg Law reported that the NIH is "months behind on dispersing the bulk of its fiscal 2026 money to grantees," with research advocates worried the Trump administration will claw back the funds or impose multi-year conditions that hamstring recipients. Limited money from the government funding law is being disbursed only for government salaries and emergency activities. Bloomberg also reported that ACA marketplace enrollment reached 23 million during the 2026 open enrollment period — a record — even as enhanced subsidies expired, suggesting that the full premium impact would emerge in 2026 filings and coverage lapses.</div>
+              <div class="subtopic-src">
+                <a href="https://www.bloomberg.com" target="_blank">Bloomberg: NIH Delays</a>
+                <a href="https://www.politico.com" target="_blank">Politico: Healthcare Politics</a>
+                <a href="https://www.bbc.com/news" target="_blank">BBC</a>
+              </div>
+            </div>
+
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://www.bloomberg.com" target="_blank">Bloomberg</a>
+            <a href="https://www.politico.com" target="_blank">Politico</a>
+            <a href="https://www.bbc.com/news" target="_blank">BBC</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 11. ELECTORAL POLITICS -->
+    <div class="card">
+      <div class="card-header level-11" onclick="toggle(this)">
+        <span class="card-rank">11</span>
+        <span class="card-title">Electoral Politics — 2026 Midterm Outlook</span>
+        <span class="card-count">14 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+
+            <div class="subtopic">
+              <div class="subtopic-title">Newsom Leads 2028 Democratic Primary in California</div>
+              <div class="subtopic-detail">Politico reported (Mar 12) that California Governor Gavin Newsom leads former VP Kamala Harris 28%-14% in a UC Berkeley-Politico poll of likely California Democratic primary voters — suggesting the 2028 Democratic field is already taking shape. Mediaite noted the poll dominated political media coverage on a typically slow news day, with commentary focused on whether Harris's post-2024 standing had recovered. Bloomberg noted that 2028 Democratic jockeying is premature given the uncertain midterm outlook, but acknowledged that Democrats appear to be coalescing around alternatives to another Harris run.</div>
+              <div class="subtopic-src">
+                <a href="https://www.politico.com" target="_blank">Politico: Newsom-Harris Poll</a>
+                <a href="https://www.mediaite.com" target="_blank">Mediaite: Poll Coverage</a>
+                <a href="https://www.bloomberg.com" target="_blank">Bloomberg: 2028 Context</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Democrats Court "MAHA Moms" Ahead of Midterms</div>
+              <div class="subtopic-detail">Politico reported (Mar 10) that Democratic strategists are actively pursuing MAHA (Make America Healthy Again) mothers — a key constituency that is "furious with the Trump administration" over its promotion of a controversial pesticide and RFK Jr.'s vaccine equivocation. The article noted that MAHA's base is increasingly fragmented from MAGA, creating an opening for Democrats to peel off health-focused suburban voters. Bloomberg's health reporters noted that trust in government health agencies has "plummeted across the political spectrum" — a cross-ideological dynamic Democrats may be able to exploit.</div>
+              <div class="subtopic-src">
+                <a href="https://www.politico.com" target="_blank">Politico: MAHA Moms</a>
+                <a href="https://www.bloomberg.com" target="_blank">Bloomberg: Healthcare Politics</a>
+                <a href="https://www.mediaite.com" target="_blank">Mediaite: Analysis</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Housing Affordability Bill Exposes GOP Disarray</div>
+              <div class="subtopic-detail">Politico reported that a bipartisan Senate housing affordability bill — designed to be a GOP messaging win on cost of living — passed the Senate but stalled in the House amid demands from hard-liners for changes. Trump's silence on the bill left House leadership without direction. Politico called it a sign that "GOP disarray on affordability" extends well beyond the tariff drama, with the party unable to capitalize on its 2024 campaign's economic promises. Bloomberg and Mediaite both noted the irony that Republicans control both chambers but cannot pass an affordability bill even in an election year when voters rank economic costs as their top concern.</div>
+              <div class="subtopic-src">
+                <a href="https://www.politico.com" target="_blank">Politico: Housing Bill</a>
+                <a href="https://www.bloomberg.com" target="_blank">Bloomberg: Political Economy</a>
+                <a href="https://www.mediaite.com" target="_blank">Mediaite: Coverage</a>
+              </div>
+            </div>
+
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://www.politico.com" target="_blank">Politico</a>
+            <a href="https://www.bloomberg.com" target="_blank">Bloomberg</a>
+            <a href="https://www.mediaite.com" target="_blank">Mediaite</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /topics-list -->
+
+  <!-- ══ FOOTER ══════════════════════════════════════════ -->
+  <div class="footer">
+    <div>
+      <strong>Sources cited in this report:</strong><br>
+      <a href="https://www.bbc.com/news" target="_blank">BBC</a> &nbsp;·&nbsp;
+      <a href="https://www.bloomberg.com" target="_blank">Bloomberg</a> &nbsp;·&nbsp;
+      <a href="https://www.politico.com" target="_blank">Politico</a> &nbsp;·&nbsp;
+      <a href="https://www.aljazeera.com" target="_blank">Al Jazeera</a> &nbsp;·&nbsp;
+      <a href="https://www.mediaite.com" target="_blank">Mediaite</a> &nbsp;·&nbsp;
+      <a href="https://geopoliticalfutures.com" target="_blank">Geopolitical Futures</a>
+    </div>
+    <div style="margin-top: 10px; opacity:0.65; font-size:10px;">
+      Compiled for BOLLI Current Events Discussion Group &nbsp;·&nbsp;
+      Coverage synthesized across 6 mainstream &amp; analytical outlets &nbsp;·&nbsp;
+      March 1–15, 2026 &nbsp;·&nbsp; <a href="https://jhnday.github.io/CrntEvnts" target="_blank">jhnday.github.io/CrntEvnts</a>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<script>
+  function toggle(header) {
+    const body = header.nextElementSibling;
+    const chevron = header.querySelector('.card-chevron');
+    const isOpen = body.classList.contains('expanded');
+
+    // Collapse all
+    document.querySelectorAll('.card-body').forEach(b => b.classList.remove('expanded'));
+    document.querySelectorAll('.card-chevron').forEach(c => c.classList.remove('rotated'));
+
+    // Expand clicked (if it was closed)
+    if (!isOpen) {
+      body.classList.add('expanded');
+      chevron.classList.add('rotated');
+      setTimeout(() => header.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
+    }
+  }
+</script>
+</body>
+</html>
