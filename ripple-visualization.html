@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ripple — Opinions from Across America</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;700&family=DM+Sans:wght@300;400;500&display=swap');
+
+  :root {
+    --bg: #111111;
+    --card-bg: #1a1a1a;
+    --white: #f5f3ee;
+    --dim: rgba(245,243,238,0.65);
+    --accent: #e8d5a3;
+    --border: rgba(245,243,238,0.12);
+    --hover-scale: 1.025;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 28px;
+    border-bottom: 1px solid var(--border);
+    background: #0d0d0d;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .wapo-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    color: var(--white);
+    opacity: 0.85;
+  }
+  .divider { color: var(--border); font-size: 20px; }
+  .ripple-wordmark {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .header-tagline {
+    font-size: 11px;
+    color: var(--dim);
+    letter-spacing: 0.06em;
+  }
+  .live-dot {
+    display: inline-block;
+    width: 7px; height: 7px;
+    background: #5dcc7a;
+    border-radius: 50%;
+    margin-right: 6px;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%,100% { opacity: 1; }
+    50% { opacity: 0.4; }
+  }
+
+  /* ── HERO BANNER ── */
+  .hero-banner {
+    padding: 36px 28px 24px;
+    border-bottom: 1px solid var(--border);
+    background: linear-gradient(135deg, #0d0d0d 0%, #161410 100%);
+  }
+  .hero-banner h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 4vw, 48px);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    color: var(--white);
+    max-width: 720px;
+  }
+  .hero-banner h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  .hero-desc {
+    margin-top: 14px;
+    font-size: 13.5px;
+    line-height: 1.7;
+    color: var(--dim);
+    max-width: 780px;
+  }
+  .hero-desc strong {
+    color: var(--white);
+    font-weight: 500;
+  }
+  .ripple-link {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid rgba(232,213,163,0.35);
+    padding-bottom: 2px;
+    transition: border-color 0.2s, color 0.2s;
+  }
+  .ripple-link:hover {
+    color: var(--white);
+    border-color: var(--white);
+  }
+  .hero-sub {
+    font-size: 13px;
+    color: var(--dim);
+    letter-spacing: 0.04em;
+  }
+  .story-count {
+    display: inline-block;
+    margin-top: 16px;
+    padding: 5px 14px;
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--dim);
+  }
+
+  /* ── TOPIC FILTER BAR ── */
+  .filter-bar {
+    padding: 14px 28px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    background: #0f0f0f;
+  }
+  .filter-bar::-webkit-scrollbar { display: none; }
+  .filter-chip {
+    flex-shrink: 0;
+    padding: 6px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--dim);
+    cursor: pointer;
+    transition: all 0.2s;
+    background: transparent;
+  }
+  .filter-chip:hover, .filter-chip.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #111;
+    font-weight: 500;
+  }
+
+  /* ── MAIN GRID ── */
+  main {
+    padding: 28px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  /* Topic section */
+  .topic-section {
+    margin-bottom: 52px;
+  }
+  .topic-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 18px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .topic-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .topic-count {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    border: 1.5px solid var(--accent);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--accent);
+    flex-shrink: 0;
+    position: relative;
+  }
+  .topic-count::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    border: 1px solid rgba(232,213,163,0.2);
+  }
+  .topic-count::after {
+    content: '';
+    position: absolute;
+    inset: -8px;
+    border-radius: 50%;
+    border: 1px solid rgba(232,213,163,0.08);
+  }
+  .topic-rule {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* Cards grid */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 16px;
+  }
+  .cards-grid.hero-grid {
+    grid-template-columns: 2fr 1fr 1fr;
+  }
+  @media (max-width: 900px) {
+    .cards-grid.hero-grid { grid-template-columns: 1fr; }
+    .cards-grid { grid-template-columns: 1fr; }
+  }
+
+  /* Card */
+  .card {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    cursor: pointer;
+    transition: transform 0.35s cubic-bezier(0.23,1,0.32,1),
+                box-shadow 0.35s ease,
+                border-color 0.35s ease;
+    text-decoration: none;
+    display: block;
+    aspect-ratio: 16/10;
+  }
+  .card:hover {
+    transform: scale(var(--hover-scale));
+    box-shadow: 0 24px 60px rgba(0,0,0,0.6);
+    border-color: rgba(232,213,163,0.25);
+  }
+  .card.large {
+    aspect-ratio: 16/9;
+    grid-row: span 2;
+    grid-column: span 1;
+  }
+
+  .card-image {
+    position: absolute;
+    inset: 0;
+    background-size: cover;
+    background-position: center;
+    transition: transform 0.6s cubic-bezier(0.23,1,0.32,1);
+  }
+  .card:hover .card-image {
+    transform: scale(1.06);
+  }
+  .card-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      0deg,
+      rgba(0,0,0,0.88) 0%,
+      rgba(0,0,0,0.45) 50%,
+      rgba(0,0,0,0.1) 100%
+    );
+    transition: opacity 0.35s ease;
+  }
+  .card:hover .card-overlay {
+    opacity: 0.9;
+  }
+
+  .card-content {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 16px;
+  }
+
+  /* Ripple count badge */
+  .ripple-badge {
+    position: relative;
+    width: 44px; height: 44px;
+    flex-shrink: 0;
+  }
+  .ripple-badge svg {
+    width: 44px; height: 44px;
+  }
+  .ripple-ring {
+    fill: none;
+    stroke: rgba(255,255,255,0.25);
+    stroke-width: 1;
+    transform-origin: center;
+    transform: scale(2.5);
+  }
+  .card:hover .ripple-ring {
+    animation: ripple-out 0.8s ease-out forwards;
+  }
+  @keyframes ripple-out {
+    from { transform: scale(2.5); opacity: 0.25; }
+    to { transform: scale(4); opacity: 0; }
+  }
+  .ripple-num {
+    fill: white;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  .card-top {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .card-topic-tag {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.7);
+    padding-top: 14px;
+    line-height: 1.2;
+  }
+
+  .card-bottom {}
+  .card-headline {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(14px, 1.5vw, 18px);
+    font-weight: 500;
+    line-height: 1.3;
+    color: var(--white);
+    margin-bottom: 10px;
+    letter-spacing: -0.01em;
+  }
+  .card.large .card-headline {
+    font-size: clamp(18px, 2.5vw, 28px);
+  }
+  .card-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .outlet-dot {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.15);
+    border: 1px solid rgba(255,255,255,0.2);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 8px;
+    font-weight: 700;
+    color: white;
+    flex-shrink: 0;
+    text-transform: uppercase;
+    letter-spacing: 0;
+  }
+  .card-outlet {
+    font-size: 11px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.8);
+  }
+  .card-author {
+    font-size: 10px;
+    color: rgba(255,255,255,0.5);
+  }
+  .card-read-time {
+    margin-left: auto;
+    font-size: 10px;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 0.05em;
+  }
+
+  /* Outlet colors */
+  .outlet-hill { background: #1a3a5c; }
+  .outlet-conversation { background: #2d5a3d; }
+  .outlet-zeteo { background: #5c1a2d; }
+  .outlet-foreignpolicy { background: #1a1a5c; }
+  .outlet-americanconservative { background: #5c2d1a; }
+  .outlet-dispatch { background: #2d3a5c; }
+  .outlet-cityjournal { background: #3a1a5c; }
+  .outlet-nation { background: #1a4a3a; }
+
+  /* ── FOOTER ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 24px 28px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--dim);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    background: #0d0d0d;
+    margin-top: 40px;
+  }
+  .footer-note {
+    max-width: 500px;
+    line-height: 1.6;
+  }
+  .footer-date {
+    color: var(--accent);
+    font-weight: 500;
+  }
+
+  /* Stagger animations */
+  .topic-section {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeUp 0.5s ease forwards;
+  }
+  .topic-section:nth-child(1) { animation-delay: 0.05s; }
+  .topic-section:nth-child(2) { animation-delay: 0.1s; }
+  .topic-section:nth-child(3) { animation-delay: 0.15s; }
+  .topic-section:nth-child(4) { animation-delay: 0.2s; }
+  .topic-section:nth-child(5) { animation-delay: 0.25s; }
+  .topic-section:nth-child(6) { animation-delay: 0.3s; }
+  .topic-section:nth-child(7) { animation-delay: 0.35s; }
+  .topic-section:nth-child(8) { animation-delay: 0.4s; }
+  .topic-section:nth-child(9) { animation-delay: 0.45s; }
+  .topic-section:nth-child(10) { animation-delay: 0.5s; }
+  @keyframes fadeUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-left">
+    <span class="wapo-logo">The Washington Post</span>
+    <span class="divider">|</span>
+    <span class="ripple-wordmark">Ripple</span>
+  </div>
+  <div class="header-tagline">
+    <span class="live-dot"></span>Opinions from across America &nbsp;·&nbsp; March 15, 2026
+  </div>
+</header>
+
+<!-- HERO BANNER -->
+<div class="hero-banner">
+  <h1>The stories <em>reverberating</em><br>across America today</h1>
+  <p class="hero-desc">
+    <strong>Ripple</strong> is the Washington Post's free opinion aggregator — curating commentary from across America's media landscape, including regional newspapers, Substack writers, and independent publications. Each card represents a featured piece on a major story. Stories are grouped into <strong>topic clusters</strong>, and the <strong>circled number</strong> on each card tells you how many different opinion pieces are available on that topic — click any card to explore the full collection on washingtonpost.com.
+  </p>
+  <p class="hero-sub" style="margin-top:10px">Perspectives from The Hill · Foreign Policy · The Dispatch · The Nation · City Journal · The Conversation · Zeteo · The American Conservative</p>
+  <div style="display:flex;align-items:center;gap:16px;margin-top:18px;flex-wrap:wrap">
+    <span class="story-count">19 stories &nbsp;·&nbsp; 9 topic clusters</span>
+    <a href="https://www.washingtonpost.com/ripple/" target="_blank" class="ripple-link">
+      Visit Ripple on washingtonpost.com →
+    </a>
+  </div>
+</div>
+
+<!-- FILTER BAR -->
+<div class="filter-bar">
+  <button class="filter-chip active" onclick="filterTopic('all')">All Topics</button>
+  <button class="filter-chip" onclick="filterTopic('trump')">Trump the Authoritarian</button>
+  <button class="filter-chip" onclick="filterTopic('ice')">Immigration & ICE</button>
+  <button class="filter-chip" onclick="filterTopic('iran')">U.S. & Israel Attack Iran</button>
+  <button class="filter-chip" onclick="filterTopic('gop')">Republicans</button>
+  <button class="filter-chip" onclick="filterTopic('afford')">Affordability</button>
+  <button class="filter-chip" onclick="filterTopic('education')">Education</button>
+  <button class="filter-chip" onclick="filterTopic('health')">New Health Guidelines</button>
+  <button class="filter-chip" onclick="filterTopic('mamdani')">Zohran Mamdani</button>
+  <button class="filter-chip" onclick="filterTopic('highered')">Higher Education</button>
+  <button class="filter-chip" onclick="filterTopic('budget')">Budget Fights</button>
+  <button class="filter-chip" onclick="filterTopic('dems')">Democrats</button>
+  <button class="filter-chip" onclick="filterTopic('history')">History Revisited</button>
+</div>
+
+<!-- MAIN -->
+<main>
+
+  <!-- TRUMP THE AUTHORITARIAN -->
+  <div class="topic-section" data-topic="trump">
+    <div class="topic-header">
+      <span class="topic-label">Trump the Authoritarian</span>
+      <div class="topic-count">20</div>
+      <div class="topic-rule"></div>
+    </div>
+    <div class="cards-grid">
+      <a class="card large" href="https://www.washingtonpost.com/ripple/2026/03/12/fulton-county-trump-raid/" target="_blank">
+        <div class="card-image" style="background-image: url('https://arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/7FUYUKLU6DRPU3SUCV7GUT5K2U.jpg')"></div>
+        <div class="card-overlay"></div>
+        <div class="card-content">
+          <div class="card-top">
+            <div class="ripple-badge">
+              <svg viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg">
+                <circle class="ripple-ring" cx="22" cy="22" r="6"/>
+                <text class="ripple-num" text-anchor="middle" dominant-baseline="middle" x="22" y="23">20</text>
+              </svg>
+            </div>
+            <span class="card-topic-tag">Trump the authoritarian</span>
+          </div>
+          <div class="card-bottom">
+            <div class="card-headline">The day Trump came for the ballots</div>
+            <div class="card-meta">
+              <div class="outlet-dot outlet-hill">TH</div>
+              <span class="card-outlet">The Hill</span>
+              <span class="card-author">· Mo Ivory</span>
+              <span class="card-read-time">5 min</span>
+            </div>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <!-- IMMIGRATION & ICE -->
+  <div class="topic-section" data-topic="ice">
+    <div class="topic-header">
+      <span class="topic-label">Immigration and ICE</span>
+      <div class="topic-count">20</div>
+      <div class="topic-rule"></div>
+    </div>
+    <div class="cards-grid">
+      <a class="card" href="https://www.washingtonpost.com/ripple/2026/03/12/ice-buys-87m-warehouse-in-pennsylvania-can-local-officials-block-a-detention-facility/" target="_blank">
+        <div class="card-image" style="background-image: url('https://arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/DB4GEP32T2MU4ZGDAQRI3RVNGE.JPG')"></div>
+        <div class="card-overlay"></div>
+        <div class="card-content">
+          <div class="card-top">
+            <div class="ripple-badge"><svg viewBox="0 0 44 44"><circle class="ripple-ring" cx="22" cy="22" r="6"/><text class="ripple-num" text-anchor="middle" dominant-baseline="middle" x="22" y="23">20</text></svg></div>
+            <span class="card-topic-tag">Immigration and ICE</span>
+          </div>
+          <div class="card-bottom">
+            <div class="card-headline">Can local officials block an ICE detention facility?</div>
+            <div class="card-meta">
+              <div class="outlet-dot outlet-conversation">TC</div>
+              <span class="card-outlet">The Conversation</span>
+              <span class="card-author">· Aaron Walayat</span>
+              <span class="card-read-time">5 min</span>
+            </div>
+          </div>
+        </div>
+      </a>
+      <a class="card" href="https://www.washingtonpost.com/ripple/2026/03/08/leqaa-kordia-ice-detention-women-trump-administration/" target="_blank">
+        <div class="card-image" style="background-image: url('https://arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/PGATRVHOXVHHSZ7JS65JVMVLEE.jpg')"></div>
+        <div class="card-overlay"></div>
+        <div class="card-content">
+          <div class="card-top">
+            <div class="ripple-badge"><svg viewBox="0 0 44 44"><circle class="ripple-ring" cx="22" cy="22" r="6"/><text class="ripple-num" text-anchor="middle" dominant-baseline="middle" x="22" y="23">20</text></svg></div>
+            <span class="card-topic-tag">Immigration and ICE</span>
+          </div>
+          <div class="card-bottom">
+            <div class="card-headline">I'm the Palestinian who has been in ICE detention for almost a year</div>
+            <div class="card-meta">
+              <div class="outlet-dot outlet-zeteo">ZT</div>
+              <span class="card-outlet">Zeteo</span>
+              <span class="card-author">· Leqaa Kordia</span>
+              <span class="card-read-time">6 min</span>
+            </div>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <!-- U.S. AND ISRAEL ATTACK IRAN -->
+  <div class="topic-section" data-topic="iran">
+    <div class="topic-header">
+      <span class="topic-label">U.S. and Israel Attack Iran</span>
+      <div class="topic-count">12</div>
+      <div class="topic-rule"></div>
+    </div>
+    <div class="cards-grid">
+      <a class="card" href="https://www.washingtonpost.com/ripple/2026/03/10/trump-doctrine-iran-war-united-states-global-order/" target="_blank">
+        <div class="card-image" style="background-image: url('https://arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/BILRODZV4ALCCXCSMIUOTOAODI_size-normalized.jpg')"></div>
+        <div class="card-overlay"></div>
+        <div class="card-content">
+          <div class="card-top">
+            <div class="ripple-badge"><svg viewBox="0 0 44 44"><circle class="ripple-ring" cx="22" cy="22" r="6"/><text class="ripple-num" text-anchor="middle" dominant-baseline="middle" x="22" y="23">12</text></svg></div>
+            <span class="card-topic-tag">U.S. and Israel attack Iran</span>
+          </div>
+          <div class="card-bottom">
+            <div class="card-headline">So this, finally, is the 'Trump Doctrine'</div>
+            <div class="card-meta">
+              <div class="outlet-dot outlet-foreignpolicy">FP</div>
+              <span class="card-outlet">Foreign Policy</span>
+              <span class="card-author">· Michael Hirsh</span>
+              <span class="card-read-time">15 min</span>
+            </div>
+          </div>
+        </div>
+      </a>
+      <a class="card" href="https://www.washingtonpost.com/ripple/2026/03/12/the-madness-of-king-trump/" target="_blank">
+        <div class="card-image" style="background-image: url('https://arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/FA44TRPXQDX5HYPBRBE2UTAMEQ_size-normalized.jpg')"></div>
+        <div class="card-overlay"></div>
+        <div class="card-content">
+          <div class="card-top">
+            <div class="ripple-badge"><svg viewBox="0 0 44 44"><circle class="ripple-ring" cx="22" cy="22" r="6"/><text class="ripple-num" text-anchor="middle" dominant-baseline="middle" x="22" y="23">12</text></svg></div>
+            <span class="card-topic-tag">U.S. and Israel attack Iran</span>
+          </div>
+          <div class="card-bottom">
+            <div class="card-headline">The madness of King Trump</div>
+            <div class="card-meta">
+              <div class="outlet-dot outlet-americanconservative">AC</div>
+              <span class="card-outlet">The American Conservative</span>
+              <span class="card-author">· Doug Bandow</span>
+              <span class="card-read-time">8 min</span>
+            </div>
+          </div>
+        </div>
+      </a>
+      <a class="card" href="https://www.washingtonpost.com/ripple/2026/03/11/congress-still-has-ways-to-throttle-back-trumps-war-with-iran-and-to-ask-questions/" target="_blank">
+        <div class="card-image" style="background-image: url('https://arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/YJK3CKXCTYYAB7Z325RWXNU2YQ_size-normalized.jpg')"></div>
+        <div class="card-overlay"></div>
+        <div class="card-content">
+          <div class="card-top">
+            <div class="ripple-badge"><svg viewBox="0 0 44 44"><circle class="ripple-ring" cx="22" cy="22" r="6"/><text class="ripple-num" text-anchor="middle" dominant-baseline="middle" x="22" y="23">12</text></svg></div>
+            <span class="card-topic-tag">U.S. and Israel attack Iran</span>
+          </div>
+          <div class="card-bottom">
+            <div class="card-headline">Congress still has ways to throttle back Trump's war with Iran</div>
+            <div class="card-meta">
+              <div class="outlet-dot outlet-conversation">TC</div>
+              <span class="card-outlet">The Conversation</span>
+              <span class="card-author">· Gaynor & Hunt</span>
+              <span class="card-read-time">7 min</span>
+            </div>
+          </div>
+        </div>
+      </a>
+      <a class="card" href="https://www.washingtonpost.com/ripple/2026/03/12/even-with-iran-trump-still-has-his-coalition/" target="_blank">
+        <div class="card-image" style="background-image: url('https://arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/A2I5TZ25Q4O6OTHHKS3MKD4RIA_size-normalized.jpg')"></div>
+        <div class="card-overlay"></div>
+        <div class="card-content">
+          <div class="card-top">
+            <div class="ripple-badge"><svg viewBox="0 0 44 44"><circle class="ripple-ring" cx="22" cy="22" r="6"/><text class="ripple-num" text-anchor="middle" dominant-baseline="middle" x="22" y="23">12</text></svg></div>
+            <span class="card-topic-tag">U.S. and Israel attack Iran</span>
+          </div>
+          <div class="card-bottom">
+            <div class="card-headline">Even with Iran, Trump still has his coalition</div>
+            <div class="card-meta">
+              <div class="outlet-dot outlet-americanconservative">AC</div>
+              <span class="card-outlet">The American Conservative</span>
+              <span class="card-author">· W. James Antle III</span>
+              <span class="card-read-time">4 min</span>
+            </div>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <!-- REPUBLICANS -->
+  <div class="topic-section" data-topic="gop">
+    <div class="topic-header">
+      <span class="topic-label">Republicans</span>
+      <div class="topic-count">19</div>
+      <div class="topic-rule"></div>
+    </div>
+    <div class="cards-grid">
+      <a class="card" href="https://www.washingtonpost.com/ripple/2026/03/12/article/vance-rubio-american-compass-influence-economic-populism/" target="_blank">
+        <div class="card-image" style="background-image: url('https://arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/6GZGGU5KUOTXOHNOINUJRAMFG4_size-normalized.jpg')"></div>
+        <div class="card-overlay"></div>
+        <div class="card-content">
+          <div class="card-top">
+            <div class="ripple-badge"><svg viewBox="0 0 44 44"><circle class="ripple-ring" cx="22" cy="22" r="6"/><text class="ripple-num" text-anchor="middle" dominant-baseline="middle" x="22" y="23">19</text></svg></div>
+            <span class="card-topic-tag">Republicans</span>
+          </div>
+          <div class="card-bottom">
+            <div class="card-headline">The brain trust fueling JD Vance and Marco Rubio's vision for the GOP</div>
+            <div class="card-meta">
+              <div class="outlet-dot outlet-dispatch">DS</div>
+              <span class="card-outlet">The Dispatch</span>
+              <span class="card-author">· Grayson Logue</span>
+              <span class="card-read-time">16 min</span>
+            </div>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <!-- AFFORDABILITY -->
+  <div class="topic-section" data-topic="afford">
+    <div class="topic-header">
+      <span class="topic-label">Affordability</span>
+      <div class="topic-count">16</div>
+      <div class="topic-rule"></div>
+    </div>
+    <div class="cards-grid">
+      <a class="card" href="https://www.washingtonpost.com/ripple/2026/03/12/consumer-sentiment-economic-statistics/" target="_blank">
+        <div class="card-image" style="background-image: url('https://arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/4372AF5O7AL3YXLLYGGFJQPINE.JPG')"></div>
+        <div class="card-overlay"></div>
+        <div class="card-content">
+          <div class="card-top">
+            <div class="ripple-badge"><svg viewBox="0 0 44 44"><circle class="ripple-ring" cx="22" cy="22" r="6"/><text class="ripple-num" text-anchor="middle" dominant-baseline="middle" x="22" y="23">16</text></svg></div>
+            <span class="card-topic-tag">Affordability</span>
+          </div>
+          <div class="card-bottom">
+            <div class="card-headline">What is the economy telling us about the midterms?</div>
+            <div class="card-meta">
+              <div class="outlet-dot outlet-hill">TH</div>
+              <span class="card-outlet">The Hill</span>
+              <span class="card-author">· J.T. Young</span>
+              <span class="card-read-time">5 min</span>
+            </div>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <!-- EDUCATION -->
+  <div class="topic-section" data-topic="education">
+    <div class="topic-header">
+      <span class="topic-label">Education</span>
+      <div class="topic-count">20</div>
+      <div class="topic-rule"></div>
+    </div>
+    <div class="cards-grid">
+      <a class="card" href="https://www.washingtonpost.com/ripple/2026/03/11/new-york-city-schools-class-size-law-education-costs/" target="_blank">
+        <div class="card-image" style="background-image: url('https://arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/SZ4YY3QTQQI63BECA3A4QTHI6I.jpg')"></div>
+        <div class="card-overlay"></div>
+        <div class="card-content">
+          <div class="card-top">
+            <div class="ripple-badge"><svg viewBox="0 0 44 44"><circle class="ripple-ring" cx="22" cy="22" r="6"/><text class="ripple-num" text-anchor="middle" dominant-baseline="middle" x="22" y="23">20</text></svg></div>
+            <span class="card-topic-tag">Education</span>
+          </div>
+          <div class="card-bottom">
+            <div class="card-headline">On schools, Mamdani and Hochul have the wrong priorities</div>
+            <div class="card-meta">
+              <div class="outlet-dot outlet-cityjournal">CJ</div>
+              <span class="card-outlet">City Journal</span>
+              <span class="card-author">· Ray Domanico</span>
+              <span class="card-read-time">4 min</span>
+            </div>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <!-- NEW HEALTH GUIDELINES -->
+  <div class="topic-section" data-topic="health">
+    <div class="topic-header">
+      <span class="topic-label">New Health Guidelines</span>
+      <div class="topic-count">18</div>
+      <div class="topic-rule"></div>
+    </div>
+    <div class="cards-grid">
+      <a class="card" href="https://www.washingtonpost.com/ripple/2026/03/12/we-study-pandemics-and-the-resurgence-of-measles-is-a-grim-sign-of-whats-coming/" target="_blank">
+        <div class="card-image" style="background-image: url('https://arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/O5FMGEFMHTUPN4WCQ4IIIVWH74.JPG')"></div>
+        <div class="card-overlay"></div>
+        <div class="card-content">
+          <div class="card-top">
+            <div class="ripple-badge"><svg viewBox="0 0 44 44"><circle class="ripple-ring" cx="22" cy="22" r="6"/><text class="ripple-num" text-anchor="middle" dominant-baseline="middle" x="22" y="23">18</text></svg></div>
+            <span class="card-topic-tag">New health guidelines</span>
+          </div>
+          <div class="card-bottom">
+            <div class="card-headline">We study pandemics. The resurgence of measles is a grim sign of what's coming</div>
+            <div class="card-meta">
+              <div class="outlet-dot outlet-conversation">TC</div>
+              <span class="card-outlet">The Conversation</span>
+              <span class="card-author">· Nuzzo & Uhlig</span>
+              <span class="card-read-time">6 min</span>
+            </div>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <!-- ZOHRAN MAMDANI -->
+  <div class="topic-section" data-topic="mamdani">
+    <div class="topic-header">
+      <span class="topic-label">Zohran Mamdani</span>
+      <div class="topic-count">19</div>
+      <div class="topic-rule"></div>
+    </div>
+    <div class="cards-grid">
+      <a class="card" href="https://www.washingtonpost.com/ripple/2026/03/11/democrats-election-mamdani-policy/" target="_blank">
+        <div class="card-image" style="background-image: url('https://arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/D63NKCROPFA6I7PXYKPN36OTTI_size-normalized.jpg')"></div>
+        <div class="card-overlay"></div>
+        <div class="card-content">
+          <div class="card-top">
+            <div class="ripple-badge"><svg viewBox="0 0 44 44"><circle class="ripple-ring" cx="22" cy="22" r="6"/><text class="ripple-num" text-anchor="middle" dominant-baseline="middle" x="22" y="23">19</text></svg></div>
+            <span class="card-topic-tag">Zohran Mamdani</span>
+          </div>
+          <div class="card-bottom">
+            <div class="card-headline">The people transforming Mamdani's promises into policy</div>
+            <div class="card-meta">
+              <div class="outlet-dot outlet-nation">TN</div>
+              <span class="card-outlet">The Nation</span>
+              <span class="card-author">· Katrina vanden Heuvel</span>
+              <span class="card-read-time">5 min</span>
+            </div>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <!-- HIGHER EDUCATION -->
+  <div class="topic-section" data-topic="highered">
+    <div class="topic-header">
+      <span class="topic-label">Higher Education</span>
+      <div class="topic-count">11</div>
+      <div class="topic-rule"></div>
+    </div>
+    <div class="cards-grid">
+      <a class="card" href="https://www.washingtonpost.com/ripple/2026/03/11/universities-survived-trumps/" target="_blank">
+        <div class="card-image" style="background-image: url('https://arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/YRNINLAU527X23SMEOG255LQA4.JPG')"></div>
+        <div class="card-overlay"></div>
+        <div class="card-content">
+          <div class="card-top">
+            <div class="ripple-badge"><svg viewBox="0 0 44 44"><circle class="ripple-ring" cx="22" cy="22" r="6"/><text class="ripple-num" text-anchor="middle" dominant-baseline="middle" x="22" y="23">11</text></svg></div>
+            <span class="card-topic-tag">Higher education</span>
+          </div>
+          <div class="card-bottom">
+            <div class="card-headline">Universities survived Trump's funding freeze, but money still isn't flowing to researchers</div>
+            <div class="card-meta">
+              <div class="outlet-dot outlet-conversation">TC</div>
+              <span class="card-outlet">The Conversation</span>
+              <span class="card-author">· Brendan Cantwell</span>
+              <span class="card-read-time">6 min</span>
+            </div>
+          </div>
+        </div>
+      </a>
+      <a class="card" href="https://www.washingtonpost.com/ripple/2026/03/10/ut-austin-president-jim-davis-studies-departments/" target="_blank">
+        <div class="card-image" style="background-image: url('https://arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/EQ6TKML23DDCZP546XW3X4OHAE.jpg')"></div>
+        <div class="card-overlay"></div>
+        <div class="card-content">
+          <div class="card-top">
+            <div class="ripple-badge"><svg viewBox="0 0 44 44"><circle class="ripple-ring" cx="22" cy="22" r="6"/><text class="ripple-num" text-anchor="middle" dominant-baseline="middle" x="22" y="23">11</text></svg></div>
+            <span class="card-topic-tag">Higher education</span>
+          </div>
+          <div class="card-bottom">
+            <div class="card-headline">UT Austin strikes a blow to critical theory</div>
+            <div class="card-meta">
+              <div class="outlet-dot outlet-cityjournal">CJ</div>
+              <span class="card-outlet">City Journal</span>
+              <span class="card-author">· John Masko</span>
+              <span class="card-read-time">4 min</span>
+            </div>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <!-- BUDGET FIGHTS -->
+  <div class="topic-section" data-topic="budget">
+    <div class="topic-header">
+      <span class="topic-label">Budget Fights</span>
+      <div class="topic-count">12</div>
+      <div class="topic-rule"></div>
+    </div>
+    <div class="cards-grid">
+      <a class="card" href="https://www.washingtonpost.com/ripple/2026/03/10/shutdown-fairness-act-congress/" target="_blank">
+        <div class="card-image" style="background-image: url('https://arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/32KXDWN75HYWVDVP4VW5VOUMXU_size-normalized.jpg')"></div>
+        <div class="card-overlay"></div>
+        <div class="card-content">
+          <div class="card-top">
+            <div class="ripple-badge"><svg viewBox="0 0 44 44"><circle class="ripple-ring" cx="22" cy="22" r="6"/><text class="ripple-num" text-anchor="middle" dominant-baseline="middle" x="22" y="23">12</text></svg></div>
+            <span class="card-topic-tag">Budget fights</span>
+          </div>
+          <div class="card-bottom">
+            <div class="card-headline">Shutdowns just stop paychecks, they don't really shut government down</div>
+            <div class="card-meta">
+              <div class="outlet-dot outlet-hill">TH</div>
+              <span class="card-outlet">The Hill</span>
+              <span class="card-author">· Everett Kelley</span>
+              <span class="card-read-time">5 min</span>
+            </div>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <!-- DEMOCRATS -->
+  <div class="topic-section" data-topic="dems">
+    <div class="topic-header">
+      <span class="topic-label">Democrats</span>
+      <div class="topic-count">17</div>
+      <div class="topic-rule"></div>
+    </div>
+    <div class="cards-grid">
+      <a class="card" href="https://www.washingtonpost.com/ripple/2026/03/10/illinois-senate-raja-krishnamoorthi-robin-kelly-julianna-stratton/" target="_blank">
+        <div class="card-image" style="background-image: url('https://arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/ZXOJSCL24UYRWWJO273IAHLCR4_size-normalized.jpg')"></div>
+        <div class="card-overlay"></div>
+        <div class="card-content">
+          <div class="card-top">
+            <div class="ripple-badge"><svg viewBox="0 0 44 44"><circle class="ripple-ring" cx="22" cy="22" r="6"/><text class="ripple-num" text-anchor="middle" dominant-baseline="middle" x="22" y="23">17</text></svg></div>
+            <span class="card-topic-tag">Democrats</span>
+          </div>
+          <div class="card-bottom">
+            <div class="card-headline">How Illinois may bumble its way into electing a Senate moderate</div>
+            <div class="card-meta">
+              <div class="outlet-dot outlet-nation">TN</div>
+              <span class="card-outlet">The Nation</span>
+              <span class="card-author">· David Faris</span>
+              <span class="card-read-time">10 min</span>
+            </div>
+          </div>
+        </div>
+      </a>
+      <a class="card" href="https://www.washingtonpost.com/ripple/2026/03/09/democrats-party-voters-manhattan-institute-poll/" target="_blank">
+        <div class="card-image" style="background-image: url('https://arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/Q34BQRITPB2JFA6U72OEBQERPM.JPG')"></div>
+        <div class="card-overlay"></div>
+        <div class="card-content">
+          <div class="card-top">
+            <div class="ripple-badge"><svg viewBox="0 0 44 44"><circle class="ripple-ring" cx="22" cy="22" r="6"/><text class="ripple-num" text-anchor="middle" dominant-baseline="middle" x="22" y="23">17</text></svg></div>
+            <span class="card-topic-tag">Democrats</span>
+          </div>
+          <div class="card-bottom">
+            <div class="card-headline">The party Democrats want and the party Democrats have</div>
+            <div class="card-meta">
+              <div class="outlet-dot outlet-cityjournal">CJ</div>
+              <span class="card-outlet">City Journal</span>
+              <span class="card-author">· Jesse Arm</span>
+              <span class="card-read-time">5 min</span>
+            </div>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <!-- HISTORY REVISITED -->
+  <div class="topic-section" data-topic="history">
+    <div class="topic-header">
+      <span class="topic-label">History Revisited</span>
+      <div class="topic-count">5</div>
+      <div class="topic-rule"></div>
+    </div>
+    <div class="cards-grid">
+      <a class="card" href="https://www.washingtonpost.com/ripple/2026/03/09/what-james-madison-can-teach-americans-about-religious-freedom-today/" target="_blank">
+        <div class="card-image" style="background-image: url('https://arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/5MK7LKGILMI6VKBFQ4RAATSBKA.jpg')"></div>
+        <div class="card-overlay"></div>
+        <div class="card-content">
+          <div class="card-top">
+            <div class="ripple-badge"><svg viewBox="0 0 44 44"><circle class="ripple-ring" cx="22" cy="22" r="6"/><text class="ripple-num" text-anchor="middle" dominant-baseline="middle" x="22" y="23">5</text></svg></div>
+            <span class="card-topic-tag">History revisited</span>
+          </div>
+          <div class="card-bottom">
+            <div class="card-headline">What James Madison can teach Americans about religious freedom today</div>
+            <div class="card-meta">
+              <div class="outlet-dot outlet-conversation">TC</div>
+              <span class="card-outlet">The Conversation</span>
+              <span class="card-author">· Corey D.B. Walker</span>
+              <span class="card-read-time">6 min</span>
+            </div>
+          </div>
+        </div>
+      </a>
+      <a class="card" href="https://www.washingtonpost.com/ripple/2026/03/09/voter-id-law-standards/" target="_blank">
+        <div class="card-image" style="background-image: url('https://arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/2SZE2VHWBNAY4XOVVKULARNFLA.jpg')"></div>
+        <div class="card-overlay"></div>
+        <div class="card-content">
+          <div class="card-top">
+            <div class="ripple-badge"><svg viewBox="0 0 44 44"><circle class="ripple-ring" cx="22" cy="22" r="6"/><text class="ripple-num" text-anchor="middle" dominant-baseline="middle" x="22" y="23">10</text></svg></div>
+            <span class="card-topic-tag">Immigration crackdowns</span>
+          </div>
+          <div class="card-bottom">
+            <div class="card-headline">American women don't need Democrats to protect them from election integrity</div>
+            <div class="card-meta">
+              <div class="outlet-dot outlet-hill">TH</div>
+              <span class="card-outlet">The Hill</span>
+              <span class="card-author">· Rep. Kat Cammack</span>
+              <span class="card-read-time">4 min</span>
+            </div>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+
+</main>
+
+<!-- RURAL AMERICA standalone -->
+<main style="padding-top:0">
+  <div class="topic-section" data-topic="rural">
+    <div class="topic-header">
+      <span class="topic-label">Rural America</span>
+      <div class="topic-count">7</div>
+      <div class="topic-rule"></div>
+    </div>
+    <div class="cards-grid">
+      <a class="card" href="https://www.washingtonpost.com/ripple/2026/03/10/mississippi-governor-tate-reeves-investment-growth/" target="_blank">
+        <div class="card-image" style="background-image: url('https://arc-anglerfish-washpost-prod-washpost.s3.amazonaws.com/public/N6LIAFB5SPOAA4BIXD2USHMAHM_size-normalized.jpg')"></div>
+        <div class="card-overlay"></div>
+        <div class="card-content">
+          <div class="card-top">
+            <div class="ripple-badge"><svg viewBox="0 0 44 44"><circle class="ripple-ring" cx="22" cy="22" r="6"/><text class="ripple-num" text-anchor="middle" dominant-baseline="middle" x="22" y="23">7</text></svg></div>
+            <span class="card-topic-tag">Rural America</span>
+          </div>
+          <div class="card-bottom">
+            <div class="card-headline">The state that says yes</div>
+            <div class="card-meta">
+              <div class="outlet-dot outlet-cityjournal">CJ</div>
+              <span class="card-outlet">City Journal</span>
+              <span class="card-author">· Shawn Regan</span>
+              <span class="card-read-time">15 min</span>
+            </div>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="footer-note">
+    Ripple by The Washington Post — curating opinion from across America's media landscape.
+    All articles link directly to washingtonpost.com/ripple.
+    Circles indicate the number of perspectives available per topic cluster.
+  </div>
+  <div class="footer-date">March 15, 2026</div>
+</footer>
+
+<script>
+function filterTopic(topic) {
+  // Update active chip
+  document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+  event.target.classList.add('active');
+
+  // Show/hide sections
+  document.querySelectorAll('.topic-section').forEach(section => {
+    if (topic === 'all' || section.dataset.topic === topic) {
+      section.style.display = '';
+      section.style.animation = 'none';
+      section.offsetHeight; // reflow
+      section.style.animation = 'fadeUp 0.35s ease forwards';
+    } else {
+      section.style.display = 'none';
+    }
+  });
+}
+</script>
+</body>
+</html>
