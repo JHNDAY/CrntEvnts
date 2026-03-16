@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Major League Pay to Play</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Playfair+Display:ital,wght@0,700;1,400&family=IBM+Plex+Mono:wght@400;600&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;1,8..60,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #0a0a0a;
+    --paper: #f5f0e8;
+    --cream: #ede6d6;
+    --red: #c0392b;
+    --gold: #b8860b;
+    --amber: #d4a017;
+    --steel: #2c3e50;
+    --rule: #8b7355;
+    --muted: #6b5e4e;
+    --green: #1a5c2a;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--ink);
+    font-family: 'Source Serif 4', Georgia, serif;
+    color: var(--paper);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* === MASTHEAD === */
+  .masthead {
+    background: var(--paper);
+    color: var(--ink);
+    text-align: center;
+    padding: 20px 20px 0;
+    border-bottom: 6px double var(--ink);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .masthead::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 28px,
+      rgba(0,0,0,0.04) 28px,
+      rgba(0,0,0,0.04) 29px
+    );
+  }
+
+  .masthead-eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 6px;
+    position: relative;
+  }
+
+  .masthead-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(3.5rem, 10vw, 7rem);
+    letter-spacing: 0.02em;
+    line-height: 0.9;
+    color: var(--ink);
+    position: relative;
+    text-shadow: 3px 3px 0 rgba(0,0,0,0.12);
+  }
+
+  .masthead-title span {
+    color: var(--red);
+  }
+
+  .masthead-sub {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-style: italic;
+    font-size: clamp(0.9rem, 2vw, 1.25rem);
+    color: var(--muted);
+    margin: 8px 0 16px;
+    position: relative;
+  }
+
+  .masthead-rule {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 0 -20px;
+    padding: 0 20px;
+    position: relative;
+  }
+
+  .masthead-rule::before,
+  .masthead-rule::after {
+    content: '';
+    flex: 1;
+    height: 2px;
+    background: var(--ink);
+  }
+
+  .masthead-dateline {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    padding: 8px 16px;
+    border: 1px solid var(--ink);
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  /* === SCOREBOARD === */
+  .scoreboard {
+    background: var(--steel);
+    padding: 16px 20px;
+    display: flex;
+    justify-content: center;
+    gap: 0;
+    flex-wrap: wrap;
+    border-bottom: 4px solid var(--amber);
+  }
+
+  .score-cell {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 12px 24px;
+    border-right: 1px solid rgba(255,255,255,0.15);
+    min-width: 130px;
+  }
+
+  .score-cell:last-child { border-right: none; }
+
+  .score-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.5);
+    margin-bottom: 6px;
+  }
+
+  .score-value {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 2.2rem;
+    color: var(--amber);
+    line-height: 1;
+    counter-reset: none;
+  }
+
+  .score-value.red { color: var(--red); }
+  .score-value.green { color: #4ade80; }
+
+  .score-note {
+    font-size: 0.55rem;
+    color: rgba(255,255,255,0.4);
+    font-family: 'IBM Plex Mono', monospace;
+    margin-top: 4px;
+  }
+
+  /* === MAIN GRID === */
+  .main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 32px 20px;
+  }
+
+  /* === SECTION HEADS === */
+  .section-head {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+  }
+
+  .section-head h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.8rem;
+    letter-spacing: 0.05em;
+    color: var(--amber);
+    white-space: nowrap;
+  }
+
+  .section-head::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, var(--amber), transparent);
+  }
+
+  /* === PRICE LADDER === */
+  .price-section {
+    background: var(--paper);
+    color: var(--ink);
+    border-radius: 2px;
+    padding: 28px;
+    margin-bottom: 36px;
+    position: relative;
+    border-left: 8px solid var(--red);
+    overflow: hidden;
+  }
+
+  .price-section::after {
+    content: '$$';
+    position: absolute;
+    right: -10px;
+    top: -20px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 8rem;
+    color: rgba(0,0,0,0.04);
+    pointer-events: none;
+  }
+
+  .price-section h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.5rem;
+    letter-spacing: 0.05em;
+    color: var(--red);
+    margin-bottom: 20px;
+    text-transform: uppercase;
+  }
+
+  .price-ladder {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    position: relative;
+  }
+
+  .price-ladder::before {
+    content: '';
+    position: absolute;
+    left: 88px;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: linear-gradient(to bottom, var(--red), var(--gold));
+  }
+
+  .price-rung {
+    display: grid;
+    grid-template-columns: 90px 1fr;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px dashed rgba(0,0,0,0.1);
+    opacity: 0;
+    animation: fadeUp 0.5s forwards;
+  }
+
+  .price-rung:nth-child(1) { animation-delay: 0.1s; }
+  .price-rung:nth-child(2) { animation-delay: 0.25s; }
+  .price-rung:nth-child(3) { animation-delay: 0.4s; }
+  .price-rung:nth-child(4) { animation-delay: 0.55s; }
+  .price-rung:nth-child(5) { animation-delay: 0.7s; }
+  .price-rung:last-child { border-bottom: none; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .rung-amount {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--red);
+    text-align: right;
+    padding-right: 20px;
+  }
+
+  .rung-body {
+    padding-left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .rung-title {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--ink);
+  }
+
+  .rung-desc {
+    font-size: 0.8rem;
+    color: var(--muted);
+    font-style: italic;
+  }
+
+  .rung-source {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--steel);
+    opacity: 0.7;
+    margin-top: 2px;
+  }
+
+  /* === PLAYER CARDS === */
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+  }
+
+  .player-card {
+    background: var(--paper);
+    color: var(--ink);
+    border-radius: 2px;
+    overflow: hidden;
+    position: relative;
+    border-top: 5px solid var(--rule);
+    transition: transform 0.2s;
+  }
+
+  .player-card:hover {
+    transform: translateY(-3px);
+  }
+
+  .player-card.featured {
+    border-top-color: var(--red);
+  }
+
+  .card-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 3px 8px;
+    background: var(--red);
+    color: white;
+    border-radius: 2px;
+  }
+
+  .card-badge.green { background: var(--green); }
+  .card-badge.gold { background: var(--gold); }
+
+  .card-header {
+    padding: 16px 16px 0;
+  }
+
+  .card-number {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.9rem;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+  }
+
+  .card-name {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 1.15rem;
+    line-height: 1.2;
+    margin: 4px 0;
+    color: var(--ink);
+  }
+
+  .card-role {
+    font-size: 0.75rem;
+    color: var(--muted);
+    font-style: italic;
+    margin-bottom: 12px;
+  }
+
+  .card-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border-top: 1px solid rgba(0,0,0,0.1);
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+  }
+
+  .stat {
+    padding: 10px 16px;
+    border-right: 1px solid rgba(0,0,0,0.1);
+  }
+
+  .stat:last-child { border-right: none; }
+  .stat:nth-child(n+3) { border-top: 1px solid rgba(0,0,0,0.1); }
+
+  .stat-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.5rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 3px;
+  }
+
+  .stat-value {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .stat-value.red { color: var(--red); }
+  .stat-value.green { color: var(--green); }
+
+  .card-body {
+    padding: 12px 16px 16px;
+    font-size: 0.82rem;
+    line-height: 1.6;
+    color: #3a3028;
+  }
+
+  .card-source {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px dashed rgba(0,0,0,0.15);
+  }
+
+  /* === CRIMINAL SPOTLIGHT === */
+  .criminal-box {
+    background: #1a0a0a;
+    border: 2px solid var(--red);
+    padding: 28px;
+    margin-bottom: 40px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .criminal-box::before {
+    content: 'INDICTED';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-12deg);
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 9rem;
+    color: rgba(192, 57, 43, 0.07);
+    pointer-events: none;
+    white-space: nowrap;
+  }
+
+  .criminal-eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--red);
+    margin-bottom: 10px;
+  }
+
+  .criminal-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    color: var(--paper);
+    letter-spacing: 0.03em;
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+
+  .criminal-title span { color: var(--amber); }
+
+  .criminal-subtitle {
+    font-size: 0.85rem;
+    color: rgba(245,240,232,0.6);
+    font-style: italic;
+    margin-bottom: 20px;
+  }
+
+  .criminal-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+
+  @media (max-width: 600px) {
+    .criminal-grid { grid-template-columns: 1fr; }
+    .cards-grid { grid-template-columns: 1fr; }
+    .score-cell { min-width: 100px; padding: 10px 12px; }
+  }
+
+  .criminal-fact {
+    background: rgba(255,255,255,0.04);
+    border-left: 3px solid var(--red);
+    padding: 12px 16px;
+  }
+
+  .criminal-fact-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.55rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-bottom: 4px;
+  }
+
+  .criminal-fact-value {
+    font-size: 0.9rem;
+    color: var(--paper);
+    line-height: 1.5;
+  }
+
+  /* === TIMELINE STRIP === */
+  .timeline {
+    position: relative;
+    padding: 20px 0;
+    margin-bottom: 40px;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(to bottom, var(--amber), transparent);
+    transform: translateX(-50%);
+  }
+
+  .timeline-item {
+    display: grid;
+    grid-template-columns: 1fr 48px 1fr;
+    align-items: center;
+    margin-bottom: 24px;
+  }
+
+  .timeline-left {
+    text-align: right;
+    padding-right: 24px;
+  }
+
+  .timeline-right {
+    padding-left: 24px;
+  }
+
+  .timeline-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: var(--amber);
+    border: 3px solid var(--ink);
+    margin: 0 auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  .timeline-dot.red { background: var(--red); }
+
+  .timeline-date {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    color: var(--amber);
+    text-transform: uppercase;
+  }
+
+  .timeline-event {
+    font-size: 0.82rem;
+    color: var(--paper);
+    line-height: 1.4;
+  }
+
+  .timeline-event strong {
+    color: var(--paper);
+    font-family: 'Playfair Display', serif;
+  }
+
+  .timeline-amount {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--red);
+    margin-top: 4px;
+  }
+
+  /* === PULLQUOTE === */
+  .pullquote {
+    border-left: 6px solid var(--amber);
+    padding: 16px 24px;
+    margin: 32px 0;
+    background: rgba(255,255,255,0.04);
+  }
+
+  .pullquote p {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    font-size: 1.2rem;
+    line-height: 1.5;
+    color: var(--paper);
+  }
+
+  .pullquote cite {
+    display: block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--amber);
+    margin-top: 10px;
+    font-style: normal;
+  }
+
+  /* === FOOTER === */
+  .footer {
+    background: var(--paper);
+    color: var(--ink);
+    padding: 24px 20px;
+    border-top: 4px double var(--ink);
+  }
+
+  .footer-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+  }
+
+  @media (max-width: 700px) {
+    .footer-inner { grid-template-columns: 1fr; }
+  }
+
+  .footer h4 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1rem;
+    letter-spacing: 0.1em;
+    color: var(--red);
+    border-bottom: 1px solid rgba(0,0,0,0.2);
+    padding-bottom: 6px;
+    margin-bottom: 10px;
+  }
+
+  .footer li {
+    list-style: none;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    color: var(--muted);
+    padding: 3px 0;
+    border-bottom: 1px dotted rgba(0,0,0,0.1);
+    letter-spacing: 0.05em;
+  }
+
+  .footer li a {
+    color: var(--steel);
+    text-decoration: none;
+    border-bottom: 1px dotted var(--rule);
+    transition: color 0.15s, border-color 0.15s;
+  }
+
+  .footer li a:hover {
+    color: var(--red);
+    border-bottom-color: var(--red);
+  }
+
+  .src-tag {
+    display: inline-block;
+    font-size: 0.5rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    padding: 1px 5px;
+    border-radius: 2px;
+    margin-right: 5px;
+    font-weight: 600;
+    vertical-align: middle;
+  }
+
+  .src-wsj  { background: #f0f4ff; color: #1a3a8a; }
+  .src-nyt  { background: #fff0f0; color: #8a0000; }
+  .src-nbc  { background: #fff8e0; color: #7a5800; }
+  .src-ft   { background: #fff4e8; color: #7a3800; }
+  .src-cnn  { background: #f0f8ff; color: #004a7a; }
+  .src-doj  { background: #f5f0ff; color: #4a007a; }
+  .src-clc  { background: #f0fff4; color: #005a1a; }
+  .src-wiki { background: #f5f5f5; color: #444; }
+  .src-pf   { background: #fff0f5; color: #7a0040; }
+  .src-misc { background: #f0f0f0; color: #555; }
+
+  .disclaimer {
+    max-width: 1100px;
+    margin: 16px auto 0;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.55rem;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+    line-height: 1.7;
+    border-top: 1px solid rgba(0,0,0,0.15);
+    padding-top: 12px;
+  }
+
+  /* pardon flow chart */
+  .flow-section {
+    background: var(--cream);
+    color: var(--ink);
+    padding: 28px;
+    border-radius: 2px;
+    margin-bottom: 40px;
+    border-left: 8px solid var(--gold);
+  }
+
+  .flow-section h3 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.4rem;
+    color: var(--steel);
+    margin-bottom: 20px;
+    letter-spacing: 0.05em;
+  }
+
+  .flow-row {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+
+  .flow-node {
+    background: white;
+    border: 1.5px solid var(--rule);
+    border-radius: 4px;
+    padding: 10px 16px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--steel);
+    min-width: 120px;
+    text-align: center;
+    line-height: 1.3;
+  }
+
+  .flow-node.red { border-color: var(--red); background: #fff5f5; }
+  .flow-node.gold { border-color: var(--gold); background: #fffbf0; }
+  .flow-node.green-node { border-color: var(--green); background: #f0fff5; }
+
+  .flow-arrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 1rem;
+    color: var(--muted);
+    padding: 0 8px;
+  }
+
+  .flow-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.55rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    padding: 0 4px;
+    text-align: center;
+  }
+
+  .flow-amount {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--red);
+    display: block;
+    margin-top: 3px;
+  }
+
+  /* animate score values on load */
+  @keyframes countUp {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .score-value {
+    animation: countUp 0.8s ease forwards;
+  }
+
+  /* staggered card entrance */
+  .player-card {
+    opacity: 0;
+    animation: fadeUp 0.5s forwards;
+  }
+  .player-card:nth-child(1) { animation-delay: 0.1s; }
+  .player-card:nth-child(2) { animation-delay: 0.2s; }
+  .player-card:nth-child(3) { animation-delay: 0.3s; }
+  .player-card:nth-child(4) { animation-delay: 0.4s; }
+  .player-card:nth-child(5) { animation-delay: 0.5s; }
+  .player-card:nth-child(6) { animation-delay: 0.6s; }
+</style>
+</head>
+<body>
+
+<!-- MASTHEAD -->
+<div class="masthead">
+  <div class="masthead-eyebrow">An Investigative Visualization &nbsp;·&nbsp; Sources: WSJ · NYT · NBC · Financial Times · CNN · Campaign Legal Center</div>
+  <div class="masthead-title">Major League <span>Pay</span> to <span>Play</span></div>
+  <div class="masthead-sub">How the Presidential Pardon Became a Private Market — and One Lawyer Got Arrested Trying to Collect</div>
+  <div class="masthead-rule">
+    <div class="masthead-dateline">March 2026 &nbsp;|&nbsp; Second Trump Term &nbsp;|&nbsp; BOLLI Current Events Group</div>
+  </div>
+</div>
+
+<!-- SCOREBOARD -->
+<div class="scoreboard">
+  <div class="score-cell">
+    <div class="score-label">Pardons Issued</div>
+    <div class="score-value">1,600+</div>
+    <div class="score-note">as of mid-2025</div>
+  </div>
+  <div class="score-cell">
+    <div class="score-label">Victim Restitution Wiped</div>
+    <div class="score-value red">$1.3B</div>
+    <div class="score-note">est. Campaign Legal Ctr.</div>
+  </div>
+  <div class="score-cell">
+    <div class="score-label">Standard Broker Fee</div>
+    <div class="score-value">$1M</div>
+    <div class="score-note">WSJ / NBC News</div>
+  </div>
+  <div class="score-cell">
+    <div class="score-label">Max "Success Fee"</div>
+    <div class="score-value red">$6M</div>
+    <div class="score-note">Wall Street Journal</div>
+  </div>
+  <div class="score-cell">
+    <div class="score-label">Nass Extortion Charge</div>
+    <div class="score-value red">$500K</div>
+    <div class="score-note">DOJ, Mar. 2026</div>
+  </div>
+  <div class="score-cell">
+    <div class="score-label">Pardon Office Status</div>
+    <div class="score-value green">GONE</div>
+    <div class="score-note">Oyer fired Mar. 2025</div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main">
+
+  <!-- CRIMINAL SPOTLIGHT: NASS -->
+  <div class="section-head" style="margin-bottom:20px;">
+    <h2>The Criminal Case</h2>
+  </div>
+
+  <div class="criminal-box">
+    <div class="criminal-eyebrow">&#9632; Breaking · Federal Court, Brooklyn · March 14–15, 2026</div>
+    <div class="criminal-title">The <span>Joshua Nass</span> Arrest</div>
+    <div class="criminal-subtitle">A Trump-world lawyer charged with extortion — after allegedly hiring muscle to collect $500K owed for pardon-brokering</div>
+    <div class="criminal-grid">
+      <div class="criminal-fact">
+        <div class="criminal-fact-label">Who Is He</div>
+        <div class="criminal-fact-value">Joshua Nass, 34 — lawyer &amp; lobbyist, website bills him as "well-connected" and specializing in "executive branch advocacy." Photos on social media alongside Don Trump Jr. at Mar-a-Lago.</div>
+      </div>
+      <div class="criminal-fact">
+        <div class="criminal-fact-label">The Charge</div>
+        <div class="criminal-fact-value">Arrested March 14, 2026. Accused of hiring someone to do "whatever it takes" — including physically dragging the client's son from his home — to extort the $500K debt owed for pardon services.</div>
+      </div>
+      <div class="criminal-fact">
+        <div class="criminal-fact-label">The Client (John Doe 1)</div>
+        <div class="criminal-fact-value">Believed to be Joseph Schwartz — convicted for $38M nursing home tax fraud. Trump pardoned him Nov. 14, 2025. Schwartz had earlier paid Wohl &amp; Burkman $960K for the same goal, then switched to Nass.</div>
+      </div>
+      <div class="criminal-fact">
+        <div class="criminal-fact-label">What Nass Filed</div>
+        <div class="criminal-fact-value">In January 2026, Nass disclosed receiving $100K in lobbying fees (Nov–Dec 2025) for "advocacy efforts regarding executive clemency" — the paper trail that began unraveling the case.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRICE LADDER -->
+  <div class="section-head">
+    <h2>The Price of Freedom</h2>
+  </div>
+
+  <div class="price-section">
+    <h3>How the Pardon Market is Priced — Per the WSJ, NBC & NYT</h3>
+    <div class="price-ladder">
+      <div class="price-rung">
+        <div class="rung-amount">$960K</div>
+        <div class="rung-body">
+          <div class="rung-title">Jack Burkman &amp; Jacob Wohl — Nursing Home Fraud</div>
+          <div class="rung-desc">Convicted felons themselves, paid $960,000 to lobby for Joseph Schwartz's pardon. Schwartz was unhappy with their efforts and hired Josh Nass instead.</div>
+          <div class="rung-source">Source: WSJ / Wikipedia clemency list</div>
+        </div>
+      </div>
+      <div class="price-rung">
+        <div class="rung-amount">$1M</div>
+        <div class="rung-body">
+          <div class="rung-title">Standard Entry Fee — The New Normal</div>
+          <div class="rung-desc">Lobbyists have told the WSJ, NBC, and FT that $1 million is now the "standard rate" to get a pardon case in front of the right people in the White House.</div>
+          <div class="rung-source">Source: Wall Street Journal · Financial Times · NBC News</div>
+        </div>
+      </div>
+      <div class="price-rung">
+        <div class="rung-amount">$1M</div>
+        <div class="rung-body">
+          <div class="rung-title">Keith Schiller &amp; George Sorial — Developer Bribery</div>
+          <div class="rung-desc">Former Trump bodyguard and Trump Org. exec received $1M in Q1 2025 to lobby for a developer convicted of bribing Sen. Robert Menendez with cash and gold bars.</div>
+          <div class="rung-source">Source: Wall Street Journal</div>
+        </div>
+      </div>
+      <div class="price-rung">
+        <div class="rung-amount">$800K</div>
+        <div class="rung-body">
+          <div class="rung-title">Binance — Changpeng Zhao Pardon Lobby</div>
+          <div class="rung-desc">Binance paid ~$800K in lobbying fees before Zhao's pardon was granted, plus agreed to potential "success fees of as much as $5M." The pardon wiped obligations beyond what Binance paid in fines.</div>
+          <div class="rung-source">Source: Wall Street Journal</div>
+        </div>
+      </div>
+      <div class="price-rung">
+        <div class="rung-amount">up to $6M</div>
+        <div class="rung-body">
+          <div class="rung-title">Maximum Reported "Success Fee"</div>
+          <div class="rung-desc">Pardon-seekers have offered lobbyists success fees as high as $6 million — paid only upon a successful pardon. Convictions wiping out hundreds of millions in restitution make even $6M a rational investment.</div>
+          <div class="rung-source">Source: Wall Street Journal · Raw Story</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PULLQUOTE -->
+  <div class="pullquote">
+    <p>"We are seeing an industrial-scale pardon business. It's a separate process outside the criminal justice system for potentially getting your case to go away."</p>
+    <cite>— Defense attorney, quoted in Financial Times &amp; NBC News, 2025</cite>
+  </div>
+
+  <!-- PLAYER CARDS -->
+  <div class="section-head">
+    <h2>The Roster</h2>
+  </div>
+
+  <div class="cards-grid">
+
+    <!-- Changpeng Zhao -->
+    <div class="player-card featured">
+      <div class="card-badge">pardoned</div>
+      <div class="card-header">
+        <div class="card-number">#01</div>
+        <div class="card-name">Changpeng "CZ" Zhao</div>
+        <div class="card-role">Founder, Binance — world's largest crypto exchange</div>
+      </div>
+      <div class="card-stats">
+        <div class="stat">
+          <div class="stat-label">Crime</div>
+          <div class="stat-value">AML Failure</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Lobby spend</div>
+          <div class="stat-value red">$800K</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Pardon date</div>
+          <div class="stat-value">Oct 2025</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Success fee</div>
+          <div class="stat-value red">up to $5M</div>
+        </div>
+      </div>
+      <div class="card-body">Binance's $800K lobbying campaign cleared the way for Zhao to do business in the U.S. again. Trump claimed he had no idea who Zhao was. Some Trump advisers worried the Zhao pardon would become a focal point for Democratic investigations.</div>
+      <div class="card-source">WSJ · CNN · Campaign Legal Center</div>
+    </div>
+
+    <!-- Trevor Milton -->
+    <div class="player-card featured">
+      <div class="card-badge">pardoned</div>
+      <div class="card-header">
+        <div class="card-number">#02</div>
+        <div class="card-name">Trevor Milton</div>
+        <div class="card-role">Founder, Nikola — electric truck fraud</div>
+      </div>
+      <div class="card-stats">
+        <div class="stat">
+          <div class="stat-label">Crime</div>
+          <div class="stat-value">Securities Fraud</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Restitution wiped</div>
+          <div class="stat-value red">$695M</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Pardon date</div>
+          <div class="stat-value">Mar 2025</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Trump said</div>
+          <div class="stat-value">"Supported me"</div>
+        </div>
+      </div>
+      <div class="card-body">Trump personally called Milton to announce his pardon. The pardon wiped both a 4-year sentence and $695M in restitution to defrauded investors. At the press conference Trump said Milton's crime was supporting "a gentleman named Donald Trump."</div>
+      <div class="card-source">Medium/Armitage analysis · NYT</div>
+    </div>
+
+    <!-- Paul Walczak -->
+    <div class="player-card">
+      <div class="card-badge gold">pardoned</div>
+      <div class="card-header">
+        <div class="card-number">#03</div>
+        <div class="card-name">Paul Walczak</div>
+        <div class="card-role">Florida nursing home operator — $10M+ tax fraud</div>
+      </div>
+      <div class="card-stats">
+        <div class="stat">
+          <div class="stat-label">Crime</div>
+          <div class="stat-value">Tax Fraud</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Days served</div>
+          <div class="stat-value red">Zero</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Mother's donation</div>
+          <div class="stat-value red">$1M</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Days pardon to sentence</div>
+          <div class="stat-value red">12 days</div>
+        </div>
+      </div>
+      <div class="card-body">Sentenced April 11, 2025 — pardoned April 23, just 12 days later. His mother, Elizabeth Fago, attended a Mar-a-Lago fundraiser costing $1M per ticket. Democrats called it an "exceptionally well-invested" million dollars.</div>
+      <div class="card-source">Medium/Armitage · Campaign Legal Center</div>
+    </div>
+
+    <!-- Julio Herrera Velutini -->
+    <div class="player-card">
+      <div class="card-badge gold">pardoned</div>
+      <div class="card-header">
+        <div class="card-number">#04</div>
+        <div class="card-name">Julio Herrera Velutini</div>
+        <div class="card-role">Foreign billionaire — Puerto Rico governor bribery</div>
+      </div>
+      <div class="card-stats">
+        <div class="stat">
+          <div class="stat-label">Crime</div>
+          <div class="stat-value">Bribery</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Super PAC donation</div>
+          <div class="stat-value red">$3.5M</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Lobby firm</div>
+          <div class="stat-value">Ballard Partners</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Lobby fee paid</div>
+          <div class="stat-value red">$600K</div>
+        </div>
+      </div>
+      <div class="card-body">Velutini's 25-year-old daughter — whose only prior donation was $20 to Buttigieg — gave $3.5M to a Trump super PAC. CLC asked for an investigation into whether Velutini was the true source of the contribution, which would be illegal.</div>
+      <div class="card-source">Campaign Legal Center · NBC</div>
+    </div>
+
+    <!-- Tim Leiweke -->
+    <div class="player-card">
+      <div class="card-badge gold">pardoned</div>
+      <div class="card-header">
+        <div class="card-number">#05</div>
+        <div class="card-name">Tim Leiweke</div>
+        <div class="card-role">CEO, Oak View Group — DOJ indictment</div>
+      </div>
+      <div class="card-stats">
+        <div class="stat">
+          <div class="stat-label">Inauguration donation</div>
+          <div class="stat-value red">$250K</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Pardon method</div>
+          <div class="stat-value">Golf @ Mar-a-Lago</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Broker</div>
+          <div class="stat-value">Trey Gowdy</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Trial held?</div>
+          <div class="stat-value red">Never</div>
+        </div>
+      </div>
+      <div class="card-body">Pardoned pre-trial in December 2025. Lawyer Trey Gowdy pressed Trump for leniency during a round of golf at Mar-a-Lago — a tactic that triggered an avalanche of other defendants contacting Gowdy for help. His company had donated $250K to Trump's inauguration.</div>
+      <div class="card-source">Campaign Legal Center · NYT</div>
+    </div>
+
+    <!-- Juan Orlando Hernandez -->
+    <div class="player-card featured">
+      <div class="card-badge">pardoned</div>
+      <div class="card-header">
+        <div class="card-number">#06</div>
+        <div class="card-name">Juan Orlando Hernández</div>
+        <div class="card-role">Former President of Honduras — drug trafficking</div>
+      </div>
+      <div class="card-stats">
+        <div class="stat">
+          <div class="stat-label">Conviction</div>
+          <div class="stat-value">45-yr sentence</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Served</div>
+          <div class="stat-value red">~1.5 yrs</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Broker</div>
+          <div class="stat-value">Roger Stone</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">WH notified?</div>
+          <div class="stat-value red">No advance notice</div>
+        </div>
+      </div>
+      <div class="card-body">Convicted of turning Honduras into a drug corridor — prosecutors called him the linchpin of shipping 400 tons of cocaine to the U.S. Roger Stone acted as intermediary. Trump pardoned so abruptly that Chief of Staff Susie Wiles and other senior officials had no advance notice.</div>
+      <div class="card-source">NBC News · FT · NYT</div>
+    </div>
+
+  </div>
+
+  <!-- HOW IT WORKS — FLOW -->
+  <div class="section-head">
+    <h2>How the System Works</h2>
+  </div>
+
+  <div class="flow-section">
+    <h3>The Pardon Pipeline — Old System vs. New System</h3>
+
+    <div style="margin-bottom:28px;">
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--muted);margin-bottom:10px;">▸ Old System (pre-2025)</div>
+      <div class="flow-row">
+        <div class="flow-node">Applicant files with<br>DOJ Pardon Office</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node">45-person career staff<br>vets case (5 criteria)</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node">Pardon Attorney<br>recommends to WH</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node green-node">President<br>decides</div>
+      </div>
+    </div>
+
+    <div>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--red);margin-bottom:10px;">▸ New System (2025–present)</div>
+      <div class="flow-row">
+        <div class="flow-node red">Hire lobbyist with<br>WH connections<div class="flow-amount">$1M–$6M</div></div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node gold">Get case framed as<br>"Biden witch hunt"</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node gold">Reach Ed Martin<br>or Susie Wiles</div>
+        <div class="flow-arrow">→</div>
+        <div class="flow-node red">President decides<br>(ad hoc, no review)</div>
+      </div>
+      <div style="margin-top:14px;font-size:0.78rem;color:var(--muted);font-style:italic;border-left:3px solid var(--rule);padding-left:12px;">
+        Liz Oyer (career pardon attorney, 45-person staff) was fired March 7, 2025. She testified that she "began learning about Trump clemency grants when they popped up in the news." Her successor Ed Martin's stated rationale: <strong>"No MAGA left behind."</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- TIMELINE -->
+  <div class="section-head">
+    <h2>The Timeline</h2>
+  </div>
+
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-left">
+        <div class="timeline-date">Jan 20, 2025</div>
+        <div class="timeline-event">Inauguration Day: 1,500+ Jan. 6 rioters pardoned within hours</div>
+      </div>
+      <div class="timeline-dot"></div>
+      <div class="timeline-right"></div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-left"></div>
+      <div class="timeline-dot"></div>
+      <div class="timeline-right">
+        <div class="timeline-date">Mar 7, 2025</div>
+        <div class="timeline-event"><strong>Liz Oyer fired</strong>. DOJ Pardon Office "totally decimated." Ed Martin installed as political loyalist.</div>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-left">
+        <div class="timeline-date">Apr 23, 2025</div>
+        <div class="timeline-event"><strong>Paul Walczak pardoned</strong> — 12 days after sentencing; zero jail time served. Mother paid $1M at Mar-a-Lago event.</div>
+        <div class="timeline-amount">ROI on $1M donation: ~$10M in restitution wiped</div>
+      </div>
+      <div class="timeline-dot"></div>
+      <div class="timeline-right"></div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-left"></div>
+      <div class="timeline-dot"></div>
+      <div class="timeline-right">
+        <div class="timeline-date">Oct 2025</div>
+        <div class="timeline-event"><strong>Changpeng Zhao pardoned.</strong> Binance had paid $800K in lobby fees. WSJ reports success fee potential of up to $5M.</div>
+        <div class="timeline-amount">$800K lobby spend</div>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-left">
+        <div class="timeline-date">Nov 14, 2025</div>
+        <div class="timeline-event"><strong>Joseph Schwartz pardoned</strong> — nursing home fraud. Total paid to brokers: $960K (Wohl/Burkman) + $100K (Nass) = $1.06M+</div>
+        <div class="timeline-amount">$1.06M+ total brokerage</div>
+      </div>
+      <div class="timeline-dot"></div>
+      <div class="timeline-right"></div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-left"></div>
+      <div class="timeline-dot"></div>
+      <div class="timeline-right">
+        <div class="timeline-date">Dec 2025</div>
+        <div class="timeline-event"><strong>WSJ investigation:</strong> "pardon-shopping industry" with $1M standard fees and $6M success fees. FT calls it "industrial scale."</div>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-left">
+        <div class="timeline-date">Jan 2026</div>
+        <div class="timeline-event">NBC analysis: more than half of 88 non-Jan. 6 pardons went to wealthy white-collar criminals. Victims owed an estimated $1.3 billion.</div>
+        <div class="timeline-amount">$1.3B victim restitution wiped</div>
+      </div>
+      <div class="timeline-dot red"></div>
+      <div class="timeline-right"></div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-left"></div>
+      <div class="timeline-dot red"></div>
+      <div class="timeline-right">
+        <div class="timeline-date">Mar 14–15, 2026</div>
+        <div class="timeline-event"><strong>Joshua Nass arrested</strong> — charged with extortion. Allegedly hired muscle to collect $500K owed for pardon services. First criminal case from the pardon economy.</div>
+        <div class="timeline-amount">FEDERAL CHARGES — BROOKLYN</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CLOSING PULLQUOTE -->
+  <div class="pullquote">
+    <p>"This is very destructive to our justice system. It delegitimizes the pardon power. It entrenches a two-tier system of justice in which wealth really can be a get-out-of-jail-free card."</p>
+    <cite>— Elizabeth Oyer, former DOJ Pardon Attorney, NBC News 2025</cite>
+  </div>
+
+</div><!-- /main -->
+
+<!-- FOOTER -->
+<div class="footer">
+  <div class="footer-inner" style="grid-template-columns: 1fr 1fr;">
+    <div>
+      <h4>Primary Sources — Click to Read</h4>
+      <ul>
+        <li><span class="src-tag src-nbc">NBC</span> <a href="https://www.nbcnews.com/politics/donald-trump/trump-pardons-drive-big-burgeoning-business-lobbyists-rcna209801" target="_blank">Trump Pardons Drive a Big, Burgeoning Business for Lobbyists</a></li>
+        <li><span class="src-tag src-wsj">WSJ</span> <a href="https://gvwire.com/2026/01/02/a-look-inside-trump-worlds-pay-to-play-pardon-scheme/" target="_blank">Pay-to-Play Pardon Scheme — WSJ Summary (GV Wire, open access)</a></li>
+        <li><span class="src-tag src-ft">FT</span> <a href="https://www.irishtimes.com/world/us/2025/12/19/trump-pardons-are-an-industrial-scale-business-says-lawyer/" target="_blank">Trump Pardons Are an 'Industrial-Scale' Business (Irish Times / FT)</a></li>
+        <li><span class="src-tag src-cnn">CNN</span> <a href="https://www.cnn.com/2025/12/08/politics/pardon-trump-who-why" target="_blank">How the Rich and Powerful Jockey for Pardons from Trump</a></li>
+        <li><span class="src-tag src-doj">DOJ</span> <a href="https://www.elhayat-life.com/2026/03/15/trumpworld-lawyer-busted-in-500k-extortion-scheme/" target="_blank">Trumpworld Lawyer Busted in $500K Extortion Scheme (Nass arrest)</a></li>
+        <li><span class="src-tag src-clc">CLC</span> <a href="https://campaignlegal.org/update/inside-pardon-playbook-analysis-president-trumps-clemency-abuses" target="_blank">Inside the Pardon Playbook — Campaign Legal Center</a></li>
+        <li><span class="src-tag src-wiki">WIKI</span> <a href="https://en.wikipedia.org/wiki/List_of_people_granted_executive_clemency_in_the_second_Trump_presidency" target="_blank">List of Clemency Grants — Second Trump Presidency</a></li>
+        <li><span class="src-tag src-pf">PF</span> <a href="https://www.politifact.com/factchecks/2025/jun/06/liz-oyer/donald-trump-pardons-wipe-out-billion-debts/" target="_blank">Did Trump's Pardons Wipe Out $1 Billion in Debt? — PolitiFact</a></li>
+        <li><span class="src-tag src-misc">MED</span> <a href="https://medium.com/@carmitage/the-pardon-for-pay-president-2c1d01767923" target="_blank">The Bombshell Inside Trump's $1.3B Pardon Market — Medium</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Key Figures &amp; By the Numbers</h4>
+      <ul>
+        <li><strong>Joshua Nass</strong> — arrested Mar. 14, 2026, Brooklyn federal court</li>
+        <li><strong>Jack Burkman &amp; Jacob Wohl</strong> — paid $960K for Schwartz pardon</li>
+        <li><strong>Trey Gowdy</strong> — secured Leiweke pardon via Mar-a-Lago golf</li>
+        <li><strong>Roger Stone</strong> — intermediary for Honduras drug lord pardon</li>
+        <li><strong>Ed Martin</strong> — Pardon Attorney, "No MAGA left behind"</li>
+        <li><strong>Liz Oyer</strong> — career attorney fired Mar. 7, 2025</li>
+        <li>1,600+ total pardons issued through mid-2025</li>
+        <li>$1.3B victim restitution wiped — Campaign Legal Center est.</li>
+        <li>$1M standard broker fee — WSJ / NBC / FT</li>
+        <li>$6M maximum "success fee" — Wall Street Journal</li>
+        <li>12 days: Walczak sentencing → pardon (zero jail time)</li>
+      </ul>
+    </div>
+  </div>
+  <div class="disclaimer">
+    Visualization compiled for BOLLI Current Events Discussion Group, March 2026. All factual claims drawn from published reporting by WSJ, NYT, NBC News, Financial Times, CNN, Campaign Legal Center, and DOJ filings. This is a journalistic summary, not legal analysis.
+  </div>
+</div>
+
+</body>
+</html>
