@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Ratings Gazette — Market Verdict Edition</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=UnifrakturMaguntia&family=IBM+Plex+Mono:wght@400;600&family=Crimson+Pro:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1208;
+    --aged: #f5eed8;
+    --gold: #b8860b;
+    --red: #8b1a1a;
+    --green: #1a5c1a;
+    --rule: #3a2e1a;
+    --fade: #9e8f72;
+    --light-rule: #c8b898;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #2a2018;
+    font-family: 'Crimson Pro', Georgia, serif;
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 20px;
+  }
+
+  .page {
+    max-width: 960px;
+    margin: 0 auto;
+    background: var(--aged);
+    background-image:
+      radial-gradient(ellipse at 20% 10%, rgba(180,160,100,0.3) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 90%, rgba(140,110,60,0.2) 0%, transparent 50%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+    border: 3px double var(--rule);
+    box-shadow: 0 0 40px rgba(0,0,0,0.7), inset 0 0 80px rgba(180,150,80,0.1);
+    padding: 0;
+  }
+
+  /* MASTHEAD */
+  .masthead {
+    border-bottom: 5px double var(--rule);
+    padding: 18px 28px 14px;
+    text-align: center;
+    position: relative;
+    background: linear-gradient(to bottom, rgba(184,134,11,0.08), transparent);
+  }
+
+  .dateline {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--fade);
+    margin-bottom: 6px;
+  }
+
+  .paper-name {
+    font-family: 'UnifrakturMaguntia', serif;
+    font-size: 64px;
+    line-height: 1;
+    color: var(--ink);
+    letter-spacing: -1px;
+    text-shadow: 2px 2px 0 rgba(0,0,0,0.15);
+  }
+
+  .paper-tagline {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--fade);
+    margin-top: 5px;
+    border-top: 1px solid var(--light-rule);
+    border-bottom: 1px solid var(--light-rule);
+    padding: 4px 0;
+    display: inline-block;
+    width: 100%;
+  }
+
+  .masthead-meta {
+    display: flex;
+    justify-content: space-between;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    color: var(--fade);
+    margin-top: 6px;
+    letter-spacing: 1px;
+  }
+
+  /* BANNER HEADLINE */
+  .banner {
+    border-bottom: 4px double var(--rule);
+    padding: 16px 28px;
+    text-align: center;
+    background: linear-gradient(to bottom, rgba(139,26,26,0.05), transparent);
+  }
+
+  .kicker {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--red);
+    display: block;
+    margin-bottom: 4px;
+  }
+
+  .banner h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 42px;
+    font-weight: 900;
+    line-height: 1.05;
+    color: var(--ink);
+  }
+
+  .banner h1 em {
+    font-style: italic;
+    color: var(--red);
+  }
+
+  .banner-deck {
+    font-family: 'Crimson Pro', serif;
+    font-size: 15px;
+    font-style: italic;
+    color: var(--fade);
+    margin-top: 8px;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.5;
+  }
+
+  /* CONTENT LAYOUT */
+  .content {
+    padding: 20px 28px;
+  }
+
+  .col-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 24px;
+  }
+  .col-grid-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 24px;
+  }
+
+  .section-rule {
+    border: none;
+    border-top: 3px double var(--rule);
+    margin: 20px 0 16px;
+  }
+
+  .section-head {
+    font-family: 'Playfair Display', serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: var(--fade);
+    text-align: center;
+    margin-bottom: 14px;
+    position: relative;
+  }
+  .section-head::before,
+  .section-head::after {
+    content: '◆';
+    color: var(--gold);
+    margin: 0 8px;
+    font-size: 8px;
+  }
+
+  /* STORY COLUMNS */
+  .story-head {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.15;
+    color: var(--ink);
+    margin-bottom: 8px;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 6px;
+  }
+  .story-head.red { color: var(--red); }
+  .story-head.green { color: var(--green); }
+
+  .byline {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 8px;
+  }
+
+  .story-body {
+    font-family: 'Crimson Pro', serif;
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--ink);
+    text-align: justify;
+    hyphens: auto;
+  }
+
+  .story-body p { margin-bottom: 10px; }
+
+  .pull-quote {
+    border-left: 4px solid var(--gold);
+    border-right: 4px solid var(--gold);
+    margin: 12px 0;
+    padding: 8px 14px;
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-style: italic;
+    font-weight: 700;
+    text-align: center;
+    color: var(--red);
+    background: rgba(184,134,11,0.06);
+    line-height: 1.4;
+  }
+
+  /* DATA BOXES */
+  .data-box {
+    border: 2px solid var(--rule);
+    padding: 14px;
+    margin-bottom: 16px;
+    background: rgba(255,255,255,0.15);
+  }
+
+  .data-box-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--fade);
+    border-bottom: 1px solid var(--light-rule);
+    padding-bottom: 6px;
+    margin-bottom: 10px;
+  }
+
+  /* CHART */
+  .chart-container {
+    width: 100%;
+    height: 160px;
+    position: relative;
+  }
+
+  /* STAT BOXES */
+  .stat-row {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  .stat-card {
+    flex: 1;
+    border: 1px solid var(--light-rule);
+    padding: 10px;
+    text-align: center;
+    background: rgba(255,255,255,0.2);
+  }
+
+  .stat-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .stat-number.red { color: var(--red); }
+  .stat-number.green { color: var(--green); }
+
+  .stat-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 8px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--fade);
+    line-height: 1.3;
+  }
+
+  /* FULL-WIDTH CHART SECTION */
+  .full-chart {
+    border: 2px double var(--rule);
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    background: rgba(255,255,255,0.1);
+  }
+
+  .full-chart-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 14px;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 12px;
+    color: var(--ink);
+  }
+
+  /* VERDICT BOX */
+  .verdict-box {
+    border: 4px double var(--gold);
+    padding: 18px 22px;
+    margin: 16px 0;
+    background: linear-gradient(135deg, rgba(184,134,11,0.08), rgba(139,26,26,0.05));
+    text-align: center;
+  }
+
+  .verdict-title {
+    font-family: 'UnifrakturMaguntia', serif;
+    font-size: 28px;
+    color: var(--red);
+    margin-bottom: 8px;
+  }
+
+  .verdict-text {
+    font-family: 'Crimson Pro', serif;
+    font-size: 15px;
+    font-style: italic;
+    line-height: 1.6;
+    color: var(--ink);
+  }
+
+  /* COMPARISON TABLE */
+  .comp-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px;
+    margin-bottom: 16px;
+  }
+  .comp-table th {
+    background: var(--rule);
+    color: var(--aged);
+    padding: 7px 10px;
+    text-align: left;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-size: 9px;
+  }
+  .comp-table td {
+    padding: 7px 10px;
+    border-bottom: 1px solid var(--light-rule);
+    vertical-align: top;
+    line-height: 1.4;
+  }
+  .comp-table tr:nth-child(even) td {
+    background: rgba(255,255,255,0.15);
+  }
+  .tag-red {
+    background: var(--red);
+    color: var(--aged);
+    padding: 2px 6px;
+    font-size: 8px;
+    letter-spacing: 1px;
+    display: inline-block;
+  }
+  .tag-green {
+    background: var(--green);
+    color: var(--aged);
+    padding: 2px 6px;
+    font-size: 8px;
+    letter-spacing: 1px;
+    display: inline-block;
+  }
+
+  /* FOOTNOTE */
+  .footnote {
+    border-top: 3px double var(--rule);
+    padding: 10px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .footnote-text {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    color: var(--fade);
+    letter-spacing: 1px;
+  }
+  .ornament {
+    color: var(--gold);
+    font-size: 18px;
+  }
+
+  /* DIVIDERS */
+  .col-divider {
+    border-left: 1px solid var(--light-rule);
+    padding-left: 24px;
+  }
+
+  .vert-rule {
+    width: 1px;
+    background: var(--light-rule);
+    margin: 0 8px;
+  }
+
+  /* INLINE CHART SVG LABELS */
+  .chart-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px;
+    fill: var(--fade);
+  }
+
+  /* ANIMATION */
+  @keyframes fadeSlide {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .banner, .col-grid-2, .col-grid-3, .full-chart, .verdict-box {
+    animation: fadeSlide 0.5s ease both;
+  }
+  .col-grid-2 { animation-delay: 0.1s; }
+  .full-chart { animation-delay: 0.2s; }
+  .verdict-box { animation-delay: 0.3s; }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- MASTHEAD -->
+  <div class="masthead">
+    <div class="dateline">Est. in the Age of Murrow · Vol. MMXXVI · No. 87</div>
+    <div class="paper-name">The Ratings Gazette</div>
+    <div class="paper-tagline">All the Audience That's Fit to Lose &nbsp;·&nbsp; "The Free Market Hath Spoken, and It Is Not Amused"</div>
+    <div class="masthead-meta">
+      <span>FRIDAY, MARCH 27, 2026</span>
+      <span>SPECIAL MARKET VERDICT EDITION</span>
+      <span>PRICE: VIEWERS NOT INCLUDED</span>
+    </div>
+  </div>
+
+  <!-- BANNER HEADLINE -->
+  <div class="banner">
+    <span class="kicker">◆ Special Media Market Verdict Edition ◆</span>
+    <h1>THE <em>RIGHTWARD LURCH</em> THAT NOBODY WATCHED</h1>
+    <div class="banner-deck">
+      CBS News bets the Tiffany Network on the MAGA audience it cannot win; meanwhile Jimmy Kimmel is exiled, then returns in triumph as millions watch the network that tried to cancel him eat crow.
+      <em>The invisible hand of the remote control has opinions.</em>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <!-- SECTION 1: TWO COLUMNS CBS + KIMMEL -->
+    <hr class="section-rule">
+    <div class="section-head">Act I &amp; Act II — Two Networks, Two Wagers, Two Very Different Bills</div>
+
+    <div class="col-grid-2">
+
+      <!-- CBS STORY -->
+      <div>
+        <div class="story-head red">CBS Discovers That Genuflecting to Power Has a Nielsen Price</div>
+        <div class="byline">By Our Increasingly Former Correspondent · CBS Desk</div>
+        <div class="story-body">
+          <p>When David Ellison completed his acquisition of Paramount in late 2025 — sweetened by a remarkable $16 billion settlement that resolved the sitting president's lawsuit over a <em>60 Minutes</em> edit — and installed former <em>Free Press</em> provocateur Bari Weiss as editor-in-chief of CBS News, the strategic logic was at least legible, if not wise.</p>
+
+          <p>The theory: American media had overcorrected left. Half the country distrusted the legacy press. An entrepreneurial shakeup — a little MAGA oxygen, a touch of contrarianism — might lure Fox's slightly less feral viewers to the Tiffany Network.</p>
+
+          <div class="pull-quote">"The goal is not to deliver the news so much as it is to <em>drive</em> the news." — Bari Weiss, in a memo to producers. The market apparently preferred the old arrangement.</div>
+
+          <p>What followed was a rather spectacular miscalculation. Under new anchor Tony Dokoupil, <em>CBS Evening News</em> opened 2026 with 4.17 million viewers — already 23% below the 5.4 million Norah O'Donnell had commanded a year prior. By mid-March, the number had slipped below 3.83 million: the lowest first-quarter audience of the 21st century. Meanwhile ABC's <em>World News Tonight</em> was drawing 8.48 million — more than double CBS — and NBC's <em>Nightly News</em> was actually up 8% in the coveted 25-54 demo.</p>
+
+          <p>The attempted pivot also produced what might charitably be called editorial adventures: a <em>60 Minutes</em> segment about El Salvador's CECOT mega-prison was abruptly pulled; a town hall featuring Erika Kirk — widow of the recently assassinated conservative activist Charlie Kirk — drew viewership 11% below the show's typical time-slot numbers. The audience, it seems, was not pining for these particular innovations.</p>
+        </div>
+      </div>
+
+      <!-- KIMMEL STORY -->
+      <div class="col-divider">
+        <div class="story-head green">Kimmel: Exiled by Disney, Restored by Viewers, Vindicated by Nielsen</div>
+        <div class="byline">By Our Late-Night Triumphalist Correspondent · ABC Desk</div>
+        <div class="story-body">
+          <p>In September 2025, ABC briefly suspended Jimmy Kimmel following his on-air comments about the political circumstances surrounding Charlie Kirk's assassination. The suspension was indefinite. The chastened host would learn his lesson.</p>
+
+          <p>He did not learn his lesson. He returned six days later. What happened next is the kind of television story that belongs in case studies: Kimmel's comeback episode drew <strong>6.26 million viewers</strong> — nearly four times his usual audience and the highest-rated regularly scheduled episode of his show in more than a decade. With three-day delayed viewing, the number swelled to <strong>8.6 million</strong>, the best late-night share in 30 years, dating to the final episodes of Johnny Carson. His YouTube monologue logged 17 million views in 24 hours.</p>
+
+          <div class="pull-quote">"His audience is gone." — Donald Trump, on Jimmy Kimmel. The president would later receive a thank-you from Kimmel for the inadvertent marketing assistance.</div>
+
+          <p>The story did not end there. For the full year 2025, <em>Jimmy Kimmel Live!</em> was the <em>only</em> network late-night show to grow its total audience — up 14% year-over-year, with a 4% gain in the 18-49 demographic. By March 2026, he had won three consecutive weekly ratings victories in the demo. Every other major late-night competitor had declined.</p>
+
+          <p>Disney, for its part, responded to this triumph by cutting Kimmel's budget. One is reluctant to place too much faith in corporate wisdom at this juncture in history.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- STAT ROW -->
+    <div class="stat-row">
+      <div class="stat-card">
+        <div class="stat-number red">−29%</div>
+        <div class="stat-label">CBS Evening News<br>Viewers Lost<br>(O'Donnell→Now)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number red">−15%</div>
+        <div class="stat-label">CBS 25-54 Demo<br>Q1 2026<br>Year-over-Year</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number green">+291%</div>
+        <div class="stat-label">Kimmel Return<br>Episode Spike<br>(vs. Avg. Show)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number green">+14%</div>
+        <div class="stat-label">Kimmel Full-Year<br>2025 Growth<br>(Only Show Up)</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-number red">2.2×</div>
+        <div class="stat-label">ABC World News<br>Outdraws CBS<br>Evening News</div>
+      </div>
+    </div>
+
+    <!-- FULL CHART: EVENING NEWS VIEWERSHIP -->
+    <hr class="section-rule">
+    <div class="section-head">The Numbers That Tell the Story</div>
+
+    <div class="full-chart">
+      <div class="full-chart-title">CBS Evening News Viewership — The Cliff Edge Visible from Space (millions)</div>
+      <svg viewBox="0 0 860 175" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;">
+        <defs>
+          <linearGradient id="cbsGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#8b1a1a" stop-opacity="0.6"/>
+            <stop offset="100%" stop-color="#8b1a1a" stop-opacity="0.05"/>
+          </linearGradient>
+          <linearGradient id="abcGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#1a5c1a" stop-opacity="0.5"/>
+            <stop offset="100%" stop-color="#1a5c1a" stop-opacity="0.05"/>
+          </linearGradient>
+        </defs>
+
+        <!-- Grid lines -->
+        <line x1="60" y1="20" x2="820" y2="20" stroke="#c8b898" stroke-width="0.5" stroke-dasharray="4,4"/>
+        <line x1="60" y1="55" x2="820" y2="55" stroke="#c8b898" stroke-width="0.5" stroke-dasharray="4,4"/>
+        <line x1="60" y1="90" x2="820" y2="90" stroke="#c8b898" stroke-width="0.5" stroke-dasharray="4,4"/>
+        <line x1="60" y1="125" x2="820" y2="125" stroke="#c8b898" stroke-width="0.5" stroke-dasharray="4,4"/>
+        <line x1="60" y1="155" x2="820" y2="155" stroke="#3a2e1a" stroke-width="1"/>
+
+        <!-- Y Labels -->
+        <text x="50" y="23" text-anchor="end" font-family="IBM Plex Mono" font-size="9" fill="#9e8f72">9M</text>
+        <text x="50" y="58" text-anchor="end" font-family="IBM Plex Mono" font-size="9" fill="#9e8f72">7M</text>
+        <text x="50" y="93" text-anchor="end" font-family="IBM Plex Mono" font-size="9" fill="#9e8f72">5M</text>
+        <text x="50" y="128" text-anchor="end" font-family="IBM Plex Mono" font-size="9" fill="#9e8f72">3M</text>
+
+        <!-- X Labels (time) -->
+        <text x="120" y="168" text-anchor="middle" font-family="IBM Plex Mono" font-size="8" fill="#9e8f72">Pelley Era</text>
+        <text x="230" y="168" text-anchor="middle" font-family="IBM Plex Mono" font-size="8" fill="#9e8f72">Glor Era</text>
+        <text x="360" y="168" text-anchor="middle" font-family="IBM Plex Mono" font-size="8" fill="#9e8f72">O'Donnell Peak</text>
+        <text x="520" y="168" text-anchor="middle" font-family="IBM Plex Mono" font-size="8" fill="#9e8f72">Weiss Arrives</text>
+        <text x="650" y="168" text-anchor="middle" font-family="IBM Plex Mono" font-size="8" fill="#9e8f72">Dokoupil Debut</text>
+        <text x="790" y="168" text-anchor="middle" font-family="IBM Plex Mono" font-size="8" fill="#9e8f72">Mar 2026</text>
+
+        <!-- CBS area fill -->
+        <polygon points="70,28 150,35 230,44 320,55 410,68 520,85 610,90 650,103 720,113 790,126 790,155 70,155"
+          fill="url(#cbsGrad)"/>
+
+        <!-- CBS line (red) -->
+        <polyline points="70,28 150,35 230,44 320,55 410,68 520,85 610,90 650,103 720,113 790,126"
+          fill="none" stroke="#8b1a1a" stroke-width="2.5" stroke-linejoin="round"/>
+
+        <!-- CBS data points -->
+        <circle cx="70" cy="28" r="3.5" fill="#8b1a1a"/>
+        <circle cx="230" cy="44" r="3.5" fill="#8b1a1a"/>
+        <circle cx="360" cy="60" r="3.5" fill="#8b1a1a"/>
+        <circle cx="520" cy="85" r="3.5" fill="#8b1a1a"/>
+        <circle cx="650" cy="103" r="3.5" fill="#8b1a1a"/>
+        <circle cx="790" cy="126" r="3.5" fill="#8b1a1a"/>
+
+        <!-- ABC reference line (green) - stays high -->
+        <polygon points="70,33 150,35 230,37 320,36 410,34 520,32 610,30 650,29 720,28 790,27 790,155 70,155"
+          fill="url(#abcGrad)" opacity="0.4"/>
+        <polyline points="70,33 150,35 230,37 320,36 410,34 520,32 610,30 650,29 720,28 790,27"
+          fill="none" stroke="#1a5c1a" stroke-width="1.5" stroke-linejoin="round" stroke-dasharray="6,3"/>
+
+        <!-- Weiss arrow annotation -->
+        <line x1="520" y1="30" x2="520" y2="82" stroke="#b8860b" stroke-width="1" stroke-dasharray="3,2"/>
+        <text x="524" y="28" font-family="IBM Plex Mono" font-size="8" fill="#b8860b">Weiss Oct '25</text>
+
+        <!-- Labels -->
+        <text x="74" y="23" font-family="IBM Plex Mono" font-size="9" fill="#8b1a1a" font-weight="bold">CBS ~7.2M</text>
+        <text x="656" y="99" font-family="IBM Plex Mono" font-size="9" fill="#8b1a1a">4.17M</text>
+        <text x="740" y="122" font-family="IBM Plex Mono" font-size="9" fill="#8b1a1a" font-weight="bold">3.83M ↓</text>
+        <text x="720" y="24" font-family="IBM Plex Mono" font-size="9" fill="#1a5c1a">ABC ~8.5M →</text>
+
+        <!-- Legend -->
+        <rect x="320" y="8" width="12" height="3" fill="#8b1a1a"/>
+        <text x="336" y="12" font-family="IBM Plex Mono" font-size="8" fill="#8b1a1a">CBS Evening News</text>
+        <line x1="430" y1="10" x2="442" y2="10" stroke="#1a5c1a" stroke-width="1.5" stroke-dasharray="5,3"/>
+        <text x="446" y="12" font-family="IBM Plex Mono" font-size="8" fill="#1a5c1a">ABC World News Tonight</text>
+      </svg>
+    </div>
+
+    <!-- KIMMEL CHART -->
+    <div class="full-chart">
+      <div class="full-chart-title">Jimmy Kimmel: The Exile Dividend — Viewership Before, During &amp; After Suspension (millions)</div>
+      <svg viewBox="0 0 860 145" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:auto;">
+        <defs>
+          <linearGradient id="kimmGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#1a5c1a" stop-opacity="0.5"/>
+            <stop offset="100%" stop-color="#1a5c1a" stop-opacity="0.05"/>
+          </linearGradient>
+        </defs>
+
+        <!-- Grid -->
+        <line x1="60" y1="20" x2="820" y2="20" stroke="#c8b898" stroke-width="0.5" stroke-dasharray="4,4"/>
+        <line x1="60" y1="50" x2="820" y2="50" stroke="#c8b898" stroke-width="0.5" stroke-dasharray="4,4"/>
+        <line x1="60" y1="80" x2="820" y2="80" stroke="#c8b898" stroke-width="0.5" stroke-dasharray="4,4"/>
+        <line x1="60" y1="110" x2="820" y2="110" stroke="#c8b898" stroke-width="0.5" stroke-dasharray="4,4"/>
+        <line x1="60" y1="128" x2="820" y2="128" stroke="#3a2e1a" stroke-width="1"/>
+
+        <!-- Y labels -->
+        <text x="50" y="23" text-anchor="end" font-family="IBM Plex Mono" font-size="9" fill="#9e8f72">9M</text>
+        <text x="50" y="53" text-anchor="end" font-family="IBM Plex Mono" font-size="9" fill="#9e8f72">6M</text>
+        <text x="50" y="83" text-anchor="end" font-family="IBM Plex Mono" font-size="9" fill="#9e8f72">3M</text>
+        <text x="50" y="113" text-anchor="end" font-family="IBM Plex Mono" font-size="9" fill="#9e8f72">0M</text>
+
+        <!-- Steady baseline ~1.6M -->
+        <polygon points="70,107 200,106 300,107 400,106 450,107 480,128 530,7 580,82 650,95 720,90 790,87 790,128 70,128"
+          fill="url(#kimmGrad)"/>
+        <polyline points="70,107 200,106 300,107 400,106 450,107 530,7 580,82 650,95 720,90 790,87"
+          fill="none" stroke="#1a5c1a" stroke-width="2.5" stroke-linejoin="round"/>
+
+        <!-- Data circles -->
+        <circle cx="70" cy="107" r="3" fill="#1a5c1a"/>
+        <circle cx="300" cy="107" r="3" fill="#1a5c1a"/>
+        <circle cx="450" cy="107" r="3" fill="#1a5c1a"/>
+
+        <!-- SUSPENSION ZONE -->
+        <rect x="480" y="10" width="50" height="118" fill="#8b1a1a" opacity="0.08"/>
+        <line x1="480" y1="10" x2="480" y2="128" stroke="#8b1a1a" stroke-width="1" stroke-dasharray="3,2"/>
+        <line x1="530" y1="10" x2="530" y2="128" stroke="#1a5c1a" stroke-width="1" stroke-dasharray="3,2"/>
+        <text x="490" y="22" font-family="IBM Plex Mono" font-size="8" fill="#8b1a1a">SUSPENDED</text>
+        <text x="486" y="32" font-family="IBM Plex Mono" font-size="8" fill="#8b1a1a">6 days</text>
+
+        <!-- Spike -->
+        <circle cx="530" cy="7" r="5" fill="#1a5c1a"/>
+        <text x="534" y="5" font-family="IBM Plex Mono" font-size="9" fill="#1a5c1a" font-weight="bold">8.6M (L+3)</text>
+
+        <!-- Regular return -->
+        <circle cx="580" cy="82" r="3" fill="#1a5c1a"/>
+        <circle cx="650" cy="95" r="3" fill="#1a5c1a"/>
+        <circle cx="790" cy="87" r="3" fill="#1a5c1a"/>
+
+        <!-- Labels -->
+        <text x="74" y="103" font-family="IBM Plex Mono" font-size="8" fill="#9e8f72">~1.6M avg</text>
+        <text x="600" y="100" font-family="IBM Plex Mono" font-size="8" fill="#1a5c1a">+14% yr</text>
+        <text x="730" y="84" font-family="IBM Plex Mono" font-size="8" fill="#1a5c1a" font-weight="bold">3-wk win streak</text>
+
+        <!-- X labels -->
+        <text x="150" y="140" text-anchor="middle" font-family="IBM Plex Mono" font-size="8" fill="#9e8f72">Pre-2025 Avg</text>
+        <text x="380" y="140" text-anchor="middle" font-family="IBM Plex Mono" font-size="8" fill="#9e8f72">Sept 17 Incident</text>
+        <text x="555" y="140" text-anchor="middle" font-family="IBM Plex Mono" font-size="8" fill="#1a5c1a">Sept 23 Return</text>
+        <text x="720" y="140" text-anchor="middle" font-family="IBM Plex Mono" font-size="8" fill="#1a5c1a">Mar 2026</text>
+      </svg>
+    </div>
+
+    <!-- COMPARATIVE ANALYSIS TABLE -->
+    <hr class="section-rule">
+    <div class="section-head">The Mirror Test — Two Strategies, Two Outcomes</div>
+
+    <table class="comp-table">
+      <thead>
+        <tr>
+          <th>Dimension</th>
+          <th>CBS News / Bari Weiss <span class="tag-red">BOWING</span></th>
+          <th>Jimmy Kimmel / ABC <span class="tag-green">DEFYING</span></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>The Wager</strong></td>
+          <td>If we appease the administration, conservative viewers will come. The MAGA audience is monetizable.</td>
+          <td>Stand your ground; the audience will recognize authenticity, even at personal cost.</td>
+        </tr>
+        <tr>
+          <td><strong>The Trigger Event</strong></td>
+          <td>$16B Trump lawsuit settlement; Weiss installed as EIC; Dokoupil replaces O'Donnell.</td>
+          <td>Suspension after Kirk comments; Nexstar/Sinclair refuse to air the show in 25% of US households.</td>
+        </tr>
+        <tr>
+          <td><strong>Immediate Audience Verdict</strong></td>
+          <td>CBS Evening News falls 23% year-over-year in first week. Progressive viewers depart; MAGA viewers do not arrive.</td>
+          <td>Return episode draws 6.26M (vs. 1.6M avg) — highest in a decade. YouTube monologue: 17M views in 24 hrs.</td>
+        </tr>
+        <tr>
+          <td><strong>Medium-Term Trajectory</strong></td>
+          <td>Q1 2026 tracking to lowest-rated first quarter of the 21st century. Down 15% in demo vs. year-ago.</td>
+          <td>Full-year 2025: +14% total viewers, +4% in demo. Only network late-night show to grow both metrics.</td>
+        </tr>
+        <tr>
+          <td><strong>The Competition's Response</strong></td>
+          <td>ABC World News Tonight (8.48M) runs at 2.2× CBS. NBC Nightly News up 8% in demo.</td>
+          <td>Colbert, Fallon, Meyers all declined year-over-year. Kimmel won the entire 11:35 slot.</td>
+        </tr>
+        <tr>
+          <td><strong>Presidential Commentary</strong></td>
+          <td>Trump cheers CBS; Pete Hegseth praises the network's new direction. <em>Verily, a warning sign.</em></td>
+          <td>Trump declares Kimmel's "audience is gone." Kimmel thanks Trump publicly for the marketing support.</td>
+        </tr>
+        <tr>
+          <td><strong>Historical Echo</strong></td>
+          <td>Washington Post (−21%) and LA Times (−20%) circulation under Bezos/Soon-Shiong show same rightward-pivot collapse.</td>
+          <td>Murrow defying McCarthy, 1954: the defiance premium is older than Nielsen ratings.</td>
+        </tr>
+        <tr>
+          <td><strong>Sardonic Verdict</strong></td>
+          <td><em>"Made to drive the news; ended up driven off a cliff."</em></td>
+          <td><em>"Exiled for a week; returned as the last man standing in network late night."</em></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- THIRD SECTION: BROADER PATTERN -->
+    <hr class="section-rule">
+    <div class="section-head">The Broader Pattern — When the Boardroom Bows, the Audience Exits</div>
+
+    <div class="col-grid-3">
+      <div class="data-box">
+        <div class="data-box-title">Washington Post</div>
+        <div class="stat-number red" style="font-size:36px;">−21.2%</div>
+        <div class="stat-label" style="font-size:10px;color:var(--ink);margin-top:6px;line-height:1.5;">Average daily print circulation (H1 2025) after Bezos shifts editorial posture to the right, cancels endorsements, and installs a new "balance" mandate. The right-leaning readers it sought did not subscribe. The existing readers did not stay.</div>
+      </div>
+      <div class="data-box">
+        <div class="data-box-title">Los Angeles Times</div>
+        <div class="stat-number red" style="font-size:36px;">−19.8%</div>
+        <div class="stat-label" style="font-size:10px;color:var(--ink);margin-top:6px;line-height:1.5;">Circulation decline under Soon-Shiong's rightward editorial pivot. Pattern identical: existing progressive reader base flees; conservative replacements fail to materialize. The same movie, different coast, same box office.</div>
+      </div>
+      <div class="data-box">
+        <div class="data-box-title">Fox News / Gutfeld!</div>
+        <div class="stat-number green" style="font-size:36px;">+21%</div>
+        <div class="stat-label" style="font-size:10px;color:var(--ink);margin-top:6px;line-height:1.5;">Gutfeld! grew 21% in total viewers and 2% in demo in 2025. The lesson: if you want the conservative audience, be Fox. Fox is very good at being Fox. CBS is very bad at being Fox.</div>
+      </div>
+    </div>
+
+    <!-- VERDICT BOX -->
+    <div class="verdict-box">
+      <div class="verdict-title">The Market's Verdict, Rendered in Remote Controls</div>
+      <div class="verdict-text">
+        The free market of viewership has adjudicated, without sentiment or ideology, a principle that any first-year media economist might have warned against: <em>brand loyalty is not transferable to a brand you have just publicly repudiated.</em>
+        <br><br>
+        CBS viewers did not tune in to Edward R. Murrow's old network because they lacked alternatives. They tuned in because the network meant something. When the network's new management announced — by settlement, by editorial suppression, by the hiring of its new EIC — that it had concluded its old meaning was a liability, the viewers updated their priors accordingly.
+        <br><br>
+        Kimmel's audience, meanwhile, demonstrated the equal and opposite corollary: viewers who feel their loyalty reciprocated — that the entertainer they watch has not been traded away for good standing with the powerful — will show up in numbers that make the Nielsen system look briefly alive again.
+        <br><br>
+        <em>The corporations bent the knee. The audience did not follow. This is, in retrospect, unsurprising — and in prospect, entirely instructive.</em>
+      </div>
+    </div>
+
+  </div><!-- end content -->
+
+  <!-- FOOTNOTE -->
+  <div class="footnote">
+    <div class="footnote-text">Sources: Nielsen ratings data via Variety, Status News, LateNighter · Q1 2026 data through March 2026 · AAM Circulation via Media Matters</div>
+    <div class="ornament">✦</div>
+    <div class="footnote-text">Compiled for BOLLI Current Events Discussion Group · Sarasota / Lexington · March 2026</div>
+  </div>
+
+</div><!-- end page -->
+
+</body>
+</html>
