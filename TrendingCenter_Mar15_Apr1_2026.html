@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trending from the Center — March 15–29, 2026</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      background: #a8c4e8;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+    }
+
+    /* ── HEADER ──────────────────────────────────────────── */
+    .header {
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #667eea 100%);
+      padding: 36px 32px 28px;
+      text-align: center;
+      color: white;
+    }
+
+    .header h1 {
+      font-size: 1.85rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      line-height: 1.3;
+    }
+
+    .header .subtitle {
+      font-size: 0.95rem;
+      opacity: 0.85;
+      margin-bottom: 18px;
+      letter-spacing: 0.04em;
+    }
+
+    /* ── SOURCE PILLS ────────────────────────────────────── */
+    .sources-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: center;
+      margin-top: 14px;
+    }
+
+    .sources-bar a {
+      font-size: 11px;
+      color: #fff;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 4px;
+      padding: 3px 10px;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .sources-bar a:hover { background: rgba(255,255,255,0.35); }
+
+    /* ── LEGEND ──────────────────────────────────────────── */
+    .legend {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 20px 10px;
+      font-size: 12px;
+      color: #555;
+      background: #a8c4e8;
+    }
+    .legend-bar {
+      width: 160px;
+      height: 7px;
+      border-radius: 4px;
+      background: linear-gradient(90deg, #cc0000, #ff6600, #ff9944, #ffcc55, #5577ff);
+    }
+
+    /* ── INSTRUCTIONS ────────────────────────────────────── */
+    .instructions {
+      text-align: center;
+      font-size: 12px;
+      color: #888;
+      padding-bottom: 12px;
+      letter-spacing: 0.03em;
+      background: #a8c4e8;
+    }
+
+    /* ── TOPIC CARDS ─────────────────────────────────────── */
+    .topics-list {
+      padding: 0 20px 30px;
+      background: #a8c4e8;
+    }
+
+    .card {
+      margin-bottom: 12px;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      padding: 16px 20px;
+      cursor: pointer;
+      user-select: none;
+      color: white;
+      position: relative;
+      gap: 12px;
+      transition: filter 0.2s;
+    }
+    .card-header:hover { filter: brightness(1.08); }
+
+    .level-1  { background: linear-gradient(135deg, #cc0000 0%, #990000 100%); }
+    .level-2  { background: linear-gradient(135deg, #e63000 0%, #c02000 100%); }
+    .level-3  { background: linear-gradient(135deg, #e86a00 0%, #c05000 100%); }
+    .level-4  { background: linear-gradient(135deg, #d4a000 0%, #a07800 100%); }
+    .level-5  { background: linear-gradient(135deg, #2e9e5a 0%, #1a7040 100%); }
+    .level-6  { background: linear-gradient(135deg, #2a7fcc 0%, #1a5a99 100%); }
+    .level-7  { background: linear-gradient(135deg, #1a5fa8 0%, #0e3d70 100%); }
+    .level-8  { background: linear-gradient(135deg, #4433aa 0%, #2a1f77 100%); }
+    .level-9  { background: linear-gradient(135deg, #5533bb 0%, #3a2288 100%); }
+    .level-10 { background: linear-gradient(135deg, #6644cc 0%, #4a2f99 100%); }
+    .level-11 { background: linear-gradient(135deg, #7755dd 0%, #5a3faa 100%); }
+
+    .card-rank { font-size: 11px; opacity: 0.7; min-width: 22px; }
+    .card-title { font-size: 1.05rem; font-weight: 600; flex: 1; }
+    .card-count {
+      font-size: 12px;
+      background: rgba(0,0,0,0.25);
+      padding: 3px 10px;
+      border-radius: 12px;
+      white-space: nowrap;
+    }
+    .card-chevron { font-size: 16px; opacity: 0.8; transition: transform 0.3s ease; }
+    .card-chevron.rotated { transform: rotate(180deg); }
+
+    /* ── CARD BODY ───────────────────────────────────────── */
+    .card-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease-in-out;
+      background: #b8ccec;
+    }
+    .card-body.expanded { max-height: 3600px; }
+
+    .card-body-inner {
+      padding: 18px 20px 20px;
+      border-top: 2px solid rgba(102,126,234,0.25);
+    }
+
+    /* ── SUBTOPIC CARDS ──────────────────────────────────── */
+    .subtopics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .subtopic {
+      background: white;
+      border-left: 3px solid #667eea;
+      border-radius: 6px;
+      padding: 11px 14px;
+      box-shadow: 0 2px 6px rgba(102,126,234,0.12);
+    }
+
+    .subtopic-src {
+      margin-top: 8px;
+      padding-top: 6px;
+      border-top: 1px solid rgba(102,126,234,0.2);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+    .subtopic-src a {
+      font-size: 10px;
+      color: #2a5298;
+      background: #eef2ff;
+      border: 1px solid #c7d2fe;
+      border-radius: 3px;
+      padding: 2px 7px;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .subtopic-src a:hover { background: #667eea; color: white; border-color: #667eea; }
+
+    .subtopic-title {
+      font-weight: 600;
+      color: #1e3c72;
+      font-size: 0.875rem;
+      margin-bottom: 5px;
+    }
+    .subtopic-detail { font-size: 0.78rem; color: #555; line-height: 1.55; }
+
+    /* ── SECTION SOURCES ─────────────────────────────────── */
+    .section-sources {
+      font-size: 11px;
+      color: #888;
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+    }
+    .section-sources strong { color: #555; }
+    .section-sources a {
+      color: #2a5298;
+      text-decoration: none;
+      background: #eef2ff;
+      padding: 2px 8px;
+      border-radius: 3px;
+    }
+    .section-sources a:hover { background: #667eea; color: white; }
+
+    /* ── FOOTER ──────────────────────────────────────────── */
+    .footer {
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+      color: rgba(255,255,255,0.8);
+      text-align: center;
+      padding: 22px 20px;
+      font-size: 11px;
+      line-height: 1.8;
+    }
+    .footer a { color: #a8c4ff; text-decoration: none; }
+    .footer a:hover { text-decoration: underline; color: #fff; }
+
+    @media (max-width: 600px) {
+      .subtopics-grid { grid-template-columns: 1fr; }
+      .header h1 { font-size: 1.35rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- ══ HEADER ══════════════════════════════════════════ -->
+  <div class="header">
+    <h1>📰 Trending from the Center · March 15–29, 2026</h1>
+    <div class="subtitle">11 Categories &nbsp;·&nbsp; Ordered by coverage volume &nbsp;·&nbsp; 9 mainstream sources</div>
+
+    <div class="sources-bar">
+      <a href="https://nytimes.com" target="_blank">New York Times</a>
+      <a href="https://cnn.com" target="_blank">CNN</a>
+      <a href="https://npr.org" target="_blank">NPR</a>
+      <a href="https://bbc.com/news" target="_blank">BBC</a>
+      <a href="https://theguardian.com/us" target="_blank">The Guardian</a>
+      <a href="https://politico.com" target="_blank">Politico</a>
+      <a href="https://theatlantic.com" target="_blank">The Atlantic</a>
+      <a href="https://aljazeera.com" target="_blank">Al Jazeera</a>
+      <a href="https://haaretz.com" target="_blank">Haaretz</a>
+    </div>
+  </div>
+
+  <!-- ── LEGEND ── -->
+  <div class="legend">
+    <span>Most coverage</span>
+    <div class="legend-bar"></div>
+    <span>Least coverage</span>
+  </div>
+  <div class="instructions">Click any category to expand · sections ordered by descending mention count</div>
+
+  <!-- ══ TOPICS ══════════════════════════════════════════ -->
+  <div class="topics-list">
+
+    <!-- 1. MIDDLE EAST / IRAN WAR -->
+    <div class="card">
+      <div class="card-header level-1" onclick="toggle(this)">
+        <span class="card-rank">01</span>
+        <span class="card-title">Middle East: US–Iran War &amp; Regional Escalation</span>
+        <span class="card-count">61 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+
+            <div class="subtopic">
+              <div class="subtopic-title">War Enters Third & Fourth Weeks — Ground Operations Eyed</div>
+              <div class="subtopic-detail">Now into its fourth week, the US–Israeli air campaign had struck more than 1,000 targets inside Iran by mid-March. The Pentagon publicly prepared plans for "weeks of US ground operations" in Iran's strategic regions, including considering seizure of Kharg Island, which handles 90% of Iran's oil exports. Trump threatened to destroy all Iranian power plants and oil wells if no deal was reached.</div>
+              <div class="subtopic-src">
+                <a href="https://cnn.com/2026/03/29/world/live-news/iran-war-us-israel-trump" target="_blank">CNN</a>
+                <a href="https://aljazeera.com/news/2026/3/29/pentagon-readies-for-weeks-of-us-ground-operations-in-iran-report" target="_blank">Al Jazeera</a>
+                <a href="https://bbc.com/news" target="_blank">BBC</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Strait of Hormuz Blocked — Biggest Oil Shock in History</div>
+              <div class="subtopic-detail">Iran's effective closure of the Strait of Hormuz — through which 20% of world oil passes — prompted the IEA to call it the biggest oil shock in history. Brent crude surged over 50% from pre-war levels, exceeding $120/barrel. Iran announced tolls for certain vessels and allowed 20 Pakistani-flagged ships to transit daily as a mediation gesture.</div>
+              <div class="subtopic-src">
+                <a href="https://cnn.com/2026/03/26/world/live-news/iran-war-us-israel-trump" target="_blank">CNN</a>
+                <a href="https://aljazeera.com/news/2026/3/31/iran-war-what-is-happening-on-day-32-of-us-israel-attacks" target="_blank">Al Jazeera</a>
+                <a href="https://npr.org/2026/03/10/nx-s1-5742828/iran-war-us-trump" target="_blank">NPR</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Iranian Retaliatory Strikes — Casualties & Nuclear Sites Targeted</div>
+              <div class="subtopic-detail">Iran launched hundreds of missiles and drones against US bases in Bahrain, Kuwait, Saudi Arabia, Qatar, and the UAE. By late March, 1,900 Iranians had been killed in strikes, along with 1,189 in Lebanon and 99 in Iraq. Israel struck two Iranian nuclear facilities, including a uranium processing plant. The IAEA called for restraint after Iran denied any radioactive leak.</div>
+              <div class="subtopic-src">
+                <a href="https://cnn.com/2026/03/28/world/live-news/iran-war-us-israel-trump" target="_blank">CNN</a>
+                <a href="https://aljazeera.com/news/2026/3/28/iran-war-what-is-happening-on-day-29-of-us-israel-attacks" target="_blank">Al Jazeera</a>
+                <a href="https://haaretz.com" target="_blank">Haaretz</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Pakistan Mediates — 15-Point US Peace Proposal</div>
+              <div class="subtopic-detail">Pakistan hosted Saudi, Turkish, and Egyptian foreign ministers in Islamabad to mediate, with its FM then traveling to Beijing. Special Envoy Witkoff confirmed Pakistan as the US–Iran back-channel. Trump said March 29 that Iran had agreed to "most of" a 15-point US demand list — a claim Iran's FM contradicted, calling the terms "largely excessive, unrealistic and unreasonable."</div>
+              <div class="subtopic-src">
+                <a href="https://cnn.com/2026/03/29/world/live-news/iran-war-us-israel-trump" target="_blank">CNN</a>
+                <a href="https://aljazeera.com/news/2026/3/28/iran-war-what-is-happening-on-day-29-of-us-israel-attacks" target="_blank">Al Jazeera</a>
+                <a href="https://bbc.com/news" target="_blank">BBC</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Hezbollah Enters War — Lebanon Toll Mounts</div>
+              <div class="subtopic-detail">Hezbollah launched projectiles at Israel from Lebanon starting March 2, drawing a major Israeli ground operation. By late March, Israeli strikes in Lebanon had killed 1,189 people — including at least 121 children. The WHO reported nine paramedics killed in one day, and at least four hospitals were forced to close. The IDF chief warned of severe manpower shortages.</div>
+              <div class="subtopic-src">
+                <a href="https://cnn.com/2026/03/28/world/live-news/iran-war-us-israel-trump" target="_blank">CNN</a>
+                <a href="https://aljazeera.com" target="_blank">Al Jazeera</a>
+                <a href="https://haaretz.com" target="_blank">Haaretz</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Trump Pauses Energy Strikes — 10-Day Extension</div>
+              <div class="subtopic-detail">On March 26, Trump announced a 10-day pause in strikes on Iranian energy sites until April 6, citing ongoing talks. This came after Iran threatened a "heavy price" for attacks on nuclear and industrial sites. Trump simultaneously warned he would seize Kharg Island or fully destroy Iranian infrastructure if no deal materialized, reflecting a contradictory mix of pressure and negotiation.</div>
+              <div class="subtopic-src">
+                <a href="https://cnn.com/2026/03/26/world/live-news/iran-war-us-israel-trump" target="_blank">CNN</a>
+                <a href="https://npr.org" target="_blank">NPR</a>
+                <a href="https://bbc.com/news" target="_blank">BBC</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Trump Criticizes NATO Allies — France Refuses Airspace</div>
+              <div class="subtopic-detail">Trump said he was "very disappointed" with NATO's response to the war, accusing allies of failing to support the US despite years of American spending on the alliance. France refused to allow planes carrying military supplies to fly over its territory, prompting Trump to call Paris "very unhelpful." Macron's office said it was "surprised" by the criticism.</div>
+              <div class="subtopic-src">
+                <a href="https://aljazeera.com/news/2026/3/28/iran-war-what-is-happening-on-day-29-of-us-israel-attacks" target="_blank">Al Jazeera</a>
+                <a href="https://bbc.com/news" target="_blank">BBC</a>
+                <a href="https://theguardian.com" target="_blank">Guardian</a>
+              </div>
+            </div>
+
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://cnn.com" target="_blank">CNN</a>
+            <a href="https://aljazeera.com" target="_blank">Al Jazeera</a>
+            <a href="https://npr.org" target="_blank">NPR</a>
+            <a href="https://bbc.com/news" target="_blank">BBC</a>
+            <a href="https://haaretz.com" target="_blank">Haaretz</a>
+            <a href="https://theguardian.com" target="_blank">Guardian</a>
+            <a href="https://nytimes.com" target="_blank">NYT</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. ICE OPERATIONS / DHS SHUTDOWN -->
+    <div class="card">
+      <div class="card-header level-2" onclick="toggle(this)">
+        <span class="card-rank">02</span>
+        <span class="card-title">ICE Operations &amp; the DHS Shutdown</span>
+        <span class="card-count">47 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+
+            <div class="subtopic">
+              <div class="subtopic-title">DHS Shutdown Becomes Longest in US History</div>
+              <div class="subtopic-detail">The partial Department of Homeland Security shutdown — centered on a congressional standoff over ICE funding — crossed into record territory in late March, becoming the longest DHS shutdown in American history at 42+ days. The Senate passed a bipartisan bill funding most of DHS but excluding ICE and border patrol. The House then rejected it, passing its own 60-day extension bill that Democrats blocked in the Senate.</div>
+              <div class="subtopic-src">
+                <a href="https://cnn.com/2026/03/27/politics/live-news/trump-administration-news" target="_blank">CNN</a>
+                <a href="https://npr.org/2026/03/25/g-s1-115106/dhs-funding-tsa-congress-stalled" target="_blank">NPR</a>
+                <a href="https://politico.com" target="_blank">Politico</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">ICE Deployed to Airports — TSA in Crisis</div>
+              <div class="subtopic-detail">Trump ordered ICE agents to major airports nationwide — JFK, LaGuardia, O'Hare, Atlanta, Houston, Newark — to assist with security as TSA workers called out in record numbers. On March 28–29, over 12% of TSA officers called out, the highest since the shutdown began. Border Czar Tom Homan said ICE agents might "remain" at airports even after TSA agents were paid.</div>
+              <div class="subtopic-src">
+                <a href="https://cnn.com/2026/03/29/politics/live-news/trump-shutdown-tsa-news" target="_blank">CNN</a>
+                <a href="https://npr.org" target="_blank">NPR</a>
+                <a href="https://nytimes.com" target="_blank">NYT</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">ICE at Polling Locations? Voter Intimidation Fears</div>
+              <div class="subtopic-detail">White House Press Secretary Leavitt said she couldn't "guarantee" ICE agents wouldn't be near polling places in November, prompting alarm from election administrators. CNN reported that Trump allies were eager to declare a national elections emergency to impose strict federal oversight of the 2026 midterms. Arizona's Secretary of State vowed to block any such deployment.</div>
+              <div class="subtopic-src">
+                <a href="https://cnn.com/2026/03/29/politics/live-news/trump-shutdown-tsa-news" target="_blank">CNN</a>
+                <a href="https://npr.org" target="_blank">NPR</a>
+                <a href="https://politico.com" target="_blank">Politico</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Detention Capacity Expands — Mega-Centers Planned</div>
+              <div class="subtopic-detail">ICE detention surged to over 72,000 people by late March — up 75% from a year earlier — with 26 deaths in custody since October. An internal February memo revealed plans for eight mega-centers, each holding 10,000 detainees, funded by the $38.3B "One Big Beautiful Bill" appropriation. NPR's reporting documented community backlash across 20+ states.</div>
+              <div class="subtopic-src">
+                <a href="https://npr.org/2026/03/23/g-s1-114107/ices-growing-detention-footprint-and-the-communities-fighting-back" target="_blank">NPR</a>
+                <a href="https://theguardian.com" target="_blank">Guardian</a>
+                <a href="https://nytimes.com" target="_blank">NYT</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Third-Country Deportations — Costa Rica Joins</div>
+              <div class="subtopic-detail">Costa Rica agreed to accept 25 deportees per week under a Trump administration agreement to deport migrants to third countries, joining South Sudan, Honduras, Rwanda, Guyana, and Caribbean island nations. Critics noted migrants are left in "legal black holes" in countries where they don't speak the language. Democrats demanded judicial oversight of all deportation warrants.</div>
+              <div class="subtopic-src">
+                <a href="https://cnn.com" target="_blank">CNN</a>
+                <a href="https://npr.org" target="_blank">NPR</a>
+                <a href="https://theguardian.com" target="_blank">Guardian</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Public Opinion Turns Against ICE — 65% Say "Gone Too Far"</div>
+              <div class="subtopic-detail">The latest NPR/PBS News/Marist poll found 65% of Americans believe ICE has "gone too far" in enforcing immigration laws — an 11-point jump since last summer. A Quinnipiac poll showed Trump at just 28% approval among independents. Community protests in Merrimack (NH), Surprise (AZ), and Social Circle (GA) forced halts to planned ICE detention facilities.</div>
+              <div class="subtopic-src">
+                <a href="https://npr.org/2026/03/23/g-s1-114107/ices-growing-detention-footprint-and-the-communities-fighting-back" target="_blank">NPR</a>
+                <a href="https://cnn.com" target="_blank">CNN</a>
+                <a href="https://nytimes.com" target="_blank">NYT</a>
+              </div>
+            </div>
+
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://cnn.com" target="_blank">CNN</a>
+            <a href="https://npr.org" target="_blank">NPR</a>
+            <a href="https://nytimes.com" target="_blank">NYT</a>
+            <a href="https://politico.com" target="_blank">Politico</a>
+            <a href="https://theguardian.com" target="_blank">Guardian</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. FRACTURES IN MAGA COALITION -->
+    <div class="card">
+      <div class="card-header level-3" onclick="toggle(this)">
+        <span class="card-rank">03</span>
+        <span class="card-title">Fractures in the MAGA Coalition</span>
+        <span class="card-count">42 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+
+            <div class="subtopic">
+              <div class="subtopic-title">Iran War Splits Influencers, but Base Holds</div>
+              <div class="subtopic-detail">Tucker Carlson, Candace Owens, Steve Bannon, and Megyn Kelly broke publicly with Trump over the Iran war, calling it a betrayal of "America First." But polling showed 90% of self-identified MAGA voters still backed the strikes, versus only 54% of non-MAGA Republicans. Al Jazeera's analysts called the "MAGA civil war" narrative a media myth, arguing the real defection is among soft-partisan independents.</div>
+              <div class="subtopic-src">
+                <a href="https://aljazeera.com/opinions/2026/3/16/no-maga-is-not-divided-on-the-iran-war" target="_blank">Al Jazeera</a>
+                <a href="https://npr.org/2026/03/28/nx-s1-5764275/cpac-2026" target="_blank">NPR</a>
+                <a href="https://cnn.com/2026/03/27/politics/trump-iran-gas-prices-inflation-gop-backlash-analysis" target="_blank">CNN</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">CPAC 2026 — Trump Absent, Fractures on Display</div>
+              <div class="subtopic-detail">Trump skipped CPAC for the first time in a decade. NPR's analysis described "rifts over Iran but unity for Trump" among the attendees in Grapevine, Texas. The speakers list featured younger conservative figures instead of Carlson, Vance, or Kelly — all of whom were absent. Analysts noted that without Trump present, no single figure could hold the coalition together.</div>
+              <div class="subtopic-src">
+                <a href="https://npr.org/2026/03/28/nx-s1-5764275/cpac-2026" target="_blank">NPR</a>
+                <a href="https://cnn.com/2026/03/27/politics/trump-iran-gas-prices-inflation-gop-backlash-analysis" target="_blank">CNN</a>
+                <a href="https://nytimes.com" target="_blank">NYT</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Joe Kent Resignation — Anti-Intervention Wing Loses Voice</div>
+              <div class="subtopic-detail">Joe Kent, the director of the National Counterterrorism Center and a vocal opponent of US interventionism, resigned in mid-March citing opposition to the Iran war. He stated the regime "posed no imminent threat to our nation." Speculation followed about whether Tulsi Gabbard (Director of National Intelligence) or JD Vance might distance themselves further from the war policy.</div>
+              <div class="subtopic-src">
+                <a href="https://cnn.com" target="_blank">CNN</a>
+                <a href="https://npr.org" target="_blank">NPR</a>
+                <a href="https://politico.com" target="_blank">Politico</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">House Freedom Caucus Blocks DHS Funding — Speaker Squeezed</div>
+              <div class="subtopic-detail">The House Freedom Caucus blocked the bipartisan Senate DHS bill because it did not include ICE and border patrol funding, extending the record shutdown. Speaker Johnson sided with the hardliners and passed a Republican-only 60-day extension bill, which Schumer blocked in the Senate. CNN framed this as yet another instance of House Republicans' inability to govern.</div>
+              <div class="subtopic-src">
+                <a href="https://cnn.com/2026/03/27/politics/live-news/trump-administration-news" target="_blank">CNN</a>
+                <a href="https://politico.com" target="_blank">Politico</a>
+                <a href="https://npr.org" target="_blank">NPR</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Independents Flee — Trump Approval Falls to 28% Among That Group</div>
+              <div class="subtopic-detail">A Quinnipiac University poll showed 68% of independents disapprove of Trump — and his approval among that cohort fell to 28%. CNN's analysis noted that Democrats are up 5 points in the generic congressional ballot. Overall, 54% of all voters disapproved of Trump's handling of Iran, and rising gas prices were becoming a kitchen-table political liability.</div>
+              <div class="subtopic-src">
+                <a href="https://cnn.com/2026/03/27/politics/trump-iran-gas-prices-inflation-gop-backlash-analysis" target="_blank">CNN</a>
+                <a href="https://nytimes.com" target="_blank">NYT</a>
+                <a href="https://npr.org" target="_blank">NPR</a>
+              </div>
+            </div>
+
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://cnn.com" target="_blank">CNN</a>
+            <a href="https://npr.org" target="_blank">NPR</a>
+            <a href="https://nytimes.com" target="_blank">NYT</a>
+            <a href="https://aljazeera.com" target="_blank">Al Jazeera</a>
+            <a href="https://politico.com" target="_blank">Politico</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. ELECTORAL POLITICS -->
+    <div class="card">
+      <div class="card-header level-4" onclick="toggle(this)">
+        <span class="card-rank">04</span>
+        <span class="card-title">Electoral Politics &amp; the 2026 Midterms</span>
+        <span class="card-count">38 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+
+            <div class="subtopic">
+              <div class="subtopic-title">Democrat Flips Mar-a-Lago District — Democrats Flip 30 Seats</div>
+              <div class="subtopic-detail">Democrat Emily Gregory won a special election in Florida House District 87 — a deep-red district that includes Trump's Mar-a-Lago estate — defeating a Trump-endorsed Republican by 51%–49%. The district had been won by 19 points in 2024. It was the 10th GOP state legislative seat flipped by Democrats since Trump returned to office, part of a nationwide trend of 30 total seat flips since 2025.</div>
+              <div class="subtopic-src">
+                <a href="https://cnn.com/2026/03/24/politics/florida-democrats-state-district-mar-a-lago-special-election" target="_blank">CNN</a>
+                <a href="https://aljazeera.com/news/2026/3/25/democrat-captures-florida-house-seat-in-trumps-mar-a-lago-district" target="_blank">Al Jazeera</a>
+                <a href="https://npr.org" target="_blank">NPR</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">SAVE America Act Passes House — Senate Filibuster Next</div>
+              <div class="subtopic-detail">The House passed the SAVE America Act (218–213) on Feb. 11 — requiring documentary proof of citizenship to register to vote and effectively banning no-excuse mail-in voting. Trump told House Republicans it would "guarantee the midterms." The Senate is filibustering it; Trump is pressing Republicans to eliminate the filibuster. Audit data from Georgia, Louisiana, and Utah found fewer than 100 noncitizen voter registrations combined.</div>
+              <div class="subtopic-src">
+                <a href="https://cnn.com/2026/03/28/politics/save-act-2026-midterm-election-democrats-analysis" target="_blank">CNN</a>
+                <a href="https://npr.org" target="_blank">NPR</a>
+                <a href="https://politico.com" target="_blank">Politico</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Trump Votes By Mail While Pushing to End Mail Voting</div>
+              <div class="subtopic-detail">In an irony widely noted by reporters, Trump cast a mail-in ballot in the Florida special election he lost — while simultaneously pushing Congress to sharply restrict mail-in voting through the SAVE America Act. Florida voters at polling places told CNN they were surprised. The White House defended the vote by saying Trump was "a resident of Palm Beach" who "primarily lives at the White House."</div>
+              <div class="subtopic-src">
+                <a href="https://cnn.com/2026/03/24/politics/florida-democrats-state-district-mar-a-lago-special-election" target="_blank">CNN</a>
+                <a href="https://npr.org" target="_blank">NPR</a>
+                <a href="https://nytimes.com" target="_blank">NYT</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Partisan Redistricting Mid-Cycle — Texas, Florida, North Carolina</div>
+              <div class="subtopic-detail">Texas, Missouri, North Carolina, and Florida moved to redraw congressional maps mid-decade for partisan advantage. Maryland Democrats pursued counter-redistricting. CNN's analysis found the net effect may be little more than a wash between parties, while noting it normalizes a dangerous precedent. The Supreme Court was also poised to rule on a Voting Rights Act case curtailing race-conscious districts.</div>
+              <div class="subtopic-src">
+                <a href="https://cnn.com/2026/03/28/politics/save-act-2026-midterm-election-democrats-analysis" target="_blank">CNN</a>
+                <a href="https://politico.com" target="_blank">Politico</a>
+                <a href="https://nytimes.com" target="_blank">NYT</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Democrats Sense 2006 Moment — Afford­ability as Central Theme</div>
+              <div class="subtopic-detail">Analysts from CNN to The Atlantic compared the 2026 midterm environment to 2006, when Republicans lost 31 House seats amid public exhaustion with the Iraq War. Democrats in Florida focused on affordability rather than Trump directly — a strategy that succeeded. The war, high gas prices, immigration costs, and economic anxiety were all converging as Democratic tailwinds.</div>
+              <div class="subtopic-src">
+                <a href="https://cnn.com/2026/03/27/politics/trump-iran-gas-prices-inflation-gop-backlash-analysis" target="_blank">CNN</a>
+                <a href="https://theatlantic.com" target="_blank">The Atlantic</a>
+                <a href="https://nytimes.com" target="_blank">NYT</a>
+              </div>
+            </div>
+
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://cnn.com" target="_blank">CNN</a>
+            <a href="https://nytimes.com" target="_blank">NYT</a>
+            <a href="https://politico.com" target="_blank">Politico</a>
+            <a href="https://aljazeera.com" target="_blank">Al Jazeera</a>
+            <a href="https://theatlantic.com" target="_blank">The Atlantic</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. GOVERNMENT OVERSIGHT OF HEALTHCARE -->
+    <div class="card">
+      <div class="card-header level-5" onclick="toggle(this)">
+        <span class="card-rank">05</span>
+        <span class="card-title">Government Oversight of Health Care</span>
+        <span class="card-count">34 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+
+            <div class="subtopic">
+              <div class="subtopic-title">Federal Judge Blocks RFK Jr.'s Vaccine Overhaul — ACIP in Limbo</div>
+              <div class="subtopic-detail">On March 16, US District Judge Brian Murphy blocked RFK Jr.'s restructuring of the CDC's Advisory Committee on Immunization Practices (ACIP), ruling his 13 appointees lacked required expertise. The ruling invalidated all prior votes by the reconstituted panel — including removing hepatitis B, rotavirus, and flu vaccine recommendations — and restored the prior science-based childhood immunization schedule.</div>
+              <div class="subtopic-src">
+                <a href="https://npr.org/2026/03/16/nx-s1-5749530/judge-blocks-rfk-jr-vaccine-changes" target="_blank">NPR</a>
+                <a href="https://theguardian.com" target="_blank">Guardian</a>
+                <a href="https://cnn.com" target="_blank">CNN</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">ACIP Vice Chair Robert Malone Resigns in Anger</div>
+              <div class="subtopic-detail">Robert Malone — RFK Jr.'s ally and ACIP vice chair — resigned angrily on March 24 after the court ruling plunged the panel into judicial limbo. His resignation added to confusion about the future of federal vaccine policy. The Guardian and CNN both reported the committee had to postpone a planned meeting to overhaul COVID-19 vaccine tracking.</div>
+              <div class="subtopic-src">
+                <a href="https://theguardian.com" target="_blank">Guardian</a>
+                <a href="https://cnn.com" target="_blank">CNN</a>
+                <a href="https://npr.org" target="_blank">NPR</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Rural Health After $137B in Medicaid Cuts</div>
+              <div class="subtopic-detail">Washington Post (cited across outlets) reported that RFK Jr. and Dr. Oz were banking on AI-powered nurses and drone-delivered lab results to fill the gap left by $137 billion in rural Medicaid cuts over 10 years. CNN documented rural hospital closures following passage of the "One Big Beautiful Bill." Medicaid work requirements are set to begin by Dec. 31, 2026, with states facing implementation chaos.</div>
+              <div class="subtopic-src">
+                <a href="https://cnn.com" target="_blank">CNN</a>
+                <a href="https://npr.org" target="_blank">NPR</a>
+                <a href="https://nytimes.com" target="_blank">NYT</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">NIH Funding Freeze — Science in Freefall</div>
+              <div class="subtopic-detail">A nationwide survey found researchers describing the NIH funding freeze as the collapse of US science — "like the Titanic." Harvard cut PhD admissions in sciences by 75% for two years. The Atlantic ran a long investigation into how the combined effect of budget cuts, politicized funding reviews, and staff departures was gutting the nation's public health research infrastructure.</div>
+              <div class="subtopic-src">
+                <a href="https://theatlantic.com" target="_blank">The Atlantic</a>
+                <a href="https://nytimes.com" target="_blank">NYT</a>
+                <a href="https://npm.org" target="_blank">NPR</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Transgender Healthcare Ruling — RFK Jr. Overstepped</div>
+              <div class="subtopic-detail">A federal judge in Oregon ruled that Kennedy exceeded his authority by issuing a declaration calling gender-affirming care for minors "unsafe and ineffective," blocking him from using it to exclude doctors from Medicare and Medicaid. The court found he bypassed required administrative procedures — continuing a pattern of courts curbing the administration's health policy overreach.</div>
+              <div class="subtopic-src">
+                <a href="https://npr.org" target="_blank">NPR</a>
+                <a href="https://theguardian.com" target="_blank">Guardian</a>
+                <a href="https://cnn.com" target="_blank">CNN</a>
+              </div>
+            </div>
+
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://npr.org" target="_blank">NPR</a>
+            <a href="https://theguardian.com" target="_blank">Guardian</a>
+            <a href="https://cnn.com" target="_blank">CNN</a>
+            <a href="https://nytimes.com" target="_blank">NYT</a>
+            <a href="https://theatlantic.com" target="_blank">The Atlantic</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. TRUMP ADMIN REVERSALS & LIABILITIES -->
+    <div class="card">
+      <div class="card-header level-6" onclick="toggle(this)">
+        <span class="card-rank">06</span>
+        <span class="card-title">Trump Administration Reversals &amp; Growing Liabilities</span>
+        <span class="card-count">31 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+
+            <div class="subtopic">
+              <div class="subtopic-title">Judge Rules NPR/PBS Defunding Order Unconstitutional</div>
+              <div class="subtopic-detail">A US District Court judge ruled on March 31 that Trump's executive order to defund NPR and PBS violated the First Amendment, finding the government cannot use funding as a "lever to influence or penalize the press." NPR CEO Katherine Maher called it "a decisive affirmation of the rights of a free and independent press." The ruling doesn't restore the funding Congress rescinded, but is a significant First Amendment victory.</div>
+              <div class="subtopic-src">
+                <a href="https://cnn.com/2026/03/31/media/federal-judge-trump-order-npr-pbs-funding" target="_blank">CNN</a>
+                <a href="https://npr.org/2026/03/31/nx-s1-5768399/npr-pbs-trump-federal-funding" target="_blank">NPR</a>
+                <a href="https://theguardian.com" target="_blank">Guardian</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">DOJ Whiplash on Law Firms — Drops Then Re-Ups Appeal</div>
+              <div class="subtopic-detail">In a chaotic 24-hour reversal, the DOJ announced it was dropping appeals against four law firms (WilmerHale, Jenner & Block, Perkins Coie, Susman Godfrey) — then reversed course after Trump and Stephen Miller objected. NPR's Carrie Johnson reported the episode as emblematic of an administration incapable of coherent legal strategy and unwilling to accept judicial defeats.</div>
+              <div class="subtopic-src">
+                <a href="https://cnn.com/2026/03/03/politics/trump-administration-reverses-drop-lawsuits" target="_blank">CNN</a>
+                <a href="https://npr.org/2026/03/03/nx-s1-5733945/trump-administration-reverses-course-on-law-firms-vowing-to-appeal" target="_blank">NPR</a>
+                <a href="https://nytimes.com" target="_blank">NYT</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">IEEPA Tariffs Struck Down — Refund Process Mired</div>
+              <div class="subtopic-detail">Following the Supreme Court's February ruling striking down most IEEPA tariffs, the Court of International Trade in March ordered Customs and Border Protection to begin refunding tariff payments. CBP admitted it couldn't comply immediately, proposing a new processing system instead. A replacement 10% global tariff was issued under Section 122 — itself on uncertain legal ground.</div>
+              <div class="subtopic-src">
+                <a href="https://politico.com" target="_blank">Politico</a>
+                <a href="https://nytimes.com" target="_blank">NYT</a>
+                <a href="https://bbc.com" target="_blank">BBC</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">War Costs — $3.7 Billion in First 100 Hours</div>
+              <div class="subtopic-detail">CSIS estimated the opening 100 hours of "Operation Epic Fury" cost approximately $3.7 billion — roughly $891 million per day. With the war entering its fourth week, analysts calculated total outlays exceeding $25 billion and counting. Rising gas prices, driven by the Hormuz closure, added inflationary pressure — undermining the GOP's central economic message from 2024.</div>
+              <div class="subtopic-src">
+                <a href="https://theatlantic.com" target="_blank">The Atlantic</a>
+                <a href="https://politico.com" target="_blank">Politico</a>
+                <a href="https://cnn.com" target="_blank">CNN</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Courts Block Multiple Trump Policies — Judicial Resistance Mounts</div>
+              <div class="subtopic-detail">Federal courts handed the Trump administration multiple setbacks in March: blocking RFK Jr.'s vaccine policies, striking down the NPR/PBS defunding order, and ruling on transgender healthcare. Appeals courts reversed at least 11 lower court rulings favorable to plaintiffs since January, highlighting a volatile judicial landscape in which both sides score wins and losses weekly.</div>
+              <div class="subtopic-src">
+                <a href="https://politico.com" target="_blank">Politico</a>
+                <a href="https://nytimes.com" target="_blank">NYT</a>
+                <a href="https://npr.org" target="_blank">NPR</a>
+              </div>
+            </div>
+
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://cnn.com" target="_blank">CNN</a>
+            <a href="https://npr.org" target="_blank">NPR</a>
+            <a href="https://nytimes.com" target="_blank">NYT</a>
+            <a href="https://politico.com" target="_blank">Politico</a>
+            <a href="https://theguardian.com" target="_blank">Guardian</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. EPSTEIN FILES -->
+    <div class="card">
+      <div class="card-header level-7" onclick="toggle(this)">
+        <span class="card-rank">07</span>
+        <span class="card-title">Epstein Files</span>
+        <span class="card-count">28 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+
+            <div class="subtopic">
+              <div class="subtopic-title">NPR Investigation Finds DOJ Withheld Trump-Related Files</div>
+              <div class="subtopic-detail">An NPR investigation in late February revealed the DOJ had withheld or removed dozens of pages of Epstein files related to sexual abuse allegations that mention President Trump. NPR found pages indexed in DOJ records but absent from the public database — including notes from three of four FBI interviews with a woman who alleged Trump assaulted her when she was between 13 and 15 years old. Trump has denied all wrongdoing.</div>
+              <div class="subtopic-src">
+                <a href="https://npr.org/2026/03/05/nx-s1-5737562/justice-department-missing-epstein-files-trump" target="_blank">NPR</a>
+                <a href="https://nytimes.com" target="_blank">NYT</a>
+                <a href="https://theguardian.com" target="_blank">Guardian</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">DOJ Releases 1,000+ More Pages — Trump FBI Allegation Notes Published</div>
+              <div class="subtopic-detail">Following the NPR investigation, the DOJ on March 6 published more than 1,000 additional pages, including three previously withheld FBI interview summaries containing the woman's detailed allegations against Trump and Epstein. The NYT found over 5,300 files and 38,000 references to Trump in the full Epstein database. The White House called the allegations "completely baseless."</div>
+              <div class="subtopic-src">
+                <a href="https://npr.org/2026/03/05/nx-s1-5737562/justice-department-missing-epstein-files-trump" target="_blank">NPR</a>
+                <a href="https://nytimes.com" target="_blank">NYT</a>
+                <a href="https://cnn.com" target="_blank">CNN</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Bipartisan Investigation — House Oversight Joins Democrats</div>
+              <div class="subtopic-detail">In a rare show of bipartisanship, Republican House Oversight Committee chair James Comer joined Democrats in pledging to investigate why files related to Trump allegations were missing from the public database. Ranking member Robert Garcia demanded AG Pam Bondi explain whether an active investigation into allegations against Trump existed. The DOJ did not respond to follow-up questions.</div>
+              <div class="subtopic-src">
+                <a href="https://npr.org/2026/02/25/nx-s1-5726780/democrats-republicans-investigate-doj-epstein-files-trump-missing-pages" target="_blank">NPR</a>
+                <a href="https://politico.com" target="_blank">Politico</a>
+                <a href="https://nytimes.com" target="_blank">NYT</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Iran War Overshadows Epstein — Files Fade From Headlines</div>
+              <div class="subtopic-detail">In mid-March, as the Iran war dominated every news cycle, Epstein file coverage sharply diminished. The Atlantic and other outlets noted the political irony: the one story that had generated bipartisan outrage was being drowned out by a military conflict that itself raised questions about distraction and political timing. Rep. Thomas Massie said publicly that "bombing Iran won't make the Epstein files go away."</div>
+              <div class="subtopic-src">
+                <a href="https://theatlantic.com" target="_blank">The Atlantic</a>
+                <a href="https://npr.org" target="_blank">NPR</a>
+                <a href="https://nytimes.com" target="_blank">NYT</a>
+              </div>
+            </div>
+
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://npr.org" target="_blank">NPR</a>
+            <a href="https://nytimes.com" target="_blank">NYT</a>
+            <a href="https://politico.com" target="_blank">Politico</a>
+            <a href="https://theatlantic.com" target="_blank">The Atlantic</a>
+            <a href="https://theguardian.com" target="_blank">Guardian</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 8. UKRAINE -->
+    <div class="card">
+      <div class="card-header level-8" onclick="toggle(this)">
+        <span class="card-rank">08</span>
+        <span class="card-title">Ukraine: Stalled Peace &amp; Sideline War</span>
+        <span class="card-count">25 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+
+            <div class="subtopic">
+              <div class="subtopic-title">US–Ukraine–Russia Peace Talks Postponed Due to Iran</div>
+              <div class="subtopic-detail">Three rounds of US-mediated talks in the UAE and Switzerland produced no breakthrough. Further talks scheduled for early March were postponed because of the Iran war. Al Jazeera documented a consistent pattern: "process without progress," with Russia insisting on territorial concessions and Ukraine demanding security guarantees first. The US reportedly tied future guarantees to Ukrainian withdrawal from parts of the Donbas.</div>
+              <div class="subtopic-src">
+                <a href="https://aljazeera.com/news/2026/2/18/russia-ukraine-talks-all-the-mediation-efforts-and-where-they-stand" target="_blank">Al Jazeera</a>
+                <a href="https://bbc.com" target="_blank">BBC</a>
+                <a href="https://npr.org" target="_blank">NPR</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Zelensky Waits on Washington — Offers Easter Ceasefire</div>
+              <div class="subtopic-detail">Zelensky said Ukraine was waiting on the US and Russia to agree on the next round of talks. He told CBS News he was confused by Trump's claim that the US didn't need Ukraine's drone technology — noting the US had requested drone assistance "several times." On March 30, he proposed an Easter ceasefire and a mutual halt on energy infrastructure strikes, which Russia dismissed.</div>
+              <div class="subtopic-src">
+                <a href="https://bbc.com" target="_blank">BBC</a>
+                <a href="https://npr.org" target="_blank">NPR</a>
+                <a href="https://aljazeera.com" target="_blank">Al Jazeera</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Iran War Boosts Russia — Oil Windfall Sustains Ukraine War</div>
+              <div class="subtopic-detail">Poland's defense minister warned that the Iran war could divert arms from Ukraine and provide Russia an economic boost via energy price spikes. Analysts estimated Russia could gain $45–$97 billion in additional budget revenues from the oil windfall, sustaining elevated military spending for years. Ukraine struck Russian Baltic oil infrastructure, reducing Russia's exports by an estimated 40%.</div>
+              <div class="subtopic-src">
+                <a href="https://bbc.com" target="_blank">BBC</a>
+                <a href="https://theguardian.com" target="_blank">Guardian</a>
+                <a href="https://politico.com" target="_blank">Politico</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Coalition of the Willing — UK-France Military Hub Plan</div>
+              <div class="subtopic-detail">A 35-country "coalition of the willing" held meetings in Paris, with the UK and France pledging to establish military hubs in Ukraine in the event of a ceasefire. The UN General Assembly voted 107–12 (with 51 abstentions, including the US) for an immediate ceasefire. The US abstained, saying the resolution might distract from ongoing negotiations.</div>
+              <div class="subtopic-src">
+                <a href="https://bbc.com" target="_blank">BBC</a>
+                <a href="https://aljazeera.com" target="_blank">Al Jazeera</a>
+                <a href="https://theguardian.com" target="_blank">Guardian</a>
+              </div>
+            </div>
+
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://aljazeera.com" target="_blank">Al Jazeera</a>
+            <a href="https://bbc.com" target="_blank">BBC</a>
+            <a href="https://npr.org" target="_blank">NPR</a>
+            <a href="https://theguardian.com" target="_blank">Guardian</a>
+            <a href="https://politico.com" target="_blank">Politico</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 9. SUPREME COURT & LEGAL -->
+    <div class="card">
+      <div class="card-header level-9" onclick="toggle(this)">
+        <span class="card-rank">09</span>
+        <span class="card-title">Supreme Court &amp; Other Legal Issues</span>
+        <span class="card-count">22 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+
+            <div class="subtopic">
+              <div class="subtopic-title">SCOTUS Hears Mail-Ballot Case — Conservative Majority Signals Restriction</div>
+              <div class="subtopic-detail">The Supreme Court heard arguments March 24 in <em>Watson v. RNC</em>, testing whether states can count mail ballots received after Election Day if postmarked on time. CNN reported the conservative majority appeared ready to ban late-arriving ballots — a ruling that could significantly affect the November 2026 midterms. Justice Sotomayor argued Congress, not courts, should decide. Justice Kavanaugh cited fraud concerns without specific evidence.</div>
+              <div class="subtopic-src">
+                <a href="https://cnn.com/2026/03/24/politics/supreme-court-conservatives-2026-election" target="_blank">CNN</a>
+                <a href="https://npr.org" target="_blank">NPR</a>
+                <a href="https://politico.com" target="_blank">Politico</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Voting Rights Act Case — Race-Conscious Districts at Risk</div>
+              <div class="subtopic-detail">The Supreme Court was expected to rule this spring on a Louisiana Voting Rights Act case that could gut the VRA provision protecting majority-minority congressional districts. CNN reported conservative justices have signaled they believe race-conscious redistricting is "no longer needed" in contemporary America — a ruling that would reshape congressional maps across the South.</div>
+              <div class="subtopic-src">
+                <a href="https://cnn.com/2026/03/24/politics/supreme-court-conservatives-2026-election" target="_blank">CNN</a>
+                <a href="https://politico.com" target="_blank">Politico</a>
+                <a href="https://npr.org" target="_blank">NPR</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">SAVE Act — Proof-of-Citizenship Requirements Analyzed</div>
+              <div class="subtopic-detail">SCOTUSblog published a detailed legal analysis noting that the SAVE Act would do nothing to prevent documented incidents of noncitizen voting — which Kansas, Utah, and Georgia voter audits found were vanishingly rare — while potentially disenfranchising an estimated 21 million eligible voters who lack ready access to passports or birth certificates.</div>
+              <div class="subtopic-src">
+                <a href="https://cnn.com" target="_blank">CNN</a>
+                <a href="https://politico.com" target="_blank">Politico</a>
+                <a href="https://npr.org" target="_blank">NPR</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Alien Enemies Act — Courts Split on Deportation Power</div>
+              <div class="subtopic-detail">Multiple district and circuit courts continued to clash over the administration's use of the 1798 Alien Enemies Act to deport Venezuelans and others without standard due process. Appeals courts reversed some district injunctions while others held. The resulting circuit split was moving toward an eventual Supreme Court review — a major test of the administration's most aggressive deportation tool.</div>
+              <div class="subtopic-src">
+                <a href="https://nytimes.com" target="_blank">NYT</a>
+                <a href="https://politico.com" target="_blank">Politico</a>
+                <a href="https://npr.org" target="_blank">NPR</a>
+              </div>
+            </div>
+
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://cnn.com" target="_blank">CNN</a>
+            <a href="https://nytimes.com" target="_blank">NYT</a>
+            <a href="https://politico.com" target="_blank">Politico</a>
+            <a href="https://npr.org" target="_blank">NPR</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 10. US-CHINA-RUSSIA RELATIONS -->
+    <div class="card">
+      <div class="card-header level-10" onclick="toggle(this)">
+        <span class="card-rank">10</span>
+        <span class="card-title">US–China–Russia: Great Power Realignment</span>
+        <span class="card-count">19 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+
+            <div class="subtopic">
+              <div class="subtopic-title">Russia-China Axis Deepens — Iran War as Catalyst</div>
+              <div class="subtopic-detail">Both China and Russia condemned US-Israeli strikes and called for an immediate ceasefire. Analysts noted that the oil price spike rescued Russia's war budget, while China accelerated the Power of Siberia 2 pipeline in its new 15th Five-Year Plan (2026–2030). US officials confirmed Russia was providing Iran with satellite intelligence on American and allied military positions — provoking outrage from Ukraine and European allies.</div>
+              <div class="subtopic-src">
+                <a href="https://aljazeera.com/news/2026/3/4/russia-china-raise-diplomatic-voices-against-us-israeli-attacks-on-iran" target="_blank">Al Jazeera</a>
+                <a href="https://bbc.com" target="_blank">BBC</a>
+                <a href="https://theguardian.com" target="_blank">Guardian</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Iran War Inadvertently Strengthens Rivals</div>
+              <div class="subtopic-detail">A major PIIE analysis found Russia stood to gain $45–$161 billion in additional energy revenues from the oil shock, while China's strategic pivot to energy self-sufficiency was "vindicated" by the crisis. The Atlantic argued the US was accelerating the very alignment it sought to prevent — fusing Russian resources with Chinese technology at a moment when Washington's attention was consumed by the Middle East.</div>
+              <div class="subtopic-src">
+                <a href="https://theatlantic.com" target="_blank">The Atlantic</a>
+                <a href="https://bbc.com" target="_blank">BBC</a>
+                <a href="https://politico.com" target="_blank">Politico</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Post-New START Nuclear Vacuum — China's Arsenal Grows</div>
+              <div class="subtopic-detail">With New START expired and no replacement in sight, China's nuclear arsenal surpassed 600 warheads — projected to exceed 1,000 by 2030 — and was moving to a land-air-sea triad. The BBC and Guardian both reported experts warning of a three-way nuclear arms race without any arms control framework, at the precise moment US attention was consumed by the Iran conflict.</div>
+              <div class="subtopic-src">
+                <a href="https://bbc.com" target="_blank">BBC</a>
+                <a href="https://theguardian.com" target="_blank">Guardian</a>
+                <a href="https://politico.com" target="_blank">Politico</a>
+              </div>
+            </div>
+
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://aljazeera.com" target="_blank">Al Jazeera</a>
+            <a href="https://bbc.com" target="_blank">BBC</a>
+            <a href="https://theatlantic.com" target="_blank">The Atlantic</a>
+            <a href="https://theguardian.com" target="_blank">Guardian</a>
+            <a href="https://politico.com" target="_blank">Politico</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 11. LATIN AMERICA & CANADA -->
+    <div class="card">
+      <div class="card-header level-11" onclick="toggle(this)">
+        <span class="card-rank">11</span>
+        <span class="card-title">Latin America &amp; Canada: Trade Wars &amp; Sovereignty</span>
+        <span class="card-count">17 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+
+            <div class="subtopic">
+              <div class="subtopic-title">Canada's PM Carney — "Old Relationship Is Over"</div>
+              <div class="subtopic-detail">Canada's new Prime Minister Mark Carney (who took office March 14) called for a "broad renegotiation" of Canada's trade relationship with the US on March 27 — the same day Trump imposed 25% auto sector tariffs on Canada. When Carney and Trump spoke, Trump raised the idea of annexing Canada. Carney said: "This is different from the world of 1990 and the USMCA." Brookings analysts described Canada at a "forked road" between autonomy and continued integration.</div>
+              <div class="subtopic-src">
+                <a href="https://bbc.com" target="_blank">BBC</a>
+                <a href="https://theguardian.com" target="_blank">Guardian</a>
+                <a href="https://politico.com" target="_blank">Politico</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">USMCA Review Begins — US Open to Walking Away</div>
+              <div class="subtopic-detail">The six-year USMCA review officially kicked off in early 2026, with US Trade Representative Greer telling Politico the US was "open to walking away" from the agreement if it wasn't getting a fair deal. Three-way consultations were underway, but the fraught tariff environment and Canada's pushback made agreement highly uncertain. Mexico quietly sought alternative trade partners to hedge against US volatility.</div>
+              <div class="subtopic-src">
+                <a href="https://politico.com" target="_blank">Politico</a>
+                <a href="https://bbc.com" target="_blank">BBC</a>
+                <a href="https://nytimes.com" target="_blank">NYT</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Latin America Deportees Sent to Third Countries</div>
+              <div class="subtopic-detail">Latin American and Caribbean nations — Costa Rica, Honduras, Guyana, Dominica, St. Kitts and Nevis — signed agreements to accept US deportees from third countries, often under quiet diplomatic pressure from Washington. Critics documented migrants from Venezuela, Central America, and other nations being deposited in countries where they had no ties, no language, and no legal status.</div>
+              <div class="subtopic-src">
+                <a href="https://theguardian.com" target="_blank">Guardian</a>
+                <a href="https://npr.org" target="_blank">NPR</a>
+                <a href="https://aljazeera.com" target="_blank">Al Jazeera</a>
+              </div>
+            </div>
+
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://bbc.com" target="_blank">BBC</a>
+            <a href="https://theguardian.com" target="_blank">Guardian</a>
+            <a href="https://politico.com" target="_blank">Politico</a>
+            <a href="https://npr.org" target="_blank">NPR</a>
+            <a href="https://aljazeera.com" target="_blank">Al Jazeera</a>
+            <a href="https://nytimes.com" target="_blank">NYT</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /topics-list -->
+
+  <!-- ══ FOOTER ══════════════════════════════════════════ -->
+  <div class="footer">
+    <div>
+      Compiled for <strong>BOLLI Current Events Discussion Group</strong> · Coverage synthesized across 9 mainstream outlets · March 15–29, 2026
+    </div>
+    <div style="margin-top:6px; opacity:0.7; font-size:10px;">
+      Sources:
+      <a href="https://nytimes.com" target="_blank">New York Times</a> ·
+      <a href="https://cnn.com" target="_blank">CNN</a> ·
+      <a href="https://npr.org" target="_blank">NPR</a> ·
+      <a href="https://bbc.com/news" target="_blank">BBC</a> ·
+      <a href="https://theguardian.com/us" target="_blank">The Guardian</a> ·
+      <a href="https://politico.com" target="_blank">Politico</a> ·
+      <a href="https://theatlantic.com" target="_blank">The Atlantic</a> ·
+      <a href="https://aljazeera.com" target="_blank">Al Jazeera</a> ·
+      <a href="https://haaretz.com" target="_blank">Haaretz</a>
+    </div>
+    <div style="margin-top:6px; opacity:0.6; font-size:10px;">
+      Portal: <a href="https://jhnday.github.io/CrntEvnts" target="_blank">jhnday.github.io/CrntEvnts</a>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<script>
+  function toggle(header) {
+    const body = header.nextElementSibling;
+    const chevron = header.querySelector('.card-chevron');
+    const isOpen = body.classList.contains('expanded');
+
+    // Collapse all
+    document.querySelectorAll('.card-body').forEach(b => b.classList.remove('expanded'));
+    document.querySelectorAll('.card-chevron').forEach(c => c.classList.remove('rotated'));
+
+    // Expand clicked (if it was closed)
+    if (!isOpen) {
+      body.classList.add('expanded');
+      chevron.classList.add('rotated');
+      setTimeout(() => header.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
+    }
+  }
+</script>
+</body>
+</html>
