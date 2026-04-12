@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>The State of Play · April 12, 2026</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Serif+4:ital,wght@0,300;0,400;0,600;1,300;1,400&family=JetBrains+Mono:wght@400;600&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink:      #1a1208;
+    --muted:    #5a4e3a;
+    --faint:    #9a8e7a;
+    --paper:    #f5f0e8;
+    --cream:    #ece6d8;
+    --rule:     #c8bea8;
+    --red:      #9b1c1c;
+    --amber:    #92400e;
+    --green:    #166534;
+    --blue:     #1e3a5f;
+    --pill-bg:  rgba(30,58,95,0.08);
+    --pill-bdr: rgba(30,58,95,0.22);
+    --expand-bg:#f0ebe0;
+  }
+
+  body {
+    font-family: 'Source Serif 4', Georgia, serif;
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 0 0 60px;
+  }
+
+  /* ── MASTHEAD ─────────────────────────────────── */
+  .masthead {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 28px 32px 22px;
+    border-bottom: 3px double var(--rule);
+  }
+  .masthead-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--faint);
+    margin-bottom: 8px;
+  }
+  .masthead h1 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-size: clamp(1.6rem, 4vw, 2.5rem);
+    font-weight: 900;
+    line-height: 1.1;
+    letter-spacing: -.01em;
+  }
+  .masthead-sub {
+    margin-top: 10px;
+    font-size: 0.82rem;
+    color: #b0a898;
+    font-style: italic;
+    line-height: 1.6;
+  }
+  .source-pills {
+    display: flex; flex-wrap: wrap; gap: 5px; margin-top: 12px;
+  }
+  .source-pills a {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: #c0b8a8;
+    border: 1px solid #3a342a;
+    border-radius: 2px;
+    padding: 2px 7px;
+    text-decoration: none;
+    transition: background .15s, color .15s;
+  }
+  .source-pills a:hover { background: #3a342a; color: var(--paper); }
+
+  /* ── LAYOUT ───────────────────────────────────── */
+  .wrapper { max-width: 860px; margin: 0 auto; padding: 0 20px; }
+
+  /* ── SECTION HEADER ───────────────────────────── */
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+    color: var(--faint);
+    padding: 32px 0 6px;
+    border-top: 1px solid var(--rule);
+    margin-top: 28px;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 4px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .section-icon { font-size: 1.1rem; }
+  .section-blurb {
+    font-size: 0.8rem;
+    color: var(--muted);
+    font-style: italic;
+    margin-bottom: 14px;
+  }
+
+  /* ── ITEM CARDS ───────────────────────────────── */
+  .items { display: flex; flex-direction: column; gap: 6px; }
+
+  .item {
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    overflow: hidden;
+    background: #faf7f2;
+  }
+
+  .item-header {
+    display: flex; align-items: flex-start; gap: 12px;
+    padding: 11px 16px;
+    cursor: pointer;
+    user-select: none;
+    transition: background .15s;
+  }
+  .item-header:hover { background: var(--expand-bg); }
+
+  .item-status {
+    flex-shrink: 0;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 2px;
+    margin-top: 2px;
+    white-space: nowrap;
+  }
+  .status-critical { background: #fee2e2; color: var(--red); border: 1px solid #fca5a5; }
+  .status-stress   { background: #fef3c7; color: var(--amber); border: 1px solid #fcd34d; }
+  .status-partial  { background: #d1fae5; color: var(--green); border: 1px solid #6ee7b7; }
+  .status-blocked  { background: #e0e7ff; color: var(--blue); border: 1px solid #a5b4fc; }
+  .status-watch    { background: var(--cream); color: var(--muted); border: 1px solid var(--rule); }
+
+  .item-summary {
+    flex: 1;
+    font-size: 0.875rem;
+    line-height: 1.55;
+    color: var(--ink);
+  }
+  .item-summary strong {
+    font-weight: 600;
+    display: block;
+    margin-bottom: 2px;
+    font-size: 0.88rem;
+  }
+  .item-summary .one-liner {
+    color: var(--muted);
+    font-size: 0.8rem;
+    font-style: italic;
+  }
+
+  .item-chevron {
+    flex-shrink: 0;
+    font-size: 12px;
+    color: var(--faint);
+    margin-top: 4px;
+    transition: transform .25s;
+  }
+  .item-chevron.open { transform: rotate(180deg); }
+
+  /* ── DETAIL PANEL ─────────────────────────────── */
+  .item-detail {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height .35s ease;
+    background: var(--expand-bg);
+    border-top: 0px solid var(--rule);
+  }
+  .item-detail.open {
+    max-height: 800px;
+    border-top: 1px solid var(--rule);
+  }
+  .item-detail-inner {
+    padding: 14px 16px 16px;
+    font-size: 0.8rem;
+    line-height: 1.65;
+    color: #3a3020;
+  }
+  .item-detail-inner p { margin-bottom: 8px; }
+  .item-detail-inner p:last-child { margin-bottom: 0; }
+
+  /* ── CITATIONS ────────────────────────────────── */
+  .cite-row {
+    display: flex; flex-wrap: wrap; gap: 5px;
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px solid var(--rule);
+  }
+  .cite-row span {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: .05em;
+    color: var(--faint);
+    margin-right: 2px;
+    text-transform: uppercase;
+  }
+  .cite-row a {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    color: var(--blue);
+    background: var(--pill-bg);
+    border: 1px solid var(--pill-bdr);
+    border-radius: 2px;
+    padding: 2px 6px;
+    text-decoration: none;
+    transition: background .15s, color .15s;
+  }
+  .cite-row a:hover { background: var(--blue); color: #fff; }
+
+  /* ── DIVIDER ──────────────────────────────────── */
+  .rule-dbl {
+    border: none;
+    border-top: 3px double var(--rule);
+    margin: 40px 0 0;
+  }
+
+  /* ── FOOTER ───────────────────────────────────── */
+  .footer {
+    margin-top: 40px;
+    padding: 18px 20px;
+    background: var(--ink);
+    color: #7a7060;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    letter-spacing: .08em;
+    text-align: center;
+    line-height: 2;
+  }
+  .footer a { color: #9a8e78; text-decoration: none; }
+  .footer a:hover { color: var(--paper); }
+
+  @media (max-width: 560px) {
+    .item-header { flex-direction: column; gap: 6px; }
+    .item-status { align-self: flex-start; }
+    .masthead { padding: 20px 16px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ══ MASTHEAD ══════════════════════════════════════ -->
+<div class="masthead">
+  <div class="masthead-eyebrow">Synthesized from center-spectrum coverage · Mar 29 – Apr 12, 2026</div>
+  <h1>The State of Play</h1>
+  <div class="masthead-sub">
+    Just the facts, Ma'am &nbsp;·&nbsp; Click any item to expand detail &amp; citations
+  </div>
+  <div class="source-pills">
+    <a href="https://www.nytimes.com" target="_blank">NYT</a>
+    <a href="https://www.cnn.com" target="_blank">CNN</a>
+    <a href="https://www.npr.org" target="_blank">NPR</a>
+    <a href="https://www.bbc.com" target="_blank">BBC</a>
+    <a href="https://www.theguardian.com" target="_blank">Guardian</a>
+    <a href="https://www.politico.com" target="_blank">Politico</a>
+    <a href="https://www.theatlantic.com" target="_blank">Atlantic</a>
+    <a href="https://www.aljazeera.com" target="_blank">Al Jazeera</a>
+    <a href="https://www.haaretz.com" target="_blank">Haaretz</a>
+  </div>
+</div>
+
+<div class="wrapper">
+
+<!-- ══ SECTION 1: POLICY STATUS ══════════════════════ -->
+<div class="section-label">Section I</div>
+<div class="section-title"><span class="section-icon">📋</span> Status of Major Policy Initiatives</div>
+<div class="section-blurb">Where each flagship agenda item stands as of April 12, 2026</div>
+
+<div class="items">
+
+  <!-- Iran / Middle East -->
+  <div class="item">
+    <div class="item-header" onclick="toggle(this)">
+      <div class="item-status status-stress">Fragile</div>
+      <div class="item-summary">
+        <strong>Iran War (Operation Epic Fury) → Two-Week Ceasefire</strong>
+        <div class="one-liner">2,000+ strikes in 38 days; ceasefire brokered by Pakistan; Strait of Hormuz still not fully open; Iran's nuclear stockpile unresolved.</div>
+      </div>
+      <div class="item-chevron">▼</div>
+    </div>
+    <div class="item-detail">
+      <div class="item-detail-inner">
+        <p>The 38-day air campaign concluded with a ceasefire brokered by Pakistan's PM Sharif — reached with 88 minutes to spare before Trump's self-imposed deadline. Both sides immediately claimed victory. Iran said it accepted on its own terms; the White House said Iran "begged" for peace.</p>
+        <p>Iran kept firing until the last day and the Strait of Hormuz remains "effectively closed" — Iran is imposing per-ship tolls. By April 9, only three ships had transited since the ceasefire.</p>
+        <p>Iran's post-war demands — lifting all sanctions, U.S. military withdrawal, reparations, and the right to enrich uranium — are described as far beyond what Washington can accept. VP Vance is leading talks in Islamabad with Witkoff and Kushner.</p>
+        <p>Iran's nuclear stockpile — sufficient for a weapon — was not resolved. Trump said it would be "perfectly taken care of." A senior Israeli official told NYT the U.S. assured Israel it would insist on uranium removal.</p>
+        <p>Supreme Leader Khamenei was killed; the assassination of a foreign head of state without a declaration of war or imminent-threat finding has no modern legal precedent.</p>
+        <div class="cite-row">
+          <span>Sources:</span>
+          <a href="https://www.npr.org/2026/04/07/nx-s1-5776377/iran-war-updates" target="_blank">NPR</a>
+          <a href="https://www.cnn.com/2026/04/07/world/live-news/iran-war-trump-us-israel" target="_blank">CNN</a>
+          <a href="https://www.npr.org/2026/04/08/nx-s1-5777548/the-latest-on-the-ceasefire-agreement-and-what-happens-next" target="_blank">NPR (ceasefire)</a>
+          <a href="https://www.theatlantic.com" target="_blank">Atlantic</a>
+          <a href="https://www.haaretz.com" target="_blank">Haaretz</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tariffs -->
+  <div class="item">
+    <div class="item-header" onclick="toggle(this)">
+      <div class="item-status status-critical">Struck Down</div>
+      <div class="item-summary">
+        <strong>Tariff Regime → IEEPA Ruled Unconstitutional; Replacement Now Challenged</strong>
+        <div class="one-liner">SCOTUS voided IEEPA tariffs (Feb. 20); $166B refund owed. New Section 122 tariffs face fresh legal challenge filed Apr. 10.</div>
+      </div>
+      <div class="item-chevron">▼</div>
+    </div>
+    <div class="item-detail">
+      <div class="item-detail-inner">
+        <p>In a landmark 6-3 ruling (Feb. 20), Chief Justice Roberts — joined by Gorsuch, Barrett, and the three liberal justices — held that IEEPA does not grant the president tariff authority. NYT called it "the most significant restraint on presidential trade power in a generation."</p>
+        <p>$166 billion in refunds are owed to 330,000+ businesses. Interest accrues at $650M per month. Over 2,000 lawsuits from FedEx, Costco, Nissan, L'Oreal, and others now clog the Court of International Trade.</p>
+        <p>Trump's replacement regime — a 10–15% global surcharge under Section 122 of the 1974 Trade Act — faced a new legal challenge on April 10, filed by 24 states and small businesses. Plaintiffs argue the law's "balance-of-payments" requirement is not met in a floating-currency economy.</p>
+        <div class="cite-row">
+          <span>Sources:</span>
+          <a href="https://www.nytimes.com" target="_blank">NYT</a>
+          <a href="https://www.politico.com" target="_blank">Politico</a>
+          <a href="https://www.cnn.com" target="_blank">CNN</a>
+          <a href="https://www.theguardian.com" target="_blank">Guardian</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Immigration / ICE -->
+  <div class="item">
+    <div class="item-header" onclick="toggle(this)">
+      <div class="item-status status-stress">Under Strain</div>
+      <div class="item-summary">
+        <strong>Mass Deportation Campaign → Continues, But DHS Funding Has Lapsed</strong>
+        <div class="one-liner">68,000 in detention (record); DHS unfunded since Feb. 14; ICE relies on Medicaid data; CECOT deportations ongoing.</div>
+      </div>
+      <div class="item-chevron">▼</div>
+    </div>
+    <div class="item-detail">
+      <div class="item-detail-inner">
+        <p>As of April 8, 68,000 people are in immigration detention — a record — as the DHS funding lapse prevents full case processing. 14 deaths in detention facilities in Q1 2026 have been documented.</p>
+        <p>ICE has direct access to Medicaid home address data for 28 states. A third of adult immigrants had already skipped or postponed healthcare in 2025 (KFF/NYT poll).</p>
+        <p>Deportation flights to El Salvador's CECOT mega-prison continue. A critical DNA database used to identify deceased migrants has disappeared. Courts have temporarily blocked TPS revocation for 350,000 Haitians and 6,000 Syrians.</p>
+        <p>DHS has been unfunded since Feb. 14. TSA agents have missed paychecks; 300+ officers have resigned. The Senate's partial DHS bill left ICE unfunded — creating a political standoff within Trump's own majority.</p>
+        <div class="cite-row">
+          <span>Sources:</span>
+          <a href="https://www.cnn.com/2026/02/05/health/medicaid-data-ice-immigrants" target="_blank">CNN (Medicaid/ICE)</a>
+          <a href="https://www.npr.org/2026/03/13/nx-s1-5737468/medicaid-immigration-ice-dhs-trump" target="_blank">NPR</a>
+          <a href="https://www.theguardian.com" target="_blank">Guardian</a>
+          <a href="https://www.politico.com" target="_blank">Politico</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Healthcare / RFK -->
+  <div class="item">
+    <div class="item-header" onclick="toggle(this)">
+      <div class="item-status status-critical">In Disarray</div>
+      <div class="item-summary">
+        <strong>HHS / RFK Jr. Agenda → Multiple Court Blocks; CDC Leadership Ousted</strong>
+        <div class="one-liner">CDC director fired; ACIP restructuring reversed by courts; ACA premium spikes; measles resurgence; rural Medicaid cuts biting.</div>
+      </div>
+      <div class="item-chevron">▼</div>
+    </div>
+    <div class="item-detail">
+      <div class="item-detail-inner">
+        <p>RFK forced CDC Director Monarez out; the White House fired her when she refused to leave. Three senior CDC officials resigned. RFK's replacement ACIP (vaccine advisory panel) was staffed with anti-vaccine activists — then reversed by a federal court ruling RFK exceeded his authority without proper administrative procedure.</p>
+        <p>An Oregon federal judge blocked RFK's declaration that gender-affirming treatments are "unsafe and ineffective" for bypassing required rulemaking procedures.</p>
+        <p>ACA enhanced subsidies expired at end of 2025, causing dramatic premium spikes — disproportionately in Republican-dominated states. KFF polling: healthcare costs are the top economic concern for 44% of 2026 voters. A measles resurgence is underway.</p>
+        <p>$137B in rural Medicaid cuts have begun to reach communities. 1.4 million lawfully present immigrants projected to lose health coverage under the One Big Beautiful Bill Act (effective 2027).</p>
+        <div class="cite-row">
+          <span>Sources:</span>
+          <a href="https://www.nytimes.com" target="_blank">NYT</a>
+          <a href="https://www.npr.org/2026/04/06/nx-s1-5770484/immigrants-tps-medicare-social-security-eligibility" target="_blank">NPR (Medicare/TPS)</a>
+          <a href="https://www.cnn.com" target="_blank">CNN</a>
+          <a href="https://www.theguardian.com" target="_blank">Guardian</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Ukraine -->
+  <div class="item">
+    <div class="item-header" onclick="toggle(this)">
+      <div class="item-status status-blocked">Stalled</div>
+      <div class="item-summary">
+        <strong>Ukraine Peace Push → Geneva Talks Collapsed; Russia Still Advancing</strong>
+        <div class="one-liner">Third round of U.S.-Ukraine-Russia talks collapsed in two hours; Zelensky calls U.S. framework "not fair"; Iran war absorbed all diplomatic bandwidth.</div>
+      </div>
+      <div class="item-chevron">▼</div>
+    </div>
+    <div class="item-detail">
+      <div class="item-detail-inner">
+        <p>The third round of trilateral talks in Geneva collapsed after just two hours on day two. Russia declared a 32-hour Easter ceasefire then immediately violated it with drone strikes. Zelensky: the U.S. "demands more from Ukraine than from Russia."</p>
+        <p>The U.S. peace framework — requiring Ukraine to cede territories Russia has not yet captured — is seen by Kyiv as capitulation. Russia simultaneously violated its own Easter ceasefire, killing civilians in Odesa and Kherson.</p>
+        <p>The Iran war has effectively sidelined Ukraine: Witkoff and Kushner are now in Pakistan. The Atlantic argues this gives Russia a strategic windfall — time to grind in Donbas while U.S. attention and leverage are consumed elsewhere. Harvard's Graham Allison has publicly warned Russia will likely seize all Donbas within a year at the current pace.</p>
+        <div class="cite-row">
+          <span>Sources:</span>
+          <a href="https://www.nytimes.com" target="_blank">NYT</a>
+          <a href="https://www.politico.com" target="_blank">Politico</a>
+          <a href="https://www.bbc.com" target="_blank">BBC</a>
+          <a href="https://www.theatlantic.com" target="_blank">Atlantic</a>
+          <a href="https://www.theguardian.com" target="_blank">Guardian</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /items -->
+
+<!-- ══ SECTION 2: CHALLENGES ══════════════════════════ -->
+<div class="section-label">Section II</div>
+<div class="section-title"><span class="section-icon">⚡</span> Major Challenges to Continuing Policy</div>
+<div class="section-blurb">Legal, political, and coalition threats now in play</div>
+
+<div class="items">
+
+  <div class="item">
+    <div class="item-header" onclick="toggle(this)">
+      <div class="item-status status-critical">High</div>
+      <div class="item-summary">
+        <strong>MAGA Coalition Fracturing</strong>
+        <div class="one-liner">Tucker Carlson, Alex Jones, MTG, Candace Owens, Rogan, and several GOP senators now openly oppose the Iran war and core Trump positions.</div>
+      </div>
+      <div class="item-chevron">▼</div>
+    </div>
+    <div class="item-detail">
+      <div class="item-detail-inner">
+        <p>Tucker Carlson's 43-minute monologue called Trump's Easter Sunday Iran threat "morally corrupt" and urged officials to disobey orders. CNN called it "the moment the MAGA media wall collapsed."</p>
+        <p>Alex Jones wept on-air, called Trump a "dementia risk," and demanded his removal. Candace Owens, Mike Cernovich, and MTG (who already broke with Trump over Epstein files) added their voices. At CPAC in late March, open clashes erupted on-stage over Iran before the ceasefire.</p>
+        <p>GOP senators Curtis (UT), Murkowski, and Grassley have dissented. Grassley and Cantwell co-sponsored a bill requiring congressional approval for tariffs. The Atlantic asks whether this constitutes real resistance or performative opposition.</p>
+        <p>The "bro-right" media ecosystem — Rogan, Tim Dillon, Theo Von — showed growing exasperation with Trump's Israel alliance. The Guardian and Atlantic explored whether this portends longer-term drift in Trump's 2024 coalition.</p>
+        <div class="cite-row">
+          <span>Sources:</span>
+          <a href="https://us.cnn.com/2026/04/10/politics/trump-iran-war-maga-media-split" target="_blank">CNN</a>
+          <a href="https://www.npr.org/2026/04/09/nx-s1-5778195/some-of-trumps-biggest-supporters-become-his-loudest-critics-over-iran-war" target="_blank">NPR</a>
+          <a href="https://www.theatlantic.com" target="_blank">Atlantic</a>
+          <a href="https://www.politico.com" target="_blank">Politico</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="item-header" onclick="toggle(this)">
+      <div class="item-status status-critical">High</div>
+      <div class="item-summary">
+        <strong>Legal Assault: Courts, Tariffs, War Powers</strong>
+        <div class="one-liner">SCOTUS struck down IEEPA tariffs; replacement tariffs now challenged; Iran war never authorized by Congress; RFK health orders reversed by courts.</div>
+      </div>
+      <div class="item-chevron">▼</div>
+    </div>
+    <div class="item-detail">
+      <div class="item-detail-inner">
+        <p>SCOTUS's Feb. 20 ruling voiding IEEPA tariffs (6-3) is the administration's largest single legal setback. $650M/month in interest accrues while 2,000+ lawsuits proceed in the Court of International Trade.</p>
+        <p>Operation Epic Fury was never put to Congress for authorization. The Atlantic and the Guardian argue the assassination of a foreign head of state without declaration of war or imminent-threat finding sets a precedent with no legal guardrails.</p>
+        <p>Federal courts have also blocked: RFK's ACIP restructuring, RFK's transgender healthcare declaration, and deportations of 350,000 Haitians and 6,000 Syrians under TPS revocation. Courts are actively narrowing executive authority across multiple agencies simultaneously.</p>
+        <div class="cite-row">
+          <span>Sources:</span>
+          <a href="https://www.nytimes.com" target="_blank">NYT</a>
+          <a href="https://www.theatlantic.com" target="_blank">Atlantic</a>
+          <a href="https://www.theguardian.com" target="_blank">Guardian</a>
+          <a href="https://www.politico.com" target="_blank">Politico</a>
+          <a href="https://www.npr.org" target="_blank">NPR</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="item-header" onclick="toggle(this)">
+      <div class="item-status status-stress">Serious</div>
+      <div class="item-summary">
+        <strong>NATO & Alliance Relationships Under Severe Strain</strong>
+        <div class="one-liner">Trump branded NATO a "paper tiger"; is considering U.S. withdrawal; Spain threatened with trade embargo for refusing base access for Iran strikes.</div>
+      </div>
+      <div class="item-chevron">▼</div>
+    </div>
+    <div class="item-detail">
+      <div class="item-detail-inner">
+        <p>After NATO refused to open the Strait of Hormuz, Trump met Sec. Gen. Rutte to discuss potential U.S. withdrawal. The Guardian called it "the most serious threat to the alliance since its founding."</p>
+        <p>The Atlantic argues that even the threat of withdrawal strengthens Russia's hand and may prove diplomatically irreversible regardless of the ultimate decision.</p>
+        <p>Spain refused to allow U.S. military bases on its territory to be used for Iran operations. Trump threatened a trade embargo — testing the limits of alliance relationships with European democracies.</p>
+        <p>Russia and China have coordinated their public messaging throughout the Iran war to maximize Western diplomatic isolation. The BBC notes Russia is watching NATO weaken "with glee."</p>
+        <div class="cite-row">
+          <span>Sources:</span>
+          <a href="https://www.theguardian.com" target="_blank">Guardian</a>
+          <a href="https://www.theatlantic.com" target="_blank">Atlantic</a>
+          <a href="https://www.nytimes.com" target="_blank">NYT</a>
+          <a href="https://www.bbc.com" target="_blank">BBC</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="item-header" onclick="toggle(this)">
+      <div class="item-status status-stress">Serious</div>
+      <div class="item-summary">
+        <strong>DOJ Independence & Epstein Overhang</strong>
+        <div class="one-liner">Pam Bondi removed as AG; Todd Blanche (acting) announced no new Epstein prosecutions; missing FBI interview notes implicate unnamed high-profile figure.</div>
+      </div>
+      <div class="item-chevron">▼</div>
+    </div>
+    <div class="item-detail">
+      <div class="item-detail-inner">
+        <p>Trump abruptly removed AG Bondi; Todd Blanche — who had already announced no new Epstein prosecutions on Feb. 2 — is now acting AG. The Guardian characterized this as part of a pattern of installing loyalists in law enforcement to shield political allies.</p>
+        <p>NYT and Guardian investigations found FBI interview notes from three of four sessions with an Epstein victim are missing from the 3-million-page DOJ release. Triangulating other documents suggests the missing notes implicate a high-profile individual. DOJ says it is "reviewing" whether files were "improperly tagged."</p>
+        <p>MTG's resignation was directly triggered by her break with Trump over the Epstein files. International fallout continues: 70 Barnard faculty, Harvard, and Turkey have opened parallel investigations.</p>
+        <div class="cite-row">
+          <span>Sources:</span>
+          <a href="https://www.nytimes.com" target="_blank">NYT</a>
+          <a href="https://www.cnn.com/2026/02/26/politics/hillary-clinton-deposition-epstein-bill" target="_blank">CNN (Clinton deposition)</a>
+          <a href="https://www.theguardian.com" target="_blank">Guardian</a>
+          <a href="https://www.npr.org" target="_blank">NPR</a>
+          <a href="https://www.theatlantic.com" target="_blank">Atlantic</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /items -->
+
+<!-- ══ SECTION 3: PUBLIC VIEW ═════════════════════════ -->
+<div class="section-label">Section III</div>
+<div class="section-title"><span class="section-icon">📊</span> Public View of the Administration</div>
+<div class="section-blurb">Polling, protest, and sentiment as of early April 2026</div>
+
+<div class="items">
+
+  <div class="item">
+    <div class="item-header" onclick="toggle(this)">
+      <div class="item-status status-critical">36%</div>
+      <div class="item-summary">
+        <strong>Approval at Second-Term Low; Consumer Confidence at Record Low</strong>
+        <div class="one-liner">Gallup: 36% approval (lowest of second term). U. of Michigan April survey: consumer sentiment at a record low. Healthcare is top worry for 44% of voters.</div>
+      </div>
+      <div class="item-chevron">▼</div>
+    </div>
+    <div class="item-detail">
+      <div class="item-detail-inner">
+        <p>A Gallup poll placed Trump's approval at 36% — his lowest in the second term. The University of Michigan's April consumer sentiment survey recorded a historic low amid rising energy prices and Iran war fears.</p>
+        <p>NPR's Mara Liasson noted that if gas prices fall fast, the political fallout may be manageable — but "other casualties, like NATO, are harder to reverse."</p>
+        <p>KFF polling confirmed healthcare costs are the top economic concern for 44% of 2026 voters — driven by ACA premium spikes, Medicaid cuts, and RFK's disruption of public health infrastructure.</p>
+        <div class="cite-row">
+          <span>Sources:</span>
+          <a href="https://www.npr.org" target="_blank">NPR</a>
+          <a href="https://www.nytimes.com" target="_blank">NYT</a>
+          <a href="https://www.politico.com" target="_blank">Politico</a>
+          <a href="https://www.theguardian.com" target="_blank">Guardian</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="item-header" onclick="toggle(this)">
+      <div class="item-status status-watch">Growing</div>
+      <div class="item-summary">
+        <strong>"No Kings" Protests Spreading Nationally</strong>
+        <div class="one-liner">Grassroots rallies in Washington D.C., San Antonio, and other cities. No formal organization. Triggered by Iran war, tariff chaos, and DHS shutdown.</div>
+      </div>
+      <div class="item-chevron">▼</div>
+    </div>
+    <div class="item-detail">
+      <div class="item-detail-inner">
+        <p>Grassroots "No Kings" protests erupted in cities across the U.S. in response to Trump's handling of the Iran war, the tariff crisis, and the DHS shutdown. The Guardian and NPR reported sustained energy without formal organization.</p>
+        <p>Politico analyzed whether the protests translate into electoral pressure by November. Historically, leaderless protest movements without institutional backing have struggled to convert energy into turnout — but the healthcare stakes and Medicaid cuts provide Democrats a concrete policy hook.</p>
+        <div class="cite-row">
+          <span>Sources:</span>
+          <a href="https://www.theguardian.com" target="_blank">Guardian</a>
+          <a href="https://www.npr.org" target="_blank">NPR</a>
+          <a href="https://www.politico.com" target="_blank">Politico</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="item-header" onclick="toggle(this)">
+      <div class="item-status status-stress">Cracking</div>
+      <div class="item-summary">
+        <strong>MAGA Media Ecosystem: Public Rupture</strong>
+        <div class="one-liner">Tucker, Jones, Owens, MTG, Rogan, Von: all now publicly critical. The "bro-right" and isolationist wings feel most directly betrayed by the Iran intervention.</div>
+      </div>
+      <div class="item-chevron">▼</div>
+    </div>
+    <div class="item-detail">
+      <div class="item-detail-inner">
+        <p>The rupture is not the usual private grumbling — it is on-air, public, and emotionally charged. Alex Jones wept. Tucker Carlson called the president "morally corrupt" and "evil." Joe Rogan and Tim Dillon expressed open exasperation. Theo Von called Israeli leaders "terrorists" on a major podcast.</p>
+        <p>The Guardian and Atlantic are tracking whether this signals a durable drift of the younger male media ecosystem away from the GOP, or a temporary protest that will be reabsorbed once the ceasefire holds.</p>
+        <div class="cite-row">
+          <span>Sources:</span>
+          <a href="https://us.cnn.com/2026/04/10/politics/trump-iran-war-maga-media-split" target="_blank">CNN</a>
+          <a href="https://www.npr.org/2026/04/09/nx-s1-5778195/some-of-trumps-biggest-supporters-become-his-loudest-critics-over-iran-war" target="_blank">NPR</a>
+          <a href="https://www.theguardian.com" target="_blank">Guardian</a>
+          <a href="https://www.theatlantic.com" target="_blank">Atlantic</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /items -->
+
+<!-- ══ SECTION 4: MIDTERM OUTLOOK ════════════════════ -->
+<div class="section-label">Section IV</div>
+<div class="section-title"><span class="section-icon">🗳️</span> Likely Administration Behavior: Now → Midterms</div>
+<div class="section-blurb">What the political landscape suggests about the next seven months</div>
+
+<div class="items">
+
+  <div class="item">
+    <div class="item-header" onclick="toggle(this)">
+      <div class="item-status status-watch">Likely</div>
+      <div class="item-summary">
+        <strong>Energy Price Recovery as Central Narrative</strong>
+        <div class="one-liner">If the Strait of Hormuz reopens and gas prices fall, the White House will claim the Iran war as a strategic victory. This is the administration's clearest path to approval recovery.</div>
+      </div>
+      <div class="item-chevron">▼</div>
+    </div>
+    <div class="item-detail">
+      <div class="item-detail-inner">
+        <p>NPR's Mara Liasson explicitly framed gas price trajectory as the key variable: fast price falls = manageable fallout. Everything else — NATO damage, nuclear unresolved, Hormuz conditions — is "harder to reverse."</p>
+        <p>The administration is expected to use any Strait reopening as a "Mission Accomplished" moment and pivot aggressively to economic messaging ahead of November. The risk: energy markets remain fragile if Iran resumes blocking tactics or nuclear talks collapse.</p>
+        <div class="cite-row">
+          <span>Sources:</span>
+          <a href="https://www.npr.org" target="_blank">NPR</a>
+          <a href="https://www.politico.com" target="_blank">Politico</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="item-header" onclick="toggle(this)">
+      <div class="item-status status-watch">Likely</div>
+      <div class="item-summary">
+        <strong>Healthcare as Democratic Weapon; Administration Plays Defense</strong>
+        <div class="one-liner">Democrats see healthcare as their 2026 centerpiece. Medicaid cuts, ACA premium spikes, and RFK chaos give them three separate lines of attack. KFF: healthcare is #1 voter concern.</div>
+      </div>
+      <div class="item-chevron">▼</div>
+    </div>
+    <div class="item-detail">
+      <div class="item-detail-inner">
+        <p>NPR and Politico both reported Democrats are in what a Senate aide described as "a blue sky moment" on healthcare. The three vectors — Medicaid cuts, ACA premium spikes, and RFK disruption of CDC/ACIP — give Democrats multiple distinct attack lines that resonate even in red states (rural Medicaid cuts hit Republican constituencies hardest).</p>
+        <p>KFF polling: healthcare is the top economic concern for 44% of 2026 voters. This number predates the measles resurgence and the full impact of rural hospital cuts — both likely to worsen by fall.</p>
+        <p>The administration's healthcare defense is limited: courts have blocked its most aggressive HHS moves, its own appointees are under fire (RFK, Dr. Oz), and the "AI solutions for rural healthcare" messaging has drawn mockery.</p>
+        <div class="cite-row">
+          <span>Sources:</span>
+          <a href="https://www.npr.org" target="_blank">NPR</a>
+          <a href="https://www.politico.com" target="_blank">Politico</a>
+          <a href="https://www.nytimes.com" target="_blank">NYT</a>
+          <a href="https://www.theguardian.com" target="_blank">Guardian</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="item-header" onclick="toggle(this)">
+      <div class="item-status status-watch">Watch</div>
+      <div class="item-summary">
+        <strong>Two Bellwether Elections Signal MAGA's Direction</strong>
+        <div class="one-liner">Georgia special election (MTG's seat) and Texas Senate runoff (Paxton vs. Cornyn) will test whether MAGA's hold is strengthening or cracking at the base.</div>
+      </div>
+      <div class="item-chevron">▼</div>
+    </div>
+    <div class="item-detail">
+      <div class="item-detail-inner">
+        <p>MTG's resignation triggered a Georgia special election. CNN notes a Democrat faces "a tall task" but the race draws national attention as a test of Trump's coattails in the district that twice elected his most fervent congressional ally — now his loudest critic.</p>
+        <p>The Texas Senate runoff (Ken Paxton vs. John Cornyn) is framed by Politico and NYT as a referendum on what the GOP stands for. Cornyn — a two-term incumbent — is at risk of not making the runoff. If Paxton wins, it signals MAGA's complete takeover of the Texas Republican establishment and its rejection of institutional conservatism.</p>
+        <p>Both races will play out before November and will be read by both parties as a leading indicator of the midterm environment.</p>
+        <div class="cite-row">
+          <span>Sources:</span>
+          <a href="https://www.cnn.com" target="_blank">CNN</a>
+          <a href="https://www.politico.com" target="_blank">Politico</a>
+          <a href="https://www.nytimes.com" target="_blank">NYT</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="item">
+    <div class="item-header" onclick="toggle(this)">
+      <div class="item-status status-partial">Note</div>
+      <div class="item-summary">
+        <strong>Democratic Own-Goal: Swalwell Scandal Complicates Messaging</strong>
+        <div class="one-liner">House Democratic leadership withdrew support for Rep. Swalwell after a sexual assault allegation — complicating the party's character and accountability messaging.</div>
+      </div>
+      <div class="item-chevron">▼</div>
+    </div>
+    <div class="item-detail">
+      <div class="item-detail-inner">
+        <p>Politico and CNN reported on the disruption caused by a former staffer's sexual assault allegation against Rep. Eric Swalwell. Democratic leadership moved quickly, but the episode complicates Democratic messaging on accountability at a moment when they are trying to capitalize on Republican Epstein and Iran war scandals.</p>
+        <p>The incident is unlikely to be decisive, but will be cited by Republicans to deflect character-based attacks and provides evidence that "both sides" narratives will be available to the press in the final months before the midterms.</p>
+        <div class="cite-row">
+          <span>Sources:</span>
+          <a href="https://www.politico.com" target="_blank">Politico</a>
+          <a href="https://www.cnn.com" target="_blank">CNN</a>
+          <a href="https://www.nytimes.com" target="_blank">NYT</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /items -->
+
+<hr class="rule-dbl"/>
+
+</div><!-- /wrapper -->
+
+<div class="footer">
+  Compiled for BOLLI Current Events Discussion Group &nbsp;·&nbsp; Coverage synthesized across 9 mainstream outlets
+  &nbsp;·&nbsp; Mar 29 – Apr 12, 2026 &nbsp;·&nbsp; Click any item to expand detail and citations
+  <br/>
+  <a href="https://www.nytimes.com" target="_blank">NYT</a> ·
+  <a href="https://www.cnn.com" target="_blank">CNN</a> ·
+  <a href="https://www.npr.org" target="_blank">NPR</a> ·
+  <a href="https://www.bbc.com" target="_blank">BBC</a> ·
+  <a href="https://www.theguardian.com" target="_blank">Guardian</a> ·
+  <a href="https://www.politico.com" target="_blank">Politico</a> ·
+  <a href="https://www.theatlantic.com" target="_blank">Atlantic</a> ·
+  <a href="https://www.aljazeera.com" target="_blank">Al Jazeera</a> ·
+  <a href="https://www.haaretz.com" target="_blank">Haaretz</a>
+</div>
+
+<script>
+  function toggle(header) {
+    const detail = header.nextElementSibling;
+    const chevron = header.querySelector('.item-chevron');
+    const isOpen = detail.classList.contains('open');
+
+    // Collapse all
+    document.querySelectorAll('.item-detail').forEach(d => d.classList.remove('open'));
+    document.querySelectorAll('.item-chevron').forEach(c => c.classList.remove('open'));
+
+    if (!isOpen) {
+      detail.classList.add('open');
+      chevron.classList.add('open');
+      setTimeout(() => header.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
+    }
+  }
+</script>
+</body>
+</html>
