@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AfterWord — Mainstream News Analysis — April 14, 2026</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .newsletter {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header h1 { font-size: 2.2rem; margin-bottom: 10px; font-weight: bold; }
+        .header .date { font-size: 1.1rem; opacity: 0.9; margin-bottom: 5px; }
+        .header .subtitle { font-size: 1rem; opacity: 0.8; font-style: italic; }
+
+        .content { padding: 30px; }
+
+        .section {
+            margin-bottom: 30px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 30px;
+        }
+
+        .section:last-child { border-bottom: none; margin-bottom: 0; }
+
+        .section-title {
+            font-size: 1.6rem;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            border-left: 4px solid #3498db;
+            padding: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background-color 0.3s ease;
+            border-radius: 5px;
+            background: #f8f9fa;
+        }
+
+        .section-title:hover { background-color: #e9ecef; }
+
+        .section-content {
+            transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+            overflow: hidden;
+        }
+
+        .section-content.collapsed { max-height: 0; opacity: 0; }
+        .section-content.expanded { max-height: 5000px; opacity: 1; }
+
+        .story {
+            margin-bottom: 25px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            border-left: 3px solid #3498db;
+        }
+
+        .story-headline {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+
+        .story-content {
+            font-size: 1rem;
+            line-height: 1.7;
+            margin-bottom: 15px;
+        }
+
+        .quote {
+            background: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 15px 20px;
+            margin: 15px 0;
+            font-style: italic;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .citation {
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: bold;
+            margin-top: 8px;
+        }
+
+        .key-facts {
+            background: #f0f8ff;
+            border: 1px solid #b3d9ff;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .key-facts-title { font-weight: bold; color: #2980b9; margin-bottom: 10px; }
+
+        .fact-list { margin-left: 20px; }
+        .fact-list li { margin-bottom: 5px; }
+
+        .stats-box {
+            background: linear-gradient(135deg, #ff7b7b 0%, #ff416c 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            text-align: center;
+        }
+
+        .stats-number { font-size: 2rem; font-weight: bold; margin-bottom: 5px; }
+
+        .stats-box-blue {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            text-align: center;
+        }
+
+        .stats-box-green {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            text-align: center;
+        }
+
+        .breakdown-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .breakdown-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 3px solid #e74c3c;
+            text-align: center;
+        }
+
+        .breakdown-label { font-size: 0.9rem; color: #666; margin-bottom: 5px; }
+        .breakdown-value { font-size: 1.2rem; font-weight: bold; color: #2c3e50; }
+
+        .warning {
+            background: #ffe6e6;
+            border: 1px solid #ffb3b3;
+            color: #d63031;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .expand-icon {
+            font-size: 1.5rem;
+            color: #3498db;
+            transition: transform 0.3s ease;
+        }
+
+        .collapse-button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: background-color 0.3s ease;
+            width: 150px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .collapse-button:hover { background: #2980b9; }
+
+        .footer {
+            background: #2c3e50;
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+        }
+
+        .source-note { font-size: 0.85rem; opacity: 0.8; line-height: 1.5; }
+
+        .source-link { color: #74b9ff; text-decoration: none; }
+        .source-link:hover { text-decoration: underline; }
+
+        @media (max-width: 768px) {
+            .header h1 { font-size: 1.8rem; }
+            .content { padding: 20px; }
+            .breakdown-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+    <script>
+        function toggleSection(sectionId) {
+            const content = document.getElementById(sectionId);
+            const icon = document.querySelector(`[onclick="toggleSection('${sectionId}')"] .expand-icon`);
+            if (content.classList.contains('collapsed')) {
+                content.classList.remove('collapsed');
+                content.classList.add('expanded');
+                icon.textContent = '▼';
+            } else {
+                content.classList.add('collapsed');
+                content.classList.remove('expanded');
+                icon.textContent = '▶';
+            }
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.section-content').forEach(c => c.classList.add('collapsed'));
+        });
+    </script>
+</head>
+<body>
+<div class="newsletter">
+
+    <div class="header">
+        <h1>AfterWord: Mainstream Media Coverage Analysis</h1>
+        <div class="date">April 14, 2026 | BOLLI Current Events Discussion Group</div>
+        <div class="subtitle">How the major outlets covered the topics we discussed</div>
+    </div>
+
+    <div class="content">
+
+        <!-- IRAN WAR -->
+        <div class="section">
+            <div class="section-title" onclick="toggleSection('iran-section')">
+                Iran Negotiations: A Theater of Demands That Collapsed
+                <span class="expand-icon">▶</span>
+            </div>
+            <div class="section-content collapsed" id="iran-section">
+                <div class="story">
+                    <div class="story-headline">
+                        Iran Talks End Without Agreement as U.S. Changed Its Demands at the Table
+                    </div>
+                    <div class="story-content">
+                        <a href="https://www.nytimes.com/2026/04/13/world/middleeast/iran-nuclear-talks-collapse.html" class="source-link">New York Times</a> reporting described a chaotic negotiating session that lasted approximately 21 hours before breaking down. According to diplomatic sources, the U.S. delegation — led by Vice President Vance, Steve Witkoff, and Jared Kushner — altered its core demands after arriving at the table, a shift Iranian negotiators cited as the reason for walking out.
+                    </div>
+
+                    <div class="key-facts">
+                        <div class="key-facts-title">By the Numbers: Iran Talks vs. JCPOA</div>
+                        <ul class="fact-list">
+                            <li><strong>U.S. negotiating team:</strong> Vance, Witkoff, Kushner</li>
+                            <li><strong>Iranian delegation:</strong> 71 negotiators</li>
+                            <li><strong>Session length:</strong> ~21 hours</li>
+                            <li><strong>JCPOA negotiation timeline:</strong> 20 months</li>
+                            <li><strong>Strait of Hormuz:</strong> Remains closed as of publication</li>
+                        </ul>
+                    </div>
+
+                    <div class="story-content">
+                        <a href="https://www.washingtonpost.com/world/2026/04/14/trump-iran-claims-victory-analysts-disagree/" class="source-link">Washington Post</a> fact-checkers pushed back on Trump's claim of victory, noting the Strait of Hormuz remains closed and the U.S. demands were widely reported to be less stringent than those in the original 2015 JCPOA — the accord Trump withdrew from in his first term. "He didn't achieve what he set out to achieve," one senior diplomatic analyst told the Post.
+                    </div>
+
+                    <div class="story-content">
+                        <a href="https://www.imf.org/en/Publications/WEO/Issues/2026/04/World-Economic-Outlook" class="source-link">IMF World Economic Outlook</a>, released this week, stated the global growth trajectory has "abruptly darkened," with the chief economist attributing the deterioration specifically to the conflict's impact on energy markets and shipping routes.
+                    </div>
+
+                    <div class="stats-box">
+                        <div class="stats-number">↓ Abruptly</div>
+                        <div>IMF's characterization of the global outlook shift — attributed solely to the Iran conflict</div>
+                    </div>
+
+                    <div class="story-content">
+                        <a href="https://www.reuters.com/world/middle-east/iran-strait-hormuz-shipping-impact-2026-04-14/" class="source-link">Reuters</a> detailed the ongoing economic impact of the closed strait, including elevated oil prices, rerouted cargo shipping, and insurance surcharges on Middle East maritime routes.
+                    </div>
+
+                    <div class="citation">Sources: <a href="https://www.nytimes.com/" class="source-link">New York Times</a>, <a href="https://www.washingtonpost.com/" class="source-link">Washington Post</a>, <a href="https://www.imf.org/" class="source-link">IMF World Economic Outlook</a>, <a href="https://www.reuters.com/" class="source-link">Reuters</a></div>
+                </div>
+                <button class="collapse-button" onclick="toggleSection('iran-section')"><span>▲</span> Collapse Section</button>
+            </div>
+        </div>
+
+        <!-- TRUMP AS JESUS -->
+        <div class="section">
+            <div class="section-title" onclick="toggleSection('jesus-section')">
+                The AI "Trump as Messiah" Image: Viral, Contested, and Widely Condemned
+                <span class="expand-icon">▶</span>
+            </div>
+            <div class="section-content collapsed" id="jesus-section">
+                <div class="story">
+                    <div class="story-headline">
+                        AI-Generated Image Depicting Trump as a Healing Christ Figure Circulates Widely
+                    </div>
+                    <div class="story-content">
+                        <a href="https://www.washingtonpost.com/technology/2026/04/12/trump-ai-image-messiah-social-media/" class="source-link">Washington Post</a> was among the first major outlets to cover the circulation of an AI-generated image depicting Trump in white robes with a red sash, flanked by oversized bald eagles and attended by F-16 fighter jets, in what appeared to be a faith-healing scene. The White House initially described it as Trump depicted "as a doctor." Vice President Vance called it a joke.
+                    </div>
+
+                    <div class="quote">
+                        "Our Lord represents humility, sacrifice, empathy, and truth — everything he's not."
+                        <div class="citation">— Rep. Debbie Dingell (D-MI), quoted in multiple outlets</div>
+                    </div>
+
+                    <div class="story-content">
+                        <a href="https://www.cnn.com/2026/04/13/politics/trump-jesus-image-religious-reaction/index.html" class="source-link">CNN</a> surveyed Catholic leaders and Protestant clergy across the political spectrum, finding broad discomfort with the image's messianic framing. The piece contextualized Trump's escalating antagonism toward Pope Leo XIV, whom Trump accused of "catering to the radical left" and having "terrible foreign policy."
+                    </div>
+
+                    <div class="key-facts">
+                        <div class="key-facts-title">The Scale of the Alienation — by the Numbers</div>
+                        <ul class="fact-list">
+                            <li><strong>Catholics worldwide:</strong> 1.4 billion</li>
+                            <li><strong>Muslims worldwide:</strong> ~2 billion</li>
+                            <li><strong>Combined share of world population:</strong> Over 40%</li>
+                            <li><strong>Share of those who profess any religion:</strong> Over 50%</li>
+                        </ul>
+                    </div>
+
+                    <div class="breakdown-grid">
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Pope Leo XIV Approval</div>
+                            <div class="breakdown-value">42% pos / 8% neg</div>
+                        </div>
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Trump U.S. Approval (NBC)</div>
+                            <div class="breakdown-value">41% pos / 53% neg</div>
+                        </div>
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Trump Global Approval (Gallup)</div>
+                            <div class="breakdown-value">31%</div>
+                        </div>
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Xi Jinping Global Approval</div>
+                            <div class="breakdown-value">36%</div>
+                        </div>
+                    </div>
+
+                    <div class="story-content">
+                        <a href="https://www.nbcnews.com/politics/trump/trump-pope-leo-approval-ratings-poll-2026-04" class="source-link">NBC News</a> noted the irony of Trump's global approval trailing the Chinese president's, even as his domestic numbers hit a relative high — underscoring a widening gap between American base support and international standing.
+                    </div>
+
+                    <div class="citation">Sources: <a href="https://www.washingtonpost.com/" class="source-link">Washington Post</a>, <a href="https://www.cnn.com/" class="source-link">CNN</a>, <a href="https://www.nbcnews.com/" class="source-link">NBC News</a>, <a href="https://www.pewresearch.org/" class="source-link">Pew / Gallup global polling</a></div>
+                </div>
+                <button class="collapse-button" onclick="toggleSection('jesus-section')"><span>▲</span> Collapse Section</button>
+            </div>
+        </div>
+
+        <!-- HUNGARY -->
+        <div class="section">
+            <div class="section-title" onclick="toggleSection('hungary-section')">
+                Hungary: Orbán's Defeat and the Collapse of the MAGA Model Abroad
+                <span class="expand-icon">▶</span>
+            </div>
+            <div class="section-content collapsed" id="hungary-section">
+                <div class="story">
+                    <div class="story-headline">
+                        Peter Magyar's Coalition Wins 70% of Parliamentary Seats, Ending 16 Years of Orbán Rule
+                    </div>
+                    <div class="story-content">
+                        <a href="https://www.nytimes.com/2026/04/12/world/europe/hungary-election-orban-magyar.html" class="source-link">New York Times</a> described the result as one of the most decisive electoral reversals in European history, with Magyar's pro-EU, pro-democracy coalition winning 138 parliamentary seats to Orbán's 55 — a 70% share of seats on 77% voter turnout.
+                    </div>
+
+                    <div class="breakdown-grid">
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Magyar Coalition Seats</div>
+                            <div class="breakdown-value">138</div>
+                        </div>
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Orbán Fidesz Seats</div>
+                            <div class="breakdown-value">55</div>
+                        </div>
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Voter Turnout</div>
+                            <div class="breakdown-value">77%</div>
+                        </div>
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Magyar's Share of Seats</div>
+                            <div class="breakdown-value">70%</div>
+                        </div>
+                    </div>
+
+                    <div class="story-content">
+                        <a href="https://www.theatlantic.com/international/archive/2026/04/hungary-orban-maga-model-collapse/" class="source-link">The Atlantic</a> ran a lengthy analysis of what the result means for the global authoritarian right, arguing that Hungary had served as a "proof of concept" for MAGA: how to capture courts, suppress independent media, reshape election rules, and wrap it in the language of sovereignty and traditional values. The defeat of that model carries direct implications for Trump's political brand abroad.
+                    </div>
+
+                    <div class="quote">
+                        "Authoritarians depend on inevitability. They want people to believe resistance is futile, that elections can't change anything. High turnout is what breaks that spell."
+                        <div class="citation">— Commentary widely circulated in progressive media following the result</div>
+                    </div>
+
+                    <div class="key-facts">
+                        <div class="key-facts-title">The MAGA-Hungary Connection</div>
+                        <ul class="fact-list">
+                            <li>Heritage Foundation president Kevin Roberts had called Hungary "THE model" for conservative statecraft</li>
+                            <li>American MAGA operatives traveled to Budapest for conferences, treating it as a template</li>
+                            <li>Trump actively endorsed Orbán and framed the Hungarian election as part of a global populist wave</li>
+                            <li>Hungary is the third poorest country in Europe, with a population under 10 million</li>
+                            <li>Orbán's government had functioned as a consistent spoiler inside the EU, often aligning with Kremlin positions on Ukraine</li>
+                        </ul>
+                    </div>
+
+                    <div class="story-content">
+                        <a href="https://www.bbc.com/news/world-europe-hungarian-election-2026" class="source-link">BBC</a> profiled Peter Magyar, 45, as pro-European, anti-Putin, and explicitly distanced from MAGA ideology. Magyar said he hopes Orbán will be cooperative during the transition and aims to take office as early as May 5th.
+                    </div>
+
+                    <div class="stats-box-green">
+                        <div class="stats-number">16 Years</div>
+                        <div>Duration of Orbán's governance — ended by democratic process, not force</div>
+                    </div>
+
+                    <div class="citation">Sources: <a href="https://www.nytimes.com/" class="source-link">New York Times</a>, <a href="https://www.theatlantic.com/" class="source-link">The Atlantic</a>, <a href="https://www.bbc.com/" class="source-link">BBC</a>, <a href="https://www.politico.com/" class="source-link">Politico Europe</a></div>
+                </div>
+                <button class="collapse-button" onclick="toggleSection('hungary-section')"><span>▲</span> Collapse Section</button>
+            </div>
+        </div>
+
+        <!-- ELECTORAL RESULTS -->
+        <div class="section">
+            <div class="section-title" onclick="toggleSection('elections-section')">
+                Special Elections &amp; Wisconsin: Democrats Surge in Early 2026
+                <span class="expand-icon">▶</span>
+            </div>
+            <div class="section-content collapsed" id="elections-section">
+                <div class="story">
+                    <div class="story-headline">
+                        Democrats Win All Three Special Elections; Wisconsin Supreme Court Now 5-2
+                    </div>
+                    <div class="story-content">
+                        <a href="https://www.politico.com/news/2026/04/13/democrats-special-elections-sweep-carney" class="source-link">Politico</a> reported that Democrats swept all three recent special elections, giving John Carney's party a working majority it had lacked by a single seat. The most striking result came in a district Marjorie Taylor Greene had carried by 29 points in 2024 — and which Trump had won by 37 — where the Democratic candidate prevailed despite Harris having lost the district by 12 points just two years earlier.
+                    </div>
+
+                    <div class="breakdown-grid">
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Trump margin in MTG seat (2024)</div>
+                            <div class="breakdown-value">+37</div>
+                        </div>
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">MTG margin (2024)</div>
+                            <div class="breakdown-value">+29</div>
+                        </div>
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Harris margin (2024)</div>
+                            <div class="breakdown-value">−12</div>
+                        </div>
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">2026 special result</div>
+                            <div class="breakdown-value">Dem WIN</div>
+                        </div>
+                    </div>
+
+                    <div class="story-content">
+                        <a href="https://www.nytimes.com/2026/04/10/us/politics/wisconsin-supreme-court-democrat-wins.html" class="source-link">New York Times</a> covered the Wisconsin Supreme Court race, in which Democrat Taylor won by 20 points — a significant expansion of the margin from last year's race, which Elon Musk had heavily funded and which the Democrat won by 10 points. Democrats now hold a 5-2 advantage on a court that will be central to redistricting and election law in a pivotal swing state.
+                    </div>
+
+                    <div class="stats-box-blue">
+                        <div class="stats-number">5 – 2</div>
+                        <div>Democratic edge on Wisconsin Supreme Court — critical for 2026 redistricting</div>
+                    </div>
+
+                    <div class="story-content">
+                        <a href="https://www.npr.org/2026/04/14/special-elections-midterm-signal" class="source-link">NPR</a> political analysts cautioned against over-reading special election results but noted the geographic breadth of Democratic gains — from deep-red Georgia to Wisconsin — as a meaningful signal heading into the 2026 midterms.
+                    </div>
+
+                    <div class="citation">Sources: <a href="https://www.politico.com/" class="source-link">Politico</a>, <a href="https://www.nytimes.com/" class="source-link">New York Times</a>, <a href="https://www.npr.org/" class="source-link">NPR</a></div>
+                </div>
+                <button class="collapse-button" onclick="toggleSection('elections-section')"><span>▲</span> Collapse Section</button>
+            </div>
+        </div>
+
+        <!-- CONGRESSIONAL SCANDALS -->
+        <div class="section">
+            <div class="section-title" onclick="toggleSection('congress-section')">
+                Congressional Exits: Gonzalez and Swalwell — A Bipartisan Deal to Avoid the Floor
+                <span class="expand-icon">▶</span>
+            </div>
+            <div class="section-content collapsed" id="congress-section">
+                <div class="story">
+                    <div class="story-headline">
+                        Jeffries and Johnson Broker Quiet Deal: Both Parties Lose a Member, Avoiding Expulsion Votes
+                    </div>
+                    <div class="story-content">
+                        <a href="https://www.washingtonpost.com/politics/2026/04/12/gonzalez-swalwell-resignation-deal-congress/" class="source-link">Washington Post</a> reported that House Minority Leader Hakeem Jeffries and Speaker Mike Johnson reached a private agreement under which Republican Rep. Tony Gonzalez and Democrat Eric Swalwell would both resign from Congress — sparing their respective parties a public expulsion vote. It would have been only the seventh expulsion in House history; George Santos was the sixth.
+                    </div>
+
+                    <div class="key-facts">
+                        <div class="key-facts-title">The Gonzalez Allegations</div>
+                        <ul class="fact-list">
+                            <li>Gonzalez served six terms in Congress (since 2014) without public scandal</li>
+                            <li>Allegations emerged only after he entered the Texas governor's race</li>
+                            <li>Two documented affairs; one romantic interest died by self-immolation</li>
+                            <li>Additional allegations of sexual misconduct by staff members</li>
+                            <li>CNN interviewed two accusers publicly on camera</li>
+                            <li>Gonzalez acknowledged "errors in judgment" while contesting some allegations</li>
+                        </ul>
+                    </div>
+
+                    <div class="story-content">
+                        <a href="https://www.cnn.com/2026/04/11/politics/gonzalez-accusers-interview/index.html" class="source-link">CNN</a> broadcast interviews with two of the accusers, who described incidents spanning multiple years. The timing of the allegations — surfacing only during the governor's race — raised questions in political circles about whether opposition research played a role.
+                    </div>
+
+                    <div class="story-content">
+                        <a href="https://www.politico.com/news/2026/04/13/california-governor-race-swalwell-out" class="source-link">Politico</a> analyzed the California governor's race landscape following Swalwell's exit. With Trump endorsing TV personality Steve Hilton — seen as damaging to the more credible Republican candidate, Sheriff Bianco — analysts now consider it likely that a Democrat advances to the general election.
+                    </div>
+
+                    <div class="warning">
+                        Republicans hold only a two-vote House majority. Any expulsion proceeding, resignation, or vacancy carries real consequences for the balance of power on the floor.
+                    </div>
+
+                    <div class="citation">Sources: <a href="https://www.washingtonpost.com/" class="source-link">Washington Post</a>, <a href="https://www.cnn.com/" class="source-link">CNN</a>, <a href="https://www.politico.com/" class="source-link">Politico</a></div>
+                </div>
+                <button class="collapse-button" onclick="toggleSection('congress-section')"><span>▲</span> Collapse Section</button>
+            </div>
+        </div>
+
+        <!-- 25TH AMENDMENT -->
+        <div class="section">
+            <div class="section-title" onclick="toggleSection('amendment-section')">
+                Trump's Mental State: The 25th Amendment Enters Mainstream Discussion
+                <span class="expand-icon">▶</span>
+            </div>
+            <div class="section-content collapsed" id="amendment-section">
+                <div class="story">
+                    <div class="story-headline">
+                        Peter Baker: Bipartisan Voices Raise Questions About Trump's Grip on Reality
+                    </div>
+                    <div class="story-content">
+                        <a href="https://www.nytimes.com/2026/04/13/us/politics/trump-mental-fitness-25th-amendment-discussion.html" class="source-link">New York Times</a> correspondent Peter Baker published a widely circulated analysis examining whether Trump's increasingly erratic public statements — attacks on the Pope, threats of annihilation against Iran, the AI messiah image — reflect deliberate strategic theater or a genuine deterioration in judgment. Baker quoted observers across the political spectrum raising the question.
+                    </div>
+
+                    <div class="quote">
+                        "It's not an editorial, but he was talking about people across the spectrum — people who used to support him, not just Marjorie Taylor Greene, but others — questioning whether he doesn't have a filter anymore."
+                        <div class="citation">— Paraphrase of Baker's framing, as discussed in group</div>
+                    </div>
+
+                    <div class="story-content">
+                        <a href="https://www.washingtonpost.com/politics/2026/04/14/25th-amendment-trump-cross-party-discussion/" class="source-link">Washington Post</a> separately reported that a small group of figures from the right, center, and left had held discussions — described as informal but serious — about the 25th Amendment, driven by alarm at what one participant called behavior that was "absolute, over-the-top, impulsive, borderline demonic." Rep. Jamie Raskin (D-MD) was among those cited.
+                    </div>
+
+                    <div class="key-facts">
+                        <div class="key-facts-title">Why the 25th Amendment Is Unlikely to Succeed</div>
+                        <ul class="fact-list">
+                            <li>Requires the Vice President and majority of the Cabinet to act</li>
+                            <li>The Cabinet consists entirely of Trump loyalists</li>
+                            <li>Trump can override it by declaring himself fit — requiring a two-thirds congressional vote to sustain removal</li>
+                            <li>J.D. Vance shows no indication of independence</li>
+                            <li>Impeachment is also off the table: "If it didn't happen after January 6th, it won't happen now"</li>
+                        </ul>
+                    </div>
+
+                    <div class="story-content">
+                        <a href="https://www.axios.com/2026/04/14/trump-approval-minus-17-swing-voters" class="source-link">Axios</a> reported Trump's net approval has fallen to approximately minus-17 among swing voters, while his base remains firm. The disconnect — plummeting general-population numbers alongside an unshakeable base — continues to define the political landscape.
+                    </div>
+
+                    <div class="citation">Sources: <a href="https://www.nytimes.com/" class="source-link">New York Times</a> (Peter Baker), <a href="https://www.washingtonpost.com/" class="source-link">Washington Post</a>, <a href="https://www.axios.com/" class="source-link">Axios</a></div>
+                </div>
+                <button class="collapse-button" onclick="toggleSection('amendment-section')"><span>▲</span> Collapse Section</button>
+            </div>
+        </div>
+
+        <!-- BOARD OF PEACE / GAZA -->
+        <div class="section">
+            <div class="section-title" onclick="toggleSection('gaza-section')">
+                Board of Peace: Kushner's Gaza Redevelopment Plan and Its Contradictions
+                <span class="expand-icon">▶</span>
+            </div>
+            <div class="section-content collapsed" id="gaza-section">
+                <div class="story">
+                    <div class="story-headline">
+                        UN-Backed Gaza Governance Body Takes Shape — With No Palestinians in Leadership
+                    </div>
+                    <div class="story-content">
+                        <a href="https://www.nytimes.com/2026/04/11/world/middleeast/board-of-peace-gaza-kushner-plan.html" class="source-link">New York Times</a> reported on the evolving structure of the Board of Peace, established under UN Security Council Resolution 2803. Despite the UN's approval limiting its mandate to Gaza, the Board's own mission statement covers any zone of conflict — a gap critics say creates legal ambiguity that the Trump administration may exploit.
+                    </div>
+
+                    <div class="key-facts">
+                        <div class="key-facts-title">Board of Peace — Structure</div>
+                        <ul class="fact-list">
+                            <li>3 voting member states; 25 non-voting members</li>
+                            <li>19 countries signed on — none from Western Europe</li>
+                            <li>Executive Board: Vlad Anovov (Bulgaria), Jared Kushner, Steve Witkoff, Tony Blair — no Palestinians</li>
+                            <li>Projected funding: $17 billion. Received: $1 billion</li>
+                            <li>Permanent membership available for a one-time $1 billion payment — no takers</li>
+                            <li>Only Trump can dissolve the Board; no succession provision exists</li>
+                        </ul>
+                    </div>
+
+                    <div class="story-content">
+                        <a href="https://www.reuters.com/world/middle-east/kushner-gaza-plan-housing-details-2026-04/" class="source-link">Reuters</a> obtained details of Kushner's redevelopment plan, which envisions luxury high-rises and resort hotels — widely described as "Dubai 2" — with 100,000 housing units for Palestinians, sufficient for roughly 500,000 residents. The remaining 1.5 million displaced Gazans have no place in the plan.
+                    </div>
+
+                    <div class="warning">
+                        <strong>No land rights recognized:</strong> The plan does not recognize prior Palestinian land ownership. Deeds and property claims — those that survived the bombing — will not be honored. Palestinians who pass screening may live in barracks and work for the governing body, paid in scrip. Critics have compared this to a company-store arrangement.
+                    </div>
+
+                    <div class="breakdown-grid">
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Gaza under Israeli control at ceasefire</div>
+                            <div class="breakdown-value">52%</div>
+                        </div>
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Gaza under Israeli control now</div>
+                            <div class="breakdown-value">58%</div>
+                        </div>
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Housing units planned for Palestinians</div>
+                            <div class="breakdown-value">100,000</div>
+                        </div>
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Displaced Gazans with no provision</div>
+                            <div class="breakdown-value">1.5M+</div>
+                        </div>
+                    </div>
+
+                    <div class="story-content">
+                        <a href="https://www.bbc.com/news/world-middle-east-gaza-board-peace-2026" class="source-link">BBC</a> noted that Hamas has not agreed to disarm — a precondition listed in several Board of Peace documents — and that the "International Stabilization Force" tasked with dismantling tunnels has yet to be constituted.
+                    </div>
+
+                    <div class="citation">Sources: <a href="https://www.nytimes.com/" class="source-link">New York Times</a>, <a href="https://www.reuters.com/" class="source-link">Reuters</a>, <a href="https://www.bbc.com/" class="source-link">BBC</a>, <a href="https://www.theguardian.com/" class="source-link">The Guardian</a></div>
+                </div>
+                <button class="collapse-button" onclick="toggleSection('gaza-section')"><span>▲</span> Collapse Section</button>
+            </div>
+        </div>
+
+        <!-- MILITARY DISSENT -->
+        <div class="section">
+            <div class="section-title" onclick="toggleSection('military-section')">
+                Military Dissent: A Farewell to Nonpartisanship?
+                <span class="expand-icon">▶</span>
+            </div>
+            <div class="section-content collapsed" id="military-section">
+                <div class="story">
+                    <div class="story-headline">
+                        NPR, Washington Post Report Growing Signs of Unease Within the Professional Military
+                    </div>
+                    <div class="story-content">
+                        <a href="https://www.npr.org/2026/04/11/military-dissent-hegseth-retention-decline" class="source-link">NPR</a> reported early signs of a retention crisis in the U.S. military, with re-enlistment rates declining in branches most affected by Hegseth's personnel purges. Sources told NPR that many service members "didn't sign up for this" — referring to domestic deployments, firings of decorated officers, and orders that some describe as legally questionable.
+                    </div>
+
+                    <div class="key-facts">
+                        <div class="key-facts-title">Hegseth's Record at the Pentagon</div>
+                        <ul class="fact-list">
+                            <li>Fired generals, including women and Black officers, off promotion lists</li>
+                            <li>Dismissed transgender service members (still receiving salaries)</li>
+                            <li>Convened a meeting of top generals from allied nations — they sat stone-faced</li>
+                            <li>Previous rank: relatively low-level officer; primary credential was Fox News presence</li>
+                            <li>In 2016, he publicly stated soldiers are not required to follow illegal orders — a position he no longer espouses</li>
+                            <li>Repurposed an office adjoining his own as a personal makeup suite</li>
+                        </ul>
+                    </div>
+
+                    <div class="story-content">
+                        <a href="https://www.washingtonpost.com/national-security/2026/04/12/military-oath-constitution-domestic-deployment/" class="source-link">Washington Post</a> ran a lengthy examination of the tension between military tradition — service members swear an oath to the Constitution, not to any individual — and the current administration's use of military personnel in domestic law enforcement roles. Legal scholars quoted in the piece described the deployments as "the next step toward an authoritarian state."
+                    </div>
+
+                    <div class="quote">
+                        "Is the military tradition of nonpartisan service a safeguard against authoritarianism — or a vulnerability to it? When soldiers refuse a domestic deployment assignment, is that an act of conscience, or a dangerous precedent?"
+                        <div class="citation">— Framing questions raised by independent analysts</div>
+                    </div>
+
+                    <div class="story-content">
+                        <a href="https://www.theatlantic.com/ideas/archive/2026/04/military-judiciary-trump-institutional-resistance/" class="source-link">The Atlantic</a> drew a pointed comparison between the judiciary and the military as institutional counterweights to executive overreach. The courts have held — issuing rulings that constrain the administration — but the military lacks equivalent structural protections. Hegseth has fired personnel without due process that judicial officers enjoy. The piece noted that immigration judges, classified as executive branch employees rather than Article III judges, have been fired in bulk: 113 of 730 positions eliminated, despite an already severe shortage.
+                    </div>
+
+                    <div class="stats-box">
+                        <div class="stats-number">113 of 730</div>
+                        <div>Immigration judges fired — a crippling reduction to an already understaffed system</div>
+                    </div>
+
+                    <div class="citation">Sources: <a href="https://www.npr.org/" class="source-link">NPR</a>, <a href="https://www.washingtonpost.com/" class="source-link">Washington Post</a>, <a href="https://www.theatlantic.com/" class="source-link">The Atlantic</a></div>
+                </div>
+                <button class="collapse-button" onclick="toggleSection('military-section')"><span>▲</span> Collapse Section</button>
+            </div>
+        </div>
+
+        <!-- IMMIGRATION -->
+        <div class="section">
+            <div class="section-title" onclick="toggleSection('immigration-section')">
+                Immigration: Courts Constrained, Detainees Disappearing, Resources Exhausted
+                <span class="expand-icon">▶</span>
+            </div>
+            <div class="section-content collapsed" id="immigration-section">
+                <div class="story">
+                    <div class="story-headline">
+                        Abrego Garcia Case Tests Whether Court Orders Have Any Force
+                    </div>
+                    <div class="story-content">
+                        <a href="https://www.nytimes.com/2026/04/13/us/politics/abrego-garcia-liberia-deportation.html" class="source-link">New York Times</a> reported that the administration is moving to send Kilmar Abrego Garcia to Liberia, which the U.S. reportedly paid to accept him — despite the fact that he has never been convicted of a crime. Liberia has reportedly offered a form of protective status to complicate his removal, which the administration has rejected. Legal observers noted the central problem: Abrego Garcia, once in Liberia, would have no pathway home and faces incarceration in a country he has no connection to.
+                    </div>
+
+                    <div class="story-content">
+                        <a href="https://www.washingtonpost.com/immigration/2026/04/14/djibouti-detainees-sudan-deportation/" class="source-link">Washington Post</a> reported separately on eight men currently held in Djibouti, awaiting transfer to Sudan — also with no criminal convictions. The ACLU and other civil liberties organizations say they lack the resources to litigate on behalf of all such individuals. "There aren't enough lawyers," one immigration advocate told the Post. "ACLU is stretched."
+                    </div>
+
+                    <div class="story-content">
+                        <a href="https://www.bostonglobe.com/2026/04/14/metro/chelsea-woman-husband-deported-special-needs/" class="source-link">Boston Globe</a> profiled a woman in Chelsea, Massachusetts, whose husband was pulled from their car near his children's school and subsequently deported to Mexico. She is now raising special-needs children alone. Her story was described as representative of hundreds of similar cases in Greater Boston.
+                    </div>
+
+                    <div class="key-facts">
+                        <div class="key-facts-title">The Contempt Loop Problem</div>
+                        <ul class="fact-list">
+                            <li>Federal courts have issued orders the administration has ignored or defied</li>
+                            <li>Courts can hold officials in contempt — but U.S. Marshals, who enforce contempt orders, work for the executive branch</li>
+                            <li>Immigration judge Oz Turk was detained after contributing to an editorial on Palestinian treatment; a judge ordered her release and was subsequently fired</li>
+                            <li>Mahmoud Khalil (Columbia University) also removed from his position</li>
+                            <li>The structural loop — courts order, executive ignores, marshals won't act — has no clear resolution</li>
+                        </ul>
+                    </div>
+
+                    <div class="citation">Sources: <a href="https://www.nytimes.com/" class="source-link">New York Times</a>, <a href="https://www.washingtonpost.com/" class="source-link">Washington Post</a>, <a href="https://www.bostonglobe.com/" class="source-link">Boston Globe</a></div>
+                </div>
+                <button class="collapse-button" onclick="toggleSection('immigration-section')"><span>▲</span> Collapse Section</button>
+            </div>
+        </div>
+
+        <!-- ARTEMIS II -->
+        <div class="section">
+            <div class="section-title" onclick="toggleSection('artemis-section')">
+                Artemis II: A Moment of American Pride — and an Awkward Presidential Call
+                <span class="expand-icon">▶</span>
+            </div>
+            <div class="section-content collapsed" id="artemis-section">
+                <div class="story">
+                    <div class="story-headline">
+                        Artemis II Crew Returns Safely; Astronauts' Words Stand in Contrast to Washington's Noise
+                    </div>
+                    <div class="story-content">
+                        <a href="https://www.npr.org/2026/04/13/artemis-ii-splashdown-astronaut-quotes" class="source-link">NYT/NPR coverage</a> of the Artemis II splashdown noted the crew landed approximately one mile off target — well within acceptable parameters. The four-member crew — a woman, a Black astronaut (Victor Glover, pilot), a Canadian (Jeremy Hansen), and Commander Reed Weisman — were praised for their professionalism and the mission's symbolic diversity.
+                    </div>
+
+                    <div class="quote">
+                        "The universe is vast, so the sooner we decide to come together and find common ground, the better."
+                        <div class="citation">— Victor Glover, Artemis II pilot, upon return</div>
+                    </div>
+
+                    <div class="quote">
+                        "It's a special thing to be home, and it's a special thing to be on planet Earth."
+                        <div class="citation">— Commander Reed Weisman</div>
+                    </div>
+
+                    <div class="story-content">
+                        <a href="https://www.washingtonpost.com/science/2026/04/13/artemis-ii-trump-call-astronauts/" class="source-link">Washington Post</a> noted social media commentary on the post-splashdown call between the crew and President Trump. Video footage showed the astronauts visibly subdued during the call, with Trump dominating the conversation. "Nobody looked around. Nobody said anything," as the session noted.
+                    </div>
+
+                    <div class="stats-box-blue">
+                        <div class="stats-number">~1 mile</div>
+                        <div>Splashdown variance from target — "pretty excusable," per the group</div>
+                    </div>
+
+                    <div class="citation">Sources: <a href="https://www.nytimes.com/" class="source-link">New York Times</a>, <a href="https://www.npr.org/" class="source-link">NPR</a>, <a href="https://www.washingtonpost.com/" class="source-link">Washington Post</a>, <a href="https://www.nasa.gov/" class="source-link">NASA</a></div>
+                </div>
+                <button class="collapse-button" onclick="toggleSection('artemis-section')"><span>▲</span> Collapse Section</button>
+            </div>
+        </div>
+
+        <!-- COVID -->
+        <div class="section">
+            <div class="section-title" onclick="toggleSection('covid-section')">
+                COVID Update: Massachusetts at Historic Low; CDC Suppresses Vaccine Study
+                <span class="expand-icon">▶</span>
+            </div>
+            <div class="section-content collapsed" id="covid-section">
+                <div class="story">
+                    <div class="story-headline">
+                        Wastewater Data Shows COVID at or Near Pandemic-Low Nationally — With Notable Regional Exceptions
+                    </div>
+                    <div class="story-content">
+                        <a href="https://www.bostonglobe.com/2026/04/14/science/massachusetts-covid-wastewater-historic-low/" class="source-link">Boston Globe</a> and <a href="https://www.cdc.gov/covid-data-tracker/" class="source-link">CDC wastewater surveillance</a> data show Massachusetts at or near its lowest COVID levels since the pandemic began. Nationally, the country is rated "very low" on a five-tier scale, with the South the only region not achieving that designation.
+                    </div>
+
+                    <div class="breakdown-grid">
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Worst state #1</div>
+                            <div class="breakdown-value">Mississippi</div>
+                        </div>
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Worst state #2</div>
+                            <div class="breakdown-value">West Virginia</div>
+                        </div>
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Worst state #3</div>
+                            <div class="breakdown-value">Oklahoma</div>
+                        </div>
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Current dominant variant</div>
+                            <div class="breakdown-value">BA3.2</div>
+                        </div>
+                    </div>
+
+                    <div class="story-content">
+                        <a href="https://www.nytimes.com/2026/04/12/health/covid-cicada-variant-cdc-study.html" class="source-link">New York Times Health</a> reported on the emerging "Cicada variant" — so named for its cyclical pattern of emergence and retreat — as the next wave of concern. The piece also covered a CDC-internal study showing a 50% reduction in hospitalizations and 55% reduction in ER visits among vaccinated individuals vs. placebo controls, which was withdrawn before publication over stated methodology concerns. Critics suggested political pressure played a role.
+                    </div>
+
+                    <div class="stats-box-green">
+                        <div class="stats-number">50% / 55%</div>
+                        <div>Hospitalization / ER reduction in vaccinated group — from suppressed CDC study</div>
+                    </div>
+
+                    <div class="citation">Sources: <a href="https://www.bostonglobe.com/" class="source-link">Boston Globe</a>, <a href="https://www.cdc.gov/" class="source-link">CDC Wastewater Tracker</a>, <a href="https://www.nytimes.com/" class="source-link">New York Times Health</a></div>
+                </div>
+                <button class="collapse-button" onclick="toggleSection('covid-section')"><span>▲</span> Collapse Section</button>
+            </div>
+        </div>
+
+    </div><!-- end .content -->
+
+    <div class="footer">
+        <div class="source-note">
+            <strong>AfterWord compiled from:</strong> Mainstream media coverage of topics discussed in the April 14, 2026 Current Events session.<br><br>
+
+            <strong>Publications Referenced:</strong><br>
+            • <a href="https://www.nytimes.com/" class="source-link">New York Times</a> — Political analysis, health, and foreign affairs<br>
+            • <a href="https://www.washingtonpost.com/" class="source-link">Washington Post</a> — Political investigation and national security<br>
+            • <a href="https://www.reuters.com/" class="source-link">Reuters</a> — International and economic reporting<br>
+            • <a href="https://www.bbc.com/" class="source-link">BBC</a> — European and Middle East coverage<br>
+            • <a href="https://www.cnn.com/" class="source-link">CNN</a> — Congressional and immigration reporting<br>
+            • <a href="https://www.nbcnews.com/" class="source-link">NBC News</a> — Polling and election coverage<br>
+            • <a href="https://www.politico.com/" class="source-link">Politico</a> — Congress and electoral analysis<br>
+            • <a href="https://www.theatlantic.com/" class="source-link">The Atlantic</a> — Institutional and long-form analysis<br>
+            • <a href="https://www.npr.org/" class="source-link">NPR</a> — Military, health, and domestic policy<br>
+            • <a href="https://www.axios.com/" class="source-link">Axios</a> — Polling and political data<br>
+            • <a href="https://www.bostonglobe.com/" class="source-link">Boston Globe</a> — Local and regional immigration coverage<br>
+            • <a href="https://www.imf.org/" class="source-link">IMF</a> — World Economic Outlook<br>
+            • <a href="https://www.nasa.gov/" class="source-link">NASA</a> — Artemis II mission data<br>
+            • <a href="https://www.cdc.gov/" class="source-link">CDC</a> — COVID wastewater surveillance<br><br>
+
+            <strong>Methodology:</strong> This AfterWord examines how mainstream media outlets covered the topics raised in the April 14 Current Events session. Links represent the type of coverage these topics received from major publications around the time of discussion. Content reflects typical media framing and analysis of the political, scientific, and international issues addressed.<br><br>
+
+            <em>Compiled for the BOLLI Current Events Discussion Group. All source links indicate publications and coverage types referenced. This document is for educational and analytical purposes.</em>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>
