@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>As the World Churns</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #1a1208; font-family: Georgia, 'Times New Roman', serif; color: #f5ead4; min-height: 100vh; padding: 2rem 1rem; }
+  .page-wrap { max-width: 860px; margin: 0 auto; }
+  .tv-frame { background: #0e0c08; border: 12px solid #2e2416; border-radius: 28px; overflow: hidden; box-shadow: inset 0 0 0 4px #5c4a2a, 0 0 0 6px #0e0c08, 0 0 0 14px #3a2e1a; }
+  .network-banner { background: #1a1208; color: #f5ead4; text-align: center; padding: 6px; font-size: 11px; letter-spacing: 0.35em; text-transform: uppercase; }
+  .screen { background: #f7f0dc; color: #1a1208; position: relative; }
+  .screen::after { content: ''; position: absolute; inset: 0; background: repeating-linear-gradient(to bottom, transparent 0px, transparent 3px, rgba(0,0,0,0.04) 3px, rgba(0,0,0,0.04) 4px); pointer-events: none; z-index: 10; }
+
+  /* MASTHEAD */
+  .title-card { background: #f7f0dc; text-align: center; padding: 2rem 2rem 1.5rem; border-bottom: 4px double #1a1208; }
+  .nod-line { font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase; color: #8a7250; margin-bottom: 0.3rem; font-style: italic; }
+  .presents-line { font-size: 12px; letter-spacing: 0.4em; text-transform: uppercase; color: #5c4a2a; margin-bottom: 0.5rem; }
+  .main-title { font-size: 56px; font-style: italic; font-weight: 900; color: #1a1208; line-height: 1.0; text-shadow: 4px 4px 0 #c8b880; }
+  .title-tagline { margin-top: 0.6rem; font-size: 13px; letter-spacing: 0.3em; text-transform: uppercase; color: #5c4a2a; }
+  .ornament { color: #8a7250; letter-spacing: 0.6em; }
+
+  /* TODAY BANNER */
+  .today-banner { background: #2a1f0e; color: #f5ead4; text-align: center; padding: 0.7rem 2rem; }
+  .today-label { font-size: 11px; letter-spacing: 0.5em; text-transform: uppercase; color: #8a7250; }
+  .today-title { font-size: 22px; font-style: italic; margin-top: 3px; }
+
+  .organ-sting { background: #1a1208; color: #8a7250; font-size: 11px; font-style: italic; text-align: center; padding: 7px; letter-spacing: 0.15em; }
+
+  /* EPISODE BLOCKS */
+  .episode-block { border-bottom: 3px double #1a1208; }
+  .ep-title-bar { background: #2a1f0e; color: #f5ead4; padding: 0.9rem 2rem; display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 0.5rem; }
+  .ep-title { font-size: 20px; font-style: italic; color: #f5ead4; }
+  .ep-status { font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase; color: #c8a870; background: #1a1208; padding: 3px 10px; }
+  .ep-body { padding: 1.6rem 2rem 1.8rem; background: #fffef8; }
+  .char-slug { display: flex; align-items: baseline; gap: 1rem; margin-bottom: 0.9rem; flex-wrap: wrap; }
+  .char-name { font-size: 26px; font-weight: 900; font-style: italic; color: #1a1208; line-height: 1; }
+  .char-role { font-size: 11px; letter-spacing: 0.3em; text-transform: uppercase; color: #8a7250; border-left: 2px solid #c8b880; padding-left: 0.75rem; }
+
+  /* COPY */
+  .lurid-copy { font-size: 16px; line-height: 1.8; color: #1a1208; }
+  .revelation { display: block; margin-top: 0.8rem; margin-bottom: 0.8rem; font-size: 17px; font-style: italic; font-weight: bold; color: #2a1f0e; border-left: 4px solid #1a1208; padding-left: 0.8rem; line-height: 1.5; }
+  .cliffhanger { display: block; margin-top: 1rem; font-size: 17px; font-style: italic; color: #1a1208; text-align: center; padding: 0.7rem 1rem; border-top: 1px solid #c8b880; border-bottom: 1px solid #c8b880; }
+  .status-stamp { margin-top: 1.2rem; background: #1a1208; color: #c8b880; display: inline-block; padding: 4px 16px; font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase; }
+
+  /* POSTSCRIPT */
+  .postscript-wrap { background: #0e0c08; padding: 2rem 2rem 2.5rem; }
+  .ps-header { text-align: center; margin-bottom: 2rem; }
+  .next-week-bug { border: 3px solid #8a7250; display: inline-block; padding: 5px 20px; color: #8a7250; font-size: 11px; letter-spacing: 0.5em; text-transform: uppercase; margin-bottom: 0.6rem; }
+  .ps-title { font-size: 36px; font-style: italic; color: #f5ead4; line-height: 1.05; }
+  .ps-sub { font-size: 12px; letter-spacing: 0.25em; text-transform: uppercase; color: #5c4a2a; margin-top: 0.4rem; }
+  .suspect-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1.2rem; margin-bottom: 2rem; }
+  .suspect-card { border: 1px solid #5c4a2a; background: #1a1208; padding: 1.3rem; }
+  .sus-name { font-size: 20px; font-style: italic; font-weight: bold; color: #f5ead4; line-height: 1.1; margin-bottom: 3px; }
+  .sus-role { font-size: 9px; letter-spacing: 0.25em; text-transform: uppercase; color: #8a7250; padding-bottom: 0.75rem; margin-bottom: 0.75rem; border-bottom: 1px solid #2e2416; }
+  .sus-copy { font-size: 13.5px; line-height: 1.7; color: #c8b888; font-style: italic; }
+  .sus-hook { margin-top: 0.9rem; font-size: 14px; font-weight: bold; font-style: normal; color: #f5ead4; letter-spacing: 0.02em; line-height: 1.35; }
+  .peril-row { display: flex; align-items: center; gap: 8px; margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid #2e2416; }
+  .peril-lbl { font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase; color: #5c4a2a; }
+  .dots { display: flex; gap: 5px; }
+  .dot { width: 11px; height: 11px; border-radius: 50%; border: 1px solid #5c4a2a; }
+  .dot.on { background: #c8a870; border-color: #c8a870; }
+  .final-tease { text-align: center; border-top: 1px solid #2e2416; padding-top: 1.8rem; }
+  .tease-copy { font-size: 16px; font-style: italic; line-height: 1.85; color: #c8b888; max-width: 640px; margin: 0 auto; }
+  .tune-in { margin-top: 1.2rem; font-size: 10px; letter-spacing: 0.45em; text-transform: uppercase; color: #5c4a2a; }
+  .tv-knobs { background: #1a1208; padding: 10px 32px; display: flex; justify-content: space-between; align-items: center; border-top: 3px solid #2e2416; }
+  .knob { width: 22px; height: 22px; border-radius: 50%; background: #3a2e1a; border: 2px solid #5c4a2a; display: inline-block; }
+  .ch-label { font-size: 11px; color: #8a7250; letter-spacing: 0.2em; text-transform: uppercase; }
+  .footer-line { text-align: center; padding: 0.8rem; font-size: 10px; letter-spacing: 0.2em; color: #5c4a2a; background: #0e0c08; }
+
+  @media (max-width: 600px) {
+    .main-title { font-size: 36px; }
+    .ep-title-bar { flex-direction: column; }
+    .char-slug { flex-direction: column; gap: 0.3rem; }
+    .char-role { border-left: none; padding-left: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="page-wrap">
+<div class="tv-frame">
+
+  <div class="network-banner">&#9679; Live Broadcast &nbsp;|&nbsp; WDGE-TV Washington &nbsp;|&nbsp; Channel 47 &#9679;</div>
+
+  <div class="screen">
+
+    <!-- MASTHEAD -->
+    <div class="title-card">
+      <div class="nod-line">In the proud tradition of <em>As The World Turns</em> &mdash; CBS, 1956&ndash;2010</div>
+      <div class="presents-line">Consolidated Broadcasting System Now Presents</div>
+      <div class="main-title">As the World Churns</div>
+      <div class="title-tagline">Washington&rsquo;s Most Turbulent Drama &mdash; Unfolding Daily &mdash; Whether We Like It or Not</div>
+      <div class="ornament" style="margin-top:0.75rem; font-size: 20px;">&#10022; &#9670; &#10022;</div>
+    </div>
+
+    <div class="organ-sting">&#9834;&nbsp; [ Organ rises in trembling minor thirds &mdash; resolves into nothing &mdash; resolves into nothing again ]&nbsp; &#9834;</div>
+
+    <!-- TODAY BANNER -->
+    <div class="today-banner">
+      <div class="today-label">Today on As the World Churns</div>
+      <div class="today-title">&ldquo;The Mansion of a Thousand Sorrows &mdash; And the Sorrows Keep Coming&rdquo;</div>
+    </div>
+
+    <div class="organ-sting">&#9834;&nbsp; [ A chord. Another chord. A third chord that should not exist. ]&nbsp; &#9834;</div>
+
+
+    <!-- ═══ KRISTI NOEM ═══ -->
+    <div class="episode-block">
+      <div class="ep-title-bar">
+        <div class="ep-title">&ldquo;A Prairie Woman Amid the Ruins of Her Own Making&rdquo;</div>
+        <div class="ep-status">&#9679; Story Ongoing</div>
+      </div>
+      <div class="ep-body">
+        <div class="char-slug">
+          <div class="char-name">Kristi Noem</div>
+          <div class="char-role">Banished to the Shield of the Americas</div>
+        </div>
+        <div class="lurid-copy">
+          Kristi sits today in the strange purgatory of a title that nobody can fully explain &mdash; Special Envoy to the Shield of the Americas &mdash; nursing wounds that multiply even now she is gone. <em>She thought it was over.</em> It is not over. For the tabloids have not finished with her, and neither, it appears, has Fate.
+          <span class="revelation">Because while Kristi was busy conducting what Washington politely calls a &ldquo;close working relationship&rdquo; with her advisor Corey Lewandowski &mdash; while she was deporting the undesirable and shooting her own dog and billing the taxpayer for a $220 million advertising campaign &mdash; her husband Bryon was at home in Castlewood, South Dakota, pursuing enthusiasms of his own. Photographs have now emerged, obtained by a Fleet Street tabloid, depicting Bryon in <em>hot pink undergarments</em> and a skin-toned garment stuffed to emphatic effect, sent as tokens of affection to a succession of admiring correspondents. This activity, Washington insiders confirm, has been &ldquo;an open secret at DHS for months.&rdquo;</span>
+          Kristi&rsquo;s spokesperson announces she is &ldquo;devastated&rdquo; and &ldquo;blindsided.&rdquo; The city, which has been gossiping about Bryon since last year &mdash; and which notes with exquisite relish that Kristi, as Governor of South Dakota, pursued the transgender community with the zeal of a woman with absolutely nothing to hide at home &mdash; receives this news with all the sympathy it deserves.
+          <span class="cliffhanger">Will Kristi find peace in the Shield of the Americas &mdash; whatever that is &mdash; or does the Don have further plans for a woman who knows where certain bodies are buried? And will Bryon be taking Corey&rsquo;s calls?</span>
+        </div>
+        <div class="status-stamp">&#9670; Story Status: Unresolved &amp; Deepening &#9670;</div>
+      </div>
+    </div>
+
+    <div class="organ-sting">&#9834;&nbsp; [ A single, reproachful chord. Then another, worse one. ]&nbsp; &#9834;</div>
+
+
+    <!-- ═══ PAM BONDI ═══ -->
+    <div class="episode-block">
+      <div class="ep-title-bar">
+        <div class="ep-title">&ldquo;The Files Remain Unopened. The Enemies Remain At Large.&rdquo;</div>
+        <div class="ep-status">&#9679; Story Ongoing</div>
+      </div>
+      <div class="ep-body">
+        <div class="char-slug">
+          <div class="char-name">Pam Bondi</div>
+          <div class="char-role">Former Attorney General &mdash; Whereabouts Vague</div>
+        </div>
+        <div class="lurid-copy">
+          Even now, the Epstein Files sit in their vault like an unpulled tooth, aching, undisclosed, maddening to all who know they exist. Pam had them. Pam had <em>everything.</em> The nation pressed its face to the glass and waited for the great reckoning &mdash; the names, the flights, the unspeakable ledger of the powerful &mdash; and what emerged was&hellip; a trickle. A gesture. A press conference.
+          <span class="revelation">And the enemies list &mdash; oh, the enemies list, that beloved catalogue of scores to be settled, scores the Don has been counting since before he ever returned to power &mdash; remains today as unindicted as the morning Pam walked through the door. The adversaries lunch at their usual tables. They appear on television. They are fine. <em>They are absolutely fine.</em></span>
+          The Don informed her of her dismissal in a motorcade, en route to the Supreme Court &mdash; a setting of theatrical perfection that Pam herself might have appreciated in another life. She left the vehicle believing she might still salvage the situation. By the following morning, the Truth Social post had gone up, brisk and final as a door slamming in a drafty corridor.
+          <span class="cliffhanger">Pam is now transitioning to &ldquo;an important new role in the private sector.&rdquo; Nobody knows what it is. Does Pam? And those files &mdash; who has them now, and what do they intend to do with them?</span>
+        </div>
+        <div class="status-stamp">&#9670; Story Status: The Files Are Still Out There &#9670;</div>
+      </div>
+    </div>
+
+    <div class="organ-sting">&#9834;&nbsp; [ Organ lingers on the diminished chord, uncomfortable, refusing to resolve ]&nbsp; &#9834;</div>
+
+
+    <!-- ═══ LORI CHAVEZ-DeREMER ═══ -->
+    <div class="episode-block">
+      <div class="ep-title-bar">
+        <div class="ep-title">&ldquo;Last Call at the Department of Labor&rdquo;</div>
+        <div class="ep-status">&#9679; Story Ongoing</div>
+      </div>
+      <div class="ep-body">
+        <div class="char-slug">
+          <div class="char-name">Lori Chavez-DeRemer</div>
+          <div class="char-role">Secretary of Labor &mdash; Until Very Recently</div>
+        </div>
+        <div class="lurid-copy">
+          At this very moment, somewhere in Washington, the investigation continues. It has not concluded. It lingers, as these things do, over the ruins of a Cabinet career that lasted barely long enough for the stationery to arrive. Lori is gone &mdash; &ldquo;resigned,&rdquo; the White House says, with the careful enunciation of an institution that has learned to choose its words &mdash; but the story she leaves behind is still very much in progress.
+          <span class="revelation">Her husband &mdash; <em>her own husband</em> &mdash; has been formally and officially <em>banned from the premises</em> of the Department of Labor, following allegations of misconduct against female staff members of such gravity that a District of Columbia police investigation was opened, conducted, and inconveniently closed without a resolution that satisfies anyone. Two of Lori&rsquo;s own aides have already resigned mid-investigation, their nerves having reached their natural limit. And hanging over all of this is the question of the after-hours refreshments &mdash; the allegation that Lori herself was not always in the condition that her office required.</span>
+          She departs under a cloud so dense and so specifically detailed that calling it a resignation requires a certain commitment to the euphemism. The investigation, meanwhile, does not share her calendar.
+          <span class="cliffhanger">The inquiry is open. The husband remains banned from the building. And somewhere in Washington, two former aides are deciding whether or not to talk.</span>
+        </div>
+        <div class="status-stamp">&#9670; Story Status: Investigation Ongoing &#9670;</div>
+      </div>
+    </div>
+
+    <div class="organ-sting">&#9834;&nbsp; [ Tremolo. Sustained. Deeply, profoundly unresolved. ]&nbsp; &#9834;</div>
+
+
+    <!-- ═══ JOHN PHELAN ═══ -->
+    <div class="episode-block">
+      <div class="ep-title-bar">
+        <div class="ep-title">&ldquo;The Silent Man and His Silent Exit&rdquo;</div>
+        <div class="ep-status">&#9679; Story Unclear</div>
+      </div>
+      <div class="ep-body">
+        <div class="char-slug">
+          <div class="char-name">John Phelan</div>
+          <div class="char-role">Former Secretary of the Navy &mdash; Gone Since Wednesday</div>
+        </div>
+        <div class="lurid-copy">
+          He is gone. The Pentagon announced it with two words &mdash; <em>effective immediately</em> &mdash; and then said nothing further. John Phelan, a man of banking and not of battle, who navigated the treacherous waters of the Pentagon for over a year without generating a single headline, has vanished from public life as quietly and as completely as a ship dropping below the horizon.
+          <span class="revelation">Washington does not know what to make of this. In a season of spectacular, lurid, well-documented crashes &mdash; affairs and fetishes and banned husbands and misaddressed group chats &mdash; the <em>quiet</em> departure is somehow the most disquieting of all. There is no scandal on record. No congressional testimony. No tabloid photograph. No Truth Social post of farewell. He was there. Now he is not. <em>Why?</em></span>
+          The capital, which feeds on information and starves on silence, finds itself in the unfamiliar position of having nothing to say. It is not a condition Washington wears gracefully.
+          <span class="cliffhanger">What did John Phelan know? What did he <em>see?</em> And why, of all the departures of this tumultuous season, is his the one that nobody will explain?</span>
+        </div>
+        <div class="status-stamp">&#9670; Story Status: Unknown, Which Is Worse &#9670;</div>
+      </div>
+    </div>
+
+    <div class="organ-sting">&#9834;&nbsp; [ Brief, bewildered chord. A pause. The chord again, no wiser than before. ]&nbsp; &#9834;</div>
+
+
+    <!-- ═══ MIKE WALTZ ═══ -->
+    <div class="episode-block">
+      <div class="ep-title-bar">
+        <div class="ep-title">&ldquo;The Chat That Will Not Die&rdquo;</div>
+        <div class="ep-status">&#9679; The Repercussions Continue</div>
+      </div>
+      <div class="ep-body">
+        <div class="char-slug">
+          <div class="char-name">Mike Waltz</div>
+          <div class="char-role">Former National Security Advisor &mdash; Now Ambassador-Designate to the UN</div>
+        </div>
+        <div class="lurid-copy">
+          The Signal app has not been removed from official Washington&rsquo;s phones. It sits there still, on the devices of the powerful, a small and devastating rectangle of infinite potential. Mike Waltz knows this better than anyone alive, for it was his finger &mdash; his <em>own</em> finger, on his <em>own</em> phone &mdash; that added the editor-in-chief of <em>The Atlantic</em> to a group chat in which cabinet members were calmly discussing military strikes on Yemen.
+          <span class="revelation">Jeffrey Goldberg read every word of it. Then he wrote every word of it. The story erupted across the republic like a depth charge. The Don, for whom the appearance of competence is not optional, was not able to locate the silver lining. And Mike was gone &mdash; only to reappear, in Washington&rsquo;s most durable tradition, as the Ambassador-Designate to the United Nations. In this city, no one ever truly disappears. They are merely <em>reassigned.</em></span>
+          But the episode refuses to be forgotten. The chat still echoes. Other chats have since come to light. The culture of careless encryption is alive and well &mdash; and it is currently employed by the Secretary of Defense.
+          <span class="cliffhanger">Will Mike&rsquo;s UN appointment sail through the Senate, or will certain senators wish to discuss, at considerable length, that particular Thursday on Signal?</span>
+        </div>
+        <div class="status-stamp">&#9670; Story Status: He&rsquo;s Back. Sort Of. &#9670;</div>
+      </div>
+    </div>
+
+    <div class="organ-sting">&#9834;&nbsp; [ Organ plays a mournful descending scale &mdash; arrives at the bottom &mdash; reconsiders ]&nbsp; &#9834;</div>
+
+
+    <!-- ═══ ELON MUSK ═══ -->
+    <div class="episode-block">
+      <div class="ep-title-bar">
+        <div class="ep-title">&ldquo;The Richest Ghost in Washington&rdquo;</div>
+        <div class="ep-status">&#9679; Departed, Yet Somehow Present</div>
+      </div>
+      <div class="ep-body">
+        <div class="char-slug">
+          <div class="char-name">Elon Musk</div>
+          <div class="char-role">Former Special Government Employee &mdash; Still Technically Everything Else</div>
+        </div>
+        <div class="lurid-copy">
+          He is gone from the building, yet he is everywhere. DOGE &mdash; his creature, his instrument, his gift to a grateful or horrified republic, depending entirely on one&rsquo;s position within it &mdash; continues its work without him, a chainsaw that runs unattended. The agencies he targeted are diminished. The employees he found redundant are, in many cases, still pursuing legal remedies. And Elon himself has returned to his rockets, his automobiles, and the social media platform that he owns and on which the national conversation now, improbably, takes place.
+          <span class="revelation">His co-architect Vivek Ramaswamy departed in a blaze of philosophical incompatibility even earlier, finding that the ideological space between himself and the rest of the administration was wider than the org chart had suggested. Between them, Elon and Vivek reshaped the federal government in ways that will be argued about in seminars for decades. Whether those arguments will take place in adequately funded institutions remains an open question.</span>
+          He announced his &ldquo;scheduled time&rdquo; was concluded with the air of a man who had accomplished what he came to accomplish. Washington is quieter in his absence. It is not, and may never again be, quite the same.
+          <span class="cliffhanger">DOGE runs on. The lawsuits accumulate. And Elon, from his distance, still posts. <em>Does the Don still take his calls?</em></span>
+        </div>
+        <div class="status-stamp">&#9670; Story Status: Gone But Very Much Not Gone &#9670;</div>
+      </div>
+    </div>
+
+  </div><!-- end screen -->
+
+
+  <!-- ═══ POSTSCRIPT ═══ -->
+  <div class="postscript-wrap">
+
+    <div class="organ-sting" style="background:#0e0c08; color:#8a7250; margin-bottom:1.8rem;">
+      &#9834;&nbsp; [ The organ swells. It builds. It reaches a trembling, desperate, unresolved chord &mdash; and holds it &mdash; ]&nbsp; &#9834;
+    </div>
+
+    <div class="ps-header">
+      <div class="next-week-bug">Coming Up on As the World Churns</div>
+      <div class="ps-title">&ldquo;Three Souls at the Edge of the Precipice&rdquo;</div>
+      <div class="ps-sub">The Don Is Watching. The Don Is Always Watching.</div>
+    </div>
+
+    <div class="suspect-grid">
+
+      <div class="suspect-card">
+        <div class="sus-name">Pete Hegseth</div>
+        <div class="sus-role">Secretary of Defense &mdash; Clinging On</div>
+        <div class="sus-copy">
+          Even now, Pete stands at the Pentagon&rsquo;s helm, battered but upright. A first Signal scandal involving a journalist. A second Signal scandal involving his own family. Allegations of spirited after-hours refreshment. A confirmation hearing that left the Senate visibly exhausted. And through it all &mdash; <em>he persists.</em> The Don values loyalty above intelligence, above competence, above the appearance of either. But the headlines are piling up like unopened mail, and the Don does read the headlines.
+        </div>
+        <div class="sus-hook">How many scandals does loyalty buy? Washington is about to find out.</div>
+        <div class="peril-row">
+          <div class="peril-lbl">Peril</div>
+          <div class="dots">
+            <div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="suspect-card">
+        <div class="sus-name">Kash Patel</div>
+        <div class="sus-role">FBI Director &mdash; Results Awaited</div>
+        <div class="sus-copy">
+          The enemies list is long. The enemies, infuriatingly, remain at liberty. Kash was placed at the Bureau&rsquo;s helm with a mandate as clear as it was constitutionally fraught &mdash; find them, charge them, deliver them. And yet the deep state persists, intact and unindicted, going about its business with a brazenness that would be admirable if it were not so maddening. The Don is patient with those who share his grievances. He is less patient with those who cannot act upon them.
+        </div>
+        <div class="sus-hook">In this White House, a hatchet man who cannot locate the neck has a limited future.</div>
+        <div class="peril-row">
+          <div class="peril-lbl">Peril</div>
+          <div class="dots">
+            <div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot"></div><div class="dot"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="suspect-card">
+        <div class="sus-name">Tulsi Gabbard</div>
+        <div class="sus-role">Director of National Intelligence &mdash; Under Scrutiny</div>
+        <div class="sus-copy">
+          She was a Democrat, once &mdash; a fact that sits in certain memories like a splinter. Now, as the republic wages war against Iran, a war Tulsi has spent her entire public career arguing strenuously against, her position achieves a quality of irony so exquisite it is almost artistic. One of her top deputies has already resigned in protest. The Don has been heard asking advisers, in private, whether she might be &mdash; <em>replaceable.</em> The advisers are not saying no.
+        </div>
+        <div class="sus-hook">In this White House, being discussed in the third person is the beginning of the end. <em>The beginning.</em></div>
+        <div class="peril-row">
+          <div class="peril-lbl">Peril</div>
+          <div class="dots">
+            <div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot on"></div><div class="dot"></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="final-tease">
+      <div class="tease-copy">
+        The revolving door turns. The motorcades depart. The Truth Social posts go up in the small hours, each one a depth charge in the life of someone who thought they were safe.
+        <br><br>
+        Somewhere in this great and turbulent capital, a phone is buzzing with a notification that will change everything. We do not yet know whose phone it is.
+        <br><br>
+        <em>We will. We always do. Join us tomorrow.</em>
+      </div>
+      <div class="tune-in">&#9679; &nbsp; As the World Churns &mdash; Weekdays 2pm &mdash; Only on WDGE &nbsp; &#9679;</div>
+    </div>
+
+  </div>
+
+  <div class="tv-knobs">
+    <div style="display:flex;gap:12px;"><div class="knob"></div><div class="knob"></div></div>
+    <div class="ch-label">Ch. 47 &nbsp;&mdash;&nbsp; WDGE-TV</div>
+    <div style="display:flex;gap:12px;"><div class="knob"></div><div class="knob"></div></div>
+  </div>
+
+  <div class="footer-line">&copy; MCMLVI Consolidated Broadcasting System &bull; All Dramatic Liberties Intentional &bull; Broadcast in Compatible Color</div>
+
+</div>
+</div>
+</body>
+</html>
