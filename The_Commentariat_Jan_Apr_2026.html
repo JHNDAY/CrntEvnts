@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<!-- saved from url=(0047)https://jhnday.github.io/CrntEvnts/commentariat -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Commentariat - Recent Articles</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .header-icon {
+            font-size: 60px;
+            margin-bottom: 10px;
+        }
+
+        h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            font-size: 1.5em;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-number {
+            font-size: 4em;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 1.3em;
+            color: #666;
+        }
+
+        .authors-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        @media (max-width: 1500px) {
+            .authors-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .author-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .author-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 12px;
+            border-bottom: 3px solid #667eea;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            border-radius: 10px;
+        }
+
+        .author-header:hover {
+            background: #f8f9fa;
+        }
+
+        .author-icon {
+            font-size: 35px;
+            margin-right: 12px;
+        }
+
+        .author-name {
+            font-size: 1.5em;
+            color: #333;
+            font-weight: bold;
+        }
+
+        .author-subtitle {
+            font-size: 0.85em;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .article-count {
+            background: #667eea;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            margin-left: auto;
+            margin-right: 8px;
+        }
+
+        .chevron {
+            font-size: 1.3em;
+            transition: transform 0.3s ease;
+            color: #667eea;
+        }
+
+        .chevron.rotated {
+            transform: rotate(180deg);
+        }
+
+        .articles-section {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+        }
+
+        .articles-section.expanded {
+            max-height: 10000px;
+        }
+
+        .articles-summary {
+            margin-top: 15px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease;
+        }
+
+        .articles-summary.expanded {
+            max-height: 5000px;
+        }
+
+        .article-preview {
+            padding: 12px;
+            margin-bottom: 12px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .article-preview:hover {
+            background: #e9ecef;
+        }
+
+        .article-title {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+            font-size: 1em;
+        }
+
+        .article-date {
+            font-size: 0.8em;
+            color: #999;
+            margin-bottom: 8px;
+        }
+
+        .article-excerpt {
+            color: #555;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+
+        .expand-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            margin-top: 15px;
+            transition: background 0.3s ease;
+        }
+
+        .expand-btn:hover {
+            background: #5568d3;
+        }
+
+        .article-details {
+            display: none;
+            margin-top: 12px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+
+        .article-details.active {
+            display: block;
+        }
+
+        .article-link {
+            display: inline-block;
+            margin-top: 10px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .article-link:hover {
+            text-decoration: underline;
+        }
+
+        .comparative-section {
+            background: white;
+            border-radius: 15px;
+            padding: 35px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-bottom: 40px;
+        }
+
+        .comparative-title {
+            font-size: 2.5em;
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 20px;
+        }
+
+        .themes-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-top: 40px;
+        }
+
+        .themes-title {
+            font-size: 2em;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .themes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .theme-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .theme-icon {
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+
+        .theme-name {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2em;
+            }
+            
+            .subtitle {
+                font-size: 1.2em;
+            }
+            
+            .stat-number {
+                font-size: 3em;
+            }
+            
+            .authors-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .author-name {
+                font-size: 1.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-icon">📰</div>
+            <h1>The Commentariat</h1>
+            <p class="subtitle">January 1, 2026 - April 25, 2026</p>
+        </header>
+
+        <!-- Stats Section -->
+        <div class="stats-container">
+            <div class="stat-card">
+                <div class="stat-number">4</div>
+                <div class="stat-label">Commentators</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">46</div>
+                <div class="stat-label">Total Articles</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">8</div>
+                <div class="stat-label">Major Themes</div>
+            </div>
+        </div>
+
+        <div class="authors-grid">
+            <!-- George Friedman -->
+            <div class="author-card">
+                <div class="author-header" onclick="toggleAuthorSection('gf-section', this)">
+                    <div>
+                        <div class="author-icon">🌍</div>
+                    </div>
+                    <div style="flex: 1;">
+                        <div class="author-name">George Friedman</div>
+                        <div class="author-subtitle">Geopolitical Futures</div>
+                    </div>
+                    <div class="article-count">6 articles</div>
+                    <div class="chevron">▼</div>
+                </div>
+                
+                <div class="articles-section" id="gf-section">
+                    <div class="article-preview" onclick="toggleArticle('gf1')">
+                        <div class="article-title">War and the Principles of the Negotiation Process</div>
+                        <div class="article-date">April 13, 2026</div>
+                        <div class="article-excerpt">Analysis introduces the true vector of this conflict: China...</div>
+                    </div>
+                    <div class="article-details" id="gf1">
+                        <p>Friedman addresses a reader's question about whether the Iran conflict is ultimately driven by U.S.-China competition. He explains how the war's trajectory reveals structural geopolitical forces beyond the immediate Middle East theater, examining how regional conflicts serve as proxies for great power competition and how negotiation processes must account for these deeper strategic realities.</p>
+                        <a href="https://geopoliticalfutures.com/george-answers-your-questions-war-and-the-principles-of-the-negotiation-process/" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+
+                    <div class="article-preview" onclick="toggleArticle('gf2')">
+                        <div class="article-title">The Future of War Is Here</div>
+                        <div class="article-date">March 30, 2026</div>
+                        <div class="article-excerpt">Written in 1996, "The Future of War" predicted unmanned warfare...</div>
+                    </div>
+                    <div class="article-details" id="gf2">
+                        <p>Friedman revisits his 1996 book "The Future of War," which predicted that future warfare would be based on unmanned systems. The Iran conflict has validated many of these predictions, with drones, automated systems, and remote operations playing central roles. He examines how technological advancement in warfare intersects with geopolitical strategy and why traditional military metrics no longer capture the full picture of modern conflict.</p>
+                        <a href="https://geopoliticalfutures.com/the-future-of-war-is-here/" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+
+                    <div class="article-preview" onclick="toggleArticle('gf3')">
+                        <div class="article-title">Beyond Iran: China, Russia and Europe</div>
+                        <div class="article-date">March 23, 2026</div>
+                        <div class="article-excerpt">Trump administration's real goal is to limit China's future capability...</div>
+                    </div>
+                    <div class="article-details" id="gf3">
+                        <p>In response to a reader's question, Friedman argues that the Iran war serves larger strategic objectives related to China. He analyzes how disrupting energy markets and demonstrating U.S. willingness to use force affects calculations in Beijing, Moscow, and European capitals. The piece examines how regional conflicts function within the broader framework of global competition among major powers.</p>
+                        <a href="https://geopoliticalfutures.com/george-answers-your-questions-beyond-iran-china-russia-and-europe/" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+
+                    <div class="article-preview" onclick="toggleArticle('gf4')">
+                        <div class="article-title">Geopolitics, War and Iran</div>
+                        <div class="article-date">March 17, 2026</div>
+                        <div class="article-excerpt">Was there a miscalculation? Trump said this would take 4-5 weeks...</div>
+                    </div>
+                    <div class="article-details" id="gf4">
+                        <p>Friedman addresses whether the Trump administration miscalculated in its Iran strategy given the war's extended timeline. He analyzes the structural constraints Iran faces, U.S. strategic objectives beyond the stated goals, and how geopolitical realities shape the conflict's trajectory regardless of initial planning. The analysis examines why wars rarely proceed according to initial expectations and what this reveals about power dynamics in the Middle East.</p>
+                        <a href="https://geopoliticalfutures.com/george-answers-your-questions-geopolitics-war-and-iran/" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+
+                    <div class="article-preview" onclick="toggleArticle('gf5')">
+                        <div class="article-title">The US, Iran, Nukes and a 9/11 Scenario</div>
+                        <div class="article-date">February 9, 2026</div>
+                        <div class="article-excerpt">The United States has entered indirect talks with Tehran over Iran's nuclear program...</div>
+                    </div>
+                    <div class="article-details" id="gf5">
+                        <p>In response to a reader's question about whether Washington truly views Iran's nuclear program as an existential threat, Friedman explores the geopolitical calculations behind U.S.-Iran relations. He argues that Tehran's nuclear pursuit serves as a strategic asset for the United States, providing permanent justification for naval presence in the region. The analysis examines how both nations use the nuclear issue to advance broader geopolitical objectives rather than viewing it purely as a security threat.</p>
+                        <a href="https://geopoliticalfutures.com/george-answers-your-questions-the-us-iran-nukes-and-a-9-11-scenario/" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+
+                    <div class="article-preview" onclick="toggleArticle('gf6')">
+                        <div class="article-title">The Dubai Talks on the Ukraine War</div>
+                        <div class="article-date">January 26, 2026</div>
+                        <div class="article-excerpt">Representatives from the United States, Russia and Ukraine held talks in Dubai...</div>
+                    </div>
+                    <div class="article-details" id="gf6">
+                        <p>Friedman analyzes the weekend talks in Dubai between representatives from the United States, Russia, and Ukraine on ending the war. He examines the geopolitical realities that have brought the parties to the negotiating table, the structural constraints each nation faces, and why diplomatic resolution may finally be possible. The piece applies Geopolitical Futures' long-term forecasting framework to explain how the war's trajectory aligns with their predictions about regional power dynamics.</p>
+                        <a href="https://geopoliticalfutures.com/george-answers-your-questions-the-dubai-talks-on-the-ukraine-war/" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Heather Cox Richardson -->
+            <div class="author-card">
+                <div class="author-header" onclick="toggleAuthorSection('hcr-section', this)">
+                    <div>
+                        <div class="author-icon">📜</div>
+                    </div>
+                    <div style="flex: 1;">
+                        <div class="author-name">Heather Cox Richardson</div>
+                        <div class="author-subtitle">Letters from an American</div>
+                    </div>
+                    <div class="article-count">15 articles</div>
+                    <div class="chevron">▼</div>
+                </div>
+                
+                <div class="articles-section" id="hcr-section">
+                    <div class="article-preview" onclick="toggleArticle('hcr1')">
+                        <div class="article-title">April 23, 2026 - Navy Budget and Pentagon Plans</div>
+                        <div class="article-date">April 23, 2026</div>
+                        <div class="article-excerpt">Secretary of the Navy John Phelan spent the day talking to lawmakers...</div>
+                    </div>
+                    <div class="article-details" id="hcr1">
+                        <p>Richardson covers Secretary of the Navy John Phelan's discussions with lawmakers about the Navy's plans for new ships and the Pentagon's huge budget. The letter examines how military spending priorities reflect broader strategic concerns amid ongoing conflicts and how Congress is responding to executive branch requests for increased defense appropriations.</p>
+                        <a href="https://heathercoxrichardson.substack.com/p/april-23-2026" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+
+                    <div class="article-preview" onclick="toggleArticle('hcr2')">
+                        <div class="article-title">April 22, 2026 - Virginia Redistricting Amendment</div>
+                        <div class="article-date">April 22, 2026</div>
+                        <div class="article-excerpt">Virginia voters agreed to a constitutional amendment...</div>
+                    </div>
+                    <div class="article-details" id="hcr2">
+                        <p>Richardson analyzes Virginia voters' support for a constitutional amendment that would temporarily redistrict the state if any other state redistricted for partisan reasons. She examines the historical patterns of partisan gerrymandering, the Republican attempts to excuse their actions while attacking Democrats for similar behavior, and how this echoes pre-Civil War debates about democracy and representation.</p>
+                        <a href="https://heathercoxrichardson.substack.com/p/april-22-2026" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+
+                    <div class="article-preview" onclick="toggleArticle('hcr3')">
+                        <div class="article-title">April 21, 2026 - The Wheels Are Coming Off</div>
+                        <div class="article-date">April 21, 2026</div>
+                        <div class="article-excerpt">There is the unmistakable feeling that the wheels are coming off the MAGA bus...</div>
+                    </div>
+                    <div class="article-details" id="hcr3">
+                        <p>Richardson documents the mounting evidence that Trump's administration is unraveling, from chaotic Iran diplomacy to plummeting approval ratings. She details Iranian officials' complaints about "contradictory messages" from the U.S., Trump's approval hitting a new low of 35%, and signs that Republicans are increasingly worried about midterm elections. The letter examines whether this represents a genuine turning point or temporary turbulence.</p>
+                        <a href="https://heathercoxrichardson.substack.com/p/april-21-2026" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+
+                    <div class="article-preview" onclick="toggleArticle('hcr4')">
+                        <div class="article-title">April 20, 2026 - Trump's Instability Revealed</div>
+                        <div class="article-date">April 20, 2026</div>
+                        <div class="article-excerpt">Wall Street Journal reported that Trump was so unstable and angry...</div>
+                    </div>
+                    <div class="article-details" id="hcr4">
+                        <p>Richardson covers the late Saturday evening Wall Street Journal report by Josh Dawsey and Annie Linskey revealing that Trump was extremely unstable and angry after learning something on April 3rd. The letter explores what this reveals about decision-making processes in the administration and how personal emotional states affect national security policy.</p>
+                        <a href="https://heathercoxrichardson.substack.com/p/april-20-2026" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+
+                    <div class="article-preview" onclick="toggleArticle('hcr5')">
+                        <div class="article-title">April 19, 2026 - Patriots' Day 1775</div>
+                        <div class="article-date">April 19, 2026</div>
+                        <div class="article-excerpt">On the evening of April 18, 1775, the people who lived in the British colony of Massachusetts...</div>
+                    </div>
+                    <div class="article-details" id="hcr5">
+                        <p>On the anniversary of the Battles of Lexington and Concord, Richardson recounts the events of April 18-19, 1775, when colonial Americans first took up arms against British authority. She draws parallels to contemporary struggles to defend democratic principles against authoritarian threats, examining how historical moments of resistance continue to resonate in current political debates.</p>
+                        <a href="https://heathercoxrichardson.substack.com/p/april-19-2026" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+
+                    <div class="article-preview" onclick="toggleArticle('hcr6')">
+                        <div class="article-title">April 17, 2026 - Iran-Lebanon Ceasefire</div>
+                        <div class="article-date">April 17, 2026</div>
+                        <div class="article-excerpt">After a 10-day ceasefire between Israel and Lebanon took effect, Iran announced the Strait of Hormuz was open...</div>
+                    </div>
+                    <div class="article-details" id="hcr6">
+                        <p>Richardson reports on the ceasefire between Israel and Lebanon and Iran's announcement that the Strait of Hormuz is open to commercial shipping. She analyzes what this signals about the trajectory of the conflict, how regional actors are positioning themselves, and whether diplomatic progress is genuine or tactical maneuvering.</p>
+                        <a href="https://heathercoxrichardson.substack.com/p/april-17-2026" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+
+                    <div class="article-preview" onclick="toggleArticle('hcr7')">
+                        <div class="article-title">April 13, 2026 - Hungary's Lesson for America</div>
+                        <div class="article-date">April 13, 2026</div>
+                        <div class="article-excerpt">Just as there is a blueprint for destroying democracy, there is also one for rebuilding it...</div>
+                    </div>
+                    <div class="article-details" id="hcr7">
+                        <p>Richardson examines the significance of Hungarian voters rejecting Prime Minister Viktor Orbán's leadership. She traces how Orbán's model of using state power to consolidate control inspired right-wing leaders in America, and what his electoral defeat means for those who followed his blueprint. Drawing on FDR's words from 1932, she argues there are established patterns for both democratic decline and democratic renewal.</p>
+                        <a href="https://heathercoxrichardson.substack.com/p/april-13-2026" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+
+                    <div class="article-preview" onclick="toggleArticle('hcr8')">
+                        <div class="article-title">April 12, 2026 - Trump's Blasphemous Jesus Image</div>
+                        <div class="article-date">April 12, 2026</div>
+                        <div class="article-excerpt">Trump posted an image of himself in the place of Jesus...</div>
+                    </div>
+                    <div class="article-details" id="hcr8">
+                        <p>Richardson reports on Trump posting an image depicting himself as Jesus healing the sick, approximately 45 minutes after attacking Pope Leo for criticizing his use of religious language regarding the Iran war. She documents how inflation rose to 3.3% (the fastest rate in almost two years) driven largely by soaring gasoline prices from the Iran conflict, and the widespread revulsion at what many called heresy and blasphemy.</p>
+                        <a href="https://heathercoxrichardson.substack.com/p/april-12-2026" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+
+                    <div class="article-preview" onclick="toggleArticle('hcr9')">
+                        <div class="article-title">April 7, 2026 - "A Whole Civilization Will Die Tonight"</div>
+                        <div class="article-date">April 7, 2026</div>
+                        <div class="article-excerpt">Trump posted: "A whole civilization will die tonight, never to be brought back again..."</div>
+                    </div>
+                    <div class="article-details" id="hcr9">
+                        <p>Richardson documents one of the most terrifying days of the Trump presidency, when at 5:06 AM Trump posted that "a whole civilization will die tonight" regarding Iran. She chronicles how Americans spent the day wondering if their president would destroy the world, only to find the threat was tied to protecting his ego after starting a disastrous war. The letter examines how close the nation came to catastrophe and what it reveals about unchecked executive power.</p>
+                        <a href="https://heathercoxrichardson.substack.com/p/april-7-2026" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+
+                    <div class="article-preview" onclick="toggleArticle('hcr10')">
+                        <div class="article-title">March 31, 2026 - Trump Washes Hands of Iran War</div>
+                        <div class="article-date">March 31, 2026</div>
+                        <div class="article-excerpt">At 4:11 this morning, Trump posted: "Go get your own oil!"</div>
+                    </div>
+                    <div class="article-details" id="hcr10">
+                        <p>Richardson analyzes Trump's early morning post telling European countries to "go get your own oil" from the Strait of Hormuz without U.S. help, alongside his unconstitutional executive order attempting to commandeer federal elections through the Department of Homeland Security and Postal Service. She examines how the administration simultaneously abandons allies while attempting to rig domestic democratic processes.</p>
+                        <a href="https://heathercoxrichardson.substack.com/p/march-31-2026" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+
+                    <div class="article-preview" onclick="toggleArticle('hcr11')">
+                        <div class="article-title">February 14, 2026 - Valentine's Day Reflection</div>
+                        <div class="article-date">February 14, 2026</div>
+                        <div class="article-excerpt">On Valentine's Day, Richardson reflects on love and democracy...</div>
+                    </div>
+                    <div class="article-details" id="hcr11">
+                        <p>In her Valentine's Day letter, Richardson reflects on the connection between love and democratic values, examining how care for others and commitment to the common good sustain free societies. She explores historical moments when Americans chose solidarity over division and what those precedents teach about navigating current challenges.</p>
+                        <a href="https://heathercoxrichardson.substack.com/p/february-14-2026" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+
+                    <div class="article-preview" onclick="toggleArticle('hcr12')">
+                        <div class="article-title">February 12, 2026 - Lincoln's Birthday</div>
+                        <div class="article-date">February 12, 2026</div>
+                        <div class="article-excerpt">On Lincoln's birthday, examining what his leadership means today...</div>
+                    </div>
+                    <div class="article-details" id="hcr12">
+                        <p>Richardson marks Lincoln's birthday by examining his leadership during America's greatest crisis and what lessons his presidency offers for contemporary challenges to democracy. She explores how Lincoln navigated threats from within and without, maintained democratic principles under pressure, and rebuilt national unity after division.</p>
+                        <a href="https://heathercoxrichardson.substack.com/p/february-12-2026" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+
+                    <div class="article-preview" onclick="toggleArticle('hcr13')">
+                        <div class="article-title">February 10, 2026 - McCarthyism Parallels</div>
+                        <div class="article-date">February 10, 2026</div>
+                        <div class="article-excerpt">Examining how current political witch hunts echo the 1950s...</div>
+                    </div>
+                    <div class="article-details" id="hcr13">
+                        <p>Richardson draws parallels between current attempts to persecute political opponents and the McCarthy era's Red Scare. She analyzes how fear-mongering, baseless accusations, and abuse of government power follow recognizable historical patterns, and how Americans ultimately rejected McCarthy's tactics when they became too extreme.</p>
+                        <a href="https://heathercoxrichardson.substack.com/p/february-10-2026" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+
+                    <div class="article-preview" onclick="toggleArticle('hcr14')">
+                        <div class="article-title">February 8, 2026 - ICE Detention Crisis</div>
+                        <div class="article-date">February 8, 2026</div>
+                        <div class="article-excerpt">Reports of inhumane conditions in immigration detention...</div>
+                    </div>
+                    <div class="article-details" id="hcr14">
+                        <p>Richardson documents emerging reports of inhumane conditions in ICE detention facilities as the administration dramatically expands immigration enforcement. She examines the humanitarian crisis unfolding, legal challenges being mounted, and historical precedents for government abuse of detained populations.</p>
+                        <a href="https://heathercoxrichardson.substack.com/p/february-8-2026" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+
+                    <div class="article-preview" onclick="toggleArticle('hcr15')">
+                        <div class="article-title">February 3, 2026 - Rule of Law and Haitian TPS</div>
+                        <div class="article-date">February 3, 2026</div>
+                        <div class="article-excerpt">Administration's termination of Haitian Temporary Protected Status...</div>
+                    </div>
+                    <div class="article-details" id="hcr15">
+                        <p>Richardson analyzes the administration's decision to terminate Temporary Protected Status for Haitians, examining how this fits into broader patterns of immigration policy, what it reveals about rule of law principles, and the humanitarian consequences of suddenly removing legal protections from thousands of people.</p>
+                        <a href="https://heathercoxrichardson.substack.com/p/february-3-2026" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Jennifer Rubin -->
+            <div class="author-card">
+                <div class="author-header" onclick="toggleAuthorSection('jr-section', this)">
+                    <div>
+                        <div class="author-icon">⚖️</div>
+                    </div>
+                    <div style="flex: 1;">
+                        <div class="author-name">Jennifer Rubin</div>
+                        <div class="author-subtitle">The Contrarian</div>
+                    </div>
+                    <div class="article-count">9 articles</div>
+                    <div class="chevron">▼</div>
+                </div>
+                
+                <div class="articles-section" id="jr-section">
+                    <div class="article-preview" onclick="toggleArticle('jr1')">
+                        <div class="article-title">The Republican Crack-Up</div>
+                        <div class="article-date">March 26, 2026</div>
+                        <div class="article-excerpt">Republicans made a calculated bet that by indulging Trump's ill-conceived schemes...</div>
+                    </div>
+                    <div class="article-details" id="jr1">
+                        <p>Rubin analyzes how Republicans' calculated decision to enable Trump's destructive policies—from unleashing ICE on cities to starting wars with Venezuela and Iran—has backfired spectacularly. She documents how GOP voters are notably silent on social media, how traditionally Republican military communities have gone quiet, and what this silence signals about the party's electoral prospects.</p>
+                        <a href="https://www.contrariannews.org/p/the-republican-crack-up" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+
+                    <div class="article-preview" onclick="toggleArticle('jr2')">
+                        <div class="article-title">What Now? The Path Forward for Democracy</div>
+                        <div class="article-date">March 17, 2026</div>
+                        <div class="article-excerpt">We at The Contrarian have insisted from the start that we win the battle for democracy in the courts of law and the courts of public opinion...</div>
+                    </div>
+                    <div class="article-details" id="jr2">
+                        <p>Rubin outlines concrete action steps for defending democracy: supporting special election candidates in NY-21, FL-1, and FL-6; volunteering for the Wisconsin state supreme court election; backing pro-democracy candidates in Virginia and New Jersey; and participating in public gatherings that protest oligarchic government. She emphasizes that democratic victories require sustained collective action, not reliance on compromised leadership.</p>
+                        <a href="https://www.contrariannews.org/p/what-now" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+
+                    <div class="article-preview" onclick="toggleArticle('jr3')">
+                        <div class="article-title">Undaunted in Georgia</div>
+                        <div class="article-date">February 11, 2026</div>
+                        <div class="article-excerpt">Rubin profiles the rising Democratic resistance in Georgia...</div>
+                    </div>
+                    <div class="article-details" id="jr3">
+                        <p>Rubin profiles Georgia's Democratic resistance movement, highlighting how organizers are building infrastructure to defend voting rights and democratic processes despite hostile state government. She examines what lessons other states can learn from Georgia's grassroots mobilization and why local organizing remains crucial to democratic defense.</p>
+                        <a href="https://www.contrariannews.org/p/undaunted-in-georgia" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+
+                    <div class="article-preview" onclick="toggleArticle('jr4')">
+                        <div class="article-title">The Contrarian's 1st Anniversary</div>
+                        <div class="article-date">January 13, 2026</div>
+                        <div class="article-excerpt">On the launch of The Contrarian, one year ago today...</div>
+                    </div>
+                    <div class="article-details" id="jr4">
+                        <p>Marking The Contrarian's first anniversary, Rubin reflects on the independent media outlet's mission to provide unvarnished analysis in opposition to authoritarian threats. She outlines plans to expand regional reporting, increase diversity of voices, provide weekly calls to action, and appear at in-person events. The piece acknowledges that Trump has done far more damage faster than expected, from "disappeared" Americans to unconstitutional wars, making independent journalism more critical than ever.</p>
+                        <a href="https://www.contrariannews.org/p/the-contrarians-1st-anniversary" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+
+                    <div class="article-preview" onclick="toggleArticle('jr5')">
+                        <div class="article-title">Iran War Accountability</div>
+                        <div class="article-date">April 15, 2026</div>
+                        <div class="article-excerpt">Who bears responsibility for the Iran disaster...</div>
+                    </div>
+                    <div class="article-details" id="jr5">
+                        <p>Rubin examines accountability for the Iran war disaster, from the decision-makers who launched it to the enablers in Congress and media who failed to prevent it. She argues that documenting responsibility now will be crucial for future democratic accountability and preventing similar catastrophes.</p>
+                        <a href="https://www.contrariannews.org/p/iran-war-accountability" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+
+                    <div class="article-preview" onclick="toggleArticle('jr6')">
+                        <div class="article-title">Defending Election Integrity</div>
+                        <div class="article-date">April 8, 2026</div>
+                        <div class="article-excerpt">As Trump attempts to rig the midterms...</div>
+                    </div>
+                    <div class="article-details" id="jr6">
+                        <p>Rubin analyzes Trump's efforts to manipulate the 2026 midterm elections through executive action, examining the legal challenges being mounted and what citizens can do to defend voting rights. She outlines how courts are responding and why protecting election integrity remains the front line of democratic defense.</p>
+                        <a href="https://www.contrariannews.org/p/defending-election-integrity" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+
+                    <div class="article-preview" onclick="toggleArticle('jr7')">
+                        <div class="article-title">The Courts Are Holding</div>
+                        <div class="article-date">March 5, 2026</div>
+                        <div class="article-excerpt">Despite fears of judicial collapse, courts continue blocking unconstitutional actions...</div>
+                    </div>
+                    <div class="article-details" id="jr7">
+                        <p>Rubin documents how federal courts have continued to block unconstitutional executive actions despite political pressure, providing some hope that judicial independence has not entirely collapsed. She examines which judges are standing firm, where vulnerabilities remain, and what this pattern means for the rule of law's survival.</p>
+                        <a href="https://www.contrariannews.org/p/the-courts-are-holding" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+
+                    <div class="article-preview" onclick="toggleArticle('jr8')">
+                        <div class="article-title">Wisconsin's Democratic Firewall</div>
+                        <div class="article-date">February 28, 2026</div>
+                        <div class="article-excerpt">The Wisconsin state supreme court election battle...</div>
+                    </div>
+                    <div class="article-details" id="jr8">
+                        <p>Rubin covers the critical Wisconsin state supreme court election, explaining why this race matters nationally and how Elon Musk is attempting to buy the seat. She provides concrete ways people can help even if they don't live in Wisconsin, emphasizing that state courts serve as crucial democratic firewalls.</p>
+                        <a href="https://www.contrariannews.org/p/wisconsin-democratic-firewall" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+
+                    <div class="article-preview" onclick="toggleArticle('jr9')">
+                        <div class="article-title">Democrats Find Their Voice</div>
+                        <div class="article-date">January 22, 2026</div>
+                        <div class="article-excerpt">After weeks of paralysis, Democrats are starting to fight back...</div>
+                    </div>
+                    <div class="article-details" id="jr9">
+                        <p>Rubin analyzes signs that Democrats are emerging from post-election paralysis and beginning to mount organized resistance. She highlights effective messaging, legal challenges gaining traction, and grassroots mobilization that's putting Republicans on defense. The piece examines whether this represents sustainable opposition or temporary energy.</p>
+                        <a href="https://www.contrariannews.org/p/democrats-find-their-voice" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Chris Hedges -->
+            <div class="author-card">
+                <div class="author-header" onclick="toggleAuthorSection('ch-section', this)">
+                    <div>
+                        <div class="author-icon">✊</div>
+                    </div>
+                    <div style="flex: 1;">
+                        <div class="author-name">Chris Hedges</div>
+                        <div class="author-subtitle">ScheerPost</div>
+                    </div>
+                    <div class="article-count">16 articles</div>
+                    <div class="chevron">▼</div>
+                </div>
+                
+                <div class="articles-section" id="ch-section">
+                    <div class="article-preview" onclick="toggleArticle('ch1')">
+                        <div class="article-title">Is There a Way out of the Iran War? (w/ John Mearsheimer)</div>
+                        <div class="article-date">April 21, 2026</div>
+                        <div class="article-excerpt">Mearsheimer examines whether diplomacy can extract the U.S. from its disastrous war...</div>
+                    </div>
+                    <div class="article-details" id="ch1">
+                        <p>In this Chris Hedges Report interview, renowned political scientist John Mearsheimer analyzes whether there's a viable exit strategy from the Iran war. Mearsheimer examines the structural forces that pushed toward conflict, why initial assumptions proved catastrophically wrong, and what constraints now shape potential diplomatic resolutions. The conversation explores whether the U.S. can extract itself without catastrophic escalation or if the war's logic will continue to unfold.</p>
+                        <a href="https://scheerpost.com/2026/04/21/is-there-a-way-out-of-the-iran-war-w-john-mearsheimer-the-chris-hedges-report/" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+
+                    <div class="article-preview" onclick="toggleArticle('ch2')">
+                        <div class="article-title">Chris Hedges LIVE Q&A: The Iran War & the Fall of the American Empire</div>
+                        <div class="article-date">April 19, 2026</div>
+                        <div class="article-excerpt">Live audience Q&A on the Iran conflict and imperial decline...</div>
+                    </div>
+                    <div class="article-details" id="ch2">
+                        <p>In this live Q&A session, Hedges fields questions about the Iran war, American imperial decline, and paths of resistance. He addresses how the conflict fits into patterns of late-stage imperial overreach, why ruling elites pursue destructive policies despite clear dangers, and what effective opposition requires from ordinary citizens. The session connects immediate crises to broader structural analysis of American power.</p>
+                        <a href="https://scheerpost.com/2026/04/17/chris-hedges-live-qa-the-iran-war-the-fall-of-the-american-empire/" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+
+                    <div class="article-preview" onclick="toggleArticle('ch3')">
+                        <div class="article-title">Kuwait Holds American Journalist</div>
+                        <div class="article-date">April 17, 2026</div>
+                        <div class="article-excerpt">Ahmed Shihab-Eldin arrested for reporting on friendly fire incident...</div>
+                    </div>
+                    <div class="article-details" id="ch3">
+                        <p>Hedges reports on the arrest of Palestinian-American journalist Ahmed Shihab-Eldin in Kuwait, charged with spreading false information and harming national security after reporting on Kuwaiti military shooting down three U.S. fighter planes in friendly fire during the Iran war. Hedges examines how press freedom is being crushed amid the conflict and what Shihab-Eldin's case reveals about authoritarian responses to inconvenient truths.</p>
+                        <a href="https://consortiumnews.com/2026/04/17/chris-hedges-kuwait-holds-american-journalist/" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+
+                    <div class="article-preview" onclick="toggleArticle('ch4')">
+                        <div class="article-title">Is the War In Iran About to Become Apocalyptic? (w/ Trita Parsi)</div>
+                        <div class="article-date">April 7, 2026</div>
+                        <div class="article-excerpt">Two stark interviews warn the US-Israeli war is entering its most dangerous phase...</div>
+                    </div>
+                    <div class="article-details" id="ch4">
+                        <p>Across two stark interviews with Trita Parsi—one with Hedges and another on Democracy Now!—a consistent, alarming message emerges: the US-Israeli war on Iran is no longer being driven by coherent strategy, but by desperation, miscalculation, and refusal to accept limits. Parsi warns that as Trump escalates threats, oil chokepoints tighten, and talk of "total surrender" creeps toward the unthinkable, the conflict is entering its most dangerous phase yet.</p>
+                        <a href="https://scheerpost.com/2026/04/07/is-the-war-in-iran-about-to-become-apocalyptic-w-trita-parsi-the-chris-hedges-report/" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+
+                    <div class="article-preview" onclick="toggleArticle('ch5')">
+                        <div class="article-title">Ground War With Iran? (w/ Larry Wilkerson)</div>
+                        <div class="article-date">April 4, 2026</div>
+                        <div class="article-excerpt">Retired Army Colonel warns of catastrophe Washington may already be sliding toward...</div>
+                    </div>
+                    <div class="article-details" id="ch5">
+                        <p>In a stark and unsettling conversation, Hedges sits down with retired Army Colonel Lawrence Wilkerson to confront whether the United States is preparing to send ground forces into Iran. Wilkerson analyzes the military logic pushing toward escalation, the catastrophic consequences of a ground invasion, and whether Israeli pressure for extreme measures could trigger irreversible escalation. Both warn that conventional war could push Iran toward openly pursuing nuclear weapons.</p>
+                        <a href="https://scheerpost.com/2026/04/04/ground-war-with-iran-chris-hedges-and-larry-wilkerson-warn-of-a-catastrophe-washington-may-already-be-sliding-toward/" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+
+                    <div class="article-preview" onclick="toggleArticle('ch6')">
+                        <div class="article-title">The New World Order (Princeton Speech)</div>
+                        <div class="article-date">April 3, 2026</div>
+                        <div class="article-excerpt">Gaza is just the beginning of technologically advanced barbarism...</div>
+                    </div>
+                    <div class="article-details" id="ch6">
+                        <p>In this speech at Princeton, Hedges delivers a sweeping indictment of a global order collapsing into what he calls "technologically advanced barbarism." He argues that the genocide in Gaza, the wars in Lebanon and Iran, and the open defiance of international law are not isolated events but the opening chapter of a far darker era. Drawing on decades of reporting and moral philosophy, Hedges contends that institutions like the UN and International Court of Justice have been "neutered, transformed into useless appendages of another age."</p>
+                        <a href="https://consortiumnews.com/2026/04/03/chris-hedges-the-new-world-order/" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+
+                    <div class="article-preview" onclick="toggleArticle('ch7')">
+                        <div class="article-title">Palestine 36 Resurrects the Revolt Britain Tried to Bury</div>
+                        <div class="article-date">March 31, 2026</div>
+                        <div class="article-excerpt">Nearly a century before Gaza's devastation, Britain crushed Palestinian resistance...</div>
+                    </div>
+                    <div class="article-details" id="ch7">
+                        <p>Hedges examines how the 1936 Palestinian revolt against British colonial rule offers crucial context for understanding current events. Nearly a century before present devastation in Gaza, checkpoints and military towers defined Palestinian life under British occupation. He traces how colonial patterns of suppression, collective punishment, and denial of self-determination established precedents that continue today.</p>
+                        <a href="https://scheerpost.com/2026/03/31/palestine-36-resurrects-the-revolt-britain-tried-to-bury/" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+
+                    <div class="article-preview" onclick="toggleArticle('ch8')">
+                        <div class="article-title">The Iran War Has Just Begun</div>
+                        <div class="article-date">March 8, 2026</div>
+                        <div class="article-excerpt">Iran's military prowess and America's imperial hubris on full display...</div>
+                    </div>
+                    <div class="article-details" id="ch8">
+                        <p>As the Iran war begins, Hedges analyzes how Iran's military capabilities and America's and Israel's impulsive imperial hubris are immediately on display. He examines what the early phases of conflict reveal about power dynamics in the region, why initial U.S. assumptions are proving catastrophically wrong, and how the war's trajectory follows predictable patterns of imperial overreach.</p>
+                        <a href="https://scheerpost.com/2026/03/08/the-iran-war-has-just-begun-the-chris-hedges-report/" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+
+                    <div class="article-preview" onclick="toggleArticle('ch9')">
+                        <div class="article-title">Trump's Laurel and Hardy Negotiating Team</div>
+                        <div class="article-date">February 25, 2026</div>
+                        <div class="article-excerpt">Steve Witkoff and Jared Kushner's appalling ignorance...</div>
+                    </div>
+                    <div class="article-details" id="ch9">
+                        <p>Hedges excoriates Trump's negotiating team of Steve Witkoff and Jared Kushner, describing them as a "Laurel and Hardy" duo whose ignorance of world affairs and megalomania seem set to produce disaster. He examines how their incompetence, coupled with Trump's own lack of knowledge, threatens to turn diplomatic efforts into farce with deadly consequences.</p>
+                        <a href="https://scheerpost.com/2026/02/25/trumps-laurel-and-hardy-negotiating-team/" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+
+                    <div class="article-preview" onclick="toggleArticle('ch10')">
+                        <div class="article-title">Rot at the Top: The Elite's Darkest Secrets Spill Out</div>
+                        <div class="article-date">February 12, 2026</div>
+                        <div class="article-excerpt">Elite corruption and violence exposed...</div>
+                    </div>
+                    <div class="article-details" id="ch10">
+                        <p>Hedges examines how elite corruption is being exposed through multiple scandals and investigations. He analyzes what the revelations tell us about how power operates, who the legal system actually serves, and why accountability for the powerful remains elusive even when their crimes become undeniable.</p>
+                        <a href="https://scheerpost.com/2026/02/12/rot-at-the-top-the-elites-darkest-secrets-spill-out/" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+
+                    <div class="article-preview" onclick="toggleArticle('ch11')">
+                        <div class="article-title">Noam Chomsky, Jeffrey Epstein and the Politics of Betrayal</div>
+                        <div class="article-date">February 9, 2026</div>
+                        <div class="article-excerpt">Scathing critique of Chomsky's relationship with Epstein...</div>
+                    </div>
+                    <div class="article-details" id="ch11">
+                        <p>Hedges delivers a scathing critique of Noam Chomsky's relationship with Jeffrey Epstein and what it reveals about elite complicity. He examines how even prominent critics of power can become compromised, what this tells us about how the powerful protect each other, and why holding all elites accountable—regardless of political alignment—matters for genuine opposition to injustice.</p>
+                        <a href="https://scheerpost.com/2026/02/09/noam-chomsky-jeffrey-epstein-and-the-politics-of-betrayal/" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+
+                    <div class="article-preview" onclick="toggleArticle('ch12')">
+                        <div class="article-title">What Will the Future Look Like in the 'New World Order'? (w/ John Mearsheimer)</div>
+                        <div class="article-date">February 4, 2026</div>
+                        <div class="article-excerpt">Trump's belief in benign dictatorship through U.S. economic and military might...</div>
+                    </div>
+                    <div class="article-details" id="ch12">
+                        <p>In this Chris Hedges Report interview, John Mearsheimer analyzes Trump's vision of a "new world order" based on U.S. economic and military dominance. They examine whether Trump's approach represents genuine geopolitical strategy or dangerous delusion, how other powers are responding, and what the collapse of rules-based international order means for global stability.</p>
+                        <a href="https://scheerpost.com/2026/02/04/what-will-the-future-look-like-in-the-new-world-order-w-john-mearsheimer/" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+
+                    <div class="article-preview" onclick="toggleArticle('ch13')">
+                        <div class="article-title">Is the 'New World Order' Really New? (w/ Yanis Varoufakis)</div>
+                        <div class="article-date">January 28, 2026</div>
+                        <div class="article-excerpt">Trump's Board of Peace and U.S. hegemony amid China's rise...</div>
+                    </div>
+                    <div class="article-details" id="ch13">
+                        <p>In this episode of The Chris Hedges Report, former Greek Finance Minister Yanis Varoufakis discusses Trump's "Board of Peace" for Gaza reconstruction as an intricate play to maintain U.S. hegemony amid China's rise. Varoufakis argues that Trump's board represents another attempt to undermine international law while sparking rhetoric about a "new world order." The conversation examines whether the rules-based international order is worth preserving and how U.S. economic and military power are being deployed to maintain unilateral control over allies.</p>
+                        <a href="https://scheerpost.com/2026/01/28/is-the-new-world-order-really-new-w-yanis-varoufakis/" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+
+                    <div class="article-preview" onclick="toggleArticle('ch14')">
+                        <div class="article-title">The Last Election</div>
+                        <div class="article-date">January 20, 2026</div>
+                        <div class="article-excerpt">Trump's threat to cancel midterm elections should be taken seriously...</div>
+                    </div>
+                    <div class="article-details" id="ch14">
+                        <p>Hedges examines Trump's threats to cancel or manipulate the 2026 midterm elections, arguing these warnings must be taken literally rather than dismissed as bluster. He analyzes historical precedents for democratic collapse, what mechanisms Trump could use to subvert elections, and why treating authoritarian threats as hyperbole enables their realization.</p>
+                        <a href="https://scheerpost.com/2026/01/20/the-last-election/" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+
+                    <div class="article-preview" onclick="toggleArticle('ch15')">
+                        <div class="article-title">The Flotillas to Gaza Are the World's Conscience</div>
+                        <div class="article-date">January 16, 2026</div>
+                        <div class="article-excerpt">April 2026 flotilla will involve 3,000 activists on 100 boats...</div>
+                    </div>
+                    <div class="article-details" id="ch15">
+                        <p>Hedges reports on plans for a massive April 2026 flotilla to Gaza involving 3,000 activists on 100 boats, representing the world's conscience in action against ongoing genocide. He examines what this mobilization signals about international civil society's response to state violence, why such acts of resistance matter even when governments fail to act, and the risks activists are willing to take to oppose atrocity.</p>
+                        <a href="https://scheerpost.com/2026/01/16/the-flotillas-to-gaza-are-the-worlds-conscience/" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+
+                    <div class="article-preview" onclick="toggleArticle('ch16')">
+                        <div class="article-title">The Machinery of Terror</div>
+                        <div class="article-date">January 12, 2026</div>
+                        <div class="article-excerpt">Trump administration consolidates familiar authoritarian machinery...</div>
+                    </div>
+                    <div class="article-details" id="ch16">
+                        <p>Hedges analyzes how the Trump administration is consolidating authoritarian control through familiar mechanisms of state terror: mass deportations, political persecution, media intimidation, and violence against dissent. He examines historical patterns of authoritarian consolidation and what the current moment reveals about how democracies collapse into open dictatorship.</p>
+                        <a href="https://scheerpost.com/2026/01/12/the-machinery-of-terror/" class="article-link" target="_blank">Read full article →</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Comparative Analysis Section -->
+        <div class="analysis-section" style="background: white; border-radius: 15px; padding: 30px; margin-top: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+            <div class="analysis-header" onclick="toggleAnalysis()" style="cursor: pointer; display: flex; justify-content: space-between; align-items: center;">
+                <h2 style="color: #667eea; font-size: 2em; margin: 0;">📊 Comparative Analysis</h2>
+                <div class="chevron" style="font-size: 1.5em; color: #667eea;">▶</div>
+            </div>
+            
+            <div class="analysis-content" id="analysis-content" style="margin-top: 20px; display: none;">
+                <p style="font-size: 1.1em; line-height: 1.8; color: #444; margin-bottom: 20px;">
+                    George Friedman, Heather Cox Richardson, Jennifer Rubin, and Chris Hedges each bring distinctive analytical frameworks to understanding contemporary American politics and global affairs. While they often cover similar events, their interpretive lenses, temporal scales, normative commitments, and proposed responses differ substantially. Reading them together provides a comprehensive understanding that none could offer individually.
+                </p>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 30px;">
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; border-left: 4px solid #667eea;">
+                        <h3 style="color: #2c3e50; margin-bottom: 15px;">🌍 George Friedman</h3>
+                        <p style="color: #555; line-height: 1.6;"><strong>Analytical Framework:</strong> Structural geopolitics - focuses on geographic constraints, resource distribution, and great power competition as determinative forces.</p>
+                        <p style="color: #555; line-height: 1.6; margin-top: 10px;"><strong>Time Horizon:</strong> Decades to centuries. Current events understood as manifestations of longer historical cycles.</p>
+                        <p style="color: #555; line-height: 1.6; margin-top: 10px;"><strong>Normative Stance:</strong> Analytically detached. Avoids moral judgments in favor of explaining why events unfold as structural necessities.</p>
+                        <p style="color: #555; line-height: 1.6; margin-top: 10px;"><strong>Blind Spots:</strong> Can underestimate agency, ideology, and contingency. Structural determinism sometimes misses how leaders' choices reshape constraints.</p>
+                    </div>
+
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; border-left: 4px solid #3498db;">
+                        <h3 style="color: #2c3e50; margin-bottom: 15px;">📜 Heather Cox Richardson</h3>
+                        <p style="color: #555; line-height: 1.6;"><strong>Analytical Framework:</strong> Historical institutionalism - traces how current battles over democracy, equality, and economic justice echo recurring American conflicts.</p>
+                        <p style="color: #555; line-height: 1.6; margin-top: 10px;"><strong>Time Horizon:</strong> Daily documentation with deep historical context. Connects today's events to patterns from Reconstruction, Gilded Age, New Deal.</p>
+                        <p style="color: #555; line-height: 1.6; margin-top: 10px;"><strong>Treatment of U.S. Politics:</strong> Chronicles democratic backsliding with alarm but maintains faith that American institutions can be renewed through civic engagement.</p>
+                        <p style="color: #555; line-height: 1.6; margin-top: 10px;"><strong>Strengths:</strong> Unmatched at showing historical precedents for current crises and why institutional design matters for democratic survival.</p>
+                    </div>
+
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; border-left: 4px solid #e74c3c;">
+                        <h3 style="color: #2c3e50; margin-bottom: 15px;">⚖️ Jennifer Rubin</h3>
+                        <p style="color: #555; line-height: 1.6;"><strong>Analytical Framework:</strong> Democratic defense through legal and electoral action. Focuses on concrete strategies to resist authoritarian consolidation.</p>
+                        <p style="color: #555; line-height: 1.6; margin-top: 10px;"><strong>Time Horizon:</strong> Immediate to medium-term. Emphasizes what can be done now to protect democracy in upcoming elections.</p>
+                        <p style="color: #555; line-height: 1.6; margin-top: 10px;"><strong>Normative Stance:</strong> Explicitly pro-democracy with no pretense of neutrality. Holds Republicans accountable for enabling Trump.</p>
+                        <p style="color: #555; line-height: 1.6; margin-top: 10px;"><strong>Complementary Value:</strong> Provides action steps and legal strategies Richardson documents historically and Hedges critiques systemically.</p>
+                    </div>
+
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; border-left: 4px solid #9b59b6;">
+                        <h3 style="color: #2c3e50; margin-bottom: 15px;">✊ Chris Hedges</h3>
+                        <p style="color: #555; line-height: 1.6;"><strong>Analytical Framework:</strong> Prophetic critique rooted in moral philosophy and imperial decline theory. Views current events through lenses of systemic injustice and corporate power.</p>
+                        <p style="color: #555; line-height: 1.6; margin-top: 10px;"><strong>Time Horizon:</strong> Immediate crisis viewed as symptom of civilizational collapse. Connects daily horrors to broader patterns of imperial decay.</p>
+                        <p style="color: #555; line-height: 1.6; margin-top: 10px;"><strong>Treatment of U.S. Politics:</strong> Rejects faith in institutional reform. Argues both parties serve corporate power and genuine change requires revolutionary transformation.</p>
+                        <p style="color: #555; line-height: 1.6; margin-top: 10px;"><strong>Blind Spots:</strong> Can be overly pessimistic about reform possibilities. Sometimes underestimates differences between flawed democracy and open authoritarianism.</p>
+                    </div>
+                </div>
+
+                <div style="background: #e8f4f8; padding: 25px; border-radius: 10px; margin-top: 30px; border-left: 4px solid #3498db;">
+                    <h3 style="color: #2c3e50; margin-bottom: 15px;">🔄 How They Complement Each Other</h3>
+                    <p style="color: #555; line-height: 1.8;">
+                        <strong>Friedman</strong> explains why geopolitical forces push toward conflict regardless of who holds power. <strong>Richardson</strong> shows how current battles echo historical struggles and why institutions matter. <strong>Rubin</strong> identifies concrete actions citizens can take to defend democracy. <strong>Hedges</strong> refuses to let readers forget the moral catastrophe of imperial violence and systemic injustice.
+                    </p>
+                    <p style="color: #555; line-height: 1.8; margin-top: 15px;">
+                        Together, they provide: structural analysis (Friedman), historical context (Richardson), actionable strategies (Rubin), and moral clarity (Hedges). A reader who follows only one will miss crucial dimensions of our moment.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Major Themes Section -->
+        <div class="themes-section" style="background: white; border-radius: 15px; padding: 30px; margin-top: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
+            <h2 style="color: #667eea; font-size: 2em; margin-bottom: 25px; text-align: center;">🎯 Major Themes: January - April 2026</h2>
+            
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 25px; border-radius: 10px;">
+                    <h3 style="margin-bottom: 15px; font-size: 1.4em;">🔥 Iran War Crisis</h3>
+                    <p style="line-height: 1.6; opacity: 0.95;">Trump's war with Iran dominates all coverage. Started in early March with catastrophic miscalculations. Oil prices spike, inflation soars, casualties mount, no exit strategy evident. All four commentators analyze from different angles: Friedman (geopolitical logic), Richardson (daily chaos documentation), Rubin (accountability demands), Hedges (imperial decline).</p>
+                </div>
+
+                <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; padding: 25px; border-radius: 10px;">
+                    <h3 style="margin-bottom: 15px; font-size: 1.4em;">⚖️ Democratic Institutions Under Attack</h3>
+                    <p style="line-height: 1.6; opacity: 0.95;">Attempts to rig 2026 midterms through executive orders. Courts blocking some unconstitutional actions but structure weakening. Gerrymandering battles. Threats to cancel elections entirely. Richardson documents historical parallels; Rubin identifies defense strategies; Hedges warns system collapse is underway.</p>
+                </div>
+
+                <div style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); color: white; padding: 25px; border-radius: 10px;">
+                    <h3 style="margin-bottom: 15px; font-size: 1.4em;">🌍 Geopolitical Realignment</h3>
+                    <p style="line-height: 1.6; opacity: 0.95;">Ukraine negotiations in Dubai. Orbán's defeat in Hungary signals weakening of authoritarian model. China positioning amid U.S.-Iran conflict. Russia's calculations. European responses to American unreliability. Friedman analyzes structural forces; Richardson covers democratic implications; Hedges examines imperial overreach.</p>
+                </div>
+
+                <div style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); color: white; padding: 25px; border-radius: 10px;">
+                    <h3 style="margin-bottom: 15px; font-size: 1.4em;">🗳️ Electoral Politics & Resistance</h3>
+                    <p style="line-height: 1.6; opacity: 0.95;">2026 midterms crucial test. Special elections showing Democratic resistance. Wisconsin state supreme court battle. Virginia redistricting amendment. MTG departure from Congress. Signs of Republican crack-up. Rubin provides action steps; Richardson documents patterns; Hedges skeptical of electoral solutions.</p>
+                </div>
+
+                <div style="background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); color: #333; padding: 25px; border-radius: 10px;">
+                    <h3 style="margin-bottom: 15px; font-size: 1.4em;">📉 Trump's Declining Authority</h3>
+                    <p style="line-height: 1.6;">Approval ratings hit historic lows (35%). Chaotic messaging. Retribution attempts failing. Legal defeats mounting. Republicans worried about midterms. Wall Street Journal reporting on instability. Richardson chronicles daily unraveling; Rubin sees opportunity for accountability; Hedges argues structural damage already done.</p>
+                </div>
+
+                <div style="background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%); color: #333; padding: 25px; border-radius: 10px;">
+                    <h3 style="margin-bottom: 15px; font-size: 1.4em;">📰 Media & Accountability</h3>
+                    <p style="line-height: 1.6;">Independent media outlets like The Contrarian filling gaps. Journalist Ahmed Shihab-Eldin arrested in Kuwait for reporting friendly fire. Press freedom under assault. Truth-telling increasingly dangerous. Rubin's Contrarian as model; Hedges reports on suppression; Richardson documents historical precedents for authoritarian media control.</p>
+                </div>
+
+                <div style="background: linear-gradient(135deg, #d299c2 0%, #fef9d7 100%); color: #333; padding: 25px; border-radius: 10px;">
+                    <h3 style="margin-bottom: 15px; font-size: 1.4em;">🌊 International Conflicts</h3>
+                    <p style="line-height: 1.6;">Gaza genocide continuing. April 2026 flotilla with 3,000 activists planned. Israel-Lebanon ceasefire. Strait of Hormuz tensions. Palestinian resistance parallels to 1936 revolt. Hedges centers Palestinian suffering; Friedman analyzes regional power dynamics; Richardson connects to American complicity.</p>
+                </div>
+
+                <div style="background: linear-gradient(135deg, #e0c3fc 0%, #8ec5fc 100%); color: #333; padding: 25px; border-radius: 10px;">
+                    <h3 style="margin-bottom: 15px; font-size: 1.4em;">⚡ Empire & Militarism</h3>
+                    <p style="line-height: 1.6;">Massive Pentagon budget increases. Navy expansion plans. Ground war with Iran speculation. Imperial overreach. Catastrophic miscalculations. Friedman explains geopolitical drivers; Hedges delivers prophetic critique of imperial violence; Richardson documents domestic costs; Rubin demands accountability for architects of disaster.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; border-radius: 15px; margin-top: 40px; text-align: center;">
+            <p style="font-size: 1.2em; margin-bottom: 10px;">The Commentariat - Diverse Perspectives on Current Events</p>
+            <p style="opacity: 0.9;">January 1, 2026 - April 25, 2026</p>
+            <p style="opacity: 0.8; margin-top: 15px; font-size: 0.9em;">Tracking insights from George Friedman, Heather Cox Richardson, Jennifer Rubin, and Chris Hedges</p>
+        </footer>
+    </div>
+
+    <script>
+        function toggleAuthorSection(sectionId, headerElement) {
+            const section = document.getElementById(sectionId);
+            const chevron = headerElement.querySelector('.chevron');
+            
+            if (section.classList.contains('expanded')) {
+                section.classList.remove('expanded');
+                chevron.classList.remove('rotated');
+            } else {
+                section.classList.add('expanded');
+                chevron.classList.add('rotated');
+            }
+        }
+
+        function toggleArticle(articleId) {
+            const article = document.getElementById(articleId);
+            
+            if (article.classList.contains('expanded')) {
+                article.classList.remove('expanded');
+            } else {
+                article.classList.add('expanded');
+            }
+            
+            event.stopPropagation();
+        }
+
+        function toggleAllArticles(authorSectionId) {
+            const section = document.getElementById(authorSectionId);
+            const articles = section.querySelectorAll('.article-details');
+            
+            const allExpanded = Array.from(articles).every(article => 
+                article.classList.contains('expanded')
+            );
+            
+            articles.forEach(article => {
+                if (allExpanded) {
+                    article.classList.remove('expanded');
+                } else {
+                    article.classList.add('expanded');
+                }
+            });
+        }
+
+        function toggleAnalysis() {
+            const content = document.getElementById('analysis-content');
+            const chevron = document.querySelector('.analysis-header .chevron');
+            
+            if (content.style.display === 'none') {
+                content.style.display = 'block';
+                chevron.textContent = '▼';
+            } else {
+                content.style.display = 'none';
+                chevron.textContent = '▶';
+            }
+        }
+    </script>
+</body>
+</html>
