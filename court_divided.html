@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Court Divided Against Itself</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Source+Sans+3:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --serif: 'Playfair Display', Georgia, serif;
+    --sans: 'Source Sans 3', system-ui, sans-serif;
+    --ink: #1a1a18;
+    --ink-muted: #5a5a56;
+    --ink-faint: #9a9a94;
+    --paper: #faf8f3;
+    --paper-alt: #f2efe8;
+    --rule: #c8c4b8;
+    --rule-light: #e0ddd4;
+    --blue-bg: #e8f0f9;
+    --blue-mid: #3070b0;
+    --blue-text: #0d4a85;
+    --red-bg: #f9ecea;
+    --red-mid: #b03030;
+    --red-text: #8a1a1a;
+    --amber-text: #7a5000;
+    --gold-bg: #f5f0e0;
+    --gold-border: #c8a84b;
+    --gold-text: #6b5000;
+    --sepia: #7a6a4a;
+    --sepia-light: #ede5d0;
+    --teal-bg: #e6f2f0;
+    --teal-border: #4a9a8a;
+    --teal-text: #1a5a50;
+    --teal-dark: #2d7a6c;
+    --teal-panel-a: #ddf0ec;
+    --teal-panel-b: #cfe8e4;
+    --teal-sepia: #3a6a62;
+  }
+
+  body {
+    font-family: var(--sans);
+    background: var(--paper);
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 2rem 1rem 4rem;
+  }
+
+  .page { max-width: 760px; margin: 0 auto; }
+
+  /* ── Masthead ── */
+  .masthead {
+    border-top: 3px solid var(--ink);
+    border-bottom: 1.5px solid var(--ink);
+    padding: 1.5rem 0 1.1rem;
+    margin-bottom: 1.5rem;
+  }
+  .kicker {
+    font-size: 10.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 0.6rem;
+  }
+  h1 {
+    font-family: var(--serif);
+    font-size: 38px;
+    font-weight: 500;
+    line-height: 1.12;
+    color: var(--ink);
+    margin-bottom: 0.75rem;
+  }
+  .byline-row {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+    font-size: 12.5px;
+    color: var(--ink-muted);
+    border-top: 0.5px solid var(--rule);
+    padding-top: 0.7rem;
+    margin-top: 0.85rem;
+  }
+  .byline-row a { color: var(--blue-mid); text-decoration: none; font-weight: 500; }
+  .byline-row a:hover { text-decoration: underline; }
+  .dot { color: var(--rule); }
+
+  /* ── Deck ── */
+  .deck {
+    font-family: var(--serif);
+    font-size: 17px;
+    line-height: 1.55;
+    color: var(--ink-muted);
+    border-left: 3px solid var(--rule);
+    padding-left: 1.1rem;
+    margin-bottom: 2rem;
+    font-style: italic;
+  }
+
+  /* ── Split panels ── */
+  .split-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    border: 1px solid var(--ink);
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 1.5rem;
+  }
+  .split-panel { padding: 1.4rem 1.3rem; }
+  .split-panel.prog { background: var(--blue-bg); border-right: 1px solid var(--ink); }
+  .split-panel.cons { background: var(--red-bg); }
+
+  .panel-wing {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 500;
+    margin-bottom: 0.35rem;
+  }
+  .prog .panel-wing { color: var(--blue-text); }
+  .cons .panel-wing { color: var(--red-text); }
+
+  .panel-name {
+    font-family: var(--serif);
+    font-size: 21px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 0.2rem;
+  }
+  .panel-venue {
+    font-size: 12px;
+    color: var(--ink-faint);
+    margin-bottom: 1.1rem;
+    font-style: italic;
+  }
+  blockquote {
+    font-family: var(--serif);
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--ink);
+    border-left: 2.5px solid;
+    padding-left: 0.8rem;
+    margin: 0.8rem 0 0.5rem;
+  }
+  .prog blockquote { border-color: var(--blue-mid); }
+  .cons blockquote { border-color: var(--red-mid); }
+  .sepia-quote { border-color: var(--gold-border) !important; }
+  .teal-quote  { border-color: var(--teal-border) !important; }
+
+  .panel-caption {
+    font-size: 11.5px;
+    color: var(--ink-faint);
+    font-style: italic;
+    line-height: 1.45;
+    margin-bottom: 1rem;
+  }
+  .panel-outcome-label {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    margin-bottom: 0.4rem;
+  }
+  .tag {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 3px 10px;
+    border-radius: 99px;
+  }
+  .tag-blue  { background: #c4d9f2; color: var(--blue-text); }
+  .tag-red   { background: #f2c4c4; color: var(--red-text); }
+  .tag-amber { background: #fde8a0; color: var(--amber-text); }
+  .tag-teal  { background: #b8dfd8; color: var(--teal-text); }
+
+  /* ── Verdict cards ── */
+  .verdict-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 1.75rem;
+  }
+  .verdict-card {
+    background: var(--paper-alt);
+    border: 0.5px solid var(--rule);
+    border-radius: 6px;
+    padding: 1rem 1.1rem;
+  }
+  .verdict-card-label {
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 0.5rem;
+  }
+  .verdict-card-body {
+    font-family: var(--serif);
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: var(--ink);
+    margin-bottom: 0.7rem;
+  }
+
+  /* ── Divider ── */
+  .rule-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 1.75rem 0;
+  }
+  .rule-line { flex: 1; height: 0.5px; background: var(--rule); }
+  .rule-glyph { font-family: var(--serif); font-size: 20px; color: var(--rule); line-height: 1; }
+
+  /* ── Historical contrast: shared styles ── */
+  .history-section {
+    border-radius: 6px;
+    overflow: hidden;
+    margin-bottom: 1.75rem;
+  }
+  .history-section.gold { border: 1px solid var(--gold-border); }
+  .history-section.teal { border: 1px solid var(--teal-border); }
+
+  .history-header {
+    border-bottom: 1px solid;
+    padding: 0.75rem 1.3rem;
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+  .gold .history-header { background: var(--gold-bg); border-color: var(--gold-border); }
+  .teal .history-header { background: var(--teal-bg); border-color: var(--teal-border); }
+
+  .history-kicker {
+    font-size: 10px;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  .gold .history-kicker { color: var(--sepia); }
+  .teal .history-kicker { color: var(--teal-sepia); }
+
+  .history-title {
+    font-family: var(--serif);
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--ink);
+  }
+
+  .history-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+  }
+  .gold .history-body { background: var(--gold-border); }
+  .teal .history-body { background: var(--teal-border); }
+
+  .history-panel { padding: 1.2rem 1.3rem; }
+  .gold .history-panel         { background: var(--sepia-light); }
+  .gold .history-panel.right-panel { background: #f0e8d5; }
+  .teal .history-panel         { background: var(--teal-panel-a); }
+  .teal .history-panel.right-panel { background: var(--teal-panel-b); }
+
+  .history-panel-name {
+    font-family: var(--serif);
+    font-size: 17px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 0.15rem;
+  }
+  .history-panel-years {
+    font-size: 11px;
+    font-style: italic;
+    margin-bottom: 0.9rem;
+  }
+  .gold .history-panel-years { color: var(--sepia); }
+  .teal .history-panel-years { color: var(--teal-sepia); }
+
+  .history-caption {
+    font-size: 11.5px;
+    line-height: 1.5;
+    margin-top: 0.6rem;
+  }
+  .gold .history-caption { color: var(--sepia); }
+  .teal .history-caption { color: var(--teal-sepia); }
+
+  .friendship-banner {
+    border-top: 1px solid;
+    padding: 1rem 1.3rem;
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+  .gold .friendship-banner { background: var(--gold-bg); border-color: var(--gold-border); }
+  .teal .friendship-banner { background: var(--teal-bg); border-color: var(--teal-border); }
+
+  .friendship-icon { font-size: 24px; line-height: 1; flex-shrink: 0; margin-top: 1px; }
+  .friendship-text {
+    font-family: var(--serif);
+    font-size: 13.5px;
+    line-height: 1.65;
+    color: var(--ink-muted);
+  }
+  .friendship-text strong { color: var(--ink); font-weight: 500; }
+
+  /* ── Bottom context ── */
+  .context-box {
+    background: var(--paper-alt);
+    border: 0.5px solid var(--rule);
+    border-radius: 6px;
+    padding: 1.1rem 1.3rem;
+    margin-bottom: 1.25rem;
+  }
+  .context-box h2 {
+    font-family: var(--serif);
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--ink);
+    margin-bottom: 0.55rem;
+  }
+  .context-box p { font-size: 13.5px; color: var(--ink-muted); line-height: 1.65; }
+
+  /* ── Approval bar ── */
+  .approval-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 0.9rem;
+  }
+  .approval-label { font-size: 12px; color: var(--ink-faint); white-space: nowrap; }
+  .bar-wrap { flex: 1; height: 5px; background: var(--rule-light); border-radius: 3px; overflow: hidden; }
+  .bar-fill { height: 100%; width: 35%; background: var(--red-mid); border-radius: 3px; }
+  .approval-pct { font-size: 12.5px; font-weight: 500; color: var(--red-text); white-space: nowrap; }
+
+  /* ── Footer ── */
+  .source-line { text-align: center; font-size: 11.5px; color: var(--ink-faint); padding-top: 0.5rem; }
+  .source-line a { color: var(--blue-mid); text-decoration: none; }
+  .source-line a:hover { text-decoration: underline; }
+
+  @media (max-width: 560px) {
+    h1 { font-size: 26px; }
+    .split-grid { grid-template-columns: 1fr; }
+    .split-panel.prog { border-right: none; border-bottom: 1px solid var(--ink); }
+    .history-body { grid-template-columns: 1fr; }
+    .history-panel { border-bottom: 1px solid; }
+    .gold .history-panel { border-color: var(--gold-border); }
+    .teal .history-panel { border-color: var(--teal-border); }
+    .verdict-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="masthead">
+    <div class="kicker">Supreme Court &nbsp;·&nbsp; Opinion analysis &nbsp;·&nbsp; April 2026</div>
+    <h1>A Court Divided Against Itself</h1>
+    <div class="byline-row">
+      <span>Jesse Wegman, Brennan Center for Justice</span>
+      <span class="dot">·</span>
+      <a href="https://www.nytimes.com/2026/04/26/opinion/supreme-court-thomas-sotomayor.html" target="_blank">Read original in The New York Times ↗</a>
+    </div>
+  </div>
+
+  <p class="deck">Two justices. Two public outbursts. One apology — from the wrong person. As momentous rulings approach, a revealing glimpse of a court under institutional strain.</p>
+
+  <!-- ── Present-day split ── -->
+  <div class="split-grid">
+    <div class="split-panel prog">
+      <div class="panel-wing">Progressive · Liberal wing</div>
+      <div class="panel-name">Justice Sonia Sotomayor</div>
+      <div class="panel-venue">University of Kansas · shadow-docket remarks</div>
+      <blockquote>"This is from a man whose parents were professionals and probably doesn't really know any person who works by the hour or the piece like I do."</blockquote>
+      <p class="panel-caption">Personal dig at Justice Kavanaugh over "roving patrol" immigration stops that permitted racial profiling</p>
+      <div class="panel-outcome-label">Outcome</div>
+      <span class="tag tag-blue">Publicly apologized to Kavanaugh</span>
+    </div>
+    <div class="split-panel cons">
+      <div class="panel-wing">Conservative · Right wing</div>
+      <div class="panel-name">Justice Clarence Thomas</div>
+      <div class="panel-venue">University of Texas, Austin · C-SPAN national broadcast</div>
+      <blockquote>"Progressivism seeks to replace the basic premises of the Declaration of Independence and hence our form of government" — blaming the movement for the rise of Stalin, Hitler, Mussolini and Mao.</blockquote>
+      <p class="panel-caption">Sweeping ideological attack on tens of millions of Americans; acknowledged major donor Harlan Crow from the stage</p>
+      <div class="panel-outcome-label">Outcome</div>
+      <span class="tag tag-red">No apology issued</span>
+    </div>
+  </div>
+
+  <div class="verdict-row">
+    <div class="verdict-card">
+      <div class="verdict-card-label">What Thomas ignored</div>
+      <p class="verdict-card-body">The Progressive Era produced four constitutional amendments — including direct Senate elections and women's suffrage — each ratified by supermajorities. A triumph of democracy, not its undoing.</p>
+      <span class="tag tag-amber">Historical illiteracy</span>
+    </div>
+    <div class="verdict-card">
+      <div class="verdict-card-label">What Sotomayor was criticizing</div>
+      <p class="verdict-card-body">A September 2025 shadow-docket ruling — unexplained by the majority — that temporarily permitted immigration officers to use race and apparent ethnicity in stop decisions.</p>
+      <span class="tag tag-blue">"Kavanaugh stops"</span>
+    </div>
+  </div>
+
+  <div class="rule-row">
+    <div class="rule-line"></div>
+    <div class="rule-glyph">⚖</div>
+    <div class="rule-line"></div>
+  </div>
+
+  <!-- ── Historical contrast 1: Thomas vs O'Connor (both conservatives) ── -->
+  <div class="history-section teal">
+    <div class="history-header">
+      <span class="history-kicker">Conservative then &amp; now</span>
+      <span class="history-title">The aggrieved ideologue and the pragmatic justice</span>
+    </div>
+    <div class="history-body">
+      <div class="history-panel">
+        <div class="history-panel-name">Justice Clarence Thomas</div>
+        <div class="history-panel-years">Associate Justice, 1991–present &nbsp;·&nbsp; Conservative wing</div>
+        <blockquote class="teal-quote">Thomas has spoken at length of his contempt for Yale Law School, his alienation from Washington social life, and a sense that the establishment has always treated him as an outsider — resentments he has carried onto the bench for three decades.</blockquote>
+        <div class="history-caption">His jurisprudence is animated less by how a ruling affects ordinary Americans than by the internal logic of an originalist framework — and by a barely concealed score to settle with the progressive establishment he holds responsible for his confirmation ordeal.</div>
+        <div style="margin-top:0.8rem;"><span class="tag tag-red">Ideological grievance</span></div>
+      </div>
+      <div class="history-panel right-panel">
+        <div class="history-panel-name">Justice Sandra Day O'Connor</div>
+        <div class="history-panel-years">Associate Justice, 1981–2006 &nbsp;·&nbsp; Conservative swing vote</div>
+        <blockquote class="teal-quote">O'Connor's guiding question, in case after case, was a practical one: what are the real-world consequences for the people who will live under this ruling? Abstract doctrine mattered less to her than the human texture of the outcome.</blockquote>
+        <div class="history-caption">The first woman on the court, she became its decisive center of gravity for a generation — not because she was unprincipled but because her conservatism was grounded in consequence rather than grievance. After retiring she founded iCivics to rebuild the democratic literacy the court increasingly seemed to take for granted.</div>
+        <div style="margin-top:0.8rem;"><span class="tag tag-teal">Pragmatic consequence</span></div>
+      </div>
+    </div>
+    <div class="friendship-banner">
+      <div class="friendship-icon">⚡</div>
+      <p class="friendship-text">
+        <strong>The conservative tradition Thomas abandoned:</strong> O'Connor and Thomas served together for fifteen years and shared a party of appointment — yet their judicial temperaments could scarcely be more different. Where O'Connor asked what a ruling would mean for a rancher in Arizona or a student in Michigan, Thomas asks what the Founders would have said. Where she saw the court as an instrument of practical governance, he treats it as a platform for intellectual combat. O'Connor worried, in retirement, that the court was losing the public's trust. Thomas, by inviting a billionaire donor onto a national stage, seems indifferent to the concern.
+      </p>
+    </div>
+  </div>
+
+  <!-- ── Historical contrast 2: Ginsburg & Scalia ── -->
+  <div class="history-section gold">
+    <div class="history-header">
+      <span class="history-kicker">Historical contrast</span>
+      <span class="history-title">When ideological rivals were still friends</span>
+    </div>
+    <div class="history-body">
+      <div class="history-panel">
+        <div class="history-panel-name">Justice Ruth Bader Ginsburg</div>
+        <div class="history-panel-years">Associate Justice, 1993–2020 &nbsp;·&nbsp; Liberal wing</div>
+        <blockquote class="sepia-quote">In 2016, Ginsburg called Trump "a faker" with no consistency about him — openly prejudicial remarks about a sitting presidential candidate that she soon said she deeply regretted.</blockquote>
+        <div class="history-caption">She apologized. Wegman notes the bitter irony: it is invariably the women on the court who find the courage to say they made a mistake.</div>
+      </div>
+      <div class="history-panel right-panel">
+        <div class="history-panel-name">Justice Antonin Scalia</div>
+        <div class="history-panel-years">Associate Justice, 1986–2016 &nbsp;·&nbsp; Conservative wing</div>
+        <blockquote class="sepia-quote">In his Obergefell dissent, Scalia wrote he would "hide my head in a bag" before joining the majority's opinion — dismissing it as "the mystical aphorisms of the fortune cookie."</blockquote>
+        <div class="history-caption">Withering mockery of colleagues was a Scalia signature. He never apologized — yet the court did not feel, as it does now, like a body coming apart at the seams.</div>
+      </div>
+    </div>
+    <div class="friendship-banner">
+      <div class="friendship-icon">♪</div>
+      <p class="friendship-text">
+        <strong>What the current court conspicuously lacks:</strong> Ginsburg and Scalia disagreed on nearly everything and sparred fiercely in print — yet they shared opera tickets, celebrated New Year's Eve together, and sustained a warm personal friendship across four decades on the bench. Scalia once said Ginsburg was his favorite colleague. Their rivalry was professional, not tribal. On today's court, reshaped by a decade of bare-knuckle confirmation politics, there is little evidence of comparable warmth across the ideological divide. The argument has curdled into something more personal — and the institution is paying the price.
+      </p>
+    </div>
+  </div>
+
+  <!-- ── Institutional moment ── -->
+  <div class="context-box">
+    <h2>The court's institutional moment</h2>
+    <p>The Supreme Court is approaching near-record-low public approval ratings as it prepares to rule on major cases involving the administrative state. Wegman's verdict: one justice offered a court that would work for America — tough-minded, passionate, willing to admit error. The other gave us the court we have: smug, unapologetic, and gleefully divisive. The irony of the pattern holds — it is the women who say they made a mistake.</p>
+    <div class="approval-row">
+      <span class="approval-label">Public approval (est.)</span>
+      <div class="bar-wrap"><div class="bar-fill"></div></div>
+      <span class="approval-pct">~35% · near-record low</span>
+    </div>
+  </div>
+
+  <div class="source-line">
+    Source: <a href="https://www.nytimes.com/2026/04/26/opinion/supreme-court-thomas-sotomayor.html" target="_blank">Jesse Wegman, NYT Opinion, April 26 2026</a>
+  </div>
+
+</div>
+</body>
+</html>
