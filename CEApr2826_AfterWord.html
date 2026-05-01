@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AfterWord — BOLLI Current Events · April 28, 2026</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .newsletter {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header h1 { font-size: 2.2rem; margin-bottom: 10px; font-weight: bold; }
+        .header .subtitle { font-size: 1rem; opacity: 0.85; font-style: italic; margin-bottom: 6px; }
+        .header .tagline { font-size: 0.9rem; opacity: 0.75; }
+
+        .session-banner {
+            background: #2c3e50;
+            color: #f0e8d0;
+            text-align: center;
+            padding: 10px 30px;
+            font-size: 0.88rem;
+            letter-spacing: 0.08em;
+            font-family: 'Courier New', monospace;
+            text-transform: uppercase;
+        }
+
+        .content { padding: 30px; }
+
+        .section {
+            margin-bottom: 30px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 30px;
+        }
+        .section:last-child { border-bottom: none; margin-bottom: 0; }
+
+        .section-title {
+            font-size: 1.55rem;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            border-left: 4px solid #3498db;
+            padding: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background-color 0.3s ease;
+            border-radius: 5px;
+            background: #f8f9fa;
+        }
+        .section-title:hover { background-color: #e9ecef; }
+
+        .section-content {
+            transition: max-height 0.4s ease-out, opacity 0.3s ease-out;
+            overflow: hidden;
+        }
+        .section-content.collapsed { max-height: 0; opacity: 0; }
+        .section-content.expanded { max-height: 6000px; opacity: 1; }
+
+        .story {
+            margin-bottom: 25px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            border-left: 3px solid #3498db;
+        }
+
+        .story-headline {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+
+        .story-content { font-size: 1rem; line-height: 1.7; margin-bottom: 15px; }
+
+        .quote {
+            background: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 15px 20px;
+            margin: 15px 0;
+            font-style: italic;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .citation { font-size: 0.9rem; color: #666; font-weight: bold; margin-top: 8px; }
+
+        .key-facts {
+            background: #f0f8ff;
+            border: 1px solid #b3d9ff;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .key-facts-title { font-weight: bold; color: #2980b9; margin-bottom: 10px; }
+
+        .fact-list { margin-left: 20px; }
+        .fact-list li { margin-bottom: 5px; }
+
+        .stats-box {
+            background: linear-gradient(135deg, #ff7b7b 0%, #ff416c 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            text-align: center;
+        }
+        .stats-number { font-size: 2rem; font-weight: bold; margin-bottom: 5px; }
+
+        .stats-box.blue { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .stats-box.green { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+        .stats-box.purple { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+
+        .breakdown-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .breakdown-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 3px solid #e74c3c;
+            text-align: center;
+        }
+        .breakdown-label { font-size: 0.85rem; color: #666; margin-bottom: 5px; }
+        .breakdown-value { font-size: 1.2rem; font-weight: bold; color: #2c3e50; }
+
+        .warning {
+            background: #ffe6e6;
+            border: 1px solid #ffb3b3;
+            color: #d63031;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .emphasis {
+            background: linear-gradient(120deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .expand-icon {
+            font-size: 1.4rem;
+            color: #3498db;
+            transition: transform 0.3s ease;
+        }
+
+        .collapse-button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: background-color 0.3s ease;
+            width: 150px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .collapse-button:hover { background: #2980b9; }
+
+        .source-link { color: #2980b9; text-decoration: none; }
+        .source-link:hover { text-decoration: underline; }
+
+        .footer {
+            background: #2c3e50;
+            color: white;
+            padding: 25px 30px;
+            text-align: left;
+        }
+
+        .source-note { font-size: 0.85rem; opacity: 0.85; line-height: 1.7; }
+        .source-note a { color: #74b9ff; text-decoration: none; }
+        .source-note a:hover { text-decoration: underline; }
+
+        .context-note {
+            background: #fff8e1;
+            border: 1px solid #ffe082;
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin: 15px 0;
+            font-size: 0.95rem;
+            line-height: 1.65;
+            color: #5d4037;
+        }
+        .context-note strong { color: #e65100; }
+
+        @media (max-width: 768px) {
+            .header h1 { font-size: 1.8rem; }
+            .content { padding: 20px; }
+            .breakdown-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+    <script>
+        function toggleSection(sectionId) {
+            const content = document.getElementById(sectionId);
+            const icon = document.querySelector(`[onclick="toggleSection('${sectionId}')"] .expand-icon`);
+            if (content.classList.contains('collapsed')) {
+                content.classList.remove('collapsed');
+                content.classList.add('expanded');
+                icon.textContent = '▼';
+            } else {
+                content.classList.add('collapsed');
+                content.classList.remove('expanded');
+                icon.textContent = '▶';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.section-content').forEach(c => c.classList.add('collapsed'));
+        });
+    </script>
+</head>
+<body>
+<div class="newsletter">
+
+    <div class="header">
+        <h1>AfterWord</h1>
+        <div class="subtitle">How Mainstream Media Covered the Topics of Our Discussion</div>
+        <div class="tagline">BOLLI Current Events Discussion Group · Spring 2026</div>
+    </div>
+
+    <div class="session-banner">
+        Topics discussed April 28, 2026 · Coverage period: March 2025 – April 2026
+    </div>
+
+    <div class="content">
+
+        <!-- ========== IRAN ========== -->
+        <div class="section">
+            <div class="section-title" onclick="toggleSection('iran-section')">
+                🌐 The US-Iran War: From Negotiations to Conflict to Ceasefire
+                <span class="expand-icon">▶</span>
+            </div>
+
+            <div class="section-content collapsed" id="iran-section">
+
+                <div class="story">
+                    <div class="story-headline">How We Got Here: The JCPOA, Its Collapse, and the Road to War</div>
+                    <div class="story-content">
+                        The conflict traced directly to the 2018 US withdrawal from the JCPOA nuclear accord. <a href="https://www.britannica.com/event/12-Day-War" class="source-link">Britannica</a> documented how the 2015 agreement had capped Iran's uranium enrichment and stockpiles for 15 years — expert consensus held it would have delayed Iranian nuclear capability by at least a decade. After the US exit, Iran began rolling back its commitments in 2019. Indirect negotiations resumed in 2025, but collapsed in February 2026.
+                    </div>
+
+                    <div class="key-facts">
+                        <div class="key-facts-title">Timeline of Escalation (March 2025 – April 2026)</div>
+                        <ul class="fact-list">
+                            <li><strong>March 7, 2025:</strong> Trump writes to Khamenei demanding nuclear dismantlement within two months or face military strikes</li>
+                            <li><strong>June 13, 2025:</strong> Israel launches the 12-Day War targeting Iranian nuclear sites, military leadership, and scientists — US joins, hitting most fortified targets</li>
+                            <li><strong>June 24, 2025:</strong> Ceasefire declared, ending the 12-Day War</li>
+                            <li><strong>February 2026:</strong> Omani-mediated indirect talks collapse; Iran willing to make concessions but Trump says he is "not thrilled" with talks</li>
+                            <li><strong>February 28, 2026:</strong> US and Israel launch joint strikes on Iran ("Operation Epic Fury") — nearly 900 strikes in 12 hours; Supreme Leader Khamenei killed</li>
+                            <li><strong>April 7–8, 2026:</strong> Pakistan brokers a conditional two-week ceasefire</li>
+                            <li><strong>April 11, 2026:</strong> Islamabad Talks — highest-level US-Iran discussions since 1979 — last 21 hours; Vance announces no agreement reached</li>
+                            <li><strong>April 13, 2026:</strong> US imposes naval blockade on Iranian ports; Iran charges $2M per vessel toll through the Strait of Hormuz</li>
+                            <li><strong>April 25, 2026:</strong> Three US aircraft carriers now in the Middle East — largest buildup since 2003</li>
+                        </ul>
+                    </div>
+
+                    <div class="citation">Sources: <a href="https://en.wikipedia.org/wiki/2025%E2%80%932026_Iran%E2%80%93United_States_negotiations" class="source-link">Wikipedia — US-Iran Negotiations 2025-2026</a> · <a href="https://www.britannica.com/event/12-Day-War" class="source-link">Britannica — 12-Day War</a></div>
+                </div>
+
+                <div class="story">
+                    <div class="story-headline">The Negotiators: A Profound Mismatch</div>
+                    <div class="story-content">
+                        The <a href="https://commonslibrary.parliament.uk/research-briefings/cbp-10637/" class="source-link">UK House of Commons Library</a> briefing on the US-Iran talks noted that the issues under negotiation — Strait of Hormuz freedom of navigation, Iran's nuclear and ballistic missile program, sanctions, and reconstruction — were of extreme complexity. Iran's foreign ministry had experience spanning the 20-month Kerry-Sherman JCPOA negotiations. The US sent special envoy Steve Witkoff and JD Vance as leads.
+                    </div>
+
+                    <div class="quote">
+                        "JD Vance announced that no agreement had been reached, stating that Iran had refused 'to accept our terms.' Afterwards, Trump said that he no longer cared about negotiations with Iran."
+                    </div>
+                    <div class="citation">— <a href="https://en.wikipedia.org/wiki/2026_Iran_war_ceasefire" class="source-link">Wikipedia — 2026 Iran War Ceasefire</a>, on the April 11 Islamabad Talks</div>
+
+                    <div class="story-content">
+                        <a href="https://www.aljazeera.com/news/2026/4/30/could-the-us-iran-war-become-a-protracted-frozen-conflict" class="source-link">Al Jazeera</a> reported that Trump's approval rating had fallen to 34% — compared with 47% at inauguration — partly driven by the economic effect of the Hormuz closure, which pushed US average gasoline prices to $4.18 a gallon, the highest in nearly four years.
+                    </div>
+
+                    <div class="breakdown-grid">
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Trump Approval (at inauguration)</div>
+                            <div class="breakdown-value">47%</div>
+                        </div>
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Trump Approval (April 2026)</div>
+                            <div class="breakdown-value">34%</div>
+                        </div>
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">US Gas Price Average</div>
+                            <div class="breakdown-value">$4.18/gal</div>
+                        </div>
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">US Carriers in Region</div>
+                            <div class="breakdown-value">3</div>
+                        </div>
+                    </div>
+
+                    <div class="citation">Sources: <a href="https://www.aljazeera.com/news/2026/4/30/could-the-us-iran-war-become-a-protracted-frozen-conflict" class="source-link">Al Jazeera</a> · <a href="https://en.wikipedia.org/wiki/2026_Iran_war" class="source-link">Wikipedia — 2026 Iran War</a></div>
+                </div>
+
+                <div class="story">
+                    <div class="story-headline">Iran's Strategic Position: Walk-Away Leverage</div>
+                    <div class="story-content">
+                        <a href="https://www.britannica.com/event/2026-Iran-war" class="source-link">Britannica's</a> comprehensive account described Iran's posture as one of deliberate attrition — leveraging the Strait of Hormuz to impose costs on the global economy while waiting out US political pressure. With midterm elections approaching and Trump's approval in decline, analysts broadly agreed Iran was betting that time was on its side. <a href="https://cnn.com/2026/04/23/world/live-news/iran-war-trump-blockade-israel-lebanon" class="source-link">CNN's</a> live coverage noted Trump's repeated insistence he felt "no time pressure" even as oil prices and poll numbers told a different story.
+                    </div>
+
+                    <div class="warning">
+                        <strong>The Dual Blockade:</strong> The Guardian described a standoff in which the US Navy blockaded Iranian ports while Iran maintained its toll on Hormuz commercial shipping. Neither side had fully opened the strait as of late April 2026. The UNDP warned that Iran's own grain imports — largely routed through Hormuz — were being disrupted, deepening the economic toll inside Iran itself.
+                    </div>
+
+                    <div class="citation">Sources: <a href="https://www.britannica.com/event/2026-Iran-war" class="source-link">Britannica — 2026 Iran War</a> · <a href="https://commonslibrary.parliament.uk/research-briefings/cbp-10521/" class="source-link">UK Parliament Library — US-Iran Conflict Background</a> · <a href="https://cnn.com/2026/04/23/world/live-news/iran-war-trump-blockade-israel-lebanon" class="source-link">CNN Live Coverage</a></div>
+                </div>
+
+                <button class="collapse-button" onclick="toggleSection('iran-section')"><span>▲</span> Collapse</button>
+            </div>
+        </div>
+
+        <!-- ========== WHCA SHOOTING ========== -->
+        <div class="section">
+            <div class="section-title" onclick="toggleSection('whca-section')">
+                🎯 White House Correspondents' Dinner Shooting (April 25, 2026)
+                <span class="expand-icon">▶</span>
+            </div>
+
+            <div class="section-content collapsed" id="whca-section">
+
+                <div class="story">
+                    <div class="story-headline">What Happened: The Third Assassination Attempt on Trump</div>
+                    <div class="story-content">
+                        On April 25, 2026, Cole Tomas Allen, 31, of Torrance, California, traveled by train from Los Angeles to Washington, D.C. and checked into the Washington Hilton — the same hotel hosting the White House Correspondents' Dinner, which Trump attended for the first time during either of his presidencies. At 8:40 p.m., Allen approached a security checkpoint on the hotel's terrace level, a floor above the ballroom, and ran through a magnetometer holding a long gun. A Secret Service officer wearing a ballistic vest was shot in the chest; the officer fired back, Allen fell and was arrested. Allen was not fatally shot.
+                    </div>
+
+                    <div class="key-facts">
+                        <div class="key-facts-title">Key Facts (Department of Justice, April 27, 2026)</div>
+                        <ul class="fact-list">
+                            <li>Allen purchased a 12-gauge pump-action shotgun in August 2025 and a .38 caliber pistol in 2023 — both legally, in California</li>
+                            <li>He reserved his hotel room on April 6, three weeks in advance</li>
+                            <li>His manifesto cited grievances about US strikes on "drug boats" in the Pacific; it did not name Trump directly</li>
+                            <li>Social media posts attributed to Allen were described by extremism experts as "mainstream left-of-center" — no evidence of radicalization</li>
+                            <li>Charges: attempted assassination of the President, interstate transport of a firearm, discharge during a crime of violence</li>
+                        </ul>
+                    </div>
+
+                    <div class="citation">Source: <a href="https://www.justice.gov/opa/pr/suspect-white-house-correspondents-dinner-shooting-charged-attempt-assassinate-president" class="source-link">U.S. Department of Justice — Official Charging Announcement</a></div>
+                </div>
+
+                <div class="story">
+                    <div class="story-headline">Conspiracy Theories vs. Reality: Social Media's Instant Response</div>
+                    <div class="story-content">
+                        Within minutes of the shooting, <a href="https://en.wikipedia.org/wiki/2026_White_House_Correspondents%27_dinner_shooting" class="source-link">Wikipedia's contemporaneous documentation</a> recorded an eruption of claims across social media that the event was staged — echoing the response to the 2024 Butler, Pennsylvania shooting. X users posted "STAGED" and claimed the shooting was fabricated to build support for Trump's White House ballroom project. Bluesky users made similar claims. Nick Fuentes later acknowledged he had amplified such claims knowing they were unsupported, saying it was "a good way to stir people up."
+                    </div>
+
+                    <div class="quote">
+                        "Monday's arraignment of 31-year-old Cole Tomas Allen... opened legal proceedings that many extremism experts will be watching closely. The alleged assassination attempt is the latest high-profile data point in a growing environment of political violence in the U.S."
+                    </div>
+                    <div class="citation">— <a href="https://www.npr.org/2026/04/28/nx-s1-5801467/cole-allen-suspect-washington-correspondents-dinner-shooting" class="source-link">NPR, April 28, 2026</a></div>
+
+                    <div class="story-content">
+                        <a href="https://www.cnn.com/2026/04/27/politics/live-news/correspondents-dinner-shooting-suspect-court" class="source-link">CNN's reporting</a> noted that the Washington Hilton regularly remains open to hotel guests during the dinner, with security concentrated near the ballroom itself — a detail Allen apparently understood, as his manifesto expressed "astonishment" at the apparent lack of security.
+                    </div>
+                </div>
+
+                <div class="story">
+                    <div class="story-headline">Political Fallout: The White House Ballroom &amp; Jimmy Kimmel</div>
+                    <div class="story-content">
+                        Trump and the Republican leadership immediately framed the shooting as proof of the need for a new 90,000 sq. ft. White House ballroom — a $200M+ project already under construction and facing a lawsuit from the National Trust for Historic Preservation. House Speaker Mike Johnson called the incident justification for fast-tracking the ballroom. House Minority Leader Hakeem Jeffries called it "a vanity project." Separately, Trump and Melania both called for ABC to fire Jimmy Kimmel, citing a joke Kimmel made three days before the dinner in which he described Melania as having an "expectant widow's glow." The FCC announced a review of Disney's broadcast licenses.
+                    </div>
+
+                    <div class="citation">Sources: <a href="https://www.cnn.com/2026/04/25/politics/live-news/trump-white-house-correspondents-dinner" class="source-link">CNN</a> · <a href="https://en.wikipedia.org/wiki/2026_White_House_Correspondents%27_dinner_shooting" class="source-link">Wikipedia — WHCA Dinner Shooting</a></div>
+                </div>
+
+                <button class="collapse-button" onclick="toggleSection('whca-section')"><span>▲</span> Collapse</button>
+            </div>
+        </div>
+
+        <!-- ========== FED / WARSH ========== -->
+        <div class="section">
+            <div class="section-title" onclick="toggleSection('fed-section')">
+                🏦 Kevin Warsh &amp; the Federal Reserve: Independence Under Pressure
+                <span class="expand-icon">▶</span>
+            </div>
+
+            <div class="section-content collapsed" id="fed-section">
+
+                <div class="story">
+                    <div class="story-headline">The Nomination: A Political Hire With Real Credentials</div>
+                    <div class="story-content">
+                        Trump nominated Kevin Warsh on January 30, 2026, to succeed Jerome Powell, whose term expires May 15, 2026. Warsh — a Morgan Stanley M&amp;A veteran, former Bush White House economic aide, and Federal Reserve Board Governor from 2006 to 2011 — brought genuine market expertise to the role. <a href="https://en.wikipedia.org/wiki/Kevin_Warsh" class="source-link">His Wikipedia entry</a> documents that interviews for the position stretched through December 2025, with Trump publicly comparing the selection process to <em>The Apprentice</em>.
+                    </div>
+
+                    <div class="key-facts">
+                        <div class="key-facts-title">Warsh's Background</div>
+                        <ul class="fact-list">
+                            <li>Stanford BA (Public Policy, 1992) · Harvard Law JD (1995)</li>
+                            <li>Morgan Stanley vice president and executive director of M&amp;A banking</li>
+                            <li>Special assistant to President Bush for economic policy, 2002–2006</li>
+                            <li>Fed Board of Governors, 2006–2011 — youngest-ever governor at time of appointment</li>
+                            <li>Distinguished from Hegseth/Patel/Bondi: genuine expertise in his field</li>
+                            <li>Critics: not an economist; known as politically savvy and responsive to pressure</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="story">
+                    <div class="story-headline">The Powell Prosecution and Tillis's Hold</div>
+                    <div class="story-content">
+                        The nomination was complicated from the start by a DOJ criminal investigation into Jerome Powell, led by US Attorney Jeanine Pirro, ostensibly focused on cost overruns in the Fed's Washington headquarters renovation. Powell publicly accused the administration of targeting him over interest rate decisions. Sen. Thom Tillis (R-NC) announced he would block any Fed nominee until the investigation was dropped. <a href="https://www.cnbc.com/2026/04/29/trump-fed-nominee-kevin-warsh-senate-approval.html" class="source-link">CNBC</a> reported that a federal judge blocked Pirro's grand jury subpoenas — and shortly after, DOJ dropped its pursuit. Tillis dropped his hold.
+                    </div>
+
+                    <div class="stats-box blue">
+                        <div class="stats-number">13–11</div>
+                        <div>Senate Banking Committee vote, April 29, 2026 — first fully party-line Fed chair vote in committee history</div>
+                    </div>
+
+                    <div class="story-content">
+                        <a href="https://www.aljazeera.com/economy/2026/4/29/senate-panel-advances-kevin-warshs-nomination-for-us-fed-chair" class="source-link">Al Jazeera</a> and the <a href="https://www.washingtonpost.com/business/2026/04/29/trump-federal-reserve-kevin-warsh-committee/" class="source-link">Washington Post</a> reported the committee's April 29 party-line vote advanced Warsh to the full Senate. Sen. Elizabeth Warren called the vote "the first fully partisan vote on a Fed chair nominee in the committee's history" and warned that Pirro's inspector general referral left the door open to relaunching the probe. The full Senate vote was expected the week of May 11 — before Powell's May 15 expiration.
+                    </div>
+
+                    <div class="quote">
+                        "Trump is still going after control of the Fed, and he is keeping the threat of bogus criminal charges alive until he gets what he wants. No one is fooled."
+                    </div>
+                    <div class="citation">— Sen. Elizabeth Warren, quoted in <a href="https://www.cnbc.com/2026/04/29/trump-fed-nominee-kevin-warsh-senate-approval.html" class="source-link">CNBC</a></div>
+
+                    <div class="context-note">
+                        <strong>What the group discussed:</strong> Bob Fishman's observation that Trump must have received "at least a wink" from Warsh on interest rates before nominating him. Eric Packer's argument that Warsh — unlike Powell — will be "much more susceptible to political pressure." Michael Berger noted Powell received the Kennedy Library's Profiles in Courage Award in April 2026.
+                    </div>
+                </div>
+
+                <button class="collapse-button" onclick="toggleSection('fed-section')"><span>▲</span> Collapse</button>
+            </div>
+        </div>
+
+        <!-- ========== CORRUPTION / UAE ========== -->
+        <div class="section">
+            <div class="section-title" onclick="toggleSection('corruption-section')">
+                💰 Trump &amp; the UAE: Crypto, AI Chips, and Alleged Corruption
+                <span class="expand-icon">▶</span>
+            </div>
+
+            <div class="section-content collapsed" id="corruption-section">
+
+                <div class="story">
+                    <div class="story-headline">The World Liberty Financial Deal: $500 Million, Four Days Before Inauguration</div>
+                    <div class="story-content">
+                        <a href="https://www.cnn.com/2026/02/01/politics/trump-family-crypto-world-liberty-financial-uae" class="source-link">CNN</a> reported on the Wall Street Journal's investigation revealing that four days before Trump's second inauguration, an investment firm tied to UAE National Security Advisor Sheikh Tahnoon bin Zayed Al Nahyan secretly acquired a 49% stake in World Liberty Financial — the Trump family's cryptocurrency venture — for approximately $500 million. The deal was signed by Eric Trump. Steve Witkoff, Trump's chief Middle East envoy and co-founder of World Liberty Financial, also had financial interests in the venture.
+                    </div>
+
+                    <div class="breakdown-grid">
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">UAE Stake Purchased</div>
+                            <div class="breakdown-value">49%</div>
+                        </div>
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Deal Value</div>
+                            <div class="breakdown-value">~$500M</div>
+                        </div>
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Estimated Trump Family Share</div>
+                            <div class="breakdown-value">$187M+</div>
+                        </div>
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">AI Chips Approved for UAE Export</div>
+                            <div class="breakdown-value">500,000</div>
+                        </div>
+                    </div>
+
+                    <div class="story-content">
+                        Shortly after the deal, the Trump White House approved the export of 500,000 advanced Nvidia AI chips to the UAE — specifically to Sheikh Tahnoon's company G42 — overriding bipartisan national security objections that the technology could be diverted to China. <a href="https://www.murphy.senate.gov/newsroom/press-releases/murphy-on-trumps-secret-deal-with-the-uae-the-white-house-is-a-non-stop-corruption-machine" class="source-link">Sen. Chris Murphy (D-CT)</a> took to the Senate floor to call it "the most corrupt act in this administration" — describing it as a secret payment followed by a national security gift the US had never previously been willing to provide.
+                    </div>
+
+                    <div class="warning">
+                        <strong>Emoluments Clause:</strong> Donald Sherman of Citizens for Responsibility and Ethics in Washington called the arrangement "a blatant, disgraceful conflict of interest and a possible violation of the Constitution's Federal Emoluments Clause," warning that future White House decisions touching the UAE would be impossible to evaluate free of the financial entanglement.
+                    </div>
+
+                    <div class="quote">
+                        "Never before in the history of the nation has something like this happened in secret. The president of the United States taking payments from foreign governments, put in his own pockets, and then handing them national security favors that the United States had never been willing to do in the past."
+                    </div>
+                    <div class="citation">— Sen. Chris Murphy, Senate floor speech, March 2026 · <a href="https://www.murphy.senate.gov/newsroom/press-releases/murphy-on-trumps-secret-deal-with-the-uae-the-white-house-is-a-non-stop-corruption-machine" class="source-link">Full text via Murphy's office</a></div>
+                </div>
+
+                <button class="collapse-button" onclick="toggleSection('corruption-section')"><span>▲</span> Collapse</button>
+            </div>
+        </div>
+
+        <!-- ========== CABINET SOAP OPERA ========== -->
+        <div class="section">
+            <div class="section-title" onclick="toggleSection('soap-section')">
+                🎭 The Cabinet Soap Opera: Noem, Patel, and the Revolving Door
+                <span class="expand-icon">▶</span>
+            </div>
+
+            <div class="section-content collapsed" id="soap-section">
+
+                <div class="story">
+                    <div class="story-headline">Kristi Noem: From DHS Secretary to "Special Envoy to the Shield of the Americas"</div>
+                    <div class="story-content">
+                        <a href="https://www.foxnews.com/politics/kristi-noem-trump-respond-shocking-cross-dressing-photos-tied-her-husband" class="source-link">Fox News</a> and the New York Post reported that Kristi Noem — fired as DHS Secretary on March 5, 2026 and reassigned as Special Envoy to the Shield of the Americas — was "devastated and blindsided" when photographs emerged showing her husband Bryon Noem in cross-dressing fetish attire, paying webcam models $25 per minute for online sessions. A spokesperson said the family was asking for "privacy and prayers." Trump told the Daily Mail: "I haven't seen anything… That's too bad." The Daily Beast reported that DC insiders described Bryon's online activity as an "open secret" in Washington for months.
+                    </div>
+
+                    <div class="context-note">
+                        <strong>The irony noted by the group:</strong> Kristi Noem pursued South Dakota's transgender community with specific legislative zeal as governor and during her DHS tenure — a fact Washington commentators noted with pointed attention upon Bryon's disclosure.
+                    </div>
+
+                    <div class="story-content">
+                        Noem was replaced by Sen. Markwayne Mullin, who was sworn in as Homeland Security Secretary the week of March 10. Democratic lawmakers filed a criminal referral against Noem in connection with her conduct as DHS Secretary.
+                    </div>
+                </div>
+
+                <div class="story">
+                    <div class="story-headline">Kash Patel: FBI Director, Olympics Gold, and $250M Defamation Suit</div>
+                    <div class="story-content">
+                        <a href="https://www.npr.org/2026/02/25/nx-s1-5724942/fbi-directors-leadership-questioned-after-partying-with-the-us-mens-hockey-team" class="source-link">NPR</a> reported in February 2026 that Patel flew on a government jet (cost estimated at $75,000) to Milan for the Winter Olympics, ostensibly for security planning for the FIFA World Cup and 2028 LA Olympics. Videos showed Patel chugging beer, wearing a gold medal, and singing with the US men's hockey team after their gold medal victory. The FBI defended the trip as work-related; a New York Times itinerary review found Patel had more downtime than official meetings.
+                    </div>
+
+                    <div class="story-content">
+                        In April 2026, <a href="https://time.com/article/2026/04/18/what-to-know-about-allegations-of-drinking-by-f-b-i-director-kash-patel/" class="source-link">Time magazine</a> reported that The Atlantic published an investigation alleging Patel had been observed intoxicated on multiple occasions in Washington and Las Vegas, and had taken unexplained absences from FBI headquarters. Patel filed a $250 million defamation lawsuit against The Atlantic. Democrats on the House Judiciary Committee sent Patel a 10-question alcohol disorder assessment and demanded he complete it under penalty of perjury.
+                    </div>
+
+                    <div class="key-facts">
+                        <div class="key-facts-title">Patel Controversy Timeline (per <a href="https://en.wikipedia.org/wiki/Kash_Patel" class="source-link" style="color:#2980b9">Wikipedia</a>)</div>
+                        <ul class="fact-list">
+                            <li><strong>June 2025:</strong> Defamation suit against Frank Figliuzzi (MSNBC) over "nightclub" comment — MSNBC issued a correction</li>
+                            <li><strong>September 2025:</strong> Mishandled Charlie Kirk murder manhunt announcement — prematurely declared suspect detained</li>
+                            <li><strong>November 2025:</strong> Controversy over using government jet to watch girlfriend perform at a Pennsylvania event; FBI SWAT team assigned as her bodyguard</li>
+                            <li><strong>February 2026:</strong> Olympics partying in Milan — videos go viral</li>
+                            <li><strong>April 2026:</strong> The Atlantic drinking investigation; $250M lawsuit filed</li>
+                        </ul>
+                    </div>
+
+                    <div class="citation">Sources: <a href="https://www.npr.org/2026/02/25/nx-s1-5724942/fbi-directors-leadership-questioned-after-partying-with-the-us-mens-hockey-team" class="source-link">NPR</a> · <a href="https://time.com/article/2026/04/18/what-to-know-about-allegations-of-drinking-by-f-b-i-director-kash-patel/" class="source-link">Time</a> · <a href="https://en.wikipedia.org/wiki/Kash_Patel" class="source-link">Wikipedia — Kash Patel</a></div>
+                </div>
+
+                <button class="collapse-button" onclick="toggleSection('soap-section')"><span>▲</span> Collapse</button>
+            </div>
+        </div>
+
+        <!-- ========== NFL DRAFT ========== -->
+        <div class="section">
+            <div class="section-title" onclick="toggleSection('nfl-section')">
+                🏈 NFL Draft Pittsburgh vs. Medical School Match Day: A Tale of Two Drafts
+                <span class="expand-icon">▶</span>
+            </div>
+
+            <div class="section-content collapsed" id="nfl-section">
+
+                <div class="story">
+                    <div class="story-headline">Pittsburgh Hosts the Largest NFL Draft in History</div>
+                    <div class="story-content">
+                        The 2026 NFL Draft, held April 23–25 in Pittsburgh, set attendance records by a wide margin. <a href="https://www.visitpittsburgh.com/nfl-draft-pittsburgh/" class="source-link">Visit Pittsburgh</a> announced that 805,000 fans attended over three days — the largest Draft in history — drawn to the North Shore outside Acrisure Stadium and Point State Park. <a href="https://www.cbsnews.com/pittsburgh/live-updates/2026-nfl-draft-pittsburgh-events-traffic-updates/" class="source-link">CBS Pittsburgh</a> reported that leaders pleaded with attendees to take public transit, calling it "the largest event in the city's history." The economic impact was projected to reach the $120–213 million range of prior host cities.
+                    </div>
+
+                    <div class="breakdown-grid">
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Total Attendance</div>
+                            <div class="breakdown-value">805,000</div>
+                        </div>
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Players Drafted</div>
+                            <div class="breakdown-value">257</div>
+                        </div>
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Medical Match Day Graduates</div>
+                            <div class="breakdown-value">41,482</div>
+                        </div>
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">TV Viewers (Round 1)</div>
+                            <div class="breakdown-value">13.2M+</div>
+                        </div>
+                    </div>
+
+                    <div class="context-note">
+                        <strong>The contrast our group raised (Mark Seliber):</strong> On March 20, 2026, Match Day — when 41,482 medical school graduates opened envelopes to learn their hospital residency placements — passed largely unnoticed by the national media. Six weeks later, 805,000 people traveled to Pittsburgh over three days to watch 257 college students learn which NFL team would employ them. No television countdown. No outdoor festival. No Wiz Khalifa concert. The group's observation: the disparity reveals something real about American priorities that no one in either political party has meaningfully addressed.
+                    </div>
+                </div>
+
+                <div class="story">
+                    <div class="story-headline">What the Media Covered (and Didn't)</div>
+                    <div class="story-content">
+                        <a href="https://operations.nfl.com/journey-to-the-nfl/the-nfl-draft/2026-nfl-draft/" class="source-link">NFL Football Operations</a> documented that 42 players were granted special eligibility and 21 underclassmen who had fulfilled their degree requirements were also eligible. <a href="https://www.espn.com/nfl/draft/rounds" class="source-link">ESPN</a> broadcast the full event live. Round 1 coverage on April 23 dominated sports media nationally. Coverage of Match Day — when the future physicians, surgeons, and researchers of the country learned their assignments — was confined largely to medical trade publications and local news segments in medical school cities.
+                    </div>
+
+                    <div class="quote">
+                        "Somehow, I think the 41,482 residents will collectively have a more positive future impact on the world than the 257 football players."
+                    </div>
+                    <div class="citation">— Mark Seliber, BOLLI Current Events Discussion, April 28, 2026</div>
+
+                    <div class="citation">Sources: <a href="https://www.visitpittsburgh.com/nfl-draft-pittsburgh/" class="source-link">Visit Pittsburgh</a> · <a href="https://www.cbsnews.com/pittsburgh/live-updates/2026-nfl-draft-pittsburgh-events-traffic-updates/" class="source-link">CBS Pittsburgh</a> · <a href="https://operations.nfl.com/journey-to-the-nfl/the-nfl-draft/2026-nfl-draft/" class="source-link">NFL Operations</a> · <a href="https://www.espn.com/nfl/draft/rounds" class="source-link">ESPN Draft Coverage</a></div>
+                </div>
+
+                <button class="collapse-button" onclick="toggleSection('nfl-section')"><span>▲</span> Collapse</button>
+            </div>
+        </div>
+
+    </div><!-- /content -->
+
+    <div class="footer">
+        <div class="source-note">
+            <strong>AfterWord — BOLLI Current Events Discussion Group</strong><br>
+            Mainstream media coverage of topics discussed April 28, 2026 · Coverage period: March 2025 – April 2026<br><br>
+
+            <strong>Primary Sources Cited:</strong><br>
+            · <a href="https://en.wikipedia.org/wiki/2026_Iran_war">Wikipedia — 2026 Iran War</a><br>
+            · <a href="https://en.wikipedia.org/wiki/2025%E2%80%932026_Iran%E2%80%93United_States_negotiations">Wikipedia — US-Iran Negotiations 2025–2026</a><br>
+            · <a href="https://www.britannica.com/event/2026-Iran-war">Britannica — 2026 Iran War</a><br>
+            · <a href="https://www.britannica.com/event/12-Day-War">Britannica — The 12-Day War (June 2025)</a><br>
+            · <a href="https://commonslibrary.parliament.uk/research-briefings/cbp-10637/">UK House of Commons Library — US-Iran Talks 2026</a><br>
+            · <a href="https://commonslibrary.parliament.uk/research-briefings/cbp-10521/">UK House of Commons Library — US-Iran Conflict Background</a><br>
+            · <a href="https://www.aljazeera.com/news/2026/4/30/could-the-us-iran-war-become-a-protracted-frozen-conflict">Al Jazeera — Frozen Conflict Analysis, April 30, 2026</a><br>
+            · <a href="https://cnn.com/2026/04/23/world/live-news/iran-war-trump-blockade-israel-lebanon">CNN — Iran War Live Coverage, April 23, 2026</a><br>
+            · <a href="https://en.wikipedia.org/wiki/2026_White_House_Correspondents%27_dinner_shooting">Wikipedia — 2026 WHCA Dinner Shooting</a><br>
+            · <a href="https://www.justice.gov/opa/pr/suspect-white-house-correspondents-dinner-shooting-charged-attempt-assassinate-president">DOJ — Allen Charging Announcement, April 27, 2026</a><br>
+            · <a href="https://www.cnn.com/2026/04/25/politics/live-news/trump-white-house-correspondents-dinner">CNN — WHCA Shooting Live Coverage, April 25, 2026</a><br>
+            · <a href="https://www.cnn.com/2026/04/27/politics/live-news/correspondents-dinner-shooting-suspect-court">CNN — Allen Arraignment Coverage, April 27, 2026</a><br>
+            · <a href="https://www.npr.org/2026/04/28/nx-s1-5801467/cole-allen-suspect-washington-correspondents-dinner-shooting">NPR — Cole Allen Analysis, April 28, 2026</a><br>
+            · <a href="https://en.wikipedia.org/wiki/Kevin_Warsh">Wikipedia — Kevin Warsh</a><br>
+            · <a href="https://www.cnbc.com/2026/04/29/trump-fed-nominee-kevin-warsh-senate-approval.html">CNBC — Warsh Committee Vote, April 29, 2026</a><br>
+            · <a href="https://www.washingtonpost.com/business/2026/04/29/trump-federal-reserve-kevin-warsh-committee/">Washington Post — Warsh Nomination, April 29, 2026</a><br>
+            · <a href="https://www.aljazeera.com/economy/2026/4/29/senate-panel-advances-kevin-warshs-nomination-for-us-fed-chair">Al Jazeera — Warsh Senate Panel, April 29, 2026</a><br>
+            · <a href="https://www.cnn.com/2026/02/01/politics/trump-family-crypto-world-liberty-financial-uae">CNN — UAE Crypto Deal, February 2026</a><br>
+            · <a href="https://www.murphy.senate.gov/newsroom/press-releases/murphy-on-trumps-secret-deal-with-the-uae-the-white-house-is-a-non-stop-corruption-machine">Sen. Chris Murphy — UAE Senate Floor Speech, March 2026</a><br>
+            · <a href="https://www.foxnews.com/politics/kristi-noem-trump-respond-shocking-cross-dressing-photos-tied-her-husband">Fox News — Bryon Noem Scandal</a><br>
+            · <a href="https://www.npr.org/2026/02/25/nx-s1-5724942/fbi-directors-leadership-questioned-after-partying-with-the-us-mens-hockey-team">NPR — Patel Olympics Coverage, February 25, 2026</a><br>
+            · <a href="https://time.com/article/2026/04/18/what-to-know-about-allegations-of-drinking-by-f-b-i-director-kash-patel/">Time — Patel Drinking Allegations, April 18, 2026</a><br>
+            · <a href="https://en.wikipedia.org/wiki/Kash_Patel">Wikipedia — Kash Patel</a><br>
+            · <a href="https://www.visitpittsburgh.com/nfl-draft-pittsburgh/">Visit Pittsburgh — NFL Draft 2026</a><br>
+            · <a href="https://www.cbsnews.com/pittsburgh/live-updates/2026-nfl-draft-pittsburgh-events-traffic-updates/">CBS Pittsburgh — NFL Draft Coverage</a><br>
+            · <a href="https://operations.nfl.com/journey-to-the-nfl/the-nfl-draft/2026-nfl-draft/">NFL Football Operations — 2026 Draft</a><br>
+            · <a href="https://www.espn.com/nfl/draft/rounds">ESPN — 2026 NFL Draft Coverage</a><br><br>
+
+            <em>All links lead to the actual publications and official sources cited. AfterWord is compiled for educational purposes for the BOLLI Current Events Discussion Group. Prepared with Claude (Anthropic) as research and editorial collaborator.</em>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>
