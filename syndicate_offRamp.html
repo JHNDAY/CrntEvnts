@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Syndicate and the Off-Ramp</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@400;500&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg:       #faf9f6;
+    --bg2:      #f0ede6;
+    --bg3:      #e8e4db;
+    --text:     #1c1b18;
+    --text2:    #5c5a54;
+    --text3:    #9a9890;
+    --border:   rgba(0,0,0,0.10);
+    --border2:  rgba(0,0,0,0.18);
+    --border3:  rgba(0,0,0,0.28);
+    --danger-bg:    #fdf0ef;
+    --danger-text:  #7a1f1e;
+    --danger-bdr:   #c53030;
+    --success-bg:   #eef7e8;
+    --success-text: #2a5f12;
+    --success-bdr:  #4a8f20;
+    --warn-bg:      #fef7ea;
+    --warn-text:    #6b3a06;
+    --warn-bdr:     #c07a18;
+    --radius:   10px;
+    --radius-sm: 6px;
+    --font-serif: 'Spectral', Georgia, serif;
+    --font-sans:  'Inter', system-ui, sans-serif;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg:       #181714;
+      --bg2:      #242320;
+      --bg3:      #2e2d29;
+      --text:     #e4e2da;
+      --text2:    #9a9890;
+      --text3:    #6a6864;
+      --border:   rgba(255,255,255,0.08);
+      --border2:  rgba(255,255,255,0.15);
+      --border3:  rgba(255,255,255,0.24);
+      --danger-bg:    #2d1212;
+      --danger-text:  #f09090;
+      --danger-bdr:   #c53030;
+      --success-bg:   #102210;
+      --success-text: #8eca6e;
+      --success-bdr:  #4a8f20;
+      --warn-bg:      #291a06;
+      --warn-text:    #f0b86a;
+      --warn-bdr:     #c07a18;
+    }
+  }
+
+  body {
+    font-family: var(--font-sans);
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+    line-height: 1.6;
+    padding: 2.5rem 1rem 4rem;
+  }
+
+  .container {
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  /* ── HEADER ── */
+  .page-header {
+    border-bottom: 1px solid var(--border2);
+    padding-bottom: 1.75rem;
+    margin-bottom: 2rem;
+  }
+  .page-label {
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text3);
+    margin-bottom: 0.55rem;
+  }
+  .page-title {
+    font-family: var(--font-serif);
+    font-size: 32px;
+    font-weight: 600;
+    line-height: 1.15;
+    color: var(--text);
+    margin-bottom: 0.85rem;
+  }
+  .page-desc {
+    font-size: 14.5px;
+    color: var(--text2);
+    line-height: 1.7;
+    max-width: 680px;
+  }
+
+  /* ── STAT CARDS ── */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    margin-bottom: 2.25rem;
+  }
+  .stat {
+    background: var(--bg2);
+    border-radius: var(--radius);
+    padding: 14px 12px;
+  }
+  .stat-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    color: var(--text3);
+    margin-bottom: 4px;
+  }
+  .stat-value {
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.1;
+  }
+  .stat-sub {
+    font-size: 11px;
+    color: var(--text3);
+    margin-top: 3px;
+  }
+
+  /* ── COLUMN LABELS ── */
+  .col-labels {
+    display: grid;
+    grid-template-columns: 1fr 1fr 96px;
+    gap: 12px;
+    padding: 0 16px 10px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 8px;
+  }
+  .col-label {
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    color: var(--text3);
+  }
+  .col-label.center { text-align: center; }
+
+  /* ── MECHANISM CARDS ── */
+  .mcard {
+    border: 1px solid var(--border2);
+    border-radius: var(--radius);
+    margin-bottom: 10px;
+    overflow: hidden;
+  }
+  .mrow {
+    display: grid;
+    grid-template-columns: 1fr 1fr 96px;
+    gap: 12px;
+    padding: 16px;
+    cursor: pointer;
+    align-items: start;
+    transition: background 0.15s;
+  }
+  .mrow:hover { background: var(--bg2); }
+
+  .mleft {
+    border-left: 2.5px solid var(--danger-bdr);
+    padding-left: 11px;
+  }
+  .mright {
+    border-left: 2.5px solid var(--success-bdr);
+    padding-left: 11px;
+  }
+
+  .side-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 4px;
+    font-weight: 500;
+  }
+  .side-label.danger { color: var(--danger-text); }
+  .side-label.success { color: var(--success-text); }
+
+  .side-title {
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 4px;
+    line-height: 1.35;
+  }
+  .side-sub {
+    font-size: 12px;
+    color: var(--text2);
+    line-height: 1.5;
+  }
+
+  .badge-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding-top: 4px;
+  }
+  .badge {
+    font-size: 11px;
+    font-weight: 500;
+    padding: 3px 10px;
+    border-radius: 12px;
+    white-space: nowrap;
+  }
+  .badge-hi  { background: var(--success-bg); color: var(--success-text); }
+  .badge-md  { background: var(--warn-bg);    color: var(--warn-text); }
+  .badge-lo  { background: var(--danger-bg);  color: var(--danger-text); }
+  .toggle-hint { font-size: 11px; color: var(--text3); }
+
+  /* ── DETAIL PANEL ── */
+  .detail {
+    display: none;
+    border-top: 1px solid var(--border);
+    padding: 16px;
+    background: var(--bg2);
+  }
+  .detail-cols {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+    font-size: 12.5px;
+    color: var(--text2);
+    line-height: 1.65;
+  }
+  .detail-head {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 7px;
+  }
+  .detail-cols p { margin-bottom: 7px; }
+  .detail-cols p:last-child { margin-bottom: 0; }
+
+  /* ── ASSESSMENT ── */
+  .assessment {
+    margin-top: 2.25rem;
+    border-top: 1px solid var(--border2);
+    padding-top: 1.75rem;
+  }
+  .assessment-title {
+    font-family: var(--font-serif);
+    font-size: 20px;
+    font-weight: 500;
+    margin-bottom: 1.1rem;
+  }
+  .reach-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 1.5rem;
+  }
+  .reach-box {
+    border-radius: var(--radius);
+    padding: 16px 18px;
+  }
+  .reach-box.can  { border: 1px solid var(--success-bdr); }
+  .reach-box.cant { border: 1px solid var(--danger-bdr);  }
+  .reach-title {
+    font-size: 12px;
+    font-weight: 500;
+    margin-bottom: 10px;
+  }
+  .reach-title.can  { color: var(--success-text); }
+  .reach-title.cant { color: var(--danger-text); }
+  .reach-box ul {
+    padding-left: 16px;
+    font-size: 12.5px;
+    color: var(--text2);
+    line-height: 1.75;
+  }
+
+  /* ── TENSION BLOCK ── */
+  .tension {
+    border-left: 3px solid var(--border3);
+    padding-left: 18px;
+    margin-bottom: 1.25rem;
+  }
+  .tension-head {
+    font-size: 13.5px;
+    font-weight: 500;
+    margin-bottom: 7px;
+  }
+  .tension p {
+    font-size: 13.5px;
+    color: var(--text2);
+    line-height: 1.7;
+    margin-bottom: 8px;
+  }
+  .tension p:last-child { margin-bottom: 0; }
+
+  /* ── FOOTNOTE ── */
+  .footnote {
+    background: var(--bg2);
+    border-radius: var(--radius-sm);
+    padding: 13px 16px;
+    font-size: 12.5px;
+    color: var(--text2);
+    line-height: 1.65;
+  }
+
+  /* ── SOURCE LINKS ── */
+  .source-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 1.1rem;
+  }
+  .source-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--text2);
+    text-decoration: none;
+    border: 1px solid var(--border2);
+    border-radius: 20px;
+    padding: 5px 13px 5px 10px;
+    transition: border-color 0.15s, color 0.15s, background 0.15s;
+    font-family: var(--font-sans);
+  }
+  .source-link:hover {
+    border-color: var(--border3);
+    color: var(--text);
+    background: var(--bg2);
+  }
+  .source-link svg {
+    opacity: 0.5;
+    flex-shrink: 0;
+  }
+  .source-link:hover svg { opacity: 0.8; }
+  .source-pub {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--text3);
+  }
+
+  /* ── PLATNER PROFILE ── */
+  .profile {
+    margin-top: 2.5rem;
+    border-top: 1px solid var(--border2);
+    padding-top: 1.75rem;
+  }
+  .profile-title {
+    font-family: var(--font-serif);
+    font-size: 20px;
+    font-weight: 500;
+    margin-bottom: 1.1rem;
+  }
+  .profile-pillars {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    margin-bottom: 1.4rem;
+  }
+  .pillar {
+    background: var(--bg2);
+    border-radius: var(--radius);
+    padding: 16px 14px;
+  }
+  .pillar-icon {
+    font-size: 22px;
+    margin-bottom: 8px;
+    line-height: 1;
+  }
+  .pillar-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    color: var(--text3);
+    margin-bottom: 4px;
+  }
+  .pillar-value {
+    font-size: 13.5px;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.35;
+    margin-bottom: 5px;
+  }
+  .pillar-sub {
+    font-size: 12px;
+    color: var(--text2);
+    line-height: 1.5;
+  }
+  .profile-bio {
+    font-size: 13.5px;
+    color: var(--text2);
+    line-height: 1.72;
+    margin-bottom: 1.1rem;
+  }
+  .profile-bio p { margin-bottom: 0.65rem; }
+  .profile-bio p:last-child { margin-bottom: 0; }
+  .profile-quote {
+    border-left: 3px solid var(--border3);
+    padding: 10px 0 10px 18px;
+    margin-top: 1.1rem;
+  }
+  .profile-quote blockquote {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 14.5px;
+    color: var(--text);
+    line-height: 1.65;
+    margin-bottom: 6px;
+  }
+  .profile-quote cite {
+    font-size: 11px;
+    color: var(--text3);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-style: normal;
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 640px) {
+    .stats { grid-template-columns: repeat(2, 1fr); }
+    .col-labels, .mrow { grid-template-columns: 1fr; }
+    .col-label.center, .badge-col { align-items: flex-start; }
+    .detail-cols { grid-template-columns: 1fr; }
+    .reach-grid { grid-template-columns: 1fr; }
+    .profile-pillars { grid-template-columns: 1fr; }
+    .page-title { font-size: 24px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="page-header">
+    <p class="page-label">Cross-document analysis · IFLA / May 2026</p>
+    <h1 class="page-title">The Syndicate and the Off-Ramp</h1>
+    <p class="page-desc">"Operation Payday" maps a $25B+ wealth-extraction apparatus built around the Iran war — every mechanism engineered so nobody answers to anyone. "The Last Off-Ramp" profiles Graham Platner as the candidate willing to name the machine explicitly. This matrix maps each corruption vector to Platner's proposed counter and assesses realistic impact.</p>
+    <div class="source-links">
+      <a class="source-link" href="https://ifloz.substack.com/p/they-want-you-tired-thats-the-whole?img=https%3A%2F%2Fsubstack-post-media.s3.amazonaws.com%2Fpublic%2Fimages%2Ff9ba03a8-4f13-4853-a582-4d4d6233984a_2500x1667.png&open=false" target="_blank" rel="noopener">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        <span><span class="source-pub">IFLA · </span>Operation Payday</span>
+      </a>
+      <a class="source-link" href="https://ifloz.substack.com/p/the-next-trump-will-be-smarter-meaner?r=57hfxf" target="_blank" rel="noopener">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        <span><span class="source-pub">IFLA · </span>The Last Off-Ramp</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats">
+    <div class="stat">
+      <p class="stat-label">Core profiteers</p>
+      <p class="stat-value">~20</p>
+      <p class="stat-sub">people &amp; families</p>
+    </div>
+    <div class="stat">
+      <p class="stat-label">DOJ integrity unit</p>
+      <p class="stat-value">36 → 2</p>
+      <p class="stat-sub">lawyers remaining</p>
+    </div>
+    <div class="stat">
+      <p class="stat-label">Defense gain, day 1</p>
+      <p class="stat-value">$25–30B</p>
+      <p class="stat-sub">one trading session</p>
+    </div>
+    <div class="stat">
+      <p class="stat-label">Mills suspended</p>
+      <p class="stat-value">Apr 30</p>
+      <p class="stat-sub">couldn't close 27-pt gap</p>
+    </div>
+  </div>
+
+  <!-- COLUMN LABELS -->
+  <div class="col-labels">
+    <span class="col-label">Corruption mechanism</span>
+    <span class="col-label">Platner's counter</span>
+    <span class="col-label center">Impact</span>
+  </div>
+
+  <!-- CARD 1: President as profit center -->
+  <div class="mcard">
+    <div class="mrow" onclick="tog('d1',this)">
+      <div class="mleft">
+        <p class="side-label danger">Mechanism</p>
+        <p class="side-title">President as profit center</p>
+        <p class="side-sub">Saudi licensing, meme coin, LIV Golf, UAE crypto stake</p>
+      </div>
+      <div class="mright">
+        <p class="side-label success">Counter</p>
+        <p class="side-title">Subpoena the entire White House, daily</p>
+        <p class="side-sub">Force financial disclosure onto the public record</p>
+      </div>
+      <div class="badge-col">
+        <span class="badge badge-md">Medium</span>
+        <span class="toggle-hint">↓ detail</span>
+      </div>
+    </div>
+    <div id="d1" class="detail">
+      <div class="detail-cols">
+        <div>
+          <p class="detail-head">From "Operation Payday"</p>
+          <p>Dar Global (Saudi state-connected) pays $20M/yr in Trump licensing fees and rents office space inside Trump Tower. Over $15M routed through DT Marks KSA — a Delaware shell company named after the country funding it.</p>
+          <p>TRUMP meme coin: 76% of token value held by foreign buyers via non-US exchanges. Mar-a-Lago dinner for top-220 holders; top 25 received White House tours. Top buyers told the NYT on record they purchased "with the intention of securing a US policy action."</p>
+          <p>UAE's Sheikh Tahnoon took a 49% WLF stake; $187M wired to Trump entities, $31M to Witkoff entities. Two Tahnoon lieutenants joined the WLF board. Tahnoon simultaneously lobbied Washington for AI chip access.</p>
+        </div>
+        <div>
+          <p class="detail-head">Platner's approach and its limits</p>
+          <p>"If we get the majority, we subpoena every single person in the White House every single day." Legally binding subpoenas compel sworn testimony about financial arrangements — which goes on the public record.</p>
+          <p>Platner explicitly names the mechanism: "Essentially everything the Trump administration does, at some point you boil it down to them making money off it." That framing, on the congressional record, matters.</p>
+          <p>Exposure is real. Criminal prosecution is not: the meme coin foreign-influence channel needs DOJ, and the Public Integrity Section now has 2 lawyers. Structural reform — mandatory blind trusts, emoluments enforcement — requires legislation or a new executive.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 2: The captured negotiator -->
+  <div class="mcard">
+    <div class="mrow" onclick="tog('d2',this)">
+      <div class="mleft">
+        <p class="side-label danger">Mechanism</p>
+        <p class="side-title">The captured negotiator</p>
+        <p class="side-sub">Kushner negotiating for the US while on Saudi payroll</p>
+      </div>
+      <div class="mright">
+        <p class="side-label success">Counter</p>
+        <p class="side-title">Senate committee hearings with teeth</p>
+        <p class="side-sub">Drag Kushner in to explain who he actually works for</p>
+      </div>
+      <div class="badge-col">
+        <span class="badge badge-md">Medium</span>
+        <span class="toggle-hint">↓ detail</span>
+      </div>
+    </div>
+    <div id="d2" class="detail">
+      <div class="detail-cols">
+        <div>
+          <p class="detail-head">From "Operation Payday"</p>
+          <p>The Saudi PIF wired $2B to Kushner's Affinity Partners — overruling its own investment committee, which found operations "unsatisfactory in all aspects." $87M in Saudi management fees collected; zero profit returned to investors in four years. Senator Wyden's investigation concluded Affinity "may not be motivated by commercial considerations."</p>
+          <p>While Kushner negotiates with Iran on behalf of the US, he simultaneously pre-markets Affinity Fund 2 with Saudi PIF having "first look" rights — the same country whose entire regional strategy requires Iran's defeat. Witkoff's net worth grew 15% in his first year as envoy while his sons closed hotel deals with Qatar and launched a stablecoin in Dubai with Eric Trump.</p>
+        </div>
+        <div>
+          <p class="detail-head">Platner's approach and its limits</p>
+          <p>Platner would haul the national security apparatus before committee — forcing sworn testimony on who is actually directing US foreign policy and to whose benefit. Under oath, Kushner cannot simultaneously claim to represent US and Saudi interests without one claim collapsing.</p>
+          <p>The limit is structural: subpoenas expose, they don't void. Affinity Fund 2 commitments and the Gaza "Riviera" planning proceed regardless. Wyden already put the payola allegation on the Senate record and nothing happened. Prosecution requires DOJ, which has been reconfigured not to look.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 3: Insider trading -->
+  <div class="mcard">
+    <div class="mrow" onclick="tog('d3',this)">
+      <div class="mleft">
+        <p class="side-label danger">Mechanism</p>
+        <p class="side-title">Insider trading &amp; market manipulation</p>
+        <p class="side-sub">Pre-positioned futures trades; Congress loading defense stocks</p>
+      </div>
+      <div class="mright">
+        <p class="side-label success">Counter</p>
+        <p class="side-title">Name the trades; STOCK Act with teeth</p>
+        <p class="side-sub">Force the pattern onto the congressional record</p>
+      </div>
+      <div class="badge-col">
+        <span class="badge badge-lo">Low</span>
+        <span class="toggle-hint">↓ detail</span>
+      </div>
+    </div>
+    <div id="d3" class="detail">
+      <div class="detail-cols">
+        <div>
+          <p class="detail-head">From "Operation Payday"</p>
+          <p>On 23 March 2026, ~$580M in Brent and WTI oil futures changed hands in 60 seconds, 16 minutes before Trump's "productive conversations with Iran" Truth Social post. Oil collapsed; S&amp;P 500 futures moved seconds after the oil bet. The White House issued a formal memo warning staff not to bet on Polymarket — an admission, not damage control.</p>
+          <p>Congress: Foreign Affairs chair McCaul loaded GE Aerospace (now +82%/+76%); Florida's Moody bought Howmet Aerospace twice (+107%/+133%); McClain piled into Northrop and Curtiss-Wright (+43–52%). All in the 12 months before the war. All held classified briefings on looming military operations.</p>
+        </div>
+        <div>
+          <p class="detail-head">Platner's approach and its limits</p>
+          <p>Platner can subpoena the CFTC and SEC, demand testimony on their inaction, and force members to disclose all trades made in the 90 days before military votes. He can name the $580M trade from the Senate floor. The political cost is real.</p>
+          <p>The specific futures trade is nearly impossible to prosecute without a DOJ reconfigured not to look. Congressional trades are technically legal — the STOCK Act has no prison penalty and disclosure is delayed. A complete congressional stock ban with real penalties is achievable with both chambers. But the trades from 2025–26 will almost certainly never see prosecution.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 4: Enforcement dismantled -->
+  <div class="mcard">
+    <div class="mrow" onclick="tog('d4',this)">
+      <div class="mleft">
+        <p class="side-label danger">Mechanism</p>
+        <p class="side-title">Enforcement apparatus dismantled</p>
+        <p class="side-sub">DOJ integrity to 2 lawyers; 159 SEC actions cancelled</p>
+      </div>
+      <div class="mright">
+        <p class="side-label success">Counter</p>
+        <p class="side-title">Subpoena Bondi; legislate restoration</p>
+        <p class="side-sub">Force DOJ weaponization onto the sworn record</p>
+      </div>
+      <div class="badge-col">
+        <span class="badge badge-md">Medium</span>
+        <span class="toggle-hint">↓ detail</span>
+      </div>
+    </div>
+    <div id="d4" class="detail">
+      <div class="detail-cols">
+        <div>
+          <p class="detail-head">From "Operation Payday"</p>
+          <p>The Public Integrity Section — created post-Watergate to prosecute exactly this class of corruption — was reduced from 36 lawyers to 2 and stripped of authority to file new cases. The unit purpose-built to handle the meme coin foreign-influence channel, the futures trades, and the Kushner conflict of interest has been functionally abolished by the man it was meant to investigate.</p>
+          <p>159 SEC enforcement actions cancelled. The top SEC enforcer resigned. CFTC chair handpicked. Hegseth holds Lockheed and Northrop stock while presiding over a war that lit a rocket under both — and hosts Christian prayer services at the Pentagon as a de facto procurement networking event.</p>
+        </div>
+        <div>
+          <p class="detail-head">Platner's approach and its limits</p>
+          <p>Platner would subpoena Pam Bondi to explain DOJ weaponization and Kash Patel to justify what an FBI director hired for podcast loyalty actually does. Sworn testimony on the public record creates political cost at scale.</p>
+          <p>Congress can legislate: fund the Public Integrity Section back to full staffing, mandate SEC enforcement minimums, require CFTC independence. Achievable with a Senate majority and House cooperation.</p>
+          <p>The gap is irreversible in one direction: the cases not filed during the gutted period will never be filed. Witnesses forget. Evidence decays. Statutes of limitations toll. The deliberate accountability gap is baked in by design.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 5: Judicial capture -->
+  <div class="mcard">
+    <div class="mrow" onclick="tog('d5',this)">
+      <div class="mleft">
+        <p class="side-label danger">Mechanism</p>
+        <p class="side-title">Judicial capture</p>
+        <p class="side-sub">SCOTUS as unaccountable political wing; no binding ethics code</p>
+      </div>
+      <div class="mright">
+        <p class="side-label success">Counter</p>
+        <p class="side-title">Credible impeachment threat; ethics standards</p>
+        <p class="side-sub">Apply federal judicial ethics; 18-year term limits</p>
+      </div>
+      <div class="badge-col">
+        <span class="badge badge-lo">Low</span>
+        <span class="toggle-hint">↓ detail</span>
+      </div>
+    </div>
+    <div id="d5" class="detail">
+      <div class="detail-cols">
+        <div>
+          <p class="detail-head">Operation Payday &amp; The Last Off-Ramp</p>
+          <p>Thomas: millions in undisclosed gifts from a single billionaire (Harlan Crow) while ruling on cases affecting the billionaire class. Alito: flew the inverted flag of the January 6 insurrection from his own home. No binding ethics code applies to SCOTUS justices. The court is, in Platner's formulation, "an unelected, unaccountable political action wing of corporate conservatism."</p>
+          <p>SCOTUS has provided legal cover for presidential immunity and donor-class interests while procedurally blocking every progressive legislative workaround — the system using legal technicalities to crush working people, which is exactly what Platner argues Lincoln and FDR both correctly defied.</p>
+        </div>
+        <div>
+          <p class="detail-head">Platner's approach and its limits</p>
+          <p>Platner would initiate impeachment proceedings against at least two justices and apply federal judicial ethics standards immediately. He invokes FDR's court-packing threat as precedent: FDR never packed the court but the credible threat alone produced the "switch in time that saved nine."</p>
+          <p>The deterrent effect is real: impeachment proceedings create political cost and change judicial behavior even if removal never happens.</p>
+          <p>The hard limit: removal requires 67 Senate votes — a two-thirds majority never reached for a SCOTUS justice in US history. Term limits require a constitutional amendment or contested statute. The court can simply wait out a one-term Senate majority. This is the weakest link in Platner's toolbox precisely because SCOTUS was designed to be electorally insulated.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CARD 6: Procedural & donor class capture -->
+  <div class="mcard">
+    <div class="mrow" onclick="tog('d6',this)">
+      <div class="mleft">
+        <p class="side-label danger">Mechanism</p>
+        <p class="side-title">Procedural &amp; donor class capture</p>
+        <p class="side-sub">Parliamentarian weaponised; Citizens United funding filter</p>
+      </div>
+      <div class="mright">
+        <p class="side-label success">Counter</p>
+        <p class="side-title">Ignore the parliamentarian; publicly funded elections</p>
+        <p class="side-sub">Turn McConnell's weapon; South Australia model</p>
+      </div>
+      <div class="badge-col">
+        <span class="badge badge-hi">High</span>
+        <span class="toggle-hint">↓ detail</span>
+      </div>
+    </div>
+    <div id="d6" class="detail">
+      <div class="detail-cols">
+        <div>
+          <p class="detail-head">Operation Payday &amp; The Last Off-Ramp</p>
+          <p>McConnell weaponised the parliamentarian selectively: blocked Garland 8 months from an election ("the people should choose"), then rammed Barrett through 8 days before the next election. Democrats accept rulings Republicans ignore. The asymmetry is structural and deliberate.</p>
+          <p>Citizens United created the funding filter: AIPAC money filters out genocide acknowledgment; Goldman Sachs money filters out minimum wage hikes. Platner refuses AIPAC money — which is exactly why Janet Mills, like most Democrats, cannot call a genocide what it is. The donor class selects for candidates who won't name the machine.</p>
+        </div>
+        <div>
+          <p class="detail-head">Platner's approach and its limits</p>
+          <p>"The first person who mentions the parliamentarian to me on the Senate floor is going to get me to blow my lid." This is entirely within Senate majority power: the VP as presiding officer can overrule the parliamentarian. McConnell always understood this. Democrats have been the only ones to treat it as immovable.</p>
+          <p>Platner proposes FDR's Economic Bill of Rights and publicly funded elections, pointing to South Australia's July 2025 world-first ban on party donations — replaced by public funding with strict expenditure caps — as proof of concept.</p>
+          <p>The parliamentarian override is high-impact and immediately deployable. Citizens United reversal is low-probability federally, but state-level models prove the architecture works and provide the political proof of concept.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ASSESSMENT -->
+  <div class="assessment">
+    <h2 class="assessment-title">Assessment: the realistic scope</h2>
+    <div class="reach-grid">
+      <div class="reach-box can">
+        <p class="reach-title can">Within Platner's reach (with Senate majority)</p>
+        <ul>
+          <li>Legally binding subpoenas — sworn financial disclosure on the public record</li>
+          <li>Parliamentarian override — McConnell's procedural weapon turned on its builders</li>
+          <li>SCOTUS impeachment proceedings — failed removal still creates real deterrent</li>
+          <li>Legislative restoration of DOJ/SEC funding and mandates</li>
+          <li>Congressional stock ban with actual prison sentences</li>
+          <li>Naming the machine — changed framing changes political discourse</li>
+        </ul>
+      </div>
+      <div class="reach-box cant">
+        <p class="reach-title cant">Requires more than one senator</p>
+        <ul>
+          <li>Criminal prosecution of the meme coin / futures trade nexus — needs DOJ</li>
+          <li>Voiding Affinity Fund 2 commitments or Kushner-era Iran deal terms</li>
+          <li>Restoring the 34 Public Integrity Section lawyers who no longer exist</li>
+          <li>Emoluments enforcement — needs legislation plus executive cooperation</li>
+          <li>Citizens United reversal — constitutional amendment or SCOTUS reversal</li>
+          <li>SCOTUS removal — 2/3 threshold never reached in US history</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tension">
+      <p class="tension-head">The fundamental tension</p>
+      <p><em>Operation Payday</em>'s conclusion is bleak: the apparatus has been specifically engineered to resist democratic correction. Every regulator disabled, every ethics filter removed, every enforcement unit gutted — not by accident but as a precondition for the wealth-extraction event. One senator with subpoena power is a significant but structurally insufficient response.</p>
+      <p><em>The Last Off-Ramp</em>'s counter is urgent: Platner may be the last candidate willing to name the mechanism before the next iteration arrives "smarter and meaner." His value is not only what he can do in the Senate — it is what naming the machine does to public understanding, which is the exact project that <em>Operation Payday</em> itself is engaged in. The scalpel is smaller than the wound. But it is a scalpel.</p>
+    </div>
+
+    <div class="footnote">
+      Maine primary: 9 June 2026. Mills suspended her campaign on 30 April 2026, unable to close a 27-point polling deficit despite backing from Chuck Schumer and the DSCC. Platner now faces David Costello in the primary, where he holds a commanding lead. The DSCC has since endorsed Platner. Collins told reporters she won't "play pundit" about November — which is its own kind of answer.
+    </div>
+  </div>
+
+  <!-- PLATNER PROFILE -->
+  <div class="profile">
+    <h2 class="profile-title">Who is Graham Platner?</h2>
+    <div class="profile-pillars">
+      <div class="pillar">
+        <div class="pillar-icon">🎖</div>
+        <p class="pillar-label">Military service</p>
+        <p class="pillar-value">Marine Corps &amp; Army veteran</p>
+        <p class="pillar-sub">4 combat deployments across Iraq and Afghanistan. Embassy security at the US mission in Kabul on a top-secret clearance. Knows, in his own words, "what happens when high explosives interact with children."</p>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">🦪</div>
+        <p class="pillar-label">Civilian life</p>
+        <p class="pillar-value">Maine oyster farmer &amp; harbour master</p>
+        <p class="pillar-sub">Runs a small oyster operation on the Maine coast. Served as harbour master for his town of roughly 1,000 people — the full extent of his political ambition before this campaign.</p>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">🗳</div>
+        <p class="pillar-label">The race</p>
+        <p class="pillar-value">Populist Senate candidate, Maine 2026</p>
+        <p class="pillar-sub">Running to unseat Susan Collins. Led establishment-backed Governor Janet Mills by 27 points before she suspended her campaign on 30 April 2026. Now faces David Costello in the June 9 primary. DSCC has endorsed Platner. Grassroots funded; refuses AIPAC money.</p>
+      </div>
+    </div>
+    <div class="profile-bio">
+      <p>Platner arrived in this race with no political machinery, no Washington résumé, and no consultant-approved talking points — which is precisely why the Democratic establishment is alarmed and Maine voters are not. He is a candidate shaped by institutions the donor class cannot buy: the Marine Corps, a small coastal fishery, a town meeting.</p>
+      <p>His significance in the context of <em>Operation Payday</em>'s analysis is specific: he is one of the few candidates who names the corruption mechanism rather than the surface scandal. Where most Democrats reach for outrage at individual actors, Platner identifies the system — wars as profit events, donor money as policy filter, procedural rules as class weapons. That structural framing, more than any single policy proposal, is what makes him legible as a genuine counter-force to the machine both IFLA articles describe.</p>
+      <p>The tattoo controversy (a skull acquired in Croatia in 2007 with fellow Marines that bears an unintended resemblance to an SS insignia, since covered) has not moved his polling. The electorate appears to be performing its own cost-benefit analysis and reaching a straightforward conclusion.</p>
+    </div>
+    <div class="profile-quote">
+      <blockquote>"In a system in which consolidated wealth eventually equals consolidated political power, that is a project we need to be engaged in."</blockquote>
+      <cite>Graham Platner, invoking FDR's unfinished Economic Bill of Rights</cite>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function tog(id, row) {
+  var panel = document.getElementById(id);
+  var hint  = row.querySelector('.toggle-hint');
+  var open  = window.getComputedStyle(panel).display !== 'none';
+  panel.style.display = open ? 'none' : 'block';
+  if (hint) hint.textContent = open ? '↓ detail' : '↑ close';
+}
+</script>
+</body>
+</html>
