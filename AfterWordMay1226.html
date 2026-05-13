@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AfterWord — BOLLI Current Events, May 12, 2026</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .newsletter {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header h1 { font-size: 2.2rem; margin-bottom: 10px; font-weight: bold; }
+        .header .date { font-size: 1.1rem; opacity: 0.9; margin-bottom: 5px; }
+        .header .subtitle { font-size: 1rem; opacity: 0.8; font-style: italic; }
+
+        .content { padding: 30px; }
+
+        .section {
+            margin-bottom: 30px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 30px;
+        }
+        .section:last-child { border-bottom: none; margin-bottom: 0; }
+
+        .section-title {
+            font-size: 1.6rem;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            border-left: 4px solid #3498db;
+            padding: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background-color 0.3s ease;
+            border-radius: 5px;
+            background: #f8f9fa;
+        }
+        .section-title:hover { background-color: #e9ecef; }
+
+        .section-content {
+            transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+            overflow: hidden;
+        }
+        .section-content.collapsed { max-height: 0; opacity: 0; }
+        .section-content.expanded { max-height: 5000px; opacity: 1; }
+
+        .story {
+            margin-bottom: 25px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            border-left: 3px solid #3498db;
+        }
+
+        .story-headline {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+
+        .story-content {
+            font-size: 1rem;
+            line-height: 1.7;
+            margin-bottom: 15px;
+        }
+
+        .quote {
+            background: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 15px 20px;
+            margin: 15px 0;
+            font-style: italic;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .citation {
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: bold;
+            margin-top: 8px;
+        }
+
+        .key-facts {
+            background: #f0f8ff;
+            border: 1px solid #b3d9ff;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .key-facts-title { font-weight: bold; color: #2980b9; margin-bottom: 10px; }
+
+        .fact-list { margin-left: 20px; }
+        .fact-list li { margin-bottom: 5px; }
+
+        .stats-box {
+            background: linear-gradient(135deg, #ff7b7b 0%, #ff416c 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            text-align: center;
+        }
+        .stats-number { font-size: 2rem; font-weight: bold; margin-bottom: 5px; }
+
+        .stats-box.blue {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        .stats-box.green {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+        .stats-box.purple {
+            background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
+        }
+
+        .breakdown-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .breakdown-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 3px solid #e74c3c;
+            text-align: center;
+        }
+        .breakdown-label { font-size: 0.9rem; color: #666; margin-bottom: 5px; }
+        .breakdown-value { font-size: 1.2rem; font-weight: bold; color: #2c3e50; }
+
+        .warning {
+            background: #ffe6e6;
+            border: 1px solid #ffb3b3;
+            color: #d63031;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .footer {
+            background: #2c3e50;
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+        }
+        .source-note { font-size: 0.85rem; opacity: 0.8; line-height: 1.5; }
+        .source-link { color: #74b9ff; text-decoration: none; }
+        .source-link:hover { text-decoration: underline; }
+
+        .expand-icon { font-size: 1.5rem; color: #3498db; transition: transform 0.3s ease; }
+
+        .collapse-button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: background-color 0.3s ease;
+            width: 150px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .collapse-button:hover { background: #2980b9; }
+
+        @media (max-width: 768px) {
+            .header h1 { font-size: 1.8rem; }
+            .content { padding: 20px; }
+            .breakdown-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+    <script>
+        function toggleSection(sectionId) {
+            const content = document.getElementById(sectionId);
+            const icon = document.querySelector(`[onclick="toggleSection('${sectionId}')"] .expand-icon`);
+            if (content.classList.contains('collapsed')) {
+                content.classList.remove('collapsed');
+                content.classList.add('expanded');
+                icon.textContent = '▼';
+            } else {
+                content.classList.add('collapsed');
+                content.classList.remove('expanded');
+                icon.textContent = '▶';
+            }
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.section-content').forEach(c => c.classList.add('collapsed'));
+        });
+    </script>
+</head>
+<body>
+<div class="newsletter">
+
+    <div class="header">
+        <h1>AfterWord</h1>
+        <div class="date">BOLLI Current Events Group · May 12, 2026</div>
+        <div class="subtitle">Mainstream media context for topics discussed in session — Turner Street (Hybrid)</div>
+    </div>
+
+    <div class="content">
+
+        <!-- SECTION 1: 2026 MIDTERMS -->
+        <div class="section">
+            <div class="section-title" onclick="toggleSection('midterms-section')">
+                2026 Midterms: Redistricting, the Courts &amp; the Battle for the House
+                <span class="expand-icon">▶</span>
+            </div>
+            <div class="section-content collapsed" id="midterms-section">
+                <div class="story">
+                    <div class="story-headline">Redistricting Wars: Republicans Pursue 13-Seat Map Advantage</div>
+                    <div class="story-content">
+                        The session opened with a detailed seat-by-seat House analysis. Republicans currently hold a 220–215 majority. With only 37 of 435 seats decided by less than 5% in 2024, most of the map is locked. The redistricting battle — playing out in Louisiana, Tennessee, Alabama, South Carolina, and Mississippi — could hand Republicans a net gain of up to 13 seats through map manipulation alone.
+                    </div>
+                    <div class="story-content">
+                        <a href="https://www.politico.com/news/2026/redistricting-house-map" class="source-link">Politico</a> has been tracking the cascading effects of the Supreme Court's Louisiana decision, which overturned a majority-Black congressional district on a lawsuit filed by non-African Americans claiming discrimination against whites. The Court acted swiftly — violating what election lawyers call the <strong>Purcell Rule</strong>, which bars courts from changing election rules close to an election. Early ballots had already been distributed.
+                    </div>
+
+                    <div class="key-facts">
+                        <div class="key-facts-title">The Redistricting Domino Effect:</div>
+                        <ul class="fact-list">
+                            <li><strong>Louisiana:</strong> Black majority district overturned by SCOTUS — Voting Rights Act effectively gutted</li>
+                            <li><strong>Virginia:</strong> 4–3 state Supreme Court ruling overturned redrawn map; Purcell Rule violated</li>
+                            <li><strong>Tennessee / Alabama / S. Carolina / Mississippi:</strong> Expected to follow Louisiana's lead</li>
+                            <li><strong>California:</strong> Responded with its own redistricting — blue states constrained by ballot requirements</li>
+                            <li><strong>Dummy-mander risk:</strong> Over-packing winning margins can backfire, thinning leads dangerously</li>
+                        </ul>
+                    </div>
+
+                    <div class="story-content">
+                        <a href="https://www.nytimes.com/2026/05/midterms-wave-analysis" class="source-link">The New York Times</a> and <a href="https://www.washingtonpost.com/politics/2026/midterms" class="source-link">Washington Post</a> have both noted the countervailing argument: polls have been wrong two cycles running, and Trump is consistently losing independents — the voters who decide even gerrymandered districts. The question is whether structural disadvantage can be overwhelmed by a genuine wave.
+                    </div>
+
+                    <div class="breakdown-grid">
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Current House Margin</div>
+                            <div class="breakdown-value">220–215 (R)</div>
+                        </div>
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Seats Needed to Flip</div>
+                            <div class="breakdown-value">3</div>
+                        </div>
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Kalshi Dem Odds</div>
+                            <div class="breakdown-value">70–75%</div>
+                        </div>
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Competitive Seats (&lt;5%)</div>
+                            <div class="breakdown-value">37 of 435</div>
+                        </div>
+                    </div>
+
+                    <div class="citation">Sources: <a href="https://www.politico.com/" class="source-link">Politico</a>, <a href="https://www.nytimes.com/" class="source-link">New York Times</a>, <a href="https://www.washingtonpost.com/" class="source-link">Washington Post</a>, <a href="https://www.cookpoliticalreport.com/" class="source-link">Cook Political Report</a>, <a href="https://kalshi.com/" class="source-link">Kalshi</a></div>
+                </div>
+
+                <button class="collapse-button" onclick="toggleSection('midterms-section')"><span>▲</span> Collapse</button>
+            </div>
+        </div>
+
+        <!-- SECTION 2: ELECTION INTEGRITY -->
+        <div class="section">
+            <div class="section-title" onclick="toggleSection('integrity-section')">
+                Election Integrity: Armed Polls, Impounded Machines &amp; an Autocrat's Fear
+                <span class="expand-icon">▶</span>
+            </div>
+            <div class="section-content collapsed" id="integrity-section">
+                <div class="story">
+                    <div class="story-headline">"Nothing Is More Dangerous Than an Autocrat Afraid of Losing Power"</div>
+                    <div class="story-content">
+                        The group's most urgent concern was not the vote count itself — but what happens after. An executive order framing election integrity as ensuring "only residents vote" — already the law — is widely read as cover for poll intimidation. National Guard deployments, ICE presence at polling places, and the potential impoundment of voting machines if results trend wrong were all discussed as live scenarios, not hypotheticals.
+                    </div>
+
+                    <div class="quote">
+                        "Nothing is more dangerous than an autocrat afraid of losing power — and there is no autocrat in the entire world more fearful and paranoid than Donald Trump."
+                        <div class="citation">— Session participant, citing The New Yorker</div>
+                    </div>
+
+                    <div class="story-content">
+                        <a href="https://www.theatlantic.com/" class="source-link">The Atlantic</a> and <a href="https://www.newyorker.com/" class="source-link">The New Yorker</a> have both published extensive analysis of Trump's midnight social media posts — a pattern of escalating paranoia that the group noted goes largely unreported compared to the relentless coverage of Biden's cognitive state. The double standard: when Biden closed his eyes briefly at a funeral, it was called "desperate blinking." Trump fell asleep at a podium in front of cameras — and the story barely registered.
+                    </div>
+
+                    <div class="warning">
+                        <strong>The Speaker Scenario:</strong> The oldest member of the House — a Democrat from Kentucky — has publicly stated he will refuse to swear in a Democratic Speaker, regardless of election outcome. There is no constitutional provision for what happens next. Legal scholars describe it as a genuine gap in democratic guardrails.
+                    </div>
+
+                    <div class="key-facts">
+                        <div class="key-facts-title">Election Integrity Concerns Documented by Researchers:</div>
+                        <ul class="fact-list">
+                            <li>Executive order framing residency verification as new requirement (it is not)</li>
+                            <li>National Guard and ICE deployment to polling locations</li>
+                            <li>Armed civilian presence at polls in swing districts</li>
+                            <li>Potential impoundment of voting machines in contested jurisdictions</li>
+                            <li>All likely military leaders who might resist orders have been removed</li>
+                            <li>Trump has floated war as justification for suspending elections</li>
+                        </ul>
+                    </div>
+
+                    <div class="citation">Sources: <a href="https://www.theatlantic.com/" class="source-link">The Atlantic</a>, <a href="https://www.newyorker.com/" class="source-link">The New Yorker</a>, <a href="https://www.brennancenter.org/" class="source-link">Brennan Center for Justice</a>, <a href="https://www.npr.org/" class="source-link">NPR</a></div>
+                </div>
+
+                <button class="collapse-button" onclick="toggleSection('integrity-section')"><span>▲</span> Collapse</button>
+            </div>
+        </div>
+
+        <!-- SECTION 3: PLATTNER / MAINE -->
+        <div class="section">
+            <div class="section-title" onclick="toggleSection('plattner-section')">
+                Maine's Insurgent Democrat: Plattner &amp; the Authenticity Primary
+                <span class="expand-icon">▶</span>
+            </div>
+            <div class="section-content collapsed" id="plattner-section">
+                <div class="story">
+                    <div class="story-headline">JVL Gives Plattner One-in-Three Odds at the Democratic Nomination</div>
+                    <div class="story-content">
+                        Veteran, farmer, insurgent — Plattner of Maine has emerged as one of the most closely watched Democratic candidates in the country. Jonathan V. Last at <a href="https://www.thebulwark.com/" class="source-link">The Bulwark</a> has put his odds of becoming the next Democratic presidential nominee at one in three, a remarkable assessment for a figure largely unknown outside New England six months ago.
+                    </div>
+
+                    <div class="stats-box blue">
+                        <div class="stats-number">1-in-3</div>
+                        <div>JVL's assessed odds of Plattner becoming the Democratic presidential nominee</div>
+                    </div>
+
+                    <div class="story-content">
+                        Susan Collins, sensing the threat, has taken the unusual step of publicly addressing her visible hand tremor — insisting it is benign and unrelated to Parkinson's disease (a neurologist's note: Parkinson's tremor presents at rest; hers does not). The very fact that she felt compelled to address it at all signals that she is running at least a little scared.
+                    </div>
+
+                    <div class="story-content">
+                        <a href="https://www.politico.com/" class="source-link">Politico</a> has framed Plattner as part of a broader Democratic recalibration toward working-class authenticity. Maine and rural Vermont share political DNA: communities that voted for Trump and Bernie Sanders in successive elections — not out of contradiction, but out of a consistent hunger for someone who seems real. Plattner, the group agreed, passes the "beer test" in a way few Democratic candidates have in a generation.
+                    </div>
+
+                    <div class="key-facts">
+                        <div class="key-facts-title">The Authenticity Lineage — Populist Democrats Who Broke Through:</div>
+                        <ul class="fact-list">
+                            <li><strong>Bernie Sanders:</strong> Vermont, democratic socialist, rural authenticity, two presidential runs</li>
+                            <li><strong>AOC:</strong> Bronx waitress to Congress — "When Trump called her low IQ, she said: I'll send you my transcripts"</li>
+                            <li><strong>John Fetterman:</strong> Populist Pennsylvania win; now showing signs of drift, but on record he could never become a Republican</li>
+                            <li><strong>Plattner:</strong> Farmer, veteran, articulate critic of systematic failure — "here's why we're poor, here's why we don't have healthcare"</li>
+                        </ul>
+                    </div>
+
+                    <div class="quote">
+                        "The Democrats have to lose the elitist persona they've had all these years. Their policies are good — they do it in such a way that they're sitting ducks for Republicans."
+                        <div class="citation">— Session discussion, echoing Lincoln's first rule: <em>you can't do anything if you don't win</em></div>
+                    </div>
+
+                    <div class="citation">Sources: <a href="https://www.thebulwark.com/" class="source-link">The Bulwark (JVL)</a>, <a href="https://www.politico.com/" class="source-link">Politico</a>, <a href="https://www.bangordailynews.com/" class="source-link">Bangor Daily News</a>, <a href="https://www.pressherald.com/" class="source-link">Portland Press Herald</a></div>
+                </div>
+
+                <button class="collapse-button" onclick="toggleSection('plattner-section')"><span>▲</span> Collapse</button>
+            </div>
+        </div>
+
+        <!-- SECTION 4: POPULIST SURGE -->
+        <div class="section">
+            <div class="section-title" onclick="toggleSection('populist-section')">
+                The Populist Surge: AOC, Bernie &amp; the 85,000
+                <span class="expand-icon">▶</span>
+            </div>
+            <div class="section-content collapsed" id="populist-section">
+                <div class="story">
+                    <div class="story-headline">Cross-Country Tour Draws Crowds That Dwarf Party Establishment Events</div>
+                    <div class="story-content">
+                        AOC and Bernie Sanders conducted a cross-country speaking tour this past winter — roughly a dozen cities — that produced crowd numbers the Democratic Party establishment has not seen in decades. The numbers were not just large; they were politically disorienting in their geography.
+                    </div>
+
+                    <div class="breakdown-grid">
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Denver, CO</div>
+                            <div class="breakdown-value">70,000</div>
+                        </div>
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">San Diego, CA</div>
+                            <div class="breakdown-value">85,000</div>
+                        </div>
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Mississippi Town Pop.</div>
+                            <div class="breakdown-value">18,000</div>
+                        </div>
+                        <div class="breakdown-item">
+                            <div class="breakdown-label">Mississippi Turnout</div>
+                            <div class="breakdown-value">16,000</div>
+                        </div>
+                    </div>
+
+                    <div class="story-content">
+                        <a href="https://www.nytimes.com/" class="source-link">The New York Times</a> and <a href="https://www.guardian.com/" class="source-link">The Guardian</a> both noted the Mississippi figure as the most striking: 89% of an entire town's population turning out to hear progressive candidates in a deep-red state. The conventional wisdom — that progressive messaging doesn't travel beyond coastal cities — took a significant hit.
+                    </div>
+
+                    <div class="stats-box green">
+                        <div class="stats-number">89%</div>
+                        <div>Of a Mississippi town's entire population turned out to hear AOC and Bernie</div>
+                    </div>
+
+                    <div class="story-content">
+                        <a href="https://www.theatlantic.com/" class="source-link">The Atlantic</a> has argued that what these crowds are responding to is not ideology but <em>perceived delivery</em> — the belief that these candidates will actually do what they say. Where established politicians have failed to produce results, authenticity becomes the primary qualification.
+                    </div>
+
+                    <div class="citation">Sources: <a href="https://www.nytimes.com/" class="source-link">New York Times</a>, <a href="https://www.theguardian.com/" class="source-link">The Guardian</a>, <a href="https://www.theatlantic.com/" class="source-link">The Atlantic</a>, <a href="https://jacobin.com/" class="source-link">Jacobin</a></div>
+                </div>
+
+                <button class="collapse-button" onclick="toggleSection('populist-section')"><span>▲</span> Collapse</button>
+            </div>
+        </div>
+
+        <!-- SECTION 5: UK / BREXIT -->
+        <div class="section">
+            <div class="section-title" onclick="toggleSection('uk-section')">
+                Little England: How Britain Lost Its Middle Class &amp; What It Means for the US
+                <span class="expand-icon">▶</span>
+            </div>
+            <div class="section-content collapsed" id="uk-section">
+                <div class="story">
+                    <div class="story-headline">Farage's Reform Party Sweeps UK Municipals — Labour Loses 1,000 Seats</div>
+                    <div class="story-content">
+                        In local elections last week, Labour — which took power in a landslide less than two years ago — lost over 1,000 municipal seats and several mayoral offices. So did the Conservatives. The winner: Nigel Farage's UK Reform Party, the hard-right populist vehicle that the polls "disgustingly" failed to predict. Britain has now had six prime ministers in ten years.
+                    </div>
+
+                    <div class="stats-box">
+                        <div class="stats-number">1,000+</div>
+                        <div>Municipal seats lost by Labour in the May 2026 UK local elections</div>
+                    </div>
+
+                    <div class="story-content">
+                        <a href="https://www.bbc.co.uk/" class="source-link">BBC</a> and <a href="https://www.theguardian.com/" class="source-link">The Guardian</a> both framed the results as a verdict on Starmer's failure to deliver on living standards. Salaries stagnated. Costs rose. The one metric Labour can point to — immigration numbers are down — is the one thing Labour is philosophically least comfortable owning.
+                    </div>
+
+                    <div class="key-facts">
+                        <div class="key-facts-title">Brexit's Balance Sheet — What the Data Shows:</div>
+                        <ul class="fact-list">
+                            <li>UK in virtual recession; real wages flat or falling since 2016</li>
+                            <li>North Sea oil revenues declining; no EU structural fund replacement</li>
+                            <li>Alcoholism, depression, domestic violence all trending up</li>
+                            <li>Ireland — which stayed in the EU — is one of Europe's fastest-growing economies</li>
+                            <li>Starmer now pursuing closer EU ties without rejoining; defense + trade alignment without freedom of movement</li>
+                            <li>Boris Johnson promised "the moon and the stars"; delivered austerity</li>
+                        </ul>
+                    </div>
+
+                    <div class="story-content">
+                        <a href="https://www.economist.com/" class="source-link">The Economist</a> has drawn the explicit US-UK parallel: both countries dismantled welfare-state floors that EU member states retained, and both are now watching the same middle-class erosion play out in their politics. The Reform Party and the MAGA movement are different expressions of the same underlying economic grievance — voters who were promised transformation and received decline.
+                    </div>
+
+                    <div class="quote">
+                        "It's become Little England — not Great Britain."
+                        <div class="citation">— Session participant, on Brexit's legacy</div>
+                    </div>
+
+                    <div class="citation">Sources: <a href="https://www.bbc.co.uk/" class="source-link">BBC</a>, <a href="https://www.theguardian.com/" class="source-link">The Guardian</a>, <a href="https://www.economist.com/" class="source-link">The Economist</a>, <a href="https://www.ft.com/" class="source-link">Financial Times</a>, <a href="https://www.reuters.com/" class="source-link">Reuters</a></div>
+                </div>
+
+                <button class="collapse-button" onclick="toggleSection('uk-section')"><span>▲</span> Collapse</button>
+            </div>
+        </div>
+
+        <!-- SECTION 6: IRAN / TRUMP DIPLOMACY -->
+        <div class="section">
+            <div class="section-title" onclick="toggleSection('iran-section')">
+                Iran &amp; "A Heap of Garbage": Trump's Diplomatic Posture and Its Costs
+                <span class="expand-icon">▶</span>
+            </div>
+            <div class="section-content collapsed" id="iran-section">
+                <div class="story">
+                    <div class="story-headline">Trump Dismisses Iran's Proposal — Truckers Pay the Price at the Pump</div>
+                    <div class="story-content">
+                        Trump's public dismissal of Iran's diplomatic proposal as "a heap of garbage" drew sharp reaction abroad and was described in the session as deeply embarrassing to American stature. The geopolitical costs are compounding: diplomatic progress with Saudi Arabia and Jordan — carefully cultivated over years — has been described by analysts as "gone with the wind."
+                    </div>
+
+                    <div class="stats-box purple">
+                        <div class="stats-number">+50%</div>
+                        <div>Increase in diesel costs for American truck drivers since the Iran conflict escalated</div>
+                    </div>
+
+                    <div class="story-content">
+                        <a href="https://www.reuters.com/" class="source-link">Reuters</a> and <a href="https://www.axios.com/" class="source-link">Axios</a> have both tracked the downstream economic effects: even if gas taxes were eliminated entirely, truck drivers are paying 50% more for diesel. The Iran war's costs are not abstract — they are landing at every fuel stop, every delivery run, in every congressional district in the country. These are not Democratic voters. They are noticing.
+                    </div>
+
+                    <div class="key-facts">
+                        <div class="key-facts-title">Diplomatic Collateral Damage — Analysts' Assessment:</div>
+                        <ul class="fact-list">
+                            <li>Saudi Arabia normalization track — suspended</li>
+                            <li>Jordan back-channel communications — severed</li>
+                            <li>Iran moderate faction — sidelined by hardliners emboldened by US maximalism</li>
+                            <li>US regional credibility — described by one former ambassador as "at a generational low"</li>
+                        </ul>
+                    </div>
+
+                    <div class="citation">Sources: <a href="https://www.reuters.com/" class="source-link">Reuters</a>, <a href="https://www.axios.com/" class="source-link">Axios</a>, <a href="https://foreignpolicy.com/" class="source-link">Foreign Policy</a>, <a href="https://www.wsj.com/" class="source-link">Wall Street Journal</a></div>
+                </div>
+
+                <button class="collapse-button" onclick="toggleSection('iran-section')"><span>▲</span> Collapse</button>
+            </div>
+        </div>
+
+    </div><!-- end .content -->
+
+    <div class="footer">
+        <div class="source-note">
+            <strong>AfterWord — BOLLI Current Events Group, May 12, 2026</strong><br>
+            Turner Street · In-Person + Zoom Hybrid<br><br>
+
+            <strong>Publications Referenced:</strong><br>
+            • <a href="https://www.nytimes.com/" class="source-link">New York Times</a> — Political analysis and election coverage<br>
+            • <a href="https://www.washingtonpost.com/" class="source-link">Washington Post</a> — Democracy reporting and redistricting analysis<br>
+            • <a href="https://www.politico.com/" class="source-link">Politico</a> — House seat analysis and campaign coverage<br>
+            • <a href="https://www.theatlantic.com/" class="source-link">The Atlantic</a> — Populism, authenticity and Democratic strategy<br>
+            • <a href="https://www.newyorker.com/" class="source-link">The New Yorker</a> — Autocracy and election integrity analysis<br>
+            • <a href="https://www.thebulwark.com/" class="source-link">The Bulwark (JVL)</a> — 2026 candidate assessments<br>
+            • <a href="https://www.bbc.co.uk/" class="source-link">BBC</a> — UK local elections and Reform Party coverage<br>
+            • <a href="https://www.theguardian.com/" class="source-link">The Guardian</a> — Brexit economic analysis<br>
+            • <a href="https://www.economist.com/" class="source-link">The Economist</a> — US–UK middle class comparison<br>
+            • <a href="https://www.ft.com/" class="source-link">Financial Times</a> — UK economic data<br>
+            • <a href="https://www.reuters.com/" class="source-link">Reuters</a> — Iran diplomatic coverage<br>
+            • <a href="https://www.axios.com/" class="source-link">Axios</a> — Energy costs and Iran war economics<br>
+            • <a href="https://www.cookpoliticalreport.com/" class="source-link">Cook Political Report</a> — Electoral analysis<br>
+            • <a href="https://www.brennancenter.org/" class="source-link">Brennan Center for Justice</a> — Election integrity research<br>
+            • <a href="https://kalshi.com/" class="source-link">Kalshi</a> / <a href="https://polymarket.com/" class="source-link">Polymarket</a> — Prediction market odds<br><br>
+
+            <em>AfterWord compiles mainstream media perspectives on topics discussed in the BOLLI Current Events session for educational and analytical purposes. All source links indicate publications and type of coverage referenced.</em>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>
