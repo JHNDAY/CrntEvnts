@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>For Your Consideration — Archive</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Oswald:wght@400;600&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+
+  <!--
+  ════════════════════════════════════════════════════════════
+   ARCHIVE PILL / REFERENCE — ADD ENTRY TEMPLATE
+   Command: "Archive Pill/Reference: [Mon YYYY] | [source card label] | [link text] | [url]"
+
+   Hierarchy:  Quarter  →  Date block  →  Card-group (source label)  →  Entry pills
+
+   ── New entry inside an existing card-group ──
+   <div class="entry">
+     <a href="URL" class="entry-pill" target="_blank" rel="noopener">Link Text</a>
+   </div>
+
+   ── New card-group inside an existing date-block ──
+   <div class="card-group">
+     <div class="card-label">Source Card Label</div>
+     <div class="entry">
+       <a href="URL" class="entry-pill" target="_blank" rel="noopener">Link Text</a>
+     </div>
+   </div>
+
+   ── New date-block inside an existing quarter-body ──
+   <div class="date-block">
+     <div class="date-heading">
+       <span class="date-stamp">Mon YYYY</span>
+       <hr class="date-rule">
+     </div>
+     <div class="card-group">
+       <div class="card-label">Source Card Label</div>
+       <div class="entry">
+         <a href="URL" class="entry-pill" target="_blank" rel="noopener">Link Text</a>
+       </div>
+     </div>
+   </div>
+
+   ── New quarter shell ──
+   <div class="quarter" id="qN-YYYY">
+     <div class="quarter-header" onclick="toggleQuarter(this)">
+       <div class="qh-left">
+         <span class="quarter-label">QN YYYY</span>
+         <span class="quarter-title">Month – Month YYYY</span>
+         <span class="quarter-count">N items</span>
+       </div>
+       <span class="quarter-chevron">▾</span>
+     </div>
+     <div class="quarter-body">
+       <!-- date-blocks go here -->
+     </div>
+   </div>
+  ════════════════════════════════════════════════════════════
+  -->
+
+  <style>
+    :root {
+      --cream:      #FAF8F3;
+      --paper:      #FFFFFF;
+      --ink:        #18160F;
+      --crimson:    #B91C2E;
+      --crimson-lt: #F7E8EA;
+      --navy:       #1B3557;
+      --gold:       #9A7C2F;
+      --gold-lt:    #F5EDD6;
+      --rule:       #D6CFC0;
+      --muted:      #6B6456;
+      --blue-lt:    #E8F0F8;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Lora', Georgia, serif;
+      background: var(--cream);
+      color: var(--ink);
+      line-height: 1.65;
+      min-height: 100vh;
+    }
+
+    .top-stripe { background: var(--gold); height: 5px; width: 100%; }
+
+    /* ── Masthead ── */
+    .masthead {
+      background: var(--paper);
+      border-bottom: 3px double var(--ink);
+      padding: 32px 24px 26px;
+      text-align: center;
+    }
+    .masthead::before {
+      content: '';
+      display: block;
+      height: 1px;
+      background: var(--ink);
+      margin: 0 auto 16px;
+      width: 80%;
+      max-width: 700px;
+    }
+    .masthead-super {
+      font-family: 'Oswald', sans-serif;
+      font-size: .7rem;
+      letter-spacing: .25em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    .masthead h1 {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: clamp(2rem, 6vw, 4.2rem);
+      font-weight: 900;
+      letter-spacing: -.02em;
+      line-height: 1.05;
+      color: var(--ink);
+      margin-bottom: 4px;
+    }
+    .masthead h1 em { font-style: italic; color: var(--gold); }
+    .masthead-rule {
+      display: flex; align-items: center; gap: 14px;
+      margin: 14px auto 12px; max-width: 500px;
+    }
+    .masthead-rule hr { flex:1; border:none; border-top:1.5px solid var(--ink); }
+    .masthead-rule .diamond {
+      width: 7px; height: 7px; background: var(--gold);
+      transform: rotate(45deg); flex-shrink: 0;
+    }
+    .masthead-sub {
+      font-family: 'Lora', serif; font-style: italic;
+      font-size: 1rem; color: var(--muted); margin-bottom: 18px;
+    }
+    .back-link {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-family: 'Oswald', sans-serif; font-size: .78rem;
+      letter-spacing: .1em; text-transform: uppercase;
+      text-decoration: none; color: var(--navy);
+      border: 1.5px solid var(--navy);
+      padding: 7px 18px; border-radius: 2px; transition: all .2s;
+    }
+    .back-link:hover { background: var(--navy); color: #fff; }
+
+    /* ── Container ── */
+    .container { max-width: 880px; margin: 0 auto; padding: 36px 20px 64px; }
+
+    /* ── Stats bar ── */
+    .stats-bar {
+      display: flex; gap: 28px; justify-content: center;
+      flex-wrap: wrap; margin-bottom: 32px;
+      padding: 18px 24px; background: var(--paper);
+      border: 1px solid var(--rule); border-radius: 3px;
+      border-top: 3px solid var(--gold);
+    }
+    .stat { text-align: center; }
+    .stat-n {
+      font-family: 'Playfair Display', serif; font-size: 2rem;
+      font-weight: 700; color: var(--gold); line-height: 1;
+    }
+    .stat-label {
+      font-family: 'Oswald', sans-serif; font-size: .68rem;
+      letter-spacing: .14em; text-transform: uppercase;
+      color: var(--muted); margin-top: 3px;
+    }
+
+    /* ── Quarter accordion ── */
+    .quarter {
+      margin-bottom: 18px;
+      border: 1px solid var(--rule);
+      border-radius: 3px;
+      background: var(--paper);
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(24,22,15,.05);
+    }
+    .quarter-header {
+      display: flex; align-items: center;
+      justify-content: space-between;
+      padding: 16px 22px;
+      cursor: pointer; user-select: none;
+      border-left: 4px solid var(--gold);
+      background: var(--paper);
+      transition: background .18s; gap: 12px;
+    }
+    .quarter-header:hover,
+    .quarter-header.open { background: var(--gold-lt); }
+    .quarter-header.open { border-bottom: 1px solid var(--rule); }
+    .qh-left { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+    .quarter-label {
+      font-family: 'Oswald', sans-serif; font-size: .7rem;
+      letter-spacing: .2em; text-transform: uppercase;
+      color: var(--gold); font-weight: 600;
+    }
+    .quarter-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem; font-weight: 700; color: var(--ink);
+    }
+    .quarter-count {
+      font-family: 'Oswald', sans-serif; font-size: .7rem;
+      letter-spacing: .08em; color: var(--muted);
+      background: var(--cream); border: 1px solid var(--rule);
+      padding: 2px 9px; border-radius: 10px; white-space: nowrap;
+    }
+    .quarter-chevron {
+      font-size: .9rem; color: var(--muted);
+      transition: transform .25s; flex-shrink: 0;
+    }
+    .quarter-header.open .quarter-chevron { transform: rotate(180deg); }
+    .quarter-body { display: none; padding: 8px 22px 24px; }
+    .quarter-body.open { display: block; }
+
+    /* ── Date block — PRIMARY level ── */
+    .date-block {
+      margin-top: 22px;
+      padding-left: 0;
+    }
+    .date-block + .date-block {
+      margin-top: 30px;
+      padding-top: 24px;
+      border-top: 1px solid var(--rule);
+    }
+
+    .date-heading {
+      display: flex; align-items: center; gap: 14px;
+      margin-bottom: 14px;
+    }
+    .date-stamp {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem; font-weight: 700;
+      color: var(--navy);
+      white-space: nowrap;
+    }
+    .date-rule { flex: 1; border: none; border-top: 2px solid var(--navy); opacity: .25; }
+
+    /* ── Card-group — SUBORDINATE level ── */
+    .card-group {
+      margin-bottom: 12px;
+      padding-left: 18px;
+      border-left: 3px solid var(--rule);
+    }
+    .card-group + .card-group { margin-top: 14px; }
+
+    .card-label {
+      font-family: 'Oswald', sans-serif;
+      font-size: .68rem; letter-spacing: .16em;
+      text-transform: uppercase; color: var(--crimson);
+      font-weight: 600; margin-bottom: 7px;
+    }
+
+    .sub-label {
+      font-family: 'Oswald', sans-serif; font-size: .62rem;
+      letter-spacing: .1em; text-transform: uppercase;
+      color: var(--muted); margin: 7px 0 5px;
+    }
+
+    /* ── Entry ── */
+    .entry { padding: 3px 0; }
+
+    /* ── Pill ── */
+    .entry-pill {
+      font-family: 'Lora', Georgia, Times, serif;
+      font-size: .88rem; font-style: italic; font-weight: 400;
+      color: var(--navy); text-decoration: none;
+      background: var(--blue-lt);
+      border: 1.5px solid #C0D4E8;
+      padding: 4px 13px; border-radius: 2px;
+      transition: all .18s; display: inline-block; line-height: 1.4;
+    }
+    .entry-pill:hover { background: var(--navy); color: #fff; border-color: var(--navy); }
+
+    .archive-footer {
+      text-align: center;
+      font-family: 'Lora', serif; font-style: italic;
+      font-size: .85rem; color: var(--muted);
+      margin-top: 40px; border-top: 1px solid var(--rule);
+      padding-top: 18px;
+    }
+
+    @media (max-width: 540px) {
+      .masthead h1 { font-size: 2rem; }
+      .date-stamp   { font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="top-stripe"></div>
+
+<div class="masthead">
+  <div class="masthead-super">BOLLI Current Events Discussion Group</div>
+  <h1>For Your<br><em>Consideration</em></h1>
+  <div class="masthead-rule">
+    <hr><div class="diamond"></div>
+    <span style="font-family:'Oswald',sans-serif;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);white-space:nowrap;">Archive</span>
+    <div class="diamond"></div><hr>
+  </div>
+  <p class="masthead-sub">Curated from the portal — organized by date, source card noted</p>
+  <a href="current_affairs_central.html" class="back-link">← Back to Portal</a>
+</div>
+
+<div class="container">
+
+  <div class="stats-bar">
+    <div class="stat"><div class="stat-n">3</div><div class="stat-label">Quarters</div></div>
+    <div class="stat"><div class="stat-n">4</div><div class="stat-label">Dates</div></div>
+    <div class="stat"><div class="stat-n">10</div><div class="stat-label">Source Cards</div></div>
+    <div class="stat"><div class="stat-n">28</div><div class="stat-label">Items Archived</div></div>
+  </div>
+
+  <!-- ════════════════════════════
+       Q2 2026  Apr – Jun 2026
+  ════════════════════════════ -->
+  <div class="quarter" id="q2-2026">
+    <div class="quarter-header" onclick="toggleQuarter(this)">
+      <div class="qh-left">
+        <span class="quarter-label">Q2 2026</span>
+        <span class="quarter-title">April – June 2026</span>
+        <span class="quarter-count">2 items</span>
+      </div>
+      <span class="quarter-chevron">▾</span>
+    </div>
+    <div class="quarter-body">
+
+      <div class="date-block">
+        <div class="date-heading">
+          <span class="date-stamp">May 2026</span>
+          <hr class="date-rule">
+        </div>
+        <div class="card-group">
+          <div class="card-label">On Our Radar</div>
+          <div class="entry"><a href="https://jhnday.github.io/CrntEvnts/major-league-pay-to-play" class="entry-pill" target="_blank" rel="noopener">Major League Pay to Play</a></div>
+          <div class="entry"><a href="https://jhnday.github.io/CrntEvnts/pardon-integrity-viz" class="entry-pill" target="_blank" rel="noopener">Pardon Who ??</a></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ════════════════════════════
+       Q1 2026  Jan – Mar 2026
+  ════════════════════════════ -->
+  <div class="quarter" id="q1-2026">
+    <div class="quarter-header" onclick="toggleQuarter(this)">
+      <div class="qh-left">
+        <span class="quarter-label">Q1 2026</span>
+        <span class="quarter-title">January – March 2026</span>
+        <span class="quarter-count">2 items</span>
+      </div>
+      <span class="quarter-chevron">▾</span>
+    </div>
+    <div class="quarter-body">
+
+      <div class="date-block">
+        <div class="date-heading">
+          <span class="date-stamp">February 2026</span>
+          <hr class="date-rule">
+        </div>
+        <div class="card-group">
+          <div class="card-label">Member Contributions</div>
+          <div class="entry"><a href="https://jhnday.github.io/CrntEvnts/dhs_subpoena_visualization" class="entry-pill" target="_blank" rel="noopener">Weaponizing the Administrative Subpoena — David Rattner</a></div>
+          <div class="entry"><a href="https://jhnday.github.io/CrntEvnts/rabbi_goldstein_address_visualization" class="entry-pill" target="_blank" rel="noopener">South Africa's Expulsion of Israeli Senior Diplomat — Michael Berger</a></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ════════════════════════════
+       Q4 2025  Oct – Dec 2025
+  ════════════════════════════ -->
+  <div class="quarter" id="q4-2025">
+    <div class="quarter-header open" onclick="toggleQuarter(this)">
+      <div class="qh-left">
+        <span class="quarter-label">Q4 2025</span>
+        <span class="quarter-title">October – December 2025</span>
+        <span class="quarter-count">24 items</span>
+      </div>
+      <span class="quarter-chevron">▾</span>
+    </div>
+    <div class="quarter-body open">
+
+      <!-- November 2025 -->
+      <div class="date-block">
+        <div class="date-heading">
+          <span class="date-stamp">November 2025</span>
+          <hr class="date-rule">
+        </div>
+
+        <div class="card-group">
+          <div class="card-label">Global Affairs</div>
+          <div class="entry"><a href="https://jhnday.github.io/CrntEvnts/iran_capital_relocation_report" class="entry-pill" target="_blank" rel="noopener">Iran's Capital Crisis</a></div>
+          <div class="entry"><a href="https://jhnday.github.io/CrntEvnts/indonesia-gaza-visualization" class="entry-pill" target="_blank" rel="noopener">Indonesia Volunteers for Gaza</a></div>
+          <div class="sub-label">Peace in Our Times?</div>
+          <div class="entry"><a href="https://jhnday.github.io/CrntEvnts/geopolitical_overview" class="entry-pill" target="_blank" rel="noopener">Couric and Haass Talk</a></div>
+          <div class="entry"><a href="https://jhnday.github.io/CrntEvnts/friedman_chamberlain_peace_prize" class="entry-pill" target="_blank" rel="noopener">The Ghost of Neville Chamberlain</a></div>
+        </div>
+
+        <div class="card-group">
+          <div class="card-label">Institutional Inertia</div>
+          <div class="entry"><a href="https://jhnday.github.io/CrntEvnts/hhs_layoffs" class="entry-pill" target="_blank" rel="noopener">Failure to Further Gut the Federal Work Force</a></div>
+          <div class="entry"><a href="https://jhnday.github.io/CrntEvnts/voa-story" class="entry-pill" target="_blank" rel="noopener">Voice of America — Down But Not Out</a></div>
+          <div class="entry"><a href="https://jhnday.github.io/CrntEvnts/democratic_victories_nov2025" class="entry-pill" target="_blank" rel="noopener">Democratic Victories Nov 5</a></div>
+          <div class="entry"><a href="https://jhnday.github.io/CrntEvnts/trump_analysis_nov2025" class="entry-pill" target="_blank" rel="noopener">Institutional Resilience</a></div>
+          <div class="entry"><a href="https://jhnday.github.io/CrntEvnts/ShutdownPoker" class="entry-pill" target="_blank" rel="noopener">Know When to Hold and When to Fold</a></div>
+          <div class="entry"><a href="https://www.youtube.com/shorts/NMSrhJHilwk" class="entry-pill" target="_blank" rel="noopener">Poker Face?</a></div>
+        </div>
+      </div>
+
+      <!-- October 2025 -->
+      <div class="date-block">
+        <div class="date-heading">
+          <span class="date-stamp">October 2025</span>
+          <hr class="date-rule">
+        </div>
+
+        <div class="card-group">
+          <div class="card-label">Magic Wand Challenge</div>
+          <div class="entry"><a href="https://jhnday.github.io/CrntEvnts/GovPolicyDeals" class="entry-pill" target="_blank" rel="noopener">Evolution of Government Relationship to Citizenry</a></div>
+          <div class="entry"><a href="https://jhnday.github.io/CrntEvnts/PoliticalRealignment" class="entry-pill" target="_blank" rel="noopener">Political Realignment</a></div>
+          <div class="entry"><a href="https://jhnday.github.io/CrntEvnts/LiberalismBlueprint" class="entry-pill" target="_blank" rel="noopener">Remaking Liberalism</a></div>
+          <div class="entry"><a href="https://jhnday.github.io/CrntEvnts/Project2029" class="entry-pill" target="_blank" rel="noopener">Project 2029 — NYTimes Article</a></div>
+          <div class="entry"><a href="https://www.project2029.me/" class="entry-pill" target="_blank" rel="noopener">Project 2029 Home Page</a></div>
+          <div class="entry"><a href="https://jhnday.github.io/CrntEvnts/PDOct0625.html" class="entry-pill" target="_blank" rel="noopener">Off-Cycle Session: Between the Lines</a></div>
+          <div class="entry"><a href="https://jhnday.github.io/CrntEvnts/talarico_profile" class="entry-pill" target="_blank" rel="noopener">James Talarico — A New Voice</a></div>
+        </div>
+
+        <div class="card-group">
+          <div class="card-label">It's the Jobs, Stupid</div>
+          <div class="entry"><a href="https://jhnday.github.io/CrntEvnts/ManufacturingJobsCrisis" class="entry-pill" target="_blank" rel="noopener">🏭 Manufacturing Jobs Crisis</a></div>
+          <div class="entry"><a href="https://jhnday.github.io/CrntEvnts/ManufacturingPolitics" class="entry-pill" target="_blank" rel="noopener">🗳️ Manufacturing Populism</a></div>
+          <div class="entry"><a href="https://jhnday.github.io/CrntEvnts/acemoglu-liberalism" class="entry-pill" target="_blank" rel="noopener">💡 Remaking Liberalism</a></div>
+        </div>
+
+        <div class="card-group">
+          <div class="card-label">Mad Capp Al Capp — The country is in the very best of hands…</div>
+          <div class="entry"><a href="https://www.youtube.com/watch?v=NwqPBlSxb-0&list=RDNwqPBlSxb-0&start_radio=1" class="entry-pill" target="_blank" rel="noopener">Li'l Abner</a></div>
+          <div class="entry"><a href="https://jhnday.github.io/CrntEvnts/KimmelFolkSong" class="entry-pill" target="_blank" rel="noopener">The Lyrics — Then and Now</a></div>
+          <div class="entry"><a href="https://jhnday.github.io/CrntEvnts/tariff_folk_song_html" class="entry-pill" target="_blank" rel="noopener">Mad Cap Al Capp</a></div>
+          <div class="entry"><a href="https://jhnday.github.io/CrntEvnts/capp_kimmel_comparison" class="entry-pill" target="_blank" rel="noopener">Satire — Then and Now</a></div>
+        </div>
+
+        <div class="card-group">
+          <div class="card-label">Being Funny Is Serious Business</div>
+          <div class="entry"><a href="https://brandeis.zoom.us/clips/share/acf139_WQNOKEEKy0q6r1w" class="entry-pill" target="_blank" rel="noopener">Jimmy Kimmel Sep 25 Highlights</a></div>
+          <div class="entry"><a href="https://jhnday.github.io/CrntEvnts/KimmelHumor" class="entry-pill" target="_blank" rel="noopener">On the Importance of Being Funny</a></div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /Q4 2025 -->
+
+  <p class="archive-footer">
+    Items arrive here via the <strong style="font-style:normal;color:var(--ink);">Archive Pill / Reference</strong> command.
+    Filed by date first; source card label noted beneath each date.
+  </p>
+
+</div>
+
+<script>
+  function toggleQuarter(header) {
+    header.classList.toggle('open');
+    header.nextElementSibling.classList.toggle('open');
+  }
+</script>
+
+</body>
+</html>
