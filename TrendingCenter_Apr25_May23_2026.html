@@ -1,0 +1,1187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trending News from the Center — Apr 25–May 23, 2026</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      background: #a8c4e8;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+    }
+
+    /* ── HEADER ──────────────────────────────────────────── */
+    .header {
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #667eea 100%);
+      padding: 36px 32px 28px;
+      text-align: center;
+      color: white;
+    }
+
+    .header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .header .subtitle {
+      font-size: 0.95rem;
+      opacity: 0.85;
+      margin-bottom: 18px;
+      letter-spacing: 0.04em;
+    }
+
+    /* ── SOURCE PILLS ────────────────────────────────────── */
+    .sources-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: center;
+      margin-top: 14px;
+    }
+
+    .sources-bar a {
+      font-size: 11px;
+      color: #fff;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 4px;
+      padding: 3px 10px;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .sources-bar a:hover {
+      background: rgba(255,255,255,0.35);
+    }
+
+    /* ── LEGEND ──────────────────────────────────────────── */
+    .legend {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 20px 10px;
+      font-size: 12px;
+      color: #555;
+      background: #a8c4e8;
+    }
+    .legend-bar {
+      width: 160px;
+      height: 7px;
+      border-radius: 4px;
+      background: linear-gradient(90deg, #cc0000, #ff6600, #ff9944, #ffcc55, #5577ff);
+    }
+
+    /* ── INSTRUCTIONS ────────────────────────────────────── */
+    .instructions {
+      text-align: center;
+      font-size: 12px;
+      color: #888;
+      padding-bottom: 12px;
+      letter-spacing: 0.03em;
+      background: #a8c4e8;
+    }
+
+    /* ── TOPIC CARDS ─────────────────────────────────────── */
+    .topics-list {
+      padding: 0 20px 30px;
+      background: #a8c4e8;
+    }
+
+    .card {
+      margin-bottom: 12px;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      padding: 16px 20px;
+      cursor: pointer;
+      user-select: none;
+      color: white;
+      position: relative;
+      gap: 12px;
+      transition: filter 0.2s;
+    }
+    .card-header:hover { filter: brightness(1.08); }
+
+    /* Red → Orange → Yellow → Olive → Green → Teal → Blue → Indigo → Purple → Deep Purple */
+    .level-1  { background: linear-gradient(135deg, #cc0000 0%, #990000 100%); }
+    .level-2  { background: linear-gradient(135deg, #e63000 0%, #c02000 100%); }
+    .level-3  { background: linear-gradient(135deg, #e86a00 0%, #c05000 100%); }
+    .level-4  { background: linear-gradient(135deg, #d4a000 0%, #a07800 100%); }
+    .level-5  { background: linear-gradient(135deg, #b8b800 0%, #888800 100%); }
+    .level-6  { background: linear-gradient(135deg, #2e9e5a 0%, #1a7040 100%); }
+    .level-7  { background: linear-gradient(135deg, #2a9eaa 0%, #1a7080 100%); }
+    .level-8  { background: linear-gradient(135deg, #2a7fcc 0%, #1a5a99 100%); }
+    .level-9  { background: linear-gradient(135deg, #1a5fa8 0%, #0e3d70 100%); }
+    .level-10 { background: linear-gradient(135deg, #5533aa 0%, #3a1f77 100%); }
+    .level-11 { background: linear-gradient(135deg, #7722aa 0%, #551188 100%); }
+
+    .card-rank {
+      font-size: 11px;
+      opacity: 0.7;
+      min-width: 22px;
+    }
+
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+      flex: 1;
+    }
+
+    .card-count {
+      font-size: 12px;
+      background: rgba(0,0,0,0.25);
+      padding: 3px 10px;
+      border-radius: 12px;
+      white-space: nowrap;
+    }
+
+    .card-chevron {
+      font-size: 16px;
+      opacity: 0.8;
+      transition: transform 0.3s ease;
+    }
+    .card-chevron.rotated { transform: rotate(180deg); }
+
+    /* ── CARD BODY ───────────────────────────────────────── */
+    .card-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease-in-out;
+      background: #b8ccec;
+    }
+    .card-body.expanded { max-height: 3200px; }
+
+    .card-body-inner {
+      padding: 18px 20px 20px;
+      border-top: 2px solid rgba(102,126,234,0.25);
+    }
+
+    /* ── SUBTOPIC CARDS ──────────────────────────────────── */
+    .subtopics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .subtopic {
+      background: white;
+      border-left: 3px solid #667eea;
+      border-radius: 6px;
+      padding: 11px 14px;
+      box-shadow: 0 2px 6px rgba(102,126,234,0.12);
+    }
+
+    .subtopic-src {
+      margin-top: 8px;
+      padding-top: 6px;
+      border-top: 1px solid rgba(102,126,234,0.2);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+    .subtopic-src a {
+      font-size: 10px;
+      color: #2a5298;
+      background: #eef2ff;
+      border: 1px solid #c7d2fe;
+      border-radius: 3px;
+      padding: 2px 7px;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .subtopic-src a:hover {
+      background: #667eea;
+      color: white;
+      border-color: #667eea;
+    }
+
+    .subtopic-title {
+      font-weight: 600;
+      color: #1e3c72;
+      font-size: 0.875rem;
+      margin-bottom: 5px;
+    }
+
+    .subtopic-detail {
+      font-size: 0.78rem;
+      color: #555;
+      line-height: 1.55;
+    }
+
+    /* ── SECTION SOURCES ─────────────────────────────────── */
+    .section-sources {
+      font-size: 11px;
+      color: #888;
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+    }
+    .section-sources strong { color: #555; }
+    .section-sources a {
+      color: #2a5298;
+      text-decoration: none;
+      background: #eef2ff;
+      padding: 2px 8px;
+      border-radius: 3px;
+    }
+    .section-sources a:hover {
+      background: #667eea;
+      color: white;
+    }
+
+    /* ── FOOTER ──────────────────────────────────────────── */
+    .footer {
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+      color: rgba(255,255,255,0.8);
+      text-align: center;
+      padding: 22px 20px;
+      font-size: 11px;
+      line-height: 1.8;
+    }
+    .footer a {
+      color: #a8c4ff;
+      text-decoration: none;
+    }
+    .footer a:hover { text-decoration: underline; color: #fff; }
+
+    @media (max-width: 600px) {
+      .subtopics-grid { grid-template-columns: 1fr; }
+      .header h1 { font-size: 1.4rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- ══ HEADER ══════════════════════════════════════════ -->
+  <div class="header">
+    <h1>📰 Trending from the Center · Apr 25–May 23, 2026</h1>
+    <div class="subtitle">11 Categories &nbsp;·&nbsp; Ordered by coverage volume &nbsp;·&nbsp; 9 sources</div>
+
+    <div class="sources-bar">
+      <a href="https://www.nytimes.com/section/politics" target="_blank">New York Times</a>
+      <a href="https://www.cnn.com/politics" target="_blank">CNN</a>
+      <a href="https://www.npr.org/sections/politics" target="_blank">NPR</a>
+      <a href="https://www.bbc.com/news/world/us_and_canada" target="_blank">BBC</a>
+      <a href="https://www.theguardian.com/us-news" target="_blank">The Guardian</a>
+      <a href="https://www.politico.com" target="_blank">Politico</a>
+      <a href="https://www.theatlantic.com/politics/" target="_blank">The Atlantic</a>
+      <a href="https://www.aljazeera.com/news/us" target="_blank">Al Jazeera</a>
+      <a href="https://www.haaretz.com/us-news" target="_blank">Haaretz</a>
+    </div>
+  </div>
+
+  <!-- ── LEGEND ── -->
+  <div class="legend">
+    <span>Most coverage</span>
+    <div class="legend-bar"></div>
+    <span>Least coverage</span>
+  </div>
+  <div class="instructions">Click any category to expand · sections ordered by descending mention count</div>
+
+  <!-- ══ TOPICS ══════════════════════════════════════════ -->
+  <div class="topics-list">
+
+    <!-- 1. MIDDLE EAST -->
+    <div class="card">
+      <div class="card-header level-1" onclick="toggle(this)">
+        <span class="card-rank">01</span>
+        <span class="card-title">Middle East</span>
+        <span class="card-count">65 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+
+            <div class="subtopic">
+              <div class="subtopic-title">Iran War Ceasefire &amp; Hormuz Standoff</div>
+              <div class="subtopic-detail">The April 8 US-Iran ceasefire — mediated by Pakistan — remains fragile. Iran presented a 14-point response to US proposals that Trump called "unacceptable." Both sides continue maintaining naval positions near the Strait of Hormuz, and a cargo ship was hit near Qatar on May 10. The conflict began February 28 with coordinated US-Israeli strikes killing Iran's Supreme Leader.</div>
+              <div class="subtopic-src">
+                <a href="https://www.npr.org/sections/middle-east-crisis" target="_blank">NPR Mid-East</a>
+                <a href="https://www.nytimes.com/section/world/middleeast" target="_blank">NYT Mid-East</a>
+                <a href="https://www.bbc.com/news/world/middle_east" target="_blank">BBC World</a>
+                <a href="https://www.aljazeera.com/news/middleeast" target="_blank">Al Jazeera</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Nuclear Talks — Iran's 14-Point Response</div>
+              <div class="subtopic-detail">Iran submitted a formal written response to US proposals during ceasefire negotiations in May. Iran said it will seek "a new arrangement" for maritime traffic through Hormuz but both blockades remain in place. US-Iran talks hosted through intermediaries involve nuclear program constraints, sanctions relief, and prisoner exchanges as key sticking points.</div>
+              <div class="subtopic-src">
+                <a href="https://www.npr.org/sections/middle-east-crisis" target="_blank">NPR</a>
+                <a href="https://www.nytimes.com/section/world/middleeast" target="_blank">NYT</a>
+                <a href="https://www.theguardian.com/world/iran" target="_blank">Guardian: Iran</a>
+                <a href="https://www.aljazeera.com/news/middleeast" target="_blank">Al Jazeera</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Gaza — Scale of Destruction &amp; Humanitarian Crisis</div>
+              <div class="subtopic-detail">More than two years after the war began, the UN estimates most buildings in Gaza have been damaged or destroyed. NPR investigated a single 2024 Israeli strike that killed 132 related victims in one apartment building, mapping the family tree for the first time. Crews have begun recovering remains buried under rubble in months-old blast sites.</div>
+              <div class="subtopic-src">
+                <a href="https://www.npr.org/series/1205445976/middle-east-crisis" target="_blank">NPR Gaza</a>
+                <a href="https://www.theguardian.com/world/gaza" target="_blank">Guardian: Gaza</a>
+                <a href="https://www.aljazeera.com/where/gaza-strip/" target="_blank">Al Jazeera Gaza</a>
+                <a href="https://www.haaretz.com/israel-news/war-in-gaza" target="_blank">Haaretz</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Lebanon Ceasefire Erosion — Escalating Hezbollah Clashes</div>
+              <div class="subtopic-detail">Despite an official ceasefire, the UN reported that fighting between Israel and Hezbollah in south Lebanon reached its most intense level since the original truce during the first week of May 2026. A 45-day ceasefire extension was secured during the Trump-Xi summit in Beijing. Israel accused Hezbollah of systematic violations while rebuilding its arsenal.</div>
+              <div class="subtopic-src">
+                <a href="https://www.bbc.com/news/world/middle_east" target="_blank">BBC World</a>
+                <a href="https://www.npr.org/sections/middle-east-crisis" target="_blank">NPR</a>
+                <a href="https://www.haaretz.com" target="_blank">Haaretz</a>
+                <a href="https://www.aljazeera.com" target="_blank">Al Jazeera</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Israel-Hamas Hostage Deals &amp; Gaza Governance</div>
+              <div class="subtopic-detail">Both Hamas and Hezbollah have rejected disarmament proposals, citing ongoing Israeli threats. The UN is developing a National Transitional Committee for Gaza's post-war governance. Hamas replaced its military wing leader per IDF reports, while 19 Gaza ceasefire violations were tallied between May 6–20 — a period that overlapped with Israeli ongoing operations.</div>
+              <div class="subtopic-src">
+                <a href="https://www.haaretz.com/israel-news/war-in-gaza" target="_blank">Haaretz</a>
+                <a href="https://www.aljazeera.com/where/gaza-strip/" target="_blank">Al Jazeera</a>
+                <a href="https://www.nytimes.com/section/world/middleeast" target="_blank">NYT</a>
+                <a href="https://www.bbc.com/news/world/middle_east" target="_blank">BBC</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Regional Escalation — Houthis, Iraq Drones, Jordan Strikes</div>
+              <div class="subtopic-detail">The Houthis resumed attacks against Israel on March 28 with ballistic missiles targeting sensitive military sites. Drones launched from Iraq struck Saudi and UAE territory. Iranian strikes during the initial war phase targeted US bases across the region, with Jordan and France among nations that intercepted incoming projectiles in their airspace.</div>
+              <div class="subtopic-src">
+                <a href="https://www.aljazeera.com/news/middleeast" target="_blank">Al Jazeera</a>
+                <a href="https://www.npr.org/sections/middle-east-crisis" target="_blank">NPR</a>
+                <a href="https://www.bbc.com/news/world/middle_east" target="_blank">BBC</a>
+                <a href="https://www.theguardian.com/world/middleeast" target="_blank">Guardian</a>
+              </div>
+            </div>
+
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://www.nytimes.com" target="_blank">NYT</a>
+            <a href="https://www.cnn.com" target="_blank">CNN</a>
+            <a href="https://www.npr.org" target="_blank">NPR</a>
+            <a href="https://www.bbc.com" target="_blank">BBC</a>
+            <a href="https://www.theguardian.com" target="_blank">Guardian</a>
+            <a href="https://www.aljazeera.com" target="_blank">Al Jazeera</a>
+            <a href="https://www.haaretz.com" target="_blank">Haaretz</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. SUPREME COURT AND OTHER LEGAL ISSUES -->
+    <div class="card">
+      <div class="card-header level-2" onclick="toggle(this)">
+        <span class="card-rank">02</span>
+        <span class="card-title">Supreme Court and Other Legal Issues</span>
+        <span class="card-count">55 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+
+            <div class="subtopic">
+              <div class="subtopic-title">Voting Rights Act Gutted — Louisiana v. Callais (April 29)</div>
+              <div class="subtopic-detail">The Supreme Court ruled 6-3 along partisan lines that Louisiana's majority-Black congressional district constituted an "unconstitutional racial gerrymander." NPR's election law expert called it "one of the most important and most pernicious decisions in the last century." The court immediately finalized the ruling to let Louisiana redraw its map — expected to cost Democrats a seat — in time for November 2026.</div>
+              <div class="subtopic-src">
+                <a href="https://www.npr.org/2026/04/29/nx-s1-5754657/supreme-court-louisiana-redistricting" target="_blank">NPR VRA Ruling</a>
+                <a href="https://www.nytimes.com/section/us/politics" target="_blank">NYT Politics</a>
+                <a href="https://www.theguardian.com/law/us-supreme-court" target="_blank">Guardian: SCOTUS</a>
+                <a href="https://www.politico.com/news/courts" target="_blank">Politico Courts</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Birthright Citizenship — Trump v. Barbara (Decision Imminent)</div>
+              <div class="subtopic-detail">Trump's Day 1 executive order ending birthright citizenship for children of undocumented immigrants has been blocked by lower courts. The Supreme Court's term closes in late June; most Court-watchers expect Trump to lose, given justices' skeptical questioning. The case could establish the clearest interpretation of the 14th Amendment's Citizenship Clause in over a century.</div>
+              <div class="subtopic-src">
+                <a href="https://www.nytimes.com/section/us/politics" target="_blank">NYT Politics</a>
+                <a href="https://www.npr.org/sections/politics" target="_blank">NPR Politics</a>
+                <a href="https://www.cnn.com/politics" target="_blank">CNN Politics</a>
+                <a href="https://www.politico.com/news/courts" target="_blank">Politico</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Independent Agency Firings — Fed Chair Independence at Stake</div>
+              <div class="subtopic-detail">Four major Trump-related cases remain undecided as the term winds down, including Trump's attempt to fire Federal Reserve Governor Lisa Cook and an FTC commissioner. During January arguments, most justices expressed concern over implications for the Fed's independence. Justice Kavanaugh signaled interest in a possible Fed exception even if the Court broadly rules for Trump on agency firings.</div>
+              <div class="subtopic-src">
+                <a href="https://www.nytimes.com/section/us/politics" target="_blank">NYT Politics</a>
+                <a href="https://www.politico.com/news/courts" target="_blank">Politico</a>
+                <a href="https://www.theatlantic.com/politics/" target="_blank">The Atlantic</a>
+                <a href="https://www.bbc.com/news/world/us_and_canada" target="_blank">BBC US</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Pam Bondi Fired — DOJ Leadership in Flux</div>
+              <div class="subtopic-detail">Attorney General Pam Bondi was fired by Trump on April 2, 2026 — reportedly after Trump said "I think it's time" during a ride to the Supreme Court — over her mishandling of the Epstein files, failure to prosecute political opponents, and poor public communications. She is replaced on an interim basis by Deputy AG Todd Blanche. Bondi remains under congressional subpoena to testify on Epstein documents.</div>
+              <div class="subtopic-src">
+                <a href="https://www.cnn.com/2026/04/02/politics/pam-bondi-role-trump" target="_blank">CNN: Bondi Fired</a>
+                <a href="https://www.nytimes.com/section/us/politics" target="_blank">NYT Politics</a>
+                <a href="https://www.aljazeera.com/news/us" target="_blank">Al Jazeera US</a>
+                <a href="https://www.politico.com" target="_blank">Politico</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">SCOTUS Tariff Ruling — Aftermath &amp; Section 122</div>
+              <div class="subtopic-detail">The Court's February 20 ruling (Learning Resources v. Trump, 6-3) struck IEEPA-based tariffs. Trump pivoted immediately to a 15% global tariff under the rarely-used Section 122 of the Trade Act — limited to 150 days unless Congress votes to extend it. The congressional extension vote is expected weeks before the November midterms, forcing lawmakers into an accountability moment.</div>
+              <div class="subtopic-src">
+                <a href="https://www.npr.org/2026/02/20/tariffs-supreme-court" target="_blank">NPR: Tariffs</a>
+                <a href="https://www.nytimes.com/section/us/politics" target="_blank">NYT</a>
+                <a href="https://www.politico.com" target="_blank">Politico</a>
+                <a href="https://www.theatlantic.com/politics/" target="_blank">The Atlantic</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Transgender Sports, TPS, and End-of-Term Cluster</div>
+              <div class="subtopic-detail">Six additional cases await decisions before the term closes: West Virginia v. B.P.J. and Little v. Hecox address transgender athletes in women's sports; a third case involves ending Temporary Protected Status for hundreds of thousands of Haitian and Syrian nationals. Opinions in all are expected by late June, completing what legal scholars call one of the most consequential SCOTUS terms in decades.</div>
+              <div class="subtopic-src">
+                <a href="https://www.nytimes.com/section/us/politics" target="_blank">NYT</a>
+                <a href="https://www.politico.com/news/courts" target="_blank">Politico</a>
+                <a href="https://www.theguardian.com/law/us-supreme-court" target="_blank">Guardian</a>
+                <a href="https://www.cnn.com/politics" target="_blank">CNN</a>
+              </div>
+            </div>
+
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://www.nytimes.com" target="_blank">NYT</a>
+            <a href="https://www.cnn.com" target="_blank">CNN</a>
+            <a href="https://www.npr.org" target="_blank">NPR</a>
+            <a href="https://www.politico.com" target="_blank">Politico</a>
+            <a href="https://www.theatlantic.com" target="_blank">Atlantic</a>
+            <a href="https://www.theguardian.com" target="_blank">Guardian</a>
+            <a href="https://www.aljazeera.com" target="_blank">Al Jazeera</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. TRUMP ADMINISTRATION REVERSALS & GROWING LIABILITIES -->
+    <div class="card">
+      <div class="card-header level-3" onclick="toggle(this)">
+        <span class="card-rank">03</span>
+        <span class="card-title">Trump Administration Reversals &amp; Growing Liabilities</span>
+        <span class="card-count">52 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+
+            <div class="subtopic">
+              <div class="subtopic-title">Iran War Undermines Big Beautiful Bill Tax Promise</div>
+              <div class="subtopic-detail">Trump repeatedly promised the Big Beautiful Bill (enacted July 2025) would deliver $1,000 in additional household tax refunds. IRS data showed average refunds had risen only ~$351 by Tax Day 2026. Goldman Sachs projects real consumption growth of just 1.2% for 2026, partly because surging oil prices from the Iran war and Hormuz restrictions have eroded spending power — especially for lower-income families.</div>
+              <div class="subtopic-src">
+                <a href="https://www.nytimes.com/section/business" target="_blank">NYT Business</a>
+                <a href="https://www.cnn.com/business" target="_blank">CNN Business</a>
+                <a href="https://www.npr.org/sections/economy" target="_blank">NPR Economy</a>
+                <a href="https://www.politico.com/economy" target="_blank">Politico Economy</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">No Kings Protests — Mass Demonstrations Continue</div>
+              <div class="subtopic-detail">The March 2026 No Kings protests drew over 4 million at 2,100+ locations — the third major wave since June 2025, organized around the anniversary of Trump's expanded second term. Causes listed include immigration enforcement shootings, the Iran war, DOGE cuts, and the Big Beautiful Bill's Medicaid changes. The protests have become a barometer of organized opposition strength heading into midterms.</div>
+              <div class="subtopic-src">
+                <a href="https://www.nytimes.com/section/us/politics" target="_blank">NYT US</a>
+                <a href="https://www.npr.org/sections/politics" target="_blank">NPR Politics</a>
+                <a href="https://www.theguardian.com/us-news" target="_blank">Guardian US</a>
+                <a href="https://www.bbc.com/news/world/us_and_canada" target="_blank">BBC US</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Cabinet Upheaval — Bondi, Noem, and the Revolving Door</div>
+              <div class="subtopic-detail">Pam Bondi (fired April 2) is the second Cabinet member removed after Kristi Noem (March 5). Both were high-profile loyalists. The pattern of firing prominent allies fits what Politico and the Atlantic have described as Trump's "loyalty trap" — officials praised effusively in public, then removed for failure to deliver. Lee Zeldin (EPA) is reported to be under consideration as Bondi's permanent replacement.</div>
+              <div class="subtopic-src">
+                <a href="https://www.cnn.com/2026/04/02/politics/pam-bondi-role-trump" target="_blank">CNN: Bondi</a>
+                <a href="https://www.politico.com" target="_blank">Politico</a>
+                <a href="https://www.theatlantic.com/politics/" target="_blank">The Atlantic</a>
+                <a href="https://www.bbc.com/news/world/us_and_canada" target="_blank">BBC US</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Tariff Policy — Post-SCOTUS Uncertainty</div>
+              <div class="subtopic-detail">The average tariff burden on US households in 2026 is estimated at $1,500 — the largest US tax increase as a share of GDP since 1993. After the SCOTUS IEEPA ruling, the replacement Section 122 tariff (15%) expires July 24 unless extended by Congress. The administration faces a new USTR-initiated Section 301 investigation as an alternative authority to reimpose trade restrictions.</div>
+              <div class="subtopic-src">
+                <a href="https://www.nytimes.com/section/business" target="_blank">NYT Business</a>
+                <a href="https://www.politico.com" target="_blank">Politico</a>
+                <a href="https://www.npr.org/sections/economy" target="_blank">NPR Economy</a>
+                <a href="https://www.bbc.com/news/business" target="_blank">BBC Business</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Iran War Constitutionality — Congress and War Powers</div>
+              <div class="subtopic-detail">The February 28 US-Israeli strikes on Iran were conducted without congressional authorization, reigniting a debate over the War Powers Resolution that has been unresolved since Vietnam. The Atlantic and Politico ran major features on whether Trump's unilateral military action represents a permanent shift in executive war-making authority — with no realistic prospect of congressional challenge.</div>
+              <div class="subtopic-src">
+                <a href="https://www.theatlantic.com/politics/" target="_blank">The Atlantic</a>
+                <a href="https://www.politico.com" target="_blank">Politico</a>
+                <a href="https://www.nytimes.com/section/us/politics" target="_blank">NYT Politics</a>
+                <a href="https://www.theguardian.com/us-news" target="_blank">Guardian US</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">DOGE Aftermath — Workforce and Service Impacts</div>
+              <div class="subtopic-detail">Musk's departure from the White House on May 30, 2025 left DOGE's legacy in question: federal workforce reduced by tens of thousands, agencies consolidated or eliminated, and the Treasury/IRS access fights now resolved against the administration by courts. The Atlantic documented the grinding human costs — delayed VA benefits, shuttered rural USDA offices, and backlogs in Social Security administration.</div>
+              <div class="subtopic-src">
+                <a href="https://www.theatlantic.com/politics/" target="_blank">The Atlantic</a>
+                <a href="https://www.nytimes.com/section/us" target="_blank">NYT US</a>
+                <a href="https://www.npr.org/sections/politics" target="_blank">NPR Politics</a>
+                <a href="https://www.theguardian.com/us-news" target="_blank">Guardian US</a>
+              </div>
+            </div>
+
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://www.nytimes.com" target="_blank">NYT</a>
+            <a href="https://www.cnn.com" target="_blank">CNN</a>
+            <a href="https://www.npr.org" target="_blank">NPR</a>
+            <a href="https://www.politico.com" target="_blank">Politico</a>
+            <a href="https://www.theatlantic.com" target="_blank">Atlantic</a>
+            <a href="https://www.theguardian.com" target="_blank">Guardian</a>
+            <a href="https://www.bbc.com" target="_blank">BBC</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. ELECTORAL POLITICS -->
+    <div class="card">
+      <div class="card-header level-4" onclick="toggle(this)">
+        <span class="card-rank">04</span>
+        <span class="card-title">Electoral Politics</span>
+        <span class="card-count">48 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+
+            <div class="subtopic">
+              <div class="subtopic-title">May 19 Primaries — Georgia Senate &amp; Governor Races</div>
+              <div class="subtopic-detail">Georgia's high-stakes primaries see incumbent Sen. Jon Ossoff (D) running for re-election in the cycle's most competitive Senate seat. The GOP field — led by Rep. Mike Collins — heads to a runoff. For governor, former Atlanta Mayor Keisha Lance Bottoms led the Democratic primary field of seven. Georgia may be the Democrats' best pick-up opportunity and the GOP's best Senate target of 2026.</div>
+              <div class="subtopic-src">
+                <a href="https://www.nytimes.com/section/us/politics" target="_blank">NYT Politics</a>
+                <a href="https://www.politico.com/2026-elections" target="_blank">Politico Elections</a>
+                <a href="https://www.cnn.com/2026/05/19/politics/massie-gallrein-kentucky-georgia-primaries" target="_blank">CNN Primaries</a>
+                <a href="https://www.npr.org/sections/elections/" target="_blank">NPR Elections</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Massie Ousted — Trump's Retribution Campaign</div>
+              <div class="subtopic-detail">Rep. Thomas Massie was defeated in Kentucky's 4th District primary on May 19 by Trump-backed challenger Ed Gallrein, ending a 14-year tenure. The race became the most expensive House primary in US history at $33M+. Trump personally commissioned polling, backed the MAGA KY super PAC, and reportedly offered a third challenger an ambassadorship two weeks before Election Day to split the anti-Gallrein vote.</div>
+              <div class="subtopic-src">
+                <a href="https://www.cnn.com/2026/05/19/politics/massie-gallrein-kentucky-georgia-primaries" target="_blank">CNN: Massie Defeat</a>
+                <a href="https://www.nytimes.com/section/us/politics" target="_blank">NYT Politics</a>
+                <a href="https://www.npr.org/sections/elections/" target="_blank">NPR Elections</a>
+                <a href="https://www.politico.com" target="_blank">Politico</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">VRA Ruling's Electoral Map Consequences</div>
+              <div class="subtopic-detail">The April 29 SCOTUS ruling in Louisiana v. Callais could allow Republicans to pick up one or two House seats in Louisiana alone. NPR analysis found the ripple effects could threaten minority representation in at least 17 state and local governments. Democrats immediately announced redistricting litigation in several states, while Alabama rushed to the Court to clear its blocked 2023 map.</div>
+              <div class="subtopic-src">
+                <a href="https://www.npr.org/2026/04/29/nx-s1-5754657/supreme-court-louisiana-redistricting" target="_blank">NPR: VRA</a>
+                <a href="https://www.nytimes.com/section/us/politics" target="_blank">NYT Politics</a>
+                <a href="https://www.politico.com/2026-elections" target="_blank">Politico</a>
+                <a href="https://www.theguardian.com/us-news/voting-rights" target="_blank">Guardian</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Susan Collins — Maine Senate Battleground</div>
+              <div class="subtopic-detail">Sen. Collins is running on a seniority argument against Democratic challenger Graham Platner, urging voters that her senior position enables greater funding for Maine. Analysts rate the race as competitive. Collins has periodically broken with Trump — over DOGE, Ukraine aid, and Medicaid — making her a test of whether moderate Republicans can survive in the Trump era.</div>
+              <div class="subtopic-src">
+                <a href="https://www.npr.org/sections/elections/" target="_blank">NPR Elections</a>
+                <a href="https://www.politico.com/2026-elections" target="_blank">Politico</a>
+                <a href="https://www.nytimes.com/section/us/politics" target="_blank">NYT</a>
+                <a href="https://www.theatlantic.com/politics/" target="_blank">The Atlantic</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Democrats' Affordability Problem &amp; Progressive Surge</div>
+              <div class="subtopic-detail">Oregon voters rejected a Democratic-backed gas tax referendum on May 19, exposing an affordability tension within the party's coalition. Simultaneously, socialist candidate Chris Rabb won Pennsylvania's 3rd Congressional District primary — DSA's second nationally endorsed House candidate — reflecting a leftward energy among Democratic base voters energized by anti-war and anti-austerity sentiment.</div>
+              <div class="subtopic-src">
+                <a href="https://www.nytimes.com/section/us/politics" target="_blank">NYT Politics</a>
+                <a href="https://www.politico.com" target="_blank">Politico</a>
+                <a href="https://www.theatlantic.com/politics/" target="_blank">The Atlantic</a>
+                <a href="https://www.npr.org/sections/elections/" target="_blank">NPR Elections</a>
+              </div>
+            </div>
+
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://www.nytimes.com" target="_blank">NYT</a>
+            <a href="https://www.cnn.com" target="_blank">CNN</a>
+            <a href="https://www.npr.org" target="_blank">NPR</a>
+            <a href="https://www.politico.com" target="_blank">Politico</a>
+            <a href="https://www.theatlantic.com" target="_blank">Atlantic</a>
+            <a href="https://www.theguardian.com" target="_blank">Guardian</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. RELATIONS AMONG US, CHINA, AND RUSSIA -->
+    <div class="card">
+      <div class="card-header level-5" onclick="toggle(this)">
+        <span class="card-rank">05</span>
+        <span class="card-title">Relations Among US, China, and Russia</span>
+        <span class="card-count">45 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+
+            <div class="subtopic">
+              <div class="subtopic-title">Trump-Xi Beijing Summit (May 14–15) — First State Visit Since 2017</div>
+              <div class="subtopic-detail">Trump's two-day summit with Xi Jinping — the first US presidential state visit to China since Trump's own 2017 trip — covered trade, Taiwan, and the Iran war. China agreed in principle to a Board of Trade framework reducing tariffs on $30B of products each, and agreed to purchase 200 Boeing aircraft. Xi will visit the US in the fall. Critics note China appeared to hold the upper hand given US vulnerabilities on the Iran war and tariff instability.</div>
+              <div class="subtopic-src">
+                <a href="https://www.cnn.com/politics/live-news/trump-china-visit-xi-meeting-hnk" target="_blank">CNN: Summit</a>
+                <a href="https://www.nytimes.com/section/world/asia" target="_blank">NYT Asia</a>
+                <a href="https://www.bbc.com/news/world/asia/china" target="_blank">BBC China</a>
+                <a href="https://www.politico.com" target="_blank">Politico</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Taiwan — Policy Ambiguity Alarms Taipei</div>
+              <div class="subtopic-detail">Xi told Trump that Taiwan is "the most important issue" in their bilateral talks. Trump declined to publicly commit to continued arms sales, saying he'd like the status quo to "stay the way it is." Secretary Rubio insisted US policy is "unchanged," but Taipei officials said they watched closely and were concerned about Taiwan being "put on the menu" of US-China negotiations.</div>
+              <div class="subtopic-src">
+                <a href="https://www.nytimes.com/section/world/asia" target="_blank">NYT Asia</a>
+                <a href="https://www.politico.com" target="_blank">Politico</a>
+                <a href="https://www.theatlantic.com/international/" target="_blank">The Atlantic</a>
+                <a href="https://www.haaretz.com" target="_blank">Haaretz</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Putin Visits Beijing — Days After Trump's Departure</div>
+              <div class="subtopic-detail">Putin arrived in Beijing on May 20 for his own summit with Xi, issuing a joint statement opposing NATO-like alliances in Asia, endorsing trilateral nuclear talks with the US, and pledging deeper bilateral trade cooperation. The sequential summits — Trump first, Putin days later — highlighted China's positioning as the pivotal mediating power in the new multipolar order.</div>
+              <div class="subtopic-src">
+                <a href="https://www.bbc.com/news/world/europe" target="_blank">BBC Europe</a>
+                <a href="https://www.nytimes.com/section/world" target="_blank">NYT World</a>
+                <a href="https://www.theguardian.com/world/china" target="_blank">Guardian China</a>
+                <a href="https://www.aljazeera.com" target="_blank">Al Jazeera</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">US-China Trade Framework — Tariff Relief or Tactical Pause?</div>
+              <div class="subtopic-detail">China's Ministry of Commerce confirmed both sides "agreed in principle" to negotiate lower tariffs on $30B of mutual products, and confirmed Boeing aircraft purchases. In 2025, US-China trade reached $414.7B — nearly double Sino-Russian trade of $234B. The Dispatch and Politico note the deal lacks binding commitments on structural issues like subsidies, IP, or market access.</div>
+              <div class="subtopic-src">
+                <a href="https://www.nytimes.com/section/business" target="_blank">NYT Business</a>
+                <a href="https://www.politico.com" target="_blank">Politico</a>
+                <a href="https://www.cnn.com/business" target="_blank">CNN Business</a>
+                <a href="https://www.bbc.com/news/business" target="_blank">BBC Business</a>
+              </div>
+            </div>
+
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://www.nytimes.com" target="_blank">NYT</a>
+            <a href="https://www.cnn.com" target="_blank">CNN</a>
+            <a href="https://www.bbc.com" target="_blank">BBC</a>
+            <a href="https://www.politico.com" target="_blank">Politico</a>
+            <a href="https://www.theatlantic.com" target="_blank">Atlantic</a>
+            <a href="https://www.theguardian.com" target="_blank">Guardian</a>
+            <a href="https://www.aljazeera.com" target="_blank">Al Jazeera</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. FRACTURES IN THE MAGA COALITION -->
+    <div class="card">
+      <div class="card-header level-6" onclick="toggle(this)">
+        <span class="card-rank">06</span>
+        <span class="card-title">Fractures in the MAGA Coalition</span>
+        <span class="card-count">42 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+
+            <div class="subtopic">
+              <div class="subtopic-title">Massie Primary — Costliest House Primary Ever</div>
+              <div class="subtopic-detail">The $33M+ Kentucky 4th District race crystallized the MAGA coalition's internal war: Massie (libertarian, anti-war, deficit hawk, Epstein-disclosure advocate) vs. Gallrein (Navy SEAL, Trump loyalist). Pro-Israel groups (AIPAC, Republican Jewish Coalition) poured millions into the race, as Massie had co-sponsored Epstein disclosure legislation with Rep. Ro Khanna (D-CA). In his concession speech, Massie joked: "I had to find Ed Gallrein in Tel Aviv."</div>
+              <div class="subtopic-src">
+                <a href="https://www.nytimes.com/section/us/politics" target="_blank">NYT Politics</a>
+                <a href="https://www.cnn.com/2026/05/19/politics/massie-gallrein-kentucky-georgia-primaries" target="_blank">CNN: Massie</a>
+                <a href="https://www.politico.com" target="_blank">Politico</a>
+                <a href="https://www.theatlantic.com/politics/" target="_blank">The Atlantic</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Iran War Splits Anti-Interventionist MAGA Wing</div>
+              <div class="subtopic-detail">The Iran war exposed a deep fault line between the "America First" non-interventionist wing (Massie, Boebert, some libertarians) and the hawkish, Israel-aligned wing that controls the party apparatus. National Intelligence Director Tulsi Gabbard was reportedly rattled when Joe Kent resigned from the National Counterterrorism Center over the war's constitutionality.</div>
+              <div class="subtopic-src">
+                <a href="https://www.nytimes.com/section/us/politics" target="_blank">NYT Politics</a>
+                <a href="https://www.politico.com" target="_blank">Politico</a>
+                <a href="https://www.theatlantic.com/politics/" target="_blank">The Atlantic</a>
+                <a href="https://www.bbc.com/news/world/us_and_canada" target="_blank">BBC US</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Trump Retribution Wave — Cassidy, Indiana Senators Ousted</div>
+              <div class="subtopic-detail">Trump's political operation ousted five Indiana state senators who opposed his redistricting push and targeted Sen. Bill Cassidy (R-LA), who failed to advance from Louisiana's May 16 primary. Both Cassidy and Massie had voted against or criticized core Trump priorities. The CNN takeaway characterized it as "a May political payback tour" that has punished five Republicans in as many weeks.</div>
+              <div class="subtopic-src">
+                <a href="https://www.cnn.com/2026/05/19/politics/massie-gallrein-kentucky-georgia-primaries" target="_blank">CNN: Primaries</a>
+                <a href="https://www.politico.com" target="_blank">Politico</a>
+                <a href="https://www.nytimes.com/section/us/politics" target="_blank">NYT</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">MAGA Base Erosion — NBC Poll &amp; Softening Support</div>
+              <div class="subtopic-detail">An NBC survey found self-identified MAGA Republicans as a share of the party dropped 7 percentage points since April 2025. Trump's broader winning coalition — including "MAHA moms," tech bros, and non-traditional voters — is seen as more at risk than the hardcore base. Politico identified eight fault lines including the Iran war, Israel/antisemitism, MAHA, and Epstein files.</div>
+              <div class="subtopic-src">
+                <a href="https://www.politico.com" target="_blank">Politico</a>
+                <a href="https://www.nytimes.com/section/us/politics" target="_blank">NYT Politics</a>
+                <a href="https://www.theatlantic.com/politics/" target="_blank">The Atlantic</a>
+                <a href="https://www.npr.org/sections/politics" target="_blank">NPR Politics</a>
+              </div>
+            </div>
+
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://www.nytimes.com" target="_blank">NYT</a>
+            <a href="https://www.cnn.com" target="_blank">CNN</a>
+            <a href="https://www.politico.com" target="_blank">Politico</a>
+            <a href="https://www.theatlantic.com" target="_blank">Atlantic</a>
+            <a href="https://www.npr.org" target="_blank">NPR</a>
+            <a href="https://www.bbc.com" target="_blank">BBC</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. UKRAINE -->
+    <div class="card">
+      <div class="card-header level-7" onclick="toggle(this)">
+        <span class="card-rank">07</span>
+        <span class="card-title">Ukraine</span>
+        <span class="card-count">40 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+
+            <div class="subtopic">
+              <div class="subtopic-title">Three-Day VE Day Ceasefire &amp; Prisoner Exchange</div>
+              <div class="subtopic-detail">Trump brokered a three-day ceasefire for Russia's Victory Day (May 9-11), confirmed by both Zelenskyy and Putin's foreign affairs adviser. Each side agreed to release 1,000 prisoners — the largest single exchange of the conflict. On May 15, Russia and Ukraine swapped 205 POWs each, described as a first step toward a full 1,000-each exchange pledged under the terms.</div>
+              <div class="subtopic-src">
+                <a href="https://www.npr.org/2026/05/09/nx-s1-5816478/trump-russia-ukraine-ceasefire" target="_blank">NPR: Ceasefire</a>
+                <a href="https://www.nytimes.com/section/world/europe" target="_blank">NYT Europe</a>
+                <a href="https://www.bbc.com/news/world/europe" target="_blank">BBC Europe</a>
+                <a href="https://www.theguardian.com/world/ukraine" target="_blank">Guardian: Ukraine</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Highest Civilian Death Toll Since July 2025</div>
+              <div class="subtopic-detail">Despite ceasefire negotiations, the UN Human Rights Monitoring Mission documented 238 civilians killed and 1,404 injured in April 2026 — the highest monthly toll since July 2025. First-quarter 2026 civilian casualties ran 21% above the same period in 2025. Ukraine attributed the surge to Russia intensifying strikes as negotiations dragged, seeking to lock in battlefield gains before any deal.</div>
+              <div class="subtopic-src">
+                <a href="https://www.nytimes.com/section/world/europe" target="_blank">NYT Europe</a>
+                <a href="https://www.bbc.com/news/world/europe" target="_blank">BBC Europe</a>
+                <a href="https://www.theguardian.com/world/ukraine" target="_blank">Guardian</a>
+                <a href="https://www.aljazeera.com/news/europe" target="_blank">Al Jazeera</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">US Attention Diverted by Iran War</div>
+              <div class="subtopic-detail">Multiple outlets documented a notable reduction in US diplomatic bandwidth for Ukraine since the Iran war began in February. Zelenskyy's visit to Bahrain for "security cooperation" discussions was widely read as an attempt to build alternative support structures. The Atlantic and Politico both argued that Ukraine has escaped Trump's "permission trap" — moving on its own diplomatic path — which is good for Ukraine but unsettles US leverage.</div>
+              <div class="subtopic-src">
+                <a href="https://www.theatlantic.com/international/" target="_blank">The Atlantic</a>
+                <a href="https://www.politico.com" target="_blank">Politico</a>
+                <a href="https://www.nytimes.com/section/world/europe" target="_blank">NYT Europe</a>
+                <a href="https://www.bbc.com/news/world/europe" target="_blank">BBC</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Orthodox Easter Truce — 469 Russian Violations Reported</div>
+              <div class="subtopic-detail">A 32-hour truce for Orthodox Easter (April 11) was agreed following a prisoner exchange of ~175 detainees. Despite the announced ceasefire, Ukraine reported 469 Russian violations — mostly drone attacks — while Russia cited Ukrainian violations as well. The exchange itself was viewed as a rare constructive step, setting the template for the larger VE Day deal three weeks later.</div>
+              <div class="subtopic-src">
+                <a href="https://www.bbc.com/news/world/europe" target="_blank">BBC Europe</a>
+                <a href="https://www.nytimes.com/section/world/europe" target="_blank">NYT Europe</a>
+                <a href="https://www.theguardian.com/world/ukraine" target="_blank">Guardian</a>
+              </div>
+            </div>
+
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://www.nytimes.com" target="_blank">NYT</a>
+            <a href="https://www.bbc.com" target="_blank">BBC</a>
+            <a href="https://www.theguardian.com" target="_blank">Guardian</a>
+            <a href="https://www.politico.com" target="_blank">Politico</a>
+            <a href="https://www.theatlantic.com" target="_blank">Atlantic</a>
+            <a href="https://www.npr.org" target="_blank">NPR</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 8. ICE OPERATIONS -->
+    <div class="card">
+      <div class="card-header level-8" onclick="toggle(this)">
+        <span class="card-rank">08</span>
+        <span class="card-title">ICE Operations</span>
+        <span class="card-count">38 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+
+            <div class="subtopic">
+              <div class="subtopic-title">477K Deportations in 15 Months — Data Benchmarks</div>
+              <div class="subtopic-detail">The administration carried out 477,277 removals from January 19, 2025 through April 4, 2026. ICE arrests quadrupled (4.4x) compared to the Biden administration's final six months. Of the 60,311 people in ICE detention as of April 4, 70.8% had no criminal conviction. The administration promised to focus on "the worst of the worst," but data shows a much broader enforcement net.</div>
+              <div class="subtopic-src">
+                <a href="https://www.nytimes.com/section/us/immigration" target="_blank">NYT Immigration</a>
+                <a href="https://www.npr.org/sections/immigration" target="_blank">NPR Immigration</a>
+                <a href="https://www.cnn.com/politics" target="_blank">CNN Politics</a>
+                <a href="https://www.theguardian.com/us-news/immigration" target="_blank">Guardian Immigration</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">New Wave ICE Deployments — 40+ States</div>
+              <div class="subtopic-detail">A new wave of ICE deployments in spring 2026 targeted communities across more than 40 states, marking an expansion from initial border-centric operations. Public sentiment began to turn against the White House in 2025 as officers using military-style tactics rounded up people with no criminal record. One high-profile case: Milena Araya-Davis, who came to the US at age 4 with no criminal record.</div>
+              <div class="subtopic-src">
+                <a href="https://www.nytimes.com/section/us/immigration" target="_blank">NYT Immigration</a>
+                <a href="https://www.cnn.com/politics" target="_blank">CNN Politics</a>
+                <a href="https://www.bbc.com/news/world/us_and_canada" target="_blank">BBC US</a>
+                <a href="https://www.theguardian.com/us-news/immigration" target="_blank">Guardian</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Texas Detention Routing — Jurisdictional Strategy</div>
+              <div class="subtopic-detail">ICE disproportionately routes detainees from around the country to Texas facilities, where courts have allowed detention without bond. The Ero El Paso Camp averaged 2,505 detainees per day in FY2026. Immigration lawyers describe it as deliberate venue-shopping to maximize detention rates and reduce access to effective legal representation, creating a two-tier system based on detention geography.</div>
+              <div class="subtopic-src">
+                <a href="https://www.nytimes.com/section/us/immigration" target="_blank">NYT Immigration</a>
+                <a href="https://www.npr.org/sections/immigration" target="_blank">NPR</a>
+                <a href="https://www.theguardian.com/us-news/immigration" target="_blank">Guardian</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Children in Proceedings — Legal &amp; Humanitarian Concerns</div>
+              <div class="subtopic-detail">Reports document children as young as 4 being rushed through immigration proceedings. Separate NPR and Guardian reporting highlighted cases of US citizen children separated from deported parents, raising due process alarms. The American Immigration Council's May report argued that the system has been "built to produce deportations, not justice," and that billions in taxpayer funds are being spent on unnecessary detentions.</div>
+              <div class="subtopic-src">
+                <a href="https://www.npr.org/sections/immigration" target="_blank">NPR Immigration</a>
+                <a href="https://www.theguardian.com/us-news/immigration" target="_blank">Guardian</a>
+                <a href="https://www.cnn.com/politics" target="_blank">CNN</a>
+                <a href="https://www.bbc.com/news/world/us_and_canada" target="_blank">BBC US</a>
+              </div>
+            </div>
+
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://www.nytimes.com" target="_blank">NYT</a>
+            <a href="https://www.cnn.com" target="_blank">CNN</a>
+            <a href="https://www.npr.org" target="_blank">NPR</a>
+            <a href="https://www.theguardian.com" target="_blank">Guardian</a>
+            <a href="https://www.bbc.com" target="_blank">BBC</a>
+            <a href="https://www.politico.com" target="_blank">Politico</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 9. GOVERNMENT OVERSIGHT OF HEALTH CARE -->
+    <div class="card">
+      <div class="card-header level-9" onclick="toggle(this)">
+        <span class="card-rank">09</span>
+        <span class="card-title">Government Oversight of Health Care</span>
+        <span class="card-count">34 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+
+            <div class="subtopic">
+              <div class="subtopic-title">RFK Jr.'s Seven-Hearing Congressional Gauntlet</div>
+              <div class="subtopic-detail">HHS Secretary Kennedy completed a marathon seven-hearing week before Congress in April 2026, defending a 2027 HHS budget that cuts $15.8 billion and imposes new Medicaid work requirements. AP fact-checked Kennedy's repeated claim that "there are no cuts to Medicaid" as false. Protesters interrupted multiple hearings; Ben &amp; Jerry's co-founder Ben Cohen was among those ejected from the Senate HELP hearing.</div>
+              <div class="subtopic-src">
+                <a href="https://www.npr.org/sections/health-shots" target="_blank">NPR Health</a>
+                <a href="https://www.nytimes.com/section/health" target="_blank">NYT Health</a>
+                <a href="https://www.cnn.com/health" target="_blank">CNN Health</a>
+                <a href="https://www.politico.com/health-care" target="_blank">Politico Health</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Medicaid Cuts Approaching — Rural Hospitals at Risk</div>
+              <div class="subtopic-detail">The Big Beautiful Bill's Medicaid work requirements are edging toward implementation. Multiple outlets documented rural hospitals — many already operating near bankruptcy — facing closure under the new caps and eligibility restrictions. The Guardian reported that 13M+ people are projected to lose coverage over ten years under CBO-equivalent estimates, with disabled Americans and the working poor hit hardest.</div>
+              <div class="subtopic-src">
+                <a href="https://www.nytimes.com/section/health" target="_blank">NYT Health</a>
+                <a href="https://www.theguardian.com/us-news/health" target="_blank">Guardian Health</a>
+                <a href="https://www.cnn.com/health" target="_blank">CNN Health</a>
+                <a href="https://www.npr.org/sections/health-shots" target="_blank">NPR Health</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Measles Surge &amp; Vaccine Oversight Under Scrutiny</div>
+              <div class="subtopic-detail">Measles cases surged in 2025 as vaccination rates dropped following Kennedy's HHS restructuring of CDC advisory committees. The Atlantic ran a major feature on how Kennedy's ideologically-driven approach to the childhood vaccine schedule — delaying standard review processes — has created a dangerous gap in public health infrastructure, with international health organizations expressing alarm.</div>
+              <div class="subtopic-src">
+                <a href="https://www.theatlantic.com/health/" target="_blank">The Atlantic: Health</a>
+                <a href="https://www.nytimes.com/section/health" target="_blank">NYT Health</a>
+                <a href="https://www.npr.org/sections/health-shots" target="_blank">NPR Health</a>
+                <a href="https://www.bbc.com/news/health" target="_blank">BBC Health</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">HHS Staffing Collapse — 20K Jobs Cut</div>
+              <div class="subtopic-detail">HHS has been reduced from 82,000 to approximately 62,000 workers under Kennedy's restructuring. Programs affected include HIV prevention, maternal health, minority health services, and STI management. Kennedy frames the consolidation as eliminating redundancy into the new Administration for a Healthy America (AHA). Lawmakers from both parties have pressed for accountability on how cuts affect frontline services.</div>
+              <div class="subtopic-src">
+                <a href="https://www.nytimes.com/section/health" target="_blank">NYT Health</a>
+                <a href="https://www.cnn.com/health" target="_blank">CNN Health</a>
+                <a href="https://www.politico.com/health-care" target="_blank">Politico Health</a>
+                <a href="https://www.theguardian.com/us-news/health" target="_blank">Guardian</a>
+              </div>
+            </div>
+
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://www.nytimes.com" target="_blank">NYT</a>
+            <a href="https://www.cnn.com" target="_blank">CNN</a>
+            <a href="https://www.npr.org" target="_blank">NPR</a>
+            <a href="https://www.politico.com" target="_blank">Politico</a>
+            <a href="https://www.theatlantic.com" target="_blank">Atlantic</a>
+            <a href="https://www.theguardian.com" target="_blank">Guardian</a>
+            <a href="https://www.bbc.com" target="_blank">BBC</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 10. LATIN AMERICA AND CANADA -->
+    <div class="card">
+      <div class="card-header level-10" onclick="toggle(this)">
+        <span class="card-rank">10</span>
+        <span class="card-title">Latin America and Canada</span>
+        <span class="card-count">28 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+
+            <div class="subtopic">
+              <div class="subtopic-title">USMCA Review (July 1) — Canada-US Defense Board Suspended</div>
+              <div class="subtopic-detail">The US suspended the 86-year-old Permanent Joint Board on Defense on May 18, accusing Canada of failing its military commitments. Undersecretary Colby cited PM Carney's Davos speech as hostile rhetoric and noted Canada's reconsideration of its $11B F-35 purchase. The USMCA joint review begins July 1 — a $1T+ trade relationship under review as Canada pursues an EV deal with China that Washington says may violate the pact.</div>
+              <div class="subtopic-src">
+                <a href="https://www.bbc.com/news/world/us_and_canada" target="_blank">BBC US/Canada</a>
+                <a href="https://www.politico.com" target="_blank">Politico</a>
+                <a href="https://www.nytimes.com/section/world/americas" target="_blank">NYT Americas</a>
+                <a href="https://www.theguardian.com/world/canada" target="_blank">Guardian Canada</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">PM Carney Pivots to Diversification — China EV Deal</div>
+              <div class="subtopic-detail">At the May 9 Global Progress Action Summit in Toronto, Carney declared Canada must move "from reliance to resilience" — explicitly stepping back from dependence on the US market. Canada negotiated a deal with China lowering tariffs on Chinese EVs in exchange for lower taxes on Canadian farm products, directly antagonizing Washington ahead of the USMCA review. Over 75% of Canada's exports currently go to the US.</div>
+              <div class="subtopic-src">
+                <a href="https://www.theguardian.com/world/canada" target="_blank">Guardian Canada</a>
+                <a href="https://www.bbc.com/news/world/us_and_canada" target="_blank">BBC</a>
+                <a href="https://www.aljazeera.com/economy" target="_blank">Al Jazeera Economy</a>
+                <a href="https://www.nytimes.com/section/world/americas" target="_blank">NYT Americas</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Mexico's Sheinbaum — Water Dispute &amp; Cartel Pressure</div>
+              <div class="subtopic-detail">Trump threatened additional tariffs on Mexico over a water-sharing treaty dispute involving Rio Grande allocations to Texas farmers. Mexico-Canada strategic coordination has deepened ahead of USMCA talks. President Sheinbaum has maintained a careful balance of asserting Mexican sovereignty on cartel enforcement and trade while avoiding trade war escalation — a posture that Al Jazeera described as more structurally advantageous than Trudeau's.</div>
+              <div class="subtopic-src">
+                <a href="https://www.aljazeera.com/economy" target="_blank">Al Jazeera Economy</a>
+                <a href="https://www.nytimes.com/section/world/americas" target="_blank">NYT Americas</a>
+                <a href="https://www.theguardian.com/world/mexico" target="_blank">Guardian Mexico</a>
+                <a href="https://www.bbc.com/news/world/latin_america" target="_blank">BBC LatAm</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">15% Global Tariff — Post-SCOTUS Latin American Landscape</div>
+              <div class="subtopic-detail">Following the SCOTUS IEEPA ruling, Trump's 15% Section 122 global tariff replaced higher country-specific rates for most Latin American nations. Brazil, the hemisphere's largest economy, has product exemptions on beef, citrus, critical minerals, and pharmaceutical exports. The tariff expires July 24, 2026 unless Congress extends it — forcing a politically sensitive vote before midterm elections.</div>
+              <div class="subtopic-src">
+                <a href="https://www.nytimes.com/section/world/americas" target="_blank">NYT Americas</a>
+                <a href="https://www.bbc.com/news/business" target="_blank">BBC Business</a>
+                <a href="https://www.aljazeera.com/economy" target="_blank">Al Jazeera</a>
+                <a href="https://www.politico.com" target="_blank">Politico</a>
+              </div>
+            </div>
+
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://www.nytimes.com" target="_blank">NYT</a>
+            <a href="https://www.bbc.com" target="_blank">BBC</a>
+            <a href="https://www.theguardian.com" target="_blank">Guardian</a>
+            <a href="https://www.politico.com" target="_blank">Politico</a>
+            <a href="https://www.aljazeera.com" target="_blank">Al Jazeera</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 11. EPSTEIN FILES -->
+    <div class="card">
+      <div class="card-header level-11" onclick="toggle(this)">
+        <span class="card-rank">11</span>
+        <span class="card-title">Epstein Files</span>
+        <span class="card-count">24 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+
+            <div class="subtopic">
+              <div class="subtopic-title">Withheld FBI 302s Released — Uncorroborated Trump Allegations</div>
+              <div class="subtopic-detail">The DOJ released previously withheld FBI 302 interview summaries in March 2026 containing uncorroborated allegations that a woman told investigators Trump assaulted her when she was 13–15. The documents were initially held back — DOJ cited "mistaken coding." The White House denied the allegations and called related material a "dead issue." Trump has never been charged; the documents do not indicate whether investigators found the account credible.</div>
+              <div class="subtopic-src">
+                <a href="https://www.nytimes.com/section/us" target="_blank">NYT US</a>
+                <a href="https://www.cnn.com/politics" target="_blank">CNN Politics</a>
+                <a href="https://www.bbc.com/news/world/us_and_canada" target="_blank">BBC US</a>
+                <a href="https://www.theguardian.com/us-news" target="_blank">Guardian US</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Bondi Fired — Epstein Handling as Proximate Cause</div>
+              <div class="subtopic-detail">Multiple outlets reported that Trump's frustration with Bondi's handling of the Epstein file release was a primary reason for her April 2 firing. The White House said Trump and senior staff felt Bondi "completely whiffed" — slow-walking releases, over-redacting documents, and mishandling congressional oversight. Bondi's subpoena to testify before the House Oversight Committee on Epstein documents remains outstanding.</div>
+              <div class="subtopic-src">
+                <a href="https://www.cnn.com/2026/04/02/politics/pam-bondi-role-trump" target="_blank">CNN: Bondi Firing</a>
+                <a href="https://www.nytimes.com/section/us/politics" target="_blank">NYT Politics</a>
+                <a href="https://www.politico.com" target="_blank">Politico</a>
+                <a href="https://www.aljazeera.com/news/us" target="_blank">Al Jazeera US</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">Epstein Transparency Act — January 30 Mass Release</div>
+              <div class="subtopic-detail">The January 30, 2026 release — 3 million pages including thousands of videos and photographs under the Epstein Transparency Act — named Trump, Clinton, Musk, and others in FBI tip sheets containing unverified allegations. The 32-count federal indictment drafted but never filed in 2007 was made public for the first time, revealing that prosecutors felt they could charge more than just Epstein and Ghislaine Maxwell.</div>
+              <div class="subtopic-src">
+                <a href="https://www.nytimes.com/section/us" target="_blank">NYT US</a>
+                <a href="https://www.cnn.com/politics/live-news/epstein-files-release-doj-01-30-26" target="_blank">CNN: File Release</a>
+                <a href="https://www.bbc.com/news/world/us_and_canada" target="_blank">BBC US</a>
+                <a href="https://www.theguardian.com/us-news" target="_blank">Guardian US</a>
+              </div>
+            </div>
+
+            <div class="subtopic">
+              <div class="subtopic-title">House Oversight Subpoena — 50th Birthday Book</div>
+              <div class="subtopic-detail">The House Oversight Committee subpoenaed Epstein's estate, releasing a 238-page 50th birthday book with contributions from wealthy and politically connected figures — including an alleged cryptic sketch attributed to Trump. The White House denied he drew or signed the birthday letter; Trump called it a "dead issue." More than 3 million pages reportedly remain unreleased despite the Transparency Act's mandate.</div>
+              <div class="subtopic-src">
+                <a href="https://www.nytimes.com/section/us" target="_blank">NYT US</a>
+                <a href="https://www.cnn.com/politics" target="_blank">CNN</a>
+                <a href="https://www.theguardian.com/us-news" target="_blank">Guardian US</a>
+                <a href="https://www.politico.com" target="_blank">Politico</a>
+              </div>
+            </div>
+
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://www.nytimes.com" target="_blank">NYT</a>
+            <a href="https://www.cnn.com" target="_blank">CNN</a>
+            <a href="https://www.bbc.com" target="_blank">BBC</a>
+            <a href="https://www.theguardian.com" target="_blank">Guardian</a>
+            <a href="https://www.politico.com" target="_blank">Politico</a>
+            <a href="https://www.aljazeera.com" target="_blank">Al Jazeera</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /topics-list -->
+
+  <!-- ══ FOOTER ══════════════════════════════════════════ -->
+  <div class="footer">
+    <div style="opacity:0.6; font-size:10px;">
+      Compiled for BOLLI Current Events Discussion Group · Coverage synthesized across 9 mainstream sources · Apr 25–May 23, 2026
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<script>
+  function toggle(header) {
+    const body = header.nextElementSibling;
+    const chevron = header.querySelector('.card-chevron');
+    const isOpen = body.classList.contains('expanded');
+
+    // Collapse all
+    document.querySelectorAll('.card-body').forEach(b => b.classList.remove('expanded'));
+    document.querySelectorAll('.card-chevron').forEach(c => c.classList.remove('rotated'));
+
+    // Expand clicked (if it was closed)
+    if (!isOpen) {
+      body.classList.add('expanded');
+      chevron.classList.add('rotated');
+      setTimeout(() => header.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
+    }
+  }
+</script>
+</body>
+</html>
