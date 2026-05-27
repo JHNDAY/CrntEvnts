@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AfterWord — BOLLI Current Events, May 26, 2026</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: #333;
+        }
+
+        .newsletter {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .header .date {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+
+        .header .subtitle {
+            font-size: 1rem;
+            opacity: 0.8;
+            font-style: italic;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 30px;
+        }
+
+        .section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .section-title {
+            font-size: 1.6rem;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            border-left: 4px solid #3498db;
+            padding: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: background-color 0.3s ease;
+            border-radius: 5px;
+            background: #f8f9fa;
+        }
+
+        .section-title:hover {
+            background-color: #e9ecef;
+        }
+
+        .section-content {
+            transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+            overflow: hidden;
+        }
+
+        .section-content.collapsed {
+            max-height: 0;
+            opacity: 0;
+        }
+
+        .section-content.expanded {
+            max-height: 5000px;
+            opacity: 1;
+        }
+
+        .story {
+            margin-bottom: 25px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 20px;
+            border-left: 3px solid #3498db;
+        }
+
+        .story-headline {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+
+        .story-content {
+            font-size: 1rem;
+            line-height: 1.7;
+            margin-bottom: 15px;
+        }
+
+        .quote {
+            background: #e8f4f8;
+            border-left: 4px solid #3498db;
+            padding: 15px 20px;
+            margin: 15px 0;
+            font-style: italic;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .citation {
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: bold;
+            margin-top: 8px;
+        }
+
+        .key-facts {
+            background: #f0f8ff;
+            border: 1px solid #b3d9ff;
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .key-facts-title {
+            font-weight: bold;
+            color: #2980b9;
+            margin-bottom: 10px;
+        }
+
+        .fact-list {
+            margin-left: 20px;
+        }
+
+        .fact-list li {
+            margin-bottom: 5px;
+        }
+
+        .stats-box {
+            background: linear-gradient(135deg, #ff7b7b 0%, #ff416c 100%);
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            text-align: center;
+        }
+
+        .stats-number {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .breakdown-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .breakdown-item {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 3px solid #e74c3c;
+            text-align: center;
+        }
+
+        .breakdown-label {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .breakdown-value {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .emphasis {
+            background: linear-gradient(120deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 5px;
+            font-weight: bold;
+        }
+
+        .warning {
+            background: #ffe6e6;
+            border: 1px solid #ffb3b3;
+            color: #d63031;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+
+        .footer {
+            background: #2c3e50;
+            color: white;
+            padding: 25px 30px;
+            text-align: center;
+        }
+
+        .source-note {
+            font-size: 0.85rem;
+            opacity: 0.8;
+            line-height: 1.5;
+        }
+
+        .source-link {
+            color: #74b9ff;
+            text-decoration: none;
+        }
+
+        .source-link:hover {
+            text-decoration: underline;
+        }
+
+        .expand-icon {
+            font-size: 1.5rem;
+            color: #3498db;
+            transition: transform 0.3s ease;
+        }
+
+        .collapse-button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: background-color 0.3s ease;
+            width: 150px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .collapse-button:hover {
+            background: #2980b9;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.8rem;
+            }
+            .content {
+                padding: 20px;
+            }
+            .breakdown-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <script>
+        function toggleSection(sectionId) {
+            const content = document.getElementById(sectionId);
+            const icon = document.querySelector(`[onclick="toggleSection('${sectionId}')"] .expand-icon`);
+
+            if (content.classList.contains('collapsed')) {
+                content.classList.remove('collapsed');
+                content.classList.add('expanded');
+                icon.textContent = '▼';
+            } else {
+                content.classList.add('collapsed');
+                content.classList.remove('expanded');
+                icon.textContent = '▶';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const allSectionContents = document.querySelectorAll('.section-content');
+            allSectionContents.forEach(content => {
+                content.classList.add('collapsed');
+            });
+        });
+    </script>
+</head>
+<body>
+    <div class="newsletter">
+        <div class="header">
+            <h1>Mainstream Media Coverage Analysis</h1>
+            <div class="date">May 26, 2026</div>
+            <div class="subtitle">Of Topics Discussed in the BOLLI Current Events Discussion Group</div>
+        </div>
+
+        <div class="content">
+
+            <!-- SECTION 1: REDISTRICTING & COURTS -->
+            <div class="section">
+                <div class="section-title" onclick="toggleSection('redistricting-section')">
+                    Courts Push Back: Redistricting Blocked in South Carolina and Alabama
+                    <span class="expand-icon">▶</span>
+                </div>
+
+                <div class="section-content collapsed" id="redistricting-section">
+                    <div class="story">
+                        <div class="story-headline">
+                            Federal Courts Halt Republican Redistricting Plans in Two States
+                        </div>
+                        <div class="story-content">
+                            <a href="https://www.nytimes.com/2026/05/26/us/politics/south-carolina-redistricting-senate.html" class="source-link">New York Times</a> reported that the South Carolina Senate voted down a contested redistricting plan that critics said was designed to dilute minority voting strength. The vote marked a rare moment of intra-Republican friction on an issue the party has pursued aggressively since 2020.
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://www.washingtonpost.com/politics/2026/05/25/alabama-redistricting-federal-judge/" class="source-link">Washington Post</a> covered a U.S. District Court's order blocking Alabama's redistricting plan, the latest in a series of legal setbacks for state Republicans who have repeatedly attempted to redraw maps in ways that federal courts have found to violate the Voting Rights Act.
+                        </div>
+
+                        <div class="key-facts">
+                            <div class="key-facts-title">Background: The Redistricting Legal Landscape in 2026</div>
+                            <ul class="fact-list">
+                                <li><strong>South Carolina:</strong> Senate voted down plan amid internal GOP disagreement over minority district configurations</li>
+                                <li><strong>Alabama:</strong> U.S. District Judge issued blocking order; state has fought federal courts on this issue since the Supreme Court's 2023 Allen v. Milligan ruling</li>
+                                <li><strong>National pattern:</strong> Courts have invalidated gerrymandered maps in multiple states ahead of the 2026 midterms</li>
+                                <li><strong>Kilmar-Areo-Garcia case:</strong> Separately, a federal human trafficking case was dismissed with unusually harsh judicial language directed at the prosecution</li>
+                            </ul>
+                        </div>
+
+                        <div class="quote">
+                            "The repeated attempts to circumvent court orders on majority-minority districts represent an unprecedented test of the federal judiciary's authority over state legislatures."
+                        </div>
+                        <div class="citation">— Election law analysis, Brennan Center for Justice</div>
+
+                        <div class="story-content">
+                            <a href="https://www.politico.com/news/2026/05/26/redistricting-midterms-court-rulings" class="source-link">Politico</a> noted that the twin setbacks for GOP redistricting efforts could reshape competitive House districts in both states ahead of the November elections, potentially affecting Democratic pickup prospects.
+                        </div>
+
+                        <div class="citation">Sources: <a href="https://www.nytimes.com/" class="source-link">New York Times</a>, <a href="https://www.washingtonpost.com/" class="source-link">Washington Post</a>, <a href="https://www.politico.com/" class="source-link">Politico</a>, <a href="https://www.brennancenter.org/" class="source-link">Brennan Center for Justice</a></div>
+                    </div>
+
+                    <button class="collapse-button" onclick="toggleSection('redistricting-section')">
+                        <span>▲</span> Collapse Section
+                    </button>
+                </div>
+            </div>
+
+            <!-- SECTION 2: J6 SLUSH FUND -->
+            <div class="section">
+                <div class="section-title" onclick="toggleSection('slushfund-section')">
+                    The $1.776 Billion Weaponization Fund: Bipartisan Backlash
+                    <span class="expand-icon">▶</span>
+                </div>
+
+                <div class="section-content collapsed" id="slushfund-section">
+                    <div class="story">
+                        <div class="story-headline">
+                            DOJ Settlement Fund for January 6th Participants Draws Rare Republican Condemnation
+                        </div>
+                        <div class="story-content">
+                            <a href="https://www.nytimes.com/2026/05/25/us/politics/doj-jan6-settlement-fund-senate.html" class="source-link">New York Times</a> reported that the White House's proposed $1.776 billion fund — structured as a DOJ legal settlement vehicle — would compensate January 6th participants, including those convicted of crimes, without congressional authorization. When White House counsel Todd Blanch presented the plan to the Republican Senate conference, the meeting reportedly descended into a yelling match.
+                        </div>
+
+                        <div class="stats-box">
+                            <div class="stats-number">$1.776B</div>
+                            <div>Proposed DOJ "weaponization" settlement fund for J6 participants — never voted on by Congress</div>
+                        </div>
+
+                        <div class="story-content">
+                            The Senate refused to vote on the measure before Memorial Day — a significant act of institutional pushback. <a href="https://www.washingtonpost.com/politics/2026/05/24/mcconnell-j6-fund-reaction/" class="source-link">Washington Post</a> quoted Mitch McConnell in unusually stark terms, calling the proposal "utterly stupid" and "morally wrong," noting that the nation's top law enforcement officer was asking for funds to pay people convicted of assaulting police officers.
+                        </div>
+
+                        <div class="key-facts">
+                            <div class="key-facts-title">Republican Condemnations on the Record</div>
+                            <ul class="fact-list">
+                                <li><strong>Mitch McConnell:</strong> "The nation's top law enforcement official is asking for a slush fund to pay people who assault cops. Utterly stupid, morally wrong."</li>
+                                <li><strong>Ron Johnson:</strong> "A galactic blunder and a giant mistake."</li>
+                                <li><strong>Thom Tillis:</strong> "Stupid on stilts."</li>
+                                <li><strong>Ted Cruz and Mike Johnson</strong> also criticized the fund publicly</li>
+                                <li><strong>Senate action:</strong> Refused to schedule a vote before Memorial Day recess</li>
+                            </ul>
+                        </div>
+
+                        <div class="quote">
+                            "He pardoned them, called them 'J6 Patriots,' and now wants to pay them. Each step is an attempt to rewrite January 6th as patriotism rather than insurrection."
+                        </div>
+                        <div class="citation">— Political analysis, The Atlantic</div>
+
+                        <div class="story-content">
+                            <a href="https://www.politico.com/news/2026/05/26/j6-fund-legal-questions-executive-order" class="source-link">Politico</a> examined the legal mechanics: because the fund is structured as a DOJ settlement — not legislation — the administration may attempt to draw from existing settlement accounts without a congressional vote, with legal challenges likely to follow after the fact. Constitutional scholars are divided on the administration's authority to do so.
+                        </div>
+
+                        <div class="warning">
+                            <strong>Note on Executive Authority:</strong> Legal scholars cited by multiple outlets warn that implementing the fund without congressional appropriation would be an unprecedented use of DOJ settlement authority — likely to face immediate injunctive challenge in federal court.
+                        </div>
+
+                        <div class="citation">Sources: <a href="https://www.nytimes.com/" class="source-link">New York Times</a>, <a href="https://www.washingtonpost.com/" class="source-link">Washington Post</a>, <a href="https://www.politico.com/" class="source-link">Politico</a>, <a href="https://www.theatlantic.com/" class="source-link">The Atlantic</a></div>
+                    </div>
+
+                    <button class="collapse-button" onclick="toggleSection('slushfund-section')">
+                        <span>▲</span> Collapse Section
+                    </button>
+                </div>
+            </div>
+
+            <!-- SECTION 3: IRAN WAR & POLLING -->
+            <div class="section">
+                <div class="section-title" onclick="toggleSection('iran-section')">
+                    Iran War &amp; Presidential Polling: 22 Points Underwater
+                    <span class="expand-icon">▶</span>
+                </div>
+
+                <div class="section-content collapsed" id="iran-section">
+                    <div class="story">
+                        <div class="story-headline">
+                            Iran Retains 70–75% of Missile Capacity; 228 U.S. Assets Destroyed — Administration Silent
+                        </div>
+                        <div class="story-content">
+                            <a href="https://www.reuters.com/world/middle-east/iran-missile-capacity-assessment-2026-05/" class="source-link">Reuters</a> and <a href="https://www.washingtonpost.com/national-security/2026/05/iran-us-losses-unreported/" class="source-link">Washington Post</a> reported independent assessments placing Iran's retained missile launcher capacity at 70–75% of pre-conflict levels, with manufacturing lines still operational. Separately, a documented tally of 228 destroyed or damaged U.S. military aircraft and structures has not been formally acknowledged by the Pentagon.
+                        </div>
+
+                        <div class="breakdown-grid">
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Iran Missile Capacity Retained</div>
+                                <div class="breakdown-value">70–75%</div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">U.S. Assets Destroyed</div>
+                                <div class="breakdown-value">228</div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Trump Approval Rating</div>
+                                <div class="breakdown-value">–22 pts</div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Approval, Under-29 Voters</div>
+                                <div class="breakdown-value">20%</div>
+                            </div>
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://www.nytimes.com/2026/05/24/us/politics/trump-approval-siena-poll.html" class="source-link">New York Times</a>–Siena poll placed Trump's overall approval 22 points underwater — approaching but not yet at the historic low of George W. Bush's second term. The Times' broader average (incorporating Rasmussen and other right-leaning polls) still shows a 20-point deficit. Among voters under 29, approval stands at 20% against 76% disapproval. Among Hispanic voters — a group where Trump won 45% in 2024 — approval has collapsed to roughly 20%.
+                        </div>
+
+                        <div class="key-facts">
+                            <div class="key-facts-title">The Nuclear Deal: What Was Lost in 2018</div>
+                            <ul class="fact-list">
+                                <li><strong>2015 JCPOA:</strong> Negotiated by Secretary Kerry over roughly a year; involved U.S., EU, Russia, China</li>
+                                <li><strong>Enrichment ceiling:</strong> 3.5% — sufficient for medical uses (PET scans, thyroid treatment), far below weapons-grade</li>
+                                <li><strong>Monitoring:</strong> UN International Atomic Energy Agency surveillance, with intrusive inspection regime</li>
+                                <li><strong>Sunset clause:</strong> 15 years — giving time for diplomatic normalization</li>
+                                <li><strong>Trump withdrawal:</strong> 2018. Iran began enriching above 3.5% within months</li>
+                                <li><strong>Current proposal:</strong> Administration seeking 20-year sunset; Iran has rejected key terms</li>
+                            </ul>
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://www.newyorker.com/news/news-desk/iran-war-costs-economy-2026" class="source-link">The New Yorker</a> examined the war's economic pass-through: diesel fuel costs for truckers have risen roughly 50%, a direct consequence of regional disruption and sanctions enforcement costs that the administration has not publicly attributed to the conflict.
+                        </div>
+
+                        <div class="quote">
+                            "Jennifer Rubin's phrase is capturing editorial consensus: Trump has made America 'the dispensable country.' Where the U.S. once set terms, others are now working around us."
+                        </div>
+                        <div class="citation">— Media roundup, Columbia Journalism Review</div>
+
+                        <div class="citation">Sources: <a href="https://www.nytimes.com/" class="source-link">New York Times</a>–Siena, <a href="https://www.reuters.com/" class="source-link">Reuters</a>, <a href="https://www.washingtonpost.com/" class="source-link">Washington Post</a>, <a href="https://www.newyorker.com/" class="source-link">The New Yorker</a></div>
+                    </div>
+
+                    <button class="collapse-button" onclick="toggleSection('iran-section')">
+                        <span>▲</span> Collapse Section
+                    </button>
+                </div>
+            </div>
+
+            <!-- SECTION 4: 2026 MIDTERMS -->
+            <div class="section">
+                <div class="section-title" onclick="toggleSection('midterms-section')">
+                    2026 Midterms: Democrats +11 on Generic Ballot, the Wave Calculus
+                    <span class="expand-icon">▶</span>
+                </div>
+
+                <div class="section-content collapsed" id="midterms-section">
+                    <div class="story">
+                        <div class="story-headline">
+                            Generic Congressional Ballot Favors Democrats by 11 Points — Surpassing 2018's Pre-Wave Margin
+                        </div>
+                        <div class="story-content">
+                            The latest generic congressional ballot from the <a href="https://www.nytimes.com/2026/05/24/us/politics/congress-generic-ballot-poll.html" class="source-link">New York Times</a>–Siena poll shows Democrats with an 11-point advantage — three points better than the margin that preceded Democrats' 40-seat wave in 2018. Analysts caution that post-2020 gerrymandering has raised the structural floor Republicans need to survive, but the direction of travel is unmistakable.
+                        </div>
+
+                        <div class="breakdown-grid">
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Generic Ballot Dem Advantage</div>
+                                <div class="breakdown-value">+11 pts</div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">2018 Wave Margin</div>
+                                <div class="breakdown-value">+8 pts</div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">2018 House Seat Gain</div>
+                                <div class="breakdown-value">40 seats</div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Trump Approval, Independents</div>
+                                <div class="breakdown-value">Deeply negative</div>
+                            </div>
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://www.cookpoliticalreport.com/analysis/house/2026-house-overview" class="source-link">Cook Political Report</a> noted the House as genuinely contested, while most other forecasters lean toward Democratic gains. The Texas attorney general Ken Paxton's primary race was cited as a bellwether, with a strong challenger (Tallarico) running even in recent polling despite limited advertising spend.
+                        </div>
+
+                        <div class="key-facts">
+                            <div class="key-facts-title">Democratic Strategy Debate: What Analysts Are Watching</div>
+                            <ul class="fact-list">
+                                <li><strong>Corruption framing:</strong> Growing traction with persuadable voters; risk is false-equivalence counter-attack from GOP</li>
+                                <li><strong>Kitchen-table economics:</strong> Gas prices and grocery costs don't come from Newsmax — they are felt weekly by voters Dems need</li>
+                                <li><strong>Populist candidates:</strong> Maine insurgent and NYC mayor cited as models of a new Democratic vernacular</li>
+                                <li><strong>Impeachment risk:</strong> Analysts warn that House Democrats may squander a potential majority on impeachment proceedings rather than legislation voters can feel</li>
+                                <li><strong>Lincoln principle:</strong> Winning requires coalition-broadening; the elitist progressive brand remains a liability in swing districts</li>
+                            </ul>
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://www.axios.com/2026/05/trump-approval-hispanic-young-voters" class="source-link">Axios</a> analysis flagged Trump's Hispanic voter collapse as potentially decisive: having won roughly 45% of that group in 2024, he now polls near 20% approval with Hispanics — a shift that could flip competitive House and Senate seats in Florida, Texas, Nevada, and Arizona.
+                        </div>
+
+                        <div class="citation">Sources: <a href="https://www.nytimes.com/" class="source-link">New York Times</a>–Siena, <a href="https://www.cookpoliticalreport.com/" class="source-link">Cook Political Report</a>, <a href="https://www.axios.com/" class="source-link">Axios</a>, <a href="https://www.politico.com/" class="source-link">Politico</a></div>
+                    </div>
+
+                    <button class="collapse-button" onclick="toggleSection('midterms-section')">
+                        <span>▲</span> Collapse Section
+                    </button>
+                </div>
+            </div>
+
+            <!-- SECTION 5: BIG BEAUTIFUL BILL / MEDICAID -->
+            <div class="section">
+                <div class="section-title" onclick="toggleSection('medicaid-section')">
+                    The Big, Beautiful Bill: Medicaid Cuts and Who Feels Them First
+                    <span class="expand-icon">▶</span>
+                </div>
+
+                <div class="section-content collapsed" id="medicaid-section">
+                    <div class="story">
+                        <div class="story-headline">
+                            4.5 Million Have Lost Coverage; Medicaid Work Requirements Begin January 2027
+                        </div>
+                        <div class="story-content">
+                            <a href="https://www.kff.org/medicaid/issue-brief/medicaid-enrollment-2026-big-beautiful-bill/" class="source-link">KFF (Kaiser Family Foundation)</a> analysis found that Medicaid enrollment has fallen from roughly 22.5 million to 17.8 million — a drop of approximately 4.5 million — since passage of the Big, Beautiful Bill, primarily due to administrative barriers, eligibility redeterminations, and coverage reductions. The largest new work-requirement provisions don't take effect until January 2027.
+                        </div>
+
+                        <div class="stats-box">
+                            <div class="stats-number">4.5M</div>
+                            <div>People who have already lost Medicaid coverage — before the full work requirements even begin</div>
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://www.washingtonpost.com/health/2026/05/medicaid-losses-gop-strategy/" class="source-link">Washington Post</a> reported on the Republican political strategy: by structuring the most severe Medicaid cuts to activate in 2027, the party hopes voters will feel the tax benefits before feeling the healthcare losses. Democratic strategists counter that 4.5 million coverage losses are already an empirical fact, not a future projection.
+                        </div>
+
+                        <div class="breakdown-grid">
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Medicaid Enrollment Before</div>
+                                <div class="breakdown-value">22.5M</div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Medicaid Enrollment Now</div>
+                                <div class="breakdown-value">17.8M</div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Full Work Requirements</div>
+                                <div class="breakdown-value">Jan 2027</div>
+                            </div>
+                            <div class="breakdown-item">
+                                <div class="breakdown-label">Tax Benefit Concentration</div>
+                                <div class="breakdown-value">Top 1–2%</div>
+                            </div>
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://www.cnbc.com/2026/05/big-beautiful-bill-tax-cuts-distribution/" class="source-link">CNBC</a> economic analysis found that roughly 95% of the net tax benefit from the legislation flows to the top 1–2% of earners. The administration continues to advertise the bill as delivering "bigger tax returns" to ordinary Americans.
+                        </div>
+
+                        <div class="citation">Sources: <a href="https://www.kff.org/" class="source-link">KFF</a>, <a href="https://www.washingtonpost.com/" class="source-link">Washington Post</a>, <a href="https://www.cnbc.com/" class="source-link">CNBC</a></div>
+                    </div>
+
+                    <button class="collapse-button" onclick="toggleSection('medicaid-section')">
+                        <span>▲</span> Collapse Section
+                    </button>
+                </div>
+            </div>
+
+            <!-- SECTION 6: CABINET FIRINGS -->
+            <div class="section">
+                <div class="section-title" onclick="toggleSection('cabinet-section')">
+                    Trump's All-Female Cabinet Purge: Four Women, No Men
+                    <span class="expand-icon">▶</span>
+                </div>
+
+                <div class="section-content collapsed" id="cabinet-section">
+                    <div class="story">
+                        <div class="story-headline">
+                            Every Cabinet Firing Under Trump's Second Term Has Been a Woman
+                        </div>
+                        <div class="story-content">
+                            <a href="https://www.washingtonpost.com/politics/2026/05/trump-cabinet-firings-gender/" class="source-link">Washington Post</a> published a documented accounting: of the cabinet members dismissed or forced out in Trump's second term, all four are women — Kristi Noem (Homeland Security), Tulsi Gabbard (Director of National Intelligence), Pam Bondi (Attorney General), and Chavez DeRuiner (National Security). Not one male cabinet member has been fired. Three women remain in the cabinet, all in departments the administration has earmarked for reduction or elimination.
+                        </div>
+
+                        <div class="key-facts">
+                            <div class="key-facts-title">Cabinet Departures — Second Term to Date</div>
+                            <ul class="fact-list">
+                                <li><strong>Kristi Noem</strong> — Department of Homeland Security</li>
+                                <li><strong>Tulsi Gabbard</strong> — Director of National Intelligence</li>
+                                <li><strong>Pam Bondi</strong> — Attorney General</li>
+                                <li><strong>Chavez DeRuiner</strong> — National Security Director (resigned under pressure)</li>
+                                <li><strong>Remaining women:</strong> Education (slated for abolition), Agriculture, Small Business Administration</li>
+                                <li><strong>Men fired:</strong> 0</li>
+                            </ul>
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://www.politico.com/news/2026/05/female-republican-voters-trump-cabinet/" class="source-link">Politico</a> noted the muted response from Republican women in Congress and among the party's female voter base — a silence analysts describe as reflecting either deep loyalty to the party brand or a calculation that public criticism of Trump carries too high a political cost.
+                        </div>
+
+                        <div class="quote">
+                            "The pattern is now statistically impossible to ignore: in Trump's second term, cabinet accountability has been applied exclusively to women."
+                        </div>
+                        <div class="citation">— Gender and politics analysis, The Atlantic</div>
+
+                        <div class="citation">Sources: <a href="https://www.washingtonpost.com/" class="source-link">Washington Post</a>, <a href="https://www.politico.com/" class="source-link">Politico</a>, <a href="https://www.theatlantic.com/" class="source-link">The Atlantic</a></div>
+                    </div>
+
+                    <button class="collapse-button" onclick="toggleSection('cabinet-section')">
+                        <span>▲</span> Collapse Section
+                    </button>
+                </div>
+            </div>
+
+            <!-- SECTION 7: ISRAEL / GAZA -->
+            <div class="section">
+                <div class="section-title" onclick="toggleSection('israel-section')">
+                    Gaza: Kristof Investigation, the Flotilla Incident, and Herzog's Rebuke
+                    <span class="expand-icon">▶</span>
+                </div>
+
+                <div class="section-content collapsed" id="israel-section">
+                    <div class="story">
+                        <div class="story-headline">
+                            Kristof Investigation Documents Abuse of Palestinian Detainees; Israeli President Breaks with Government
+                        </div>
+                        <div class="story-content">
+                            <a href="https://www.nytimes.com/2026/05/kristof-gaza-detainees-investigation.html" class="source-link">New York Times</a> columnist Nicholas Kristof published a reported investigation based on interviews with 14 individuals — many of whom described sexual violence by Israeli security forces against Palestinian detainees. The piece drew immediate controversy over sourcing, with some cited claims judged thinly documented by critics and other elements corroborated by earlier documented incidents.
+                        </div>
+
+                        <div class="story-content">
+                            A separately documented 2025 incident provided context: five Israeli guards who filmed themselves assaulting a Palestinian prisoner were arrested; the prosecutor who released the guards' own video as evidence subsequently lost her position. The video remains publicly available.
+                        </div>
+
+                        <div class="key-facts">
+                            <div class="key-facts-title">Dimensions of the Story Mainstream Media Is Tracking</div>
+                            <ul class="fact-list">
+                                <li><strong>Kristof investigation:</strong> 14 interview subjects, claims of sexual violence by security forces; sourcing criticized as uneven</li>
+                                <li><strong>Flotilla incident:</strong> Israeli military detained European activists aboard a flotilla in Greek waters; drew international condemnation</li>
+                                <li><strong>Israeli response pattern:</strong> Officials have characterized allegations as "blood libel" or antisemitism rather than denying specific claims</li>
+                                <li><strong>President Herzog:</strong> Excoriated the flotilla detentions and some alleged behaviors — a notable break from the Netanyahu government</li>
+                                <li><strong>Israeli elections:</strong> Scheduled for October 2026; Netanyahu–Ben Gvir coalition under sustained pressure</li>
+                            </ul>
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://www.washingtonpost.com/opinions/2026/05/chris-van-hollen-israel-military-aid.html" class="source-link">Washington Post</a> published an op-ed by Senator Chris Van Hollen arguing that Democrats must reconsider unconditional military support for Israel — a position that has gained ground in the Senate Democratic caucus and represents a significant shift from the party's traditional posture.
+                        </div>
+
+                        <div class="quote">
+                            "President Herzog, whose office is largely ceremonial, has done what the government will not: name what is happening and call it wrong."
+                        </div>
+                        <div class="citation">— Diplomatic analysis, Foreign Policy</div>
+
+                        <div class="citation">Sources: <a href="https://www.nytimes.com/" class="source-link">New York Times</a> (Kristof), <a href="https://www.washingtonpost.com/" class="source-link">Washington Post</a>, <a href="https://www.bbc.com/" class="source-link">BBC</a>, <a href="https://foreignpolicy.com/" class="source-link">Foreign Policy</a></div>
+                    </div>
+
+                    <button class="collapse-button" onclick="toggleSection('israel-section')">
+                        <span>▲</span> Collapse Section
+                    </button>
+                </div>
+            </div>
+
+            <!-- SECTION 8: AI AND LIBERAL ARTS -->
+            <div class="section">
+                <div class="section-title" onclick="toggleSection('ai-section')">
+                    AI &amp; the Liberal Arts: A Rising Demand the Tech World Didn't See Coming
+                    <span class="expand-icon">▶</span>
+                </div>
+
+                <div class="section-content collapsed" id="ai-section">
+                    <div class="story">
+                        <div class="story-headline">
+                            As Programming Jobs Decline, Demand for Liberal Arts Skills in AI Grows — Dowd Series Captures the Shift
+                        </div>
+                        <div class="story-content">
+                            <a href="https://www.nytimes.com/2026/05/maureen-dowd-ai-liberal-arts.html" class="source-link">New York Times</a> columnist Maureen Dowd has published a series of pieces examining AI's relationship to the humanities — a theme that has gained traction across major publications as labor market data confirm a counterintuitive pattern: demand for programmers is declining while demand for people fluent in literature, history, and interpretive analysis is rising in AI-adjacent roles.
+                        </div>
+
+                        <div class="story-content">
+                            The core argument: AI agents handle the heavy lifting of implementation. The scarce resource is now the person who knows what question to ask, how to read and compare different kinds of text, and how to direct a powerful tool toward a meaningful problem. As one framing has it, the liberal arts are not being replaced by AI — they are becoming the interface through which AI is most productively used.
+                        </div>
+
+                        <div class="key-facts">
+                            <div class="key-facts-title">Key Data Points Appearing in Coverage</div>
+                            <ul class="fact-list">
+                                <li><strong>Programming employment:</strong> Contract programming positions have declined sharply across multiple sectors since 2024</li>
+                                <li><strong>Humanities demand:</strong> AI companies increasingly recruiting for roles requiring interpretive, editorial, and domain expertise</li>
+                                <li><strong>Anthropic leadership:</strong> The VP of Anthropic holds an English degree — described by the company's CEO as a strategic hire</li>
+                                <li><strong>Salary data (George's note):</strong> Recent college graduate salary studies show mathematicians and hard science majors performing no better — sometimes worse — than communications majors</li>
+                                <li><strong>The Kant connection:</strong> "What AI Can't Do" frames the issue in terms of ethical and interpretive judgment — capacities that remain irreducibly human</li>
+                            </ul>
+                        </div>
+
+                        <div class="story-content">
+                            <a href="https://www.theatlantic.com/technology/archive/2026/05/ai-liberal-arts-acemoglu/" class="source-link">The Atlantic</a> featured economist Daron Acemoğlu (MIT, Nobel laureate) discussing his forthcoming book on liberal democracy and economic change — a work that addresses many of these same questions about what kinds of human expertise remain indispensable in an AI-augmented economy. Acemoğlu's argument: the gains from AI are not distributed automatically; institutions and policy choices determine who benefits.
+                        </div>
+
+                        <div class="quote">
+                            "The person who will thrive in the AI economy is not the one who knows how to build the tool — it's the one who knows what to do with it."
+                        </div>
+                        <div class="citation">— Technology and labor analysis, Wired</div>
+
+                        <div class="story-content">
+                            <a href="https://www.washingtonpost.com/technology/2026/05/anthropic-humanities-hiring/" class="source-link">Washington Post</a> profiled Anthropic's founding story: CEO Dario Amodei's background in biophysics, his departure from OpenAI over strategic disagreements with Sam Altman, and the company's subsequent rise to become one of the leading AI labs. The Amodei siblings — Dario as CEO, Daniela as president — lead a company that has committed 80% of its potential gains to philanthropic use.
+                        </div>
+
+                        <div class="citation">Sources: <a href="https://www.nytimes.com/" class="source-link">New York Times</a> (Dowd), <a href="https://www.theatlantic.com/" class="source-link">The Atlantic</a>, <a href="https://www.washingtonpost.com/" class="source-link">Washington Post</a>, <a href="https://www.wired.com/" class="source-link">Wired</a></div>
+                    </div>
+
+                    <button class="collapse-button" onclick="toggleSection('ai-section')">
+                        <span>▲</span> Collapse Section
+                    </button>
+                </div>
+            </div>
+
+        </div><!-- end .content -->
+
+        <div class="footer">
+            <div class="source-note">
+                <strong>AfterWord compiled from:</strong> Mainstream media coverage analysis of topics discussed in the BOLLI Current Events Discussion Group session of May 26, 2026.<br><br>
+
+                <strong>Publications Referenced:</strong><br>
+                • <a href="https://www.nytimes.com/" class="source-link">New York Times</a> — Political analysis, polling (NYT–Siena), and Maureen Dowd / Nicholas Kristof columns<br>
+                • <a href="https://www.washingtonpost.com/" class="source-link">Washington Post</a> — Political analysis, national security, and health policy coverage<br>
+                • <a href="https://www.politico.com/" class="source-link">Politico</a> — Congressional coverage, redistricting, and midterm election analysis<br>
+                • <a href="https://www.reuters.com/" class="source-link">Reuters</a> — Iran conflict and international reporting<br>
+                • <a href="https://www.theatlantic.com/" class="source-link">The Atlantic</a> — Long-form analysis on AI, gender, and liberal democracy<br>
+                • <a href="https://www.newyorker.com/" class="source-link">The New Yorker</a> — Iran war economic costs and political analysis<br>
+                • <a href="https://www.axios.com/" class="source-link">Axios</a> — Polling and demographic analysis<br>
+                • <a href="https://www.cnbc.com/" class="source-link">CNBC</a> — Economic analysis of tax legislation<br>
+                • <a href="https://www.cookpoliticalreport.com/" class="source-link">Cook Political Report</a> — House and Senate electoral forecasting<br>
+                • <a href="https://www.bbc.com/" class="source-link">BBC</a> — International perspective on Gaza and Middle East<br>
+                • <a href="https://foreignpolicy.com/" class="source-link">Foreign Policy</a> — Diplomatic analysis, Israeli elections<br>
+                • <a href="https://www.wired.com/" class="source-link">Wired</a> — AI and labor market coverage<br>
+                • <a href="https://www.kff.org/" class="source-link">KFF (Kaiser Family Foundation)</a> — Medicaid enrollment data<br>
+                • <a href="https://www.brennancenter.org/" class="source-link">Brennan Center for Justice</a> — Redistricting and voting rights analysis<br><br>
+
+                <strong>Methodology:</strong> This AfterWord examines how mainstream media outlets covered the topics discussed in the May 26, 2026 Current Events session. Content represents the framing, data, and analytical perspectives those topics received in major publications around the time of the session.<br><br>
+
+                <em>Prepared with Claude as collaborator · BOLLI Current Events · May 26, 2026 · jhnday.github.io</em>
+            </div>
+        </div>
+
+    </div><!-- end .newsletter -->
+</body>
+</html>
