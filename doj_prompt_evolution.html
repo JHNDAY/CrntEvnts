@@ -1,0 +1,1147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Anatomy of a Prompt: Five Iterations</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Lora:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #f4f1eb;
+    --surface: #ffffff;
+    --surface2: #ede9e0;
+    --border: #d0c9bc;
+    --text: #1e1a14;
+    --text-dim: #4a4540;
+    --text-muted: #9a9490;
+
+    --v1: #b02a1e;
+    --v2: #c06010;
+    --v3: #7a6800;
+    --v4: #1e7a40;
+    --v5: #1a5c96;
+    --final: #6a2a8e;
+
+    --gold: #8a6a10;
+    --glow-gold: rgba(138,106,16,0.08);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Lora', Georgia, serif;
+    font-size: 17px;
+    line-height: 1.75;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    text-align: center;
+    padding: 4rem 2rem 3rem;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(138,106,16,0.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1rem;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.1s forwards;
+  }
+
+  h1 {
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    line-height: 1.1;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.75rem;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.2s forwards;
+  }
+
+  .header-sub {
+    font-family: 'DM Serif Display', serif;
+    font-style: italic;
+    font-size: clamp(0.9rem, 2vw, 1.1rem);
+    color: var(--text-dim);
+    margin-bottom: 2rem;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.3s forwards;
+  }
+
+  .header-premise {
+    max-width: 600px;
+    margin: 0 auto;
+    font-size: 0.88rem;
+    color: var(--text-dim);
+    line-height: 1.7;
+    opacity: 0;
+    animation: fadeUp 0.6s 0.4s forwards;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ── LAYER NAV ── */
+  .layer-nav {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 1.25rem 1rem;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(8px);
+  }
+
+  .nav-dot {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.35rem 0.85rem;
+    border-radius: 100px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.05em;
+    text-decoration: none;
+    border: 1px solid transparent;
+    transition: all 0.2s;
+    color: var(--text-dim);
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .nav-dot:hover {
+    border-color: var(--border);
+    color: var(--text);
+    background: var(--surface2);
+  }
+
+  .nav-dot .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ── MAIN ── */
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem;
+  }
+
+  /* ── VERSION BLOCK ── */
+  .version-block {
+    margin-bottom: 3.5rem;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: slideIn 0.5s forwards;
+  }
+
+  .version-block:nth-child(1) { animation-delay: 0.1s; }
+  .version-block:nth-child(2) { animation-delay: 0.2s; }
+  .version-block:nth-child(3) { animation-delay: 0.3s; }
+  .version-block:nth-child(4) { animation-delay: 0.4s; }
+  .version-block:nth-child(5) { animation-delay: 0.5s; }
+
+  @keyframes slideIn {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .version-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.25rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .version-badge {
+    width: 2.8rem;
+    height: 2.8rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.1rem;
+    color: white;
+    flex-shrink: 0;
+    position: relative;
+  }
+
+  .version-badge::after {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 50%;
+    border: 1px solid;
+    opacity: 0.3;
+  }
+
+  .v1 .version-badge { background: var(--v1); }
+  .v1 .version-badge::after { border-color: var(--v1); }
+  .v2 .version-badge { background: var(--v2); }
+  .v2 .version-badge::after { border-color: var(--v2); }
+  .v3 .version-badge { background: var(--v3); color: #fff; }
+  .v3 .version-badge::after { border-color: var(--v3); }
+  .v4 .version-badge { background: var(--v4); }
+  .v4 .version-badge::after { border-color: var(--v4); }
+  .v5 .version-badge { background: var(--v5); }
+  .v5 .version-badge::after { border-color: var(--v5); }
+
+  .version-meta h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.2rem;
+    font-weight: 400;
+    line-height: 1.2;
+    margin-bottom: 0.2rem;
+  }
+
+  .version-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  /* ── PROMPT BOX ── */
+  .prompt-box {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 1rem;
+  }
+
+  .prompt-box-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1rem;
+    background: var(--surface2);
+    border-bottom: 1px solid var(--border);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .prompt-box-header .indicator {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+  }
+
+  .prompt-text {
+    padding: 1.1rem 1.25rem;
+    font-size: 0.86rem;
+    line-height: 1.75;
+    color: var(--text);
+  }
+
+  /* ── COLLAPSIBLE PROMPT ── */
+  .collapsible-prompt {
+    margin-bottom: 1rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .collapsible-trigger {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    width: 100%;
+    padding: 0.65rem 1rem;
+    background: var(--surface2);
+    border: none;
+    cursor: pointer;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    text-align: left;
+    transition: background 0.15s, color 0.15s;
+    user-select: none;
+  }
+
+  .collapsible-trigger:hover {
+    background: #e0dbd0;
+    color: var(--text);
+  }
+
+  .collapsible-trigger .indicator {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .collapsible-trigger .toggle-label {
+    flex: 1;
+  }
+
+  .collapsible-trigger .chevron {
+    margin-left: auto;
+    font-size: 0.75rem;
+    transition: transform 0.25s ease;
+    color: var(--text-muted);
+    flex-shrink: 0;
+  }
+
+  .collapsible-trigger[aria-expanded="true"] .chevron {
+    transform: rotate(180deg);
+  }
+
+  .collapsible-trigger[aria-expanded="true"] {
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+  }
+
+  .collapsible-body {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease;
+    background: var(--surface);
+  }
+
+  .collapsible-body.open {
+    max-height: 1000px;
+  }
+
+  /* highlight added text */
+  .added {
+    background: rgba(138,106,16,0.1);
+    border-bottom: 1px solid rgba(138,106,16,0.35);
+    border-radius: 2px;
+    padding: 0 2px;
+    color: #5a3e00;
+  }
+
+  /* ── WHAT IMPROVED ── */
+  .improvement-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.85rem;
+    margin-bottom: 1rem;
+  }
+
+  @media (max-width: 600px) {
+    .improvement-row { grid-template-columns: 1fr; }
+  }
+
+  .improvement-card {
+    border-radius: 6px;
+    padding: 0.9rem 1rem;
+    font-size: 0.82rem;
+    line-height: 1.6;
+  }
+
+  .improvement-card.working {
+    background: rgba(39,174,96,0.08);
+    border: 1px solid rgba(39,174,96,0.2);
+  }
+
+  .improvement-card.suggestion {
+    background: rgba(201,168,76,0.08);
+    border: 1px solid rgba(201,168,76,0.2);
+  }
+
+  .improvement-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.62rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+    font-weight: 500;
+  }
+
+  .improvement-card.working .improvement-label { color: #1e7a40; }
+  .improvement-card.suggestion .improvement-label { color: var(--gold); }
+
+  .improvement-card p { color: var(--text-dim); }
+
+  /* ── DIMENSION BAR ── */
+  .dimensions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .dim-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.66rem;
+    letter-spacing: 0.08em;
+    padding: 0.25rem 0.65rem;
+    border-radius: 100px;
+    border: 1px solid;
+  }
+
+  .dim-tag.present {
+    background: rgba(138,106,16,0.1);
+    border-color: rgba(138,106,16,0.4);
+    color: #5a3e00;
+  }
+
+  .dim-tag.absent {
+    background: transparent;
+    border-color: var(--text-muted);
+    color: var(--text-muted);
+    text-decoration: line-through;
+    opacity: 0.5;
+  }
+
+  /* connector line */
+  .connector {
+    display: flex;
+    justify-content: center;
+    margin: 0 0 3rem;
+    position: relative;
+  }
+
+  .connector::before {
+    content: '';
+    width: 1px;
+    height: 2.5rem;
+    background: linear-gradient(to bottom, var(--border), transparent);
+  }
+
+  .connector-arrow {
+    position: absolute;
+    top: 2rem;
+    font-size: 0.75rem;
+    color: var(--gold);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.1em;
+  }
+
+  /* ── COMPARISON SECTION ── */
+  .comparison-section {
+    margin-top: 4rem;
+    padding-top: 3rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .comparison-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+  }
+
+  .comparison-header h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(1.5rem, 3vw, 2.2rem);
+    font-weight: 400;
+    margin-bottom: 0.5rem;
+  }
+
+  .comparison-header p {
+    font-size: 0.88rem;
+    color: var(--text-dim);
+    font-style: italic;
+  }
+
+  .compare-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  @media (max-width: 640px) {
+    .compare-grid { grid-template-columns: 1fr; }
+  }
+
+  .compare-card {
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .compare-card-header {
+    padding: 0.75rem 1.25rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  .compare-card.initial .compare-card-header {
+    background: rgba(176,42,30,0.08);
+    border: 1px solid rgba(176,42,30,0.25);
+    border-bottom: none;
+    color: #8a1a10;
+  }
+
+  .compare-card.final .compare-card-header {
+    background: rgba(106,42,142,0.08);
+    border: 1px solid rgba(106,42,142,0.25);
+    border-bottom: none;
+    color: #4a1a7a;
+  }
+
+  .compare-card-body {
+    padding: 1.25rem;
+    font-size: 0.85rem;
+    line-height: 1.75;
+    border: 1px solid;
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+  }
+
+  .compare-card.initial .compare-card-body {
+    background: rgba(192,57,43,0.04);
+    border-color: rgba(192,57,43,0.2);
+    color: var(--text-dim);
+  }
+
+  .compare-card.final .compare-card-body {
+    background: rgba(142,68,173,0.04);
+    border-color: rgba(142,68,173,0.2);
+    color: var(--text);
+  }
+
+  /* ── DELTA TABLE ── */
+  .delta-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.83rem;
+    margin-bottom: 2rem;
+  }
+
+  .delta-table th {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    text-align: left;
+    padding: 0.6rem 0.85rem;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+  }
+
+  .delta-table td {
+    padding: 0.75rem 0.85rem;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+    line-height: 1.55;
+  }
+
+  .delta-table tr:hover td { background: var(--surface); }
+
+  .delta-table .dimension-name {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--gold);
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .delta-table .before-text { color: var(--text-muted); font-style: italic; }
+  .delta-table .after-text  { color: var(--text); }
+
+  .delta-table .impact {
+    font-size: 0.75rem;
+    color: #1e7a40;
+    font-family: 'DM Mono', monospace;
+  }
+
+  /* ── SCORE BAR ── */
+  .score-section {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 1.75rem 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .score-section h3 {
+    font-family: 'DM Serif Display', serif;
+    font-weight: 400;
+    font-size: 1.05rem;
+    margin-bottom: 1.25rem;
+    color: var(--gold);
+  }
+
+  .score-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.85rem;
+  }
+
+  .score-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.05em;
+    color: var(--text-dim);
+    width: 9rem;
+    flex-shrink: 0;
+  }
+
+  .score-bar-track {
+    flex: 1;
+    height: 6px;
+    background: var(--surface2);
+    border-radius: 100px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .score-bar-fill {
+    height: 100%;
+    border-radius: 100px;
+    transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    width: 0;
+  }
+
+  .score-bar-fill.animated { /* triggered by JS */ }
+
+  .score-value {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    width: 3rem;
+    text-align: right;
+  }
+
+  /* ── KEY LESSON ── */
+  .key-lesson {
+    background: var(--glow-gold);
+    border: 1px solid rgba(201,168,76,0.25);
+    border-left: 3px solid var(--gold);
+    border-radius: 0 8px 8px 0;
+    padding: 1.25rem 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .key-lesson h3 {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.6rem;
+  }
+
+  .key-lesson p {
+    font-size: 0.9rem;
+    line-height: 1.7;
+    color: var(--text-dim);
+  }
+
+  .key-lesson p strong { color: var(--text); }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 2rem;
+    border-top: 1px solid var(--border);
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    color: var(--text-muted);
+    margin-top: 3rem;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow">BOLLI Writing Coaching Workshop · Prompt Engineering</div>
+  <h1>The Anatomy of a Prompt</h1>
+  <div class="header-sub">Five iterations — from topic list to operational brief</div>
+  <div class="header-premise">
+    This document traces how a single inquiry about the DOJ evolved across five coaching sessions.
+    Each iteration added a new dimension of context, transforming a bare subject into a fully specified
+    research and facilitation brief. The final comparison shows exactly what changed — and why it matters.
+  </div>
+</header>
+
+<nav class="layer-nav">
+  <a class="nav-dot" href="#v1"><span class="dot" style="background:var(--v1)"></span>v1 · Topic</a>
+  <a class="nav-dot" href="#v2"><span class="dot" style="background:var(--v2)"></span>v2 · Identity</a>
+  <a class="nav-dot" href="#v3"><span class="dot" style="background:var(--v3)"></span>v3 · Purpose</a>
+  <a class="nav-dot" href="#v4"><span class="dot" style="background:var(--v4)"></span>v4 · Audience</a>
+  <a class="nav-dot" href="#v5"><span class="dot" style="background:var(--v5)"></span>v5 · Success</a>
+  <a class="nav-dot" href="#compare"><span class="dot" style="background:var(--final)"></span>Compare</a>
+</nav>
+
+<div class="container">
+
+  <!-- ═══════════ VERSION 1 ═══════════ -->
+  <div class="version-block v1" id="v1">
+    <div class="version-header">
+      <div class="version-badge">1</div>
+      <div class="version-meta">
+        <h2>Version 1 — The Topic List</h2>
+        <div class="version-tag">Draft · No context · No purpose · No audience</div>
+      </div>
+    </div>
+
+    <div class="dimensions">
+      <span class="dim-tag present">Subject ✓</span>
+      <span class="dim-tag absent">Identity</span>
+      <span class="dim-tag absent">Purpose</span>
+      <span class="dim-tag absent">Audience</span>
+      <span class="dim-tag absent">Success Criterion</span>
+      <span class="dim-tag absent">Intellectual Frame</span>
+    </div>
+
+    <div class="collapsible-prompt">
+      <button class="collapsible-trigger" aria-expanded="false" onclick="togglePrompt(this)">
+        <span class="indicator" style="background:var(--v1)"></span>
+        <span class="toggle-label">Prompt as submitted — click to expand</span>
+        <span class="chevron">▼</span>
+      </button>
+      <div class="collapsible-body">
+        <div class="prompt-text">
+          I want to investigate the profound changes that occurred at the DOJ in Trump's second administration.<br><br>
+          · Reduction of DOJ employees due to resignations and firings<br>
+          · The shift in the DOJ to becoming the personal lawyer of the president<br>
+          · The impact of vindictive prosecutions<br>
+          · The sharp decrease in legal expertise and the attendant reversal in the courts<br>
+          · Pending lawsuits against the DOJ for malfeasances<br>
+          · Possible litigation against the current DOJ after the Trump administration is over
+        </div>
+      </div>
+    </div>
+
+    <div class="improvement-row">
+      <div class="improvement-card working">
+        <div class="improvement-label">✦ What's working</div>
+        <p>The word "profound" sets the right register — serious, analytical, not tabloid. The final bullet (future litigation) shows sophisticated forward-looking thinking that goes beyond current-events summaries.</p>
+      </div>
+      <div class="improvement-card suggestion">
+        <div class="improvement-label">→ What's missing</div>
+        <p>This is a <em>topic outline</em>, not a narrative. Claude has no idea who is asking, why they're asking, or what they'll do with the answer. It can only return a generic encyclopedia entry.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="connector"><div class="connector-arrow">+ WHO YOU ARE</div></div>
+
+  <!-- ═══════════ VERSION 2 ═══════════ -->
+  <div class="version-block v2" id="v2">
+    <div class="version-header">
+      <div class="version-badge">2</div>
+      <div class="version-meta">
+        <h2>Version 2 — Identity Added</h2>
+        <div class="version-tag">Added: age, profession, intellectual background, personal stake</div>
+      </div>
+    </div>
+
+    <div class="dimensions">
+      <span class="dim-tag present">Subject ✓</span>
+      <span class="dim-tag present">Identity ✓</span>
+      <span class="dim-tag absent">Purpose</span>
+      <span class="dim-tag absent">Audience</span>
+      <span class="dim-tag absent">Success Criterion</span>
+      <span class="dim-tag present">Intellectual Frame ✓</span>
+    </div>
+
+    <div class="collapsible-prompt">
+      <button class="collapsible-trigger" aria-expanded="false" onclick="togglePrompt(this)">
+        <span class="indicator" style="background:var(--v2)"></span>
+        <span class="toggle-label">Full prompt at this iteration — click to expand</span>
+        <span class="chevron">▼</span>
+      </button>
+      <div class="collapsible-body">
+        <div class="prompt-text">
+          I want to investigate the profound changes that occurred at the DOJ in Trump's second administration.<br><br>
+          · Reduction of DOJ employees due to resignations and firings<br>
+          · The shift in the DOJ to becoming the personal lawyer of the president<br>
+          · The impact of vindictive prosecutions<br>
+          · The sharp decrease in legal expertise and the attendant reversal in the courts<br>
+          · Pending lawsuits against the DOJ for malfeasances<br>
+          · Possible litigation against the current DOJ after the Trump administration is over<br><br>
+          <span class="added">I am 75 years old and retired. I have a PhD in physics and spent my career analyzing and understanding numbers in complex systems. I have always read widely in history and current events. I am concerned about the anti-science and unfactual approach to governance of the current administration.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="improvement-row">
+      <div class="improvement-card working">
+        <div class="improvement-label">✦ What's working</div>
+        <p>"Analyzing and understanding numbers in complex systems" tells Claude exactly how this mind works — it wants patterns, data, and systemic analysis, not anecdote. The phrase "anti-science and unfactual" signals concern without outrage, which is a disciplined register.</p>
+      </div>
+      <div class="improvement-card suggestion">
+        <div class="improvement-label">→ What's still missing</div>
+        <p>We know who is asking and how they think — but not <em>what for</em>. Without purpose, Claude still can't calibrate depth, format, or tone. Is this for personal understanding? A presentation? A written piece?</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="connector"><div class="connector-arrow">+ WHY YOU'RE ASKING</div></div>
+
+  <!-- ═══════════ VERSION 3 ═══════════ -->
+  <div class="version-block v3" id="v3">
+    <div class="version-header">
+      <div class="version-badge">3</div>
+      <div class="version-meta">
+        <h2>Version 3 — Purpose Added</h2>
+        <div class="version-tag">Added: facilitation role, commitment to fairness and honesty</div>
+      </div>
+    </div>
+
+    <div class="dimensions">
+      <span class="dim-tag present">Subject ✓</span>
+      <span class="dim-tag present">Identity ✓</span>
+      <span class="dim-tag present">Purpose ✓</span>
+      <span class="dim-tag absent">Audience</span>
+      <span class="dim-tag absent">Success Criterion</span>
+      <span class="dim-tag present">Intellectual Frame ✓</span>
+    </div>
+
+    <div class="collapsible-prompt">
+      <button class="collapsible-trigger" aria-expanded="false" onclick="togglePrompt(this)">
+        <span class="indicator" style="background:var(--v3)"></span>
+        <span class="toggle-label">Full prompt at this iteration — click to expand</span>
+        <span class="chevron">▼</span>
+      </button>
+      <div class="collapsible-body">
+        <div class="prompt-text">
+          I want to investigate the profound changes that occurred at the DOJ in Trump's second administration.<br><br>
+          · Reduction of DOJ employees due to resignations and firings<br>
+          · The shift in the DOJ to becoming the personal lawyer of the president<br>
+          · The impact of vindictive prosecutions<br>
+          · The sharp decrease in legal expertise and the attendant reversal in the courts<br>
+          · Pending lawsuits against the DOJ for malfeasances<br>
+          · Possible litigation against the current DOJ after the Trump administration is over<br><br>
+          I am 75 years old and retired. I have a PhD in physics and spent my career analyzing and understanding numbers in complex systems. I have always read widely in history and current events. I am concerned about the anti-science and unfactual approach to governance of the current administration.<br><br>
+          <span class="added">I facilitate a Current Events group and want to present this fairly but honestly.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="improvement-row">
+      <div class="improvement-card working">
+        <div class="improvement-label">✦ What's working</div>
+        <p>"Fairly but honestly" is a compressed statement of intellectual integrity — acknowledging the tension between balance and candor. The facilitator role gives Claude a dual mandate: analytical depth <em>and</em> audience translation.</p>
+      </div>
+      <div class="improvement-card suggestion">
+        <div class="improvement-label">→ What's still missing</div>
+        <p>We know the purpose — but not the audience. "A Current Events group" could be anything from a Fox News watching demographic to a faculty seminar. Audience determines tone, balance, and how to anticipate pushback.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="connector"><div class="connector-arrow">+ WHO WILL HEAR THIS</div></div>
+
+  <!-- ═══════════ VERSION 4 ═══════════ -->
+  <div class="version-block v4" id="v4">
+    <div class="version-header">
+      <div class="version-badge">4</div>
+      <div class="version-meta">
+        <h2>Version 4 — Audience Specified</h2>
+        <div class="version-tag">Added: political leaning of group, desired response mode</div>
+      </div>
+    </div>
+
+    <div class="dimensions">
+      <span class="dim-tag present">Subject ✓</span>
+      <span class="dim-tag present">Identity ✓</span>
+      <span class="dim-tag present">Purpose ✓</span>
+      <span class="dim-tag present">Audience ✓</span>
+      <span class="dim-tag absent">Success Criterion</span>
+      <span class="dim-tag present">Intellectual Frame ✓</span>
+    </div>
+
+    <div class="collapsible-prompt">
+      <button class="collapsible-trigger" aria-expanded="false" onclick="togglePrompt(this)">
+        <span class="indicator" style="background:var(--v4)"></span>
+        <span class="toggle-label">Full prompt at this iteration — click to expand</span>
+        <span class="chevron">▼</span>
+      </button>
+      <div class="collapsible-body">
+        <div class="prompt-text">
+          I want to investigate the profound changes that occurred at the DOJ in Trump's second administration.<br><br>
+          · Reduction of DOJ employees due to resignations and firings<br>
+          · The shift in the DOJ to becoming the personal lawyer of the president<br>
+          · The impact of vindictive prosecutions<br>
+          · The sharp decrease in legal expertise and the attendant reversal in the courts<br>
+          · Pending lawsuits against the DOJ for malfeasances<br>
+          · Possible litigation against the current DOJ after the Trump administration is over<br><br>
+          I am 75 years old and retired. I have a PhD in physics and spent my career analyzing and understanding numbers in complex systems. I have always read widely in history and current events. I am concerned about the anti-science and unfactual approach to governance of the current administration.<br><br>
+          I facilitate a Current Events group and want to present this fairly but honestly.<br><br>
+          <span class="added">My group is mostly from the progressive liberal faction. I want them to objectively (not emotionally) respond to the results.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="improvement-row">
+      <div class="improvement-card working">
+        <div class="improvement-label">✦ What's working</div>
+        <p>"Mostly from the progressive liberal faction" is candidly self-aware — not pretending the audience is a blank slate. The parenthetical "(not emotionally)" signals that emotional reaction is a real risk the facilitator is actively managing.</p>
+      </div>
+      <div class="improvement-card suggestion">
+        <div class="improvement-label">→ What's still missing</div>
+        <p>We know the audience disposition and desired mode — but not what <em>success looks like in practice</em>. "Objectively respond" is still abstract. Claude needs a concrete success criterion to design toward.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="connector"><div class="connector-arrow">+ WHAT SUCCESS LOOKS LIKE</div></div>
+
+  <!-- ═══════════ VERSION 5 ═══════════ -->
+  <div class="version-block v5" id="v5">
+    <div class="version-header">
+      <div class="version-badge">5</div>
+      <div class="version-meta">
+        <h2>Version 5 — Success Criterion Added</h2>
+        <div class="version-tag">Complete: subject · identity · purpose · audience · success criterion · intellectual frame</div>
+      </div>
+    </div>
+
+    <div class="dimensions">
+      <span class="dim-tag present">Subject ✓</span>
+      <span class="dim-tag present">Identity ✓</span>
+      <span class="dim-tag present">Purpose ✓</span>
+      <span class="dim-tag present">Audience ✓</span>
+      <span class="dim-tag present">Success Criterion ✓</span>
+      <span class="dim-tag present">Intellectual Frame ✓</span>
+    </div>
+
+    <div class="collapsible-prompt">
+      <button class="collapsible-trigger" aria-expanded="false" onclick="togglePrompt(this)">
+        <span class="indicator" style="background:var(--v5)"></span>
+        <span class="toggle-label">Complete final prompt — click to expand</span>
+        <span class="chevron">▼</span>
+      </button>
+      <div class="collapsible-body">
+        <div class="prompt-text">
+          I want to investigate the profound changes that occurred at the DOJ in Trump's second administration.<br><br>
+          · Reduction of DOJ employees due to resignations and firings<br>
+          · The shift in the DOJ to becoming the personal lawyer of the president<br>
+          · The impact of vindictive prosecutions<br>
+          · The sharp decrease in legal expertise and the attendant reversal in the courts<br>
+          · Pending lawsuits against the DOJ for malfeasances<br>
+          · Possible litigation against the current DOJ after the Trump administration is over<br><br>
+          I am 75 years old and retired. I have a PhD in physics and spent my career analyzing and understanding numbers in complex systems. I have always read widely in history and current events. I am concerned about the anti-science and unfactual approach to governance of the current administration.<br><br>
+          I facilitate a Current Events group and want to present this fairly but honestly. My group is mostly from the progressive liberal faction. I want them to objectively (not emotionally) respond to the results.<br><br>
+          <span class="added">I'd consider it a success if participants left asking better questions rather than feeling their existing views confirmed.</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="improvement-row">
+      <div class="improvement-card working">
+        <div class="improvement-label">✦ What's working</div>
+        <p>This single sentence is the most important in the entire prompt. It's countercultural (you're not building a case — you're building curiosity), it's measurable, and it perfectly encodes a Socratic rather than rhetorical pedagogy. Claude now knows exactly what to optimize for.</p>
+      </div>
+      <div class="improvement-card suggestion">
+        <div class="improvement-label">✦ Now complete</div>
+        <p>The arc from "analyzing complex systems" to "asking better questions" creates an intellectual through-line that a physicist would recognize: premature closure is the enemy of understanding. The prompt now embeds that wisdom structurally.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════ COMPARISON ═══════════ -->
+  <div class="comparison-section" id="compare">
+
+    <div class="comparison-header">
+      <h2>First Draft vs. Final Brief</h2>
+      <p>What changed — and what it changed Claude's ability to do</p>
+    </div>
+
+    <div class="compare-grid">
+      <div class="compare-card initial">
+        <div class="compare-card-header">Version 1 · The Topic List</div>
+        <div class="compare-card-body">
+          I want to investigate the profound changes that occurred at the DOJ in Trump's second administration.<br><br>
+          · Reduction of DOJ employees due to resignations and firings<br>
+          · The shift in the DOJ to becoming the personal lawyer of the president<br>
+          · The impact of vindictive prosecutions<br>
+          · The sharp decrease in legal expertise and the attendant reversal in the courts<br>
+          · Pending lawsuits against the DOJ for malfeasances<br>
+          · Possible litigation against the current DOJ after the Trump administration is over
+        </div>
+      </div>
+      <div class="compare-card final">
+        <div class="compare-card-header">Version 5 · The Operational Brief</div>
+        <div class="compare-card-body">
+          I want to investigate the profound changes that occurred at the DOJ in Trump's second administration.<br><br>
+          · Reduction of DOJ employees due to resignations and firings<br>
+          · The shift in the DOJ to becoming the personal lawyer of the president<br>
+          · The impact of vindictive prosecutions<br>
+          · The sharp decrease in legal expertise and the attendant reversal in the courts<br>
+          · Pending lawsuits against the DOJ for malfeasances<br>
+          · Possible litigation against the current DOJ after the Trump administration is over<br><br>
+          I am 75 years old and retired. I have a PhD in physics and spent my career analyzing and understanding numbers in complex systems. I have always read widely in history and current events. I am concerned about the anti-science and unfactual approach to governance of the current administration.<br><br>
+          I facilitate a Current Events group and want to present this fairly but honestly. My group is mostly from the progressive liberal faction. I want them to objectively (not emotionally) respond to the results.<br><br>
+          I'd consider it a success if participants left asking better questions rather than feeling their existing views confirmed.
+        </div>
+      </div>
+    </div>
+
+    <!-- DELTA TABLE -->
+    <table class="delta-table">
+      <thead>
+        <tr>
+          <th>Dimension</th>
+          <th>Version 1</th>
+          <th>Version 5</th>
+          <th>Impact on Claude's Output</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="dimension-name">Analytical depth</td>
+          <td class="before-text">Unknown — could be a student or a specialist</td>
+          <td class="after-text">PhD physicist; systemic pattern-recognition; 20+ years reading history</td>
+          <td class="impact">Claude can go deep — complex systems framing, entropy metaphor, historical parallels</td>
+        </tr>
+        <tr>
+          <td class="dimension-name">Format</td>
+          <td class="before-text">Unclear — summary? essay? briefing?</td>
+          <td class="after-text">Facilitation tool for a live group discussion</td>
+          <td class="impact">Structured discussion guide with tiers, not a news summary</td>
+        </tr>
+        <tr>
+          <td class="dimension-name">Tone</td>
+          <td class="before-text">Unknown — could be advocacy or scholarship</td>
+          <td class="after-text">Fairly but honestly — balanced but not false-equivalence</td>
+          <td class="impact">Evidence-first language; steelman exercises included; contested section built in</td>
+        </tr>
+        <tr>
+          <td class="dimension-name">Audience calibration</td>
+          <td class="before-text">None — audience unknown</td>
+          <td class="after-text">Progressive liberal group prone to emotional confirmation</td>
+          <td class="impact">Questions designed to stretch rather than confirm; steelman exercise for closing</td>
+        </tr>
+        <tr>
+          <td class="dimension-name">Success criterion</td>
+          <td class="before-text">Implicit: produce information</td>
+          <td class="after-text">Explicit: participants ask better questions, not feel confirmed</td>
+          <td class="impact">Third tier built entirely around open questions; Socratic, not rhetorical structure</td>
+        </tr>
+        <tr>
+          <td class="dimension-name">Intellectual frame</td>
+          <td class="before-text">None — framing left to Claude</td>
+          <td class="after-text">Complex systems + entropy; premature closure as the enemy</td>
+          <td class="impact">Physicist's lab report structure: data → analysis → interpretation → open questions</td>
+        </tr>
+        <tr>
+          <td class="dimension-name">Personal stake</td>
+          <td class="before-text">Anonymous — no relationship to topic</td>
+          <td class="after-text">Civic concern about anti-science governance; experienced educator</td>
+          <td class="impact">Claude treats this as mission-critical, not casual — detail and care increase</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- SCORE BARS -->
+    <div class="score-section">
+      <h3>Prompt Completeness by Dimension</h3>
+
+      <div class="score-row">
+        <div class="score-label">Subject clarity</div>
+        <div class="score-bar-track"><div class="score-bar-fill" data-width="95" style="background: linear-gradient(to right, var(--v1), var(--v2))"></div></div>
+        <div class="score-value">v1 → 95%</div>
+      </div>
+      <div class="score-row">
+        <div class="score-label">Identity context</div>
+        <div class="score-bar-track"><div class="score-bar-fill" data-width="90" style="background: linear-gradient(to right, var(--v1), var(--v2))"></div></div>
+        <div class="score-value">v2 adds</div>
+      </div>
+      <div class="score-row">
+        <div class="score-label">Purpose</div>
+        <div class="score-bar-track"><div class="score-bar-fill" data-width="82" style="background: linear-gradient(to right, var(--v2), var(--v3))"></div></div>
+        <div class="score-value">v3 adds</div>
+      </div>
+      <div class="score-row">
+        <div class="score-label">Audience spec</div>
+        <div class="score-bar-track"><div class="score-bar-fill" data-width="85" style="background: linear-gradient(to right, var(--v3), var(--v4))"></div></div>
+        <div class="score-value">v4 adds</div>
+      </div>
+      <div class="score-row">
+        <div class="score-label">Success criterion</div>
+        <div class="score-bar-track"><div class="score-bar-fill" data-width="98" style="background: linear-gradient(to right, var(--v4), var(--v5))"></div></div>
+        <div class="score-value">v5 adds</div>
+      </div>
+      <div class="score-row">
+        <div class="score-label">Overall utility</div>
+        <div class="score-bar-track"><div class="score-bar-fill" data-width="94" style="background: linear-gradient(to right, var(--final), var(--gold))"></div></div>
+        <div class="score-value">v5: 94%</div>
+      </div>
+    </div>
+
+    <div class="key-lesson">
+      <h3>The Coaching Principle This Sequence Demonstrates</h3>
+      <p>
+        A prompt is not a search query. It is a <strong>conversation brief</strong> — a specification of who you are,
+        what you need, who will receive it, and what success looks like. The subject matter barely changed across
+        five iterations. What changed was everything surrounding it: the <strong>intellectual frame</strong>, the
+        <strong>social context</strong>, and the <strong>pedagogical goal</strong>. Each of those additions didn't
+        just improve the prompt — it transformed what kind of document Claude could responsibly produce.
+        Version 1 could only yield a news summary. Version 5 yielded a structured inquiry document organized
+        as a physicist's lab report, built for a specific group, calibrated to a specific risk
+        (emotional confirmation bias), and anchored to a specific definition of success.
+        <strong>The topic was always the same. The narrative made it real.</strong>
+      </p>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+  BOLLI Writing Coaching Workshop &nbsp;·&nbsp; Prompt Engineering for Adult Learners &nbsp;·&nbsp; Prepared June 2026
+</footer>
+
+<script>
+  // Toggle collapsible prompt panels
+  function togglePrompt(btn) {
+    const body = btn.nextElementSibling;
+    const isOpen = btn.getAttribute('aria-expanded') === 'true';
+    btn.setAttribute('aria-expanded', !isOpen);
+    body.classList.toggle('open', !isOpen);
+    btn.querySelector('.toggle-label').textContent = isOpen
+      ? btn.querySelector('.toggle-label').textContent.replace('click to collapse', 'click to expand')
+      : btn.querySelector('.toggle-label').textContent.replace('click to expand', 'click to collapse');
+  }
+
+  // Animate score bars when they scroll into view
+  const fills = document.querySelectorAll('.score-bar-fill');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        const el = e.target;
+        const w = el.dataset.width;
+        el.style.width = w + '%';
+        observer.unobserve(el);
+      }
+    });
+  }, { threshold: 0.3 });
+
+  fills.forEach(f => observer.observe(f));
+</script>
+
+</body>
+</html>
