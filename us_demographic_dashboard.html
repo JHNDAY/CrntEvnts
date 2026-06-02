@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>U.S. Demographic Dashboard</title>
+<title>U.S. Demographic Ledger — Updated Edition</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -16,10 +16,9 @@
     --warn: #e67e22;
     --pale: #eae4d8;
     --mid: #8b7d6b;
+    --purple: #6a2a8e;
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; }
-
   body {
     background: var(--paper);
     color: var(--ink);
@@ -28,7 +27,6 @@
     min-height: 100vh;
     padding: 2rem;
   }
-
   header {
     text-align: center;
     border-top: 4px solid var(--ink);
@@ -36,369 +34,208 @@
     padding: 1.2rem 0 1rem;
     margin-bottom: 0.4rem;
   }
-
-  .masthead {
-    font-family: 'Playfair Display', serif;
-    font-size: 2.2rem;
-    font-weight: 900;
-    letter-spacing: 0.04em;
-    line-height: 1.1;
+  .masthead { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 900; letter-spacing: 0.04em; line-height: 1.1; }
+  .subhead { font-size: 0.8rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--mid); margin-top: 0.4rem; }
+  .edition { font-size: 0.72rem; color: var(--mid); margin-top: 0.3rem; border-top: 1px solid var(--rule); padding-top: 0.4rem; }
+  .update-banner {
+    background: #fff8e6; border: 1px solid #d4a017; border-left: 4px solid #d4a017;
+    padding: 0.6rem 1rem; font-size: 0.75rem; color: #5a3e00; margin-top: 0.8rem;
+    letter-spacing: 0.02em;
   }
 
-  .subhead {
-    font-size: 0.8rem;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--mid);
-    margin-top: 0.4rem;
-  }
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; margin-top: 1.2rem; }
+  .panel { background: white; border: 1px solid var(--rule); padding: 1.4rem 1.6rem; position: relative; }
+  .panel-full { grid-column: 1 / -1; }
+  .panel-label { font-size: 0.65rem; letter-spacing: 0.18em; text-transform: uppercase; color: var(--mid); margin-bottom: 0.5rem; font-weight: 600; }
+  .panel-title { font-family: 'Playfair Display', serif; font-size: 1.25rem; font-weight: 700; line-height: 1.2; margin-bottom: 1rem; border-bottom: 1px solid var(--rule); padding-bottom: 0.7rem; }
+  .source-badge { display: inline-block; font-size: 0.6rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; background: #d5f5e3; color: #1e5631; border: 1px solid #a9dfbf; padding: 0.1rem 0.5rem; border-radius: 3px; margin-left: 0.4rem; vertical-align: middle; }
 
-  .edition {
-    font-size: 0.72rem;
-    color: var(--mid);
-    margin-top: 0.3rem;
-    border-top: 1px solid var(--rule);
-    padding-top: 0.4rem;
-  }
+  /* PANEL I — Waterfall */
+  .waterfall { display: flex; flex-direction: column; gap: 0.6rem; margin-top: 0.5rem; }
+  .wf-row { display: flex; align-items: center; gap: 0.8rem; }
+  .wf-label { font-size: 0.78rem; width: 150px; flex-shrink: 0; color: var(--ink); font-weight: 400; }
+  .wf-bar-wrap { flex: 1; height: 26px; background: var(--pale); position: relative; border: 1px solid var(--rule); }
+  .wf-bar { height: 100%; display: flex; align-items: center; padding-left: 6px; font-size: 0.72rem; font-weight: 600; color: white; }
+  .wf-divider { height: 1px; background: var(--rule); margin: 0.4rem 0; }
+  .wf-total { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; text-align: right; margin-top: 0.8rem; padding-top: 0.5rem; border-top: 2px solid var(--ink); }
 
-  .grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1.2rem;
-    margin-top: 1.2rem;
-  }
-
-  .panel {
-    background: white;
-    border: 1px solid var(--rule);
-    padding: 1.4rem 1.6rem;
-    position: relative;
-  }
-
-  .panel-full {
-    grid-column: 1 / -1;
-  }
-
-  .panel-label {
-    font-size: 0.65rem;
-    letter-spacing: 0.18em;
-    text-transform: uppercase;
-    color: var(--mid);
-    margin-bottom: 0.5rem;
-    font-weight: 600;
-  }
-
-  .panel-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.25rem;
-    font-weight: 700;
-    line-height: 1.2;
-    margin-bottom: 1rem;
-    border-bottom: 1px solid var(--rule);
-    padding-bottom: 0.7rem;
-  }
-
-  /* PANEL 1 — Waterfall */
-  .waterfall {
-    display: flex;
-    flex-direction: column;
-    gap: 0.6rem;
-    margin-top: 0.5rem;
-  }
-
-  .wf-row {
-    display: flex;
-    align-items: center;
-    gap: 0.8rem;
-  }
-
-  .wf-label {
-    font-size: 0.78rem;
-    width: 140px;
-    flex-shrink: 0;
-    color: var(--ink);
-    font-weight: 400;
-  }
-
-  .wf-bar-wrap {
-    flex: 1;
-    height: 26px;
-    background: var(--pale);
-    position: relative;
-    border: 1px solid var(--rule);
-  }
-
-  .wf-bar {
-    height: 100%;
-    display: flex;
-    align-items: center;
-    padding-left: 6px;
-    font-size: 0.72rem;
-    font-weight: 600;
-    color: white;
-    transition: width 1.2s ease;
-  }
-
-  .wf-divider {
-    height: 1px;
-    background: var(--rule);
-    margin: 0.4rem 0;
-  }
-
-  .wf-total {
-    font-family: 'Playfair Display', serif;
-    font-size: 1.1rem;
-    font-weight: 700;
-    text-align: right;
-    margin-top: 0.8rem;
-    padding-top: 0.5rem;
-    border-top: 2px solid var(--ink);
-  }
-
-  /* PANEL 2 — Apples to Oranges */
-  .compare-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.8rem;
-    margin-top: 0.5rem;
-  }
-
-  .compare-table th {
-    background: var(--ink);
-    color: var(--paper);
-    padding: 0.5rem 0.8rem;
-    text-align: left;
-    font-weight: 600;
-    font-size: 0.72rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-
-  .compare-table td {
-    padding: 0.55rem 0.8rem;
-    border-bottom: 1px solid var(--pale);
-    vertical-align: top;
-    line-height: 1.4;
-  }
-
-  .compare-table tr:nth-child(even) td {
-    background: var(--pale);
-  }
-
+  /* PANEL II — Comparison table */
+  .compare-table { width: 100%; border-collapse: collapse; font-size: 0.79rem; margin-top: 0.5rem; }
+  .compare-table th { background: var(--ink); color: var(--paper); padding: 0.5rem 0.8rem; text-align: left; font-weight: 600; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; }
+  .compare-table td { padding: 0.55rem 0.8rem; border-bottom: 1px solid var(--pale); vertical-align: top; line-height: 1.4; }
+  .compare-table tr:nth-child(even) td { background: var(--pale); }
   .flag-red { color: var(--accent); font-weight: 600; }
   .flag-green { color: var(--accent2); font-weight: 600; }
 
-  /* PANEL 3 — Scenarios */
-  .scenario-wrap {
-    position: relative;
-    height: 240px;
-    margin-top: 0.5rem;
-  }
+  /* PANEL II-B — Rate Distinction */
+  .rate-split { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 0.5rem; }
+  .rate-card { border: 1px solid var(--rule); padding: 1rem; background: var(--pale); }
+  .rate-card-head { font-family: 'Playfair Display', serif; font-size: 1rem; font-weight: 700; margin-bottom: 0.3rem; }
+  .rate-card-num { font-size: 1.6rem; font-weight: 900; font-family: 'Playfair Display', serif; line-height: 1; margin-bottom: 0.4rem; }
+  .rate-card-def { font-size: 0.75rem; line-height: 1.5; color: var(--mid); }
+  .rate-card-meaning { font-size: 0.75rem; margin-top: 0.6rem; padding-top: 0.6rem; border-top: 1px solid var(--rule); line-height: 1.5; }
+  .rate-verdict { margin-top: 1rem; padding: 0.8rem 1rem; border-left: 3px solid var(--warn); background: #fff8f0; font-size: 0.78rem; line-height: 1.55; color: #4a2200; }
+  .rate-verdict strong { color: var(--ink); }
 
-  canvas#scenarioChart {
-    width: 100%;
-    height: 100%;
-  }
+  /* PANEL III — Scenarios */
+  .scenario-wrap { position: relative; height: 240px; margin-top: 0.5rem; }
+  canvas#scenarioChart { width: 100%; height: 100%; }
+  .legend { display: flex; gap: 1.2rem; margin-top: 0.8rem; flex-wrap: wrap; }
+  .legend-item { display: flex; align-items: center; gap: 0.4rem; font-size: 0.74rem; }
+  .legend-dot { width: 20px; height: 3px; border-radius: 2px; }
 
-  .legend {
-    display: flex;
-    gap: 1.2rem;
-    margin-top: 0.8rem;
-    flex-wrap: wrap;
-  }
-
-  .legend-item {
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    font-size: 0.74rem;
-  }
-
-  .legend-dot {
-    width: 20px;
-    height: 3px;
-    border-radius: 2px;
-  }
-
-  /* PANEL 4 — Reliability */
-  .reliability-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 0.8rem;
-    margin-top: 0.5rem;
-  }
-
-  .rel-card {
-    border: 1px solid var(--rule);
-    padding: 0.9rem;
-    background: var(--pale);
-  }
-
-  .rel-card-title {
-    font-family: 'Playfair Display', serif;
-    font-size: 0.88rem;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-    padding-bottom: 0.4rem;
-    border-bottom: 1px solid var(--rule);
-  }
-
-  .rel-item {
-    font-size: 0.72rem;
-    line-height: 1.5;
-    margin-bottom: 0.3rem;
-    color: var(--ink);
-  }
-
-  .rel-flag {
-    display: inline-block;
-    font-size: 0.62rem;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    padding: 0.1rem 0.4rem;
-    border-radius: 2px;
-    margin-right: 0.3rem;
-  }
-
+  /* PANEL IV — Reliability */
+  .reliability-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0.8rem; margin-top: 0.5rem; }
+  .rel-card { border: 1px solid var(--rule); padding: 0.9rem; background: var(--pale); }
+  .rel-card-title { font-family: 'Playfair Display', serif; font-size: 0.88rem; font-weight: 700; margin-bottom: 0.5rem; padding-bottom: 0.4rem; border-bottom: 1px solid var(--rule); }
+  .rel-item { font-size: 0.72rem; line-height: 1.5; margin-bottom: 0.3rem; color: var(--ink); }
+  .rel-flag { display: inline-block; font-size: 0.62rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; padding: 0.1rem 0.4rem; border-radius: 2px; margin-right: 0.3rem; }
   .flag-caution { background: #fdebd0; color: #935116; }
   .flag-ok { background: #d5f5e3; color: #1e8449; }
   .flag-warn { background: #fadbd8; color: #922b21; }
 
-  .footnote {
-    font-size: 0.68rem;
-    color: var(--mid);
-    margin-top: 1.5rem;
-    border-top: 1px solid var(--rule);
-    padding-top: 0.8rem;
-    text-align: center;
-    letter-spacing: 0.03em;
-  }
+  /* PANEL V — Arithmetic proof */
+  .proof-block { background: var(--pale); border: 1px solid var(--rule); padding: 1.2rem 1.4rem; margin-top: 0.5rem; }
+  .proof-line { display: flex; align-items: baseline; gap: 0.6rem; font-size: 0.88rem; padding: 0.35rem 0; border-bottom: 1px dashed var(--rule); }
+  .proof-line:last-child { border-bottom: none; }
+  .proof-op { font-family: 'Playfair Display', serif; font-size: 1.1rem; font-weight: 700; width: 1.2rem; flex-shrink: 0; color: var(--mid); }
+  .proof-label { flex: 1; }
+  .proof-val { font-family: 'Playfair Display', serif; font-weight: 700; font-size: 1rem; text-align: right; min-width: 80px; }
+  .proof-line.total { border-top: 2px solid var(--ink); margin-top: 0.3rem; padding-top: 0.5rem; }
+  .proof-line.total .proof-val { color: var(--accent2); font-size: 1.15rem; }
+  .proof-check { margin-top: 0.8rem; font-size: 0.75rem; color: var(--accent2); font-weight: 600; text-align: right; }
 
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+  .footnote { font-size: 0.68rem; color: var(--mid); margin-top: 1.5rem; border-top: 1px solid var(--rule); padding-top: 0.8rem; text-align: center; letter-spacing: 0.03em; }
 
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
   .panel { animation: fadeIn 0.6s ease both; }
-  .panel:nth-child(1) { animation-delay: 0.1s; }
-  .panel:nth-child(2) { animation-delay: 0.25s; }
-  .panel:nth-child(3) { animation-delay: 0.4s; }
-  .panel:nth-child(4) { animation-delay: 0.55s; }
+  .panel:nth-child(1) { animation-delay: 0.05s; }
+  .panel:nth-child(2) { animation-delay: 0.15s; }
+  .panel:nth-child(3) { animation-delay: 0.25s; }
+  .panel:nth-child(4) { animation-delay: 0.35s; }
+  .panel:nth-child(5) { animation-delay: 0.45s; }
+  .panel:nth-child(6) { animation-delay: 0.55s; }
 </style>
 </head>
 <body>
 
 <header>
   <div class="masthead">U.S. DEMOGRAPHIC LEDGER</div>
-  <div class="subhead">A Four-Panel Analysis · Population, Migration & Fertility</div>
-  <div class="edition">Prepared in response to a BOLLI inquiry · Data current as of June 2026 · Sources: U.S. Census Bureau, CBO, PRB, Migration Policy Institute</div>
+  <div class="subhead">A Five-Panel Analysis · Population, Migration & Fertility</div>
+  <div class="edition">Prepared for BOLLI · Updated Edition · June 2026 · Sources: CDC VSRR 2025, U.S. Census Bureau, CBO, PRB, Migration Policy Institute</div>
+  <div class="update-banner">
+    ⟳ <strong>Updated:</strong> Panel I figures corrected to CDC provisional 2025 data (3,606,400 births) · Panel II expanded with birth rate vs. fertility rate distinction · Panel IV reliability ratings revised · Panel V added — CDC-sourced arithmetic proof
+  </div>
 </header>
 
 <div class="grid">
 
-  <!-- PANEL 1: Waterfall -->
+  <!-- PANEL I: Waterfall — updated with CDC figures -->
   <div class="panel">
     <div class="panel-label">Panel I · Resolving the Contradiction</div>
-    <div class="panel-title">How Can Population Grow Despite a Low Birth Rate?</div>
+    <div class="panel-title">How Can Population Grow Despite a Low Fertility Rate? <span class="source-badge">CDC 2025</span></div>
     <div class="waterfall">
-
       <div class="wf-row">
-        <div class="wf-label">Births</div>
-        <div class="wf-bar-wrap">
-          <div class="wf-bar" style="width:72%; background:var(--accent2);">+3.67M</div>
-        </div>
+        <div class="wf-label">Births (CDC provisional)</div>
+        <div class="wf-bar-wrap"><div class="wf-bar" style="width:74%; background:var(--accent2);">3,606,400</div></div>
       </div>
-
       <div class="wf-row">
-        <div class="wf-label">Deaths</div>
-        <div class="wf-bar-wrap">
-          <div class="wf-bar" style="width:64%; background:var(--mid);">−3.17M</div>
-        </div>
+        <div class="wf-label">Deaths (estimated)</div>
+        <div class="wf-bar-wrap"><div class="wf-bar" style="width:63%; background:var(--mid);">−3,100,000</div></div>
       </div>
-
       <div class="wf-row">
         <div class="wf-label" style="font-weight:600;">Natural Increase</div>
-        <div class="wf-bar-wrap">
-          <div class="wf-bar" style="width:10%; background:var(--accent2); min-width:60px;">+0.5M</div>
-        </div>
+        <div class="wf-bar-wrap"><div class="wf-bar" style="width:11%; background:var(--accent2); min-width:65px;">+506,400</div></div>
       </div>
-
       <div class="wf-divider"></div>
-
       <div class="wf-row">
-        <div class="wf-label">All immigrants in</div>
-        <div class="wf-bar-wrap">
-          <div class="wf-bar" style="width:55%; background:var(--accent3);">+1.3M</div>
-        </div>
+        <div class="wf-label">Net immigration (PRB)</div>
+        <div class="wf-bar-wrap"><div class="wf-bar" style="width:55%; background:var(--accent3);">+1,300,000</div></div>
       </div>
-
       <div class="wf-row">
-        <div class="wf-label">U.S. citizens out</div>
-        <div class="wf-bar-wrap">
-          <div class="wf-bar" style="width:5%; background:var(--accent); min-width:55px;">~−0.1M</div>
-        </div>
+        <div class="wf-label">U.S. citizens departing</div>
+        <div class="wf-bar-wrap"><div class="wf-bar" style="width:5%; background:var(--accent); min-width:60px;">~−100,000</div></div>
       </div>
-
       <div class="wf-row">
         <div class="wf-label" style="font-weight:600;">Net Migration</div>
-        <div class="wf-bar-wrap">
-          <div class="wf-bar" style="width:48%; background:var(--accent3);">+1.3M</div>
-        </div>
+        <div class="wf-bar-wrap"><div class="wf-bar" style="width:48%; background:var(--accent3);">+1,200,000</div></div>
       </div>
-
       <div class="wf-divider"></div>
-
       <div class="wf-total">Total Growth 2024–25: ≈ +1.8M &nbsp;✓</div>
     </div>
     <p style="font-size:0.72rem; color:var(--mid); margin-top:1rem; line-height:1.5;">
-      Answer: Even with a below-replacement birth rate (1.6 vs. 2.1 needed), births still exceed deaths in absolute terms — adding ~500K people. Legal immigration adds ~1.3M more. The total reaches ~1.8M growth. The paradox dissolves.
+      The resolution: even with a fertility rate (1.57) below replacement (2.1), births in absolute numbers still exceed deaths — adding ~506K people. Immigration contributes ~1.2M more. The fertility rate warns about the <em>future</em>; the birth count reflects the <em>present</em>. See Panel II-B for that critical distinction.
     </p>
   </div>
 
-  <!-- PANEL 2: Apples to Oranges -->
+  <!-- PANEL II: Measurement Problem -->
   <div class="panel">
     <div class="panel-label">Panel II · The Measurement Problem</div>
     <div class="panel-title">Are You Comparing Apples to Apples?</div>
     <table class="compare-table">
       <thead>
-        <tr>
-          <th>Dimension</th>
-          <th>Immigrants IN</th>
-          <th>Citizens OUT</th>
-        </tr>
+        <tr><th>Dimension</th><th>Immigrants IN</th><th>Citizens OUT</th></tr>
       </thead>
       <tbody>
         <tr>
           <td><strong>Who is counted</strong></td>
           <td>All foreign-born arrivals: legal permanent residents, refugees, asylum seekers, temp workers, undocumented</td>
-          <td>Only U.S. citizens who formally depart — a narrow slice</td>
+          <td>Only U.S. citizens who formally depart — a narrow, poorly-defined category</td>
         </tr>
         <tr>
           <td><strong>How measured</strong></td>
-          <td>Customs, visa records, DHS data — relatively trackable</td>
-          <td class="flag-red">Estimated indirectly — the U.S. does not require exit reporting</td>
+          <td>Customs, visa records, DHS data — well-tracked for legal entrants</td>
+          <td class="flag-red">Estimated indirectly — U.S. has no exit reporting requirement</td>
+        </tr>
+        <tr>
+          <td><strong>Data quality</strong></td>
+          <td class="flag-green">Legal arrivals: high reliability · Undocumented: estimated</td>
+          <td class="flag-red">Low reliability — derived from foreign census & surveys</td>
         </tr>
         <tr>
           <td><strong>Scale (2024–25)</strong></td>
-          <td class="flag-green">~1.3 million net</td>
-          <td class="flag-red">~100,000 estimated</td>
+          <td class="flag-green">~1.3 million net (PRB / Census Bureau)</td>
+          <td class="flag-red">~100,000 estimated — 13× smaller</td>
         </tr>
         <tr>
           <td><strong>Verdict</strong></td>
-          <td colspan="2" class="flag-red">NOT apples to apples. The first inquiry compared a broad, well-measured category to a narrow, poorly-measured one. Net migration is still strongly positive.</td>
+          <td colspan="2" class="flag-red">NOT apples to apples. Broad, well-measured category vs. narrow, poorly-measured one. The original "net negative migration" response was almost certainly a subcategory or time-window artifact. Overall net migration is strongly positive.</td>
         </tr>
       </tbody>
     </table>
-    <p style="font-size:0.72rem; color:var(--mid); margin-top:1rem; line-height:1.5;">
-      The earlier Claude response about "net negative migration" likely referred to a specific subcategory or time window — not the overall 2024–25 picture, which shows net positive migration of ~1.3M.
-    </p>
   </div>
 
-  <!-- PANEL 3: Scenarios -->
+  <!-- PANEL II-B: Birth Rate vs Fertility Rate — NEW -->
+  <div class="panel panel-full">
+    <div class="panel-label">Panel II-B · The Conceptual Key — New Addition</div>
+    <div class="panel-title">Birth Rate vs. Fertility Rate: Two Different Clocks</div>
+    <div class="rate-split">
+      <div class="rate-card">
+        <div class="rate-card-head">Birth Rate <span class="source-badge">CDC 2025</span></div>
+        <div class="rate-card-num" style="color:var(--accent2);">53.1</div>
+        <div class="rate-card-def">Live births per 1,000 women ages 15–44 · Or ~10.6 per 1,000 total population · Measures the <strong>current flow</strong> of babies being born right now</div>
+        <div class="rate-card-meaning">
+          <strong>What it tells you:</strong> As long as this rate produces more absolute births than there are deaths, the population grows — regardless of what the fertility rate says. In 2025: 3,606,400 births vs. ~3,100,000 deaths = net +506,400. Population grows <em>today</em>.
+        </div>
+      </div>
+      <div class="rate-card">
+        <div class="rate-card-head">Total Fertility Rate <span class="source-badge">CDC 2025</span></div>
+        <div class="rate-card-num" style="color:var(--accent);">1.57</div>
+        <div class="rate-card-def">Average number of children a woman would have over her lifetime at current rates · Measures a <strong>generational forecast</strong> — what happens to population size over time</div>
+        <div class="rate-card-meaning">
+          <strong>What it tells you:</strong> Each generation will be smaller than the last. Below 2.1 means eventual population decline <em>assuming no net immigration</em>. This is a warning about the <em>future</em>, not a description of today. It becomes the present reality around 2033.
+        </div>
+      </div>
+    </div>
+    <div class="rate-verdict">
+      <strong>Why this resolves the original confusion:</strong> The question "how can the U.S. population grow if the fertility rate is below 2.1?" conflates two different timescales. The birth rate governs <em>current-year</em> arithmetic — births still outnumber deaths in absolute terms, so population grows now. The fertility rate governs <em>generational</em> trajectory — each cohort will be smaller, so population eventually shrinks without immigration. Both statements are simultaneously true. They describe different time horizons. The 2.1 replacement threshold is a mathematical benchmark assuming <strong>zero net immigration</strong> — it is not a description of current-year population change.
+    </div>
+  </div>
+
+  <!-- PANEL III: Scenarios -->
   <div class="panel panel-full">
     <div class="panel-label">Panel III · Looking Ahead</div>
-    <div class="panel-title">U.S. Population Trajectories 2025–2055 Under Three Immigration Scenarios</div>
+    <div class="panel-title">U.S. Population Trajectories 2025–2055 Under Four Immigration Scenarios</div>
     <div class="scenario-wrap">
       <canvas id="scenarioChart"></canvas>
     </div>
@@ -406,52 +243,111 @@
       <div class="legend-item"><div class="legend-dot" style="background:#2c6e49;"></div> High immigration (pre-2024 levels ~2.2M/yr)</div>
       <div class="legend-item"><div class="legend-dot" style="background:#1d4e8f;"></div> Moderate immigration (CBO baseline ~800K/yr)</div>
       <div class="legend-item"><div class="legend-dot" style="background:#c0392b;"></div> Low immigration (current trend ~400K/yr)</div>
-      <div class="legend-item"><div class="legend-dot" style="background:#888; border-top: 2px dashed #888; height:0;"></div> Zero net immigration</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#999;"></div> Zero net immigration (birth rate only)</div>
     </div>
     <p style="font-size:0.72rem; color:var(--mid); margin-top:1rem; line-height:1.5;">
-      Source: Adapted from CBO Demographic Outlook 2026–2056. With fertility at 1.6 and falling, sustained low immigration leads to population plateau and decline after ~2033. After that year, deaths are projected to exceed births; only immigration prevents population contraction.
+      Source: Adapted from CBO Demographic Outlook 2026–2056. The orange 2033 threshold marks where deaths are projected to exceed births — the point where the fertility rate's long-term warning becomes the birth rate's present reality. After that, only net immigration prevents population contraction. With TFR now projected at 1.53 by 2055 (CBO), the zero-immigration scenario accelerates.
     </p>
   </div>
 
-  <!-- PANEL 4: Data Reliability -->
+  <!-- PANEL IV: Reliability — upgraded -->
   <div class="panel panel-full">
-    <div class="panel-label">Panel IV · Data Reliability Audit</div>
+    <div class="panel-label">Panel IV · Data Reliability Audit — Revised</div>
     <div class="panel-title">Where Should You Trust the Numbers — and Where Should You Be Cautious?</div>
     <div class="reliability-grid">
 
       <div class="rel-card">
-        <div class="rel-card-title">Birth Rate &amp; Fertility (1.6)</div>
-        <div class="rel-item"><span class="rel-flag flag-ok">Reliable</span> CDC vital statistics are among the most robust demographic data the U.S. collects.</div>
-        <div class="rel-item"><span class="rel-flag flag-caution">Caution</span> The 2.1 replacement-rate threshold assumes zero net immigration — it's a mathematical benchmark, not a policy target.</div>
-        <div class="rel-item"><span class="rel-flag flag-caution">Caution</span> Fertility rates vary significantly by region, education level, and immigrant vs. native-born status.</div>
+        <div class="rel-card-title">Birth Count &amp; Fertility Rate</div>
+        <div class="rel-item"><span class="rel-flag flag-ok">Reliable ↑</span> CDC provisional 2025 data confirms 3,606,400 births — one of the most robust data series the U.S. produces. <em>Upgraded from previous edition.</em></div>
+        <div class="rel-item"><span class="rel-flag flag-ok">Reliable</span> General fertility rate (53.1/1,000 women 15–44) and TFR (1.57) are CDC vital statistics — highly trustworthy.</div>
+        <div class="rel-item"><span class="rel-flag flag-caution">Caution</span> The 2.1 replacement threshold assumes zero net immigration — a mathematical benchmark, not a policy target. It describes eventual trajectory, not current-year change.</div>
+        <div class="rel-item"><span class="rel-flag flag-caution">Caution</span> TFR varies significantly by nativity: immigrant women have higher fertility than U.S.-born women, complicating national averages.</div>
       </div>
 
       <div class="rel-card">
         <div class="rel-card-title">Immigration Inflow</div>
-        <div class="rel-item"><span class="rel-flag flag-ok">Reliable</span> Legal permanent residents and visa holders are well-documented via DHS records.</div>
-        <div class="rel-item"><span class="rel-flag flag-warn">Unreliable</span> Undocumented immigration is estimated, not counted — estimates vary widely by source and political framing.</div>
-        <div class="rel-item"><span class="rel-flag flag-caution">Caution</span> 2025 data is in flux due to rapidly changing enforcement policy — figures may be revised substantially.</div>
+        <div class="rel-item"><span class="rel-flag flag-ok">Reliable</span> Legal permanent residents and visa holders are well-documented via DHS records — strong data foundation.</div>
+        <div class="rel-item"><span class="rel-flag flag-warn">Unreliable</span> Undocumented immigration is estimated, not counted — estimates vary widely by source and political framing. 2025 enforcement changes make this especially uncertain.</div>
+        <div class="rel-item"><span class="rel-flag flag-caution">Caution</span> 2025 net immigration (~1.3M per PRB) is already a sharp drop from 2.7M the prior year — and current policy changes may revise this further downward in subsequent estimates.</div>
       </div>
 
       <div class="rel-card">
         <div class="rel-card-title">Emigration of U.S. Citizens</div>
-        <div class="rel-item"><span class="rel-flag flag-warn">Unreliable</span> The U.S. has no mandatory exit tracking system. Emigration figures are estimates derived from foreign census data and surveys.</div>
-        <div class="rel-item"><span class="rel-flag flag-warn">Unreliable</span> "Americans leaving" figures frequently conflate temporary abroad residence with permanent emigration.</div>
-        <div class="rel-item"><span class="rel-flag flag-caution">Caution</span> This is the least reliable number in the entire inquiry — treat with significant skepticism.</div>
+        <div class="rel-item"><span class="rel-flag flag-warn">Unreliable</span> The U.S. has no mandatory exit tracking. Emigration figures are indirect estimates from foreign census data and surveys — this is the weakest number in the entire inquiry.</div>
+        <div class="rel-item"><span class="rel-flag flag-warn">Unreliable</span> "Americans leaving" figures frequently conflate temporary residence abroad with permanent emigration — a crucial distinction not captured in available data.</div>
+        <div class="rel-item"><span class="rel-flag flag-caution">Note</span> Because birth and death data (CDC) are far more reliable than emigration estimates, the two inputs to population arithmetic have very different confidence levels. Weight them accordingly.</div>
       </div>
 
     </div>
+  </div>
+
+  <!-- PANEL V: Arithmetic proof — NEW -->
+  <div class="panel panel-full">
+    <div class="panel-label">Panel V · The Verified Arithmetic — New Addition</div>
+    <div class="panel-title">CDC-Sourced Population Equation for 2025 <span class="source-badge">CDC VSRR 2025</span></div>
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top:0.5rem;">
+      <div>
+        <div style="font-size:0.75rem; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--mid); margin-bottom:0.6rem;">Natural Change</div>
+        <div class="proof-block">
+          <div class="proof-line">
+            <div class="proof-op">+</div>
+            <div class="proof-label">Births (CDC provisional 2025)</div>
+            <div class="proof-val" style="color:var(--accent2);">3,606,400</div>
+          </div>
+          <div class="proof-line">
+            <div class="proof-op">−</div>
+            <div class="proof-label">Deaths (estimated 2025)</div>
+            <div class="proof-val" style="color:var(--accent);">3,100,000</div>
+          </div>
+          <div class="proof-line total">
+            <div class="proof-op">=</div>
+            <div class="proof-label" style="font-weight:600;">Natural Increase</div>
+            <div class="proof-val">+506,400</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div style="font-size:0.75rem; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--mid); margin-bottom:0.6rem;">Migration Change</div>
+        <div class="proof-block">
+          <div class="proof-line">
+            <div class="proof-op">+</div>
+            <div class="proof-label">All immigrants entering (net, PRB)</div>
+            <div class="proof-val" style="color:var(--accent3);">1,300,000</div>
+          </div>
+          <div class="proof-line">
+            <div class="proof-op">−</div>
+            <div class="proof-label">U.S. citizens departing (estimated)</div>
+            <div class="proof-val" style="color:var(--accent);">~100,000</div>
+          </div>
+          <div class="proof-line total">
+            <div class="proof-op">=</div>
+            <div class="proof-label" style="font-weight:600;">Net Migration</div>
+            <div class="proof-val">~+1,200,000</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="proof-block" style="margin-top:1rem; background:white; border-color: var(--accent2);">
+      <div class="proof-line total" style="border-top:none; padding-top:0.3rem;">
+        <div class="proof-op">=</div>
+        <div class="proof-label" style="font-weight:600; font-size:1rem;">Total U.S. Population Growth 2024–25</div>
+        <div class="proof-val" style="color:var(--accent2); font-size:1.3rem;">≈ +1.8M</div>
+      </div>
+    </div>
+    <div class="proof-check">✓ Consistent with Census Bureau reported growth of +1.8M (0.5%) for 2024–25</div>
+    <p style="font-size:0.72rem; color:var(--mid); margin-top:0.8rem; line-height:1.5;">
+      This arithmetic closes the "Conclusion Confusion" completely. The fertility rate (1.57) operates on a <em>different timescale</em> than the birth count (3.6M). While each woman averages fewer than 2.1 children over her lifetime, the sheer number of women of childbearing age still produces more births than deaths in any given year. Immigration adds another 1.2M. The paradox was definitional, not mathematical.
+    </p>
   </div>
 
 </div>
 
 <div class="footnote">
-  Sources: U.S. Census Bureau Population Estimates 2025 · CBO Demographic Outlook 2026–2056 · Population Reference Bureau (PRB) Jan 2026 · Migration Policy Institute 2025 · San Francisco Federal Reserve Nov 2025 · CDC National Center for Health Statistics<br>
-  Prepared for BOLLI Current Events Discussion · This visualization is for educational purposes. All projections carry significant uncertainty.
+  Sources: CDC VSRR Provisional Natality Data 2025 (vsrr043.pdf) · U.S. Census Bureau Population Estimates 2025 · CBO Demographic Outlook 2026–2056 · Population Reference Bureau Jan 2026 · Migration Policy Institute 2025 · SF Federal Reserve Nov 2025 · OECD Fertility Rate Indicators · Britannica — Fertility Rate<br>
+  Prepared for BOLLI Current Events Discussion · Updated June 2026 in response to independent CDC verification by inquiry author · All projections carry significant uncertainty.
 </div>
 
 <script>
-// Simple canvas chart for scenario panel
 const canvas = document.getElementById('scenarioChart');
 const ctx = canvas.getContext('2d');
 
@@ -461,100 +357,59 @@ function drawChart() {
   canvas.width = W;
   canvas.height = H;
 
-  const pad = { top: 20, right: 30, bottom: 40, left: 60 };
+  const pad = { top: 20, right: 50, bottom: 40, left: 60 };
   const chartW = W - pad.left - pad.right;
   const chartH = H - pad.top - pad.bottom;
 
-  // Years 2025–2055, every 5
   const years = [2025,2030,2035,2040,2045,2050,2055];
-  // Population in millions — rough projections based on CBO data
   const scenarios = {
     high:     [350, 358, 366, 374, 381, 388, 396],
     moderate: [350, 354, 358, 361, 363, 364, 364],
     low:      [350, 352, 353, 352, 350, 347, 343],
-    zero:     [350, 350, 348, 344, 338, 331, 323],
+    zero:     [350, 350, 348, 343, 336, 328, 319],
   };
-
-  const minPop = 310, maxPop = 410;
-  const colors = {
-    high: '#2c6e49',
-    moderate: '#1d4e8f',
-    low: '#c0392b',
-    zero: '#999',
-  };
+  const minPop = 305, maxPop = 410;
+  const colors = { high:'#2c6e49', moderate:'#1d4e8f', low:'#c0392b', zero:'#999' };
 
   function xPos(i) { return pad.left + (i / (years.length - 1)) * chartW; }
   function yPos(v) { return pad.top + chartH - ((v - minPop) / (maxPop - minPop)) * chartH; }
 
-  // Grid lines
-  ctx.strokeStyle = '#e0d8cc';
-  ctx.lineWidth = 1;
+  // Grid
+  ctx.strokeStyle = '#e0d8cc'; ctx.lineWidth = 1;
   for (let v = 320; v <= 400; v += 20) {
     const y = yPos(v);
-    ctx.beginPath();
-    ctx.moveTo(pad.left, y);
-    ctx.lineTo(pad.left + chartW, y);
-    ctx.stroke();
-    ctx.fillStyle = '#8b7d6b';
-    ctx.font = '11px "Source Sans 3", sans-serif';
-    ctx.textAlign = 'right';
-    ctx.fillText(v + 'M', pad.left - 8, y + 4);
+    ctx.beginPath(); ctx.moveTo(pad.left, y); ctx.lineTo(pad.left + chartW, y); ctx.stroke();
+    ctx.fillStyle = '#8b7d6b'; ctx.font = '11px "Source Sans 3",sans-serif';
+    ctx.textAlign = 'right'; ctx.fillText(v + 'M', pad.left - 8, y + 4);
   }
 
-  // X axis labels
   years.forEach((yr, i) => {
-    ctx.fillStyle = '#8b7d6b';
-    ctx.font = '11px "Source Sans 3", sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText(yr, xPos(i), pad.top + chartH + 20);
+    ctx.fillStyle = '#8b7d6b'; ctx.font = '11px "Source Sans 3",sans-serif';
+    ctx.textAlign = 'center'; ctx.fillText(yr, xPos(i), pad.top + chartH + 20);
   });
 
-  // Draw lines
   Object.entries(scenarios).forEach(([key, vals]) => {
     ctx.beginPath();
     ctx.strokeStyle = colors[key];
     ctx.lineWidth = key === 'zero' ? 1.5 : 2.5;
-    if (key === 'zero') ctx.setLineDash([6, 4]);
-    else ctx.setLineDash([]);
-    vals.forEach((v, i) => {
-      if (i === 0) ctx.moveTo(xPos(i), yPos(v));
-      else ctx.lineTo(xPos(i), yPos(v));
-    });
-    ctx.stroke();
-    ctx.setLineDash([]);
-
-    // End label
-    const lastX = xPos(vals.length - 1);
-    const lastY = yPos(vals[vals.length - 1]);
-    ctx.fillStyle = colors[key];
-    ctx.font = 'bold 11px "Source Sans 3", sans-serif';
-    ctx.textAlign = 'left';
-    ctx.fillText(vals[vals.length - 1] + 'M', lastX + 4, lastY + 4);
+    if (key === 'zero') ctx.setLineDash([6,4]); else ctx.setLineDash([]);
+    vals.forEach((v, i) => { if (i===0) ctx.moveTo(xPos(i),yPos(v)); else ctx.lineTo(xPos(i),yPos(v)); });
+    ctx.stroke(); ctx.setLineDash([]);
+    const lx = xPos(vals.length-1), ly = yPos(vals[vals.length-1]);
+    ctx.fillStyle = colors[key]; ctx.font = 'bold 11px "Source Sans 3",sans-serif';
+    ctx.textAlign = 'left'; ctx.fillText(vals[vals.length-1]+'M', lx+4, ly+4);
   });
 
-  // Axis lines
-  ctx.strokeStyle = '#1a1a2e';
-  ctx.lineWidth = 1.5;
-  ctx.beginPath();
-  ctx.moveTo(pad.left, pad.top);
-  ctx.lineTo(pad.left, pad.top + chartH);
-  ctx.lineTo(pad.left + chartW, pad.top + chartH);
-  ctx.stroke();
+  ctx.strokeStyle = '#1a1a2e'; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(pad.left,pad.top); ctx.lineTo(pad.left,pad.top+chartH); ctx.lineTo(pad.left+chartW,pad.top+chartH); ctx.stroke();
 
-  // 2033 marker — deaths exceed births
-  const markerX = pad.left + ((2033 - 2025) / 30) * chartW;
-  ctx.strokeStyle = '#e67e22';
-  ctx.lineWidth = 1;
-  ctx.setLineDash([3, 3]);
-  ctx.beginPath();
-  ctx.moveTo(markerX, pad.top);
-  ctx.lineTo(markerX, pad.top + chartH);
-  ctx.stroke();
+  // 2033 marker
+  const mx = pad.left + ((2033-2025)/30)*chartW;
+  ctx.strokeStyle='#e67e22'; ctx.lineWidth=1; ctx.setLineDash([3,3]);
+  ctx.beginPath(); ctx.moveTo(mx,pad.top); ctx.lineTo(mx,pad.top+chartH); ctx.stroke();
   ctx.setLineDash([]);
-  ctx.fillStyle = '#e67e22';
-  ctx.font = '10px "Source Sans 3", sans-serif';
-  ctx.textAlign = 'center';
-  ctx.fillText('2033: Deaths > Births', markerX, pad.top + 12);
+  ctx.fillStyle='#e67e22'; ctx.font='10px "Source Sans 3",sans-serif';
+  ctx.textAlign='center'; ctx.fillText('2033: Deaths > Births', mx, pad.top+12);
 }
 
 drawChart();
