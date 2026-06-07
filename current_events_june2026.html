@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Reckoning · Week of June 1–7, 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=EB+Garamond:ital,opsz,wght@0,8..144,400;0,8..144,500;1,8..144,400;1,8..144,500&family=Cinzel:wght@400;700;900&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+
+/* ═══════════════════════════════════════════
+   SHARED TOKENS  (edifice_rex palette)
+═══════════════════════════════════════════ */
+:root {
+  --gold:       #c9a84c;
+  --gold-light: #e8c97a;
+  --gold-dark:  #8b6914;
+  --gold-xs:    rgba(201,168,76,0.10);
+  --cream:      #f5efe0;
+  --parchment:  #ede0c4;
+  --white:      #f9f5ed;
+  --ink:        #1a1208;
+  --mid:        #3a2a10;
+  --dim:        #7a6a50;
+  --red:        #8b1a1a;
+  --red-light:  #b22222;
+  --red-xs:     rgba(139,26,26,0.09);
+  --rule:       rgba(201,168,76,0.18);
+  --rule-md:    rgba(201,168,76,0.32);
+  --shadow:     rgba(26,18,8,0.35);
+
+  /* AI Elements of Style palette */
+  --aes-paper:   #fffdf6;
+  --aes-ink:     #0d0a05;
+  --aes-mid:     #4a3c28;
+  --aes-gold:    #c8b888;
+  --aes-red:     #8c0f0f;
+  --aes-bg:      #e8e0cc;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background-color: #1a1208;
+  background-image:
+    radial-gradient(ellipse at 20% 20%, rgba(139,105,20,0.15) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 80%, rgba(139,26,26,0.12) 0%, transparent 60%);
+  min-height: 100vh;
+  font-family: 'EB Garamond', Georgia, serif;
+  color: var(--ink);
+  padding: 0 1rem 4rem;
+}
+
+/* ═══════════════════════════════════════════
+   TOGGLE BAR
+═══════════════════════════════════════════ */
+.toggle-bar {
+  position: sticky; top: 0; z-index: 1000;
+  display: flex; justify-content: center;
+  padding: 0.8rem 1rem;
+  background: linear-gradient(to bottom, rgba(26,18,8,0.98) 0%, rgba(26,18,8,0.85) 100%);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(201,168,76,0.2);
+}
+.toggle-pill {
+  display: flex;
+  background: rgba(26,18,8,0.9);
+  border: 1px solid rgba(201,168,76,0.35);
+  border-radius: 100px;
+  padding: 3px; gap: 2px;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.5), inset 0 1px 0 rgba(201,168,76,0.1);
+}
+.toggle-btn {
+  font-family: 'Cinzel', serif; font-size: 0.65rem; font-weight: 700;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  padding: 0.45rem 1.4rem; border: none; border-radius: 100px;
+  cursor: pointer; transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+  color: rgba(201,168,76,0.5); background: transparent;
+}
+.toggle-btn.active {
+  background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold) 100%);
+  color: var(--ink);
+  box-shadow: 0 2px 12px rgba(201,168,76,0.4);
+}
+.toggle-btn:hover:not(.active) { color: var(--gold-light); }
+
+/* ═══════════════════════════════════════════
+   VIEW WRAPPERS
+═══════════════════════════════════════════ */
+.view { padding-top: 2rem; }
+.view.hidden { display: none; }
+
+.view .page {
+  margin: 0 auto;
+  background: var(--cream);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  box-shadow: 0 0 80px rgba(201,168,76,0.25), 0 20px 60px var(--shadow), 0 0 0 1px rgba(201,168,76,0.3);
+  position: relative; overflow: hidden;
+}
+.view .page::before {
+  content: ''; position: absolute; inset: 12px;
+  border: 1px solid var(--gold); pointer-events: none; z-index: 10;
+}
+.view .page::after {
+  content: ''; position: absolute; inset: 16px;
+  border: 1px solid rgba(201,168,76,0.3); pointer-events: none; z-index: 10;
+}
+.view .masthead { background: var(--ink); position: relative; overflow: hidden; }
+.view .masthead::after {
+  content: ''; position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse at 85% 30%, rgba(139,105,20,0.22) 0%, transparent 55%),
+    radial-gradient(ellipse at 15% 70%, rgba(139,26,26,0.15) 0%, transparent 50%);
+  pointer-events: none;
+}
+.accent-stripe {
+  height: 4px;
+  background: linear-gradient(90deg, var(--ink) 0%, var(--gold-dark) 25%, var(--gold) 55%, var(--gold-light) 75%, var(--red-light) 100%);
+}
+@keyframes titleGlow {
+  from { text-shadow: 0 2px 20px rgba(201,168,76,0.3); }
+  to   { text-shadow: 0 2px 40px rgba(201,168,76,0.65), 0 0 80px rgba(201,168,76,0.2); }
+}
+@keyframes pageReveal {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes sectionFade {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+
+/* ═══════════════════════════════════════════
+   AT A GLANCE  — AI ELEMENTS OF STYLE
+═══════════════════════════════════════════ */
+#view-glance .page {
+  max-width: 980px;
+  padding-bottom: 0;
+  animation: pageReveal 0.9s ease-out both;
+  /* Override cream for AES newspaper aesthetic */
+  background: var(--aes-paper) !important;
+  border: 2px solid var(--aes-ink);
+  box-shadow: 6px 6px 0 var(--aes-ink), 0 0 60px rgba(201,168,76,0.2);
+}
+#view-glance .page::before {
+  border: none;
+}
+#view-glance .page::after {
+  border: none;
+}
+
+/* Ruled paper overlay — AES signature */
+#view-glance .page .aes-ruled-overlay {
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 27px, rgba(0,0,0,0.025) 27px, rgba(0,0,0,0.025) 28px);
+  pointer-events: none; z-index: 0;
+}
+
+/* All children above ruled overlay */
+#view-glance .page > * { position: relative; z-index: 1; }
+
+/* ── AES MASTHEAD ── */
+#view-glance .aes-masthead {
+  background: var(--aes-paper);
+  text-align: center;
+  border-bottom: 4px double var(--aes-ink);
+  padding: 2rem 3rem 1.4rem;
+}
+#view-glance .aes-kicker {
+  font-family: 'Courier Prime', monospace;
+  font-size: 10px; letter-spacing: 0.38em;
+  text-transform: uppercase; color: var(--aes-mid);
+  margin-bottom: 0.5rem;
+}
+#view-glance .aes-headline {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.2rem, 5vw, 3.6rem);
+  font-weight: 900; line-height: 0.92;
+  color: var(--aes-ink); text-transform: uppercase;
+  letter-spacing: 0.04em; margin-bottom: 0.3rem;
+}
+#view-glance .aes-headline em {
+  font-style: italic; font-weight: 400;
+  font-size: 0.75em; display: block;
+  letter-spacing: 0.06em; color: var(--aes-mid);
+}
+#view-glance .aes-subhead {
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem; font-style: italic;
+  color: var(--aes-mid); margin-bottom: 0.5rem;
+}
+#view-glance .aes-dedication {
+  font-family: 'Courier Prime', monospace;
+  font-size: 9px; letter-spacing: 0.22em;
+  text-transform: uppercase; color: #9a8a68;
+  border-top: 1px solid var(--aes-gold);
+  padding-top: 0.5rem; margin-top: 0.5rem;
+}
+
+/* ── AES RULES HR ── */
+.hr-thick  { border: none; border-top: 3px solid var(--aes-ink); margin: 1.1rem 0; }
+.hr-thin   { border: none; border-top: 1px solid var(--aes-gold); margin: 0.9rem 0; }
+.hr-double { border: none; border-top: 4px double var(--aes-ink); margin: 1.3rem 0; }
+
+/* ── AES AXIOM BAND ── */
+#view-glance .axiom-band {
+  display: grid; grid-template-columns: repeat(3,1fr);
+  border: 2px solid var(--aes-ink); margin: 0 3rem 1.3rem;
+}
+#view-glance .axiom-cell {
+  padding: 0.9rem 1rem;
+  border-right: 2px solid var(--aes-ink);
+  background: var(--aes-paper);
+}
+#view-glance .axiom-cell:last-child { border-right: none; }
+#view-glance .axiom-tag {
+  font-family: 'Courier Prime', monospace;
+  font-size: 9px; letter-spacing: 0.25em;
+  text-transform: uppercase; color: var(--aes-mid); margin-bottom: 4px;
+}
+#view-glance .axiom-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.9rem; font-weight: 900;
+  color: var(--aes-gold); line-height: 1; margin-bottom: 2px;
+}
+#view-glance .axiom-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 0.95rem; font-weight: 700;
+  color: var(--aes-ink); margin-bottom: 4px;
+}
+#view-glance .axiom-name.red { color: var(--aes-red); }
+#view-glance .axiom-body {
+  font-size: 12.5px; line-height: 1.55;
+  color: var(--aes-mid); font-style: italic;
+}
+
+/* ── AES BODY ── */
+#view-glance .aes-body { padding: 0 3rem 2rem; }
+
+#view-glance .sec-tag {
+  font-family: 'Courier Prime', monospace;
+  font-size: 9px; letter-spacing: 0.3em;
+  text-transform: uppercase; color: var(--aes-mid); margin-bottom: 0.4rem;
+}
+#view-glance .sec-head {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.05rem; font-weight: 700;
+  color: var(--aes-ink); border-bottom: 2px solid var(--aes-ink);
+  padding-bottom: 0.3rem; margin-bottom: 0.85rem;
+}
+
+/* ── AES RULE ENTRIES (three columns) ── */
+#view-glance .col3 {
+  display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 1.8rem;
+}
+#view-glance .col2 {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1.8rem;
+}
+#view-glance .rule-entry {
+  margin-bottom: 1rem;
+  border-left: 4px solid var(--aes-ink);
+  padding: 0.7rem 0.9rem;
+  background: rgba(0,0,0,0.03);
+}
+#view-glance .rule-num {
+  font-family: 'Courier Prime', monospace;
+  font-size: 9px; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--aes-red); margin-bottom: 3px;
+}
+#view-glance .rule-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 0.95rem; font-weight: 700;
+  color: var(--aes-ink); margin-bottom: 4px;
+}
+#view-glance .rule-body {
+  font-size: 13px; line-height: 1.6;
+  color: var(--aes-mid); font-style: italic; margin-bottom: 4px;
+}
+#view-glance .rule-apply {
+  font-family: 'Courier Prime', monospace;
+  font-size: 11.5px; color: var(--aes-ink); font-style: normal;
+}
+#view-glance .rule-apply::before { content: '→ '; color: var(--aes-red); font-weight: 700; }
+
+/* ── AES VIOLATION TABLE ── */
+#view-glance table.vt { width: 100%; border-collapse: collapse; }
+#view-glance table.vt thead th {
+  font-family: 'Courier Prime', monospace;
+  font-size: 9px; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--aes-mid);
+  text-align: left; padding: 4px 8px 8px;
+  border-bottom: 1.5px solid var(--aes-ink);
+}
+#view-glance table.vt tbody td {
+  padding: 8px; border-bottom: 1px dashed var(--aes-gold);
+  vertical-align: top; font-size: 13px; line-height: 1.5;
+  color: var(--aes-ink);
+}
+#view-glance table.vt tbody tr:last-child td { border-bottom: none; }
+#view-glance table.vt .bad {
+  font-family: 'Courier Prime', monospace; font-size: 12px;
+  color: var(--aes-red); text-decoration: line-through;
+  text-decoration-color: var(--aes-red); text-decoration-thickness: 2px;
+  background: #f0e8d0; padding: 2px 7px;
+  border: 1.5px solid var(--aes-gold); display: inline-block; margin-bottom: 3px;
+}
+#view-glance table.vt .good {
+  font-family: 'Courier Prime', monospace; font-size: 12px;
+  color: #4a7c28; background: #f0e8d0; padding: 2px 7px;
+  border: 1.5px solid var(--aes-gold); display: inline-block;
+}
+
+/* ── AES FORBIDDEN BAND ── */
+#view-glance .forbidden {
+  background: #f0e8d0; border: 2px solid var(--aes-ink);
+  padding: 0.8rem 1rem; margin: 1rem 0;
+}
+#view-glance .forb-head {
+  font-family: 'Playfair Display', serif;
+  font-size: 0.95rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.04em;
+  color: var(--aes-red); display: flex; align-items: center;
+  gap: 0.6rem; margin-bottom: 0.6rem;
+}
+#view-glance .forb-head::before, #view-glance .forb-head::after {
+  content: ''; flex: 1; height: 1.5px; background: var(--aes-red);
+}
+#view-glance .pills { display: flex; flex-wrap: wrap; gap: 5px; }
+#view-glance .pill {
+  font-family: 'Courier Prime', monospace; font-size: 11px;
+  padding: 3px 9px; border: 1.5px solid var(--aes-mid);
+  color: var(--aes-ink); text-decoration: line-through;
+  text-decoration-color: var(--aes-red); text-decoration-thickness: 2px;
+}
+
+/* ── AES CHECKLIST ── */
+#view-glance ul.chk { list-style: none; padding: 0; margin: 0; }
+#view-glance ul.chk li {
+  font-size: 13px; line-height: 1.6; color: var(--aes-ink);
+  padding: 5px 0 5px 24px; border-bottom: 1px dashed var(--aes-gold);
+  position: relative;
+}
+#view-glance ul.chk li:last-child { border-bottom: none; }
+#view-glance ul.chk li::before {
+  content: '□'; position: absolute; left: 0; top: 5px;
+  color: var(--aes-mid); font-size: 14px;
+}
+#view-glance ul.chk li.warn {
+  font-family: 'Courier Prime', monospace; font-size: 12px;
+  font-weight: 700; color: var(--aes-red);
+}
+#view-glance ul.chk li.warn::before { content: '⚠'; color: var(--aes-red); font-size: 12px; top: 6px; }
+
+/* ── AES CLOSING BAND ── */
+#view-glance .closing-band {
+  background: var(--aes-ink); color: var(--aes-gold);
+  padding: 1.2rem 3rem;
+  border-top: 3px solid var(--aes-ink);
+  display: flex; align-items: flex-start; gap: 1.5rem;
+}
+#view-glance .cb-label {
+  font-family: 'Courier Prime', monospace;
+  font-size: 8.5px; letter-spacing: 0.2em;
+  text-transform: uppercase; color: rgba(200,184,136,0.6);
+  white-space: nowrap; padding-top: 3px; flex-shrink: 0;
+}
+#view-glance .cb-rule { width: 1px; background: rgba(200,184,136,0.2); align-self: stretch; flex-shrink: 0; }
+#view-glance .cb-text {
+  font-family: 'Playfair Display', serif;
+  font-size: 13px; font-style: italic; line-height: 1.65;
+  color: rgba(200,184,136,0.9);
+}
+#view-glance .cb-text strong { color: var(--aes-gold); font-style: normal; font-weight: 700; }
+
+/* ── AES PAGE FOOTER ── */
+#view-glance .page-footer {
+  border-top: 1px solid var(--aes-gold);
+  margin: 0 3rem; padding: 10px 0 0 0;
+  display: flex; justify-content: space-between; align-items: center;
+  padding-bottom: 1.5rem;
+}
+#view-glance .page-footer p {
+  font-family: 'Courier Prime', monospace; font-size: 8.5px;
+  letter-spacing: 0.08em; color: var(--aes-mid); margin: 0;
+}
+
+
+/* ═══════════════════════════════════════════
+   IN DEPTH  (edifice_rex broadsheet style)
+═══════════════════════════════════════════ */
+#view-depth .page {
+  max-width: 860px;
+  animation: pageReveal 1.2s ease-out both;
+}
+#view-depth .masthead {
+  padding: 3rem 3rem 2.5rem;
+  text-align: center;
+  border-bottom: 3px solid var(--gold);
+}
+#view-depth .masthead-rule {
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--gold), transparent);
+  margin: 0.75rem auto; width: 70%;
+}
+#view-depth .issue-line {
+  font-family: 'Cinzel', serif; font-size: 0.65rem;
+  letter-spacing: 0.25em; color: var(--gold-dark);
+  text-transform: uppercase; margin-bottom: 1.2rem;
+}
+#view-depth .title {
+  font-family: 'Cinzel', serif; font-size: clamp(2.4rem,6vw,3.8rem);
+  font-weight: 900; color: var(--gold-light); line-height: 1.05;
+  letter-spacing: 0.03em; animation: titleGlow 3s ease-in-out infinite alternate;
+}
+#view-depth .subtitle {
+  font-family: 'EB Garamond', serif; font-style: italic;
+  font-size: 1.05rem; color: rgba(232,201,122,0.7);
+  margin-top: 0.5rem; letter-spacing: 0.08em;
+}
+#view-depth .date-line {
+  font-family: 'Cinzel', serif; font-size: 0.7rem;
+  letter-spacing: 0.2em; color: var(--gold-dark);
+  margin-top: 1.4rem; text-transform: uppercase;
+}
+#view-depth .content { padding: 2rem 3.5rem 3rem; }
+#view-depth .section {
+  margin-bottom: 2.5rem;
+  animation: sectionFade 0.8s ease-out both;
+}
+#view-depth .section:nth-child(1) { animation-delay: 0.1s; }
+#view-depth .section:nth-child(2) { animation-delay: 0.2s; }
+#view-depth .section:nth-child(3) { animation-delay: 0.3s; }
+#view-depth .section:nth-child(4) { animation-delay: 0.4s; }
+#view-depth .section:nth-child(5) { animation-delay: 0.5s; }
+#view-depth .section:nth-child(6) { animation-delay: 0.6s; }
+#view-depth .section:nth-child(7) { animation-delay: 0.7s; }
+#view-depth .section-title {
+  font-family: 'Cinzel', serif; font-size: 0.8rem; font-weight: 700;
+  letter-spacing: 0.2em; text-transform: uppercase; color: var(--red);
+  border-bottom: 1px solid var(--gold); padding-bottom: 0.4rem;
+  margin-bottom: 1rem; display: flex; align-items: center; gap: 0.6rem;
+}
+#view-depth .section-title::before { content: '◆'; font-size: 0.5rem; color: var(--gold); flex-shrink: 0; }
+#view-depth .content p {
+  font-size: 1.05rem; line-height: 1.8; color: #2a1e0e;
+  margin-bottom: 0.8rem; text-align: justify; hyphens: auto;
+}
+#view-depth .section > p:first-of-type::first-letter {
+  font-family: 'Cinzel', serif; font-size: 3.2rem; font-weight: 900;
+  float: left; line-height: 0.8; margin: 0.1em 0.1em 0 0;
+  color: var(--red); text-shadow: 2px 2px 0 rgba(139,26,26,0.15);
+}
+#view-depth .pull-quote {
+  margin: 1.5rem 0; padding: 1rem 1.5rem;
+  border-left: 3px solid var(--gold); border-right: 3px solid var(--gold);
+  background: rgba(201,168,76,0.07); text-align: center;
+  font-family: 'Playfair Display', serif; font-style: italic;
+  font-size: 1.05rem; line-height: 1.6; color: var(--red);
+}
+#view-depth .pull-quote cite {
+  display: block; font-family: 'Cinzel', serif; font-style: normal;
+  font-size: 0.65rem; letter-spacing: 0.15em; color: var(--gold-dark);
+  margin-top: 0.5rem; text-transform: uppercase;
+}
+#view-depth .stat-grid {
+  display: grid; grid-template-columns: repeat(3,1fr);
+  gap: 0.9rem; margin: 1.2rem 0;
+}
+#view-depth .stat-box {
+  background: var(--ink); padding: 1rem; text-align: center;
+  border: 1px solid var(--gold-dark); position: relative;
+}
+#view-depth .stat-box::before {
+  content: ''; position: absolute; inset: 3px;
+  border: 1px solid rgba(201,168,76,0.15); pointer-events: none;
+}
+#view-depth .stat-number {
+  font-family: 'Cinzel', serif; font-size: 1.5rem; font-weight: 900;
+  color: var(--gold-light); line-height: 1;
+}
+#view-depth .stat-label {
+  font-family: 'EB Garamond', serif; font-size: 0.75rem;
+  color: rgba(232,201,122,0.6); margin-top: 0.3rem;
+  letter-spacing: 0.05em; line-height: 1.3;
+}
+#view-depth .divider {
+  text-align: center; margin: 2rem 0;
+  color: var(--gold); font-size: 0.9rem;
+  letter-spacing: 0.5em; opacity: 0.6;
+}
+#view-depth .fact-item {
+  display: flex; gap: 1rem; align-items: flex-start;
+  margin-bottom: 0.9rem; padding-bottom: 0.9rem;
+  border-bottom: 1px dotted rgba(201,168,76,0.3);
+}
+#view-depth .fact-item:last-child { border-bottom: none; margin-bottom: 0; }
+#view-depth .fact-num {
+  font-family: 'Cinzel', serif; font-weight: 900; font-size: 1.3rem;
+  color: var(--gold); line-height: 1; flex-shrink: 0; min-width: 1.5rem;
+}
+#view-depth .fact-text { font-size: 1rem; line-height: 1.65; color: #2a1e0e; margin-bottom: 0; }
+#view-depth .closing {
+  margin-top: 2rem; padding-top: 1.5rem;
+  border-top: 1px solid var(--gold); text-align: center;
+}
+#view-depth .ornament {
+  color: var(--gold); font-size: 1.6rem; display: block;
+  text-align: center; margin: 0.5rem 0; opacity: 0.7;
+}
+#view-depth .closing-text {
+  font-family: 'Playfair Display', serif; font-style: italic;
+  font-size: 1.1rem; line-height: 1.7; color: var(--red);
+  max-width: 600px; margin: 0 auto 1rem;
+}
+#view-depth .closing-sig {
+  font-family: 'Cinzel', serif; font-size: 0.7rem;
+  letter-spacing: 0.18em; color: var(--gold-dark); text-transform: uppercase;
+}
+#view-depth .content ul, #view-depth .content ol {
+  margin: 0.8rem 0 0.8rem 1.8rem; line-height: 1.9;
+  font-size: 1.02rem; color: #2a1e0e;
+}
+#view-depth .content li { margin-bottom: 0.4rem; }
+
+</style>
+</head>
+<body>
+
+<!-- ═══ TOGGLE BAR ═══ -->
+<div class="toggle-bar">
+  <div class="toggle-pill">
+    <button class="toggle-btn active" id="btn-glance" onclick="switchView('glance')">At A Glance</button>
+    <button class="toggle-btn" id="btn-depth" onclick="switchView('depth')">In Depth</button>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════════
+     AT A GLANCE  —  AI ELEMENTS OF STYLE
+═══════════════════════════════════════════════════════════════ -->
+<div class="view" id="view-glance">
+<div class="page">
+
+  <div class="aes-ruled-overlay"></div>
+
+  <!-- AES Masthead -->
+  <div class="aes-masthead">
+    <div class="aes-kicker">BOLLI Current Events Discussion Group · Week of June 1–7, 2026</div>
+    <div class="hr-thin"></div>
+    <div class="aes-headline">The Reckoning<em>Primaries, the Iran Stalemate &amp; 60 Minutes</em></div>
+    <div class="aes-subhead">The week the Republican coalition bent further — and the press bent, too</div>
+    <div class="aes-dedication">Talking Points · Not Conclusions · Bring These to the Table</div>
+  </div>
+
+  <div class="hr-thick" style="margin:0 3rem;"></div>
+
+  <!-- Axiom Band — three thesis numbers -->
+  <div class="axiom-band">
+    <div class="axiom-cell">
+      <div class="axiom-tag">Primary Verdict</div>
+      <div class="axiom-num">64–36</div>
+      <div class="axiom-name red">Cornyn Crushed in TX</div>
+      <div class="axiom-body">Four-term senator, erstwhile Majority Leader contender, loses by 28 points to ethically-challenged AG Ken Paxton after a Trump endorsement.</div>
+    </div>
+    <div class="axiom-cell">
+      <div class="axiom-tag">Iran War — Day ~100</div>
+      <div class="axiom-num">100</div>
+      <div class="axiom-name">Days of Stalemate</div>
+      <div class="axiom-body">Iran retains control of the Strait of Hormuz. Trump vacillates publicly. Drezner: "All the assumptions they had made were wrong."</div>
+    </div>
+    <div class="axiom-cell">
+      <div class="axiom-tag">60 Minutes</div>
+      <div class="axiom-num">7→3</div>
+      <div class="axiom-name red">Correspondents Remain</div>
+      <div class="axiom-body">Tanya Simon, Cecilia Vega, Sharyn Alfonsi fired. Then Scott Pelley — 22 years at the show — fired after the bagel breakfast. Four gone in a week.</div>
+    </div>
+  </div>
+
+  <div class="aes-body">
+
+    <div class="hr-thin"></div>
+    <div class="sec-tag">The Three Stories Worth Examining</div>
+    <div class="sec-head">Primary Results · The Iran War · The Press Under Siege</div>
+
+    <!-- Three columns of rule entries -->
+    <div class="col3">
+
+      <!-- Column 1: Primaries -->
+      <div>
+        <div class="rule-entry">
+          <div class="rule-num">Primary I · Texas Senate</div>
+          <div class="rule-title">The Paxton Landslide</div>
+          <div class="rule-body">Trump endorsed Ken Paxton over four-term Senator John Cornyn, who had led in polls by ~10%. Result: 64–36. Thom Tillis on Paxton: "To call him ethically challenged is to call Jeffrey Dahmer suffering from an eating disorder."</div>
+          <div class="rule-apply">What does it mean when the party's most senior Senate figure can be obliterated in a week?</div>
+        </div>
+        <div class="rule-entry">
+          <div class="rule-num">Primary II · California Governor</div>
+          <div class="rule-title">The Jungle Primary Scare</div>
+          <div class="rule-body">Democrats feared two Republicans emerging. Swalwell dropped out; his support migrated to Becerra and Steyer. With 68% counted: Becerra 26.8%, Hilton 26.4%, Steyer 21.1%. Democrats combined at 60% — above Harris's 58.5% in 2024.</div>
+          <div class="rule-apply">Is the California result a leading indicator for the national mood?</div>
+        </div>
+        <div class="rule-entry">
+          <div class="rule-num">Context</div>
+          <div class="rule-title">The Retribution Pattern</div>
+          <div class="rule-body">The generic Democratic congressional ballot lead ranges from 4–10%, with the Silver Bulletin at 6.9% — comparable to where Democrats stood heading into 2018. Democrats then gained 41 House seats.</div>
+          <div class="rule-apply">Paraphrase Twain: "Reports of Republicans restraining Trump are greatly exaggerated."</div>
+        </div>
+      </div>
+
+      <!-- Column 2: Iran -->
+      <div>
+        <div class="rule-entry">
+          <div class="rule-num">Iran War · Day ~100</div>
+          <div class="rule-title">The Asymmetric Stalemate</div>
+          <div class="rule-body">Iran leverages the Strait of Hormuz and willingness to absorb suffering. Trump oscillates between "deal is near" and "I could care less." Pundits observe that his public vacillation signals to Iran that he wants out — and they hold the upper hand.</div>
+          <div class="rule-apply">Jen Rubin: "America under Trump is becoming the dispensable nation."</div>
+        </div>
+        <div class="rule-entry">
+          <div class="rule-num">Legislative Resistance</div>
+          <div class="rule-title">Two Wins, One Loss</div>
+          <div class="rule-body">House voted 215–208 to block further Iran strikes (4 Republicans crossed). House also passed $1B security + $8B loan to Ukraine, 226–195. But: Senate passed $70B ICE/CBP funding 52–47 with only Murkowski joining Democrats.</div>
+          <div class="rule-apply">Is two symbolic wins and one real loss the best the opposition can manage?</div>
+        </div>
+        <div class="rule-entry">
+          <div class="rule-num">The Courts</div>
+          <div class="rule-title">90% Against the Administration</div>
+          <div class="rule-body">Politico: federal judges have ruled against ICE detention in 10,400 of 11,600 cases. Courts have also reversed firings, reinstated grants, overturned diversity guidance, and dismissed vindictive prosecutions.</div>
+          <div class="rule-apply">Bates: "A very dangerous kid in a very dangerous candy store."</div>
+        </div>
+      </div>
+
+      <!-- Column 3: 60 Minutes / Outrages -->
+      <div>
+        <div class="rule-entry">
+          <div class="rule-num">60 Minutes</div>
+          <div class="rule-title">The Bagel Breakfast Massacre</div>
+          <div class="rule-body">New EP Nick Bilton hosted a bagel meet-and-greet. Scott Pelley questioned his credentials, demanded explanation for three firings, accused editor Bari Weiss of "murdering" the show. Pelley was fired by end of day. Seven correspondents are now three.</div>
+          <div class="rule-apply">Ben Rhodes: "This is how oligarch-authoritarian takeover of media happens."</div>
+        </div>
+        <div class="rule-entry">
+          <div class="rule-num">White House UFC / Spectacle</div>
+          <div class="rule-title">The Octagon on the South Lawn</div>
+          <div class="rule-body">A UFC fight card on June 14 — which happens to be Trump's 80th birthday — features an octagon on the South Lawn. Trump on possibly keeping it: "Maybe we'll never take it down." Cox Richardson: "Trump appears to see politics as a dominance sport."</div>
+          <div class="rule-apply">What does this spectacle communicate to allies and adversaries?</div>
+        </div>
+        <div class="rule-entry">
+          <div class="rule-num">Appointments</div>
+          <div class="rule-title">The Credentials Gap</div>
+          <div class="rule-body">Bill Pulte — scion of a residential construction company — named interim DNI. The law explicitly requires "extensive national security expertise." His prior use: pursuing mortgage fraud charges against Cook, James, and Schiff.</div>
+          <div class="rule-apply">CNN's Zachary Wolf: "People don't have jobs in the Trump administration so much as play roles."</div>
+        </div>
+      </div>
+
+    </div><!-- /col3 -->
+
+    <div class="hr-double" style="margin-top:0.5rem;"></div>
+
+    <!-- Violation Table: The Twain Paraphrase Test -->
+    <div class="sec-tag">The Week's Interpretive Challenge</div>
+    <div class="sec-head">What Restraint Actually Looks Like vs. What It's Called</div>
+
+    <table class="vt">
+      <thead>
+        <tr>
+          <th>Claim</th>
+          <th>The Evidence</th>
+          <th>The Verdict</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="bad">Republicans are restraining Trump</span></td>
+          <td>Two symbolic House votes; $70B ICE bill passed anyway; Big Beautiful Bill passed last year.</td>
+          <td class="reason"><span class="good">Symbolic resistance, structural compliance</span></td>
+        </tr>
+        <tr>
+          <td><span class="bad">The press remains independent</span></td>
+          <td>Bari Weiss squelched the CECOT story pending Trump editorial input; Pelley fired for asking questions.</td>
+          <td class="reason"><span class="good">Editorial independence is now a firing offense</span></td>
+        </tr>
+        <tr>
+          <td><span class="bad">The JCPOA withdrawal was a sound decision</span></td>
+          <td>Iran was in compliance; Drezner notes all assumptions entering the conflict have proven wrong.</td>
+          <td class="reason"><span class="good">Bruni: "Destroys for the sake of destroying"</span></td>
+        </tr>
+        <tr>
+          <td><span class="bad">Courts are a reliable check</span></td>
+          <td>Wins in 90% of ICE detention cases; but Abrego Garcia remains in El Salvador. SCOTUS reinstated AL gerrymander.</td>
+          <td class="reason"><span class="good">Vital but uneven; SCOTUS is the gap</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="hr-thin"></div>
+
+    <!-- Checklist: Discussion Sparkers -->
+    <div class="col2" style="margin-bottom:1.2rem;">
+      <div>
+        <div class="sec-tag">Questions to Bring to the Table</div>
+        <div class="sec-head">Discussion Sparkers</div>
+        <ul class="chk">
+          <li>If 49% of Americans rate the economy as poor — the lowest since the pandemic — and non-college whites have moved from 32% to 54% disapproval, what coalition is Trump actually governing for?</li>
+          <li>Cornyn was not an outspoken critic of Trump — merely insufficiently enthusiastic. What does a 64–36 loss say about the space available for independent judgment in the GOP?</li>
+          <li class="warn">The Iran War is nearing its 100th day. The public is not being told the true toll. At what point does the information deficit become the central story?</li>
+          <li>Scott Pelley was fired for asking his new boss to explain three prior firings. Is asking for accountability now itself a terminable offense?</li>
+          <li>Of the seven Republican senators who voted to convict Trump in 2021, only Collins and Murkowski can remain after this year. What does a party that has purged its dissenters actually become?</li>
+          <li class="warn">The U.S. added 172k jobs, but PCE is up 3.8% and oil reserves are at a 22-year low. How do we weigh the headline employment number against structural pressures?</li>
+        </ul>
+      </div>
+      <div>
+        <div class="sec-tag">Interesting Numbers This Week</div>
+        <div class="sec-head">Some Facts That May Impress Your Friends</div>
+        <ul class="chk">
+          <li><strong>172,000</strong> jobs added; unemployment holds at 4.3%.</li>
+          <li><strong>79.0 years</strong> — U.S. average life expectancy vs. 82.7 for peer nations.</li>
+          <li><strong>3.8%</strong> — PCE index rise over last 12 months.</li>
+          <li><strong>500,000</strong> — British intelligence estimate of Russian soldiers killed in Ukraine, roughly double the reported figure.</li>
+          <li><strong>17%</strong> — share of a 12-hour Cabinet meeting spent flattering Trump; Rubio led all flatterers.</li>
+          <li><strong>20%</strong> — reduction in MIT federal research funding; the institute will admit 20% fewer graduate students.</li>
+          <li class="warn">U.S. oil reserves at their lowest level in 22 years, per the Financial Times.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Forbidden Band: What Not to Say -->
+    <div class="forbidden">
+      <div class="forb-head">Phrases to Retire This Week</div>
+      <div class="pills">
+        <span class="pill">both sides</span>
+        <span class="pill">independent press</span>
+        <span class="pill">the rule of law is working fine</span>
+        <span class="pill">the courts have it covered</span>
+        <span class="pill">he's just trolling</span>
+        <span class="pill">the war will end soon</span>
+        <span class="pill">Republicans will draw a line</span>
+        <span class="pill">it's just one agency</span>
+      </div>
+    </div>
+
+  </div><!-- /aes-body -->
+
+  <!-- AES Closing Band -->
+  <div class="closing-band">
+    <div class="cb-label">The Week's Thesis</div>
+    <div class="cb-rule"></div>
+    <div class="cb-text">
+      Every thread this week — the Paxton landslide, the Iranian stalemate, the 60 Minutes purge, the appointment of unqualified loyalists — points to the same underlying logic: <strong>institutions bend before they break.</strong> The question the week poses, and the question worth bringing to the table, is not whether the bending is happening. It is whether anyone is keeping count.
+      <div style="margin-top:0.7rem; font-family:'Courier Prime',monospace; font-size:9px; letter-spacing:0.22em; text-transform:uppercase; color:rgba(200,184,136,0.65);">
+        "Two years ago the U.S. was DEAD, now we have the HOTTEST country anywhere in the world." — D. Trump, Truth Social &nbsp;·&nbsp; There is a shard of truth here if we factor in global warming and the anger he stokes.
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <p>Current Events Digest · Week of June 1–7, 2026 · The Reckoning</p>
+    <p>BOLLI Current Events Discussion Group · jhnday.github.io/CrntEvnts</p>
+  </div>
+
+</div><!-- /page -->
+</div><!-- /view-glance -->
+
+
+<!-- ═══════════════════════════════════════════════════════════════
+     IN DEPTH  —  edifice_rex broadsheet style
+═══════════════════════════════════════════════════════════════ -->
+<div class="view hidden" id="view-depth">
+<div class="page">
+
+  <div class="masthead">
+    <div class="issue-line">A Weekly Intelligence · Current Events Digest</div>
+    <div class="masthead-rule"></div>
+    <h1 class="title">The Reckoning</h1>
+    <div class="subtitle">Primaries, the Iran Stalemate &amp; The Press Under Siege</div>
+    <div class="masthead-rule"></div>
+    <div class="date-line">Week of June 1–7, 2026</div>
+  </div>
+  <div class="accent-stripe"></div>
+
+  <div class="content">
+
+    <div class="section">
+      <div class="section-title">Two Key Primaries</div>
+      <p>One week before the runoff to determine the Republican Senate candidate for TX, Trump endorsed Ken Paxton who was leading Senator John Cornyn in the polls by about 10%. Paxton went on to win in a landslide by 64–36%. Cornyn has served for four terms and been a contender for majority leader. His colleagues in the Republican Senate caucus did not take his loss very well with outgoing NC Senator Thom Tillis saying "To call Paxton ethically challenged is to call Jeffrey Dahmer suffering from an eating disorder".</p>
+      <p>Turning to the CA gubernatorial primary, until Eric Swalwell dropped out of the race Democrats feared that two Republicans, Steve Hilton and Chad Bianco, could conceivably emerge from the jungle primary. With Swalwell out, his supporters apparently turned to Xavier Becerra and Tom Steyer. With 68% of the vote counted, Becerra leads with a 26.8% vote share followed by Hilton with 26.4%, Steyer with 21.1% and Bianco with 10.8%. The AP projects that Becerra will advance to the runoff and given that the late returns are favoring the Democrats, Steyer retains a modest chance to supplant Hilton as the second runoff candidate. All the Democrats combined are tallying 60% of the vote. This share, which is likely to increase, already exceeds the 58.5% of the vote Kamala Harris secured in the 2024 election.</p>
+    </div>
+
+    <div class="divider">✦ ✦ ✦</div>
+
+    <div class="section">
+      <div class="section-title">Three Outrages Which Stood Out This Week</div>
+      <p>Trump apparently requires that his appointees are slavishly loyal to him and that they satisfy one of two criteria: (i) They look good on TV, preferably with experience at Fox News or on reality TV, or (ii) they were involved in real estate. Although it seemed impossible to lower the bar for his appointees, he has done so with his selection of Bill Pulte, the scion of a residential construction company, to serve as interim Director of National Intelligence. Although the law which established the position explicitly calls for "extensive national security expertise", Pulte has none whatsoever. In his roles as Director of the Federal Housing Finance Agency and Chairman of Freddie Mac and Fannie Mae, however, Trump undoubtedly found his initiative to pursue trumped up mortgage fraud charges against Lisa Cook, Letitia James and Adam Schiff to be compelling. Pulte's selection prompted Zachary Wolf of CNN to write an article with the sub-title "People don't have jobs in the Trump administration so much as play roles".</p>
+      <p>From both a visual and cultural perspective, the construction of an octagon on the South Lawn of the White House to host a UFC fight card on June 14 which purportedly "celebrates" the nation's 250th birthday, but happens to fall on Trump's 80th birthday, is troubling. Analogizing this monstrosity to the permanence of the Eiffel Tower in Paris, Trump said "maybe we'll never take it down". Heather Cox Richardson reacted by writing "Trump appears to see politics as a dominance sport, much like...UFC".</p>
+      <p>Although not a Trump initiative per se, but consonant with his authoritarian instincts, what has happened at 60 Minutes this week brings into question how this 58-year-old program can endure. The seeds of its demise were planted last year when Skydance Media CEO David Elison hired Bari Weiss, who had no news background, as editor-in-chief for CBS News. Two months later, a story on the horrible conditions at CECOT in El Salvador was squelched by Weiss until the Trump administration had editorial input. Before Weiss's arrival, executive producer Bill Owens resigned because of his lack of editorial independence and then Anderson Cooper left earlier this month.</p>
+      <p>Last week, Weiss hired Nick Bilton, with a background as a journalist, screenwriter and author, but not in news per se, as executive producer. Two days later, interim executive producer Tanya Simon and correspondents Cecilia Vega and Sharyn Alfonsi, who produced the CECOT story, were fired. Somehow Bilton thought that it would be a good idea to host a bagel breakfast on Monday to introduce himself to the remaining staff and ease their qualms. Predictably the meeting didn't go well, especially after Scott Pelley, who has been at the show for 22 years, questioned Bilton's credentials, asked for an explanation of the three firings days earlier, and accused Weiss of "murdering" the show after "she was brought in to kill it". In response, Pelley was fired, leaving the show with only three of its formerly seven correspondents. Ben Rhodes, who served as a national security advisor under Obama, opined "This is how oligarch-authoritarian takeover of media happens".</p>
+    </div>
+
+    <div class="divider">✦ ✦ ✦</div>
+
+    <div class="section">
+      <div class="section-title">Resistance</div>
+      <p>As the Republicans control both chambers of Congress, the Democrats are limited in what they can do to impose limits on Trump and his policies. They can voice their dissatisfaction, force uncomfortable votes for Republicans, and try to pass legislation, albeit subject to a veto, by securing the support of a handful of malleable Republicans, especially those facing competitive races in November. Late this week, they had two legislative successes:</p>
+      <ul>
+        <li>On Thursday, The House voted 215–208, to block further strikes in Iran as four Republicans joined all Democrats for this symbolic victory.</li>
+        <li>During the Thursday/Friday vote-a-rama, the House passed a bill to provide $1B of security assistance and an $8B "loan" to Ukraine as well as increasing sanctions on Russia by a 226–195 vote with 18 Republicans voting along with all Democrats except Ilhan Omar.</li>
+      </ul>
+      <p>However, the vote-a-rama also included a 52–47 vote in the Senate, with only Lisa Murkowski joining the Democrats to provide $70B of funding to ICE and CBP with no restriction on the $1.8B anti-weaponization fund after an earlier vote on a measure to permanently block the fund failed by one vote. At the same time, the House passed an Agriculture and FDA appropriations bill which included a $141 million reduction in the WIC nutrition program.</p>
+      <p>When we consider that this same Congress narrowly passed the Big Beautiful Bill last year and has largely let Trump govern unimpeded, let's paraphrase Mark Twain: "The accounts of my death Republicans voting to restrain Trump are greatly exaggerated".</p>
+      <p>In the absence of legislative curbs, the resistance to Trump and his programs has been concentrated in the courts (with the notable exception of the Supreme Court except regarding tariffs so far).</p>
+      <p>Two weeks ago, U.S. District Judge for TN Waverly Crenshaw Jr. in his ruling dismissing the human trafficking case against Kilmar Abrego Garcia cited AG Robert H. Jackson's 1940 address to U.S. attorneys when he said the worst abuse of power is when the prosecutor "picks people he thinks he should get, rather than pick cases which need to be prosecuted".</p>
+      <p>Then a week ago on Friday, there were three more decisions which blocked Trump excesses:</p>
+      <ul>
+        <li>U.S. District Judge for D.C. Christopher Cooper ruled that the Trump co-branding of the Kennedy Center violated federal law. Now that the Center's chief counsel ordered the removal of all references to Trump, Christopher Bates opined that this process "could serve as a metaphor for how his presidency is going".</li>
+        <li>U.S. District Judge Leonie Brinkman in VA temporarily blocked any actions implementing the $1.8B anti-weaponization fund.</li>
+        <li>U.S. District Judge Kathleen Williams in Miami, responding to a motion filed by 35 former federal judges, reopened the $10B suit Trump filed against the IRS because the settlement could be "the product of collusion and is itself a fraud on the court".</li>
+      </ul>
+      <p>Moving on to this week, on Tuesday, a 3-judge panel of the Court of Appeals for the D.C. Circuit ruled that the Pentagon policy banning transgender troops was illegal. And on Friday, U.S. District Judge for RI John McConnell Jr. ruled that the policy which halted asylum decisions and denied other immigration benefits to people from 39 countries was illegal.</p>
+      <p>Looking at a broader timeframe, Politico reports that cumulatively federal judges have ruled against ICE detention in 10,400 of 11,600 cases (90%). Moreover, several deportations, e.g. Kilmar Abrego Garcia's, have been stopped. The courts have ruled that the appointment of several U.S. Attorneys, e.g. Alina Habba in NJ, were illegal. They have also reversed the firings of some federal employees, prevented the shuttering/reduction of some federal agencies, e.g. Voice of America, called for the reinstatement of federal grants, overturned guidance forbidding diversity programs in schools, and have dismissed a number of vindictive prosecutions. There have been rulings against the administration in many other areas as well.</p>
+    </div>
+
+    <div class="divider">✦ ✦ ✦</div>
+
+    <div class="section">
+      <div class="section-title">Notes and Quotes · Elections</div>
+      <p>In national polls, Gallup found that only 16% of respondents considered the state of the economy to be excellent or good, 34% rated it as being fair, and 49% considered it to be poor. The positive rating is the lowest since the midst of the pandemic in 2022. A CBS poll found that 54% of non-college Whites disapprove of Trump's job performance compared to 32% at the beginning of his administration.</p>
+      <p>Amber Phillips in a WAPO article suggested that Mark Kelly, Gavin Newsom and Josh Shapiro were the leading contenders for the 2028 Democratic nomination. An Emerson poll on this subject, which mostly reflected name recognition, was led by Pete Buttigieg at 18%, with Gavin Newsom at 16%, AOC at 11%, and Josh Shapiro and Kamala Harris both at 10%.</p>
+      <p>In noteworthy election results this week:</p>
+      <ul>
+        <li>In the LA mayoral jungle primary, incumbent Democrat Karen Bass leads with 35% of the vote followed by former reality TV star and political newcomer Republican Spencer Pratt with 28.2% of the vote and Democrat Nithya Raman with 24.9%. Given that only 71% of the vote has been counted and that Raman has nearly halved Pratt's lead, there is a real chance that she could prevail. Referring to both the governor's and mayoralty races, Trump unsurprisingly wrote "There's BIG cheating by the Dumocrats in California...Why the vote counting delay?".</li>
+        <li>In the IA Republican gubernatorial primary, Trump-endorsed Randy Feenstra lost by 1% to political newcomer Zach Lahn who will run against Democratic state auditor Rob Sand. Democrat Josh Turek, their preferred candidate, will be running for the Senate against Rep. Ashley Hinson.</li>
+        <li>The NJ-07 Democratic primary to run for the seat formerly held by current governor Mikie Sherrill, a former Navy helicopter pilot and mother of four, was won by Rebecca Bennett, a former Navy helicopter pilot and mother of two, giving new meaning to the term "helicopter mother". She will run against Republican Thomas Kean, son of a former governor, who has been missing from Congress and hasn't voted in months.</li>
+        <li>270 To Win polling has the battleground Senate races rated D+9 in NC, D+8 in OH, D+7 in ME, D+7 in GA, D+4 in AK, D+1 in IA, MI and TX even, and NB I+5. RealClear Polling has TX R+2, but MI D+7 if the party's preferred candidate Haley Stevens wins the August primary.</li>
+        <li>The ME polls do not yet fully reflect the revelation of Graham Platner's extramarital sexting and the disclosure by the NYT that three women whom he dated described toxic and unsettling relationships with him.</li>
+        <li>TX polling from a week ago has Talarico at +6% favorability with Paxton at −26%, although the polls have tightened since then.</li>
+        <li>The Democratic lead in the generic congressional ballot varies between 4 and 10% among various sources with the Silver Bulletin's 6.9% Democratic lead, comparable to where Democrats stood at this point in 2018, representative.</li>
+        <li>The Supreme Court overturned a lower court decision and reinstated the congressional map which will enable the Republicans to gain one House seat in AL, with the three liberal justices dissenting. Christopher Bates opined about the decision "The Supreme Court is just making it up".</li>
+        <li>On the other hand, the SC Senate followed the lead of their IN counterparts as twelve Republican senators joined with their Democratic colleagues to prevent the last minute adoption of a new congressional map which would result in James Clyburn losing his seat in Congress.</li>
+      </ul>
+    </div>
+
+    <div class="divider">✦ ✦ ✦</div>
+
+    <div class="section">
+      <div class="section-title">Punch List of Other Recent Outrages</div>
+      <ul>
+        <li>The deal which settled Trump's bogus suit against the IRS fully shields Trump, his family members and businesses from any investigations or financial consequences related to their tax returns filed before the date of the deal.</li>
+        <li>The OPM has proposed a government-wide NDA which will apply to current and future employees.</li>
+        <li>The USPS has proposed only sending mail-in ballots to individuals who appear on lists of eligible voters supplied by state and local election authorities.</li>
+        <li>The administration is pushing for a new $250 bill which will bear Trump's portrait.</li>
+        <li>DHS Secretary Markwayne Mullin has been floating the idea of shutting down international travel to Blue state airports because of their lack of support for immigration-related operations.</li>
+        <li>The DOJ has launched an investigation on shaky grounds into E. Jean Carroll for possibly having perjured herself by not disclosing outside funding for some of her legal fees.</li>
+        <li>Pete Hegseth removed 9 individuals from a list of 22 who had been recommended for promotion to be one-star admirals. Three of them were women and two were Black men. No reason was provided for this action which runs counter to the rules of the promotion system.</li>
+        <li>The Trump Library has been unable to find 25k Tweets Trump sent from his account during his first term in response to a Freedom of Information request from the WAPO.</li>
+        <li>Trump announced that he will nominate Todd Blanche to be AG. After the Senate passed DHS/CBP funding during the vote-a-rama without any reference to the $1.8B weaponization fund after Blanche said that it would be abandoned, Chuck Schumer commented "Republicans are trusting the word of Todd Blanche, who built a career on lying". Trump has not acknowledged the abandonment of the fund.</li>
+        <li>Trump issued an EO stripping 8k high grade federal workers of their protected status turning them into at-will employees who can be fired without providing a reason.</li>
+        <li>The administration is diverting $90MM of park entrance fees from the National Park Service to pay for America's 250th anniversary celebration.</li>
+        <li>Will Scharf, the Trump-appointed head of the National Capital Planning Commission said that a 1910 law limiting D.C. building height to 130-feet does not apply to the planned 250-foot arch, citing that the National Archives building is 166-feet tall.</li>
+        <li>RFK Jr. is pursuing HHS access to state medical records systems to abet studies of autism, vaccine safety and chronic diseases.</li>
+        <li>The Pentagon hired a rioter who pleaded guilty to breaking into the Capitol on January 6 to a sensitive DOJ position which involves counterterrorism operations. Elias Irizarry is now 24-years-old and has worked at this job since shortly after he was pardoned by Trump on Inauguration Day.</li>
+      </ul>
+    </div>
+
+    <div class="divider">✦ ✦ ✦</div>
+
+    <div class="section">
+      <div class="section-title">Iran War</div>
+      <p>The seeds for the Iran War were sown in 2018 when Trump withdrew from the JCPOA which took 20 months to negotiate and was signed in 2015 by China, France, Germany, Russia, the UK and the EU in addition to Iran and the U.S. It is hard to understand why this decision was made as Iran was largely in compliance with the agreement. Perhaps Frank Bruni hit upon the reason in this week's NYT Conversation when he wrote in a more general context "The Trump Administration destroys for the sake of destroying, to erase what its predecessors have done". Notwithstanding that his real estate colleagues with thin credentials, Steve Witkoff and Jared Kushner, were actually making progress toward an agreement in late February until Benjamin Netanyahu intervened and persuaded the over-confident Trump to go to war.</p>
+      <p>The war will be entering its 100th day tomorrow and continues to be a stalemate as Iran's leadership has leveraged its ability to block the Strait of Hormuz and willingness to let its population suffer. Meanwhile Trump vacillates in his public announcements and Truth Social posts between saying that a deal is near or expressing that he could care less if the war continues. And whenever it appears that the negotiators are making some progress, he torpedoes any settlement with impulsive posts. As he bloviates on TV and spews forth Truth Social posts at all hours, it must be clear to the Iranians that he really wants to end the war and that they hold the upper hand in this asymmetric conflict.</p>
+      <p>Here are what some pundits are saying:</p>
+      <ul>
+        <li>Jen Rubin wrote "America under Trump is becoming the dispensable nation".</li>
+        <li>Christopher Bates described Trump's conduct of the war as the actions of "a very dangerous kid in a very dangerous candy store".</li>
+        <li>Daniel Drezner of the Fletcher School at Tufts wrote "It only took three months for Trump and his policy principals to realize that all the assumptions they had made going into the conflict were wrong".</li>
+      </ul>
+    </div>
+
+    <div class="divider">✦ ✦ ✦</div>
+
+    <div class="section">
+      <div class="section-title">Some Interesting Numbers Which Have Emerged</div>
+      <div class="fact-item"><div class="fact-num">I</div><p class="fact-text">The U.S. added 172k jobs last month as the unemployment rate remained at 4.3%.</p></div>
+      <div class="fact-item"><div class="fact-num">II</div><p class="fact-text">Average U.S. life expectancy is 79.0 years vs. 82.7 years for peer countries.</p></div>
+      <div class="fact-item"><div class="fact-num">III</div><p class="fact-text">The Personal Consumption Expenditure Index was up by 3.8% over the last 12 months.</p></div>
+      <div class="fact-item"><div class="fact-num">IV</div><p class="fact-text">CNN reports that healthcare accounts for 15% of U.S. employment.</p></div>
+      <div class="fact-item"><div class="fact-num">V</div><p class="fact-text">British intelligence estimates that nearly 500k Russian soldiers have died in the Ukraine War, about double the reported number.</p></div>
+      <div class="fact-item"><div class="fact-num">VI</div><p class="fact-text">After analyzing 12 hours of Cabinet meeting footage, the NYT calculated that 17% of the time was spent flattering Trump; Marco Rubio praised him the most.</p></div>
+      <div class="fact-item"><div class="fact-num">VII</div><p class="fact-text">According to the Financial Times, U.S. oil reserves are at their lowest level in 22 years.</p></div>
+      <div class="fact-item"><div class="fact-num">VIII</div><p class="fact-text">MIT president Sally Kornbluth reports that the federal research funding the institute receives is down by 20% from a year earlier and that MIT will be admitting 20% less new graduate students.</p></div>
+    </div>
+
+    <div class="divider">✦ ✦ ✦</div>
+
+    <div class="section closing">
+      <span class="ornament">⚜</span>
+      <div class="pull-quote" style="margin-bottom:2rem;">
+        "Two years ago the U.S. was DEAD, now we have the HOTTEST country anywhere in the world."
+        <cite>— Donald Trump, Truth Social &nbsp;·&nbsp; A Closing Thought</cite>
+      </div>
+      <p class="closing-text">There actually is a shard of truth in this statement if we take into global warming and the anger underlying our politics which he stokes.</p>
+      <div class="closing-sig">Finis · Week of June 7, 2026</div>
+      <span class="ornament" style="margin-top:1rem;">⚜</span>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /page -->
+</div><!-- /view-depth -->
+
+<script>
+  function switchView(mode) {
+    const glance = document.getElementById('view-glance');
+    const depth  = document.getElementById('view-depth');
+    const btnG   = document.getElementById('btn-glance');
+    const btnD   = document.getElementById('btn-depth');
+    if (mode === 'glance') {
+      glance.classList.remove('hidden');
+      depth.classList.add('hidden');
+      btnG.classList.add('active');
+      btnD.classList.remove('active');
+    } else {
+      depth.classList.remove('hidden');
+      glance.classList.add('hidden');
+      btnD.classList.add('active');
+      btnG.classList.remove('active');
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+</body>
+</html>
