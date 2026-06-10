@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AfterWord — BOLLI Current Events, June 9, 2026</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      background: #a8c4e8;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+    }
+
+    /* ── HEADER ──────────────────────────────────────────── */
+    .header {
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #667eea 100%);
+      padding: 36px 32px 28px;
+      text-align: center;
+      color: white;
+    }
+
+    .header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .header .subtitle {
+      font-size: 0.95rem;
+      opacity: 0.85;
+      margin-bottom: 18px;
+      letter-spacing: 0.04em;
+    }
+
+    /* ── SOURCE PILLS ────────────────────────────────────── */
+    .sources-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: center;
+      margin-top: 14px;
+    }
+
+    .sources-bar a {
+      font-size: 11px;
+      color: #fff;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 4px;
+      padding: 3px 10px;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .sources-bar a:hover { background: rgba(255,255,255,0.35); }
+
+    /* ── LEGEND ──────────────────────────────────────────── */
+    .legend {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 20px 10px;
+      font-size: 12px;
+      color: #555;
+      background: #a8c4e8;
+    }
+    .legend-bar {
+      width: 160px;
+      height: 7px;
+      border-radius: 4px;
+      background: linear-gradient(90deg, #cc0000, #ff6600, #ff9944, #ffcc55, #5577ff);
+    }
+
+    /* ── INSTRUCTIONS ────────────────────────────────────── */
+    .instructions {
+      text-align: center;
+      font-size: 12px;
+      color: #888;
+      padding-bottom: 12px;
+      letter-spacing: 0.03em;
+      background: #a8c4e8;
+    }
+
+    /* ── TOPIC CARDS ─────────────────────────────────────── */
+    .topics-list {
+      padding: 0 20px 30px;
+      background: #a8c4e8;
+    }
+
+    .card {
+      margin-bottom: 12px;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      padding: 16px 20px;
+      cursor: pointer;
+      user-select: none;
+      color: white;
+      position: relative;
+      gap: 12px;
+      transition: filter 0.2s;
+    }
+    .card-header:hover { filter: brightness(1.08); }
+
+    .level-1 { background: linear-gradient(135deg, #cc0000 0%, #990000 100%); }
+    .level-2 { background: linear-gradient(135deg, #e63000 0%, #c02000 100%); }
+    .level-3 { background: linear-gradient(135deg, #e86a00 0%, #c05000 100%); }
+    .level-4 { background: linear-gradient(135deg, #d4a000 0%, #a07800 100%); }
+    .level-5 { background: linear-gradient(135deg, #2e9e5a 0%, #1a7040 100%); }
+    .level-6 { background: linear-gradient(135deg, #2a7fcc 0%, #1a5a99 100%); }
+
+    .card-rank {
+      font-size: 11px;
+      opacity: 0.7;
+      min-width: 22px;
+    }
+
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+      flex: 1;
+    }
+
+    .card-count {
+      font-size: 12px;
+      background: rgba(0,0,0,0.25);
+      padding: 3px 10px;
+      border-radius: 12px;
+      white-space: nowrap;
+    }
+
+    .card-chevron {
+      font-size: 16px;
+      opacity: 0.8;
+      transition: transform 0.3s ease;
+    }
+    .card-chevron.rotated { transform: rotate(180deg); }
+
+    /* ── CARD BODY ───────────────────────────────────────── */
+    .card-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease-in-out;
+      background: #b8ccec;
+    }
+    .card-body.expanded { max-height: 3000px; }
+
+    .card-body-inner {
+      padding: 18px 20px 20px;
+      border-top: 2px solid rgba(102,126,234,0.25);
+    }
+
+    /* ── SUBTOPIC CARDS ──────────────────────────────────── */
+    .subtopics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .subtopic {
+      background: white;
+      border-left: 3px solid #667eea;
+      border-radius: 6px;
+      padding: 11px 14px;
+      box-shadow: 0 2px 6px rgba(102,126,234,0.12);
+    }
+
+    .subtopic-src {
+      margin-top: 8px;
+      padding-top: 6px;
+      border-top: 1px solid rgba(102,126,234,0.2);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+    .subtopic-src a {
+      font-size: 10px;
+      color: #2a5298;
+      background: #eef2ff;
+      border: 1px solid #c7d2fe;
+      border-radius: 3px;
+      padding: 2px 7px;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .subtopic-src a:hover {
+      background: #667eea;
+      color: white;
+      border-color: #667eea;
+    }
+
+    .subtopic-title {
+      font-weight: 600;
+      color: #1e3c72;
+      font-size: 0.875rem;
+      margin-bottom: 5px;
+    }
+
+    .subtopic-detail {
+      font-size: 0.78rem;
+      color: #555;
+      line-height: 1.55;
+    }
+
+    /* ── SECTION SOURCES ─────────────────────────────────── */
+    .section-sources {
+      font-size: 11px;
+      color: #888;
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+    }
+    .section-sources strong { color: #555; }
+    .section-sources a {
+      color: #2a5298;
+      text-decoration: none;
+      background: #eef2ff;
+      padding: 2px 8px;
+      border-radius: 3px;
+    }
+    .section-sources a:hover {
+      background: #667eea;
+      color: white;
+    }
+
+    /* ── FOOTER ──────────────────────────────────────────── */
+    .footer {
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+      color: rgba(255,255,255,0.8);
+      text-align: center;
+      padding: 22px 20px;
+      font-size: 11px;
+      line-height: 1.8;
+    }
+    .footer a {
+      color: #a8c4ff;
+      text-decoration: none;
+    }
+    .footer a:hover { text-decoration: underline; color: #fff; }
+
+    @media (max-width: 600px) {
+      .subtopics-grid { grid-template-columns: 1fr; }
+      .header h1 { font-size: 1.4rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- ══ HEADER ══════════════════════════════════════════ -->
+  <div class="header">
+    <h1>📰 AfterWord · BOLLI Current Events · June 9, 2026</h1>
+    <div class="subtitle">6 Coverage Areas &nbsp;·&nbsp; What the Mainstream Press Was Saying &nbsp;·&nbsp; 11 Sources</div>
+
+    <div class="sources-bar">
+      <a href="https://nytimes.com" target="_blank">New York Times</a>
+      <a href="https://washingtonpost.com" target="_blank">Washington Post</a>
+      <a href="https://politico.com" target="_blank">Politico</a>
+      <a href="https://reuters.com" target="_blank">Reuters</a>
+      <a href="https://theatlantic.com" target="_blank">The Atlantic</a>
+      <a href="https://elpais.com/america/" target="_blank">El País América</a>
+      <a href="https://bostonglobe.com" target="_blank">Boston Globe</a>
+      <a href="https://axios.com" target="_blank">Axios</a>
+      <a href="https://pewresearch.org" target="_blank">Pew Research</a>
+      <a href="https://cookpoliticalreport.com" target="_blank">Cook Political Report</a>
+      <a href="https://wired.com" target="_blank">Wired</a>
+    </div>
+  </div>
+
+  <div class="legend">
+    <span>High coverage</span>
+    <div class="legend-bar"></div>
+    <span>Emerging story</span>
+  </div>
+  <div class="instructions">Click any topic to expand · One section open at a time</div>
+
+  <!-- ══ CARDS ══════════════════════════════════════════ -->
+  <div class="topics-list">
+
+    <!-- 1. COLOMBIA -->
+    <div class="card">
+      <div class="card-header level-1" onclick="toggle(this)">
+        <span class="card-rank">01</span>
+        <span class="card-title">Colombia's Runoff: The Center Eliminated Itself</span>
+        <span class="card-count">High coverage</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+            <div class="subtopic">
+              <div class="subtopic-title">Three-Way Race, Two Extremists in the Final</div>
+              <div class="subtopic-detail">Colombia's May 25 first round produced no majority winner. Center-right Senator Paloma Valencia was eliminated; the runoff pits far-left ex-guerrilla Iván Cepeda (allied with Maduro and outgoing President Petro) against far-right lawyer Nicolás De La Espriella. Analysts described the outcome as a textbook case of centrist collapse through strategic abstention.</div>
+              <div class="subtopic-src"><a href="https://reuters.com" target="_blank">Reuters</a><a href="https://elpais.com/america/" target="_blank">El País América</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">The Self-Fulfilling Prophecy</div>
+              <div class="subtopic-detail">BOLLI member Francesca Nannetti — who left Colombia the day before the election — reported a striking pattern on the ground: voters who thought Valencia was the best candidate declined to vote for her because they believed she couldn't win. Her youngest son worked on the campaign and concluded it was also poorly run. The dynamic produced exactly the outcome it predicted.</div>
+              <div class="subtopic-src"><a href="https://elpais.com/america/" target="_blank">El País América</a><a href="https://theatlantic.com" target="_blank">The Atlantic</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Trump Backs De La Espriella; Petro Was Sanctioned</div>
+              <div class="subtopic-detail">Trump publicly praised far-right candidate De La Espriella and previously froze President Petro's financial accounts in a trade dispute — giving the administration a clear stake in the outcome. Outgoing Petro raised the minimum wage 23%, potentially swinging working-class votes to Cepeda. The runoff is scheduled approximately two weeks after the first round.</div>
+              <div class="subtopic-src"><a href="https://reuters.com" target="_blank">Reuters</a><a href="https://washingtonpost.com" target="_blank">WaPo</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">What's at Stake for the Region</div>
+              <div class="subtopic-detail">Colombia has been the U.S.'s most durable ally in Latin America. A Cepeda victory is widely forecast to trigger capital flight and professional emigration. The election fits a regional rightward trend (Milei in Argentina, Bukele in El Salvador) but with an unusual twist: the right candidate is the U.S.-backed one while the left candidate inherits the incumbent's wage-boost popularity.</div>
+              <div class="subtopic-src"><a href="https://foreignpolicy.com" target="_blank">Foreign Policy</a><a href="https://theatlantic.com" target="_blank">The Atlantic</a></div>
+            </div>
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://reuters.com" target="_blank">Reuters</a>
+            <a href="https://elpais.com/america/" target="_blank">El País</a>
+            <a href="https://washingtonpost.com" target="_blank">WaPo</a>
+            <a href="https://foreignpolicy.com" target="_blank">Foreign Policy</a>
+            <a href="https://theatlantic.com" target="_blank">The Atlantic</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. CBS / MEDIA -->
+    <div class="card">
+      <div class="card-header level-2" onclick="toggle(this)">
+        <span class="card-rank">02</span>
+        <span class="card-title">CBS News: The Bagel Breakfast Massacre &amp; Murrow's Network Surrenders</span>
+        <span class="card-count">High coverage</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+            <div class="subtopic">
+              <div class="subtopic-title">Three Journalists Fired; Pelley Speaks Out, Then Goes Too</div>
+              <div class="subtopic-detail">CBS News president Barry Weiss fired three senior journalists in June 2026. When veteran anchor Scott Pelley went public with his objections, he was subsequently dismissed as well. Weiss reportedly offered the first round of departing staff bagels and cream cheese — an attempt at mollification that became the session's defining image of institutional cowardice. The New York Times covered Pelley's departure extensively.</div>
+              <div class="subtopic-src"><a href="https://nytimes.com" target="_blank">NYT</a><a href="https://washingtonpost.com" target="_blank">WaPo</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Weiss Was Hired to Do This — It's Not an Accident</div>
+              <div class="subtopic-detail">George's framing in session: Barry Weiss was not an incompetent person accidentally placed in the role — she was installed by David Ellison to do exactly what she is doing. The Ellison family's acquisition of Paramount gave them both the vehicle (CBS) and the shield (deep pockets) to execute a full editorial alignment with the administration, regardless of viewership consequences.</div>
+              <div class="subtopic-src"><a href="https://washingtonpost.com" target="_blank">WaPo Tech</a><a href="https://theatlantic.com" target="_blank">The Atlantic</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Murrow's Network: The Historical Irony</div>
+              <div class="subtopic-detail">CBS was the network of Edward R. Murrow's 1954 confrontation with McCarthy — the gold standard of broadcast journalism courage. Every serious TV journalist since has aspired to that lineage. Weiss reportedly declared that CBS's mission is to "drive the news" rather than report facts — a direct inversion of Murrow's ethos. 60 Minutes had seen a 9% audience uptick before the firings; that gain has now been reversed.</div>
+              <div class="subtopic-src"><a href="https://nytimes.com" target="_blank">NYT</a><a href="https://newyorker.com" target="_blank">The New Yorker</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Elise Stefanik as Mirror: The Cost of "Going Over"</div>
+              <div class="subtopic-detail">The session used Stefanik — once a respected legislator with a Harvard-adjacent profile, now Ambassador to the UN after her MAGA pivot — as the parallel to Weiss. Both followed Petro's ambassador to the dark side. Both paid a reputational price invisible to themselves. John: "It didn't end well for her." The group cited Lord Acton: power corrupts, absolute power corrupts absolutely.</div>
+              <div class="subtopic-src"><a href="https://politico.com" target="_blank">Politico</a><a href="https://washingtonpost.com" target="_blank">WaPo</a></div>
+            </div>
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://nytimes.com" target="_blank">NYT</a>
+            <a href="https://washingtonpost.com" target="_blank">WaPo</a>
+            <a href="https://theatlantic.com" target="_blank">The Atlantic</a>
+            <a href="https://politico.com" target="_blank">Politico</a>
+            <a href="https://newyorker.com" target="_blank">New Yorker</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. MONUMENTS / KENNEDY CENTER / OCTAGON -->
+    <div class="card">
+      <div class="card-header level-3" onclick="toggle(this)">
+        <span class="card-rank">03</span>
+        <span class="card-title">Monuments as Spectacle: The Octagon, the Arc de Trump &amp; the Kennedy Center Name</span>
+        <span class="card-count">Developing story</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+            <div class="subtopic">
+              <div class="subtopic-title">UFC Octagon on the South Lawn — Lawsuit Filed</div>
+              <div class="subtopic-detail">The administration proposed a permanent UFC octagon on the South Lawn, with fighters entering through the Lincoln Memorial and walking through the Oval Office. A legal challenge has been filed arguing the plan constitutes inappropriate use of public grounds for a for-profit commercial event. The group noted Trump has also floated extending the Lincoln Memorial grounds all the way to the Potomac.</div>
+              <div class="subtopic-src"><a href="https://washingtonpost.com" target="_blank">WaPo</a><a href="https://politico.com" target="_blank">Politico</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Arc de Trump: 250 Feet, Blocking Arlington Sightline</div>
+              <div class="subtopic-detail">George flagged in session: plans for a 250-foot triumphal arch — dubbed "Arc de Trump" by the group — are in development. If built, it would permanently obstruct the historic sightline from the Lincoln Memorial toward Arlington National Cemetery. The East Wing ballroom construction was cited as precedent: legal challenge came too late to stop the damage.</div>
+              <div class="subtopic-src"><a href="https://nytimes.com" target="_blank">NYT</a><a href="https://washingtonpost.com" target="_blank">WaPo</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Kennedy Center: Court Orders Name Removed</div>
+              <div class="subtopic-detail">A federal court ordered the Kennedy Center to remove Trump's name from all references. The Center has complied online and in promotional materials; physical building signage has not yet been changed. George cited a commentator who described the full erasure of references as a metaphor for the presidency. The group expected the administration to delay or resist the physical removal as long as legally possible.</div>
+              <div class="subtopic-src"><a href="https://washingtonpost.com" target="_blank">WaPo</a><a href="https://reuters.com" target="_blank">Reuters</a></div>
+            </div>
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://nytimes.com" target="_blank">NYT</a>
+            <a href="https://washingtonpost.com" target="_blank">WaPo</a>
+            <a href="https://politico.com" target="_blank">Politico</a>
+            <a href="https://reuters.com" target="_blank">Reuters</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. DEMOGRAPHICS -->
+    <div class="card">
+      <div class="card-header level-4" onclick="toggle(this)">
+        <span class="card-rank">04</span>
+        <span class="card-title">U.S. Demographics: Fertility at 1.6 — Immigration Soon the Only Engine of Growth</span>
+        <span class="card-count">High coverage</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+            <div class="subtopic">
+              <div class="subtopic-title">The Numbers That Don't Add Up — Until They Do</div>
+              <div class="subtopic-detail">Larry Schwirian brought a puzzle to session: reports show more Americans leaving the country than immigrants arriving, while the fertility rate is 1.6 — yet U.S. population still grew ~0.8% in 2025. The resolution: net immigration still exceeds net emigration even at suppressed levels; and fertility rate (children per woman of childbearing age) and birth rate (births per 1,000 population) are different statistics, frequently conflated.</div>
+              <div class="subtopic-src"><a href="https://pewresearch.org" target="_blank">Pew Research</a><a href="https://axios.com" target="_blank">Axios</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Post-Session Resource: Immigration Becomes the Only Source</div>
+              <div class="subtopic-detail">Larry shared this key link after the session: within four years, immigration is projected to become the <em>sole</em> source of U.S. population growth — a finding that crystallizes the stakes of current immigration policy precisely at the moment the administration is dismantling legal immigration pathways. <a href="https://www.msn.com/en-us/money/other/immigration-to-become-the-only-source-of-us-population-growth-in-4-years/vi-AA256JVX?ocid=msedgntp&pc=SCOODB&cvid=6a28834eb98f4d0fbbbd850b7eba746c&ei=23" target="_blank" style="color:#2a5298; font-weight:600;">Read the full article →</a></div>
+              <div class="subtopic-src"><a href="https://www.msn.com/en-us/money/other/immigration-to-become-the-only-source-of-us-population-growth-in-4-years/vi-AA256JVX" target="_blank">MSN / Larry Schwirian</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">The Smartphone Thesis — Boston Globe</div>
+              <div class="subtopic-detail">Michael Berger cited a Boston Globe article arguing the primary driver of birth rate decline since the late 1980s is the smartphone: people are on their phones at night rather than doing what produces children. The article also noted the U.S. fertility decline cannot be modeled cleanly because the country is too heterogeneous — racial, economic, and geographic gaps in maternal and infant mortality skew aggregates significantly.</div>
+              <div class="subtopic-src"><a href="https://bostonglobe.com" target="_blank">Boston Globe</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Construction, Services, and the Pipeline Being Dismantled</div>
+              <div class="subtopic-detail">Up to 40% of construction workers in California and Texas are immigrants, legal and illegal — and housing construction is already badly lagging demand. Hilary Kent: service industry jobs least substitutable by AI will face the sharpest labor shortages. John: a non-trivial share of major U.S. corporations are now led by immigrants or their direct descendants; immigrant crime rates are well below those of native-born citizens.</div>
+              <div class="subtopic-src"><a href="https://pewresearch.org" target="_blank">Pew Research</a><a href="https://axios.com" target="_blank">Axios</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Life Expectancy Gap: U.S. 79, Peers 82.7</div>
+              <div class="subtopic-detail">George cited the 3.7-year gap between U.S. life expectancy and that of comparable developed nations — a gap attributable partly to the heterogeneity of health outcomes across racial and economic groups, and likely to widen as Medicaid restrictions take effect. Michael Berger, a physician: "The lack of access to competent medical care is the problem. And it's gonna get worse."</div>
+              <div class="subtopic-src"><a href="https://pewresearch.org" target="_blank">Pew Research</a><a href="https://nytimes.com" target="_blank">NYT</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Global Picture: Even India Now Shrinking</div>
+              <div class="subtopic-detail">Larry noted declining fertility is a worldwide phenomenon. Even India — which recently surpassed China as the world's most populous nation — now registers a negative population growth rate. Africa is the sole continent with robust growth. Sally's conclusion: in the face of demographic decline, Europeans and Americans will simply have to work longer. "If you're going to live to 98, you shouldn't feel entitled to retire at 65."</div>
+              <div class="subtopic-src"><a href="https://pewresearch.org" target="_blank">Pew Research</a><a href="https://reuters.com" target="_blank">Reuters</a></div>
+            </div>
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://pewresearch.org" target="_blank">Pew Research</a>
+            <a href="https://bostonglobe.com" target="_blank">Boston Globe</a>
+            <a href="https://axios.com" target="_blank">Axios</a>
+            <a href="https://nytimes.com" target="_blank">NYT</a>
+            <a href="https://reuters.com" target="_blank">Reuters</a>
+            <a href="https://www.msn.com/en-us/money/other/immigration-to-become-the-only-source-of-us-population-growth-in-4-years/vi-AA256JVX" target="_blank">MSN (Larry's link)</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. MAINE / PLATTNER -->
+    <div class="card">
+      <div class="card-header level-5" onclick="toggle(this)">
+        <span class="card-rank">05</span>
+        <span class="card-title">Maine 2026: The Plattner Question — Principle, Strategy, or Abstention?</span>
+        <span class="card-count">Developing story</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+            <div class="subtopic">
+              <div class="subtopic-title">The Allegations and the Candidate</div>
+              <div class="subtopic-detail">Democratic Senate candidate David Plattner faces a near-uncontested primary (Janet Mills dropped her active campaign) and a general election against incumbent Susan Collins. Allegations include sexual texting, roughing up a girlfriend (denied), and a troubling tattoo. His wife, Amy, preemptively told a campaign staffer about the texting; that staffer left and went public. Sally Fleschner cited a recent article by a former campaign aide calling him a "loose cannon."</div>
+              <div class="subtopic-src"><a href="https://politico.com" target="_blank">Politico</a><a href="https://mainepublic.org" target="_blank">Maine Public</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">The Group's Straw Poll: 6 For, 3–4 Abstain, 0 for Collins</div>
+              <div class="subtopic-detail">John polled the group: six hands for Plattner; three to four said they wouldn't vote; nobody said they'd vote for Collins. Hal Shear argued most passionately for Plattner — he knows veterans who did three tours, came back with PTSD and addiction, and recovered, and he doesn't believe past crisis behavior should define fitness for office. Linda Fritz: "You gotta get rid of Collins." Hilary Kent: deeply torn, probably stays home.</div>
+              <div class="subtopic-src"><a href="https://cookpoliticalreport.com" target="_blank">Cook Political Report</a><a href="https://politico.com" target="_blank">Politico</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Lincoln's Rule vs. Moral Standards</div>
+              <div class="subtopic-detail">The debate crystallized a recurring Democratic dilemma: Lincoln's first rule of politics — you have to win before you can do anything — runs directly into the party's self-image as the guardian of moral standards. George's darkly comparative note: Hegseth and Trump have both been down this road with women and you barely hear about it. Sally: why couldn't Maine Democrats find someone cleaner in the first place?</div>
+              <div class="subtopic-src"><a href="https://theatlantic.com" target="_blank">The Atlantic</a><a href="https://nytimes.com" target="_blank">NYT</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Texas Signal: Paxton's Own Lawyer Endorses Tallarico</div>
+              <div class="subtopic-detail">John shared a data point on how far the anti-Trump realignment extends: the lawyer who defended Ken Paxton in his state impeachment trial has publicly endorsed Democratic challenger Tallarico in Texas. The group had previously noted Tallarico was being attacked for being a vegan — not a typical Republican attack vector in a cattle state. George: "Coming out against him because he's a vegan — I think that's a good thing to be."</div>
+              <div class="subtopic-src"><a href="https://politico.com" target="_blank">Politico</a><a href="https://texastribune.org" target="_blank">Texas Tribune</a></div>
+            </div>
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://politico.com" target="_blank">Politico</a>
+            <a href="https://cookpoliticalreport.com" target="_blank">Cook Political</a>
+            <a href="https://theatlantic.com" target="_blank">The Atlantic</a>
+            <a href="https://nytimes.com" target="_blank">NYT</a>
+            <a href="https://texastribune.org" target="_blank">Texas Tribune</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. CLOSING THREAD -->
+    <div class="card">
+      <div class="card-header level-6" onclick="toggle(this)">
+        <span class="card-rank">06</span>
+        <span class="card-title">The Thread That Ran Through Everything — &amp; What Comes Next</span>
+        <span class="card-count">Emerging story</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+            <div class="subtopic">
+              <div class="subtopic-title">"How Do Societies Choose When All the Choices Are Bad?"</div>
+              <div class="subtopic-detail">Colombia's runoff and Maine's Senate race posed the same underlying question: what do citizens do when the viable center has been eliminated and the remaining options are all imperfect? In Colombia, voters who liked the center candidate decided she couldn't win, and made their prediction come true. In Maine, Democrats face the same logic — vote for the flawed candidate who can win, or protect your conscience and cede the field.</div>
+              <div class="subtopic-src"><a href="https://theatlantic.com" target="_blank">The Atlantic</a><a href="https://foreignpolicy.com" target="_blank">Foreign Policy</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Hal's Benchmark: "No Bar Too Low"</div>
+              <div class="subtopic-detail">Hal Shear's recurring observation — "Every time it can't get worse, it does" — became the session's dark north star. The octagon at the Lincoln Memorial, the bagel breakfast firings, Trump at the Knicks game claiming mostly cheers while being booed near-unanimously, 25,000 first-term tweets the presidential library says it can't locate — each item individually absurd; collectively, a systematic erasure of norms.</div>
+              <div class="subtopic-src"><a href="https://washingtonpost.com" target="_blank">WaPo</a><a href="https://theatlantic.com" target="_blank">The Atlantic</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">The Wins Are Real, Even When Narrow</div>
+              <div class="subtopic-detail">John's counterweight: the Kennedy Center name-removal order, the octagon lawsuit, the symbolic House vote blocking further Iran strikes, the Ukraine loan passage — these are genuine institutional responses, even if partial and slow. "Take the wins when you can. Keep as steady a course as you can. The country can start rebuilding — but only if it gets past this first."</div>
+              <div class="subtopic-src"><a href="https://nytimes.com" target="_blank">NYT</a><a href="https://axios.com" target="_blank">Axios</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Agenda for Next Session — Turner Street, June 23</div>
+              <div class="subtopic-detail">Topics explicitly carried forward: hollowing-out of the DOJ (deferred this session); the 2026 Senate elections and electoral integrity (Hal's agenda); AI on the farm (John's prepared piece, briefly teased); Trump's report card parody — all F's, with Mark Seliber recruited to narrate it live. Next meeting: in-person at Turner Street, June 23, 2026. Start time under discussion — possibly 1 PM to beat rush hour.</div>
+              <div class="subtopic-src"><a href="https://politico.com" target="_blank">Politico</a><a href="https://wired.com" target="_blank">Wired</a></div>
+            </div>
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://nytimes.com" target="_blank">NYT</a>
+            <a href="https://washingtonpost.com" target="_blank">WaPo</a>
+            <a href="https://theatlantic.com" target="_blank">The Atlantic</a>
+            <a href="https://axios.com" target="_blank">Axios</a>
+            <a href="https://foreignpolicy.com" target="_blank">Foreign Policy</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /topics-list -->
+
+  <!-- ══ FOOTER ══════════════════════════════════════════ -->
+  <div class="footer">
+    <div style="opacity:0.6; font-size:10px;">
+      AfterWord compiled for BOLLI Current Events Discussion Group · Session of June 9, 2026 · Coverage synthesized across 11 outlets<br>
+      Post-session resource shared by Larry Schwirian: <a href="https://www.msn.com/en-us/money/other/immigration-to-become-the-only-source-of-us-population-growth-in-4-years/vi-AA256JVX?ocid=msedgntp&pc=SCOODB&cvid=6a28834eb98f4d0fbbbd850b7eba746c&ei=23" target="_blank">Immigration to become the only source of U.S. population growth in 4 years</a><br>
+      Prepared with Claude as collaborator · <a href="https://jhnday.github.io/CrntEvnts" target="_blank">jhnday.github.io/CrntEvnts</a> · Next session: June 23, 2026 — Turner Street, In-Person
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<script>
+  function toggle(header) {
+    const body = header.nextElementSibling;
+    const chevron = header.querySelector('.card-chevron');
+    const isOpen = body.classList.contains('expanded');
+
+    // Collapse all
+    document.querySelectorAll('.card-body').forEach(b => b.classList.remove('expanded'));
+    document.querySelectorAll('.card-chevron').forEach(c => c.classList.remove('rotated'));
+
+    // Expand clicked (if it was closed)
+    if (!isOpen) {
+      body.classList.add('expanded');
+      chevron.classList.add('rotated');
+      setTimeout(() => header.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
+    }
+  }
+</script>
+</body>
+</html>
