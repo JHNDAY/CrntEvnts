@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trending from the Right — May 26 – June 21, 2026</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 880px;
+      margin: 0 auto;
+      background: #a8c4e8;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+    }
+
+    /* ── HEADER ──────────────────────────────────────────── */
+    .header {
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #667eea 100%);
+      padding: 36px 32px 28px;
+      text-align: center;
+      color: white;
+    }
+
+    .header h1 {
+      font-size: 1.9rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .header .subtitle {
+      font-size: 0.95rem;
+      opacity: 0.85;
+      margin-bottom: 18px;
+      letter-spacing: 0.04em;
+    }
+
+    /* ── SOURCE PILLS ────────────────────────────────────── */
+    .sources-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: center;
+      margin-top: 14px;
+    }
+
+    .sources-bar a {
+      font-size: 11px;
+      color: #fff;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 4px;
+      padding: 3px 10px;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .sources-bar a:hover {
+      background: rgba(255,255,255,0.35);
+    }
+
+    /* ── LEGEND ──────────────────────────────────────────── */
+    .legend {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 20px 10px;
+      font-size: 12px;
+      color: #555;
+      background: #a8c4e8;
+    }
+    .legend-bar {
+      width: 200px;
+      height: 7px;
+      border-radius: 4px;
+      background: linear-gradient(90deg, #cc0000, #e85500, #d4a800, #2e9e5a, #2a7fcc, #1a4fa8);
+    }
+
+    /* ── INSTRUCTIONS ────────────────────────────────────── */
+    .instructions {
+      text-align: center;
+      font-size: 12px;
+      color: #888;
+      padding-bottom: 12px;
+      letter-spacing: 0.03em;
+      background: #a8c4e8;
+    }
+
+    /* ── TOPIC CARDS ─────────────────────────────────────── */
+    .topics-list {
+      padding: 0 20px 30px;
+      background: #a8c4e8;
+    }
+
+    .card {
+      margin-bottom: 12px;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      padding: 16px 20px;
+      cursor: pointer;
+      user-select: none;
+      color: white;
+      position: relative;
+      gap: 12px;
+      transition: filter 0.2s;
+    }
+    .card-header:hover { filter: brightness(1.08); }
+
+    /* Red → Orange → Yellow-Green → Teal → Blue gradient levels (11 categories) */
+    .level-1  { background: linear-gradient(135deg, #cc0000 0%, #990000 100%); }
+    .level-2  { background: linear-gradient(135deg, #dd3300 0%, #b82900 100%); }
+    .level-3  { background: linear-gradient(135deg, #e85500 0%, #c04400 100%); }
+    .level-4  { background: linear-gradient(135deg, #e88800 0%, #c06c00 100%); }
+    .level-5  { background: linear-gradient(135deg, #d4a800 0%, #a88400 100%); }
+    .level-6  { background: linear-gradient(135deg, #a8b000 0%, #848c00 100%); }
+    .level-7  { background: linear-gradient(135deg, #6a9e3a 0%, #4f7a2a 100%); }
+    .level-8  { background: linear-gradient(135deg, #2e9e5a 0%, #1a7040 100%); }
+    .level-9  { background: linear-gradient(135deg, #2a8a8a 0%, #1a6868 100%); }
+    .level-10 { background: linear-gradient(135deg, #2a7fcc 0%, #1a5a99 100%); }
+    .level-11 { background: linear-gradient(135deg, #1a4fa8 0%, #0e3578 100%); }
+
+    .card-rank {
+      font-size: 11px;
+      opacity: 0.7;
+      min-width: 22px;
+    }
+
+    .card-title {
+      font-size: 1.0rem;
+      font-weight: 600;
+      flex: 1;
+    }
+
+    .card-count {
+      font-size: 12px;
+      background: rgba(0,0,0,0.25);
+      padding: 3px 10px;
+      border-radius: 12px;
+      white-space: nowrap;
+    }
+
+    .card-chevron {
+      font-size: 16px;
+      opacity: 0.8;
+      transition: transform 0.3s ease;
+    }
+    .card-chevron.rotated { transform: rotate(180deg); }
+
+    /* ── CARD BODY ───────────────────────────────────────── */
+    .card-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease-in-out;
+      background: #b8ccec;
+    }
+    .card-body.expanded { max-height: 3200px; }
+
+    .card-body-inner {
+      padding: 18px 20px 20px;
+      border-top: 2px solid rgba(102,126,234,0.25);
+    }
+
+    /* ── SUBTOPIC CARDS ──────────────────────────────────── */
+    .subtopics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .subtopic {
+      background: white;
+      border-left: 3px solid #667eea;
+      border-radius: 6px;
+      padding: 11px 14px;
+      box-shadow: 0 2px 6px rgba(102,126,234,0.12);
+    }
+
+    .subtopic-src {
+      margin-top: 8px;
+      padding-top: 6px;
+      border-top: 1px solid rgba(102,126,234,0.2);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+    .subtopic-src a {
+      font-size: 10px;
+      color: #2a5298;
+      background: #eef2ff;
+      border: 1px solid #c7d2fe;
+      border-radius: 3px;
+      padding: 2px 7px;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .subtopic-src a:hover {
+      background: #667eea;
+      color: white;
+      border-color: #667eea;
+    }
+
+    .subtopic-title {
+      font-weight: 600;
+      color: #1e3c72;
+      font-size: 0.875rem;
+      margin-bottom: 5px;
+    }
+
+    .subtopic-detail {
+      font-size: 0.78rem;
+      color: #555;
+      line-height: 1.55;
+    }
+
+    /* ── SECTION SOURCES ─────────────────────────────────── */
+    .section-sources {
+      font-size: 11px;
+      color: #888;
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+    }
+    .section-sources strong { color: #555; }
+    .section-sources a {
+      color: #2a5298;
+      text-decoration: none;
+      background: #eef2ff;
+      padding: 2px 8px;
+      border-radius: 3px;
+    }
+    .section-sources a:hover {
+      background: #667eea;
+      color: white;
+    }
+
+    /* ── FOOTER ──────────────────────────────────────────── */
+    .footer {
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+      color: rgba(255,255,255,0.8);
+      text-align: center;
+      padding: 22px 20px;
+      font-size: 11px;
+      line-height: 1.8;
+    }
+    .footer a {
+      color: #a8c4ff;
+      text-decoration: none;
+    }
+    .footer a:hover { text-decoration: underline; color: #fff; }
+
+    @media (max-width: 600px) {
+      .subtopics-grid { grid-template-columns: 1fr; }
+      .header h1 { font-size: 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- ══ HEADER ══════════════════════════════════════════ -->
+  <div class="header">
+    <h1>📰 Trending from the Right · May 26 – June 21, 2026</h1>
+    <div class="subtitle">11 Categories &nbsp;·&nbsp; Ordered by coverage volume &nbsp;·&nbsp; 7 conservative / center-right sources</div>
+
+    <div class="sources-bar">
+      <a href="https://www.wsj.com" target="_blank">Wall Street Journal</a>
+      <a href="https://thedispatch.com" target="_blank">The Dispatch</a>
+      <a href="https://www.nationalreview.com" target="_blank">National Review</a>
+      <a href="https://www.dailywire.com" target="_blank">Daily Wire</a>
+      <a href="https://nypost.com" target="_blank">New York Post</a>
+      <a href="https://www.tuckercarlson.com" target="_blank">Tucker Carlson</a>
+      <a href="https://www.breitbart.com" target="_blank">Breitbart</a>
+    </div>
+  </div>
+
+  <!-- ── LEGEND ── -->
+  <div class="legend">
+    <span>Most coverage</span>
+    <div class="legend-bar"></div>
+    <span>Least coverage</span>
+  </div>
+  <div class="instructions">Click any category to expand · sections ordered by descending mention count</div>
+
+  <!-- ══ TOPICS ══════════════════════════════════════════ -->
+  <div class="topics-list">
+
+    <!-- 1. MIDDLE EAST -->
+    <div class="card">
+      <div class="card-header level-1" onclick="toggle(this)">
+        <span class="card-rank">01</span>
+        <span class="card-title">Middle East</span>
+        <span class="card-count">54 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+            <div class="subtopic">
+              <div class="subtopic-title">Carlson's "America First" Case Against the Iran War</div>
+              <div class="subtopic-detail">Tucker Carlson has used his platform to argue the Iran campaign breaks Trump's own non-interventionist campaign pledge, calling Israel a "client state" and urging Washington to press Jerusalem toward a genuine peace rather than continued escalation.</div>
+              <div class="subtopic-src"><a href="https://www.tuckercarlson.com" target="_blank">Tucker Carlson</a><a href="https://nypost.com" target="_blank">NY Post</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">National Review's Hawkish Rebuttal</div>
+              <div class="subtopic-detail">National Review's foreign-policy writers have defended the strikes as necessary to prevent a nuclear-armed Iran, arguing that isolationist critics are repeating the same restraint-era mistakes that allowed Tehran's program to advance for decades.</div>
+              <div class="subtopic-src"><a href="https://www.nationalreview.com" target="_blank">National Review</a><a href="https://www.wsj.com" target="_blank">WSJ</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Daily Wire's Internal Split</div>
+              <div class="subtopic-detail">Daily Wire co-founder Ben Shapiro has publicly clashed with Carlson, accusing him and aligned voices of effectively "siding with America's enemies" in their framing of Israel and Russia, even as other commentary on the platform has voiced more Carlson-sympathetic skepticism.</div>
+              <div class="subtopic-src"><a href="https://www.dailywire.com" target="_blank">Daily Wire</a><a href="https://www.tuckercarlson.com" target="_blank">Tucker Carlson</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">WSJ Presses for Release of the Iran Memorandum</div>
+              <div class="subtopic-detail">The Journal's editorial board has pushed the administration to make the text of its new U.S.-Iran memorandum public, arguing that Congress and allies deserve to know the terms before any lasting arrangement is finalized.</div>
+              <div class="subtopic-src"><a href="https://www.wsj.com" target="_blank">WSJ</a><a href="https://thedispatch.com" target="_blank">The Dispatch</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">New York Post on the Gaza Disarmament Standoff</div>
+              <div class="subtopic-detail">The Post continues close coverage of the stalled Hamas disarmament negotiations, generally sympathetic to the Israeli position that reconstruction and a full ceasefire cannot proceed until Hamas gives up its remaining weapons.</div>
+              <div class="subtopic-src"><a href="https://nypost.com" target="_blank">NY Post</a><a href="https://www.breitbart.com" target="_blank">Breitbart</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Breitbart's "Peace Through Strength" Framing</div>
+              <div class="subtopic-detail">Breitbart largely credits the administration's approach for ending the major phase of fighting, framing lingering criticism over the memorandum's secrecy as a secondary concern next to the larger achievement of a ceasefire.</div>
+              <div class="subtopic-src"><a href="https://www.breitbart.com" target="_blank">Breitbart</a><a href="https://nypost.com" target="_blank">NY Post</a></div>
+            </div>
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://www.tuckercarlson.com" target="_blank">Tucker Carlson</a>
+            <a href="https://www.nationalreview.com" target="_blank">National Review</a>
+            <a href="https://www.dailywire.com" target="_blank">Daily Wire</a>
+            <a href="https://www.wsj.com" target="_blank">WSJ</a>
+            <a href="https://nypost.com" target="_blank">NY Post</a>
+            <a href="https://www.breitbart.com" target="_blank">Breitbart</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. FRACTURES IN THE MAGA COALITION -->
+    <div class="card">
+      <div class="card-header level-2" onclick="toggle(this)">
+        <span class="card-rank">02</span>
+        <span class="card-title">Fractures in the MAGA Coalition</span>
+        <span class="card-count">50 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+            <div class="subtopic">
+              <div class="subtopic-title">Trump-Carlson Feud Escalates</div>
+              <div class="subtopic-detail">After Trump publicly called Carlson "kooky" over his Iran criticism, Carlson has doubled down rather than backed off, turning a policy disagreement into an open and personal rift between the president and one of his most prominent former allies.</div>
+              <div class="subtopic-src"><a href="https://www.tuckercarlson.com" target="_blank">Tucker Carlson</a><a href="https://nypost.com" target="_blank">NY Post</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Greene's Break Treated as a Real Rupture</div>
+              <div class="subtopic-detail">Coverage across the conservative press treats Marjorie Taylor Greene's split with the administration over Iran, Israel, and the Epstein files as a genuine and significant rupture rather than a manufactured story, given her prior standing as a leading Trump defender.</div>
+              <div class="subtopic-src"><a href="https://www.breitbart.com" target="_blank">Breitbart</a><a href="https://www.dailywire.com" target="_blank">Daily Wire</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Shapiro Stakes Out the Pro-Israel Position</div>
+              <div class="subtopic-detail">Daily Wire's Ben Shapiro has positioned himself firmly against the isolationist wing, defending the administration's posture toward Israel and arguing that abandoning the relationship would be a strategic and moral error.</div>
+              <div class="subtopic-src"><a href="https://www.dailywire.com" target="_blank">Daily Wire</a><a href="https://www.nationalreview.com" target="_blank">National Review</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">National Review's "What Does America First Mean" Debate</div>
+              <div class="subtopic-detail">Writers at National Review have engaged directly with the restraint-versus-intervention argument playing out across the conservative movement, treating it as a substantive disagreement about strategy rather than a simple loyalty test.</div>
+              <div class="subtopic-src"><a href="https://www.nationalreview.com" target="_blank">National Review</a><a href="https://www.wsj.com" target="_blank">WSJ</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Dispatch Warns Against a Loyalty-Test Culture</div>
+              <div class="subtopic-detail">The Dispatch has argued that the political punishment of dissenters like Representative Thomas Massie shows the movement increasingly prioritizes personal loyalty to Trump over the substantive principles — like spending restraint and transparency — it claims to stand for.</div>
+              <div class="subtopic-src"><a href="https://thedispatch.com" target="_blank">The Dispatch</a><a href="https://www.nationalreview.com" target="_blank">National Review</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">WSJ Tracks the Populist-Business Divide</div>
+              <div class="subtopic-detail">The Journal's reporting on tariff policy continues to document friction between traditional pro-business Republicans and populist nationalists within the coalition, a split that predates but has intensified alongside the foreign-policy disputes.</div>
+              <div class="subtopic-src"><a href="https://www.wsj.com" target="_blank">WSJ</a><a href="https://thedispatch.com" target="_blank">The Dispatch</a></div>
+            </div>
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://www.tuckercarlson.com" target="_blank">Tucker Carlson</a>
+            <a href="https://www.dailywire.com" target="_blank">Daily Wire</a>
+            <a href="https://www.nationalreview.com" target="_blank">National Review</a>
+            <a href="https://thedispatch.com" target="_blank">The Dispatch</a>
+            <a href="https://www.breitbart.com" target="_blank">Breitbart</a>
+            <a href="https://www.wsj.com" target="_blank">WSJ</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. EPSTEIN FILES -->
+    <div class="card">
+      <div class="card-header level-3" onclick="toggle(this)">
+        <span class="card-rank">03</span>
+        <span class="card-title">Epstein Files</span>
+        <span class="card-count">46 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+            <div class="subtopic">
+              <div class="subtopic-title">NY Post's Running Coverage of Named Figures</div>
+              <div class="subtopic-detail">The Post continues its tabloid-style tracking of which prominent figures appear in each new document batch, including extensive coverage of Bill Gates's closed-door House Oversight testimony and the personal details that surfaced from it.</div>
+              <div class="subtopic-src"><a href="https://nypost.com" target="_blank">NY Post</a><a href="https://www.dailywire.com" target="_blank">Daily Wire</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Daily Wire Highlights Democrat-Aligned Names</div>
+              <div class="subtopic-detail">Daily Wire coverage has emphasized references to Democrat-aligned figures such as Larry Summers and Kathryn Ruemmler in the files, arguing the story is being under-covered by outlets more focused on Republican-adjacent names.</div>
+              <div class="subtopic-src"><a href="https://www.dailywire.com" target="_blank">Daily Wire</a><a href="https://www.breitbart.com" target="_blank">Breitbart</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Breitbart Frames the Release as a Grassroots Win</div>
+              <div class="subtopic-detail">Breitbart credits the discharge-petition effort led by Representatives Massie and Greene for forcing the release against initial administration resistance, framing it as proof that conservative grassroots pressure can move Washington.</div>
+              <div class="subtopic-src"><a href="https://www.breitbart.com" target="_blank">Breitbart</a><a href="https://nypost.com" target="_blank">NY Post</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">National Review's Measured Legal Read on Redactions</div>
+              <div class="subtopic-detail">National Review has offered more measured legal analysis of whether the Justice Department's redactions stayed within the narrow bounds the Transparency Act actually allows, rather than treating every redaction as evidence of a cover-up.</div>
+              <div class="subtopic-src"><a href="https://www.nationalreview.com" target="_blank">National Review</a><a href="https://thedispatch.com" target="_blank">The Dispatch</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">WSJ on the Gates Fallout</div>
+              <div class="subtopic-detail">The Journal's business desk has covered what the Gates revelations mean for his philanthropic standing and corporate relationships, treating the story as much a reputational and governance matter as a political one.</div>
+              <div class="subtopic-src"><a href="https://www.wsj.com" target="_blank">WSJ</a><a href="https://nypost.com" target="_blank">NY Post</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Carlson Keeps Pressing on Unanswered Questions</div>
+              <div class="subtopic-detail">Tucker Carlson has continued to question aspects of the official Epstein narrative, including the circumstances of his death, arguing that the file releases — however large — still haven't resolved the questions that matter most.</div>
+              <div class="subtopic-src"><a href="https://www.tuckercarlson.com" target="_blank">Tucker Carlson</a><a href="https://www.dailywire.com" target="_blank">Daily Wire</a></div>
+            </div>
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://nypost.com" target="_blank">NY Post</a>
+            <a href="https://www.dailywire.com" target="_blank">Daily Wire</a>
+            <a href="https://www.breitbart.com" target="_blank">Breitbart</a>
+            <a href="https://www.nationalreview.com" target="_blank">National Review</a>
+            <a href="https://www.wsj.com" target="_blank">WSJ</a>
+            <a href="https://www.tuckercarlson.com" target="_blank">Tucker Carlson</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. ICE OPERATIONS -->
+    <div class="card">
+      <div class="card-header level-4" onclick="toggle(this)">
+        <span class="card-rank">04</span>
+        <span class="card-title">ICE Operations</span>
+        <span class="card-count">43 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+            <div class="subtopic">
+              <div class="subtopic-title">Breitbart's Enforcement Success Stories</div>
+              <div class="subtopic-detail">Breitbart regularly highlights ICE's own press releases touting arrests of individuals with violent criminal histories, framing the broader enforcement surge as delivering exactly the public-safety outcomes the administration promised.</div>
+              <div class="subtopic-src"><a href="https://www.breitbart.com" target="_blank">Breitbart</a><a href="https://nypost.com" target="_blank">NY Post</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">NY Post's Deportation Tally as a Promise-Kept Story</div>
+              <div class="subtopic-detail">The Post continues to frame rising deportation numbers as evidence of a campaign pledge being fulfilled, running periodic tallies against the administration's stated enforcement targets.</div>
+              <div class="subtopic-src"><a href="https://nypost.com" target="_blank">NY Post</a><a href="https://www.breitbart.com" target="_blank">Breitbart</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Daily Wire Pushes Back on "Ambush" Narratives</div>
+              <div class="subtopic-detail">Daily Wire has challenged characterizations of ICE agents as the primary aggressors in confrontational incidents, citing cases where agents reported being targeted or obstructed during enforcement operations.</div>
+              <div class="subtopic-src"><a href="https://www.dailywire.com" target="_blank">Daily Wire</a><a href="https://www.breitbart.com" target="_blank">Breitbart</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">WSJ on the Labor-Market Side Effects</div>
+              <div class="subtopic-detail">The Journal's economics desk has covered labor shortages in agriculture and hospitality tied to enforcement intensity, treating the trade-off between enforcement and workforce availability as a serious open policy question.</div>
+              <div class="subtopic-src"><a href="https://www.wsj.com" target="_blank">WSJ</a><a href="https://thedispatch.com" target="_blank">The Dispatch</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">National Review Flags Due-Process Concerns</div>
+              <div class="subtopic-detail">Even broadly sympathetic to the enforcement mission, National Review has flagged documented cases of U.S. citizens wrongly detained as a legitimate concern that the administration needs to address through better verification procedures.</div>
+              <div class="subtopic-src"><a href="https://www.nationalreview.com" target="_blank">National Review</a><a href="https://thedispatch.com" target="_blank">The Dispatch</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Dispatch on the Legal Limits of Expanded Authority</div>
+              <div class="subtopic-detail">The Dispatch has taken a more skeptical, process-focused look at the use of National Guard deployments and wartime-era statutory authority to support enforcement, questioning whether the legal basis will hold up under continued court scrutiny.</div>
+              <div class="subtopic-src"><a href="https://thedispatch.com" target="_blank">The Dispatch</a><a href="https://www.nationalreview.com" target="_blank">National Review</a></div>
+            </div>
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://www.breitbart.com" target="_blank">Breitbart</a>
+            <a href="https://nypost.com" target="_blank">NY Post</a>
+            <a href="https://www.dailywire.com" target="_blank">Daily Wire</a>
+            <a href="https://www.wsj.com" target="_blank">WSJ</a>
+            <a href="https://www.nationalreview.com" target="_blank">National Review</a>
+            <a href="https://thedispatch.com" target="_blank">The Dispatch</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. ELECTORAL POLITICS -->
+    <div class="card">
+      <div class="card-header level-5" onclick="toggle(this)">
+        <span class="card-rank">05</span>
+        <span class="card-title">Electoral Politics</span>
+        <span class="card-count">40 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+            <div class="subtopic">
+              <div class="subtopic-title">National Review on the Georgia Runoff Split</div>
+              <div class="subtopic-detail">National Review's analysis of the June 16 Georgia gubernatorial runoff treats the mixed result for Trump-aligned candidates as a meaningful signal about the limits of presidential coattails even in deep-red contests.</div>
+              <div class="subtopic-src"><a href="https://www.nationalreview.com" target="_blank">National Review</a><a href="https://thedispatch.com" target="_blank">The Dispatch</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">WSJ on Affordability as the Midterm Message</div>
+              <div class="subtopic-detail">The Journal's economics coverage frames inflation and cost-of-living data as likely to dominate midterm messaging for both parties, with Republicans needing to show tariff policy isn't compounding the squeeze on households.</div>
+              <div class="subtopic-src"><a href="https://www.wsj.com" target="_blank">WSJ</a><a href="https://nypost.com" target="_blank">NY Post</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Breitbart's Favorable Take on Redistricting Gains</div>
+              <div class="subtopic-detail">Breitbart covers Texas-style mid-decade map changes as a smart defensive strategy that protects House Republicans from being wiped out by an unfavorable national environment.</div>
+              <div class="subtopic-src"><a href="https://www.breitbart.com" target="_blank">Breitbart</a><a href="https://nypost.com" target="_blank">NY Post</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Daily Wire on Mamdani and Maine as Cautionary Tales</div>
+              <div class="subtopic-detail">Daily Wire frames Zohran Mamdani's continued political prominence and the left-flank Senate nomination in Maine as evidence Democrats are nominating candidates too far outside the mainstream to win swing contests in November.</div>
+              <div class="subtopic-src"><a href="https://www.dailywire.com" target="_blank">Daily Wire</a><a href="https://nypost.com" target="_blank">NY Post</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">NY Post on the Ohio Voter-Registration Investigation</div>
+              <div class="subtopic-detail">The Post covers the FBI's search of an Ohio voter-registration group's offices primarily through an election-integrity lens, treating the investigation as a legitimate inquiry rather than the intimidation campaign critics allege.</div>
+              <div class="subtopic-src"><a href="https://nypost.com" target="_blank">NY Post</a><a href="https://www.breitbart.com" target="_blank">Breitbart</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Dispatch's Wave-Election Warning</div>
+              <div class="subtopic-detail">The Dispatch explicitly cautions Republicans that approval-rating trends point to a genuinely difficult November, arguing that redistricting gains and base enthusiasm won't be enough to offset a broad erosion in independent support.</div>
+              <div class="subtopic-src"><a href="https://thedispatch.com" target="_blank">The Dispatch</a><a href="https://www.wsj.com" target="_blank">WSJ</a></div>
+            </div>
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://www.nationalreview.com" target="_blank">National Review</a>
+            <a href="https://www.wsj.com" target="_blank">WSJ</a>
+            <a href="https://www.breitbart.com" target="_blank">Breitbart</a>
+            <a href="https://www.dailywire.com" target="_blank">Daily Wire</a>
+            <a href="https://nypost.com" target="_blank">NY Post</a>
+            <a href="https://thedispatch.com" target="_blank">The Dispatch</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. SUPREME COURT AND OTHER LEGAL ISSUES -->
+    <div class="card">
+      <div class="card-header level-6" onclick="toggle(this)">
+        <span class="card-rank">06</span>
+        <span class="card-title">Supreme Court and Other Legal Issues</span>
+        <span class="card-count">36 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+            <div class="subtopic">
+              <div class="subtopic-title">National Review's Textualist Case on Birthright Citizenship</div>
+              <div class="subtopic-detail">National Review's legal writers have laid out a detailed textualist argument in favor of the administration's reading of the 14th Amendment's "subject to the jurisdiction thereof" clause, while acknowledging the argument faces real headwinds at the Court.</div>
+              <div class="subtopic-src"><a href="https://www.nationalreview.com" target="_blank">National Review</a><a href="https://thedispatch.com" target="_blank">The Dispatch</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">WSJ's Editorial Support for Presidential Removal Power</div>
+              <div class="subtopic-detail">The Journal's editorial board has backed an expansive reading of the president's authority to remove independent-agency heads without cause, arguing it restores constitutional accountability that the Humphrey's Executor precedent improperly diluted.</div>
+              <div class="subtopic-src"><a href="https://www.wsj.com" target="_blank">WSJ</a><a href="https://www.nationalreview.com" target="_blank">National Review</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Dispatch's Skeptical Read on Unitary-Executive Theory</div>
+              <div class="subtopic-detail">The Dispatch has taken a more cautious view, warning that an unchecked removal power could erode independent oversight functions in ways that a future Democratic administration would exploit just as readily.</div>
+              <div class="subtopic-src"><a href="https://thedispatch.com" target="_blank">The Dispatch</a><a href="https://www.wsj.com" target="_blank">WSJ</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Daily Wire's Advocacy on the Transgender Athletes Case</div>
+              <div class="subtopic-detail">Daily Wire has provided sustained, strongly supportive coverage of state bans on transgender athletes in women's sports as the Little v. Hecox decision approaches, treating it as one of the term's most consequential rulings.</div>
+              <div class="subtopic-src"><a href="https://www.dailywire.com" target="_blank">Daily Wire</a><a href="https://nypost.com" target="_blank">NY Post</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Breitbart on the Redistricting Opportunity</div>
+              <div class="subtopic-detail">Breitbart frames the Court's narrowing of Voting Rights Act protections in Louisiana v. Callais as opening a fair opportunity for Southern legislatures to draw maps without race-based constraints that previously favored Democratic-leaning districts.</div>
+              <div class="subtopic-src"><a href="https://www.breitbart.com" target="_blank">Breitbart</a><a href="https://nypost.com" target="_blank">NY Post</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">NY Post on the Mail-Ballot Deadline Case</div>
+              <div class="subtopic-detail">The Post covers the RNC-backed mail-ballot deadline challenge through a practical, election-administration lens, focused on what a ruling would mean for how states actually count votes in November.</div>
+              <div class="subtopic-src"><a href="https://nypost.com" target="_blank">NY Post</a><a href="https://www.wsj.com" target="_blank">WSJ</a></div>
+            </div>
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://www.nationalreview.com" target="_blank">National Review</a>
+            <a href="https://www.wsj.com" target="_blank">WSJ</a>
+            <a href="https://thedispatch.com" target="_blank">The Dispatch</a>
+            <a href="https://www.dailywire.com" target="_blank">Daily Wire</a>
+            <a href="https://www.breitbart.com" target="_blank">Breitbart</a>
+            <a href="https://nypost.com" target="_blank">NY Post</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. TRUMP ADMINISTRATION REVERSALS & GROWING LIABILITIES -->
+    <div class="card">
+      <div class="card-header level-7" onclick="toggle(this)">
+        <span class="card-rank">07</span>
+        <span class="card-title">Trump Administration Reversals &amp; Growing Liabilities</span>
+        <span class="card-count">33 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+            <div class="subtopic">
+              <div class="subtopic-title">WSJ Editorial Board Keeps Pressing on Tariffs</div>
+              <div class="subtopic-detail">The Journal's editorial page has maintained consistent criticism of tariff-driven inflation, arguing the protectionist approach is imposing real costs on consumers and businesses that outweigh its stated manufacturing benefits.</div>
+              <div class="subtopic-src"><a href="https://www.wsj.com" target="_blank">WSJ</a><a href="https://thedispatch.com" target="_blank">The Dispatch</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Dispatch Catalogs Legal Setbacks</div>
+              <div class="subtopic-detail">The Dispatch has compiled a running account of court losses on agency restructuring and federal-worker firings, arguing the pattern reflects genuine overreach rather than simply hostile judges.</div>
+              <div class="subtopic-src"><a href="https://thedispatch.com" target="_blank">The Dispatch</a><a href="https://www.wsj.com" target="_blank">WSJ</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">National Review on Cabinet Turnover</div>
+              <div class="subtopic-detail">National Review has expressed measured concern that frequent personnel changes, including the attorney general transition, risk disrupting policy execution at a moment the administration can least afford instability.</div>
+              <div class="subtopic-src"><a href="https://www.nationalreview.com" target="_blank">National Review</a><a href="https://thedispatch.com" target="_blank">The Dispatch</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">NY Post's Tabloid Take on the Polling Slide</div>
+              <div class="subtopic-detail">The Post covers the approval-rating decline with its usual skepticism toward "mainstream" polling methodology, while still acknowledging the broad consistency of the downward trend across multiple independent pollsters.</div>
+              <div class="subtopic-src"><a href="https://nypost.com" target="_blank">NY Post</a><a href="https://www.wsj.com" target="_blank">WSJ</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Daily Wire Pushes Back on "Liability" Framing</div>
+              <div class="subtopic-detail">Daily Wire argues the polling softness reflects ordinary midterm-cycle dynamics rather than a genuine crisis, pointing to past presidents who recovered from similar numbers well before their own midterms.</div>
+              <div class="subtopic-src"><a href="https://www.dailywire.com" target="_blank">Daily Wire</a><a href="https://www.breitbart.com" target="_blank">Breitbart</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Breitbart's Media-Bias Counter-Narrative</div>
+              <div class="subtopic-detail">Breitbart frames much of the "liabilities" coverage in establishment outlets as itself evidence of coordinated press hostility, arguing the underlying economic and policy picture is being presented more negatively than the data warrants.</div>
+              <div class="subtopic-src"><a href="https://www.breitbart.com" target="_blank">Breitbart</a><a href="https://www.dailywire.com" target="_blank">Daily Wire</a></div>
+            </div>
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://www.wsj.com" target="_blank">WSJ</a>
+            <a href="https://thedispatch.com" target="_blank">The Dispatch</a>
+            <a href="https://www.nationalreview.com" target="_blank">National Review</a>
+            <a href="https://nypost.com" target="_blank">NY Post</a>
+            <a href="https://www.dailywire.com" target="_blank">Daily Wire</a>
+            <a href="https://www.breitbart.com" target="_blank">Breitbart</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 8. UKRAINE -->
+    <div class="card">
+      <div class="card-header level-8" onclick="toggle(this)">
+        <span class="card-rank">08</span>
+        <span class="card-title">Ukraine</span>
+        <span class="card-count">29 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+            <div class="subtopic">
+              <div class="subtopic-title">National Review's Case for Continued Support</div>
+              <div class="subtopic-detail">National Review's hawkish wing continues to argue that abandoning Ukraine would embolden authoritarian aggression more broadly, framing sustained support as consistent with — not opposed to — core American interests.</div>
+              <div class="subtopic-src"><a href="https://www.nationalreview.com" target="_blank">National Review</a><a href="https://thedispatch.com" target="_blank">The Dispatch</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Carlson's Continued Skepticism of U.S. Involvement</div>
+              <div class="subtopic-detail">Tucker Carlson remains a leading skeptical voice, arguing that years of U.S. financial and military commitment haven't clearly served American interests and that a faster, more transactional resolution should take priority over open-ended support.</div>
+              <div class="subtopic-src"><a href="https://www.tuckercarlson.com" target="_blank">Tucker Carlson</a><a href="https://www.breitbart.com" target="_blank">Breitbart</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">WSJ on the Economics of a Peace Deal</div>
+              <div class="subtopic-detail">The Journal's coverage focuses on the financial mechanics of any eventual settlement, including reconstruction financing and sanctions-relief structures, treating these as decisive practical questions separate from the political debate.</div>
+              <div class="subtopic-src"><a href="https://www.wsj.com" target="_blank">WSJ</a><a href="https://www.nationalreview.com" target="_blank">National Review</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Dispatch on the Kyiv Corruption Scandal</div>
+              <div class="subtopic-detail">The Dispatch has treated the Ukrainian corruption scandal as a legitimate governance concern in its own right rather than dismissing it as Russian-aligned propaganda, while still distinguishing it from arguments about Zelensky's basic legitimacy.</div>
+              <div class="subtopic-src"><a href="https://thedispatch.com" target="_blank">The Dispatch</a><a href="https://www.nationalreview.com" target="_blank">National Review</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Daily Wire on the Missed June Deadline</div>
+              <div class="subtopic-detail">Daily Wire's coverage of the lapsed U.S.-set deadline emphasizes an "America First" framing that prolonged negotiations serve neither Ukraine nor U.S. interests as well as a faster, even if less ideal, resolution would.</div>
+              <div class="subtopic-src"><a href="https://www.dailywire.com" target="_blank">Daily Wire</a><a href="https://www.tuckercarlson.com" target="_blank">Tucker Carlson</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Breitbart Pushes for Greater European Burden-Sharing</div>
+              <div class="subtopic-detail">Breitbart's coverage consistently emphasizes calls for European nations to shoulder more of the security and financial commitment to Ukraine, framing continued heavy U.S. involvement as disproportionate to America's direct stake in the conflict.</div>
+              <div class="subtopic-src"><a href="https://www.breitbart.com" target="_blank">Breitbart</a><a href="https://www.dailywire.com" target="_blank">Daily Wire</a></div>
+            </div>
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://www.nationalreview.com" target="_blank">National Review</a>
+            <a href="https://www.tuckercarlson.com" target="_blank">Tucker Carlson</a>
+            <a href="https://www.wsj.com" target="_blank">WSJ</a>
+            <a href="https://thedispatch.com" target="_blank">The Dispatch</a>
+            <a href="https://www.dailywire.com" target="_blank">Daily Wire</a>
+            <a href="https://www.breitbart.com" target="_blank">Breitbart</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 9. GOVERNMENT OVERSIGHT OF HEALTH CARE -->
+    <div class="card">
+      <div class="card-header level-9" onclick="toggle(this)">
+        <span class="card-rank">09</span>
+        <span class="card-title">Government Oversight of Health Care</span>
+        <span class="card-count">26 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+            <div class="subtopic">
+              <div class="subtopic-title">National Review's Support for Medicaid Work Requirements</div>
+              <div class="subtopic-detail">National Review's policy writers have offered supportive analysis of the new Medicaid work requirements, framing them as a reasonable structural reform rather than the coverage crisis described in critical coverage elsewhere.</div>
+              <div class="subtopic-src"><a href="https://www.nationalreview.com" target="_blank">National Review</a><a href="https://www.wsj.com" target="_blank">WSJ</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">WSJ on the Fiscal Logic of the ACA Subsidy Cliff</div>
+              <div class="subtopic-detail">The Journal's editorial page argues that allowing pandemic-era enhanced ACA subsidies to lapse reflects honest budgeting after a period of emergency overspending, even while acknowledging the premium increases enrollees now face.</div>
+              <div class="subtopic-src"><a href="https://www.wsj.com" target="_blank">WSJ</a><a href="https://www.nationalreview.com" target="_blank">National Review</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Daily Wire's Sympathetic Coverage of MAHA Reforms</div>
+              <div class="subtopic-detail">Daily Wire continues largely favorable coverage of RFK Jr.'s vaccine-schedule and nutrition-policy changes, framing them as overdue reforms to a health bureaucracy that had grown too captured by industry interests.</div>
+              <div class="subtopic-src"><a href="https://www.dailywire.com" target="_blank">Daily Wire</a><a href="https://www.breitbart.com" target="_blank">Breitbart</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Breitbart on the Measles Coverage Fight</div>
+              <div class="subtopic-detail">Breitbart argues mainstream coverage of the measles outbreak has been deployed primarily to attack Kennedy politically, framing the case-count increase as a regional, manageable public-health matter rather than a national emergency.</div>
+              <div class="subtopic-src"><a href="https://www.breitbart.com" target="_blank">Breitbart</a><a href="https://www.dailywire.com" target="_blank">Daily Wire</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">NY Post on the CDC Nominee</div>
+              <div class="subtopic-detail">The Post profiles the administration's pro-vaccine CDC nominee largely as a personnel story, noting the pick without dwelling much on the broader "course correction" framing emphasized in establishment coverage.</div>
+              <div class="subtopic-src"><a href="https://nypost.com" target="_blank">NY Post</a><a href="https://www.wsj.com" target="_blank">WSJ</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Dispatch's Cautious Process Critique</div>
+              <div class="subtopic-detail">The Dispatch has offered a more cautious critique of how vaccine-policy changes were communicated and implemented, arguing that even reforms with merit can backfire if the public process around them looks rushed or opaque.</div>
+              <div class="subtopic-src"><a href="https://thedispatch.com" target="_blank">The Dispatch</a><a href="https://www.nationalreview.com" target="_blank">National Review</a></div>
+            </div>
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://www.nationalreview.com" target="_blank">National Review</a>
+            <a href="https://www.wsj.com" target="_blank">WSJ</a>
+            <a href="https://www.dailywire.com" target="_blank">Daily Wire</a>
+            <a href="https://www.breitbart.com" target="_blank">Breitbart</a>
+            <a href="https://thedispatch.com" target="_blank">The Dispatch</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 10. LATIN AMERICA AND CANADA -->
+    <div class="card">
+      <div class="card-header level-10" onclick="toggle(this)">
+        <span class="card-rank">10</span>
+        <span class="card-title">Latin America and Canada</span>
+        <span class="card-count">23 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+            <div class="subtopic">
+              <div class="subtopic-title">Breitbart's Celebratory Venezuela Coverage</div>
+              <div class="subtopic-detail">Breitbart continues to frame the January operation that captured former president Maduro as a major hemispheric win against a narco-state, with ongoing coverage of the interim government's cooperation with U.S. priorities.</div>
+              <div class="subtopic-src"><a href="https://www.breitbart.com" target="_blank">Breitbart</a><a href="https://nypost.com" target="_blank">NY Post</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">National Review on the Legal Basis for Caribbean Strikes</div>
+              <div class="subtopic-detail">National Review has offered a supportive constitutional argument for the administration's authority to conduct counter-narcotics strikes, while acknowledging the legal question of lethal force against alleged traffickers remains genuinely contested.</div>
+              <div class="subtopic-src"><a href="https://www.nationalreview.com" target="_blank">National Review</a><a href="https://thedispatch.com" target="_blank">The Dispatch</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">WSJ on the Canada-U.S. Trade Negotiations</div>
+              <div class="subtopic-detail">The Journal's coverage of the CUSMA review process treats the ongoing tariff disputes with Canada as a serious economic story for both countries, independent of the broader political relationship between Trump and Prime Minister Carney.</div>
+              <div class="subtopic-src"><a href="https://www.wsj.com" target="_blank">WSJ</a><a href="https://thedispatch.com" target="_blank">The Dispatch</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">NY Post on Venezuela's Oil-Sector Reopening</div>
+              <div class="subtopic-detail">The Post covers the return of Exxon, BP, and other major oil companies to Venezuela primarily as a market-opportunity story, framing it as a tangible economic benefit flowing from the change in government.</div>
+              <div class="subtopic-src"><a href="https://nypost.com" target="_blank">NY Post</a><a href="https://www.wsj.com" target="_blank">WSJ</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Dispatch's Caution on Strike Legality</div>
+              <div class="subtopic-detail">The Dispatch has flagged due-process and war-powers questions around the Caribbean strikes even while crediting the underlying counter-narcotics goal, arguing the legal framework deserves more scrutiny than it has received.</div>
+              <div class="subtopic-src"><a href="https://thedispatch.com" target="_blank">The Dispatch</a><a href="https://www.nationalreview.com" target="_blank">National Review</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Daily Wire on the Forced-Labor Trade Dispute</div>
+              <div class="subtopic-detail">Daily Wire frames the U.S. complaint over Canadian enforcement gaps on forced-labor imports as part of a broader concern about North American supply chains remaining too exposed to Chinese-linked production.</div>
+              <div class="subtopic-src"><a href="https://www.dailywire.com" target="_blank">Daily Wire</a><a href="https://www.wsj.com" target="_blank">WSJ</a></div>
+            </div>
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://www.breitbart.com" target="_blank">Breitbart</a>
+            <a href="https://nypost.com" target="_blank">NY Post</a>
+            <a href="https://www.wsj.com" target="_blank">WSJ</a>
+            <a href="https://www.nationalreview.com" target="_blank">National Review</a>
+            <a href="https://thedispatch.com" target="_blank">The Dispatch</a>
+            <a href="https://www.dailywire.com" target="_blank">Daily Wire</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 11. RELATIONS AMONG US, CHINA, AND RUSSIA -->
+    <div class="card">
+      <div class="card-header level-11" onclick="toggle(this)">
+        <span class="card-rank">11</span>
+        <span class="card-title">Relations Among US, China, and Russia</span>
+        <span class="card-count">19 mentions</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+            <div class="subtopic">
+              <div class="subtopic-title">WSJ's Deep Dive on the Beijing Summit Truce</div>
+              <div class="subtopic-detail">The Journal's reporting on the rare-earth and tariff truce reached during Trump's May visit to Beijing treats it as a fragile, one-year arrangement rather than a durable resolution, with chip-supply dependence still a major vulnerability.</div>
+              <div class="subtopic-src"><a href="https://www.wsj.com" target="_blank">WSJ</a><a href="https://thedispatch.com" target="_blank">The Dispatch</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">National Review on the Taiwan "Silicon Shield" Debate</div>
+              <div class="subtopic-detail">National Review has pushed back firmly against any rhetoric framing Taiwan's chip dominance as a strategic liability, arguing the island remains a critical partner whose defense commitment should not be diluted by economic anxiety.</div>
+              <div class="subtopic-src"><a href="https://www.nationalreview.com" target="_blank">National Review</a><a href="https://www.wsj.com" target="_blank">WSJ</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Breitbart on China's Rare-Earth Leverage</div>
+              <div class="subtopic-detail">Breitbart covers the fragility of the rare-earth truce as further evidence that China remains an unreliable long-term partner, arguing the episode strengthens the case for accelerating domestic and allied supply-chain alternatives.</div>
+              <div class="subtopic-src"><a href="https://www.breitbart.com" target="_blank">Breitbart</a><a href="https://www.wsj.com" target="_blank">WSJ</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Carlson's Case Against Confrontation With Russia</div>
+              <div class="subtopic-detail">Tucker Carlson continues to argue that ongoing hostility toward Moscow doesn't serve core American interests, framing renewed U.S.-Russia military dialogue after the latest Ukraine talks as a step in the right direction rather than a concession.</div>
+              <div class="subtopic-src"><a href="https://www.tuckercarlson.com" target="_blank">Tucker Carlson</a><a href="https://www.dailywire.com" target="_blank">Daily Wire</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Daily Wire Questions the "Russian Wedge" Narrative</div>
+              <div class="subtopic-detail">Daily Wire has covered claims that Russia is actively courting estranged MAGA-aligned commentators with notable skepticism, suggesting the framing may be overstated by establishment outlets eager to discredit the administration's critics.</div>
+              <div class="subtopic-src"><a href="https://www.dailywire.com" target="_blank">Daily Wire</a><a href="https://www.tuckercarlson.com" target="_blank">Tucker Carlson</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Dispatch on Overlapping Sanctions Regimes</div>
+              <div class="subtopic-detail">The Dispatch offers a process-focused look at how Iran-linked sanctions enforcement intersects with broader actions against Russia's "shadow fleet" oil exports, noting the practical complexity of pursuing both without disrupting trade with Beijing.</div>
+              <div class="subtopic-src"><a href="https://thedispatch.com" target="_blank">The Dispatch</a><a href="https://www.wsj.com" target="_blank">WSJ</a></div>
+            </div>
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://www.wsj.com" target="_blank">WSJ</a>
+            <a href="https://www.nationalreview.com" target="_blank">National Review</a>
+            <a href="https://www.breitbart.com" target="_blank">Breitbart</a>
+            <a href="https://www.tuckercarlson.com" target="_blank">Tucker Carlson</a>
+            <a href="https://www.dailywire.com" target="_blank">Daily Wire</a>
+            <a href="https://thedispatch.com" target="_blank">The Dispatch</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /topics-list -->
+
+  <!-- ══ FOOTER ══════════════════════════════════════════ -->
+  <div class="footer">
+    <div style="opacity:0.6; font-size:10px;">
+      Compiled for BOLLI Current Events Discussion Group · Coverage synthesized across 7 conservative / center-right outlets · May 26 – June 21, 2026
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<script>
+  function toggle(header) {
+    const body = header.nextElementSibling;
+    const chevron = header.querySelector('.card-chevron');
+    const isOpen = body.classList.contains('expanded');
+
+    // Collapse all
+    document.querySelectorAll('.card-body').forEach(b => b.classList.remove('expanded'));
+    document.querySelectorAll('.card-chevron').forEach(c => c.classList.remove('rotated'));
+
+    // Expand clicked (if it was closed)
+    if (!isOpen) {
+      body.classList.add('expanded');
+      chevron.classList.add('rotated');
+      setTimeout(() => header.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
+    }
+  }
+</script>
+</body>
+</html>

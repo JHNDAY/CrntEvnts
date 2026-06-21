@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Capitulation · Week of June 14–20, 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=EB+Garamond:ital,opsz,wght@0,8..144,400;0,8..144,500;1,8..144,400;1,8..144,500&family=Cinzel:wght@400;700;900&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+
+/* ═══════════════════════════════════════════
+   SHARED TOKENS  (edifice_rex palette)
+═══════════════════════════════════════════ */
+:root {
+  --gold:       #c9a84c;
+  --gold-light: #e8c97a;
+  --gold-dark:  #8b6914;
+  --gold-xs:    rgba(201,168,76,0.10);
+  --cream:      #f5efe0;
+  --parchment:  #ede0c4;
+  --white:      #f9f5ed;
+  --ink:        #1a1208;
+  --mid:        #3a2a10;
+  --dim:        #7a6a50;
+  --red:        #8b1a1a;
+  --red-light:  #b22222;
+  --red-xs:     rgba(139,26,26,0.09);
+  --rule:       rgba(201,168,76,0.18);
+  --rule-md:    rgba(201,168,76,0.32);
+  --shadow:     rgba(26,18,8,0.35);
+
+  /* AI Elements of Style palette */
+  --aes-paper:   #fffdf6;
+  --aes-ink:     #0d0a05;
+  --aes-mid:     #4a3c28;
+  --aes-gold:    #c8b888;
+  --aes-red:     #8c0f0f;
+  --aes-bg:      #e8e0cc;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background-color: #1a1208;
+  background-image:
+    radial-gradient(ellipse at 20% 20%, rgba(139,105,20,0.15) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 80%, rgba(139,26,26,0.12) 0%, transparent 60%);
+  min-height: 100vh;
+  font-family: 'EB Garamond', Georgia, serif;
+  color: var(--ink);
+  padding: 0 1rem 4rem;
+}
+
+/* ═══════════════════════════════════════════
+   TOGGLE BAR
+═══════════════════════════════════════════ */
+.toggle-bar {
+  position: sticky; top: 0; z-index: 1000;
+  display: flex; justify-content: center;
+  padding: 0.8rem 1rem;
+  background: linear-gradient(to bottom, rgba(26,18,8,0.98) 0%, rgba(26,18,8,0.85) 100%);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(201,168,76,0.2);
+}
+.toggle-pill {
+  display: flex;
+  background: rgba(26,18,8,0.9);
+  border: 1px solid rgba(201,168,76,0.35);
+  border-radius: 100px;
+  padding: 3px; gap: 2px;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.5), inset 0 1px 0 rgba(201,168,76,0.1);
+}
+.toggle-btn {
+  font-family: 'Cinzel', serif; font-size: 0.65rem; font-weight: 700;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  padding: 0.45rem 1.4rem; border: none; border-radius: 100px;
+  cursor: pointer; transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+  color: rgba(201,168,76,0.5); background: transparent;
+}
+.toggle-btn.active {
+  background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold) 100%);
+  color: var(--ink);
+  box-shadow: 0 2px 12px rgba(201,168,76,0.4);
+}
+.toggle-btn:hover:not(.active) { color: var(--gold-light); }
+
+/* ═══════════════════════════════════════════
+   VIEW WRAPPERS
+═══════════════════════════════════════════ */
+.view { padding-top: 2rem; }
+.view.hidden { display: none; }
+
+.view .page {
+  margin: 0 auto;
+  background: var(--cream);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  box-shadow: 0 0 80px rgba(201,168,76,0.25), 0 20px 60px var(--shadow), 0 0 0 1px rgba(201,168,76,0.3);
+  position: relative; overflow: hidden;
+}
+.view .page::before {
+  content: ''; position: absolute; inset: 12px;
+  border: 1px solid var(--gold); pointer-events: none; z-index: 10;
+}
+.view .page::after {
+  content: ''; position: absolute; inset: 16px;
+  border: 1px solid rgba(201,168,76,0.3); pointer-events: none; z-index: 10;
+}
+.view .masthead { background: var(--ink); position: relative; overflow: hidden; }
+.view .masthead::after {
+  content: ''; position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse at 85% 30%, rgba(139,105,20,0.22) 0%, transparent 55%),
+    radial-gradient(ellipse at 15% 70%, rgba(139,26,26,0.15) 0%, transparent 50%);
+  pointer-events: none;
+}
+.accent-stripe {
+  height: 4px;
+  background: linear-gradient(90deg, var(--ink) 0%, var(--gold-dark) 25%, var(--gold) 55%, var(--gold-light) 75%, var(--red-light) 100%);
+}
+@keyframes titleGlow {
+  from { text-shadow: 0 2px 20px rgba(201,168,76,0.3); }
+  to   { text-shadow: 0 2px 40px rgba(201,168,76,0.65), 0 0 80px rgba(201,168,76,0.2); }
+}
+@keyframes pageReveal {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes sectionFade {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+
+/* ═══════════════════════════════════════════
+   AT A GLANCE  — AI ELEMENTS OF STYLE
+═══════════════════════════════════════════ */
+#view-glance .page {
+  max-width: 980px;
+  padding-bottom: 0;
+  animation: pageReveal 0.9s ease-out both;
+  /* Override cream for AES newspaper aesthetic */
+  background: var(--aes-paper) !important;
+  border: 2px solid var(--aes-ink);
+  box-shadow: 6px 6px 0 var(--aes-ink), 0 0 60px rgba(201,168,76,0.2);
+}
+#view-glance .page::before {
+  border: none;
+}
+#view-glance .page::after {
+  border: none;
+}
+
+/* Ruled paper overlay — AES signature */
+#view-glance .page .aes-ruled-overlay {
+  position: absolute; inset: 0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 27px, rgba(0,0,0,0.025) 27px, rgba(0,0,0,0.025) 28px);
+  pointer-events: none; z-index: 0;
+}
+
+/* All children above ruled overlay */
+#view-glance .page > * { position: relative; z-index: 1; }
+
+/* ── AES MASTHEAD ── */
+#view-glance .aes-masthead {
+  background: var(--aes-paper);
+  text-align: center;
+  border-bottom: 4px double var(--aes-ink);
+  padding: 2rem 3rem 1.4rem;
+}
+#view-glance .aes-kicker {
+  font-family: 'Courier Prime', monospace;
+  font-size: 10px; letter-spacing: 0.38em;
+  text-transform: uppercase; color: var(--aes-mid);
+  margin-bottom: 0.5rem;
+}
+#view-glance .aes-headline {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.2rem, 5vw, 3.6rem);
+  font-weight: 900; line-height: 0.92;
+  color: var(--aes-ink); text-transform: uppercase;
+  letter-spacing: 0.04em; margin-bottom: 0.3rem;
+}
+#view-glance .aes-headline em {
+  font-style: italic; font-weight: 400;
+  font-size: 0.75em; display: block;
+  letter-spacing: 0.06em; color: var(--aes-mid);
+}
+#view-glance .aes-subhead {
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem; font-style: italic;
+  color: var(--aes-mid); margin-bottom: 0.5rem;
+}
+#view-glance .aes-dedication {
+  font-family: 'Courier Prime', monospace;
+  font-size: 9px; letter-spacing: 0.22em;
+  text-transform: uppercase; color: #9a8a68;
+  border-top: 1px solid var(--aes-gold);
+  padding-top: 0.5rem; margin-top: 0.5rem;
+}
+
+/* ── AES RULES HR ── */
+.hr-thick  { border: none; border-top: 3px solid var(--aes-ink); margin: 1.1rem 0; }
+.hr-thin   { border: none; border-top: 1px solid var(--aes-gold); margin: 0.9rem 0; }
+.hr-double { border: none; border-top: 4px double var(--aes-ink); margin: 1.3rem 0; }
+
+/* ── AES AXIOM BAND ── */
+#view-glance .axiom-band {
+  display: grid; grid-template-columns: repeat(3,1fr);
+  border: 2px solid var(--aes-ink); margin: 0 3rem 1.3rem;
+}
+#view-glance .axiom-cell {
+  padding: 0.9rem 1rem;
+  border-right: 2px solid var(--aes-ink);
+  background: var(--aes-paper);
+}
+#view-glance .axiom-cell:last-child { border-right: none; }
+#view-glance .axiom-tag {
+  font-family: 'Courier Prime', monospace;
+  font-size: 9px; letter-spacing: 0.25em;
+  text-transform: uppercase; color: var(--aes-mid); margin-bottom: 4px;
+}
+#view-glance .axiom-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.9rem; font-weight: 900;
+  color: var(--aes-gold); line-height: 1; margin-bottom: 2px;
+}
+#view-glance .axiom-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 0.95rem; font-weight: 700;
+  color: var(--aes-ink); margin-bottom: 4px;
+}
+#view-glance .axiom-name.red { color: var(--aes-red); }
+#view-glance .axiom-body {
+  font-size: 12.5px; line-height: 1.55;
+  color: var(--aes-mid); font-style: italic;
+}
+
+/* ── AES BODY ── */
+#view-glance .aes-body { padding: 0 3rem 2rem; }
+
+#view-glance .sec-tag {
+  font-family: 'Courier Prime', monospace;
+  font-size: 9px; letter-spacing: 0.3em;
+  text-transform: uppercase; color: var(--aes-mid); margin-bottom: 0.4rem;
+}
+#view-glance .sec-head {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.05rem; font-weight: 700;
+  color: var(--aes-ink); border-bottom: 2px solid var(--aes-ink);
+  padding-bottom: 0.3rem; margin-bottom: 0.85rem;
+}
+
+/* ── AES RULE ENTRIES (three columns) ── */
+#view-glance .col3 {
+  display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 1.8rem;
+}
+#view-glance .col2 {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 1.8rem;
+}
+#view-glance .rule-entry {
+  margin-bottom: 1rem;
+  border-left: 4px solid var(--aes-ink);
+  padding: 0.7rem 0.9rem;
+  background: rgba(0,0,0,0.03);
+}
+#view-glance .rule-num {
+  font-family: 'Courier Prime', monospace;
+  font-size: 9px; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--aes-red); margin-bottom: 3px;
+}
+#view-glance .rule-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 0.95rem; font-weight: 700;
+  color: var(--aes-ink); margin-bottom: 4px;
+}
+#view-glance .rule-body {
+  font-size: 13px; line-height: 1.6;
+  color: var(--aes-mid); font-style: italic; margin-bottom: 4px;
+}
+#view-glance .rule-apply {
+  font-family: 'Courier Prime', monospace;
+  font-size: 11.5px; color: var(--aes-ink); font-style: normal;
+}
+#view-glance .rule-apply::before { content: '→ '; color: var(--aes-red); font-weight: 700; }
+
+/* ── AES VIOLATION TABLE ── */
+#view-glance table.vt { width: 100%; border-collapse: collapse; }
+#view-glance table.vt thead th {
+  font-family: 'Courier Prime', monospace;
+  font-size: 9px; letter-spacing: 0.18em;
+  text-transform: uppercase; color: var(--aes-mid);
+  text-align: left; padding: 4px 8px 8px;
+  border-bottom: 1.5px solid var(--aes-ink);
+}
+#view-glance table.vt tbody td {
+  padding: 8px; border-bottom: 1px dashed var(--aes-gold);
+  vertical-align: top; font-size: 13px; line-height: 1.5;
+  color: var(--aes-ink);
+}
+#view-glance table.vt tbody tr:last-child td { border-bottom: none; }
+#view-glance table.vt .bad {
+  font-family: 'Courier Prime', monospace; font-size: 12px;
+  color: var(--aes-red); text-decoration: line-through;
+  text-decoration-color: var(--aes-red); text-decoration-thickness: 2px;
+  background: #f0e8d0; padding: 2px 7px;
+  border: 1.5px solid var(--aes-gold); display: inline-block; margin-bottom: 3px;
+}
+#view-glance table.vt .good {
+  font-family: 'Courier Prime', monospace; font-size: 12px;
+  color: #4a7c28; background: #f0e8d0; padding: 2px 7px;
+  border: 1.5px solid var(--aes-gold); display: inline-block;
+}
+
+/* ── AES FORBIDDEN BAND ── */
+#view-glance .forbidden {
+  background: #f0e8d0; border: 2px solid var(--aes-ink);
+  padding: 0.8rem 1rem; margin: 1rem 0;
+}
+#view-glance .forb-head {
+  font-family: 'Playfair Display', serif;
+  font-size: 0.95rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.04em;
+  color: var(--aes-red); display: flex; align-items: center;
+  gap: 0.6rem; margin-bottom: 0.6rem;
+}
+#view-glance .forb-head::before, #view-glance .forb-head::after {
+  content: ''; flex: 1; height: 1.5px; background: var(--aes-red);
+}
+#view-glance .pills { display: flex; flex-wrap: wrap; gap: 5px; }
+#view-glance .pill {
+  font-family: 'Courier Prime', monospace; font-size: 11px;
+  padding: 3px 9px; border: 1.5px solid var(--aes-mid);
+  color: var(--aes-ink); text-decoration: line-through;
+  text-decoration-color: var(--aes-red); text-decoration-thickness: 2px;
+}
+
+/* ── AES CHECKLIST ── */
+#view-glance ul.chk { list-style: none; padding: 0; margin: 0; }
+#view-glance ul.chk li {
+  font-size: 13px; line-height: 1.6; color: var(--aes-ink);
+  padding: 5px 0 5px 24px; border-bottom: 1px dashed var(--aes-gold);
+  position: relative;
+}
+#view-glance ul.chk li:last-child { border-bottom: none; }
+#view-glance ul.chk li::before {
+  content: '□'; position: absolute; left: 0; top: 5px;
+  color: var(--aes-mid); font-size: 14px;
+}
+#view-glance ul.chk li.warn {
+  font-family: 'Courier Prime', monospace; font-size: 12px;
+  font-weight: 700; color: var(--aes-red);
+}
+#view-glance ul.chk li.warn::before { content: '⚠'; color: var(--aes-red); font-size: 12px; top: 6px; }
+
+/* ── AES CLOSING BAND ── */
+#view-glance .closing-band {
+  background: var(--aes-ink); color: var(--aes-gold);
+  padding: 1.2rem 3rem;
+  border-top: 3px solid var(--aes-ink);
+  display: flex; align-items: flex-start; gap: 1.5rem;
+}
+#view-glance .cb-label {
+  font-family: 'Courier Prime', monospace;
+  font-size: 8.5px; letter-spacing: 0.2em;
+  text-transform: uppercase; color: rgba(200,184,136,0.6);
+  white-space: nowrap; padding-top: 3px; flex-shrink: 0;
+}
+#view-glance .cb-rule { width: 1px; background: rgba(200,184,136,0.2); align-self: stretch; flex-shrink: 0; }
+#view-glance .cb-text {
+  font-family: 'Playfair Display', serif;
+  font-size: 13px; font-style: italic; line-height: 1.65;
+  color: rgba(200,184,136,0.9);
+}
+#view-glance .cb-text strong { color: var(--aes-gold); font-style: normal; font-weight: 700; }
+
+/* ── AES PAGE FOOTER ── */
+#view-glance .page-footer {
+  border-top: 1px solid var(--aes-gold);
+  margin: 0 3rem; padding: 10px 0 0 0;
+  display: flex; justify-content: space-between; align-items: center;
+  padding-bottom: 1.5rem;
+}
+#view-glance .page-footer p {
+  font-family: 'Courier Prime', monospace; font-size: 8.5px;
+  letter-spacing: 0.08em; color: var(--aes-mid); margin: 0;
+}
+
+
+/* ═══════════════════════════════════════════
+   IN DEPTH  (edifice_rex broadsheet style)
+═══════════════════════════════════════════ */
+#view-depth .page {
+  max-width: 860px;
+  animation: pageReveal 1.2s ease-out both;
+}
+#view-depth .masthead {
+  padding: 3rem 3rem 2.5rem;
+  text-align: center;
+  border-bottom: 3px solid var(--gold);
+}
+#view-depth .masthead-rule {
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--gold), transparent);
+  margin: 0.75rem auto; width: 70%;
+}
+#view-depth .issue-line {
+  font-family: 'Cinzel', serif; font-size: 0.65rem;
+  letter-spacing: 0.25em; color: var(--gold-dark);
+  text-transform: uppercase; margin-bottom: 1.2rem;
+}
+#view-depth .title {
+  font-family: 'Cinzel', serif; font-size: clamp(2.4rem,6vw,3.8rem);
+  font-weight: 900; color: var(--gold-light); line-height: 1.05;
+  letter-spacing: 0.03em; animation: titleGlow 3s ease-in-out infinite alternate;
+}
+#view-depth .subtitle {
+  font-family: 'EB Garamond', serif; font-style: italic;
+  font-size: 1.05rem; color: rgba(232,201,122,0.7);
+  margin-top: 0.5rem; letter-spacing: 0.08em;
+}
+#view-depth .date-line {
+  font-family: 'Cinzel', serif; font-size: 0.7rem;
+  letter-spacing: 0.2em; color: var(--gold-dark);
+  margin-top: 1.4rem; text-transform: uppercase;
+}
+#view-depth .content { padding: 2rem 3.5rem 3rem; }
+#view-depth .section {
+  margin-bottom: 2.5rem;
+  animation: sectionFade 0.8s ease-out both;
+}
+#view-depth .section:nth-child(1) { animation-delay: 0.1s; }
+#view-depth .section:nth-child(2) { animation-delay: 0.2s; }
+#view-depth .section:nth-child(3) { animation-delay: 0.3s; }
+#view-depth .section:nth-child(4) { animation-delay: 0.4s; }
+#view-depth .section:nth-child(5) { animation-delay: 0.5s; }
+#view-depth .section:nth-child(6) { animation-delay: 0.6s; }
+#view-depth .section:nth-child(7) { animation-delay: 0.7s; }
+#view-depth .section-title {
+  font-family: 'Cinzel', serif; font-size: 0.8rem; font-weight: 700;
+  letter-spacing: 0.2em; text-transform: uppercase; color: var(--red);
+  border-bottom: 1px solid var(--gold); padding-bottom: 0.4rem;
+  margin-bottom: 1rem; display: flex; align-items: center; gap: 0.6rem;
+}
+#view-depth .section-title::before { content: '◆'; font-size: 0.5rem; color: var(--gold); flex-shrink: 0; }
+#view-depth .content p {
+  font-size: 1.05rem; line-height: 1.8; color: #2a1e0e;
+  margin-bottom: 0.8rem; text-align: justify; hyphens: auto;
+}
+#view-depth .section > p:first-of-type::first-letter {
+  font-family: 'Cinzel', serif; font-size: 3.2rem; font-weight: 900;
+  float: left; line-height: 0.8; margin: 0.1em 0.1em 0 0;
+  color: var(--red); text-shadow: 2px 2px 0 rgba(139,26,26,0.15);
+}
+#view-depth .pull-quote {
+  margin: 1.5rem 0; padding: 1rem 1.5rem;
+  border-left: 3px solid var(--gold); border-right: 3px solid var(--gold);
+  background: rgba(201,168,76,0.07); text-align: center;
+  font-family: 'Playfair Display', serif; font-style: italic;
+  font-size: 1.05rem; line-height: 1.6; color: var(--red);
+}
+#view-depth .pull-quote cite {
+  display: block; font-family: 'Cinzel', serif; font-style: normal;
+  font-size: 0.65rem; letter-spacing: 0.15em; color: var(--gold-dark);
+  margin-top: 0.5rem; text-transform: uppercase;
+}
+#view-depth .stat-grid {
+  display: grid; grid-template-columns: repeat(3,1fr);
+  gap: 0.9rem; margin: 1.2rem 0;
+}
+#view-depth .stat-box {
+  background: var(--ink); padding: 1rem; text-align: center;
+  border: 1px solid var(--gold-dark); position: relative;
+}
+#view-depth .stat-box::before {
+  content: ''; position: absolute; inset: 3px;
+  border: 1px solid rgba(201,168,76,0.15); pointer-events: none;
+}
+#view-depth .stat-number {
+  font-family: 'Cinzel', serif; font-size: 1.5rem; font-weight: 900;
+  color: var(--gold-light); line-height: 1;
+}
+#view-depth .stat-label {
+  font-family: 'EB Garamond', serif; font-size: 0.75rem;
+  color: rgba(232,201,122,0.6); margin-top: 0.3rem;
+  letter-spacing: 0.05em; line-height: 1.3;
+}
+#view-depth .divider {
+  text-align: center; margin: 2rem 0;
+  color: var(--gold); font-size: 0.9rem;
+  letter-spacing: 0.5em; opacity: 0.6;
+}
+#view-depth .fact-item {
+  display: flex; gap: 1rem; align-items: flex-start;
+  margin-bottom: 0.9rem; padding-bottom: 0.9rem;
+  border-bottom: 1px dotted rgba(201,168,76,0.3);
+}
+#view-depth .fact-item:last-child { border-bottom: none; margin-bottom: 0; }
+#view-depth .fact-num {
+  font-family: 'Cinzel', serif; font-weight: 900; font-size: 1.3rem;
+  color: var(--gold); line-height: 1; flex-shrink: 0; min-width: 1.5rem;
+}
+#view-depth .fact-text { font-size: 1rem; line-height: 1.65; color: #2a1e0e; margin-bottom: 0; }
+#view-depth .closing {
+  margin-top: 2rem; padding-top: 1.5rem;
+  border-top: 1px solid var(--gold); text-align: center;
+}
+#view-depth .ornament {
+  color: var(--gold); font-size: 1.6rem; display: block;
+  text-align: center; margin: 0.5rem 0; opacity: 0.7;
+}
+#view-depth .closing-text {
+  font-family: 'Playfair Display', serif; font-style: italic;
+  font-size: 1.1rem; line-height: 1.7; color: var(--red);
+  max-width: 600px; margin: 0 auto 1rem;
+}
+#view-depth .closing-sig {
+  font-family: 'Cinzel', serif; font-size: 0.7rem;
+  letter-spacing: 0.18em; color: var(--gold-dark); text-transform: uppercase;
+}
+#view-depth .content ul, #view-depth .content ol {
+  margin: 0.8rem 0 0.8rem 1.8rem; line-height: 1.9;
+  font-size: 1.02rem; color: #2a1e0e;
+}
+#view-depth .content li { margin-bottom: 0.4rem; }
+
+</style>
+</head>
+<body>
+
+<!-- ═══ TOGGLE BAR ═══ -->
+<div class="toggle-bar">
+  <div class="toggle-pill">
+    <button class="toggle-btn active" id="btn-glance" onclick="switchView('glance')">At A Glance</button>
+    <button class="toggle-btn" id="btn-depth" onclick="switchView('depth')">In Depth</button>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════════════
+     AT A GLANCE  —  AI ELEMENTS OF STYLE
+═══════════════════════════════════════════════════════════════ -->
+<div class="view" id="view-glance">
+<div class="page">
+
+  <div class="aes-ruled-overlay"></div>
+
+  <!-- AES Masthead -->
+  <div class="aes-masthead">
+    <div class="aes-kicker">BOLLI Current Events Discussion Group · Week of June 14–20, 2026</div>
+    <div class="hr-thin"></div>
+    <div class="aes-headline">Capitulation<em>The Versailles MOU, the Algae Pool &amp; the Knicks Boo</em></div>
+    <div class="aes-subhead">The week the Iran War ended on Iran's terms — and Trump's "winning" was hard to find anywhere</div>
+    <div class="aes-dedication">Talking Points · Not Conclusions · Bring These to the Table</div>
+  </div>
+
+  <div class="hr-thick" style="margin:0 3rem;"></div>
+
+  <!-- Axiom Band — three thesis numbers -->
+  <div class="axiom-band">
+    <div class="axiom-cell">
+      <div class="axiom-tag">The Iran MOU</div>
+      <div class="axiom-num">$300B</div>
+      <div class="axiom-name red">Signed at Versailles</div>
+      <div class="axiom-body">A reconstruction fund for Iran, signed at the very venue that produced the WWI treaty historians blame for WWII. Stephens: "Less a deal than a debacle."</div>
+    </div>
+    <div class="axiom-cell">
+      <div class="axiom-tag">War Cost</div>
+      <div class="axiom-num">$132B</div>
+      <div class="axiom-name">13 U.S. Deaths, 400 Casualties</div>
+      <div class="axiom-body">Iran suffered 3,500 deaths defending a position it ultimately got to keep. Nichols: Trump "failed to achieve any one of the goals he put forward."</div>
+    </div>
+    <div class="axiom-cell">
+      <div class="axiom-tag">Approval</div>
+      <div class="axiom-num">26%</div>
+      <div class="axiom-name red">Independents, Down from 43%</div>
+      <div class="axiom-body">Latino approval underwater 34/64. Ages 18–29 at 21/77. A YouGov poll: 63% say the economy is getting worse.</div>
+    </div>
+  </div>
+
+  <div class="aes-body">
+
+    <div class="hr-thin"></div>
+    <div class="sec-tag">The Three Stories Worth Examining</div>
+    <div class="sec-head">The MOU's Fine Print · The Personal Toll · The Midterm Map</div>
+
+    <!-- Three columns of rule entries -->
+    <div class="col3">
+
+      <!-- Column 1: The MOU -->
+      <div>
+        <div class="rule-entry">
+          <div class="rule-num">Governance · The MOU</div>
+          <div class="rule-title">Versailles, Again</div>
+          <div class="rule-body">The Memorandum of Understanding ending the Iran War was signed at Versailles — same venue as the WWI treaty historians blame for fomenting WWII. Trump's self-congratulation echoes Chamberlain's "Peace for Our Time."</div>
+          <div class="rule-apply">What does the choice of venue say about how this deal will be remembered?</div>
+        </div>
+        <div class="rule-entry">
+          <div class="rule-num">The Numbers</div>
+          <div class="rule-title">Capitulation by the Math</div>
+          <div class="rule-body">$300B reconstruction fund vs. $1.7B under the JCPOA. Full vs. partial sanctions relief. Iran keeps its nuclear weapons pledge — language nearly identical to the 2015 deal Trump tore up in 2018.</div>
+          <div class="rule-apply">If the terms resemble the JCPOA but cost $132B and 3,500+ lives more, what was the war for?</div>
+        </div>
+        <div class="rule-entry">
+          <div class="rule-num">The Fragility</div>
+          <div class="rule-title">Already Cracking</div>
+          <div class="rule-body">Israel is not a signatory. As the source memo was being finalized, Iran announced it was closing the Strait of Hormuz again — in response to Israel's continuing attacks in Lebanon.</div>
+          <div class="rule-apply">Levitt: "It demonstrates that the U.S. wanted this deal more than Iran did."</div>
+        </div>
+      </div>
+
+      <!-- Column 2: Personal -->
+      <div>
+        <div class="rule-entry">
+          <div class="rule-num">Personal · The Reflecting Pool</div>
+          <div class="rule-title">Creature From the Green Lagoon</div>
+          <div class="rule-body">A $2M "renovation" estimate became $14M. The newly painted, refilled Pool is now fouled with algae beyond any 5-year precedent, with blue paint chips surfacing. Trump blames vandalism. Dowd: "Creature From the Green Lagoon."</div>
+          <div class="rule-apply">Is this the administration's only green achievement?</div>
+        </div>
+        <div class="rule-entry">
+          <div class="rule-num">Personal · The Knicks Game</div>
+          <div class="rule-title">Booed at the Bulletproof Window</div>
+          <div class="rule-body">Trump attended NBA Finals Game 3; the Knicks (13 straight wins entering) lost. He was roundly booed but called it "loud and enthusiastic, mostly cheers." Rubin: "An old man clearly in profound decline."</div>
+          <div class="rule-apply">Without Trump, the Knicks were 15–0 in the playoffs. With him, 0–1. Coincidence, or omen?</div>
+        </div>
+        <div class="rule-entry">
+          <div class="rule-num">Personal · The UFC Birthday</div>
+          <div class="rule-title">Bread and Circuses</div>
+          <div class="rule-body">A bloody UFC event staged on the White House grounds for Trump's 80th birthday. Only 16% of a Reuters/IPSOS poll called it appropriate; 46% disagreed. Miles Taylor: "America's Roman Moment."</div>
+          <div class="rule-apply">What does the venue choice say about the boundary between state and spectacle?</div>
+        </div>
+      </div>
+
+      <!-- Column 3: Midterms / Elections -->
+      <div>
+        <div class="rule-entry">
+          <div class="rule-num">Elections · California</div>
+          <div class="rule-title">The Fraud Claim That Wasn't</div>
+          <div class="rule-body">Becerra led with 28.1%, Hilton 24.7%, Steyer (and his $215M) 22.8%. Democrats took 62% combined — up from 58.5% in 2024. Trump's claim that fraud would eliminate Hilton did not materialize.</div>
+          <div class="rule-apply">CA counts every vote; Trump's framing channels Stalin — "who counts them" matters more than turnout.</div>
+        </div>
+        <div class="rule-entry">
+          <div class="rule-num">Elections · The Redistricting Math</div>
+          <div class="rule-title">42% of the House, Redrawn</div>
+          <div class="rule-body">Kondik: ten states redrew maps this year; highly competitive districts fell from 26 to 21, but "somewhat competitive" ones rose by 32 (22 R, 10 D) — districts a genuine wave could flip.</div>
+          <div class="rule-apply">Nate Cohn: Democrats need a 3.1%+ popular vote win; Silver Bulletin has them at 6.2%.</div>
+        </div>
+        <div class="rule-entry">
+          <div class="rule-num">Elections · Georgia</div>
+          <div class="rule-title">The Ossoff Problem for the GOP</div>
+          <div class="rule-body">Trump-endorsed Mike Collins beat Kemp's pick by 10% — but will face Jon Ossoff, whom strategist Sarah Longwell calls the platonic ideal 2028 candidate. Cook Political moved the race to Leans D.</div>
+          <div class="rule-apply">Does winning your primary matter if it hands the other side its best matchup?</div>
+        </div>
+      </div>
+
+    </div><!-- /col3 -->
+
+    <div class="hr-double" style="margin-top:0.5rem;"></div>
+
+    <!-- Violation Table -->
+    <div class="sec-tag">The Week's Interpretive Challenge</div>
+    <div class="sec-head">What "Winning" Looks Like vs. What the Record Shows</div>
+
+    <table class="vt">
+      <thead>
+        <tr>
+          <th>Claim</th>
+          <th>The Evidence</th>
+          <th>The Verdict</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="bad">Trump won the Iran War</span></td>
+          <td>Iran kept its enrichment progress, closed Hormuz again within days, and got a $300B fund. Stephens: Tehran "scored a decisive victory."</td>
+          <td class="reason"><span class="good">By every measurable term, this was capitulation</span></td>
+        </tr>
+        <tr>
+          <td><span class="bad">"I love the inflation"</span></td>
+          <td>CPI rose from 2.9–3.0% to 4.2% since the war began — the same inflation that helped elect him in 2024.</td>
+          <td class="reason"><span class="good">63% of YouGov respondents say the economy is worsening</span></td>
+        </tr>
+        <tr>
+          <td><span class="bad">The Knicks booing was "mostly cheers"</span></td>
+          <td>Widely reported and broadcast as a hostile reception; Rubin called him "enraged at his ebbing power."</td>
+          <td class="reason"><span class="good">A small but telling test of his relationship to the truth</span></td>
+        </tr>
+        <tr>
+          <td><span class="bad">California fraud stole the primary</span></td>
+          <td>Hilton was not eliminated by fraud; Democrats simply out-polled Republicans 62–38, an increase over 2024.</td>
+          <td class="reason"><span class="good">The claim preceded the count and was contradicted by it</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="hr-thin"></div>
+
+    <!-- Checklist -->
+    <div class="col2" style="margin-bottom:1.2rem;">
+      <div>
+        <div class="sec-tag">Questions to Bring to the Table</div>
+        <div class="sec-head">Discussion Sparkers</div>
+        <ul class="chk">
+          <li>The MOU was signed at Versailles. Is the historical echo of a punitive postwar settlement — this time inverted, with the loser writing the terms — too on-the-nose, or exactly the point?</li>
+          <li>Had Trump not withdrawn from the JCPOA in 2018, Iran would not have had eight years to advance its nuclear program. Does that make this war's entire premise self-inflicted?</li>
+          <li class="warn">Independent approval has fallen from 43% to 26% since the 2024 campaign. At what point does a coalition built on independents stop being a governing coalition?</li>
+          <li>Obama's Center dedication drew a 57% favorable rating against Trump's 34%. What does it mean that the contrast was visible even in who showed up?</li>
+          <li>Christopher Bates says Trump and company commit "more abuses in a week than Nixon and his cronies perpetrated in a year" — yet it barely registers. Has the threshold for scandal simply moved, or have we stopped counting?</li>
+          <li class="warn">U.S. deaths will exceed births by 2030 — a decade earlier than projected. How much of the week's political noise obscures a demographic story this large?</li>
+        </ul>
+      </div>
+      <div>
+        <div class="sec-tag">Interesting Numbers This Week</div>
+        <div class="sec-head">Some Facts That May Impress Your Friends</div>
+        <ul class="chk">
+          <li><strong>4.2%</strong> — 12-month CPI, up from 2.9–3.0% before the Iran War began.</li>
+          <li><strong>$104B</strong> — total frozen Iranian assets the U.S. will unlock, nearly identical in real terms to the JCPOA's relief.</li>
+          <li><strong>30 / 18</strong> — recorded ICE detainee deaths in 2025 / in just the first five months of 2026.</li>
+          <li><strong>51%</strong> — employee compensation share of U.S. Gross Domestic Income, down from 58% in 2001.</li>
+          <li><strong>1.53</strong> — U.S. fertility rate; deaths will exceed births by 2030, a decade sooner than forecast.</li>
+          <li><strong>78%</strong> — share of scheduled Social Security benefits payable after the 2032 OASI shortfall.</li>
+          <li class="warn">$1.25M — cost of renaming the Department of Defense the Department of War.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Forbidden Band -->
+    <div class="forbidden">
+      <div class="forb-head">Phrases to Retire This Week</div>
+      <div class="pills">
+        <span class="pill">peace through strength</span>
+        <span class="pill">art of the deal</span>
+        <span class="pill">crack real estate negotiators</span>
+        <span class="pill">loud and enthusiastic</span>
+        <span class="pill">mostly cheers</span>
+        <span class="pill">it's just algae</span>
+        <span class="pill">acting in a capacity</span>
+        <span class="pill">no one got hurt</span>
+      </div>
+    </div>
+
+  </div><!-- /aes-body -->
+
+  <!-- AES Closing Band -->
+  <div class="closing-band">
+    <div class="cb-label">The Week's Thesis</div>
+    <div class="cb-rule"></div>
+    <div class="cb-text">
+      Every thread this week — the Versailles signing, the algae-fouled Pool, the boos at the Garden, the 26% independent approval — points to the same underlying pattern: <strong>the gap between the claimed victory and the visible result keeps widening, and the public can see it.</strong> The question worth bringing to the table is not whether Trump is "winning." It is who still believes the scorecard he is using.
+      <div style="margin-top:0.7rem; font-family:'Courier Prime',monospace; font-size:9px; letter-spacing:0.22em; text-transform:uppercase; color:rgba(200,184,136,0.65);">
+        "These fools...are either jealous, bad people, or stupid." — D. Trump, Truth Social, on critics of the Iran deal &nbsp;·&nbsp; Perhaps the Iranians will become "so sick and tired of winning."
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <p>Current Events Digest · Week of June 14–20, 2026 · Capitulation</p>
+    <p>BOLLI Current Events Discussion Group · jhnday.github.io/CrntEvnts</p>
+  </div>
+
+</div><!-- /page -->
+</div><!-- /view-glance -->
+
+
+<!-- ═══════════════════════════════════════════════════════════════
+     IN DEPTH  —  edifice_rex broadsheet style
+═══════════════════════════════════════════════════════════════ -->
+<div class="view hidden" id="view-depth">
+<div class="page">
+
+  <div class="masthead">
+    <div class="issue-line">A Weekly Intelligence · Current Events Digest</div>
+    <div class="masthead-rule"></div>
+    <h1 class="title">Capitulation</h1>
+    <div class="subtitle">The Versailles MOU, the Algae Pool &amp; The Knicks Boo</div>
+    <div class="masthead-rule"></div>
+    <div class="date-line">Week of June 14–20, 2026</div>
+  </div>
+  <div class="accent-stripe"></div>
+
+  <div class="content">
+
+    <div class="section">
+      <div class="section-title">Governance</div>
+      <p>The Memo of Understanding (MOU), which gave Iran virtually everything they could have hoped for in exchange for minimal concessions, was ironically signed at Versailles, the same venue as was used for signing the treaty ending WWI. The harsh terms that the earlier treaty imposed on Germany are widely regarded to have fomented WWII. Moreover, Trump's self-congratulatory statements after the signing of the MOU evoke Neville Chamberlain's "Peace for Our Time" speech.</p>
+      <p>At the G7 summit with our six key (former?) allies, Trump stood out, in Sesame Street parlance, as "One of These Things is Not Like the Others". This was exemplified by a photo of Trump standing alone facing the camera while the other leaders were off to the side engaged with each other. Perhaps the demand for control of Greenland, the suggestion that Canada should become the 51st state, and frequent contretemps with the leaders of these countries have exacted a price. Andrew Tanenbaum commented on how our allies' leaders dealt with Trump, writing that they "now understand that if they treat Trump the way they would treat a 3-year-old, that helps a lot".</p>
+      <p>The 12-month CPI, which was 2.6% right before the 2024 election, and 2.9 or 3.0% as Biden was leaving office, had essentially stayed in that range until the start of the Iran War, but since then rose to 4.2% last month. Let's recall that Trump's promise to curb inflation greatly helped propel him to a second term. Trump responded to the sharp increase by saying "I love the inflation".</p>
+      <p>A YouGov poll taken last month found that 15% of respondents thought that the U.S. economy was getting better, 17% that it was staying about the same, and 63% that it was getting worse.</p>
+    </div>
+
+    <div class="divider">✦ ✦ ✦</div>
+
+    <div class="section">
+      <div class="section-title">Personal</div>
+      <p>During MTP two weeks ago, Trump angrily walked out of a Kristen Welker interview when pressed for hard evidence supporting his repeated claims that the 2020 presidential election and the June CA primaries were "rigged" and "crooked".</p>
+      <p>Notwithstanding the recently disclosed six meetings in the White House Situation Room last year to strategize on how to bring L'affaire Epstein to a close, widespread anger about it still lingers across the political spectrum. In this regard, Maureen Dowd wrote an opinion piece entitled "Jeffrey Epstein Haunts the White House".</p>
+      <p>The no-bid initial cost estimate of $2 million for the "renovation" of the Reflecting Pool has turned out to be $14 million. Since being painted and refilled earlier this month, the Pool has been fouled by green algae to an extent not seen over at least a 5-year span. In response this, Maureen Dowd wrote an article today characterizing Trump as a "Creature From the Green Lagoon". Will this be the administration's only green achievement? As large chips of blue paint also rise to the surface, Trump is now blaming the problem on vandalism.</p>
+      <p>To celebrate his 80th birthday, Trump staged a bloody and vulgar UFC event on the White House grounds. A Reuters/IPSOS poll indicated that only 16% of respondents deemed the White House to be an appropriate venue for the event, whereas 46% thought that it was inappropriate. Former DHS Chief of Staff during Trump's first term, Miles Taylor, characterized the event as "America's Roman Moment", providing "bread and circuses" to the masses.</p>
+      <p>The dedication of the Obama Center on Thursday, which Aaron Blake wrote featured "jarring displays of modesty", was attended by the three former living presidents with their spouses (the Trumps were not invited), Stephen Colbert, David Letterman and others in tan suits, and a plethora of entertainers including Christina Aguilera, Bono, John Legend, Bruce Springsteen, Eddie Vedder and Stevie Wonder. By way of comparison, many of the venerable/B-list entertainers Trump invited for his July 4 celebration dropped out when they learned it was not non-partisan and consequently Trump announced that he would be the headliner. A CNN poll released this week found that 57% of respondents had a favorable view of Obama vs. 34% for Trump (and 30% for Biden).</p>
+      <p>Last Saturday, the Kennedy Center's operations chief filed a sworn statement that Trump's name had been removed from the building's facade in compliance with a court order, but tightly affixed large tarps still hang over the section where Trump's name had appeared. A NYT article headline on Friday referred to this as "A Literal Coverup". Heather Cox Richardson wrote in this context "Trump made his career on the idea that there always is a way to cheat the system if you operate in bad faith, and he has carried that into the government".</p>
+      <p>Last week, Trump attended Game 3 of the NBA Championship Series in NYC, requiring attendees, many paying $1,000s for their tickets, to arrive three hours early and tempering the public celebration in anticipation of the Knicks' ending their 53-year championship drought. When he appeared at the bullet proof window of the owner's box, Trump was roundly booed although he characterized this hostile reception as being "loud and enthusiastic, mostly cheers". Jennifer Rubin characterized his appearance at the game as a "big blubbery man, enraged at his ebbing power...an old man clearly in profound decline". Coming into the game, the Knicks had compiled a remarkable 13 straight wins, but they went on to lose this game to the Spurs before winning the next two games to secure the championship. Without Trump in attendance, the Knicks had a 15-0 record after game 3 of the first round, but with him present they were 0-1.</p>
+      <p>The extent of Trump's "winning" internationally, domestically and personally has not been prolific.</p>
+    </div>
+
+    <div class="divider">✦ ✦ ✦</div>
+
+    <div class="section">
+      <div class="section-title">The Iran War</div>
+      <p>When I became aware of the salient details of the MOU to end the war, the word which immediately came to mind was "capitulation".</p>
+      <p>Here are the key details and a few comments with language from the document in italics:</p>
+      <ul>
+        <li>The parties and their allies declare the immediate and permanent termination of military operations on all fronts, including in Lebanon. Given that Israel is not a signatory and that Netanyahu's political and personal future is on the line, this may be difficult to comply with and could ultimately jeopardize the agreement. In this regard, as I was about to press "Send", Iran just announced that it was closing the Strait of Hormuz again in response to Israel's continuing attacks in Lebanon.</li>
+        <li>The two parties will refrain from interfering in each other's internal affairs. Given that the initial rationale given for the February 28 attack was to facilitate regime change, it is clear that this ambition has been thwarted.</li>
+        <li>A 60-day negotiation period has been set forth. Given the complexity of the nuclear issue, 60 days is a mere pittance.</li>
+        <li>The U.S. will end its blockade and Iran will open the Strait of Hormuz with no charge for 60 days only.</li>
+        <li>The U.S. and its partners will develop a plan to make $300B available to Iran for reconstruction and economic development. By way of contrast, the U.S. provided Iran $1.7B (the so-called "palettes of cash") under the JCPOA to settle a pre-existing economic dispute over undelivered arms purchased from the U.S.</li>
+        <li>The U.S. undertakes to terminate all kinds of sanctions against Iran. The sanctions related to human rights, ballistic missiles and support for militants had remained intact under the JCPOA.</li>
+        <li>The Islamic Republic of Iran reaffirms that it shall not pursue or develop nuclear weapons. This language is nearly identical to that in the 2015 JCPOA which Trump withdrew from in 2018.</li>
+        <li>The U.S. will make fully available for use the frozen or restricted funds and assets to Iran after the MOU is signed. The U.S. holds roughly $2B in frozen liquid assets and $50B of real estate-related assets, with a like amount held by other countries worldwide. The $104B combined total compares to the $50–$100B of assets made available under the JCPOA. If we use the $75B midpoint and account for 40% inflation, the combined funds made available under the two arrangements are nearly identical.</li>
+      </ul>
+      <p>Comparing the MOU to the JCPOA, the major differences are then the establishment of the $300B fund and full vs. partial sanctions relief. Let's also bear in mind that over the course of the last eight years that Iran has significantly increased its supply of highly enriched uranium and made other progress toward nuclear weapons. Moreover, the JCPOA provided for intensive oversight of Iran's nuclear activities by the International Atomic Energy Agency which found Iran to largely be in compliance during the short life of the agreement. Now a detailed oversight process needs to be developed before any new agreement is finalized.</p>
+      <p>The war has cost the U.S. a disclosed $132B so far, probably considerably more, and resulted in 13 U.S. military deaths and 400 other casualties, with Iran suffering 3,500 deaths and Israel 26 more. Had Trump not withdrawn from the JCPOA, Iran would not have made eight years of progress toward developing a nuclear weapon, there may well have been no war, and Iran would not have access to a $300B "reconstruction and development fund". It appears that the deal outlined in the MOU will clearly be less favorable for the U.S. than the JCPOA was.</p>
+      <p>It took 20 months to develop the 18-page JCPOA agreement whereas the MOU is only 1 1/2 pages. A lot of work remains to be done and it is especially vexatious that prior to our attack on February 28, good progress had apparently been made toward resolving the nuclear issue. During the signing event, Supreme Leader Mojtaba Khamenei (or his surrogate) said that Trump was signing the MOU "out of desperation" and that Iran would not yield to "excessive demands" during the forthcoming negotiations. The next day, Trump posted in reaction to bipartisan U.S. and international criticism "These fools, who said I haven't been tough enough on Iran, when the Stock Market just hit a RECORD HIGH, and oil prices are 'tumbling' down, are either jealous, bad people, or stupid". Apparently the two leaders use different metrics to measure success.</p>
+      <p>Here is some pundit commentary:</p>
+      <ul>
+        <li>Rosa Brooks of Georgetown University Law Center said "This is what happens when you go to war for no good reason and with no good plan".</li>
+        <li>Azadeh Moaveni opined "In the blackest margins of the old order...Iran has become, in the eyes of many, an example of necessary defense and courage".</li>
+        <li>Tom Nichols wrote "It is clear that Trump has failed to achieve any one of the goals he put forward for this war of choice".</li>
+        <li>Bret Stephens opined "War is a contest of wills. And in that contest, the hard men of Tehran appear to have scored a decisive victory over the vain man of Washington". He went on to characterize the MOU as "less a deal than a debacle".</li>
+        <li>Matthew Levitt of the Institute for Near East Policy wrote about the MOU "it demonstrates that the U.S. wanted this deal more than Iran did".</li>
+        <li>Thomas Friedman wrote "Thank goodness we had these crack real estate negotiators on the case, not wimpy diplomats." He then quoted from The Great Gatsby "They were careless people, Tom and Daisy—they smashed up things and creatures and then retreated back into their money or their vast carelessness".</li>
+      </ul>
+      <p>Perhaps the Iranians will become "so sick and tired of winning".</p>
+    </div>
+
+    <div class="divider">✦ ✦ ✦</div>
+
+    <div class="section">
+      <div class="section-title">Notes and Quotes · The Latest Outrages</div>
+      <p>In rough chronological order, here are some of the actions undertaken in the last two weeks to assert Trump's power along with some pundit commentary:</p>
+      <ul>
+        <li>Last year, the White House considered suspending habeas corpus rights for undocumented immigrants at Stephen Miller's behest, but decided against doing so after receiving a warning from lawyer and staff secretary Will Scharf.</li>
+        <li>ICE recorded at least 30 detainee deaths in 2025, and there have been 18 recorded so far during the first five months of 2026. The actual deaths are likely higher.</li>
+        <li>The House Armed Services Committee voted to rename the Department of Defense the Department of War. This name change entails a $1.25 MM cost. Given the apparent adverse outcome of the Iran war we initiated, the timing of this change is tinged with irony.</li>
+        <li>Trump formally nominated Todd Blanche to serve as Attorney General. Before his nomination, Blanche said that he would be glad to serve in any capacity Trump needed him for and that "I love him". After characterizing Pam Bondi as "the most legally ignorant, dishonest, and ethically challenged person to ever lead the DOJ", Jen Rubin opined that when compared to Blanche, Bondi "will seem like one of the giants to ever hold the position".</li>
+        <li>In response to a request by private prison contractor GEO group, ICE removed requirements that the facilities have to comply with all state and local laws.</li>
+        <li>Trump directed Jay Clayton not to attend confirmation interviews in connection with his nomination to serve as DNI so that Bill Pulte could continue to serve in that role for the time being in an acting capacity. More generally, a CNN headline read "'Acting' aides with multiple jobs top Trump 2.0's layer cake of mismanagement".</li>
+        <li>Regarding the 47 presidential plaques in the White House with much of their text having been written by Trump, Princeton historian Sean Wilentz commented that they are "not so much bad history as it is anti-historical".</li>
+        <li>The DOJ will not challenge Paramount Skydance's $111B acquisition of Warner Brothers which includes CNN as the "foxification" of network news continues.</li>
+        <li>The DOJ has launched an investigation into Gavin Newsom and his wife for possible tax-related issues.</li>
+        <li>A coalition of preservation and cultural organizations filed a lawsuit challenging the construction of Trump's proposed National Garden of American Heroes in West Potomac Park.</li>
+        <li>Christopher Bates commented on the administration's weaponization of government, writing "When Dick Nixon so much as talked about this kind of stuff, Americans were scandalized. Trump and Co. are guilty of more abuses in a week than Nixon and his cronies perpetrated in a year, and yet it barely gets noticed".</li>
+        <li>On March 31, Trump said that the ballroom construction project would cost $400 MM, all privately paid. The cost estimate has now increased to $600 MM and $352 MM of Secret Service funding has now been diverted to the project.</li>
+        <li>After DHS spent $700MM on seven detention facilities among a group of eleven, it is now looking to sell them or give them away to other agencies.</li>
+        <li>At the Harvard commencement, keynote speaker and alumnus Conan O'Brien told the graduates "Don't contribute to the narcissism epidemic".</li>
+      </ul>
+    </div>
+
+    <div class="divider">✦ ✦ ✦</div>
+
+    <div class="section">
+      <div class="section-title">Election Results and Commentary</div>
+      <p>Let's look at election results and emerging information over the course of the last two weeks.</p>
+      <p>Here are recent key primary results:</p>
+      <ul>
+        <li>The results for the 6/02 CA jungle primaries are virtually complete and the runoff candidates have been identified. In the gubernatorial primary, Democrat Xavier Becarra got 28.1% of the vote, Trump-endorsed Republican Steve Hilton got 24.7%, and Democrat Tom Steyer and $215MM of his money got 22.8%. All told, the Democrats got 62% of the vote compared to 58.5% in the 2024 presidential election. The Trump claim that Hilton would be eliminated because of massive electoral fraud was not borne out. The basic disconnect here is that CA wants to count each and every vote whereas Trump channels Stalin who said "It doesn't matter how many people vote, only who counts them". In the LA mayoral primary, two Democrats did make the runoff as incumbent Karen Bass got 34.1% of the vote, progressive Nitha Raman 29% and Republican reality TV entertainer Spencer Pratt 25.5%.</li>
+        <li>In the ME Democratic primary, Graham Platner got 72% of the vote and will oppose 5-term Republican incumbent Susan Collins. Although Platner's outsider status and populist appeal are formidable, he will have to deal with a plethora of unfavorable disclosures. Per the Globe's James Pindell, Platner faces a "purgatory summer". This said, Platner leads Collins by an average of 4% in the latest polls.</li>
+        <li>In the SC Republican gubernatorial primary, Lt. Governor Pamela Evette will face AG Alan Wilson in the runoff. Representative Nancy Mace, a leader in the call for the release of the Epstein documents, only finished fifth.</li>
+        <li>In NV, Democrat AG Aaron Ford will be running for governor against Republican incumbent Joseph Lombardo.</li>
+        <li>In the GA Republican senatorial primary, Trump-endorsed Representative Mike Collins defeated Brian Kemp-endorsed former football coach Derek Dooley by 10%. He will be running against incumbent Democrat Jon Ossoff. Former Republican strategist Sarah Longwell said "if you were cooking up an ideal 2028 (presidential) candidate in a lab, he would probably look a lot like Jon Ossoff". After the primaries, Cook has changed its Toss-up rating to Leans D. In the Republican gubernatorial runoff, however, Trump-endorsed Lt. Governor Burt Jones lost to businessman Rick Jackson. Jackson will run against former Atlanta Mayor Keisha Lance Bottoms in the general election. In the Republican runoff for Secretary of State, Brian Kemp aide Tim Fleming beat 2020 election denier and former Democrat Vernon Jones. Incumbent Brad Raffensperger finished third in the primary and was eliminated before the runoff.</li>
+      </ul>
+      <p>Turning to national political information:</p>
+      <ul>
+        <li>Nate Cohn's analysis for the NYT indicates that the Democrats will need to win the national popular House vote by 3.1% or more to take control of the chamber. The Silver Bulletin today has the Democrats ahead by 6.2%, which compares to a 6.8% lead for at this point in 2018.</li>
+        <li>Kyle Kondik of the UVA Center for Politics has looked into the impact of redistricting. In all, ten states, including CA and TX, changed their House maps this year and 42% of the House races will be affected. Although the number of solid Red and Blue districts has hardly changed, the number of competitive districts in his analysis has been reduced from 85 to 70, and the number of highly competitive ones from 26 to 21. The quid pro quo is that the number of somewhat competitive districts, where either party has between a 5–10% advantage has increased by 32, 22 Republican ones and 10 Democratic. This is what happens when voters are shifted around to gain advantage under gerrymanders. Given a Blue wave election, some of these new moderately competitive districts could swing to the Democrats. Taking all of this into account, except perhaps the wave dynamic, Kondik predicts that the Republicans will net 5–9 additional seats from their shenanigans.</li>
+        <li>An AP/NORC poll indicates that support for Trump among Independents has declined from 43% during the 2024 campaign to 26%.</li>
+        <li>A CNN poll indicates that voter identification is now 27% Democratic, 26% Republican and 47% Independent.</li>
+        <li>According to Cornell Belcher, 81% of likely Black voters are highly motivated for the midterms.</li>
+        <li>An NBC News poll found Trump's approval among Latinos was underwater at 34%/64% and among 18–29 year-olds at 21%/77%.</li>
+        <li>Republican strategist Rob Stutzman opined about Republicans "It's a party without anyone, without the leader, on message".</li>
+      </ul>
+    </div>
+
+    <div class="divider">✦ ✦ ✦</div>
+
+    <div class="section">
+      <div class="section-title">Some Depressing Numbers</div>
+      <div class="fact-item"><div class="fact-num">I</div><p class="fact-text">According to the CBO, U.S. deaths will exceed births for the first time in our history by 2030, ten years earlier than thought. This reflects our fertility rate having declined to 1.53 births per woman.</p></div>
+      <div class="fact-item"><div class="fact-num">II</div><p class="fact-text">The Social Security retirement trust fund (OASI) is projected to face a funding shortfall in late 2032, a year earlier than projected last year and exacerbated by our declining birth rate. The Social Security Board of Trustees estimates that incoming taxes will only be sufficient to cover 78% of scheduled benefits from that point on.</p></div>
+      <div class="fact-item"><div class="fact-num">III</div><p class="fact-text">In the first quarter of 2026, the employee compensation share of U.S. Gross Domestic Income was 51%, which compares to 58% in 2001.</p></div>
+    </div>
+
+    <div class="divider">✦ ✦ ✦</div>
+
+    <div class="section closing">
+      <span class="ornament">⚜</span>
+      <div class="pull-quote" style="margin-bottom:2rem;">
+        "These fools, who said I haven't been tough enough on Iran, when the Stock Market just hit a RECORD HIGH, and oil prices are 'tumbling' down, are either jealous, bad people, or stupid."
+        <cite>— Donald Trump, Truth Social &nbsp;·&nbsp; A Closing Thought</cite>
+      </div>
+      <p class="closing-text">Enjoy the summer solstice which comes in the wee hours tomorrow morning. Happy Father's Day to all our dads.</p>
+      <div class="closing-sig">Finis · Week of June 20, 2026</div>
+      <span class="ornament" style="margin-top:1rem;">⚜</span>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /page -->
+</div><!-- /view-depth -->
+
+<script>
+  function switchView(mode) {
+    const glance = document.getElementById('view-glance');
+    const depth  = document.getElementById('view-depth');
+    const btnG   = document.getElementById('btn-glance');
+    const btnD   = document.getElementById('btn-depth');
+    if (mode === 'glance') {
+      glance.classList.remove('hidden');
+      depth.classList.add('hidden');
+      btnG.classList.add('active');
+      btnD.classList.remove('active');
+    } else {
+      depth.classList.remove('hidden');
+      glance.classList.add('hidden');
+      btnD.classList.add('active');
+      btnG.classList.remove('active');
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+</body>
+</html>
