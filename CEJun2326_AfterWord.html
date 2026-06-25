@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AfterWord — BOLLI Current Events, June 23, 2026</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      background: #a8c4e8;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+    }
+
+    /* ── HEADER ──────────────────────────────────────────── */
+    .header {
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #667eea 100%);
+      padding: 36px 32px 28px;
+      text-align: center;
+      color: white;
+    }
+
+    .header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .header .subtitle {
+      font-size: 0.95rem;
+      opacity: 0.85;
+      margin-bottom: 18px;
+      letter-spacing: 0.04em;
+    }
+
+    /* ── SOURCE PILLS ────────────────────────────────────── */
+    .sources-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: center;
+      margin-top: 14px;
+    }
+
+    .sources-bar a {
+      font-size: 11px;
+      color: #fff;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 4px;
+      padding: 3px 10px;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .sources-bar a:hover { background: rgba(255,255,255,0.35); }
+
+    /* ── LEGEND ──────────────────────────────────────────── */
+    .legend {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 20px 10px;
+      font-size: 12px;
+      color: #555;
+      background: #a8c4e8;
+    }
+    .legend-bar {
+      width: 160px;
+      height: 7px;
+      border-radius: 4px;
+      background: linear-gradient(90deg, #cc0000, #ff6600, #ff9944, #ffcc55, #5577ff);
+    }
+
+    /* ── INSTRUCTIONS ────────────────────────────────────── */
+    .instructions {
+      text-align: center;
+      font-size: 12px;
+      color: #888;
+      padding-bottom: 12px;
+      letter-spacing: 0.03em;
+      background: #a8c4e8;
+    }
+
+    /* ── TOPIC CARDS ─────────────────────────────────────── */
+    .topics-list {
+      padding: 0 20px 30px;
+      background: #a8c4e8;
+    }
+
+    .card {
+      margin-bottom: 12px;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      padding: 16px 20px;
+      cursor: pointer;
+      user-select: none;
+      color: white;
+      position: relative;
+      gap: 12px;
+      transition: filter 0.2s;
+    }
+    .card-header:hover { filter: brightness(1.08); }
+
+    .level-1 { background: linear-gradient(135deg, #cc0000 0%, #990000 100%); }
+    .level-2 { background: linear-gradient(135deg, #e63000 0%, #c02000 100%); }
+    .level-3 { background: linear-gradient(135deg, #e86a00 0%, #c05000 100%); }
+    .level-4 { background: linear-gradient(135deg, #d4a000 0%, #a07800 100%); }
+    .level-5 { background: linear-gradient(135deg, #2e9e5a 0%, #1a7040 100%); }
+    .level-6 { background: linear-gradient(135deg, #2a7fcc 0%, #1a5a99 100%); }
+
+    .card-rank {
+      font-size: 11px;
+      opacity: 0.7;
+      min-width: 22px;
+    }
+
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+      flex: 1;
+    }
+
+    .card-count {
+      font-size: 12px;
+      background: rgba(0,0,0,0.25);
+      padding: 3px 10px;
+      border-radius: 12px;
+      white-space: nowrap;
+    }
+
+    .card-chevron {
+      font-size: 16px;
+      opacity: 0.8;
+      transition: transform 0.3s ease;
+    }
+    .card-chevron.rotated { transform: rotate(180deg); }
+
+    /* ── CARD BODY ───────────────────────────────────────── */
+    .card-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease-in-out;
+      background: #b8ccec;
+    }
+    .card-body.expanded { max-height: 2400px; }
+
+    .card-body-inner {
+      padding: 18px 20px 20px;
+      border-top: 2px solid rgba(102,126,234,0.25);
+    }
+
+    /* ── SUBTOPIC CARDS ──────────────────────────────────── */
+    .subtopics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .subtopic {
+      background: white;
+      border-left: 3px solid #667eea;
+      border-radius: 6px;
+      padding: 11px 14px;
+      box-shadow: 0 2px 6px rgba(102,126,234,0.12);
+    }
+
+    .subtopic-src {
+      margin-top: 8px;
+      padding-top: 6px;
+      border-top: 1px solid rgba(102,126,234,0.2);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+    .subtopic-src a {
+      font-size: 10px;
+      color: #2a5298;
+      background: #eef2ff;
+      border: 1px solid #c7d2fe;
+      border-radius: 3px;
+      padding: 2px 7px;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .subtopic-src a:hover {
+      background: #667eea;
+      color: white;
+      border-color: #667eea;
+    }
+
+    .subtopic-title {
+      font-weight: 600;
+      color: #1e3c72;
+      font-size: 0.875rem;
+      margin-bottom: 5px;
+    }
+
+    .subtopic-detail {
+      font-size: 0.78rem;
+      color: #555;
+      line-height: 1.55;
+    }
+
+    /* ── SECTION SOURCES ─────────────────────────────────── */
+    .section-sources {
+      font-size: 11px;
+      color: #888;
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+    }
+    .section-sources strong { color: #555; }
+    .section-sources a {
+      color: #2a5298;
+      text-decoration: none;
+      background: #eef2ff;
+      padding: 2px 8px;
+      border-radius: 3px;
+    }
+    .section-sources a:hover {
+      background: #667eea;
+      color: white;
+    }
+
+    /* ── FOOTER ──────────────────────────────────────────── */
+    .footer {
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+      color: rgba(255,255,255,0.8);
+      text-align: center;
+      padding: 22px 20px;
+      font-size: 11px;
+      line-height: 1.8;
+    }
+    .footer a {
+      color: #a8c4ff;
+      text-decoration: none;
+    }
+    .footer a:hover { text-decoration: underline; color: #fff; }
+
+    @media (max-width: 600px) {
+      .subtopics-grid { grid-template-columns: 1fr; }
+      .header h1 { font-size: 1.4rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- ══ HEADER ══════════════════════════════════════════ -->
+  <div class="header">
+    <h1>📰 AfterWord · BOLLI Current Events · June 23, 2026</h1>
+    <div class="subtitle">6 Coverage Areas &nbsp;·&nbsp; What the Mainstream Press Was Saying &nbsp;·&nbsp; 16 Sources</div>
+
+    <div class="sources-bar">
+      <a href="https://nytimes.com" target="_blank">New York Times</a>
+      <a href="https://nbcnews.com" target="_blank">NBC News</a>
+      <a href="https://foxnews.com" target="_blank">Fox News</a>
+      <a href="https://cnbc.com" target="_blank">CNBC</a>
+      <a href="https://aljazeera.com" target="_blank">Al Jazeera</a>
+      <a href="https://timesofisrael.com" target="_blank">Times of Israel</a>
+      <a href="https://amnesty.org" target="_blank">Amnesty International</a>
+      <a href="https://cbsnews.com" target="_blank">CBS News</a>
+      <a href="https://lawandcrime.com" target="_blank">Law&amp;Crime</a>
+      <a href="https://democracydocket.com" target="_blank">Democracy Docket</a>
+      <a href="https://brennancenter.org" target="_blank">Brennan Center</a>
+      <a href="https://wbur.org" target="_blank">WBUR</a>
+      <a href="https://axios.com" target="_blank">Axios</a>
+      <a href="https://calmatters.org" target="_blank">CalMatters</a>
+      <a href="https://prospect.org" target="_blank">American Prospect</a>
+      <a href="https://deathpenaltyinfo.org" target="_blank">DPIC</a>
+    </div>
+  </div>
+
+  <div class="legend">
+    <span>High coverage</span>
+    <div class="legend-bar"></div>
+    <span>Developing story</span>
+  </div>
+  <div class="instructions">Click any topic to expand · One section open at a time</div>
+
+  <!-- ══ CARDS ══════════════════════════════════════════ -->
+  <div class="topics-list">
+
+    <!-- 1. IRAN DEAL AT VERSAILLES -->
+    <div class="card">
+      <div class="card-header level-1" onclick="toggle(this)">
+        <span class="card-rank">01</span>
+        <span class="card-title">Iran Deal at Versailles: $300B Fund Disputed, Israel Breaks Ranks</span>
+        <span class="card-count">High coverage</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+            <div class="subtopic">
+              <div class="subtopic-title">Signed at Versailles, During a G7 Dinner</div>
+              <div class="subtopic-detail">Trump and Iranian President Masoud Pezeshkian signed a 14-point memorandum of understanding on June 17 at the Palace of Versailles, during a dinner hosted by Emmanuel Macron at the G7 summit. The deal sets a 60-day window to negotiate a permanent treaty, reopens the Strait of Hormuz, and begins lifting sanctions.</div>
+              <div class="subtopic-src"><a href="https://nbcnews.com/world/iran" target="_blank">NBC News</a><a href="https://timesofisrael.com" target="_blank">Times of Israel</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">The $300B Fund — Trump Denies It Publicly</div>
+              <div class="subtopic-detail">Press accounts diverge sharply on the reconstruction fund: several outlets describe a $300 billion fund tied to a future permanent treaty, while Trump told reporters at the G7 that reports of a $300 billion U.S. investment were a "false story" and that Washington was "not investing 10 cents." The discrepancy remains unresolved in subsequent coverage.</div>
+              <div class="subtopic-src"><a href="https://foxnews.com/world" target="_blank">Fox News</a><a href="https://culturacolectiva.com" target="_blank">Cultura Colectiva</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Netanyahu: Israel Isn't Bound, Lebanon Operations Continue</div>
+              <div class="subtopic-detail">Israel was not a signatory to the memorandum. Netanyahu said publicly that Israel does not consider itself bound by the ceasefire terms covering Lebanon and would continue military operations there — a structural gap in an agreement that explicitly lists Lebanon as a front where hostilities must end.</div>
+              <div class="subtopic-src"><a href="https://culturacolectiva.com" target="_blank">Cultura Colectiva</a><a href="https://timesofisrael.com" target="_blank">Times of Israel</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">The Versailles Symbolism — 1919 Echoes</div>
+              <div class="subtopic-detail">Coverage repeatedly drew the parallel to the 1919 Treaty of Versailles, where Woodrow Wilson helped impose terms on Germany so punishing that historians still debate how directly they fed the next war. Trump, for his part, called the venue "the real deal," not "a gold leaf."</div>
+              <div class="subtopic-src"><a href="https://thenationalnews.com" target="_blank">The National</a></div>
+            </div>
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://nbcnews.com" target="_blank">NBC News</a>
+            <a href="https://foxnews.com" target="_blank">Fox News</a>
+            <a href="https://timesofisrael.com" target="_blank">Times of Israel</a>
+            <a href="https://thenationalnews.com" target="_blank">The National</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. ISRAEL DEATH PENALTY LAWS -->
+    <div class="card featured-card">
+      <div class="card-header level-2" onclick="toggle(this)">
+        <span class="card-rank">02</span>
+        <span class="card-title">Israel's New Death-Penalty Laws: 96% Conviction Rate, Show Trials, Champagne</span>
+        <span class="card-count">High coverage</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+            <div class="subtopic">
+              <div class="subtopic-title">March Law: Death by Hanging, Palestinians Only</div>
+              <div class="subtopic-detail">The Knesset passed the Death Penalty for Terrorists Law 62–47 on March 30, mandating death by hanging as the default sentence for West Bank Palestinians convicted of deadly attacks in military courts, with sentencing carried out within 90 days. A separate provision technically applies to anyone "denying Israel's right to exist," but is written to exclude Jewish defendants.</div>
+              <div class="subtopic-src"><a href="https://timesofisrael.com" target="_blank">Times of Israel</a><a href="https://deathpenaltyinfo.org" target="_blank">DPIC</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">May Law: A Tribunal for October 7th</div>
+              <div class="subtopic-detail">On May 11, the Knesset voted 93–0 to create a special military tribunal — 15 judges, a dedicated Jerusalem courtroom, public livestreamed trials — to try roughly 300 detained Palestinians on charges up to genocide for the October 7 attacks. Estimated cost: between $689 million and $1.72 billion, depending on which ministry's figures are used.</div>
+              <div class="subtopic-src"><a href="https://aljazeera.com" target="_blank">Al Jazeera</a><a href="https://timesofisrael.com" target="_blank">Times of Israel</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Rights Groups: Discriminatory, Unconstitutional, Apartheid</div>
+              <div class="subtopic-detail">Amnesty International, Human Rights Watch, and Israel's own Association for Civil Rights petitioned against the March law as discriminatory by design; UN experts and the EU separately warned it violates the International Covenant on Civil and Political Rights. Israel's High Court has yet to issue a final ruling on the pending challenges.</div>
+              <div class="subtopic-src"><a href="https://amnesty.org" target="_blank">Amnesty International</a><a href="https://deathpenaltyinfo.org" target="_blank">DPIC</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Ben-Gvir's Champagne, and a Photographer Swept In</div>
+              <div class="subtopic-detail">National Security Minister Itamar Ben-Gvir, whose Otzma Yehudit party authored the March bill, celebrated its passage in the Knesset chamber; party members had worn noose-shaped lapel pins during the debate. Among those now facing the May tribunal's jurisdiction is at least one detainee whose presence on October 7 was reportedly as a photographer.</div>
+              <div class="subtopic-src"><a href="https://timesofisrael.com" target="_blank">Times of Israel</a><a href="https://aljazeera.com" target="_blank">Al Jazeera</a></div>
+            </div>
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://timesofisrael.com" target="_blank">Times of Israel</a>
+            <a href="https://aljazeera.com" target="_blank">Al Jazeera</a>
+            <a href="https://amnesty.org" target="_blank">Amnesty International</a>
+            <a href="https://deathpenaltyinfo.org" target="_blank">DPIC</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. KNICKS / OBAMA LIBRARY -->
+    <div class="card">
+      <div class="card-header level-3" onclick="toggle(this)">
+        <span class="card-rank">03</span>
+        <span class="card-title">Trump Booed at the Garden, Three Ex-Presidents Toast Obama's Library</span>
+        <span class="card-count">High coverage</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+            <div class="subtopic">
+              <div class="subtopic-title">Thunderous Boos at Game 3, Not the Title Itself</div>
+              <div class="subtopic-detail">Trump was loudly booed when shown on the jumbotron during the anthem at NBA Finals Game 3 on June 8 — a game the Knicks lost, 115–111, falling to a 2–1 series lead. He watched from a bulletproof-glass suite with owner James Dolan; a planned outdoor fan watch party was canceled for security reasons. The Knicks went on to win the title in five games — their first since 1973.</div>
+              <div class="subtopic-src"><a href="https://cnbc.com" target="_blank">CNBC</a><a href="https://aljazeera.com" target="_blank">Al Jazeera</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">"He's Not Wanted Here" — Local Reaction</div>
+              <div class="subtopic-detail">Senate Minority Leader Chuck Schumer and Rep. Hakeem Jeffries both criticized Trump's attendance as self-insertion into a city moment; NBA Commissioner Adam Silver said Trump was "welcome to be here." Fact-checkers confirmed the boos were genuine and synced to his image appearing on screen, not a fabricated clip.</div>
+              <div class="subtopic-src"><a href="https://aljazeera.com" target="_blank">Al Jazeera</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Obama Center Opens — Three Other Living Ex-Presidents Attend</div>
+              <div class="subtopic-detail">The Obama Presidential Center's June 18 dedication in Chicago drew Bill Clinton, George W. Bush, and Joe Biden — all three other living former presidents — plus their spouses. Trump, the sitting president, did not attend. Obama's speech invoked "no kings," a popular anti-Trump protest phrase, while also calling for national healing.</div>
+              <div class="subtopic-src"><a href="https://nbcnews.com" target="_blank">NBC News</a><a href="https://cbsnews.com" target="_blank">CBS News</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Stevie Wonder, Springsteen, and a $850 Million Price Tag</div>
+              <div class="subtopic-detail">The ceremony's musical lineup included Bruce Springsteen, Stevie Wonder, Bono and the Edge, Jennifer Hudson, John Legend, and Christina Aguilera. The $850 million center is the longest-delayed and most expensive presidential library in U.S. history, and stores its archives digitally rather than in physical form.</div>
+              <div class="subtopic-src"><a href="https://cbsnews.com" target="_blank">CBS News</a><a href="https://nbcnews.com" target="_blank">NBC News</a></div>
+            </div>
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://cnbc.com" target="_blank">CNBC</a>
+            <a href="https://aljazeera.com" target="_blank">Al Jazeera</a>
+            <a href="https://nbcnews.com" target="_blank">NBC News</a>
+            <a href="https://cbsnews.com" target="_blank">CBS News</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. MASSACHUSETTS BALLOT RULINGS -->
+    <div class="card">
+      <div class="card-header level-4" onclick="toggle(this)">
+        <span class="card-rank">04</span>
+        <span class="card-title">Massachusetts: Rent Control Killed Same-Day, Open-Primary Question Survives</span>
+        <span class="card-count">Developing story</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+            <div class="subtopic">
+              <div class="subtopic-title">Struck Down the Morning of the Session</div>
+              <div class="subtopic-detail">The SJC ruled the rent-control ballot question unconstitutional on the morning of June 23 — the same day BOLLI met — because its exemption for "educational, religious, or non-profit" housing made religion "a factor in its application," which the state Constitution bars from initiative petitions. The proposal would have capped annual rent increases at 5% or inflation, whichever is lower.</div>
+              <div class="subtopic-src"><a href="https://wbur.org" target="_blank">WBUR</a><a href="https://axios.com" target="_blank">Axios Boston</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">A Separate Tax Question Fell the Week Before</div>
+              <div class="subtopic-detail">A proposed income-tax-rebate ballot question was blocked the week prior on different grounds — the SJC found its official summary misleading, not religion-related. The two rulings were separate decisions roughly a week apart, not a single same-day double-strike.</div>
+              <div class="subtopic-src"><a href="https://commonwealthbeacon.org" target="_blank">CommonWealth Beacon</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">The Open-Primary Question Survives Court Review</div>
+              <div class="subtopic-detail">In a separate ruling, the same court let stand a petition to replace party primaries with a single all-party primary for state offices, top-two advancing to November — the "jungle primary" model BOLLI discussed. It will appear on the November 2026 ballot alongside a marijuana-related measure.</div>
+              <div class="subtopic-src"><a href="https://wbur.org" target="_blank">WBUR</a><a href="https://wgbh.org" target="_blank">GBH</a></div>
+            </div>
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://wbur.org" target="_blank">WBUR</a>
+            <a href="https://axios.com" target="_blank">Axios</a>
+            <a href="https://commonwealthbeacon.org" target="_blank">CommonWealth Beacon</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. 2028 FIELD / AUCHINCLOSS -->
+    <div class="card">
+      <div class="card-header level-5" onclick="toggle(this)">
+        <span class="card-rank">05</span>
+        <span class="card-title">Ossoff Mania Builds as Auchincloss Faces a Primary at Home — Now, Not in Two Years</span>
+        <span class="card-count">Sustained coverage</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+            <div class="subtopic">
+              <div class="subtopic-title">"Why Everyone Wants Jon Ossoff to Run for President"</div>
+              <div class="subtopic-detail">Michelle Goldberg's viral NYT column compared Ossoff to a young Obama; Sarah Longwell, the former Republican strategist behind The Bulwark, posted that he was "president-maxxing so hard." Ossoff insists he has "zero interest" in 2028 and is focused only on his Georgia re-election, where he currently leads in polling.</div>
+              <div class="subtopic-src"><a href="https://nytimes.com/section/opinion" target="_blank">NYT (Goldberg)</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Correction: Auchincloss's Primary Is Happening Now</div>
+              <div class="subtopic-detail">Contrary to the session's framing of a challenge "two years out," Rep. Jake Auchincloss already faces an active September 1, 2026 primary against Jason Poulos, who has made Auchincloss's roughly $1 million-plus in AIPAC-linked donations central to his campaign. A second challenger, Chris Boyd, has since suspended his run.</div>
+              <div class="subtopic-src"><a href="https://prospect.org" target="_blank">American Prospect</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">The Platner Attack Backfired</div>
+              <div class="subtopic-detail">Auchincloss publicly called Maine Senate candidate Graham Platner's military tattoo "personally disqualifying," effectively siding against the presumptive Democratic nominee and drawing accusations of a tacit Susan Collins endorsement — fueling his own primary challenger's case that his AIPAC-aligned positioning is increasingly a liability, not an asset, in his own district.</div>
+              <div class="subtopic-src"><a href="https://prospect.org" target="_blank">American Prospect</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Wu's Property-Tax Fight Reaches the Ballot Box</div>
+              <div class="subtopic-detail">Confirming the session's tip from a real-time phone alert: Boston Mayor Michelle Wu has endorsed primary challengers against two state senators — Brownsberger and Nick Collins — who blocked her push to shift more property-tax burden onto commercial real estate, an unusually direct mayoral intervention in legislative primaries.</div>
+              <div class="subtopic-src"><a href="https://thecrimson.com" target="_blank">Harvard Crimson</a></div>
+            </div>
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://nytimes.com" target="_blank">NYT</a>
+            <a href="https://prospect.org" target="_blank">American Prospect</a>
+            <a href="https://thecrimson.com" target="_blank">Harvard Crimson</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. DOJ HOLLOWED OUT -->
+    <div class="card">
+      <div class="card-header level-6" onclick="toggle(this)">
+        <span class="card-rank">06</span>
+        <span class="card-title">DOJ Hollowed Out: The "Broadview Six" Case and an 0-for-9 Run on Voter Rolls</span>
+        <span class="card-count">Sustained coverage</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+            <div class="subtopic">
+              <div class="subtopic-title">Redacted Transcripts, "Trust Has Been Broken"</div>
+              <div class="subtopic-detail">Federal Judge April Perry dismissed all remaining charges against the "Broadview Six" Chicago protesters after discovering prosecutors had submitted redacted grand jury transcripts to conceal improper conduct, including coaching jurors and dismissing one who called the case a "crock of sh*t." Perry told the U.S. Attorney directly that the "presumption of regularity" — courts' default trust in DOJ representations — "has been broken."</div>
+              <div class="subtopic-src"><a href="https://lawandcrime.com" target="_blank">Law&amp;Crime</a><a href="https://cbsnews.com" target="_blank">CBS News</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">NYT: A Pattern, Not an Anomaly</div>
+              <div class="subtopic-detail">The New York Times' Alan Feuer reported that politicized prosecutions are producing an "erosion in faith" among both grand jurors and judges, citing repeated grand jury rejections in the Comey and Letitia James cases and a Wyoming panel that threw out nine indictments after a prosecutor told jurors they'd hear about "bad guys" and "murderers" before any evidence was presented.</div>
+              <div class="subtopic-src"><a href="https://nytimes.com/section/us/politics" target="_blank">NYT Politics</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">0-for-9 on Voter Roll Lawsuits</div>
+              <div class="subtopic-detail">DOJ has filed 31 lawsuits against states refusing to hand over unredacted voter rolls; nine have been decided, and the department has lost every one — including before judges spanning the spectrum, five appointed by Trump and four by Democratic presidents. No federal court has yet ruled in DOJ's favor.</div>
+              <div class="subtopic-src"><a href="https://democracydocket.com" target="_blank">Democracy Docket</a><a href="https://brennancenter.org" target="_blank">Brennan Center</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">111 Former Prosecutors Demand an Investigation</div>
+              <div class="subtopic-detail">More than 100 former federal prosecutors from the Northern District of Illinois, along with House Judiciary Ranking Member Jamie Raskin, have called for a formal investigation into U.S. Attorney Andrew Boutros over the Broadview Six conduct, which they describe as a documented "failure of leadership."</div>
+              <div class="subtopic-src"><a href="https://lawandcrime.com" target="_blank">Law&amp;Crime</a></div>
+            </div>
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://nytimes.com" target="_blank">NYT</a>
+            <a href="https://lawandcrime.com" target="_blank">Law&amp;Crime</a>
+            <a href="https://cbsnews.com" target="_blank">CBS News</a>
+            <a href="https://democracydocket.com" target="_blank">Democracy Docket</a>
+            <a href="https://brennancenter.org" target="_blank">Brennan Center</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /topics-list -->
+
+  <!-- ══ FOOTER ══════════════════════════════════════════ -->
+  <div class="footer">
+    <div style="opacity:0.6; font-size:10px;">
+      AfterWord compiled for BOLLI Current Events Discussion Group · Session of June 23, 2026 · Coverage synthesized across 16 outlets<br>
+      Prepared with Claude as collaborator · <a href="https://jhnday.github.io/CrntEvnts" target="_blank">jhnday.github.io/CrntEvnts</a> · Next session: Sawyer Street — date TBD
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<script>
+  function toggle(header) {
+    const body = header.nextElementSibling;
+    const chevron = header.querySelector('.card-chevron');
+    const isOpen = body.classList.contains('expanded');
+
+    // Collapse all
+    document.querySelectorAll('.card-body').forEach(b => b.classList.remove('expanded'));
+    document.querySelectorAll('.card-chevron').forEach(c => c.classList.remove('rotated'));
+
+    // Expand clicked (if it was closed)
+    if (!isOpen) {
+      body.classList.add('expanded');
+      chevron.classList.add('rotated');
+      setTimeout(() => header.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
+    }
+  }
+</script>
+</body>
+</html>
