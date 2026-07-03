@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SpudCell — A Cell That Was Built, Not Born</title>
+<style>
+  :root{
+    --paper:#f4f0e6;
+    --paper-dim:#ece5d4;
+    --ink:#1c1a16;
+    --ink-soft:#4a443a;
+    --rule:#1c1a16;
+    --gavel:#2e5c3f;
+    --gavel-soft:#4a8062;
+    --upheld:#33543f;
+    --upheld-bg:#e2e9de;
+    --stayed:#8a6a1f;
+    --stayed-bg:#f0e6c8;
+    --pending:#3d5a73;
+    --pending-bg:#dde6ea;
+    --reversed:#7a2e1d;
+    --reversed-bg:#f0dcd4;
+    --serif: "Iowan Old Style","Palatino Linotype","Book Antiqua",Georgia,serif;
+    --display: "Big Caslon","Didot","Bodoni MT",Georgia,serif;
+    --mono: "Courier New", Courier, monospace;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper-dim);
+    font-family:var(--serif);
+    color:var(--ink);
+  }
+  .sheet{
+    max-width:920px;
+    margin:0 auto;
+    background:var(--paper);
+    background-image:
+      radial-gradient(ellipse at top left, rgba(0,0,0,0.03), transparent 60%),
+      radial-gradient(ellipse at bottom right, rgba(0,0,0,0.03), transparent 60%);
+    min-height:100vh;
+    padding:0 0 60px 0;
+    border-left:1px solid rgba(0,0,0,0.08);
+    border-right:1px solid rgba(0,0,0,0.08);
+  }
+  header.masthead{
+    text-align:center;
+    padding:34px 24px 18px;
+    border-bottom:4px double var(--rule);
+  }
+  .kicker{
+    font-family:var(--mono);
+    letter-spacing:0.35em;
+    text-transform:uppercase;
+    font-size:11px;
+    color:var(--ink-soft);
+    margin-bottom:10px;
+  }
+  .kicker a{ color:var(--gavel); }
+  h1.title{
+    font-family:var(--display);
+    font-weight:700;
+    font-size:clamp(34px,6vw,58px);
+    margin:0;
+    letter-spacing:0.01em;
+  }
+  .subtitle{
+    font-style:italic;
+    font-size:16px;
+    color:var(--ink-soft);
+    margin-top:8px;
+  }
+  .meta-strip{
+    display:flex;
+    justify-content:center;
+    gap:18px;
+    flex-wrap:wrap;
+    font-family:var(--mono);
+    font-size:11px;
+    letter-spacing:0.05em;
+    color:var(--ink-soft);
+    margin-top:14px;
+    text-transform:uppercase;
+  }
+  .meta-strip span::after{content:"·"; margin-left:18px; color:var(--ink-soft);}
+  .meta-strip span:last-child::after{content:"";}
+
+  /* Toggle */
+  .toggle-row{
+    display:flex;
+    justify-content:center;
+    margin:22px 0 0;
+  }
+  .toggle{
+    display:inline-flex;
+    border:1.5px solid var(--rule);
+    border-radius:999px;
+    overflow:hidden;
+    background:var(--paper);
+  }
+  .toggle button{
+    font-family:var(--mono);
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    font-size:12px;
+    padding:9px 22px;
+    border:none;
+    background:transparent;
+    color:var(--ink);
+    cursor:pointer;
+    transition:background 0.2s, color 0.2s;
+  }
+  .toggle button.active{
+    background:var(--ink);
+    color:var(--paper);
+  }
+  .toggle button:not(.active):hover{
+    background:rgba(0,0,0,0.06);
+  }
+
+  main{ padding:28px 32px 0; }
+  @media(max-width:600px){ main{padding:20px 16px 0;} }
+
+  section{display:none;}
+  section.active{display:block;}
+
+  /* ---- AT A GLANCE VIEW ---- */
+  .thesis-block{
+    border-top:1px solid var(--rule);
+    border-bottom:1px solid var(--rule);
+    padding:18px 0;
+    margin-bottom:26px;
+    text-align:center;
+  }
+  .thesis-block .q{
+    font-family:var(--display);
+    font-size:21px;
+    line-height:1.4;
+    font-style:italic;
+    color:var(--gavel);
+  }
+  .thesis-block .a{
+    font-family:var(--mono);
+    font-size:12px;
+    letter-spacing:0.04em;
+    color:var(--ink-soft);
+    margin-top:10px;
+  }
+
+  .scorebar{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:1px;
+    background:var(--rule);
+    border:1px solid var(--rule);
+    margin-bottom:30px;
+  }
+  .scorebar .cell{
+    background:var(--paper);
+    padding:16px 10px;
+    text-align:center;
+  }
+  .scorebar .num{
+    font-family:var(--display);
+    font-size:30px;
+    font-weight:700;
+  }
+  .scorebar .lbl{
+    font-family:var(--mono);
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    color:var(--ink-soft);
+    margin-top:4px;
+  }
+
+  .section-label{
+    font-family:var(--mono);
+    text-transform:uppercase;
+    letter-spacing:0.15em;
+    font-size:12px;
+    color:var(--gavel);
+    border-bottom:2px solid var(--gavel);
+    display:inline-block;
+    padding-bottom:3px;
+    margin-bottom:18px;
+  }
+
+  .card-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:16px;
+    margin-bottom:34px;
+  }
+  @media(max-width:640px){ .card-grid{grid-template-columns:1fr;} }
+
+  .case-card{
+    border:1px solid var(--rule);
+    background:var(--paper);
+    padding:16px 16px 14px;
+    position:relative;
+    transition:transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .case-card:hover{
+    transform:translateY(-2px);
+    box-shadow:3px 5px 0 rgba(0,0,0,0.12);
+  }
+  .case-card .domain{
+    font-family:var(--mono);
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    color:var(--ink-soft);
+  }
+  .case-card h3{
+    font-family:var(--display);
+    font-size:18px;
+    margin:6px 0 8px;
+    line-height:1.25;
+  }
+  .case-card p{
+    font-size:13.5px;
+    line-height:1.5;
+    color:var(--ink-soft);
+    margin:0 0 10px;
+  }
+  .badge-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:8px;
+  }
+  .badge{
+    font-family:var(--mono);
+    font-size:10.5px;
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    padding:4px 10px;
+    border-radius:999px;
+    font-weight:bold;
+  }
+  .badge.upheld{background:var(--upheld-bg); color:var(--upheld);}
+  .badge.stayed{background:var(--stayed-bg); color:var(--stayed);}
+  .badge.pending{background:var(--pending-bg); color:var(--pending);}
+  .badge.reversed{background:var(--reversed-bg); color:var(--reversed);}
+  .verified{
+    font-family:var(--mono);
+    font-size:9.5px;
+    color:var(--ink-soft);
+    opacity:0.75;
+  }
+  .cite-link{
+    font-family:var(--mono);
+    font-size:10px;
+    color:var(--gavel);
+    text-decoration:none;
+    border-bottom:1px dotted var(--gavel);
+  }
+  .cite-link:hover{ color:var(--gavel-soft); }
+  .card-cite{
+    margin-top:8px;
+    padding-top:8px;
+    border-top:1px dashed rgba(0,0,0,0.15);
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .tl-cite{
+    margin-top:6px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+
+  /* discussion panel */
+  .discussion-panel{
+    margin-top:10px;
+    border-top:4px double var(--rule);
+    padding-top:22px;
+  }
+  .discussion-panel .section-label{ color:var(--ink); border-bottom-color:var(--ink); }
+  .dq{
+    font-family:var(--display);
+    font-style:italic;
+    font-size:17px;
+    line-height:1.5;
+    padding:14px 0;
+    border-bottom:1px solid rgba(0,0,0,0.15);
+  }
+  .dq:last-child{border-bottom:none;}
+  .dq .num{
+    font-family:var(--mono);
+    font-style:normal;
+    color:var(--gavel);
+    margin-right:8px;
+    font-size:14px;
+  }
+  .dq.featured{
+    background:var(--paper-dim);
+    margin:0 -16px;
+    padding:18px 16px;
+    border:1px solid var(--rule);
+    border-left:5px solid var(--gavel);
+  }
+
+  /* ---- BROADSHEET VIEW ---- */
+  .broadsheet-intro{
+    columns:2;
+    column-gap:28px;
+    font-size:14px;
+    line-height:1.65;
+    margin-bottom:30px;
+  }
+  .broadsheet-intro p{margin:0 0 12px;}
+  .broadsheet-intro p:first-child::first-letter{
+    font-family:var(--display);
+    font-size:52px;
+    float:left;
+    line-height:0.8;
+    padding:6px 6px 0 0;
+    color:var(--gavel);
+  }
+  @media(max-width:640px){ .broadsheet-intro{columns:1;} }
+
+  .timeline{
+    position:relative;
+    margin:0 0 36px;
+    padding-left:24px;
+    border-left:3px solid var(--rule);
+  }
+  .tl-entry{
+    position:relative;
+    padding:0 0 26px 22px;
+  }
+  .tl-entry::before{
+    content:"";
+    position:absolute;
+    left:-31.5px;
+    top:4px;
+    width:11px;
+    height:11px;
+    border-radius:50%;
+    background:var(--paper);
+    border:3px solid var(--gavel);
+  }
+  .tl-date{
+    font-family:var(--mono);
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    color:var(--gavel);
+    font-weight:bold;
+  }
+  .tl-entry h4{
+    font-family:var(--display);
+    font-size:18px;
+    margin:4px 0 6px;
+  }
+  .tl-entry p{
+    font-size:13.5px;
+    line-height:1.6;
+    color:var(--ink-soft);
+    margin:0 0 6px;
+  }
+  .tl-tags{display:flex; gap:6px; flex-wrap:wrap; margin-top:6px;}
+
+  .deep-dive{
+    border:1px solid var(--rule);
+    margin-bottom:24px;
+  }
+  .deep-dive summary{
+    cursor:pointer;
+    list-style:none;
+    padding:14px 18px;
+    background:var(--paper-dim);
+    font-family:var(--display);
+    font-size:17px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+  .deep-dive summary::-webkit-details-marker{display:none;}
+  .deep-dive summary::after{
+    content:"+";
+    font-family:var(--mono);
+    font-size:18px;
+    color:var(--gavel);
+  }
+  .deep-dive[open] summary::after{content:"–";}
+  .deep-dive .body{
+    padding:16px 18px 18px;
+    font-size:13.5px;
+    line-height:1.65;
+    color:var(--ink-soft);
+  }
+  .deep-dive .body strong{color:var(--ink);}
+  .deep-dive .quote{
+    font-style:italic;
+    border-left:3px solid var(--gavel);
+    padding-left:14px;
+    margin:10px 0;
+    color:var(--ink);
+  }
+  .deep-dive .src{
+    margin-top:10px;
+  }
+
+  .closing-note{
+    font-size:13px;
+    font-style:italic;
+    color:var(--ink-soft);
+    text-align:center;
+    margin-top:30px;
+    padding-top:16px;
+    border-top:1px solid rgba(0,0,0,0.15);
+  }
+
+  footer.colophon{
+    text-align:center;
+    font-family:var(--mono);
+    font-size:10.5px;
+    color:var(--ink-soft);
+    letter-spacing:0.05em;
+    margin-top:40px;
+    padding-top:16px;
+    border-top:1px solid var(--rule);
+  }
+</style>
+</head>
+<body>
+<div class="sheet">
+
+  <header class="masthead">
+    <div class="kicker">BOLLI AI Literacy SIG · Science Brief · Source: <a href="https://www.nytimes.com/interactive/2026/07/01/science/spudcells-synthetic-cell.html?unlocked_article_code=1.u1A.Kke8.wqKxXNqXd2y_&smid=url-share" target="_blank">The New York Times</a></div>
+    <h1 class="title">SpudCell</h1>
+    <div class="subtitle">A cell that was built, not born — and what it means to feed, grow, reproduce, and evolve from scratch</div>
+    <div class="meta-strip">
+      <span>Reported July 1, 2026</span>
+      <span>Carl Zimmer &amp; Marco Hernandez, NYT</span>
+      <span>University of Minnesota · Kate Adamala Lab</span>
+    </div>
+    <div class="toggle-row">
+      <div class="toggle">
+        <button id="btn-glance" class="active" onclick="showView('glance')">At a Glance</button>
+        <button id="btn-broadsheet" onclick="showView('broadsheet')">Broadsheet</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ======================= AT A GLANCE ======================= -->
+    <section id="view-glance" class="active">
+
+      <div class="thesis-block">
+        <div class="q">"Life is not binary. That's why I'm hesitant to call this 'alive.' There's no clear line, as much as we would love it to be."</div>
+        <div class="a">— Kate Adamala, synthetic biologist, University of Minnesota</div>
+      </div>
+
+      <div class="scorebar">
+        <div class="cell"><div class="num">36</div><div class="lbl">Genes in SpudCell's genome, vs. 4,460 in lab-strain E. coli</div></div>
+        <div class="cell"><div class="num">0</div><div class="lbl">Ribosomes SpudCell can build for itself — they must be fed</div></div>
+        <div class="cell"><div class="num">5</div><div class="lbl">Generations for a mutant strain to outcompete the original for food</div></div>
+        <div class="cell"><div class="num">$100M+</div><div class="lbl">Expected Biotic nonprofit spending over the next decade</div></div>
+      </div>
+
+      <div class="section-label">Six things it does — and doesn't — do</div>
+      <div class="card-grid">
+
+        <div class="case-card">
+          <div class="domain">Minimalism</div>
+          <h3>A 36-Gene Genome</h3>
+          <p>Where the human genome runs to roughly 20,000 protein-coding genes, SpudCell was built from just 36 — chosen for basic jobs like copying DNA, borrowed from a virus and E. coli.</p>
+          <div class="badge-row">
+            <span class="badge upheld">Achieved</span>
+            <span class="verified">reported 7/1</span>
+          </div>
+        </div>
+
+        <div class="case-card">
+          <div class="domain">Metabolism</div>
+          <h3>Feeding &amp; Growth</h3>
+          <p>SpudCells slurp small molecules through surface channels and fuse with "feeder" bubbles carrying larger nutrients — growing big enough to divide within hours.</p>
+          <div class="badge-row">
+            <span class="badge upheld">Achieved</span>
+            <span class="verified">verified 7/1</span>
+          </div>
+        </div>
+
+        <div class="case-card">
+          <div class="domain">Division</div>
+          <h3>A New Route to Splitting in Two</h3>
+          <p>Rather than copy the natural protein ring that pinches cells apart, Adamala found that proteins simply piling onto the membrane created enough bending pressure to split it — a novel mechanism, a year in the making.</p>
+          <div class="badge-row">
+            <span class="badge upheld">Achieved</span>
+            <span class="verified">verified 7/1</span>
+          </div>
+        </div>
+
+        <div class="case-card">
+          <div class="domain">Evolution</div>
+          <h3>Competing for Food</h3>
+          <p>A 50-50 mix of original and mutant SpudCells competed for five generations; the mutants — better at snagging food bubbles — pulled ahead, a first glimpse of selection at work in a synthetic system.</p>
+          <div class="badge-row">
+            <span class="badge upheld">Achieved</span>
+            <span class="verified">verified 7/1</span>
+          </div>
+        </div>
+
+        <div class="case-card">
+          <div class="domain">The Missing Piece</div>
+          <h3>Ribosomes Not Yet Self-Made</h3>
+          <p>SpudCells carry the genes to build ribosomes but can't assemble them. Fed ready-made ones instead, the line degrades and fails after five to ten generations of protein production.</p>
+          <div class="badge-row">
+            <span class="badge reversed">Unsolved</span>
+            <span class="verified">verified 7/1</span>
+          </div>
+        </div>
+
+        <div class="case-card">
+          <div class="domain">Governance</div>
+          <h3>Open Science, Open Risk</h3>
+          <p>Adamala and Endy chose not to patent SpudCell, instead founding the nonprofit Biotic to share recipes openly — while acknowledging hardier future versions could someday be misused.</p>
+          <div class="badge-row">
+            <span class="badge pending">Open question</span>
+            <span class="verified">first meeting Sept. 2026</span>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="discussion-panel">
+        <div class="section-label">For the group</div>
+
+        <div class="dq featured">
+          <span class="num">①</span>Adamala says "life is not binary." Does SpudCell — which feeds, grows, reproduces, and evolves, but can't yet build its own ribosomes — change how you'd define what counts as living?
+        </div>
+        <div class="dq"><span class="num">②</span>Adamala and Endy chose not to patent SpudCell, founding a nonprofit to share the recipe openly instead. Does open-source biology make dangerous misuse more or less likely than a patented, tightly controlled approach?</div>
+        <div class="dq"><span class="num">③</span>Endy compares SpudCell to the 1903 Wright Flyer — a crude first step, not a finished technology. If that analogy holds, what's the biological equivalent of the 737, and how far off is it?</div>
+        <div class="dq"><span class="num">④</span>Scientists still don't know what 56 of the 525 "essential" genes in an earlier minimal-genome project actually do. What does that gap in basic knowledge suggest about how confidently anyone can engineer — or govern — synthetic life right now?</div>
+      </div>
+
+      <div class="closing-note">Toggle to Broadsheet for the fuller build sequence, timeline, and deep dives →</div>
+    </section>
+
+    <!-- ======================= BROADSHEET ======================= -->
+    <section id="view-broadsheet">
+
+      <div class="broadsheet-intro">
+        <p>Scientists have long dreamed of discovering the alchemy by which chemicals can be turned into life. On July 1, 2026, a team at the University of Minnesota, led by synthetic biologist Kate Adamala, announced it had taken a major step toward that vision: simple cells, built from scratch, that feed, grow, reproduce, and compete with one another for food.</p>
+        <p>Named SpudCell for its potato-like appearance, the cell was assembled from roughly a hundred proteins and molecules, 36 genes borrowed from a virus and E. coli, and membrane-forming building blocks that spontaneously enclosed the mixture into bubbles. Many of those bubbles ended up with the right ingredients to start carrying out the chemical reactions seen in real cells.</p>
+        <p>It is not, by Adamala's own account, unambiguously alive — it can't yet build its own ribosomes, the molecular factories that make proteins, and depends on scientists to supply them. But it does more than any synthetic cell before it, and rather than patent the work, Adamala and Stanford's Drew Endy have founded a nonprofit, Biotic, to build an open research community around it.</p>
+      </div>
+
+      <div class="section-label">How the cell came together</div>
+      <div class="timeline">
+
+        <div class="tl-entry">
+          <div class="tl-date">1990s</div>
+          <h4>Venter's team starts stripping a genome down</h4>
+          <p>Craig Venter's team began studying a microbe with fewer than 1,000 genes, eventually stripping it to 525 essential genes — the "top-down" approach to minimal life.</p>
+        </div>
+
+        <div class="tl-entry">
+          <div class="tl-date">2016</div>
+          <h4>A third of the "essential" genes remain a mystery</h4>
+          <p>John Glass's team, continuing Venter's work, reported it didn't know what a third of the 525 essential genes were doing. A decade later, 56 of them are still unexplained.</p>
+        </div>
+
+        <div class="tl-entry">
+          <div class="tl-date">Recent years</div>
+          <h4>Adamala tackles division from the bottom up</h4>
+          <p>Rather than mimic the natural protein ring that pinches cells in two, Adamala's team found that proteins simply accumulating on a membrane created enough bending pressure to split it — a year of experiments to make work reliably.</p>
+        </div>
+
+        <div class="tl-entry">
+          <div class="tl-date">Build phase</div>
+          <h4>Broth, bubbles, and 36 genes</h4>
+          <p>The team mixed roughly 100 proteins and molecules with 36 genes for basic jobs like copying DNA, then added membrane building blocks that spontaneously formed bubbles engulfing the soup.</p>
+        </div>
+
+        <div class="tl-entry">
+          <div class="tl-date">Feeding &amp; growth</div>
+          <h4>Slurping and fusing</h4>
+          <p>SpudCells drew small molecules through surface channels, and fused with food-loaded "feeder" bubbles for larger nutrients too big to pass through — growing large enough to divide within hours.</p>
+        </div>
+
+        <div class="tl-entry">
+          <div class="tl-date">Reproduction</div>
+          <h4>A special protein forces the split</h4>
+          <p>A protein added to the flask latched onto the cell surface and forced it to bend inward until it split in two — with each new cell continuing to grow.</p>
+        </div>
+
+        <div class="tl-entry">
+          <div class="tl-date">Evolution test</div>
+          <h4>Mutants outcompete the originals</h4>
+          <p>A mutant strain, engineered to bind food bubbles more tightly, was mixed 50-50 with the original and, over five generations, pulled ahead — evidence of Darwinian competition in a wholly synthetic system.</p>
+          <div class="tl-tags"><span class="badge upheld">Milestone achieved</span></div>
+        </div>
+
+        <div class="tl-entry">
+          <div class="tl-date">Ongoing limitation</div>
+          <h4>The ribosome problem persists</h4>
+          <p>SpudCells carry the genes for ribosomes but the parts don't come together on their own. Fed ready-made ribosomes instead, cells can keep making proteins for five to ten generations before failing as ribosomes degrade.</p>
+          <div class="tl-tags"><span class="badge reversed">Unsolved</span></div>
+        </div>
+
+        <div class="tl-entry">
+          <div class="tl-date">Sept. 2026</div>
+          <h4>Biotic's first meeting, Philadelphia</h4>
+          <p>The nonprofit Adamala and Endy founded to build a SpudCell research community holds its inaugural meeting, with safeguarding this area of research high on the agenda.</p>
+        </div>
+
+      </div>
+
+      <div class="section-label">Deep dives</div>
+
+      <details class="deep-dive">
+        <summary>Why 36 genes, and what they still don't explain <span></span></summary>
+        <div class="body">
+          Two roads have converged on the question of minimal life. Craig Venter's team went top-down, stripping a natural microbe's genome to 525 essential genes and still not knowing what a third of them did in a 2016 paper. <strong>SpudCell went bottom-up instead</strong> — combining lifeless molecules until a cell-like system emerged, arriving at 36 genes borrowed from a virus and E. coli for jobs like copying DNA.
+          <div class="quote">"There are still significant tasks that every cell has to do that we don't know."</div>
+          <p>— John Glass, synthetic biologist, J. Craig Venter Institute</p>
+          <p>The two approaches ask different questions of the same mystery: Venter's tells you what a natural cell can't lose without breaking; Adamala's tells you what a minimal set of parts can build from nothing. Neither yet has a complete parts list.</p>
+        </div>
+      </details>
+
+      <details class="deep-dive">
+        <summary>The ribosome problem — SpudCell's central limitation <span></span></summary>
+        <div class="body">
+          A ribosome is the molecular factory that turns genetic instructions into proteins — and it is, so far, the one major piece of cellular machinery SpudCell cannot build for itself. The cells carry the genes needed to construct ribosomes, but for reasons not yet understood, the parts don't spontaneously assemble inside the cell.
+          <div class="quote">"I don't want to say it dies, but it stops working."</div>
+          <p>— Kate Adamala, on what happens as ribosomes degrade across generations</p>
+          <p>For now, Adamala's lab feeds SpudCells ready-made ribosomes — a workaround with an expiration date. Solving self-assembly is one of Biotic's top open-source priorities, alongside enabling the cells to divide indefinitely rather than degrading after five to ten generations.</p>
+        </div>
+      </details>
+
+      <details class="deep-dive">
+        <summary>Is it alive? Why scientists are hedging <span></span></summary>
+        <div class="body">
+          SpudCell feeds, grows, reproduces, and — in the five-generation competition experiment — even shows a rudimentary capacity to evolve under selective pressure. By most functional measures, that's a strong claim to being alive. Yet Adamala remains careful about the label, and her caution reflects a real scientific gap, not false modesty: <strong>a cell that depends on borrowed ribosomes is not yet self-sustaining</strong>.
+          <div class="quote">"It's a cell that was built, not born. It's constructed, but it does what cells do."</div>
+          <p>— Drew Endy, synthetic biologist, Stanford University</p>
+          <p>Roseanna Zia, a computational biologist at the University of Missouri uninvolved in the work, called the competition result "the shake-the-ground accomplishment" — less because it proves SpudCell is alive, and more because it shows synthetic cells can now be pitted against one another to evolve toward more sophisticated versions.</p>
+        </div>
+      </details>
+
+      <details class="deep-dive">
+        <summary>Biotic, open science, and the dual-use question <span></span></summary>
+        <div class="body">
+          Rather than patent SpudCell, Adamala and Endy founded Biotic, a nonprofit Endy estimates will spend hundreds of millions of dollars over the next decade, with hundreds of scientists expected to join and easier recipes and shared ingredients planned to lower the barrier to entry.
+          <div class="quote">"We can have these conversations now, as opposed to waiting for somebody else to do it, and then we're just all reacting."</div>
+          <p>— Drew Endy, on safeguarding the research openly rather than after the fact</p>
+          <p>The tradeoff is real: today's SpudCells can only survive a few generations on a special lab diet, but future, hardier versions raise the possibility of misuse — potentially even as a weapon, by Endy's own acknowledgment. Endy's bet is that an open, well-organized research community is better positioned to prevent that outcome than a closed or purely commercial one would be.</p>
+        </div>
+      </details>
+
+      <div class="discussion-panel">
+        <div class="section-label">For the group</div>
+        <div class="dq featured"><span class="num">①</span>Adamala says "life is not binary." Does SpudCell — which feeds, grows, reproduces, and evolves, but can't yet build its own ribosomes — change how you'd define what counts as living?</div>
+        <div class="dq"><span class="num">②</span>Adamala and Endy chose not to patent SpudCell, founding a nonprofit to share the recipe openly instead. Does open-source biology make dangerous misuse more or less likely than a patented, tightly controlled approach?</div>
+        <div class="dq"><span class="num">③</span>Endy compares SpudCell to the 1903 Wright Flyer — a crude first step, not a finished technology. If that analogy holds, what's the biological equivalent of the 737, and how far off is it?</div>
+        <div class="dq"><span class="num">④</span>Scientists still don't know what 56 of the 525 "essential" genes in an earlier minimal-genome project actually do. What does that gap in basic knowledge suggest about how confidently anyone can engineer — or govern — synthetic life right now?</div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <footer class="colophon">
+    Prepared for BOLLI AI Literacy SIG · Source: Carl Zimmer &amp; Marco Hernandez, The New York Times, July 1, 2026 · Full article: <a class="cite-link" href="https://www.nytimes.com/interactive/2026/07/01/science/spudcells-synthetic-cell.html?unlocked_article_code=1.u1A.Kke8.wqKxXNqXd2y_&smid=url-share" target="_blank">nytimes.com ↗</a>
+  </footer>
+</div>
+
+<script>
+  function showView(view){
+    document.getElementById('view-glance').classList.toggle('active', view==='glance');
+    document.getElementById('view-broadsheet').classList.toggle('active', view==='broadsheet');
+    document.getElementById('btn-glance').classList.toggle('active', view==='glance');
+    document.getElementById('btn-broadsheet').classList.toggle('active', view==='broadsheet');
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+</script>
+
+</body>
+</html>
