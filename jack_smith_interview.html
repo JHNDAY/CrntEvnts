@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>No One Above The Law</title>
+<style>
+  :root{
+    --paper:#f4f0e6;
+    --paper-dim:#ece5d4;
+    --ink:#1c1a16;
+    --ink-soft:#4a443a;
+    --rule:#1c1a16;
+    --gavel:#7a2e1d;
+    --gavel-soft:#a8503a;
+    --upheld:#33543f;
+    --upheld-bg:#e2e9de;
+    --stayed:#8a6a1f;
+    --stayed-bg:#f0e6c8;
+    --pending:#3d5a73;
+    --pending-bg:#dde6ea;
+    --reversed:#7a2e1d;
+    --reversed-bg:#f0dcd4;
+    --serif: "Iowan Old Style","Palatino Linotype","Book Antiqua",Georgia,serif;
+    --display: "Big Caslon","Didot","Bodoni MT",Georgia,serif;
+    --mono: "Courier New", Courier, monospace;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper-dim);
+    font-family:var(--serif);
+    color:var(--ink);
+  }
+  .sheet{
+    max-width:920px;
+    margin:0 auto;
+    background:var(--paper);
+    background-image:
+      radial-gradient(ellipse at top left, rgba(0,0,0,0.03), transparent 60%),
+      radial-gradient(ellipse at bottom right, rgba(0,0,0,0.03), transparent 60%);
+    min-height:100vh;
+    padding:0 0 60px 0;
+    border-left:1px solid rgba(0,0,0,0.08);
+    border-right:1px solid rgba(0,0,0,0.08);
+  }
+  header.masthead{
+    text-align:center;
+    padding:34px 24px 18px;
+    border-bottom:4px double var(--rule);
+  }
+  .kicker{
+    font-family:var(--mono);
+    letter-spacing:0.35em;
+    text-transform:uppercase;
+    font-size:11px;
+    color:var(--ink-soft);
+    margin-bottom:10px;
+  }
+  h1.title{
+    font-family:var(--display);
+    font-weight:700;
+    font-size:clamp(34px,6vw,58px);
+    margin:0;
+    letter-spacing:0.01em;
+  }
+  .subtitle{
+    font-style:italic;
+    font-size:16px;
+    color:var(--ink-soft);
+    margin-top:8px;
+  }
+  .meta-strip{
+    display:flex;
+    justify-content:center;
+    gap:18px;
+    flex-wrap:wrap;
+    font-family:var(--mono);
+    font-size:11px;
+    letter-spacing:0.05em;
+    color:var(--ink-soft);
+    margin-top:14px;
+    text-transform:uppercase;
+  }
+  .meta-strip span::after{content:"·"; margin-left:18px; color:var(--ink-soft);}
+  .meta-strip span:last-child::after{content:"";}
+
+  .toggle-row{
+    display:flex;
+    justify-content:center;
+    margin:22px 0 0;
+  }
+  .toggle{
+    display:inline-flex;
+    border:1.5px solid var(--rule);
+    border-radius:999px;
+    overflow:hidden;
+    background:var(--paper);
+  }
+  .toggle button{
+    font-family:var(--mono);
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    font-size:12px;
+    padding:9px 22px;
+    border:none;
+    background:transparent;
+    color:var(--ink);
+    cursor:pointer;
+    transition:background 0.2s, color 0.2s;
+  }
+  .toggle button.active{
+    background:var(--ink);
+    color:var(--paper);
+  }
+  .toggle button:not(.active):hover{
+    background:rgba(0,0,0,0.06);
+  }
+
+  main{ padding:28px 32px 0; }
+  @media(max-width:600px){ main{padding:20px 16px 0;} }
+
+  section{display:none;}
+  section.active{display:block;}
+
+  /* ---- AT A GLANCE VIEW ---- */
+  .thesis-block{
+    border-top:1px solid var(--rule);
+    border-bottom:1px solid var(--rule);
+    padding:18px 0;
+    margin-bottom:26px;
+    text-align:center;
+  }
+  .thesis-block .q{
+    font-family:var(--display);
+    font-size:21px;
+    line-height:1.4;
+    font-style:italic;
+    color:var(--gavel);
+  }
+  .thesis-block .a{
+    font-family:var(--mono);
+    font-size:12px;
+    letter-spacing:0.04em;
+    color:var(--ink-soft);
+    margin-top:10px;
+  }
+
+  .scorebar{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:1px;
+    background:var(--rule);
+    border:1px solid var(--rule);
+    margin-bottom:30px;
+  }
+  .scorebar .cell{
+    background:var(--paper);
+    padding:16px 10px;
+    text-align:center;
+  }
+  .scorebar .num{
+    font-family:var(--display);
+    font-size:30px;
+    font-weight:700;
+  }
+  .scorebar .lbl{
+    font-family:var(--mono);
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    color:var(--ink-soft);
+    margin-top:4px;
+  }
+
+  .section-label{
+    font-family:var(--mono);
+    text-transform:uppercase;
+    letter-spacing:0.15em;
+    font-size:12px;
+    color:var(--gavel);
+    border-bottom:2px solid var(--gavel);
+    display:inline-block;
+    padding-bottom:3px;
+    margin-bottom:18px;
+  }
+
+  .card-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:16px;
+    margin-bottom:34px;
+  }
+  @media(max-width:640px){ .card-grid{grid-template-columns:1fr;} }
+
+  .case-card{
+    border:1px solid var(--rule);
+    background:var(--paper);
+    padding:16px 16px 14px;
+    position:relative;
+    transition:transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .case-card:hover{
+    transform:translateY(-2px);
+    box-shadow:3px 5px 0 rgba(0,0,0,0.12);
+  }
+  .case-card .domain{
+    font-family:var(--mono);
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    color:var(--ink-soft);
+  }
+  .case-card h3{
+    font-family:var(--display);
+    font-size:18px;
+    margin:6px 0 8px;
+    line-height:1.25;
+  }
+  .case-card p{
+    font-size:13.5px;
+    line-height:1.5;
+    color:var(--ink-soft);
+    margin:0 0 10px;
+  }
+  .badge-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:8px;
+  }
+  .badge{
+    font-family:var(--mono);
+    font-size:10.5px;
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    padding:4px 10px;
+    border-radius:999px;
+    font-weight:bold;
+  }
+  .badge.upheld{background:var(--upheld-bg); color:var(--upheld);}
+  .badge.stayed{background:var(--stayed-bg); color:var(--stayed);}
+  .badge.pending{background:var(--pending-bg); color:var(--pending);}
+  .badge.reversed{background:var(--reversed-bg); color:var(--reversed);}
+  .verified{
+    font-family:var(--mono);
+    font-size:9.5px;
+    color:var(--ink-soft);
+    opacity:0.75;
+  }
+
+  /* discussion panel */
+  .discussion-panel{
+    margin-top:10px;
+    border-top:4px double var(--rule);
+    padding-top:22px;
+  }
+  .discussion-panel .section-label{ color:var(--ink); border-bottom-color:var(--ink); }
+  .dq{
+    font-family:var(--display);
+    font-style:italic;
+    font-size:17px;
+    line-height:1.5;
+    padding:14px 0;
+    border-bottom:1px solid rgba(0,0,0,0.15);
+  }
+  .dq:last-child{border-bottom:none;}
+  .dq .num{
+    font-family:var(--mono);
+    font-style:normal;
+    color:var(--gavel);
+    margin-right:8px;
+    font-size:14px;
+  }
+  .dq.featured{
+    background:var(--paper-dim);
+    margin:0 -16px;
+    padding:18px 16px;
+    border:1px solid var(--rule);
+    border-left:5px solid var(--gavel);
+  }
+
+  /* ---- BROADSHEET VIEW ---- */
+  .broadsheet-intro{
+    columns:2;
+    column-gap:28px;
+    font-size:14px;
+    line-height:1.65;
+    margin-bottom:30px;
+  }
+  .broadsheet-intro p{margin:0 0 12px;}
+  .broadsheet-intro p:first-child::first-letter{
+    font-family:var(--display);
+    font-size:52px;
+    float:left;
+    line-height:0.8;
+    padding:6px 6px 0 0;
+    color:var(--gavel);
+  }
+  @media(max-width:640px){ .broadsheet-intro{columns:1;} }
+
+  .timeline{
+    position:relative;
+    margin:0 0 36px;
+    padding-left:24px;
+    border-left:3px solid var(--rule);
+  }
+  .tl-entry{
+    position:relative;
+    padding:0 0 26px 22px;
+  }
+  .tl-entry::before{
+    content:"";
+    position:absolute;
+    left:-31.5px;
+    top:4px;
+    width:11px;
+    height:11px;
+    border-radius:50%;
+    background:var(--paper);
+    border:3px solid var(--gavel);
+  }
+  .tl-date{
+    font-family:var(--mono);
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    color:var(--gavel);
+    font-weight:bold;
+  }
+  .tl-entry h4{
+    font-family:var(--display);
+    font-size:18px;
+    margin:4px 0 6px;
+  }
+  .tl-entry p{
+    font-size:13.5px;
+    line-height:1.6;
+    color:var(--ink-soft);
+    margin:0 0 6px;
+  }
+  .tl-tags{display:flex; gap:6px; flex-wrap:wrap; margin-top:6px;}
+
+  .deep-dive{
+    border:1px solid var(--rule);
+    margin-bottom:24px;
+  }
+  .deep-dive summary{
+    cursor:pointer;
+    list-style:none;
+    padding:14px 18px;
+    background:var(--paper-dim);
+    font-family:var(--display);
+    font-size:17px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+  .deep-dive summary::-webkit-details-marker{display:none;}
+  .deep-dive summary::after{
+    content:"+";
+    font-family:var(--mono);
+    font-size:18px;
+    color:var(--gavel);
+  }
+  .deep-dive[open] summary::after{content:"–";}
+  .deep-dive .body{
+    padding:16px 18px 18px;
+    font-size:13.5px;
+    line-height:1.65;
+    color:var(--ink-soft);
+  }
+  .deep-dive .body strong{color:var(--ink);}
+  .deep-dive .quote{
+    font-style:italic;
+    border-left:3px solid var(--gavel);
+    padding-left:14px;
+    margin:10px 0;
+    color:var(--ink);
+  }
+  .deep-dive .src{
+    margin-top:10px;
+    font-family:var(--mono);
+    font-size:10.5px;
+    color:var(--ink-soft);
+  }
+
+  .closing-note{
+    font-size:13px;
+    font-style:italic;
+    color:var(--ink-soft);
+    text-align:center;
+    margin-top:30px;
+    padding-top:16px;
+    border-top:1px solid rgba(0,0,0,0.15);
+  }
+
+  footer.colophon{
+    text-align:center;
+    font-family:var(--mono);
+    font-size:10.5px;
+    color:var(--ink-soft);
+    letter-spacing:0.05em;
+    margin-top:40px;
+    padding-top:16px;
+    border-top:1px solid var(--rule);
+  }
+</style>
+</head>
+<body>
+<div class="sheet">
+
+  <header class="masthead">
+    <div class="kicker">BOLLI Current Events Discussion Group</div>
+    <h1 class="title">No One Above The Law</h1>
+    <div class="subtitle">Jack Smith's first interview since leaving the special counsel's office</div>
+    <div class="meta-strip">
+      <span>Deadline: White House · MSNBC</span>
+      <span>Interviewer: Nicole Wallace</span>
+      <span>~44 min. broadcast, ahead of July 4th</span>
+      <span><a href="https://www.youtube.com/watch?v=UGQGPv8rUzM" target="_blank" style="color:inherit;">Watch on YouTube ↗</a></span>
+    </div>
+    <div class="toggle-row">
+      <div class="toggle">
+        <button id="btn-glance" class="active" onclick="showView('glance')">At a Glance</button>
+        <button id="btn-broadsheet" onclick="showView('broadsheet')">Broadsheet</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ======================= AT A GLANCE ======================= -->
+    <section id="view-glance" class="active">
+
+      <div class="thesis-block">
+        <div class="q">"I stand by my decisions as special counsel, including the decision to bring charges against President Trump."</div>
+        <div class="a">Smith says he'd bring the same cases again on the same facts, regardless of the president's party — "no one should be above the law in this country."</div>
+      </div>
+
+      <div class="scorebar">
+        <div class="cell"><div class="num">30 yrs</div><div class="lbl">Career as a federal prosecutor, Republican and Democratic administrations alike</div></div>
+        <div class="cell"><div class="num">5 yrs</div><div class="lbl">Chief of DOJ's Public Integrity Section, created after Watergate</div></div>
+        <div class="cell"><div class="num">2</div><div class="lbl">Federal cases he charged against Trump — election interference and classified documents</div></div>
+        <div class="cell"><div class="num">1st</div><div class="lbl">His first television interview since resigning as special counsel</div></div>
+      </div>
+
+      <div class="section-label">Six moments from the interview</div>
+      <div class="card-grid">
+
+        <div class="case-card">
+          <div class="domain">The Decision to Prosecute</div>
+          <h3>Would he charge Trump again?</h3>
+          <p>Asked if he'd indict a former president again on the same facts, Smith answers yes — "regardless of whether that president was a Democrat or a Republican."</p>
+          <div class="badge-row">
+            <span class="badge upheld">Unequivocal</span>
+            <span class="verified">[00:03]</span>
+          </div>
+        </div>
+
+        <div class="case-card">
+          <div class="domain">The Human Cost</div>
+          <h3>The agent fired after his wife's funeral</h3>
+          <p>An FBI agent nursing his dying wife was fired shortly after she passed. Smith attended the funeral and says he can't understand how anyone could "stand for the demonizing" of people like him.</p>
+          <div class="badge-row">
+            <span class="badge reversed">Personal toll</span>
+            <span class="verified">[05:39]</span>
+          </div>
+        </div>
+
+        <div class="case-card">
+          <div class="domain">The Legal Reckoning</div>
+          <h3>Covington &amp; Burling "did not blink"</h3>
+          <p>When the administration targeted the firm defending Smith, its lawyers called him the same day to say they were staying — a contrast, Smith says, with big firms that later went to work for Trump's DOJ.</p>
+          <div class="badge-row">
+            <span class="badge upheld">Held firm</span>
+            <span class="verified">[08:29]</span>
+          </div>
+        </div>
+
+        <div class="case-card">
+          <div class="domain">Institutional Damage</div>
+          <h3>Judges no longer trust DOJ prosecutors</h3>
+          <p>Smith says courts across the country have said outright they can't trust government attorneys anymore — trust built "over generations" lost, in his account, in a matter of days.</p>
+          <div class="badge-row">
+            <span class="badge stayed">Cascading effect</span>
+            <span class="verified">[10:07]</span>
+          </div>
+        </div>
+
+        <div class="case-card">
+          <div class="domain">Personal Risk</div>
+          <h3>Does he expect to be indicted himself?</h3>
+          <p>Trump has said he'd jail him. Smith says he doesn't dwell on the threats and won't be intimidated into silence — "there's no way in the world" that works.</p>
+          <div class="badge-row">
+            <span class="badge pending">Not afraid</span>
+            <span class="verified">[15:26] · [40:15]</span>
+          </div>
+        </div>
+
+        <div class="case-card">
+          <div class="domain">Looking Ahead</div>
+          <h3>Is the rule of law dead?</h3>
+          <p>"I don't think so at all," Smith says — pointing to the "legions of career prosecutors" still inside the department who want to do the right thing. Rebuilding trust, he says, is harder than earning it the first time, but achievable.</p>
+          <div class="badge-row">
+            <span class="badge upheld">Cautiously optimistic</span>
+            <span class="verified">[31:47]</span>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="discussion-panel">
+        <div class="section-label">For the group</div>
+
+        <div class="dq featured">
+          <span class="num">①</span>Smith insists his cases were "completely apolitical" and applied "the same standards" across Republican and Democratic administrations. What would genuine evidence of prosecutorial neutrality look like to you — and does his account meet that bar?
+        </div>
+        <div class="dq"><span class="num">②</span>Smith describes a "circle of trust" being rebuilt around pardoned January 6th defendants, even as career agents who protected the country are pushed out. What does that pairing suggest about how loyalty and trust are being redefined inside this DOJ?</div>
+        <div class="dq"><span class="num">③</span>Smith argues that facts alone no longer move public opinion — "no one's tried to communicate with them" — and says the department needs to get better at storytelling. Is that a realistic shift for an institution built on courtroom-only advocacy, or does it risk politicizing the thing he's trying to protect?</div>
+        <div class="dq"><span class="num">④</span>Asked whether the rule of law is dead, Smith points to Watergate as precedent for institutional recovery. Do you find that comparison persuasive for this moment, or are the dynamics meaningfully different this time?</div>
+      </div>
+
+      <div class="closing-note">Toggle to Broadsheet for the full interview timeline, deep dives, and direct passages →</div>
+    </section>
+
+    <!-- ======================= BROADSHEET ======================= -->
+    <section id="view-broadsheet">
+
+      <div class="broadsheet-intro">
+        <p>Former special counsel Jack Smith sat down with Nicole Wallace on MSNBC's Deadline: White House for his first television interview since resigning from the Justice Department — the same program that began broadcasting the day James Comey was fired in 2017. The occasion, timed just ahead of the Fourth of July, was framed by Smith as a chance to honor the career prosecutors and FBI agents he worked alongside, many of whom he says have been fired, smeared, or driven out for doing their jobs.</p>
+        <p>Smith spent nearly thirty years as a federal prosecutor under both parties, including a stint as acting U.S. Attorney in Nashville during the first Trump administration. He led the special counsel investigations into Trump's efforts to overturn the 2020 election and his handling of classified documents after leaving office. Throughout the interview he returns again and again to a single throughline: that the standards he applied were never meant to shift with the administration in power, and that what has changed since is not his conduct but the willingness of institutions to defend the people who do this work.</p>
+        <p>The conversation ranges from the personal — an agent fired days after his wife's death from cancer — to the structural: judges who say they can no longer trust DOJ attorneys, law firms that capitulated versus those that didn't, and whether a legal doctrine like the presumption of regularity can survive when the people who are supposed to uphold it stop believing in it. Smith ends where he began: not afraid, and "completely optimistic" that the department can be rebuilt.</p>
+      </div>
+
+      <div class="section-label">Timeline of the interview</div>
+      <div class="timeline">
+
+        <div class="tl-entry">
+          <div class="tl-date">[00:03]</div>
+          <h4>Opening statement — "No one should be above the law"</h4>
+          <p>Smith opens by standing behind every decision he made as special counsel, saying the investigation proved Trump's conduct beyond a reasonable doubt and that he'd act the same way again regardless of party.</p>
+        </div>
+
+        <div class="tl-entry">
+          <div class="tl-date">[03:09]</div>
+          <h4>A thirty-year career across both parties</h4>
+          <p>Smith describes working in Republican and Democratic administrations alike, including as acting U.S. Attorney in Nashville under the first Trump administration, and running a war-crimes tribunal for the State Department.</p>
+        </div>
+
+        <div class="tl-entry">
+          <div class="tl-date">[05:39]</div>
+          <h4>The agent who buried his wife, then lost his job</h4>
+          <p>Smith recounts an FBI agent fired shortly after his wife died of cancer, and says he attended the funeral, calling it "filled with heroes" and the treatment of agents like him incomprehensible.</p>
+        </div>
+
+        <div class="tl-entry">
+          <div class="tl-date">[08:29]</div>
+          <h4>Covington &amp; Burling, and the law firms that didn't fold</h4>
+          <p>When the administration targeted the firm representing him, Smith says its lawyers called the same day to say they weren't going anywhere — a contrast he draws sharply with firms like Paul, Weiss that later did work for Trump's Justice Department.</p>
+          <div class="tl-tags"><span class="badge upheld">Held firm</span></div>
+        </div>
+
+        <div class="tl-entry">
+          <div class="tl-date">[09:53]–[11:18]</div>
+          <h4>"They've jettisoned expertise" — the Brian Driscoll example</h4>
+          <p>Smith says courts increasingly distrust DOJ attorneys, undermining the department's basic ability to function, and cites Brian Driscoll — a decorated career agent fired for defending targeted colleagues — as evidence of lost institutional knowledge.</p>
+        </div>
+
+        <div class="tl-entry">
+          <div class="tl-date">[14:51]–[15:26]</div>
+          <h4>Could he himself be indicted?</h4>
+          <p>Smith acknowledges it's possible he could be charged, but says he doesn't spend much time thinking about Trump's threats, focusing instead on the wellbeing of the agents and prosecutors who worked his cases.</p>
+        </div>
+
+        <div class="tl-entry">
+          <div class="tl-date">[16:28]–[18:47]</div>
+          <h4>Pardons, the "slush fund," and a shared definition of integrity</h4>
+          <p>Smith calls the pardoning and financial rewarding of January 6th offenders "deeply wrong" and a dangerous signal to law enforcement, but says most Americans he meets — even skeptics — still share common ground on integrity once they know the facts.</p>
+        </div>
+
+        <div class="tl-entry">
+          <div class="tl-date">[21:28]</div>
+          <h4>Lessons from the Mueller report</h4>
+          <p>Reflecting on how the Mueller findings were misrepresented in a single news cycle, Smith says he never wrote his own report with communications strategy in mind, but now believes prosecutors have to get better at making facts digestible.</p>
+        </div>
+
+        <div class="tl-entry">
+          <div class="tl-date">[25:42]–[27:57]</div>
+          <h4>Adjusting the case after the Supreme Court's immunity ruling</h4>
+          <p>Smith describes filing a superseding indictment after the Court's immunity decision, stressing his team followed the ruling even though they disagreed with it, and would only proceed if they still believed they could prove the case beyond a reasonable doubt.</p>
+        </div>
+
+        <div class="tl-entry">
+          <div class="tl-date">[31:47]</div>
+          <h4>Is the rule of law dead? "I don't think so at all."</h4>
+          <p>Smith says "legions" of career prosecutors remain who want to do the right thing, and while rehabilitating the department will be difficult, he's "completely optimistic" it's possible — comparing the moment to the country's recovery after Watergate.</p>
+          <div class="tl-tags"><span class="badge upheld">Optimistic</span></div>
+        </div>
+
+        <div class="tl-entry">
+          <div class="tl-date">[35:07]–[36:39]</div>
+          <h4>Rebuilding a "circle of trust"</h4>
+          <p>Asked how to restore trust between the public and public servants, Smith says the answer is getting the facts out in digestible ways — and notes that most of the agents and prosecutors he worked with never discussed politics at all.</p>
+        </div>
+
+        <div class="tl-entry">
+          <div class="tl-date">[40:15]</div>
+          <h4>"I am not going to be intimidated"</h4>
+          <p>Smith says he isn't afraid to keep speaking out, calling any attempt to silence him through legal threats "a grave miscalculation."</p>
+        </div>
+
+        <div class="tl-entry">
+          <div class="tl-date">[43:07]</div>
+          <h4>What comes next</h4>
+          <p>Asked if this is the start of speaking out more regularly, Smith says it's new territory for him — he's started a law firm with Tim Heaphy and will keep going only where he feels he can genuinely help.</p>
+        </div>
+
+      </div>
+
+      <div class="section-label">Deep dives</div>
+
+      <details class="deep-dive">
+        <summary>The purge of career agents and prosecutors <span></span></summary>
+        <div class="body">
+          A recurring theme of the interview is the personal toll on the FBI agents and DOJ prosecutors who worked Smith's cases. He describes one agent fired shortly after his wife died of cancer, and another, Brian Driscoll — a decorated counterterrorism and hostage-rescue veteran — dismissed for defending colleagues who were being improperly targeted.
+          <div class="quote">"I just can't believe that if people knew the character of these people I worked with, that they could ever stand for the demonizing that's happened to them."</div>
+          <p>Smith frames the firings as part of a broader campaign designed to make career officials feel isolated, and says his central goal since leaving office has been to publicly support them.</p>
+        </div>
+      </details>
+
+      <details class="deep-dive">
+        <summary>Law firms: who "ran toward the fire" <span></span></summary>
+        <div class="body">
+          Smith draws a sharp line between Covington &amp; Burling, which represented him without hesitation after the administration targeted the firm, and larger firms — he names Paul, Weiss specifically — that struck deals with the administration or later did work for Trump's Justice Department.
+          <div class="quote">"You get to find out who's who, right? You get to find out who runs toward the fire, who kind of backs away."</div>
+          <p>He credits Judge Beryl Howell's description of the administration's executive orders against law firms as "chilling," and argues firms that fought back have "batted a thousand" in court.</p>
+        </div>
+      </details>
+
+      <details class="deep-dive">
+        <summary>From Mueller to Smith: communicating facts in a hostile media environment <span></span></summary>
+        <div class="body">
+          Smith, self-described as "a courtroom guy," reflects on how the Mueller report was misrepresented within a single news cycle because, in his view, no one explained or defended it effectively. He says he didn't think about communications strategy while writing his own report, but has since concluded that career prosecutors need outside help translating dense legal findings into terms the public can absorb — without abandoning the DOJ's traditional reluctance to try cases in the media.
+          <div class="quote">"No one's tried to communicate with them. No one's tried to give them the facts in a way that's actually easy for them to digest."</div>
+          <p>He praises Robert Mueller's career of service while suggesting Mueller's more buttoned-up, "different era" communication style is part of what allowed the report's findings to be misrepresented.</p>
+        </div>
+      </details>
+
+      <details class="deep-dive">
+        <summary>Is the rule of law dead? Smith's case for optimism <span></span></summary>
+        <div class="body">
+          Pressed directly on whether the rule of law in America is "dead," Smith says no — pointing to the large number of career prosecutors, unnamed and unrecognized, still working inside the department who want to follow the facts and the law. He compares the moment to Watergate, arguing the country has historically responded to institutional crises by getting better, not worse.
+          <div class="quote">"Recovering character is a lot harder than gaining it in the first place. But I think we're totally capable of doing that. I'm completely optimistic."</div>
+          <p>He frames his own posture — and that of colleagues who've stood up in similar moments — around a simple test: acting in a way that, in retirement, he can look back on and say he did things right.</p>
+        </div>
+      </details>
+
+      <div class="discussion-panel">
+        <div class="section-label">For the group</div>
+        <div class="dq featured"><span class="num">①</span>Smith insists his cases were "completely apolitical" and applied "the same standards" across Republican and Democratic administrations. What would genuine evidence of prosecutorial neutrality look like to you — and does his account meet that bar?</div>
+        <div class="dq"><span class="num">②</span>Smith describes a "circle of trust" being rebuilt around pardoned January 6th defendants, even as career agents who protected the country are pushed out. What does that pairing suggest about how loyalty and trust are being redefined inside this DOJ?</div>
+        <div class="dq"><span class="num">③</span>Smith argues that facts alone no longer move public opinion and says the department needs to get better at storytelling. Is that realistic for an institution built on courtroom-only advocacy, or does it risk politicizing the thing he's trying to protect?</div>
+        <div class="dq"><span class="num">④</span>Asked whether the rule of law is dead, Smith points to Watergate as precedent for institutional recovery. Do you find that comparison persuasive for this moment, or are the dynamics meaningfully different this time?</div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <footer class="colophon">
+    Prepared for BOLLI Current Events Discussion Group · Source: full interview transcript, Deadline: White House (MSNBC) · Timestamps as provided in transcript
+  </footer>
+</div>
+
+<script>
+  function showView(view){
+    document.getElementById('view-glance').classList.toggle('active', view==='glance');
+    document.getElementById('view-broadsheet').classList.toggle('active', view==='broadsheet');
+    document.getElementById('btn-glance').classList.toggle('active', view==='glance');
+    document.getElementById('btn-broadsheet').classList.toggle('active', view==='broadsheet');
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>The Presumption Under Strain</title>
+<style>
+  :root{
+    --paper:#f4f0e6;
+    --paper-dim:#ece5d4;
+    --ink:#1c1a16;
+    --ink-soft:#4a443a;
+    --rule:#1c1a16;
+    --gavel:#7a2e1d;
+    --gavel-soft:#a8503a;
+    --upheld:#33543f;
+    --upheld-bg:#e2e9de;
+    --stayed:#8a6a1f;
+    --stayed-bg:#f0e6c8;
+    --pending:#3d5a73;
+    --pending-bg:#dde6ea;
+    --reversed:#7a2e1d;
+    --reversed-bg:#f0dcd4;
+    --serif: "Iowan Old Style","Palatino Linotype","Book Antiqua",Georgia,serif;
+    --display: "Big Caslon","Didot","Bodoni MT",Georgia,serif;
+    --mono: "Courier New", Courier, monospace;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper-dim);
+    font-family:var(--serif);
+    color:var(--ink);
+  }
+  .sheet{
+    max-width:920px;
+    margin:0 auto;
+    background:var(--paper);
+    background-image:
+      radial-gradient(ellipse at top left, rgba(0,0,0,0.03), transparent 60%),
+      radial-gradient(ellipse at bottom right, rgba(0,0,0,0.03), transparent 60%);
+    min-height:100vh;
+    padding:0 0 60px 0;
+    border-left:1px solid rgba(0,0,0,0.08);
+    border-right:1px solid rgba(0,0,0,0.08);
+  }
+  header.masthead{
+    text-align:center;
+    padding:34px 24px 18px;
+    border-bottom:4px double var(--rule);
+  }
+  .kicker{
+    font-family:var(--mono);
+    letter-spacing:0.35em;
+    text-transform:uppercase;
+    font-size:11px;
+    color:var(--ink-soft);
+    margin-bottom:10px;
+  }
+  h1.title{
+    font-family:var(--display);
+    font-weight:700;
+    font-size:clamp(34px,6vw,58px);
+    margin:0;
+    letter-spacing:0.01em;
+  }
+  .subtitle{
+    font-style:italic;
+    font-size:16px;
+    color:var(--ink-soft);
+    margin-top:8px;
+  }
+  .meta-strip{
+    display:flex;
+    justify-content:center;
+    gap:18px;
+    flex-wrap:wrap;
+    font-family:var(--mono);
+    font-size:11px;
+    letter-spacing:0.05em;
+    color:var(--ink-soft);
+    margin-top:14px;
+    text-transform:uppercase;
+  }
+  .meta-strip span::after{content:"·"; margin-left:18px; color:var(--ink-soft);}
+  .meta-strip span:last-child::after{content:"";}
+
+  /* Toggle */
+  .toggle-row{
+    display:flex;
+    justify-content:center;
+    margin:22px 0 0;
+  }
+  .toggle{
+    display:inline-flex;
+    border:1.5px solid var(--rule);
+    border-radius:999px;
+    overflow:hidden;
+    background:var(--paper);
+  }
+  .toggle button{
+    font-family:var(--mono);
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    font-size:12px;
+    padding:9px 22px;
+    border:none;
+    background:transparent;
+    color:var(--ink);
+    cursor:pointer;
+    transition:background 0.2s, color 0.2s;
+  }
+  .toggle button.active{
+    background:var(--ink);
+    color:var(--paper);
+  }
+  .toggle button:not(.active):hover{
+    background:rgba(0,0,0,0.06);
+  }
+
+  main{ padding:28px 32px 0; }
+  @media(max-width:600px){ main{padding:20px 16px 0;} }
+
+  section{display:none;}
+  section.active{display:block;}
+
+  /* ---- AT A GLANCE VIEW ---- */
+  .thesis-block{
+    border-top:1px solid var(--rule);
+    border-bottom:1px solid var(--rule);
+    padding:18px 0;
+    margin-bottom:26px;
+    text-align:center;
+  }
+  .thesis-block .q{
+    font-family:var(--display);
+    font-size:21px;
+    line-height:1.4;
+    font-style:italic;
+    color:var(--gavel);
+  }
+  .thesis-block .a{
+    font-family:var(--mono);
+    font-size:12px;
+    letter-spacing:0.04em;
+    color:var(--ink-soft);
+    margin-top:10px;
+  }
+
+  .scorebar{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:1px;
+    background:var(--rule);
+    border:1px solid var(--rule);
+    margin-bottom:30px;
+  }
+  .scorebar .cell{
+    background:var(--paper);
+    padding:16px 10px;
+    text-align:center;
+  }
+  .scorebar .num{
+    font-family:var(--display);
+    font-size:30px;
+    font-weight:700;
+  }
+  .scorebar .lbl{
+    font-family:var(--mono);
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    color:var(--ink-soft);
+    margin-top:4px;
+  }
+
+  .section-label{
+    font-family:var(--mono);
+    text-transform:uppercase;
+    letter-spacing:0.15em;
+    font-size:12px;
+    color:var(--gavel);
+    border-bottom:2px solid var(--gavel);
+    display:inline-block;
+    padding-bottom:3px;
+    margin-bottom:18px;
+  }
+
+  .card-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:16px;
+    margin-bottom:34px;
+  }
+  @media(max-width:640px){ .card-grid{grid-template-columns:1fr;} }
+
+  .case-card{
+    border:1px solid var(--rule);
+    background:var(--paper);
+    padding:16px 16px 14px;
+    position:relative;
+    transition:transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .case-card:hover{
+    transform:translateY(-2px);
+    box-shadow:3px 5px 0 rgba(0,0,0,0.12);
+  }
+  .case-card .domain{
+    font-family:var(--mono);
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:0.08em;
+    color:var(--ink-soft);
+  }
+  .case-card h3{
+    font-family:var(--display);
+    font-size:18px;
+    margin:6px 0 8px;
+    line-height:1.25;
+  }
+  .case-card p{
+    font-size:13.5px;
+    line-height:1.5;
+    color:var(--ink-soft);
+    margin:0 0 10px;
+  }
+  .badge-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:8px;
+  }
+  .badge{
+    font-family:var(--mono);
+    font-size:10.5px;
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    padding:4px 10px;
+    border-radius:999px;
+    font-weight:bold;
+  }
+  .badge.upheld{background:var(--upheld-bg); color:var(--upheld);}
+  .badge.stayed{background:var(--stayed-bg); color:var(--stayed);}
+  .badge.pending{background:var(--pending-bg); color:var(--pending);}
+  .badge.reversed{background:var(--reversed-bg); color:var(--reversed);}
+  .verified{
+    font-family:var(--mono);
+    font-size:9.5px;
+    color:var(--ink-soft);
+    opacity:0.75;
+  }
+  .cite-link{
+    font-family:var(--mono);
+    font-size:10px;
+    color:var(--gavel);
+    text-decoration:none;
+    border-bottom:1px dotted var(--gavel);
+  }
+  .cite-link:hover{ color:var(--gavel-soft); }
+  .card-cite{
+    margin-top:8px;
+    padding-top:8px;
+    border-top:1px dashed rgba(0,0,0,0.15);
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+  .tl-cite{
+    margin-top:6px;
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+
+  /* discussion panel */
+  .discussion-panel{
+    margin-top:10px;
+    border-top:4px double var(--rule);
+    padding-top:22px;
+  }
+  .discussion-panel .section-label{ color:var(--ink); border-bottom-color:var(--ink); }
+  .dq{
+    font-family:var(--display);
+    font-style:italic;
+    font-size:17px;
+    line-height:1.5;
+    padding:14px 0;
+    border-bottom:1px solid rgba(0,0,0,0.15);
+  }
+  .dq:last-child{border-bottom:none;}
+  .dq .num{
+    font-family:var(--mono);
+    font-style:normal;
+    color:var(--gavel);
+    margin-right:8px;
+    font-size:14px;
+  }
+  .dq.featured{
+    background:var(--paper-dim);
+    margin:0 -16px;
+    padding:18px 16px;
+    border:1px solid var(--rule);
+    border-left:5px solid var(--gavel);
+  }
+
+  /* ---- BROADSHEET VIEW ---- */
+  .broadsheet-intro{
+    columns:2;
+    column-gap:28px;
+    font-size:14px;
+    line-height:1.65;
+    margin-bottom:30px;
+  }
+  .broadsheet-intro p{margin:0 0 12px;}
+  .broadsheet-intro p:first-child::first-letter{
+    font-family:var(--display);
+    font-size:52px;
+    float:left;
+    line-height:0.8;
+    padding:6px 6px 0 0;
+    color:var(--gavel);
+  }
+  @media(max-width:640px){ .broadsheet-intro{columns:1;} }
+
+  .timeline{
+    position:relative;
+    margin:0 0 36px;
+    padding-left:24px;
+    border-left:3px solid var(--rule);
+  }
+  .tl-entry{
+    position:relative;
+    padding:0 0 26px 22px;
+  }
+  .tl-entry::before{
+    content:"";
+    position:absolute;
+    left:-31.5px;
+    top:4px;
+    width:11px;
+    height:11px;
+    border-radius:50%;
+    background:var(--paper);
+    border:3px solid var(--gavel);
+  }
+  .tl-date{
+    font-family:var(--mono);
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:0.06em;
+    color:var(--gavel);
+    font-weight:bold;
+  }
+  .tl-entry h4{
+    font-family:var(--display);
+    font-size:18px;
+    margin:4px 0 6px;
+  }
+  .tl-entry p{
+    font-size:13.5px;
+    line-height:1.6;
+    color:var(--ink-soft);
+    margin:0 0 6px;
+  }
+  .tl-tags{display:flex; gap:6px; flex-wrap:wrap; margin-top:6px;}
+
+  .deep-dive{
+    border:1px solid var(--rule);
+    margin-bottom:24px;
+  }
+  .deep-dive summary{
+    cursor:pointer;
+    list-style:none;
+    padding:14px 18px;
+    background:var(--paper-dim);
+    font-family:var(--display);
+    font-size:17px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+  .deep-dive summary::-webkit-details-marker{display:none;}
+  .deep-dive summary::after{
+    content:"+";
+    font-family:var(--mono);
+    font-size:18px;
+    color:var(--gavel);
+  }
+  .deep-dive[open] summary::after{content:"–";}
+  .deep-dive .body{
+    padding:16px 18px 18px;
+    font-size:13.5px;
+    line-height:1.65;
+    color:var(--ink-soft);
+  }
+  .deep-dive .body strong{color:var(--ink);}
+  .deep-dive .quote{
+    font-style:italic;
+    border-left:3px solid var(--gavel);
+    padding-left:14px;
+    margin:10px 0;
+    color:var(--ink);
+  }
+  .deep-dive .src{
+    margin-top:10px;
+  }
+
+  .closing-note{
+    font-size:13px;
+    font-style:italic;
+    color:var(--ink-soft);
+    text-align:center;
+    margin-top:30px;
+    padding-top:16px;
+    border-top:1px solid rgba(0,0,0,0.15);
+  }
+
+  footer.colophon{
+    text-align:center;
+    font-family:var(--mono);
+    font-size:10.5px;
+    color:var(--ink-soft);
+    letter-spacing:0.05em;
+    margin-top:40px;
+    padding-top:16px;
+    border-top:1px solid var(--rule);
+  }
+</style>
+</head>
+<body>
+<div class="sheet">
+
+  <header class="masthead">
+    <div class="kicker">BOLLI Current Events Discussion Group</div>
+    <h1 class="title">The Presumption Under Strain</h1>
+    <div class="subtitle">Courts, the second Trump administration, and the test of institutional durability</div>
+    <div class="meta-strip">
+      <span>Jan. 2025 – Jun. 2026</span>
+      <span>Baseline Apr. 1, 2026, updated through Jun. 30, 2026</span>
+      <span>15–20 min. session</span>
+    </div>
+    <div class="toggle-row">
+      <div class="toggle">
+        <button id="btn-glance" class="active" onclick="showView('glance')">At a Glance</button>
+        <button id="btn-broadsheet" onclick="showView('broadsheet')">Broadsheet</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- ======================= AT A GLANCE ======================= -->
+    <section id="view-glance" class="active">
+
+      <div class="thesis-block">
+        <div class="q">"Are government institutions withstanding the administration's efforts to dismantle norms and ignore the law?"</div>
+        <div class="a">The honest answer, as of this writing: unevenly — courts are pushing back hard, but the Supreme Court has been a mixed and at times reluctant backstop.</div>
+      </div>
+
+      <div class="scorebar">
+        <div class="cell"><div class="num">200+</div><div class="lbl">Documented instances of judicial distrust toward DOJ since Jan. 2025</div></div>
+        <div class="cell"><div class="num">1-in-5</div><div class="lbl">Legal experts who still say the presumption of regularity is warranted</div></div>
+        <div class="cell"><div class="num">6–3</div><div class="lbl">SCOTUS struck down IEEPA tariffs &amp; upheld birthright citizenship</div></div>
+        <div class="cell"><div class="num">6–3</div><div class="lbl">SCOTUS overruled Humphrey's Executor, expanding removal power</div></div>
+      </div>
+
+      <div class="section-label">Six cases, six outcomes</div>
+      <div class="card-grid">
+
+        <div class="case-card">
+          <div class="domain">Immigration · Wartime Powers</div>
+          <h3>Alien Enemies Act deportations</h3>
+          <p>5th Circuit judge Andrew Oldham accused the courts of applying a "presumption of irregularity" to Trump's invocation of the 18th-century wartime statute for summary deportations.</p>
+          <div class="badge-row">
+            <span class="badge stayed">Contested, ongoing</span>
+            <span class="verified">verified 6/30</span>
+          </div>
+          <div class="card-cite">
+            <a class="cite-link" href="https://www.ms.now/deadline-white-house/deadline-legal-blog/pretti-minneapolis-trump-administration-presumption-of-regularity" target="_blank">MSNBC: "presumption of irregularity" ↗</a>
+          </div>
+        </div>
+
+        <div class="case-card">
+          <div class="domain">Separation of Powers</div>
+          <h3>Trump v. Wilcox / Trump v. Slaughter</h3>
+          <p>SCOTUS overruled the 90-year-old Humphrey's Executor precedent, ruling officers with "considerable executive power" — NLRB, MSPB, FTC — are removable at will.</p>
+          <div class="badge-row">
+            <span class="badge reversed">Admin win — precedent overturned</span>
+            <span class="verified">decided 6/29</span>
+          </div>
+          <div class="card-cite">
+            <a class="cite-link" href="https://www.npr.org/2026/06/29/nx-s1-5816232/supreme-court-ftc-independent-agencies-humphreys-executor" target="_blank">NPR: Trump v. Slaughter ↗</a>
+            <a class="cite-link" href="https://www.cbsnews.com/news/supreme-court-trump-ftc-slaughter-humphreys-executor/" target="_blank">CBS News ↗</a>
+          </div>
+        </div>
+
+        <div class="case-card">
+          <div class="domain">Congressional Power of the Purse</div>
+          <h3>Learning Resources v. Trump (IEEPA tariffs)</h3>
+          <p>SCOTUS, 6–3, ruled the emergency-powers statute does not authorize the president to impose tariffs — Congress, not the executive, holds the taxing power.</p>
+          <div class="badge-row">
+            <span class="badge upheld">Court check held</span>
+            <span class="verified">decided 2/20</span>
+          </div>
+          <div class="card-cite">
+            <a class="cite-link" href="https://www.congress.gov/crs-product/LSB11398" target="_blank">CRS: IEEPA tariff ruling ↗</a>
+            <a class="cite-link" href="https://en.wikipedia.org/wiki/Learning_Resources,_Inc._v._Trump" target="_blank">Case background ↗</a>
+          </div>
+        </div>
+
+        <div class="case-card">
+          <div class="domain">Federalism · Domestic Deployment</div>
+          <h3>Trump v. Illinois (National Guard)</h3>
+          <p>SCOTUS declined to stay a lower-court order blocking federalization of the Illinois Guard for Chicago policing — a rare procedural loss for the administration.</p>
+          <div class="badge-row">
+            <span class="badge upheld">Court check held</span>
+            <span class="verified">decided 12/23</span>
+          </div>
+          <div class="card-cite">
+            <a class="cite-link" href="https://www.cato.org/blog/should-feds-today-benefit-presumption-regularity-court" target="_blank">Cato: Trump v. Illinois analysis ↗</a>
+            <a class="cite-link" href="https://www.piie.com/blogs/realtime-economics/2026/did-supreme-court-just-signal-fate-trumps-tariffs" target="_blank">PIIE ↗</a>
+          </div>
+        </div>
+
+        <div class="case-card">
+          <div class="domain">14th Amendment</div>
+          <h3>Trump v. Barbara (birthright citizenship)</h3>
+          <p>SCOTUS, 6–3, struck down the executive order narrowing the 14th Amendment, with Roberts writing the Framers' promise of citizenship is kept "today."</p>
+          <div class="badge-row">
+            <span class="badge upheld">Court check held</span>
+            <span class="verified">decided 6/30 — today</span>
+          </div>
+          <div class="card-cite">
+            <a class="cite-link" href="https://www.cnn.com/2026/06/30/politics/live-news/supreme-court-cases-news" target="_blank">CNN: live ruling coverage ↗</a>
+            <a class="cite-link" href="https://www.aljazeera.com/news/2026/6/30/us-supreme-court-rules-against-trump-order-to-end-birthright-citizenship" target="_blank">Al Jazeera ↗</a>
+            <a class="cite-link" href="https://www.naacpldf.org/case-issue/know-your-rights-birthright-citizenship/" target="_blank">LDF case summary ↗</a>
+          </div>
+        </div>
+
+        <div class="case-card">
+          <div class="domain">Voting Rights / Privacy</div>
+          <h3>DOJ voter-data demands</h3>
+          <p>Three district courts (CA, OR) rejected DOJ attempts to obtain confidential voter rolls, with one judge ruling the presumption "no longer holds." DOJ is appealing.</p>
+          <div class="badge-row">
+            <span class="badge stayed">On appeal</span>
+            <span class="verified">verified 3/3</span>
+          </div>
+          <div class="card-cite">
+            <a class="cite-link" href="https://www.brennancenter.org/our-work/analysis-opinion/federal-courts-reject-trump-administrations-attempts-obtain-private-voter" target="_blank">Brennan Center ↗</a>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="discussion-panel">
+        <div class="section-label">For the group</div>
+
+        <div class="dq featured">
+          <span class="num">①</span>Where do you see the courts functioning as a durable, structural check on the executive — and where do you see them outpaced, delayed, or sidestepped by executive action? <a class="cite-link" href="https://www.justsecurity.org/120547/presumption-regularity-trump-administration-litigation/" target="_blank">[Just Security tracker ↗]</a>
+        </div>
+        <div class="dq"><span class="num">②</span>Only 1 in 5 legal experts surveyed by Bright Line Watch/UCLA still say the government merits the presumption of regularity — even 41% of sitting federal judges agree it's eroded. Does a legal doctrine still "work" once most practitioners stop believing in it?</div>
+        <div class="dq"><span class="num">③</span>The Supreme Court struck down the tariffs and upheld birthright citizenship, yet also overturned Humphrey's Executor, dramatically expanding presidential removal power. Is this evidence of a Court applying neutral legal principle case-by-case — or of an institution picking its battles?</div>
+        <div class="dq"><span class="num">④</span>When a White House spokesperson responds to 200+ documented instances of judicial distrust by calling it "judicial activism," who is the public more likely to believe — and what does that suggest about whether courts alone can hold this line?</div>
+      </div>
+
+      <div class="closing-note">Toggle to Broadsheet for the fuller timeline, case detail, and source citations →</div>
+    </section>
+
+    <!-- ======================= BROADSHEET ======================= -->
+    <section id="view-broadsheet">
+
+      <div class="broadsheet-intro">
+        <p>For as long as American courts have existed, they have extended the federal government a quiet courtesy: the presumption of regularity. It instructs judges to assume, absent clear evidence otherwise, that executive officials have acted lawfully and in good faith. That courtesy is not symbolic — it narrows discovery, limits judicial review of agency reasoning, and shapes who wins close cases.</p>
+        <p>Since January 2025, that courtesy has been tested more openly than at any point in modern memory. A Just Security tracking project — featured on 60 Minutes — has now catalogued more than 200 instances in which federal judges voiced concern over the administration's noncompliance with orders, distrust of its representations, or arbitrary conduct. A federal judge in Maryland told a government lawyer outright: "You have taken the presumption of regularity, and you've destroyed it."</p>
+        <p>Yet the institutional story is not one-directional. The Supreme Court — the backstop of last resort — has handed the administration genuine defeats on tariffs, the National Guard, and birthright citizenship, while simultaneously dismantling a 90-year-old precedent that protected independent agencies from at-will removal. The picture that emerges is neither collapse nor business-as-usual, but an uneven, case-by-case contest whose outcome is still being written.</p>
+      </div>
+
+      <div class="section-label">Timeline of key flashpoints</div>
+      <div class="timeline">
+
+        <div class="tl-entry">
+          <div class="tl-date">Jan. 20, 2025</div>
+          <h4>Inauguration — birthright citizenship E.O. signed same day</h4>
+          <p>On his first day back in office, the president signed an order purporting to redefine the 14th Amendment to deny automatic citizenship to children of undocumented or temporary-status parents.</p>
+        </div>
+
+        <div class="tl-entry">
+          <div class="tl-date">Spring 2025</div>
+          <h4>Funding freeze defiance — district courts find noncompliance</h4>
+          <p>After a TRO ordered frozen federal grants restored, Judge John McConnell found the administration had violated the "plain language" of his order, while DHS/FEMA were separately accused of a "covert" rebranding of an indefinite freeze.</p>
+          <div class="tl-cite"><a class="cite-link" href="https://www.brennancenter.org/our-work/research-reports/what-courts-can-do-if-trump-administration-defies-court-orders" target="_blank">Brennan Center: enforcing compliance ↗</a></div>
+        </div>
+
+        <div class="tl-entry">
+          <div class="tl-date">May 22, 2025</div>
+          <h4>Trump v. Wilcox — shadow-docket stay</h4>
+          <p>SCOTUS allowed Trump to remove NLRB's Gwynne Wilcox and MSPB's Cathy Harris without cause via an unsigned emergency order, finding the agencies wield "considerable executive power" — widely read as a signal Humphrey's Executor was effectively dead.</p>
+          <div class="tl-tags"><span class="badge reversed">Admin win</span></div>
+          <div class="tl-cite"><a class="cite-link" href="https://www.supremecourt.gov/opinions/24pdf/24a966_1b8e.pdf" target="_blank">SCOTUS: Trump v. Wilcox order ↗</a> <a class="cite-link" href="https://en.wikipedia.org/wiki/Humphrey's_Executor_v._United_States" target="_blank">Background ↗</a></div>
+        </div>
+
+        <div class="tl-entry">
+          <div class="tl-date">Summer–Fall 2025</div>
+          <h4>Alien Enemies Act litigation; "presumption of irregularity"</h4>
+          <p>In litigation over summary deportations under the 18th-century wartime statute, a Trump-appointed appellate judge, Andrew Oldham, complained in dissent that the majority "seems to give this President a presumption of irregularity" — inverting the traditional doctrine.</p>
+          <div class="tl-cite"><a class="cite-link" href="https://www.ms.now/deadline-white-house/deadline-legal-blog/pretti-minneapolis-trump-administration-presumption-of-regularity" target="_blank">MS NOW: Oldham dissent ↗</a></div>
+        </div>
+
+        <div class="tl-entry">
+          <div class="tl-date">Dec. 23, 2025</div>
+          <h4>Trump v. Illinois — National Guard deployment blocked</h4>
+          <p>SCOTUS, 6–3, declined to stay a lower-court order barring federalization of the Illinois Guard for use in Chicago. The administration subsequently ended similar deployments in Los Angeles and Portland.</p>
+          <div class="tl-tags"><span class="badge upheld">Court check held</span></div>
+          <div class="tl-cite"><a class="cite-link" href="https://www.cato.org/blog/should-feds-today-benefit-presumption-regularity-court" target="_blank">Cato at Liberty ↗</a></div>
+        </div>
+
+        <div class="tl-entry">
+          <div class="tl-date">Jan.–Mar. 2026</div>
+          <h4>Operation Metro Surge triggers a litigation wave</h4>
+          <p>The largest immigration-enforcement operation in U.S. history sets off a sharp spike in federal lawsuits; CNN's review finds 77+ rulings with explicit judicial criticism, concentrated in immigration, executive overreach, and free speech cases.</p>
+          <div class="tl-cite"><a class="cite-link" href="https://www.cnn.com/interactive/2026/06/politics/trump-judges-criticism-vis/" target="_blank">CNN: 77+ rulings tracker ↗</a></div>
+        </div>
+
+        <div class="tl-entry">
+          <div class="tl-date">Feb. 20, 2026</div>
+          <h4>Learning Resources v. Trump — IEEPA tariffs struck down</h4>
+          <p>SCOTUS, 6–3 (Roberts writing), held IEEPA does not authorize tariffs — "a tariff is a tax," and the taxing power belongs to Congress. All IEEPA tariffs terminated within days; Trump pivoted immediately to Section 122 authority, capped at 150 days.</p>
+          <div class="tl-tags"><span class="badge upheld">Court check held</span></div>
+          <div class="tl-cite"><a class="cite-link" href="https://www.hklaw.com/en/insights/publications/2026/02/supreme-court-strikes-down-ieepa-tariffs" target="_blank">Holland &amp; Knight ↗</a> <a class="cite-link" href="https://www.whitecase.com/insight-alert/united-states-terminates-ieepa-based-tariffs-following-supreme-court-decision" target="_blank">White &amp; Case ↗</a></div>
+        </div>
+
+        <div class="tl-entry">
+          <div class="tl-date">Mar. 2026</div>
+          <h4>Voter-data demands rejected in three districts</h4>
+          <p>California, Oregon, and a third court reject DOJ demands for confidential statewide voter rolls; an Oregon judge rules the presumption "that [DOJ] could be taken at its word ... no longer holds." DOJ appeals.</p>
+          <div class="tl-tags"><span class="badge stayed">On appeal</span></div>
+          <div class="tl-cite"><a class="cite-link" href="https://www.brennancenter.org/our-work/analysis-opinion/federal-courts-reject-trump-administrations-attempts-obtain-private-voter" target="_blank">Brennan Center ↗</a></div>
+        </div>
+
+        <div class="tl-entry">
+          <div class="tl-date">May 2026</div>
+          <h4>Rhode Island: DOJ candor crisis</h4>
+          <p>Judge Mary McElroy, then Judge Melissa DuBose, separately sanction or threaten sanctions against DOJ attorneys for withholding information from the court in immigration-detention and subpoena matters — a U.S. Attorney's office chief refers for discipline, apologizing on the record.</p>
+          <div class="tl-cite"><a class="cite-link" href="https://www.ms.now/news/news-analysis/trump-justice-department-trust-presumption-regularity" target="_blank">MS NOW: Gomez case ↗</a></div>
+        </div>
+
+        <div class="tl-entry">
+          <div class="tl-date">Jun. 28, 2026</div>
+          <h4>Bright Line Watch / UCLA survey released</h4>
+          <p>Of 300+ legal experts surveyed — sitting judges, elite litigators, law professors — only 1 in 5 say the federal government still merits the presumption of regularity; even among federal judges the figure is just 41%.</p>
+          <div class="tl-cite"><a class="cite-link" href="https://www.inquirer.com/opinion/commentary/courts-law-government-regularity-trust-prosecutions-20260628.html" target="_blank">Inquirer: Bright Line Watch/UCLA survey ↗</a></div>
+        </div>
+
+        <div class="tl-entry">
+          <div class="tl-date">Jun. 29, 2026</div>
+          <h4>Trump v. Slaughter — Humphrey's Executor overruled</h4>
+          <p>SCOTUS, 6–3 (Roberts: "if anything more is left of Humphrey's, the Court overrules it"), formally ends the 1935 precedent protecting independent agency heads from at-will removal — the culmination of the Wilcox signal thirteen months earlier.</p>
+          <div class="tl-tags"><span class="badge reversed">Admin win — precedent overturned</span></div>
+          <div class="tl-cite"><a class="cite-link" href="https://en.wikipedia.org/wiki/Humphrey's_Executor_v._United_States" target="_blank">Wikipedia: full case history ↗</a> <a class="cite-link" href="https://www.cbsnews.com/news/supreme-court-trump-ftc-slaughter-humphreys-executor/" target="_blank">CBS News ↗</a></div>
+        </div>
+
+        <div class="tl-entry">
+          <div class="tl-date">Jun. 30, 2026 — today</div>
+          <h4>Trump v. Barbara — birthright citizenship upheld</h4>
+          <p>SCOTUS, 6–3 (Roberts: citizenship is "the right to have rights"), strikes down the January 2025 executive order. Thomas's 91-page dissent calls the ruling a mistake that "devalues" citizenship; Alito and Gorsuch also dissent separately.</p>
+          <div class="tl-tags"><span class="badge upheld">Court check held</span></div>
+          <div class="tl-cite"><a class="cite-link" href="https://www.ms.now/liveblog/supreme-court-birthright-citizenship-trump-transgender-athletes-ruling-june-30-2026" target="_blank">MS NOW: live coverage ↗</a> <a class="cite-link" href="https://abcnews.com/Politics/faq-birthright-citizenship-ahead-supreme-courts-ruling/story?id=134215675" target="_blank">ABC News background ↗</a></div>
+        </div>
+
+      </div>
+
+      <div class="section-label">Deep dives</div>
+
+      <details class="deep-dive">
+        <summary>Removal power: from Wilcox to Slaughter <span></span></summary>
+        <div class="body">
+          For ninety years, <strong>Humphrey's Executor v. United States</strong> (1935) let Congress shield "quasi-legislative" or "quasi-judicial" agency heads — FTC, NLRB, MSPB — from being fired without cause, preserving a measure of independence from the White House. The second Trump administration tested that wall almost immediately, firing FTC commissioner Rebecca Slaughter, NLRB's Gwynne Wilcox, and MSPB's Cathy Harris within its first months.
+          <div class="quote">"What text, history, and structure settle, our precedent confirms — the President may remove his subordinates at will."</div>
+          <p>— Chief Justice Roberts, <em>Trump v. Slaughter</em> majority opinion, June 29, 2026</p>
+          <p>Justice Kagan's dissent in the earlier <em>Wilcox</em> shadow-docket stay called the move an effective repeal of Humphrey's "by fiat." Notably, the Court has so far carved out the Federal Reserve and spared two other officials — Fed governor Lisa Cook and the Register of Copyrights — pending further litigation, leaving open exactly how far the new removal doctrine reaches.</p>
+          <div class="src"><a class="cite-link" href="https://www.npr.org/2026/06/29/nx-s1-5816232/supreme-court-ftc-independent-agencies-humphreys-executor" target="_blank">NPR: Supreme Court cements Trump's power over agencies ↗</a></div>
+        </div>
+      </details>
+
+      <details class="deep-dive">
+        <summary>"Presumption of irregularity" — how judges describe the shift <span></span></summary>
+        <div class="body">
+          The phrase that gives this session its title was coined not by a critic but by a Trump-appointed Fifth Circuit judge, Andrew Oldham, dissenting in Alien Enemies Act litigation. His complaint — that the majority was treating the administration with extra suspicion — was meant as criticism of the courts. Legal commentators have since adopted his phrase approvingly, arguing it accurately names what has happened: courts that once gave the executive the benefit of the doubt are now doing the opposite, deliberately.
+          <div class="quote">"You have taken the presumption of regularity, and you've destroyed it."</div>
+          <p>— U.S. District Judge Paula Xinis (D. Md.), addressing a DOJ attorney in open court</p>
+          <p>A Just Security study — now in its fourth edition, updated through March 19, 2026 — catalogs the pattern across three categories: court findings of non-compliance with orders, judicial distrust of government factual representations, and rulings that agency action was arbitrary or pretextual.</p>
+          <div class="src"><a class="cite-link" href="https://www.justsecurity.org/120547/presumption-regularity-trump-administration-litigation/" target="_blank">Just Security: The Presumption of Regularity tracker ↗</a></div>
+        </div>
+      </details>
+
+      <details class="deep-dive">
+        <summary>Tariffs and the power of the purse <span></span></summary>
+        <div class="body">
+          <strong>Learning Resources, Inc. v. Trump</strong> was, in the Court's own framing, the first case to reach the substantive merits of a major second-term Trump policy, rather than just resolving procedure or emergency relief. The administration had used IEEPA — a sanctions statute never before used to impose tariffs — to levy duties that pushed the average U.S. effective tariff rate to nearly 17%, the highest since the early 1930s.
+          <div class="quote">"A tariff is a tax levied on imported merchandise" — and the taxing power belongs to Congress, not the President.</div>
+          <p>The administration's response illustrates the "whack-a-mole" pattern that recurs across these cases: within hours of losing on IEEPA, Trump pivoted to Section 122 of the Trade Act of 1974, a narrower but still-available authority, capped at 150 days absent congressional extension — itself now also under legal challenge.</p>
+          <div class="src"><a class="cite-link" href="https://www.congress.gov/crs-product/LSB11398" target="_blank">Congressional Research Service: IEEPA tariff ruling summary ↗</a></div>
+        </div>
+      </details>
+
+      <details class="deep-dive">
+        <summary>What "withstanding" looks like in practice <span></span></summary>
+        <div class="body">
+          Two things are simultaneously true. District and circuit judges — across red and blue states, Republican and Democratic appointees alike — have been willing to call out noncompliance, contradictory representations, and pretextual reasoning in unusually blunt terms, and to use contempt referrals, sanctions, and disciplinary referrals when warranted. That is the system functioning as designed.
+          <p>At the same time, the Supreme Court itself has been inconsistent: handing the administration major substantive losses on tariffs and birthright citizenship while, on a separate and arguably more structural question — who controls the machinery of the executive branch itself — siding decisively with expanded presidential power. Whether that asymmetry reflects principled doctrinal lines or a Court calibrating which fights to have is, itself, a fair question for the room.</p>
+          <div class="src"><a class="cite-link" href="https://newrepublic.com/article/212501/supreme-court-roberts-slaughter-cook" target="_blank">New Republic: the administrative-state fight ↗</a></div>
+        </div>
+      </details>
+
+      <div class="discussion-panel">
+        <div class="section-label">For the group</div>
+        <div class="dq featured"><span class="num">①</span>Where do you see the courts functioning as a durable, structural check on the executive — and where do you see them outpaced, delayed, or sidestepped by executive action?</div>
+        <div class="dq"><span class="num">②</span>Only 1 in 5 legal experts surveyed still say the government merits the presumption of regularity — even 41% of sitting federal judges agree it's eroded. Does a legal doctrine still "work" once most practitioners stop believing in it?</div>
+        <div class="dq"><span class="num">③</span>The Court struck down the tariffs and upheld birthright citizenship, yet also overturned Humphrey's Executor. Neutral principle applied case-by-case — or an institution picking its battles?</div>
+        <div class="dq"><span class="num">④</span>When the administration responds to 200+ documented instances of judicial distrust by calling it "judicial activism," who does the public believe — and what does that suggest about whether courts alone can hold this line?</div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <footer class="colophon">
+    Prepared for BOLLI Current Events Discussion Group · Sources linked inline · Baseline Apr. 1, 2026, refreshed through Jun. 30, 2026 · Case statuses subject to change on appeal
+  </footer>
+</div>
+
+<script>
+  function showView(view){
+    document.getElementById('view-glance').classList.toggle('active', view==='glance');
+    document.getElementById('view-broadsheet').classList.toggle('active', view==='broadsheet');
+    document.getElementById('btn-glance').classList.toggle('active', view==='glance');
+    document.getElementById('btn-broadsheet').classList.toggle('active', view==='broadsheet');
+    window.scrollTo({top:0, behavior:'smooth'});
+  }
+</script>
+
+</body>
+</html>
