@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AfterWord — BOLLI Current Events, July 26, 2026</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      background: #a8c4e8;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+    }
+
+    /* ── HEADER ──────────────────────────────────────────── */
+    .header {
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #667eea 100%);
+      padding: 36px 32px 28px;
+      text-align: center;
+      color: white;
+    }
+
+    .header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .header .subtitle {
+      font-size: 0.95rem;
+      opacity: 0.85;
+      margin-bottom: 18px;
+      letter-spacing: 0.04em;
+    }
+
+    /* ── SOURCE PILLS ────────────────────────────────────── */
+    .sources-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: center;
+      margin-top: 14px;
+    }
+
+    .sources-bar a {
+      font-size: 11px;
+      color: #fff;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 4px;
+      padding: 3px 10px;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .sources-bar a:hover { background: rgba(255,255,255,0.35); }
+
+    /* ── LEGEND ──────────────────────────────────────────── */
+    .legend {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 20px 10px;
+      font-size: 12px;
+      color: #555;
+      background: #a8c4e8;
+    }
+    .legend-bar {
+      width: 160px;
+      height: 7px;
+      border-radius: 4px;
+      background: linear-gradient(90deg, #cc0000, #ff6600, #ff9944, #ffcc55, #2e9e5a, #2a7fcc);
+    }
+
+    /* ── INSTRUCTIONS ────────────────────────────────────── */
+    .instructions {
+      text-align: center;
+      font-size: 12px;
+      color: #888;
+      padding-bottom: 12px;
+      letter-spacing: 0.03em;
+      background: #a8c4e8;
+    }
+
+    /* ── TOPIC CARDS ─────────────────────────────────────── */
+    .topics-list {
+      padding: 0 20px 30px;
+      background: #a8c4e8;
+    }
+
+    .card {
+      margin-bottom: 12px;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      padding: 16px 20px;
+      cursor: pointer;
+      user-select: none;
+      color: white;
+      position: relative;
+      gap: 12px;
+      transition: filter 0.2s;
+    }
+    .card-header:hover { filter: brightness(1.08); }
+
+    .level-1 { background: linear-gradient(135deg, #cc0000 0%, #990000 100%); }
+    .level-2 { background: linear-gradient(135deg, #e63000 0%, #c02000 100%); }
+    .level-3 { background: linear-gradient(135deg, #e86a00 0%, #c05000 100%); }
+    .level-4 { background: linear-gradient(135deg, #d4a000 0%, #a07800 100%); }
+    .level-5 { background: linear-gradient(135deg, #2e9e5a 0%, #1a7040 100%); }
+    .level-6 { background: linear-gradient(135deg, #2a7fcc 0%, #1a5a99 100%); }
+
+    .card-rank {
+      font-size: 11px;
+      opacity: 0.7;
+      min-width: 22px;
+    }
+
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+      flex: 1;
+    }
+
+    .card-count {
+      font-size: 12px;
+      background: rgba(0,0,0,0.25);
+      padding: 3px 10px;
+      border-radius: 12px;
+      white-space: nowrap;
+    }
+
+    .card-chevron {
+      font-size: 14px;
+      opacity: 0.6;
+      transition: transform 0.3s ease;
+    }
+    .card-chevron.rotated { transform: scaleY(-1); }
+
+    /* ── CARD BODY (COLLAPSED BY DEFAULT) ───────────────── */
+    .card-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease, opacity 0.3s ease;
+      opacity: 0;
+      background: #f5f5f5;
+    }
+
+    .card-body.expanded {
+      max-height: 2000px;
+      opacity: 1;
+    }
+
+    .card-body-inner {
+      padding: 20px;
+    }
+
+    /* ── SUBTOPICS GRID ──────────────────────────────────── */
+    .subtopics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .subtopic {
+      background: white;
+      border-left: 4px solid #ddd;
+      padding: 14px;
+      border-radius: 6px;
+    }
+
+    .subtopic-title {
+      font-weight: 600;
+      color: #1e3c72;
+      font-size: 0.95rem;
+      margin-bottom: 6px;
+    }
+
+    .subtopic-detail {
+      font-size: 13px;
+      color: #555;
+      line-height: 1.5;
+      margin-bottom: 8px;
+    }
+
+    .subtopic-src {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .subtopic-src a {
+      font-size: 11px;
+      color: #667eea;
+      text-decoration: none;
+      border: 1px solid #667eea;
+      padding: 2px 8px;
+      border-radius: 3px;
+      transition: background 0.2s;
+    }
+    .subtopic-src a:hover { background: #667eea; color: white; }
+
+    /* ── SECTION SOURCES ──────────────────────────────────– */
+    .section-sources {
+      border-top: 1px solid #ddd;
+      padding-top: 12px;
+      font-size: 12px;
+      color: #666;
+    }
+
+    .section-sources a {
+      margin-right: 8px;
+      color: #667eea;
+      text-decoration: none;
+    }
+    .section-sources a:hover { text-decoration: underline; }
+
+    /* ── FOOTER ──────────────────────────────────────────── */
+    .footer {
+      padding: 20px;
+      text-align: center;
+      background: #f0f0f0;
+      color: #666;
+      border-top: 1px solid #ddd;
+    }
+
+    .footer a { color: #667eea; text-decoration: none; }
+    .footer a:hover { text-decoration: underline; }
+
+    /* ── RESPONSIVE ──────────────────────────────────────── */
+    @media (max-width: 768px) {
+      .subtopics-grid {
+        grid-template-columns: 1fr;
+      }
+      .header h1 { font-size: 1.4rem; }
+      .card-title { font-size: 0.9rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="header">
+    <h1>AfterWord</h1>
+    <p class="subtitle">BOLLI Current Events Discussion Group — July 26, 2026</p>
+    <div class="sources-bar">
+      <a href="https://www.cnn.com/2026/07/01/science/synthetic-cell-research" target="_blank">CNN Science</a>
+      <a href="https://www.techtimes.com/articles/319677" target="_blank">TechTimes</a>
+      <a href="https://www.forbes.com/sites/michaeltnietzel/2026/03/11/" target="_blank">Forbes</a>
+      <a href="https://www.npr.org/2025/10/01/nx-s1-5558298/" target="_blank">NPR</a>
+      <a href="https://democratic-erosion.org/" target="_blank">Democratic Erosion</a>
+    </div>
+  </div>
+
+  <div class="legend">
+    <span>Coverage temperature:</span>
+    <div class="legend-bar"></div>
+  </div>
+
+  <div class="instructions">
+    Click any topic to expand and explore discussion threads, key insights, and participant exchanges with source citations.
+  </div>
+
+  <div class="topics-list">
+
+    <!-- 1. SYNTHETIC LIFE -->
+    <div class="card">
+      <div class="card-header level-1" onclick="toggle(this)">
+        <span class="card-rank">01</span>
+        <span class="card-title">Synthetic Life: A Test Environment, Not Yet Playing God</span>
+        <span class="card-count">Science</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+            <div class="subtopic">
+              <div class="subtopic-title">SpudCell: Feeding, Growing, Reproducing</div>
+              <div class="subtopic-detail">Scientists at the University of Minnesota announced SpudCell—the first synthetic cell assembled entirely from non-living chemical components that can complete a full biological life cycle: feeding, growing, replicating its genome, and dividing into daughter cells. The breakthrough was announced in July 2026 and described as "a staggering technical accomplishment" by researchers at the J. Craig Venter Institute.</div>
+              <div class="subtopic-src"><a href="https://www.cnn.com/2026/07/01/science/synthetic-cell-research" target="_blank">CNN</a><a href="https://www.techtimes.com/articles/319677/20260704/" target="_blank">TechTimes</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">A Test Environment, Not Yet Synthetic Life</div>
+              <div class="subtopic-detail">SpudCell runs a complete cell cycle using only components whose identities, quantities, and arrangements are fully known. Yet creator Kate Adamala is emphatic: SpudCell is not alive. John Day's framing matched this caution: "We're about as far from creating synthetic life with this technology as we are from creating real intelligence with artificial intelligence." The breakthrough opens a test environment for studying protein and DNA variations, not the creation of life itself.</div>
+              <div class="subtopic-src"><a href="https://www.techtimes.com/articles/319677" target="_blank">TechTimes</a><a href="https://indiandefencereview.com/scientists-built-synthetic-cell-eat-grow-reproduce-on-its-own/" target="_blank">Indian Defence Review</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Ribosomes and the Wright Brothers Moment</div>
+              <div class="subtopic-detail">SpudCell demonstrates ribosome function—the "microscopic factories" inside cells that read DNA and assemble amino acids into protein chains. Francesca emphasized this represents a "Wright brothers at Kitty Hawk" moment: we can now see the trajectory of where this technology will lead, even though the endpoint remains far away. The synthetic cell enables systematic study of molecular variation in controlled conditions.</div>
+              <div class="subtopic-src"><a href="https://www.nature.com/articles/synthetic-cells" target="_blank">Nature</a><a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC9563707/" target="_blank">Frontiers Bioengineering</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Philosophers Hired by AI Companies</div>
+              <div class="subtopic-detail">Francesca cited recent reporting that AI companies are recruiting philosophy PhD holders to work through ethical implications of both synthetic biology and AI. The convergence of these technologies—both making possible what seemed impossible—creates existential questions requiring humanistic expertise, not just technical capability. This trend itself reflects growing recognition that mechanism alone cannot answer the questions these breakthroughs raise.</div>
+              <div class="subtopic-src"><a href="https://www.nytimes.com/section/business/ai-ethics" target="_blank">NYT Business</a><a href="https://wired.com/ethics/" target="_blank">Wired</a></div>
+            </div>
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://www.cnn.com">CNN</a>
+            <a href="https://www.techtimes.com">TechTimes</a>
+            <a href="https://www.nature.com">Nature</a>
+            <a href="https://www.wired.com">Wired</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. INSTITUTIONS -->
+    <div class="card">
+      <div class="card-header level-2" onclick="toggle(this)">
+        <span class="card-rank">02</span>
+        <span class="card-title">Faith in Institutions: The Return on Investment</span>
+        <span class="card-count">Government</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+            <div class="subtopic">
+              <div class="subtopic-title">$2.57 for Every $1 Invested in NIH</div>
+              <div class="subtopic-detail">According to a March 2026 report by United for Medical Research, NIH grants generated $94.15 billion in new economic activity in FY2025, with a return on investment of $2.57 for every $1 invested. Over the past decade, NIH funding has driven more than $822 billion in new economic activity and supported more than 3.7 million jobs. John Day's argument was grounded in exactly this data: government-funded agencies deliver "astounding" returns on investment.</div>
+              <div class="subtopic-src"><a href="https://www.forbes.com/sites/michaeltnietzel/2026/03/11/" target="_blank">Forbes</a><a href="https://www.fiercebiotech.com/research/despite-delays-nih-grants-generated-250-return-366b-investment-2025-report" target="_blank">FierceBiotech</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">The Loss of Faith Is a Tragic Feature of Our Time</div>
+              <div class="subtopic-detail">John articulated the core concern: "The general voter or so many voters have lost faith in institutions and are critical of them and have been disconnected or forgotten, all the things that have been done by the institutions that are supported by the government." This loss of faith in the "deep state" is not empirically justified—NIH, DARPA, NSF investments have transformed American life. Yet the cynicism persists, eroding confidence in the institutions that enabled everything from the Internet to mRNA vaccines.</div>
+              <div class="subtopic-src"><a href="https://news.harvard.edu/gazette/story/2025/03/nih-funding-delivers-exponential-economic-returns/" target="_blank">Harvard Gazette</a><a href="https://www.unitedformedicalresearch.org/statements/" target="_blank">United for Medical Research</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Efficiency Matters, But Wholesale Dismantling Does Not</div>
+              <div class="subtopic-detail">Hal Shear's important pushback: "Government should not be exactly the same size... there's a fair amount of inefficiency in each agency." The group agreed that systematic, thoughtful reform is necessary. But cutting agencies wholesale without strategy is not reform—it's ideological demolition that destroys institutional capacity without improving efficiency or reducing costs.</div>
+              <div class="subtopic-src"><a href="https://www.congress.gov/crs-product/R48694" target="_blank">Congressional Research Service</a><a href="https://ncses.nsf.gov/surveys/" target="_blank">NSF Surveys</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">The Free Market Myth and Elon Musk</div>
+              <div class="subtopic-detail">John used Musk as a counterexample: he "knows how to make money, knows how to grab resources, and make a lot of money but fundamentally didn't contribute to the advancement of the technology." The idea that "the free market will solve everything" is demonstrably false. Technology requires patient capital and long-term research that markets alone don't fund—which is precisely what government agencies provide.</div>
+              <div class="subtopic-src"><a href="https://wired.com/story/market-failure-innovation" target="_blank">Wired</a><a href="https://www.theatlantic.com/technology/" target="_blank">The Atlantic</a></div>
+            </div>
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://www.forbes.com">Forbes</a>
+            <a href="https://www.fiercebiotech.com">FierceBiotech</a>
+            <a href="https://news.harvard.edu">Harvard Gazette</a>
+            <a href="https://www.congress.gov">CRS</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. DOGE & REHIRING -->
+    <div class="card">
+      <div class="card-header level-3" onclick="toggle(this)">
+        <span class="card-rank">03</span>
+        <span class="card-title">DOGE: The Narrative Collapse and Rehiring Boomerang</span>
+        <span class="card-count">Government</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+            <div class="subtopic">
+              <div class="subtopic-title">Wholesale Cuts Announced; Reality Diverges Within Weeks</div>
+              <div class="subtopic-detail">DOGE launched with promises of mass firings and wholesale dismantling. Yet within months, federal agencies began rehiring workers en masse. By March 2026, approximately 25,000 fired federal workers had been rehired as "essential" to agency operations, according to Brookings Institution senior fellow Elaine Kamarck. Within 24 hours of firing 350 nuclear security workers, the administration rehired 322 of them. The pattern repeated across agencies.</div>
+              <div class="subtopic-src"><a href="https://www.npr.org/2025/10/01/nx-s1-5558298/" target="_blank">NPR</a><a href="https://www.fedtools.com/blog/federal-rehiring-after-doge-cuts-2026" target="_blank">FedTools</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Federal Spending Increased, Not Decreased</div>
+              <div class="subtopic-detail">According to FedTools analysis, federal spending actually increased by approximately $376 billion (about 6%) through August 2025 compared to the prior year. The federal deficit grew nearly $2 trillion over the same period. Elon Musk's own assessment: DOGE was only "somewhat successful" and he would "not do it again." Yet the narrative of massive cuts persists in public discourse despite the operational reality.</div>
+              <div class="subtopic-src"><a href="https://www.fedtools.com/blog/federal-rehiring-after-doge-cuts-2026" target="_blank">FedTools</a><a href="https://www.notus.org/agencies/doge-is-officially-ending-agencies-are-hiring" target="_blank">NOTUS</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Capacity Crises Across Government</div>
+              <div class="subtopic-detail">Agencies that cut staff discovered they couldn't perform basic functions. The Social Security Administration had to rehire over 500 call center employees and aims to hire over 1,000 more. The CDC had to rehire its entire Childhood Lead Poisoning Prevention team after it was wiped out while helping Milwaukee address a lead exposure crisis. The USDA halted plans to lay off 25% of staff at bird flu response facilities when egg prices spiked.</div>
+              <div class="subtopic-src"><a href="https://www.cnn.com/2025/06/24/politics/doge-fired-workers-rehired" target="_blank">CNN Politics</a><a href="https://www.notus.org/agencies/" target="_blank">NOTUS</a></div>
+            </div>
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://www.npr.org">NPR</a>
+            <a href="https://www.fedtools.com">FedTools</a>
+            <a href="https://www.cnn.com">CNN</a>
+            <a href="https://www.notus.org">NOTUS</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. WEAPONIZATION & DOJ INDEPENDENCE -->
+    <div class="card">
+      <div class="card-header level-4" onclick="toggle(this)">
+        <span class="card-rank">04</span>
+        <span class="card-title">Weaponization: Not a Legal Term, A Political Label</span>
+        <span class="card-count">Law</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+            <div class="subtopic">
+              <div class="subtopic-title">DOJ Independence Was Always a Norm, Not Law</div>
+              <div class="subtopic-detail">According to the Miller Center (University of Virginia), the post-Watergate understanding that the DOJ operates with independence from the President is an "unwritten rule" scorned by "strong policy norms"—but it is not statutory law. The Justice Manual instructs that legal judgments must be "impartial and insulated from political influence," but these are internal policies, not enforceable law. Trump v. United States (2024) eliminated possibilities for statutory protection.</div>
+              <div class="subtopic-src"><a href="https://millercenter.org/conference-on-the-presidency-2025/essays/independence-and-executive-branch" target="_blank">Miller Center</a><a href="https://govfacts.org/accountability-ethics/anti-corruption/the-unwritten-rules-that-keep-doj-independent-from-the-white-house/" target="_blank">GovFacts</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Norms Can Collapse; Guardrails Have Failed</div>
+              <div class="subtopic-detail">As Harvard Gazette reported in October 2025, "Presidents have been very careful, for their own political benefit, to respect these norms and rules that have governed this sort of distancing [between the White House and the DOJ]." But norms depend on willing participants. The American Bar Association warned in September 2025 that "prosecutorial decisions must be free from political direction so that we don't have a corrosive loss of the public's trust and confidence." Yet this independence now rests entirely on executive restraint.</div>
+              <div class="subtopic-src"><a href="https://news.harvard.edu/gazette/story/2025/10/how-independent-is-the-justice-department-now/" target="_blank">Harvard Gazette</a><a href="https://www.americanbar.org/news/abanews/aba-news-archives/2025/09/" target="_blank">American Bar Association</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Political Prosecutions and Institutional Erosion</div>
+              <div class="subtopic-detail">By February 2026, Attorney General Pam Bondi sat before the House Judiciary Committee defending what career prosecutors described as direct presidential control over prosecutions. Bloomberg Law reported that James Comey was charged over a photo of seashells arranged on a beach, described as a "threat" to Trump. The pattern is consistent: presidential direction, removal of prosecutors who resist, indictments later thrown out by courts as legally deficient.</div>
+              <div class="subtopic-src"><a href="https://news.bloomberglaw.com/bankruptcy-law/how-the-doj-decides-who-gets-charged-and-who-doesnt-in-america" target="_blank">Bloomberg Law</a><a href="https://www.jcb.rupress.org/" target="_blank">Journal of Gender, Race & Justice</a></div>
+            </div>
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://millercenter.org">Miller Center</a>
+            <a href="https://govfacts.org">GovFacts</a>
+            <a href="https://news.harvard.edu">Harvard Gazette</a>
+            <a href="https://www.americanbar.org">ABA</a>
+            <a href="https://news.bloomberglaw.com">Bloomberg Law</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. DEMOCRACY IN CRISIS -->
+    <div class="card">
+      <div class="card-header level-5" onclick="toggle(this)">
+        <span class="card-rank">05</span>
+        <span class="card-title">Democracy as One-Time Hurdle: Two Leaders, One Pattern</span>
+        <span class="card-count">Democracy</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+            <div class="subtopic">
+              <div class="subtopic-title">Israel's Judicial Overhaul: Executive Aggrandizement in Real Time</div>
+              <div class="subtopic-detail">Israel provides a case study in democratic erosion. In 2023, Netanyahu's administration proposed judicial reforms to curtail the Supreme Court's powers and politicize judicial appointments. By March 2025, Justice Minister Yariv Levin took steps to remove Attorney General Gali Baharav-Miara, another institutional check on executive power. Though Israel's Supreme Court blocked the removal, the intention was clear. The Democratic Erosion Consortium documented these as classic "executive aggrandizement"—legally permissible steps that systematically weaken institutional checks.</div>
+              <div class="subtopic-src"><a href="https://democratic-erosion.org/2026/03/29/israels-democracy-is-eroding-by-design-not-by-chance/" target="_blank">Democratic Erosion</a><a href="https://www.frontiersin.org/journals/political-science/articles/10.3389/fpos.2025.1627969/full" target="_blank">Frontiers</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">America's Hollowed-Out DOJ: Parallel Pattern</div>
+              <div class="subtopic-detail">The United States follows a parallel trajectory. Unlike Israel's multi-party system, America's executive power is more concentrated. The removal of prosecutorial independence, direct White House control over individual cases, and the installation of loyalists in key positions all point toward a system in which institutional checks on executive power have eroded or been actively dismantled.</div>
+              <div class="subtopic-src"><a href="https://yalelawjournal.org/essay/under-political-pressure-how-courts-and-congress-can-help-prosecutors-seek-justice/" target="_blank">Yale Law Journal</a><a href="https://www.jpost.com/opinion/article-886174" target="_blank">Jerusalem Post</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Narrow Margins, Then Treating Democracy as a One-Time Event</div>
+              <div class="subtopic-detail">Netanyahu won by a narrow margin and formed a coalition; Trump won by narrow margins. Both then governed as if winning an election meant they could disregard the institutional restraints that make democracy work. Israel's execution laws and America's gutted DOJ are different instruments aimed at the same target: institutions that exist to slow power down, being dismantled by leaders who won elections and then decided fairness was optional.</div>
+              <div class="subtopic-src"><a href="https://democratic-erosion.org/2025/04/20/israels-judicial-reforms-a-potential-danger-to-democracy/" target="_blank">Democratic Erosion</a><a href="https://blogs.timesofisrael.com/this-is-how-democracies-fall-and-israel-is-near-the-brink/" target="_blank">Times of Israel</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">The Mar-a-Lago Pool: When Power Is Incoherent</div>
+              <div class="subtopic-detail">Ralph Loomis brought a crystallizing example: Trump hired someone to clean up his reflecting pool at Mar-a-Lago, a no-bid contract to a major donor. When it failed, Trump blamed a "socialist, crazy guy" with a "huge knife." The next day, the U.S. Attorney said it was actually a machine requiring two hands. "These folks can't even get their lives together," Ralph observed. The incoherence itself reveals something: power that cannot sustain a consistent narrative is power that is not truly constrained by law or fact.</div>
+              <div class="subtopic-src"><a href="https://www.washingtonpost.com/politics" target="_blank">WaPo Politics</a></div>
+            </div>
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://democratic-erosion.org">Democratic Erosion Consortium</a>
+            <a href="https://www.frontiersin.org">Frontiers</a>
+            <a href="https://yalelawjournal.org">Yale Law Journal</a>
+            <a href="https://www.jpost.com">Jerusalem Post</a>
+            <a href="https://www.washingtonpost.com">Washington Post</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. LOGISTICS & CLOSING -->
+    <div class="card">
+      <div class="card-header level-6" onclick="toggle(this)">
+        <span class="card-rank">06</span>
+        <span class="card-title">Logistics: Turner Street Finale & Sawyer Street Ahead</span>
+        <span class="card-count">Housekeeping</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+            <div class="subtopic">
+              <div class="subtopic-title">Last In-Person Session at Turner Street</div>
+              <div class="subtopic-detail">John announced that he has secured a room at Turner Street for July 21. This is very likely the group's last in-person session at Turner Street before BOLLI moves to the new Sawyer Street facility after August 1. The move marks a significant transition for the group's meeting logistics and marks the end of a long tenure at the Turner Street location.</div>
+              <div class="subtopic-src"></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Sawyer Street: Single-Mode Initially, True Hybrid Later</div>
+              <div class="subtopic-detail">The new Sawyer Street building will be physically nicer, but initially single-mode—either Zoom or in-person, not both simultaneously. True hybrid capability is planned for the future but may not be ready immediately. The hybrid kit currently used belongs to Ali Kerm and will not be available going forward, requiring either new equipment or creative solutions.</div>
+              <div class="subtopic-src"></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Improving Remote Participant Visibility</div>
+              <div class="subtopic-detail">One persistent challenge: remote participants can't see images of Zoom participants on the large screen. John has figured out how to fix this, which will significantly improve visibility and engagement for those joining remotely. The group also discussed the importance of maintaining attention to remote participants—not just talking amongst themselves in the room, but keeping focus on people who are remote and want to make comments.</div>
+              <div class="subtopic-src"></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Summer Schedule: 1–2:30 p.m., Then Back to 4 p.m.</div>
+              <div class="subtopic-detail">For the rest of the summer, meetings will stick to the 1:00–2:30 p.m. time slot. When the fall session (called "BALI" by the group) comes into session, meetings will return to 4:00 p.m. This schedule adjustment helps accommodate summer vacations and makes the group more accessible during the warm months.</div>
+              <div class="subtopic-src"></div>
+            </div>
+          </div>
+          <div class="section-sources">
+            Session notes · BOLLI operations
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /topics-list -->
+
+  <!-- ══ FOOTER ══════════════════════════════════════════ -->
+  <div class="footer">
+    <div style="opacity:0.6; font-size:10px;">
+      AfterWord compiled for BOLLI Current Events Discussion Group · Session of July 26, 2026<br>
+      Coverage synthesized from CNN, NPR, FierceBiotech, Forbes, Miller Center, ABA, Democratic Erosion Consortium, and academic sources<br>
+      Prepared from Zoom transcript with Claude as collaborator · <a href="https://jhnday.github.io/CrntEvnts" target="_blank">jhnday.github.io/CrntEvnts</a> · Next session: August 2, 2026 — Location TBD
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<script>
+  function toggle(header) {
+    const body = header.nextElementSibling;
+    const chevron = header.querySelector('.card-chevron');
+    const isOpen = body.classList.contains('expanded');
+
+    // Collapse all
+    document.querySelectorAll('.card-body').forEach(b => b.classList.remove('expanded'));
+    document.querySelectorAll('.card-chevron').forEach(c => c.classList.remove('rotated'));
+
+    // Expand clicked (if it was closed)
+    if (!isOpen) {
+      body.classList.add('expanded');
+      chevron.classList.add('rotated');
+      setTimeout(() => header.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
+    }
+  }
+</script>
+
+</body>
+</html>
