@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Perception Survey</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f1419 0%, #1a2332 100%);
+            color: #f5f3f0;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        header {
+            margin-bottom: 3rem;
+            text-align: center;
+            border-bottom: 2px solid #d4a574;
+            padding-bottom: 2rem;
+        }
+
+        h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            font-weight: 700;
+            color: #d4a574;
+            margin-bottom: 0.5rem;
+            letter-spacing: -1px;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            color: #c0bab0;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+        }
+
+        .scale-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: #9a9388;
+            margin-bottom: 1.5rem;
+            gap: 1rem;
+        }
+
+        .scale-label span {
+            flex: 1;
+            text-align: center;
+        }
+
+        .controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2.5rem;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .sort-btn, .filter-btn {
+            padding: 0.7rem 1.5rem;
+            background: rgba(212, 165, 116, 0.15);
+            border: 1px solid #d4a574;
+            color: #d4a574;
+            font-size: 0.95rem;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 2px;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .sort-btn:hover, .filter-btn:hover {
+            background: rgba(212, 165, 116, 0.25);
+            transform: translateY(-2px);
+        }
+
+        .sort-btn.active, .filter-btn.active {
+            background: #d4a574;
+            color: #0f1419;
+        }
+
+        .chart {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .chart-row {
+            display: grid;
+            grid-template-columns: 140px 1fr 60px;
+            gap: 1rem;
+            align-items: center;
+            transition: opacity 0.3s ease;
+        }
+
+        .chart-row:hover {
+            opacity: 1;
+        }
+
+        .chart-row.hidden {
+            display: none;
+        }
+
+        .country-name {
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #f5f3f0;
+            text-align: right;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding-right: 1rem;
+        }
+
+        .bar-container {
+            position: relative;
+            height: 28px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 1px;
+            overflow: hidden;
+        }
+
+        .bar {
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 8px;
+            transition: all 0.3s ease;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #f5f3f0;
+            position: relative;
+        }
+
+        .bar-positive {
+            background: linear-gradient(90deg, rgba(212, 165, 116, 0.2) 0%, rgba(212, 165, 116, 0.6) 100%);
+        }
+
+        .bar-negative {
+            background: linear-gradient(90deg, rgba(196, 63, 63, 0.2) 0%, rgba(196, 63, 63, 0.6) 100%);
+            justify-content: flex-start;
+            padding-left: 8px;
+            padding-right: 0;
+        }
+
+        .bar-neutral {
+            background: rgba(128, 128, 128, 0.2);
+            width: 2%;
+        }
+
+        .score-value {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #d4a574;
+            min-width: 45px;
+            text-align: right;
+        }
+
+        .score-value.negative {
+            color: #c4403f;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(212, 165, 116, 0.3);
+        }
+
+        .stat-box {
+            text-align: center;
+        }
+
+        .stat-value {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: #d4a574;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #9a9388;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .chart-row {
+                grid-template-columns: 100px 1fr 50px;
+                gap: 0.75rem;
+            }
+
+            .country-name {
+                font-size: 0.85rem;
+            }
+
+            .controls {
+                gap: 0.5rem;
+            }
+
+            .sort-btn, .filter-btn {
+                padding: 0.6rem 1rem;
+                font-size: 0.85rem;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .bar, .sort-btn, .filter-btn, .chart-row {
+                transition: none;
+            }
+        }
+
+        .map-legend {
+            display: flex;
+            gap: 2rem;
+            margin-top: 1.5rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            font-size: 0.9rem;
+        }
+
+        .map-container {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(212, 165, 116, 0.2);
+            border-radius: 2px;
+            overflow: hidden;
+            min-height: 520px;
+        }
+
+        #worldMap {
+            width: 100%;
+            height: 520px;
+            background: rgba(15, 20, 25, 0.3);
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .legend-color {
+            width: 24px;
+            height: 24px;
+            border-radius: 2px;
+        }
+
+        .view-toggle {
+            display: inline-flex;
+            gap: 0;
+            background: rgba(212, 165, 116, 0.15);
+            border: 1px solid #d4a574;
+            border-radius: 2px;
+            margin-left: 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .toggle-btn {
+            padding: 0.5rem 1rem;
+            background: transparent;
+            border: none;
+            color: #d4a574;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+        }
+
+        .toggle-btn.active {
+            background: #d4a574;
+            color: #0f1419;
+        }
+
+        .toggle-btn:not(.active):hover {
+            background: rgba(212, 165, 116, 0.2);
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: #d4a574;
+            margin-bottom: 0.5rem;
+            letter-spacing: -1px;
+        }
+
+        .section-subtitle {
+            font-size: 1.1rem;
+            color: #c0bab0;
+            font-weight: 500;
+            margin-bottom: 2rem;
+        }
+
+        .stats {
+            margin-top: 3rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div style="display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 1rem;">
+                <h1>Global Perception</h1>
+                <div class="view-toggle">
+                    <button class="toggle-btn active" data-view="geography">Geography</button>
+                    <button class="toggle-btn" data-view="scorecard">Scorecard</button>
+                </div>
+            </div>
+            <p class="subtitle" id="header-subtitle">Where in the world does perception thrive or falter?</p>
+            <div class="scale-label" id="scale-label">
+                <span>Most Negative</span>
+                <span>Neutral</span>
+                <span>Most Positive</span>
+            </div>
+        </header>
+
+        <!-- Geography of Perception Section -->
+        <section id="geography-section" class="section active">
+            <h2 class="section-title">Geography of Perception</h2>
+            <p class="section-subtitle">Countries colored by perception score</p>
+            <div class="map-container">
+                <div id="worldMap"></div>
+            </div>
+            <div class="map-legend">
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #c4403f;"></div>
+                    <span>Most Negative</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #f4d03f;"></div>
+                    <span>Neutral</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #2ecc71;"></div>
+                    <span>Most Positive</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Perception Scorecard Section -->
+        <section id="scorecard-section" class="section">
+            <h2 class="section-title">Perception Scorecard</h2>
+            <p class="section-subtitle">Detailed ranking of countries by perception</p>
+            <div class="scale-label" style="margin-bottom: 2rem;">
+                <span>Most Negative</span>
+                <span>Neutral</span>
+                <span>Most Positive</span>
+            </div>
+
+            <div class="controls">
+                <button class="sort-btn active" data-sort="score-desc">Most Positive First</button>
+                <button class="sort-btn" data-sort="score-asc">Most Negative First</button>
+                <button class="sort-btn" data-sort="name">Alphabetical</button>
+                <button class="filter-btn active" data-filter="all">Show All</button>
+                <button class="filter-btn" data-filter="positive">Positive Only</button>
+                <button class="filter-btn" data-filter="negative">Negative Only</button>
+            </div>
+
+            <div class="chart" id="chart"></div>
+        </section>
+
+        <div class="stats">
+            <div class="stat-box">
+                <div class="stat-value" id="count-total">0</div>
+                <div class="stat-label">Countries</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value" id="score-high">0</div>
+                <div class="stat-label">Highest Score</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value" id="score-low">0</div>
+                <div class="stat-label">Lowest Score</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value" id="score-avg">0</div>
+                <div class="stat-label">Average Score</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const data = [
+            { perception: -24, country: "Israel" },
+            { perception: -19, country: "North Korea" },
+            { perception: -19, country: "Afghanistan" },
+            { perception: -17, country: "Iran" },
+            { perception: -16, country: "U.S." },
+            { perception: -13, country: "Iraq" },
+            { perception: -11, country: "Russia" },
+            { perception: -10, country: "Syria" },
+            { perception: -9, country: "Pakistan" },
+            { perception: -5, country: "Belarus" },
+            { perception: -5, country: "Myanmar" },
+            { perception: -5, country: "Venezuela" },
+            { perception: -3, country: "Nigeria" },
+            { perception: -3, country: "Cuba" },
+            { perception: -3, country: "Lebanon" },
+            { perception: -3, country: "Bangladesh" },
+            { perception: -3, country: "Yemen" },
+            { perception: -2, country: "Colombia" },
+            { perception: -2, country: "India" },
+            { perception: -1, country: "Saudi Arabia" },
+            { perception: 0, country: "Ethiopia" },
+            { perception: 36, country: "Switzerland" },
+            { perception: 36, country: "Canada" },
+            { perception: 34, country: "Japan" },
+            { perception: 33, country: "Sweden" },
+            { perception: 32, country: "Italy" },
+            { perception: 32, country: "Norway" },
+            { perception: 31, country: "Spain" },
+            { perception: 30, country: "Australia" },
+            { perception: 30, country: "Denmark" },
+            { perception: 30, country: "New Zealand" },
+            { perception: 30, country: "Finland" },
+            { perception: 29, country: "Netherlands" },
+            { perception: 28, country: "Ireland" },
+            { perception: 26, country: "Portugal" },
+            { perception: 25, country: "Austria" },
+            { perception: 24, country: "Greece" },
+            { perception: 24, country: "Belgium" },
+            { perception: 21, country: "Singapore" },
+            { perception: 21, country: "South Korea" },
+            { perception: 21, country: "Germany" },
+            { perception: 19, country: "Poland" },
+            { perception: 17, country: "Taiwan" },
+            { perception: 16, country: "Hong Kong" },
+            { perception: 14, country: "Thailand" },
+            { perception: 14, country: "Brazil" },
+            { perception: 13, country: "Malaysia" },
+            { perception: 12, country: "Indonesia" },
+            { perception: 11, country: "France" },
+            { perception: 11, country: "Argentina" },
+            { perception: 11, country: "UK" },
+            { perception: 9, country: "Philippines" },
+            { perception: 9, country: "Egypt" },
+            { perception: 9, country: "South Africa" },
+            { perception: 9, country: "Vietnam" },
+            { perception: 9, country: "Ukraine" },
+            { perception: 8, country: "Türkiye" },
+            { perception: 7, country: "China" },
+            { perception: 7, country: "Hungary" },
+            { perception: 7, country: "Morocco" },
+            { perception: 6, country: "Qatar" },
+            { perception: 4, country: "UAE" },
+            { perception: 4, country: "Serbia" },
+            { perception: 4, country: "Kenya" },
+            { perception: 2, country: "Mexico" }
+        ];
+
+        let currentSort = 'score-desc';
+        let currentFilter = 'all';
+
+        const chart = document.getElementById('chart');
+        const minScore = Math.min(...data.map(d => d.perception));
+        const maxScore = Math.max(...data.map(d => d.perception));
+
+        function getBarWidth(score) {
+            if (score === 0) return 2;
+            const range = Math.max(Math.abs(minScore), Math.abs(maxScore));
+            return Math.abs(score) / range * 100;
+        }
+
+        function renderChart() {
+            let sortedData = [...data];
+
+            if (currentSort === 'score-desc') {
+                sortedData.sort((a, b) => b.perception - a.perception);
+            } else if (currentSort === 'score-asc') {
+                sortedData.sort((a, b) => a.perception - b.perception);
+            } else if (currentSort === 'name') {
+                sortedData.sort((a, b) => a.country.localeCompare(b.country));
+            }
+
+            chart.innerHTML = '';
+            sortedData.forEach(item => {
+                const isPositive = item.perception > 0;
+                const isNegative = item.perception < 0;
+                const isNeutral = item.perception === 0;
+
+                if (currentFilter === 'positive' && !isPositive) return;
+                if (currentFilter === 'negative' && !isNegative) return;
+
+                const row = document.createElement('div');
+                row.className = 'chart-row';
+                row.innerHTML = `
+                    <div class="country-name">${item.country}</div>
+                    <div class="bar-container">
+                        <div class="bar ${isPositive ? 'bar-positive' : isNegative ? 'bar-negative' : 'bar-neutral'}" 
+                             style="width: ${getBarWidth(item.perception)}%; ${isNegative ? 'justify-content: flex-start;' : ''}">
+                        </div>
+                    </div>
+                    <div class="score-value ${isNegative ? 'negative' : ''}">${item.perception > 0 ? '+' : ''}${item.perception}</div>
+                `;
+                chart.appendChild(row);
+            });
+
+            updateStats();
+        }
+
+        function updateStats() {
+            const visibleData = data.filter(item => {
+                if (currentFilter === 'positive') return item.perception > 0;
+                if (currentFilter === 'negative') return item.perception < 0;
+                return true;
+            });
+
+            document.getElementById('count-total').textContent = visibleData.length;
+            document.getElementById('score-high').textContent = '+' + Math.max(...visibleData.map(d => d.perception));
+            document.getElementById('score-low').textContent = Math.min(...visibleData.map(d => d.perception));
+            const avg = (visibleData.reduce((sum, item) => sum + item.perception, 0) / visibleData.length).toFixed(1);
+            document.getElementById('score-avg').textContent = (avg > 0 ? '+' : '') + avg;
+        }
+
+        // Country code mapping for choropleth - verified ISO 3166-1 alpha-3 codes
+        const countryCodeMap = {
+            "Israel": "ISR",
+            "North Korea": "PRK",
+            "Afghanistan": "AFG",
+            "Iran": "IRN",
+            "U.S.": "USA",
+            "Iraq": "IRQ",
+            "Russia": "RUS",
+            "Syria": "SYR",
+            "Pakistan": "PAK",
+            "Belarus": "BLR",
+            "Myanmar": "MMR",
+            "Venezuela": "VEN",
+            "Nigeria": "NGA",
+            "Cuba": "CUB",
+            "Lebanon": "LBN",
+            "Bangladesh": "BGD",
+            "Yemen": "YEM",
+            "Colombia": "COL",
+            "India": "IND",
+            "Saudi Arabia": "SAU",
+            "Ethiopia": "ETH",
+            "Switzerland": "CHE",
+            "Canada": "CAN",
+            "Japan": "JPN",
+            "Sweden": "SWE",
+            "Italy": "ITA",
+            "Norway": "NOR",
+            "Spain": "ESP",
+            "Australia": "AUS",
+            "Denmark": "DNK",
+            "New Zealand": "NZL",
+            "Finland": "FIN",
+            "Netherlands": "NLD",
+            "Ireland": "IRL",
+            "Portugal": "PRT",
+            "Austria": "AUT",
+            "Greece": "GRC",
+            "Belgium": "BEL",
+            "Singapore": "SGP",
+            "South Korea": "KOR",
+            "Germany": "DEU",
+            "Poland": "POL",
+            "Taiwan": "TWN",
+            "Hong Kong": "HKG",
+            "Thailand": "THA",
+            "Brazil": "BRA",
+            "Malaysia": "MYS",
+            "Indonesia": "IDN",
+            "France": "FRA",
+            "Argentina": "ARG",
+            "UK": "GBR",
+            "Philippines": "PHL",
+            "Egypt": "EGY",
+            "South Africa": "ZAF",
+            "Vietnam": "VNM",
+            "Ukraine": "UKR",
+            "Türkiye": "TUR",
+            "China": "CHN",
+            "Hungary": "HUN",
+            "Morocco": "MAR",
+            "Qatar": "QAT",
+            "UAE": "ARE",
+            "Serbia": "SRB",
+            "Kenya": "KEN",
+            "Mexico": "MEX"
+        };
+
+        function renderMap() {
+            // Map countries to their ISO-3 codes
+            const mappedData = data.map(d => ({
+                country: d.country,
+                code: countryCodeMap[d.country],
+                perception: d.perception
+            })).filter(d => d.code); // Only include mapped countries
+
+            const locations = mappedData.map(d => d.code);
+            const scores = mappedData.map(d => d.perception);
+            const names = mappedData.map(d => d.country);
+            const hoverTexts = mappedData.map(d => 
+                `<b>${d.country}</b><br>Perception Score: ${d.perception > 0 ? '+' : ''}${d.perception}`
+            );
+
+            // Create the trace with explicit data
+            const trace = {
+                type: 'choropleth',
+                locations: locations,
+                z: scores,
+                text: hoverTexts,
+                customdata: names,
+                hovertemplate: '%{text}<extra></extra>',
+                colorscale: [
+                    [0, 'rgb(196, 64, 63)'],      // red - most negative
+                    [0.5, 'rgb(244, 208, 63)'],   // yellow - neutral
+                    [1, 'rgb(46, 204, 113)']      // green - most positive
+                ],
+                colorbar: {
+                    title: {
+                        text: "Perception<br>Score",
+                        font: { color: '#c0bab0', size: 12 }
+                    },
+                    thickness: 15,
+                    len: 0.6,
+                    x: 1.02,
+                    tickfont: { color: '#c0bab0', size: 10 },
+                    tickcolor: '#d4a574',
+                    bordercolor: '#d4a574',
+                    borderwidth: 1,
+                    tickmode: 'linear',
+                    tick0: -24,
+                    dtick: 12
+                },
+                marker: {
+                    line: {
+                        color: 'rgba(31, 40, 52, 0.8)',
+                        width: 0.5
+                    },
+                    opacity: 0.85
+                },
+                zmin: -24,
+                zmax: 36
+            };
+
+            const layout = {
+                title: null,
+                geo: {
+                    projection: {
+                        type: 'natural earth'
+                    },
+                    bgcolor: 'rgba(15, 20, 25, 0)',
+                    showland: true,
+                    landcolor: 'rgb(51, 68, 90)',
+                    coastcolor: 'rgb(100, 120, 140)',
+                    countrycolor: 'rgb(75, 95, 115)',
+                    coastwidth: 0.5,
+                    countrywidth: 0.7,
+                    showlakes: true,
+                    lakecolor: 'rgba(15, 20, 25, 0.5)',
+                    showcountries: true,
+                    showocean: false
+                },
+                paper_bgcolor: 'transparent',
+                plot_bgcolor: 'transparent',
+                margin: { l: 0, r: 140, t: 0, b: 0 },
+                height: 500,
+                font: {
+                    family: 'Inter, sans-serif',
+                    color: '#c0bab0',
+                    size: 11
+                }
+            };
+
+            const config = {
+                responsive: true,
+                displayModeBar: false,
+                staticPlot: false,
+                toImageButtonOptions: {
+                    format: 'png',
+                    filename: 'global_perception'
+                }
+            };
+
+            // Use Plotly's Uint8Array fix for better compatibility
+            Plotly.newPlot('worldMap', [trace], layout, config).catch(err => {
+                console.error('Plotly error:', err);
+                document.getElementById('worldMap').innerHTML = 
+                    '<div style="color: #c0bab0; padding: 2rem; text-align: center;">Map could not load. Please refresh the page.</div>';
+            });
+        }
+
+        document.querySelectorAll('.sort-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                currentSort = e.target.dataset.sort;
+                renderChart();
+            });
+        });
+
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+                currentFilter = e.target.dataset.filter;
+                renderChart();
+            });
+        });
+
+        // Render chart immediately
+        renderChart();
+
+        // Ensure Plotly is loaded before rendering map
+        if (typeof Plotly !== 'undefined') {
+            renderMap();
+        } else {
+            // Fallback: wait for Plotly to load
+            setTimeout(() => {
+                if (typeof Plotly !== 'undefined') {
+                    renderMap();
+                }
+            }, 1000);
+        }
+
+        // View toggle functionality
+        document.querySelectorAll('.view-toggle .toggle-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const view = e.target.dataset.view;
+                
+                // Update active button
+                document.querySelectorAll('.view-toggle .toggle-btn').forEach(b => b.classList.remove('active'));
+                e.target.classList.add('active');
+
+                // Update sections
+                document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+                document.getElementById(view + '-section').classList.add('active');
+
+                // Update header subtitle
+                const subtitles = {
+                    geography: 'Where in the world does perception thrive or falter?',
+                    scorecard: 'Detailed ranking of countries by perception'
+                };
+                document.getElementById('header-subtitle').textContent = subtitles[view];
+
+                // Update scale label visibility
+                const scaleLabel = document.getElementById('scale-label');
+                if (view === 'geography') {
+                    scaleLabel.style.display = 'flex';
+                } else {
+                    scaleLabel.style.display = 'none';
+                }
+
+                // Trigger map redraw if switching to geography
+                if (view === 'geography' && typeof Plotly !== 'undefined') {
+                    setTimeout(() => {
+                        Plotly.Plots.resize('worldMap');
+                    }, 100);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
