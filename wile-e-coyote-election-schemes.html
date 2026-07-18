@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ACME Corp: The 2020 Election Fraud Campaign</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+      background: linear-gradient(135deg, #f5f5f5 0%, #ebebeb 100%);
+      min-height: 100vh;
+      padding: 2rem;
+      color: #2c2c2a;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      padding: 3rem;
+    }
+    
+    .header {
+      text-align: center;
+      margin-bottom: 3rem;
+      border-bottom: 3px solid #f59e0b;
+      padding-bottom: 2rem;
+    }
+    
+    .header h1 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: #1f2937;
+    }
+    
+    .header p {
+      font-size: 1.1rem;
+      color: #6b7280;
+      margin-bottom: 0.75rem;
+    }
+    
+    .acme-logo {
+      display: inline-block;
+      background: #dc2626;
+      color: white;
+      padding: 0.5rem 1.5rem;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      margin-top: 0.5rem;
+    }
+    
+    .subtitle {
+      font-size: 0.95rem;
+      color: #9ca3af;
+      margin-top: 1rem;
+      font-style: italic;
+    }
+    
+    .section-title {
+      font-size: 1.8rem;
+      font-weight: 600;
+      color: #1f2937;
+      margin: 2.5rem 0 1.5rem;
+      padding-left: 1rem;
+      border-left: 4px solid #f59e0b;
+    }
+    
+    .scheme-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    .scheme-card {
+      background: #fafafa;
+      border: 2px solid #e5e7eb;
+      border-radius: 12px;
+      padding: 2rem;
+      text-align: center;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .scheme-card:hover {
+      transform: translateY(-4px);
+      border-color: #f59e0b;
+      box-shadow: 0 8px 16px rgba(245, 158, 11, 0.15);
+    }
+    
+    .scheme-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #dc2626, #f59e0b);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .scheme-card:hover::before {
+      opacity: 1;
+    }
+    
+    .acme-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      color: #dc2626;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+      opacity: 0.9;
+    }
+    
+    .scheme-icon {
+      font-size: 4rem;
+      margin-bottom: 1rem;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .scheme-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #1f2937;
+      margin-bottom: 0.75rem;
+    }
+    
+    .scheme-subtitle {
+      font-size: 0.95rem;
+      color: #6b7280;
+      margin-bottom: 1.25rem;
+      line-height: 1.6;
+      min-height: 50px;
+    }
+    
+    .result-badge {
+      display: inline-block;
+      background: #fee2e2;
+      color: #991b1b;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+    
+    .timeline {
+      position: relative;
+      max-width: 900px;
+      margin: 3rem auto;
+      padding: 2rem;
+      background: #fafafa;
+      border-radius: 12px;
+    }
+    
+    .timeline-item {
+      display: flex;
+      margin-bottom: 2.5rem;
+      position: relative;
+      padding-left: 50px;
+    }
+    
+    .timeline-item:last-child {
+      margin-bottom: 0;
+    }
+    
+    .timeline-dot {
+      position: absolute;
+      left: 8px;
+      width: 32px;
+      height: 32px;
+      background: #dc2626;
+      border-radius: 50%;
+      border: 3px solid white;
+      top: 0;
+      box-shadow: 0 0 0 4px #e5e7eb;
+    }
+    
+    .timeline-line {
+      position: absolute;
+      left: 23px;
+      top: 32px;
+      width: 2px;
+      height: calc(100% + 30px);
+      background: #d1d5db;
+    }
+    
+    .timeline-item:last-child .timeline-line {
+      display: none;
+    }
+    
+    .timeline-content {
+      background: white;
+      padding: 1.5rem;
+      border-radius: 8px;
+      border-left: 4px solid #f59e0b;
+      flex: 1;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+    
+    .timeline-date {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #dc2626;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 0.5rem;
+    }
+    
+    .timeline-text {
+      font-size: 1rem;
+      color: #1f2937;
+      margin-bottom: 0.75rem;
+      line-height: 1.6;
+    }
+    
+    .timeline-text strong {
+      color: #1f2937;
+      font-weight: 600;
+    }
+    
+    .outcome {
+      font-size: 0.95rem;
+      color: #6b7280;
+      font-style: italic;
+      padding-top: 0.75rem;
+      border-top: 1px solid #e5e7eb;
+      margin-top: 0.75rem;
+    }
+    
+    .footer-note {
+      margin-top: 3rem;
+      padding: 2rem;
+      background: linear-gradient(135deg, #eff6ff 0%, #f0fdf4 100%);
+      border-radius: 12px;
+      border-left: 6px solid #3b82f6;
+      text-align: center;
+    }
+    
+    .footer-note h3 {
+      font-size: 1.1rem;
+      color: #1f2937;
+      margin-bottom: 0.75rem;
+      font-weight: 600;
+    }
+    
+    .footer-note p {
+      font-size: 0.95rem;
+      color: #6b7280;
+      line-height: 1.7;
+    }
+    
+    .disclaimer {
+      margin-top: 2rem;
+      padding: 1rem;
+      background: #f3f4f6;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 0.85rem;
+      color: #9ca3af;
+    }
+    
+    @media (max-width: 768px) {
+      .container {
+        padding: 1.5rem;
+      }
+      
+      .header h1 {
+        font-size: 1.8rem;
+      }
+      
+      .scheme-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .timeline {
+        padding: 1rem;
+      }
+      
+      .timeline-item {
+        padding-left: 40px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div class="acme-logo">🐺 ACME CORPORATION 🐺</div>
+    <h1>The 2020 Election Fraud Campaign</h1>
+    <p style="font-size: 1.3rem; color: #dc2626; font-weight: 600; margin-top: 1rem;">A Complete Study in Failed Schemes</p>
+    <p class="subtitle">Where elaborate plans met reality and democracy proved stronger than doubt</p>
+  </div>
+
+  <div style="text-align: center; margin-bottom: 2rem;">
+    <img src="https://jhnday.github.io/CrntEvnts/Wiley Coyote.jpeg" alt="Wiley Coyote" style="max-width: 100%; height: auto; border-radius: 12px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); margin-bottom: 1.5rem;">
+  </div>
+
+  <div style="text-align: center; margin-bottom: 2rem; padding: 1.5rem; background: #fef3c7; border-radius: 8px; border-left: 4px solid #f59e0b;">
+    <p style="font-size: 0.95rem; color: #92400e;"><strong>Featuring:</strong> The courtroom roadrunner, the litigation trap, the media mirage, and other ACME classics that didn't go as planned.</p>
+  </div>
+
+  <h2 class="section-title">The Six Main Schemes</h2>
+
+  <div class="scheme-grid">
+    <div class="scheme-card">
+      <div class="acme-label">ACME Corp</div>
+      <div class="scheme-icon">📋</div>
+      <div class="scheme-title">Voter Fraud Audits</div>
+      <div class="scheme-subtitle">Recount ballots repeatedly until the desired number appears</div>
+      <div class="result-badge">🔴 Backfired</div>
+    </div>
+    
+    <div class="scheme-card">
+      <div class="acme-label">ACME Corp</div>
+      <div class="scheme-icon">⚖️</div>
+      <div class="scheme-title">Litigation Blitz</div>
+      <div class="scheme-subtitle">Sue in 60+ courts simultaneously, overwhelming with legal firepower</div>
+      <div class="result-badge">🔴 Dismissed</div>
+    </div>
+    
+    <div class="scheme-card">
+      <div class="acme-label">ACME Corp</div>
+      <div class="scheme-icon">📺</div>
+      <div class="scheme-title">Media Saturation</div>
+      <div class="scheme-subtitle">Repeat claims until they feel true through constant repetition</div>
+      <div class="result-badge">🔴 Declined</div>
+    </div>
+    
+    <div class="scheme-card">
+      <div class="acme-label">ACME Corp</div>
+      <div class="scheme-icon">🗣️</div>
+      <div class="scheme-title">Rally Narrative</div>
+      <div class="scheme-subtitle">Motivate supporters with stolen election claims and grievances</div>
+      <div class="result-badge">🔴 Polarized</div>
+    </div>
+    
+    <div class="scheme-card">
+      <div class="acme-label">ACME Corp</div>
+      <div class="scheme-icon">📱</div>
+      <div class="scheme-title">Social Media Amplification</div>
+      <div class="scheme-subtitle">Viral spread of claims without evidence required</div>
+      <div class="result-badge">🔴 Debunked</div>
+    </div>
+    
+    <div class="scheme-card">
+      <div class="acme-label">ACME Corp</div>
+      <div class="scheme-icon">👔</div>
+      <div class="scheme-title">State-Level Pressure</div>
+      <div class="scheme-subtitle">Pressure local and state officials to overturn results</div>
+      <div class="result-badge">🔴 Resisted</div>
+    </div>
+  </div>
+
+  <h2 class="section-title">The Timeline of Failure</h2>
+
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-line"></div>
+      <div class="timeline-content">
+        <div class="timeline-date">Post-Election 2020</div>
+        <div class="timeline-text"><strong>ACME Scheme Launches:</strong> Legal challenges filed across 60+ courts nationwide</div>
+        <div class="outcome">Result: 60+ dismissals. The coyote runs off a cliff.</div>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-line"></div>
+      <div class="timeline-content">
+        <div class="timeline-date">2021-2023</div>
+        <div class="timeline-text"><strong>Extended Campaign:</strong> "Big Lie" narrative pushed through rallies, media, and statements</div>
+        <div class="outcome">Result: Major voter mistrust but NO evidence of fraud. ACME's trap snaps on itself.</div>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-line"></div>
+      <div class="timeline-content">
+        <div class="timeline-date">January 6, 2021</div>
+        <div class="timeline-text"><strong>Capitol Attempt:</strong> Election fraud claims used to fuel insurrection effort</div>
+        <div class="outcome">Result: Criminal convictions of 1000+, bipartisan condemnation. ACME's anvil falls straight down.</div>
+      </div>
+    </div>
+
+    <div class="timeline-item">
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <div class="timeline-date">July 16, 2024</div>
+        <div class="timeline-text"><strong>Latest Gambit:</strong> Address pushing executive control of election process with election fraud narrative</div>
+        <div class="outcome">Result: Viewed as anti-democratic scheme. Public skepticism, criticism from across political spectrum. Fell flat.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    <h3>🎬 Why ACME's Schemes Keep Failing</h3>
+    <p>
+      Like the Road Runner cartoons, reality has a way of outwitting elaborate plans. Courts demand evidence. Voters read fact-checks. Election officials took oaths seriously. Democratic institutions held firm. Local Republicans certified results. Judges—many appointed by the very same administration—dismissed lawsuits for lacking evidence.
+    </p>
+    <p style="margin-top: 1rem;">
+      <strong>The moral of the story:</strong> Democracy, it turns out, is harder to fool than painted tunnels on canyon walls.
+    </p>
+  </div>
+
+  <div class="disclaimer">
+    <p>This visualization uses satire and humor to document publicly reported attempts to overturn the 2020 election results and the consistent failure of those efforts through courts, institutions, and public opinion. All major claims have been verified by courts, fact-checkers, and independent analyses.</p>
+  </div>
+</div>
+
+</body>
+</html>
