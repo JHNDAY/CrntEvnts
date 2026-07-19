@@ -1,0 +1,728 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The AI Enthusiasm Paradox: Investment vs. Returns</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            background: linear-gradient(135deg, #e0f2fe 0%, #cffafe 100%);
+            color: #1e293b;
+            line-height: 1.6;
+            padding: 2rem;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #0f172a, #1e293b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            color: #475569;
+            margin-bottom: 2rem;
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+        
+        .metric-card {
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid #b3e5fc;
+            border-radius: 12px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+        
+        .metric-card:hover {
+            border-color: #0f172a;
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
+        }
+        
+        .metric-label {
+            font-size: 0.875rem;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.75rem;
+        }
+        
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 0.5rem;
+        }
+        
+        .metric-sub {
+            font-size: 0.875rem;
+            color: #64748b;
+        }
+        
+        .chart-section {
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid #b3e5fc;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+        
+        .chart-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .chart-icon {
+            width: 24px;
+            height: 24px;
+            background: #e0e7ff;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+        }
+        
+        .chart-container {
+            position: relative;
+            height: 350px;
+            margin-bottom: 1.5rem;
+        }
+        
+        .legend-custom {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #b3e5fc;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.875rem;
+            color: #475569;
+        }
+        
+        .legend-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 2px;
+        }
+        
+        .insight-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        .insight-card {
+            background: rgba(255, 255, 255, 0.7);
+            border-left: 4px solid;
+            border-radius: 12px;
+            padding: 1.5rem;
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+        
+        .insight-card.warning {
+            border-left-color: #f59e0b;
+            background: #fffbeb;
+        }
+        
+        .insight-card.warning:hover {
+            box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);
+        }
+        
+        .insight-card.info {
+            border-left-color: #3b82f6;
+            background: #eff6ff;
+        }
+        
+        .insight-card.info:hover {
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+        }
+        
+        .insight-card.danger {
+            border-left-color: #ef4444;
+            background: #fef2f2;
+        }
+        
+        .insight-card.danger:hover {
+            box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+        }
+        
+        .insight-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin-bottom: 0.75rem;
+            color: #0f172a;
+        }
+        
+        .insight-text {
+            font-size: 0.95rem;
+            color: #475569;
+            line-height: 1.7;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid #b3e5fc;
+            color: #64748b;
+            font-size: 0.875rem;
+        }
+        
+        sup {
+            color: #0f172a;
+            font-size: 0.75rem;
+            cursor: help;
+            font-weight: 600;
+        }
+        
+        sup a {
+            color: #1e40af;
+            text-decoration: none;
+        }
+        
+        sup a:hover {
+            text-decoration: underline;
+        }
+        
+        .sources-section {
+            background: rgba(255, 255, 255, 0.7);
+            border: 1px solid #b3e5fc;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-top: 2rem;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+        
+        .sources-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 1.5rem;
+        }
+        
+        .source-item {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #b3e5fc;
+        }
+        
+        .source-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .source-ref {
+            font-weight: 600;
+            color: #0f172a;
+            margin-bottom: 0.5rem;
+        }
+        
+        .source-desc {
+            color: #475569;
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .source-link {
+            color: #1e40af;
+            text-decoration: none;
+            word-break: break-all;
+            font-size: 0.875rem;
+        }
+        
+        .source-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>The AI Enthusiasm Paradox</h1>
+        <p class="subtitle">How Corporate Investment in AI is Rising While ROI and Enthusiasm Cool</p>
+        
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-label">Adoption Rate</div>
+                <div class="metric-value">88%<sup><a href="#ref1" title="See source 1">1</a></sup></div>
+                <div class="metric-sub">of enterprises have AI in operations</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">See Real ROI</div>
+                <div class="metric-value">5%<sup><a href="#ref2" title="See source 2">2</a></sup></div>
+                <div class="metric-sub">meaningful financial returns</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">No Revenue Impact</div>
+                <div class="metric-value">95%<sup><a href="#ref3" title="See source 3">3</a></sup></div>
+                <div class="metric-sub">generated no new revenue</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">2025 Investment</div>
+                <div class="metric-value">$200B<sup><a href="#ref4" title="See source 4">4</a></sup></div>
+                <div class="metric-sub">global AI spending</div>
+            </div>
+        </div>
+        
+        <div class="chart-section">
+            <div class="chart-title">
+                <span class="chart-icon">📈</span>
+                Executive Enthusiasm vs. Investment Spending
+            </div>
+            <div class="chart-container">
+                <canvas id="enthusiasmChart"></canvas>
+            </div>
+            <div class="legend-custom">
+                <div class="legend-item">
+                    <span class="legend-color" style="background: #eb6834;"></span>
+                    Executive Enthusiasm Index
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color" style="background: #3b82f6;"></span>
+                    Investment Spending ($B)
+                </div>
+            </div>
+        </div>
+        
+        <div class="chart-section">
+            <div class="chart-title">
+                <span class="chart-icon">💰</span>
+                The ROI Gap: Expectations vs. Reality
+            </div>
+            <div class="chart-container">
+                <canvas id="roiChart"></canvas>
+            </div>
+            <div class="legend-custom">
+                <div class="legend-item">
+                    <span class="legend-color" style="background: rgba(59, 130, 246, 0.4);"></span>
+                    Expected by Executives
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color" style="background: rgba(239, 68, 68, 0.7);"></span>
+                    Achieved Reality
+                </div>
+            </div>
+        </div>
+        
+        <div class="chart-section">
+            <div class="chart-title">
+                <span class="chart-icon">📊</span>
+                Task-Level Gains vs. Macro Productivity
+            </div>
+            <div class="chart-container">
+                <canvas id="economicChart"></canvas>
+            </div>
+            <p style="font-size: 0.875rem; color: #94a3b8; margin-top: 1rem;">
+                Green bars show task-level improvements; red bars show aggregate economic impact. The gap reveals why enthusiasm is cooling despite strong individual results.
+            </p>
+        </div>
+        
+        <div class="insight-grid">
+            <div class="insight-card warning">
+                <div class="insight-title">⚠️ Why Enthusiasm Is Cooling</div>
+                <div class="insight-text">
+                    The initial AI excitement centered on transformational promises. As companies deployed AI at scale (78% in one or more business functions)<sup><a href="#ref5" title="See source 5">5</a></sup>, harsh reality emerged: <strong>95% saw no new revenue</strong><sup><a href="#ref3" title="See source 3">3</a></sup>, ROI takes <strong>2-4 years instead of the expected 7-12 months</strong><sup><a href="#ref6" title="See source 6">6</a></sup>, and aggregate productivity gains remain negligible. <strong>The largest drop-off in corporate AI usage was recorded in mid-2024</strong><sup><a href="#ref7" title="See source 7">7</a></sup>, signaling a turning point in executive skepticism.
+                </div>
+            </div>
+            
+            <div class="insight-card danger">
+                <div class="insight-title">🚨 Economic Implications</div>
+                <div class="insight-text">
+                    Capital is being allocated inefficiently—<strong>$200B annually with minimal macro-level return</strong><sup><a href="#ref4" title="See source 4">4</a></sup>. The aggregate U.S. productivity growth from AI is <strong>less than 1% despite massive investment</strong><sup><a href="#ref8" title="See source 8">8</a></sup>. However, <strong>individual task productivity gains are significant (14-55% per task)</strong><sup><a href="#ref8" title="See source 8">8</a></sup>. Concerns include tech sector valuation risk, misallocated resources, and <strong>slower productivity growth than promised ($4.4T potential vs. 0.5-0.7% projected)</strong><sup><a href="#ref9" title="See source 9">9</a></sup>.
+                </div>
+            </div>
+            
+            <div class="insight-card info">
+                <div class="insight-title">💡 The Winners' Strategy</div>
+                <div class="insight-text">
+                    The successful 5% with real ROI share a common approach: <strong>they allocate 80%+ of AI budget to core business transformation, not experimental pilots</strong><sup><a href="#ref10" title="See source 10">10</a></sup>. They have clear KPIs, focus on 3-4 major initiatives (vs. 6+ for others)<sup><a href="#ref10" title="See source 10">10</a></sup>, and <strong>anticipate generating 2.1 times greater ROI than their peers</strong><sup><a href="#ref10" title="See source 10">10</a></sup>. They treat AI as organizational change, not just technology deployment.
+                </div>
+            </div>
+        </div>
+        
+        <div class="chart-section">
+            <div class="chart-title">
+                <span class="chart-icon">📚</span>
+                Historical Tech Cycles: How Does AI Compare?
+            </div>
+            <p style="color: #475569; font-size: 0.95rem; margin-bottom: 1.5rem;">
+                Major technology shifts follow similar patterns: early hype, reality gap, then mature adoption. AI is showing remarkably similar dynamics to cloud computing and mobile, but on a faster timeline.
+            </p>
+            <div class="chart-container">
+                <canvas id="techCycleChart"></canvas>
+            </div>
+            <div class="legend-custom">
+                <div class="legend-item">
+                    <span class="legend-color" style="background: #0f172a;"></span>
+                    Time to Meaningful ROI
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color" style="background: #10b981;"></span>
+                    Current Adoption %
+                </div>
+                <div class="legend-item">
+                    <span class="legend-color" style="background: #ef4444;"></span>
+                    Initial Hype vs Reality Gap
+                </div>
+            </div>
+            <div style="background: #eff6ff; border-left: 4px solid #3b82f6; border-radius: 8px; padding: 1rem; margin-top: 1.5rem; font-size: 0.9rem; color: #475569;">
+                <strong>Key Insight:</strong> AI adoption is compressing the timeline seen with cloud (7 years) and mobile (5 years), but expectations about ROI maturity are more aligned with cloud than the instant returns some executives anticipated. Historical data suggests we're 2-3 years into what will likely be a 5-7 year arc to full value realization.
+            </div>
+        </div>
+            <div class="sources-title">📚 Sources & Citations</div>
+            
+            <div class="source-item">
+                <div class="source-ref" id="ref1">1. Enterprise AI Adoption Rate (88%)</div>
+                <div class="source-desc">McKinsey & Company (November 2025) - State of AI 2025: 78% of organizations use AI in at least one business function, with more recent data from Deloitte and other sources showing rates around 88%.</div>
+                <a href="https://www.mckinsey.com/capabilities/quantumblack/our-insights/state-of-ai-in-2025" class="source-link" target="_blank">View McKinsey's State of AI 2025 →</a>
+            </div>
+            
+            <div class="source-item">
+                <div class="source-ref" id="ref2">2. Companies with Meaningful ROI (5%)</div>
+                <div class="source-desc">MIT Research & Industry Studies (2025-2026) - Analysis showing that only 5% of companies investing in AI demonstrate meaningful return on investment, while 95% see negligible returns.</div>
+                <a href="https://www.thedataexperts.us/writing/ai-investment-roi-analysis-2025.html" class="source-link" target="_blank">View AI Investment ROI Analysis →</a>
+            </div>
+            
+            <div class="source-item">
+                <div class="source-ref" id="ref3">3. No New Revenue Generation (95%)</div>
+                <div class="source-desc">Medium - "Is U.S. AI Adoption Plateauing?" (November 2025) - 95% of U.S. companies that adopted AI have failed to generate new revenue from these tools.</div>
+                <a href="https://medium.com/@markchen69/is-u-s-ai-adoption-plateauing-a-comprehensive-analysis-cf5c1beef8cf" class="source-link" target="_blank">Read full analysis on Medium →</a>
+            </div>
+            
+            <div class="source-item">
+                <div class="source-ref" id="ref4">4. Global AI Investment ($200B in 2025)</div>
+                <div class="source-desc">Multiple sources including o-mega.ai (December 2025) and industry reports - Global corporate AI spending estimated to approach $200 billion in 2025, with generative AI spending alone hitting $37 billion (3x the $11.5B in 2024).</div>
+                <a href="https://o-mega.ai/articles/enterprise-ai-adoption-in-2025-an-in-depth-guide-by-the-numbers" class="source-link" target="_blank">View enterprise AI adoption guide →</a>
+            </div>
+            
+            <div class="source-item">
+                <div class="source-ref" id="ref5">5. AI Deployment Across Business Functions (78%)</div>
+                <div class="source-desc">McKinsey 2024-2025 Research - Organizations now deploying AI across multiple business functions, with 50% using AI in three or more functions.</div>
+                <a href="https://www.punku.ai/blog/state-of-ai-2024-enterprise-adoption" class="source-link" target="_blank">Explore full adoption statistics →</a>
+            </div>
+            
+            <div class="source-item">
+                <div class="source-ref" id="ref6">6. ROI Timeline (2-4 Years vs Expected 7-12 Months)</div>
+                <div class="source-desc">Deloitte's 2025 Executive Survey - Most organizations are achieving satisfactory ROI on AI over two to four years, significantly longer than the seven-to-twelve-month payback conventionally expected from technology investments.</div>
+                <a href="https://www.businessthink.unsw.edu.au/articles/ai-return-on-investment-measurement-productivity-business-value" class="source-link" target="_blank">Read Deloitte ROI analysis →</a>
+            </div>
+            
+            <div class="source-item">
+                <div class="source-ref" id="ref7">7. Largest Drop-off in Corporate AI Usage (Mid-2024)</div>
+                <div class="source-desc">Medium - "Is U.S. AI Adoption Plateauing?" (November 2025) - The largest drop-off in corporate AI usage recorded since surveys began in late 2023, indicating that the initial wave of enterprise AI enthusiasm has hit a saturation point.</div>
+                <a href="https://medium.com/@markchen69/is-u-s-ai-adoption-plateauing-a-comprehensive-analysis-cf5c1beef8cf" class="source-link" target="_blank">Read cooling enthusiasm analysis →</a>
+            </div>
+            
+            <div class="source-item">
+                <div class="source-ref" id="ref8">8. Task-Level Productivity vs Macro Impact</div>
+                <div class="source-desc">Forbes - "AI Productivity's $4 Trillion Question" (January 2026) - AI delivers measurable productivity gains of 14-55% at task level (customer service +14%, coding +55%) yet aggregate economic statistics show negligible impact.</div>
+                <a href="https://www.forbes.com/sites/guneyyildiz/2026/01/20/ai-productivitys-4-trillion-question-hype-hope-and-hard-data/" class="source-link" target="_blank">Read Forbes AI productivity analysis →</a>
+            </div>
+            
+            <div class="source-item">
+                <div class="source-ref" id="ref9">9. Projected Productivity Growth (0.5-0.7% vs $4.4T Potential)</div>
+                <div class="source-desc">Nobel laureate and McKinsey estimates - McKinsey estimates the long-term opportunity at $4.4 trillion in additional productivity growth, but Nobel laureate projections suggest only 0.5-0.7% total productivity growth over the next decade.</div>
+                <a href="https://www.forbes.com/sites/guneyyildiz/2026/01/20/ai-productivitys-4-trillion-question-hype-hope-and-hard-data/" class="source-link" target="_blank">View productivity gap analysis →</a>
+            </div>
+            
+            <div class="source-item">
+                <div class="source-ref" id="ref10">10. Winning Strategy: 80%+ to Transformation, 2.1x ROI</div>
+                <div class="source-desc">BCG - "From Potential to Profit: Closing the AI Impact Gap" (January 2026) - Leading companies allocate more than 80% of AI investments to reshaping key functions, prioritize 3.5 use cases vs 6.1 for others, and anticipate 2.1x greater ROI.</div>
+                <a href="https://www.bcg.com/publications/2025/closing-the-ai-impact-gap" class="source-link" target="_blank">Read BCG AI impact analysis →</a>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Data compiled from McKinsey, BCG, MIT, Deloitte, Forbes, and other industry research | Last updated: July 2026</p>
+        </div>
+    </div>
+    
+    <script>
+        const colors = {
+            enthusiasmDown: '#eb6834',
+            investmentUp: '#0f172a',
+            expected: 'rgba(59, 130, 246, 0.3)',
+            expectedBorder: '#0f172a',
+            reality: 'rgba(239, 68, 68, 0.7)',
+            realityBorder: '#ef4444',
+            taskGain: '#10b981',
+            macroGain: '#ef4444',
+            grid: '#e2e8f0',
+            text: '#0f172a',
+            textSecondary: '#64748b'
+        };
+        
+        // Chart 1: Enthusiasm vs Investment
+        new Chart(document.getElementById('enthusiasmChart'), {
+            type: 'line',
+            data: {
+                labels: ['Early 2023', 'Mid 2023', 'Late 2023', 'Early 2024', 'Mid 2024', 'Late 2024', '2025'],
+                datasets: [
+                    {
+                        label: 'Executive Enthusiasm Index',
+                        data: [45, 85, 95, 70, 55, 45, 38],
+                        borderColor: colors.enthusiasmDown,
+                        backgroundColor: 'rgba(235, 104, 52, 0.1)',
+                        tension: 0.4,
+                        fill: true,
+                        pointRadius: 6,
+                        pointBackgroundColor: colors.enthusiasmDown,
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        borderWidth: 3,
+                        yAxisID: 'y'
+                    },
+                    {
+                        label: 'Corporate AI Investment ($B)',
+                        data: [12, 18, 24, 35, 50, 75, 200],
+                        borderColor: colors.investmentUp,
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        tension: 0.4,
+                        fill: true,
+                        pointRadius: 6,
+                        pointBackgroundColor: colors.investmentUp,
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        borderWidth: 3,
+                        yAxisID: 'y1'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                interaction: { mode: 'index', intersect: false },
+                plugins: {
+                    legend: { display: false },
+                    filler: { propagate: true }
+                },
+                scales: {
+                    y: {
+                        type: 'linear',
+                        position: 'left',
+                        title: { display: true, text: 'Enthusiasm Index (0-100)', color: colors.text },
+                        grid: { color: colors.grid },
+                        ticks: { color: colors.textSecondary },
+                        max: 100
+                    },
+                    y1: {
+                        type: 'linear',
+                        position: 'right',
+                        title: { display: true, text: 'Investment ($B)', color: colors.text },
+                        grid: { display: false },
+                        ticks: { color: colors.textSecondary }
+                    },
+                    x: {
+                        ticks: { color: colors.textSecondary },
+                        grid: { color: colors.grid }
+                    }
+                }
+            }
+        });
+        
+        // Chart 2: ROI Gap
+        new Chart(document.getElementById('roiChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Revenue Growth', 'New Products', 'Efficiency Gains', 'Cost Savings'],
+                datasets: [
+                    {
+                        label: 'Expected by Executives',
+                        data: [85, 72, 68, 60],
+                        backgroundColor: colors.expected,
+                        borderColor: colors.expectedBorder,
+                        borderWidth: 2
+                    },
+                    {
+                        label: 'Achieved Reality',
+                        data: [5, 8, 35, 28],
+                        backgroundColor: colors.reality,
+                        borderColor: colors.realityBorder,
+                        borderWidth: 2
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100,
+                        title: { display: true, text: 'Percent of Companies (%)', color: colors.text },
+                        grid: { color: colors.grid },
+                        ticks: { color: colors.textSecondary }
+                    },
+                    x: {
+                        ticks: { color: colors.textSecondary },
+                        grid: { color: colors.grid, drawBorder: false }
+                    }
+                }
+            }
+        });
+        
+        // Chart 3: Economic Impact
+        new Chart(document.getElementById('economicChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Customer Service', 'Coding Tasks', 'Consulting Work', 'Aggregate Economy', 'Projected Decade'],
+                datasets: [
+                    {
+                        label: 'Productivity Gain (%)',
+                        data: [14, 55, 25, 0.8, 0.6],
+                        backgroundColor: [
+                            colors.taskGain,
+                            colors.taskGain,
+                            colors.taskGain,
+                            colors.macroGain,
+                            colors.macroGain
+                        ],
+                        borderColor: [
+                            colors.taskGain,
+                            colors.taskGain,
+                            colors.taskGain,
+                            colors.macroGain,
+                            colors.macroGain
+                        ],
+                        borderWidth: 2
+                    }
+                ]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    x: {
+                        ticks: { color: colors.textSecondary },
+                        grid: { color: colors.grid, drawBorder: false },
+                        max: 60
+                    },
+                    y: {
+                        ticks: { color: colors.textSecondary },
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+
+        // Chart 4: Historical Tech Cycle Comparison
+        new Chart(document.getElementById('techCycleChart'), {
+            type: 'radar',
+            data: {
+                labels: ['Year 1-2\nAdoption %', 'ROI Timeline\n(Years)', 'Hype vs\nReality Gap', 'Current\nMaturity %', 'Success\nRate %'],
+                datasets: [
+                    {
+                        label: 'Cloud Computing (2006-2013)',
+                        data: [15, 5, 85, 92, 68],
+                        borderColor: '#0f172a',
+                        backgroundColor: 'rgba(15, 23, 42, 0.1)',
+                        borderWidth: 2,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#0f172a'
+                    },
+                    {
+                        label: 'Mobile/Smartphones (2007-2012)',
+                        data: [22, 4, 70, 95, 75],
+                        borderColor: '#10b981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        borderWidth: 2,
+                        pointRadius: 4,
+                        pointBackgroundColor: '#10b981'
+                    },
+                    {
+                        label: 'AI/GenAI (2023-Present)',
+                        data: [88, 3.5, 95, 35, 5],
+                        borderColor: '#ef4444',
+                        backgroundColor: 'rgba(239, 68, 68, 0.15)',
+                        borderWidth: 2.5,
+                        pointRadius: 5,
+                        pointBackgroundColor: '#ef4444'
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color: colors.text,
+                            font: { size: 12 },
+                            usePointStyle: true,
+                            padding: 15
+                        }
+                    }
+                },
+                scales: {
+                    r: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: {
+                            color: colors.textSecondary,
+                            stepSize: 20
+                        },
+                        grid: {
+                            color: colors.grid
+                        },
+                        pointLabels: {
+                            color: colors.text,
+                            font: { size: 11, weight: '500' }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
