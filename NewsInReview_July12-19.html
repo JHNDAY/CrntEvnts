@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fabrication and Force · Week of July 12 – July 19, 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=EB+Garamond:ital,opsz,wght@0,8..144,400;0,8..144,500;1,8..144,400;1,8..144,500&family=Cinzel:wght@400;700;900&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+
+/* ═══════════════════════════════════════════
+   SHARED TOKENS  (edifice_rex palette)
+═══════════════════════════════════════════ */
+:root {
+  --gold:       #c9a84c;
+  --gold-light: #e8c97a;
+  --gold-dark:  #8b6914;
+  --gold-xs:    rgba(201,168,76,0.10);
+  --cream:      #f5efe0;
+  --parchment:  #ede0c4;
+  --white:      #f9f5ed;
+  --ink:        #1a1208;
+  --mid:        #3a2a10;
+  --dim:        #7a6a50;
+  --red:        #8b1a1a;
+  --red-light:  #b22222;
+  --red-xs:     rgba(139,26,26,0.09);
+  --rule:       rgba(201,168,76,0.18);
+  --rule-md:    rgba(201,168,76,0.32);
+  --shadow:     rgba(26,18,8,0.35);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background-color: #1a1208;
+  background-image:
+    radial-gradient(ellipse at 20% 20%, rgba(139,105,20,0.15) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 80%, rgba(139,26,26,0.12) 0%, transparent 60%);
+  min-height: 100vh;
+  font-family: 'EB Garamond', Georgia, serif;
+  color: var(--ink);
+  padding: 0 1rem 4rem;
+}
+
+/* ═══════════════════════════════════════════
+   TOGGLE BAR
+═══════════════════════════════════════════ */
+.toggle-bar {
+  position: sticky; top: 0; z-index: 1000;
+  display: flex; justify-content: center;
+  padding: 0.8rem 1rem;
+  background: linear-gradient(to bottom, rgba(26,18,8,0.98) 0%, rgba(26,18,8,0.85) 100%);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(201,168,76,0.2);
+}
+.toggle-pill {
+  display: flex;
+  background: rgba(26,18,8,0.9);
+  border: 1px solid rgba(201,168,76,0.35);
+  border-radius: 100px;
+  padding: 3px; gap: 2px;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.5), inset 0 1px 0 rgba(201,168,76,0.1);
+}
+.toggle-btn {
+  font-family: 'Cinzel', serif; font-size: 0.65rem; font-weight: 700;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  padding: 0.45rem 1.4rem; border: none; border-radius: 100px;
+  cursor: pointer; transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+  color: rgba(201,168,76,0.5); background: transparent;
+}
+.toggle-btn.active {
+  background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold) 100%);
+  color: var(--ink);
+  box-shadow: 0 2px 12px rgba(201,168,76,0.4);
+}
+.toggle-btn:hover:not(.active) { color: var(--gold-light); }
+
+/* ═══════════════════════════════════════════
+   VIEW WRAPPERS
+═══════════════════════════════════════════ */
+.view { padding-top: 2rem; }
+.view.hidden { display: none; }
+
+.view .page {
+  margin: 0 auto;
+  background: var(--cream);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  box-shadow: 0 0 80px rgba(201,168,76,0.25), 0 20px 60px var(--shadow), 0 0 0 1px rgba(201,168,76,0.3);
+  position: relative; overflow: hidden;
+  max-width: 900px;
+}
+.view .page::before {
+  content: ''; position: absolute; inset: 12px;
+  border: 1px solid var(--gold); pointer-events: none; z-index: 10;
+}
+.view .page::after {
+  content: ''; position: absolute; inset: 16px;
+  border: 2px solid var(--gold); pointer-events: none; z-index: 9;
+  opacity: 0.5;
+}
+
+.view .content {
+  position: relative; z-index: 20;
+  padding: 3.5rem 3rem;
+}
+
+/* HEADER */
+.header {
+  text-align: center; border-bottom: 2px solid var(--gold);
+  padding-bottom: 1.5rem; margin-bottom: 2rem;
+}
+.header-label {
+  font-family: 'Cinzel', serif; font-size: 0.55rem; letter-spacing: 0.3em;
+  text-transform: uppercase; color: var(--dim); margin-bottom: 0.3rem;
+}
+.header-title {
+  font-family: 'Playfair Display', serif; font-size: 2.4rem; font-weight: 700;
+  color: var(--ink); margin-bottom: 0.5rem; line-height: 1.2;
+}
+.header-subtitle {
+  font-family: 'Cinzel', serif; font-size: 0.65rem; letter-spacing: 0.15em;
+  text-transform: uppercase; color: var(--dim);
+}
+
+/* SECTIONS */
+.section { margin-bottom: 2.5rem; }
+.section-title {
+  font-family: 'Cinzel', serif; font-size: 0.7rem; font-weight: 700;
+  letter-spacing: 0.25em; text-transform: uppercase;
+  color: var(--red); margin-bottom: 1.2rem;
+  border-top: 1px solid var(--rule); border-bottom: 2px solid var(--red-xs);
+  padding-top: 0.8rem; padding-bottom: 0.6rem;
+}
+.section p {
+  margin-bottom: 0.8rem; line-height: 1.75;
+  text-align: justify;
+}
+.section strong { font-weight: 600; }
+.section ul {
+  list-style: none; margin-left: 0;
+}
+.section li {
+  margin-bottom: 0.6rem; padding-left: 1.8rem; position: relative;
+  line-height: 1.65;
+}
+.section li::before {
+  content: '▪'; position: absolute; left: 0.4rem;
+  color: var(--gold);
+}
+
+/* DIVIDER */
+.divider {
+  text-align: center; margin: 2rem 0; color: var(--gold);
+  font-size: 1.2rem; letter-spacing: 0.5em;
+}
+
+/* FACT ITEMS */
+.fact-item {
+  display: flex; gap: 1.2rem; margin-bottom: 1.5rem;
+  padding-bottom: 1rem; border-bottom: 1px solid var(--rule);
+}
+.fact-item:last-child { border-bottom: none; }
+.fact-num {
+  font-family: 'Cinzel', serif; font-size: 1.8rem; font-weight: 700;
+  color: var(--gold); flex-shrink: 0; width: 2rem; text-align: center;
+  line-height: 1;
+}
+.fact-text {
+  flex: 1; line-height: 1.7; font-size: 0.95rem;
+}
+
+/* CLOSING */
+.closing { text-align: center; margin-top: 3rem; }
+.ornament {
+  display: block; font-size: 1.8rem; color: var(--gold);
+  margin-bottom: 0.5rem;
+}
+.pull-quote {
+  font-family: 'Playfair Display', serif; font-size: 1.15rem;
+  font-style: italic; color: var(--mid); margin-bottom: 1rem;
+  line-height: 1.8;
+}
+.pull-quote cite {
+  font-family: 'Cinzel', serif; font-size: 0.6rem; font-style: normal;
+  letter-spacing: 0.1em; color: var(--dim); text-transform: uppercase;
+  display: block; margin-top: 0.8rem;
+}
+.closing-text {
+  font-size: 0.9rem; color: var(--mid); margin-bottom: 1.5rem;
+  line-height: 1.7;
+}
+.closing-sig {
+  font-family: 'Cinzel', serif; font-size: 0.65rem; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--dim); margin: 1rem 0;
+}
+
+</style>
+</head>
+<body>
+
+<div class="toggle-bar">
+  <div class="toggle-pill">
+    <button class="toggle-btn active" id="btn-glance" onclick="switchView('glance')">At A Glance</button>
+    <button class="toggle-btn" id="btn-depth" onclick="switchView('depth')">Depth</button>
+  </div>
+</div>
+
+<!-- GLANCE VIEW: Ultra-Condensed Summary -->
+<div id="view-glance" class="view">
+  <div class="page">
+    <div class="content">
+      <div class="header">
+        <div class="header-label">This Week's Essentials</div>
+        <div class="header-title">Fabrication and Force</div>
+        <div class="header-subtitle">Week of July 12 – July 19, 2026</div>
+      </div>
+
+      <div class="section">
+        <p><strong>America's Global Reputation Collapses:</strong> A Nira survey of 46,000 people across 85 countries shows the U.S. at -16% net favorability, ranking 125th globally—just ahead of Iran, Afghanistan, North Korea and Israel. This represents a catastrophic 27% drop from +22% in Biden's final year, falling to -5% at the start of Trump's term and now to -16% as of April 2026.</p>
+      </div>
+
+      <div class="section">
+        <p><strong>Trump's Election Speech: A Tissue of Falsehoods:</strong> Trump delivered a primetime address claiming victory in Iran, election security, and economic performance. Analysis reveals 70% of his remarks were false or grossly misleading—from inflated murder statistics among immigrants, to debunked claims of Chinese election interference, to unsupported assertions about voting machine integrity. Election security experts called the promised "bombshell" a "dud."</p>
+      </div>
+
+      <div class="section">
+        <p><strong>Todd Blanche's AG Confirmation Hearing:</strong> Trump's personal lawyer and acting Attorney General testified before the Senate Judiciary Committee. He defended pardons for January 6 rioters, claimed investigations of Trump's enemies were "his right and duty," and admitted "mistakes were made" regarding the Epstein files. A federal judge ruled his settlement of a $10B IRS lawsuit violated judicial review and referred him to the NY State Bar for disciplinary action.</p>
+      </div>
+
+      <div class="section">
+        <p><strong>ICE Shootings and Deadly Enforcement:</strong> Two unjustified ICE shootings killed Latino drivers in Houston and Maine—both erroneous targets shot through their car windows. The Maine shooter has a documented history of domestic violence. ICE has made 29 shootings this year resulting in 8-11 deaths. Since 2025 began, 52 immigrants have died in detention—4 times the Biden rate. Trump reinstated vehicle stops after a brief pause, claiming ICE is "loved and respected," contradicting IPSOS polling showing 62% think ICE has "gone too far."</p>
+      </div>
+
+      <div class="section">
+        <p><strong>Maine Democratic Senate Race Intensifies:</strong> Democrats select delegates this weekend to nominate Platner's replacement at a July 25 convention in Bangor. Leading candidates include former Senate President Troy Jackson, public health official Nirav Shah, and Secretary of State Shana Bellows. Jackson's populist messaging and Maine roots position him as the likely nominee to challenge Susan Collins, who supports Trump positions 95% of the time.</p>
+      </div>
+
+      <div class="section">
+        <p><strong>Iran Escalation Accelerates:</strong> Trump declared the ceasefire over and has intensified bombing of Iranian infrastructure. The Strait of Hormuz is essentially closed; Iran is attacking U.S. assets and regional infrastructure. A U.S. base in Jordan was attacked, killing two soldiers. Trump initially proposed a 20% fee on cargo passage through the Strait, then withdrew it in favor of promising "MASSIVE investments" from Gulf States. Bret Stephens observed: "Dealing with Trump's brain may be an insurmountable" foreign policy problem.</p>
+      </div>
+
+      <div class="divider">✦ ✦ ✦</div>
+
+      <div class="section closing">
+        <span class="ornament">⚜</span>
+        <div class="pull-quote">
+          "Trump is desperate to corrupt the elections while falsely accusing the Democrats of doing what he wants to do."
+          <cite>Analysis of Election Rhetoric</cite>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /page -->
+</div><!-- /view-glance -->
+
+<!-- DEPTH VIEW: Full Article -->
+<div id="view-depth" class="view hidden">
+  <div class="page">
+    <div class="content">
+      <div class="header">
+        <div class="header-label">In Full</div>
+        <div class="header-title">Fabrication and Force</div>
+        <div class="header-subtitle">Week of July 12 – July 19, 2026</div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">America's Reputation in Freefall: Global Favorability Collapse</div>
+        <p>A comprehensive Nira survey of 46,000 people across 85 countries over a 13-month period ending in April 2026 paints a devastating picture of America's standing in the world. The U.S. ranked 125th in net favorability (positive minus negative perception) at -16%, positioned directly behind Pakistan, Syria, Russia, and Iran, and ahead only of Afghanistan, North Korea, and Israel at -24%.</p>
+        <p>Only one-third of the 68 surveyed countries received negative scores. Switzerland and Canada led globally at +36%, followed by Japan (+34%), Italy (+32%), Germany (+21%), and France and the U.K. (+11%). China registered +7%, while Russia scored -11%.</p>
+        <p>The trajectory is alarming. In April 2024, the last full Biden year, the U.S. stood at +22% favorability. This plummeted to -5% at the beginning of Trump's second term in 2025. The 27% drop occurred as tariffs were just being implemented. An additional 11% decline this year presumably reflects the Iran War and America's implicit association with Israel's crisis.</p>
+        <p>These numbers would be extraordinarily difficult for even Trump to spin. They represent not merely political disagreement but a fundamental erosion of American soft power and global standing. The Ugly American has returned to the world stage.</p>
+      </div>
+
+      <div class="divider">✦ ✦ ✦</div>
+
+      <div class="section">
+        <div class="section-title">Trump's Primetime Election Speech: A Compendium of Falsehoods</div>
+        <p>In previewing the speech, pundit Christopher Bates observed: "Every time Trump speaks to the nation it's 48% braggadocio, 48% settling of scores and maybe 4% of useful stuff." Analysis of Thursday's primetime address revealed the actual composition: 20% braggadocio, 10% generic score-settling, 70% false or grossly misleading statements, and 0% useful policy content.</p>
+        <p><strong>Inflation and Economic Claims:</strong> Trump asserted: "Less than two years ago, we inherited the worst inflation in 48 years." Inflation stood at 2.9% when Biden left office—hardly catastrophic. He claimed "11,788 murderers" came through open borders over a 40-year compilation period including already-incarcerated and deported individuals, whereas available data indicates immigrants commit crimes at lower rates than the general population. Claims about the stock market and 401(k)s benefit only the minority with such holdings, ignoring wage stagnation for most Americans.</p>
+        <p><strong>The Iran War:</strong> Trump proclaimed: "We are likewise winning big in Iran, and you will see the fruits of that labor very, very shortly." The Iran conflict has become a costly quagmire. As Christopher Bates noted, "Each day that passes, the war bears more and more resemblance to Vietnam."</p>
+        <p><strong>Election Security Fabrications:</strong> Trump claimed he was "announcing the immediate declassification and release of critical intelligence, revealing shocking vulnerabilities in our election infrastructure." Much of the released material had already been public; many supportive documents were debunked; some contradicted his own assertions.</p>
+        <p>On alleged Chinese interference, Trump asserted: "During the 2020 election cycle, the People's Republic of China carried out the largest corruption of election data in history." An intelligence report dated January 7, 2021—while Trump was still in office—found that China considered influence operations but decided against them. A White House document currently online states: "We assess that vote tabulation systems would be difficult to manipulate on a wide enough scale to compromise election results." John Solomon, recently added to Trump's election task force, acknowledged to MSNBC this week: "The Intelligence Committee has zero evidence that someone, that a foreign power, flipped a vote in 2020, '22 or '24."</p>
+        <p>Trump claimed: "Electronic voting machines and ballot counting systems are dishonest, almost all." This assertion lacks any evidentiary support and contradicts intelligence reports and even his own appointees, including 2020-21 DNI John Ratcliffe, who declared the 2020 election "the finest in U.S. history."</p>
+        <p>On voter registration, Trump alleged: "According to the DHS review, they identified approximately 278k non-citizens who are registered to vote in federal elections." This figure derived from crude data matching between California, New Jersey, Nevada, and Pennsylvania against incomplete federal records and lacks corroboration.</p>
+        <p><strong>The SAVE Act Coercion:</strong> Trump demanded: "Congress must pass the SAVE Act. The only reason you wouldn't do it is you want to cheat." What appears transparent is that Trump wants to cheat—projecting his intentions onto others, a consistent psychological pattern.</p>
+        <p><strong>Expert Assessment:</strong> David Becker, executive director of the Center for Election Innovation & Research, stated flatly: "The White House promised a bombshell, and they delivered a dud." A New York Times analysis noted the speech purported to build public confidence but instead undermined it. Maureen Dowd called it "a batty stew of whiny complaints." Senator Mark Warner (D-VA) opined: "This guy will not win a free and fair election, so he will do anything to intervene, to corrupt our elections." Christopher Bates summed it up: Trump is "desperate to pass the SAVE Act, which he feels will save his a**."</p>
+        <p>All of this reveals Trump's profound anxiety about the midterms. He fears Democrats will at least win the House, making his remaining tenure miserable. To prevent this, he schemes to corrupt elections while falsely accusing others of his intended crimes.</p>
+      </div>
+
+      <div class="divider">✦ ✦ ✦</div>
+
+      <div class="section">
+        <div class="section-title">Todd Blanche: From Personal Counsel to Attorney General</div>
+        <p>Todd Blanche entered Trump's orbit in 2019 representing Paul Manafort, proceeding to represent Boris Epstein and Igor Furman. In April 2023, Trump hired him for the Stormy Daniels hush money case, followed by the classified documents and election obstruction prosecutions. Upon election, Trump nominated Blanche as Deputy Attorney General, confirming him in March 2025. After Pam Bondi's firing in April, Blanche became Acting Attorney General, receiving a formal AG nomination in June.</p>
+        <p>His Senate Judiciary Committee hearing this week revealed a lawyer attempting to balance professional demeanor with allegiance to his client. In his opening statement, he pledged: "I am here today to earn your trust once more." Unlike the combative Bondi, Blanche responded calmly to Democratic questions, with occasional flashes of passive-aggressiveness.</p>
+        <p><strong>Key Testimony:</strong> When asked if he was friends with Trump, Blanche deflected: "I am his lawyer...was his lawyer and now I'm deputy AG." Regarding the Epstein files, he admitted "mistakes were made," but initially resisted meeting with abuse survivors, claiming legal prohibitions. Senator Thom Tillis (R-NC) stated he would not vote for confirmation unless Blanche met with survivors. Overcome by this pressure, Blanche subsequently met with them for an hour.</p>
+        <p>On January 6 rioters' treatment, Blanche claimed recusal yet defended vacating convictions for 12 leaders. He asserted: "The Constitution gives the president the full power to pardon any person for any reason he wants"—a chilling endorsement of absolute executive clemency power.</p>
+        <p>When queried about the $1.8 billion Anti-Weaponization Fund, Blanche insisted it was "dead" but refused to memorialize this in writing. He acknowledged Trump's right to sue the DOJ to reinstate it.</p>
+        <p><strong>Judicial Rebuke:</strong> On Monday, U.S. District Judge Kathleen Williams ruled that the $10 billion IRS settlement—which funded the $1.8B Anti-Weaponization initiative and granted Trump, his family, and businesses immunity from tax audits on pre-settlement returns—violated judicial review principles. The Judge wrote: "The parties used the existence of federal litigation as a means of conferring legitimacy upon a course of action that they were unwilling to subject to judicial review." She also indicated she would refer Blanche to the New York State Bar Association for potential disciplinary action.</p>
+        <p><strong>Enemies Investigation:</strong> When asked about investigating and prosecuting the president's perceived enemies, Blanche responded: "That is his right, and indeed it is his duty to do that." Senator Hirono (D-HI) pressed for clarification; Blanche was evasive.</p>
+        <p><strong>Path to Confirmation:</strong> Following Lindsey Graham's death, the Judiciary Committee has 21 members—11 Republicans and 10 Democrats. A majority vote is required to advance the nomination to full Senate. If all 10 Democrats vote no, only one Republican defection kills it. Senators Cornyn (R-TX) and Tillis (R-NC), both not running for reelection, are possible dissenters. A New York Times editorial asked pointedly: "We are about to find out if Republicans can still say no." Even if defeated, Blanche can serve as Acting AG for 210 days, extending to October's end.</p>
+      </div>
+
+      <div class="divider">✦ ✦ ✦</div>
+
+      <div class="section">
+        <div class="section-title">Immigration Enforcement: Unjustified Killings and Systemic Violence</div>
+        <p>Within six days and 1,900 miles, ICE agents conducted two eerily parallel shootings. In both instances, ICE opened fire on white vehicles, fatally shooting Latino drivers they erroneously believed were persons of interest. ICE claimed both drivers wielded their vehicles as weapons against officers—none of whom wore body cameras.</p>
+        <p><strong>The Houston Shooting:</strong> Fifty-two-year-old Mexican citizen Lorenzo Salgado Araujo had lived lawfully in the U.S. for 35 years, maintaining no criminal record while building a construction company and putting three sons through college. Given neighborhood carjackings and previous tool thefts, Salgado understandably attempted escape when unmarked ICE vehicles aggressively pursued him without sirens or emergency lights. Though ICE alleged vehicle ramming, the van bore extensive damage only on the driver's side—where Salgado was fatally shot through the door. All three passengers testified ICE's account was false. Mexican President Claudia Sheinbaum formally requested prosecution for 17 Mexican nationals killed during immigration enforcement: three via shooting, fourteen in detention.</p>
+        <p><strong>The Maine Shooting:</strong> Twenty-six-year-old Colombian citizen Joan Sebastian Duran Guerrero possessed legal work authorization. He was shot through his car's front window as he sat near his home, allegedly "attempting to flee" and "weaponizing his vehicle." Guerrero worked two jobs, lived with his partner and three-year-old daughter, and was not ICE's target. The shooter, identified as 37-year-old David Brouillette (who joined ICE in December 2024), has a checkered history including domestic violence: one ex-wife reported choking, floor-slamming, and boiling water assault; another reported death threats while Brouillette held his drawn gun. His high school best friend stated: "He is not a man who should be allowed around a firearm. He has always been an angry guy with a quick temper." Colombian President Gustavo Petro expressed outrage: "Johan Sebastian Duran may rest in peace as a victim of state persecution and exclusion against a civilian population group for ethnic and cultural reasons banned since the times of the Nuremberg court."</p>
+        <p><strong>Systemic Violence:</strong> In response, DHS ordered a pause on ICE vehicle stops on Tuesday. Trump reinstated them Wednesday, tweeting: "ICE is doing a GREAT job which needs to be done" and later "ICE is loved and respected in the U.S." IPSOS polling contradicts this: 62% believe ICE has "gone too far" versus 36% disagreeing. Representative Pramila Jayapal (D-WA) countered: "It doesn't matter what you want to call it, but we have to disband ICE. We have to melt ICE. We have to abolish ICE."</p>
+        <p><strong>ICE Data Summary:</strong></p>
+        <ul>
+          <li>The UC Berkeley Human Rights Center documented 412 incidents of ICE crowd-control weapons misuse (pepper spray, rubber bullets, tear gas) in a 12-month period ending May, resulting in at least 203 injuries including blindness and traumatic brain injuries—believed significantly understated.</li>
+          <li>Since 2025 began: 29 reported ICE shootings resulting in 8–11 deaths depending on source.</li>
+          <li>In the last six months of 2025, the Wall Street Journal identified at least 13 ICE instances of firing into vehicles.</li>
+          <li>ICE made 39,500 arrests in June; currently averaging 1,400 daily arrests this month.</li>
+          <li>ICE is detaining over 60,000 immigrants nationwide; 52 deaths in detention during the first 500 days of Trump's second term—four times Biden's rate and 2.5 times Trump's first term rate.</li>
+          <li>Congress allocated $70 billion for DHS immigration enforcement in June. The $50 billion earmarked for ICE exceeds the combined budget of all other federal law enforcement agencies.</li>
+        </ul>
+      </div>
+
+      <div class="divider">✦ ✦ ✦</div>
+
+      <div class="section">
+        <div class="section-title">The Midterms: Maine Democrats' Path Forward</div>
+        <p><strong>Maine Senate Race Reckoning:</strong> This weekend, registered Maine Democrats select 500 delegates from the 16 counties to join the 101 State Democratic Committee members, collectively choosing the Senate nominee at a July 25 convention in Bangor. The party has democratized the process extensively, learning from the contested 2024 Harris presidential nomination.</p>
+        <p>Cumberland County Democratic Chair Joseph Zamboni reflected: "Now, this probably couldn't happen in most states, but as we know, Maine is not like most states. The fact that we are here today, at this moment, ready to elect delegates, is a testament to the strength, resilience and commitment of Maine Democrats." The plucky Mainers are attempting to forge advantage from misfortune.</p>
+        <p>Platner's magnetic appeal stemmed from being Susan Collins' polar opposite. Collins, a 73-year-old five-term incumbent touting independence while supporting Trump positions 95% of the time in his second term (90% in the first), faced credibility questions when she claimed credit for Tuesday's pause on ICE vehicle stops—only for Trump to reinstate them Wednesday. Senatorial contender Nirav Shah capitalized: "Collins asked him to stop, and he just said no. That is the measure of her influence in Washington."</p>
+        <p><strong>Debate and Candidates:</strong> The Thursday Portland debate featured eight candidates split into two groups of four, evoking 2016 Republican presidential debates. The four most prominent—Secretary of State Shana Bellows, former Senate President Troy Jackson, former public health director Nirav Shah, and political newcomer Jordan Wood—all appeared on this year's primary ballot (and lost). Accounts suggest Bellows underperformed while Wood's vigorous distancing from Platner suggested underdog status. Jackson, who campaigned with Platner while stressing his logger background and populist anti-elite messaging, and Shah, displaying commanding presence and forceful ICE condemnation, emerged as leading contenders.</p>
+        <p>My uninformed assessment: Jackson will likely secure the nomination given his Maine roots, Democratic establishment connections, and avowed populism. The Democratic campaign will be substantially against Collins rather than for their candidate.</p>
+        <p><strong>National Midterm Landscape:</strong></p>
+        <ul>
+          <li><strong>Approval Ratings:</strong> WAPO/IPSOS polling shows Trump at 37% approval/61% disapproval. Among Blacks: 16/82%; below age 30: 31/67%; Hispanics: 37/61%; ages 65+: 47/53%. On specific issues: Iran War 29/69%, Economy 33/65%, Immigration 40/59%.</li>
+          <li><strong>House Projections:</strong> FiftyPlusOne projects Democrats winning 226 seats vs. 209 for Republicans (including ~10 GOP seats from redistricting)—an 11-seat pickup.</li>
+          <li><strong>Georgia:</strong> Senator Jon Ossoff leads Mike Collins by 6%. Gubernatorial race between Keisha Lance Bottoms and Rick Jackson is tied.</li>
+          <li><strong>Michigan:</strong> Former DSCC Chair Gary Peters endorsed Haley Stevens, who now leads Abdul El-Sayed 48-41% in Detroit News polling, though trailing in other polls not reflecting McMorrow's withdrawal.</li>
+          <li><strong>Texas:</strong> In NYT/Siena Senate polling, Democrat James Talarico leads Republican AG Ken Paxton by 32% among Latinos—a cohort Trump won by 16% in Texas in 2024.</li>
+          <li><strong>New York-17:</strong> Democrat Cait Conley leads incumbent Mike Lawler (one of three Republican House members in Harris-voting districts) by 6%.</li>
+          <li><strong>Wisconsin:</strong> Lt. Governor Sara Rodriguez withdrew from the Democratic gubernatorial primary due to campaign finance issues. Former Lt. Governor Mandela Barnes (who lost his 2022 senatorial race) will likely become the leading candidate.</li>
+        </ul>
+        <p>At an Iowa Democratic rally, Pete Buttigieg declared: "Our economy is unfair because our politics is unfair. Don't tell me that we cannot take big swings, take big risks, do big work."</p>
+      </div>
+
+      <div class="divider">✦ ✦ ✦</div>
+
+      <div class="section">
+        <div class="section-title">Iran: Escalation Toward Catastrophe</div>
+        <p>At the NATO summit roughly ten days ago, Trump declared the ceasefire over. He has delivered results: hostilities are escalating toward pre-ceasefire levels. The Strait of Hormuz is essentially closed. U.S. bombing of Iranian infrastructure intensifies. Iran attacks American assets and regional infrastructure.</p>
+        <p>On Friday, a U.S. base in Jordan was attacked, resulting in two deaths (bringing total to 16 in the War), one soldier missing, and four injured soldiers requiring brief hospitalization. Channeling mafia aesthetics, Trump proposed on Monday a 20% fee on cargo value to cover safeguarding passage through the Strait. A day later, he withdrew the proposal, replacing it with promises of "MASSIVE investments" from Gulf States. He also reinstated the naval blockade, initially universal but subsequently restricted to Iranian shipping.</p>
+        <p>Trump, engaging in self-projection, said of Iranians: "They have nothing—they have nothing going except they have big mouths." An Iranian spokesperson responded coolly: "No way will we allow America, as a foreign and extraterritorial power, to interfere in the Strait of Hormuz."</p>
+        <p>In this week's Conversation, Bret Stephens offered sobering perspective: "Dealing with Iran is a serious foreign policy problem. Dealing with Trump's brain may be an insurmountable one." Sun Tzu counseled: "If you know the enemy and know yourself, you need not fear the result of a hundred battles." The current administration appears to know neither—and that may be the most dangerous combination of all.</p>
+      </div>
+
+      <div class="divider">✦ ✦ ✦</div>
+
+      <div class="section closing">
+        <span class="ornament">⚜</span>
+        <div class="pull-quote">
+          "We have to disband ICE. We have to melt ICE. We have to abolish ICE."
+          <cite>Representative Pramila Jayapal</cite>
+        </div>
+        <p class="closing-text">As the administration pursues a strategy of deliberate falsehoods on elections and escalating force in foreign policy, the nation's global standing crumbles and institutional violence intensifies. The guardrails continue to fail.</p>
+        <div class="closing-sig">Finis · Week of July 12 – July 19, 2026</div>
+        <span class="ornament" style="margin-top:1rem;">⚜</span>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /page -->
+</div><!-- /view-depth -->
+
+<script>
+  function switchView(mode) {
+    const glance = document.getElementById('view-glance');
+    const depth  = document.getElementById('view-depth');
+    const btnG   = document.getElementById('btn-glance');
+    const btnD   = document.getElementById('btn-depth');
+    if (mode === 'glance') {
+      glance.classList.remove('hidden');
+      depth.classList.add('hidden');
+      btnG.classList.add('active');
+      btnD.classList.remove('active');
+    } else {
+      depth.classList.remove('hidden');
+      glance.classList.add('hidden');
+      btnD.classList.add('active');
+      btnG.classList.remove('active');
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+</body>
+</html>
