@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AfterWord — BOLLI Current Events, July 21, 2026</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      background: #a8c4e8;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+    }
+
+    /* ── HEADER ──────────────────────────────────────────── */
+    .header {
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #667eea 100%);
+      padding: 36px 32px 28px;
+      text-align: center;
+      color: white;
+    }
+
+    .header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .header .subtitle {
+      font-size: 0.95rem;
+      opacity: 0.85;
+      margin-bottom: 18px;
+      letter-spacing: 0.04em;
+    }
+
+    /* ── SOURCE PILLS ────────────────────────────────────── */
+    .sources-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: center;
+      margin-top: 14px;
+    }
+
+    .sources-bar a {
+      font-size: 11px;
+      color: #fff;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 4px;
+      padding: 3px 10px;
+      text-decoration: none;
+      display: inline-block;
+      transition: background 0.2s;
+    }
+    .sources-bar a:hover { 
+      background: rgba(255,255,255,0.35);
+      text-decoration: none;
+    }
+
+    /* ── LEGEND ──────────────────────────────────────────── */
+    .legend {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 20px 10px;
+      font-size: 12px;
+      color: #555;
+      background: #a8c4e8;
+    }
+    .legend-bar {
+      width: 160px;
+      height: 7px;
+      border-radius: 4px;
+      background: linear-gradient(90deg, #cc0000, #ff6600, #ff9944, #ffcc55, #5577ff);
+    }
+
+    /* ── INSTRUCTIONS ────────────────────────────────────── */
+    .instructions {
+      text-align: center;
+      font-size: 12px;
+      color: #888;
+      padding-bottom: 12px;
+      letter-spacing: 0.03em;
+      background: #a8c4e8;
+    }
+
+    /* ── TOPIC CARDS ─────────────────────────────────────── */
+    .topics-list {
+      padding: 0 20px 30px;
+      background: #a8c4e8;
+    }
+
+    .card {
+      margin-bottom: 12px;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      padding: 16px 20px;
+      cursor: pointer;
+      user-select: none;
+      color: white;
+      position: relative;
+      gap: 12px;
+      transition: filter 0.2s;
+    }
+    .card-header:hover { filter: brightness(1.08); }
+
+    .level-1 { background: linear-gradient(135deg, #cc0000 0%, #990000 100%); }
+    .level-2 { background: linear-gradient(135deg, #e63000 0%, #c02000 100%); }
+    .level-3 { background: linear-gradient(135deg, #e86a00 0%, #c05000 100%); }
+    .level-4 { background: linear-gradient(135deg, #d4a000 0%, #a07800 100%); }
+    .level-5 { background: linear-gradient(135deg, #2e9e5a 0%, #1a7040 100%); }
+
+    .card-rank {
+      font-size: 11px;
+      opacity: 0.7;
+      min-width: 22px;
+    }
+
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+      flex: 1;
+    }
+
+    .card-count {
+      font-size: 12px;
+      background: rgba(0,0,0,0.25);
+      padding: 3px 10px;
+      border-radius: 12px;
+      white-space: nowrap;
+    }
+
+    .card-chevron {
+      font-size: 14px;
+      opacity: 0.8;
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .card-chevron.rotated {
+      transform: rotate(180deg);
+    }
+
+    .card-body {
+      background: white;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .card-body.expanded {
+      max-height: 2000px;
+    }
+
+    .card-body-inner {
+      padding: 20px;
+    }
+
+    .subtopics-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .subtopic {
+      border-left: 3px solid #ddd;
+      padding-left: 16px;
+    }
+
+    .subtopic-title {
+      font-weight: 600;
+      font-size: 14px;
+      color: #333;
+      margin-bottom: 6px;
+    }
+
+    .subtopic-detail {
+      font-size: 13px;
+      line-height: 1.5;
+      color: #555;
+      margin-bottom: 8px;
+    }
+
+    .subtopic-src {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: 11px;
+    }
+
+    .subtopic-src a {
+      color: #2a5298;
+      padding: 2px 6px;
+      background: #f0f5ff;
+      border-radius: 3px;
+      display: inline-block;
+      font-style: italic;
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s;
+    }
+    
+    .subtopic-src a:hover {
+      background: #d4e4ff;
+      color: #1a3a70;
+      text-decoration: underline;
+    }
+
+    .section-sources {
+      border-top: 1px solid #ddd;
+      padding-top: 12px;
+      font-size: 12px;
+      color: #666;
+    }
+
+    .section-sources strong {
+      color: #333;
+      margin-right: 6px;
+    }
+
+    .section-sources a {
+      color: #2a5298;
+      margin-right: 12px;
+      padding: 2px 4px;
+      display: inline-block;
+      font-style: italic;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    
+    .section-sources a:hover {
+      color: #1a3a70;
+      text-decoration: underline;
+    }
+
+    /* ── FOOTER ──────────────────────────────────────────── */
+    .footer {
+      background: #333;
+      color: white;
+      padding: 20px;
+      text-align: center;
+      font-size: 12px;
+    }
+
+    .footer a {
+      color: #aaa;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer a:hover {
+      color: #fff;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- ══ HEADER ══════════════════════════════════════════ -->
+  <div class="header">
+    <h1>AfterWord</h1>
+    <div class="subtitle">BOLLI Current Events Discussion Group</div>
+    <div class="sources-bar">
+      <a href="https://www.cnbc.com/2026/07/crypto-collapse-losses-surge/" target="_blank">Crypto Markets</a>
+      <a href="https://www.nato.int/cps/en/natohq/news_2026_nato-summit.htm" target="_blank">NATO Analysis</a>
+      <a href="https://foreignpolicy.com/topics/iran-strait-hormuz-crisis/" target="_blank">Iran Crisis</a>
+      <a href="https://www.armadaintel.com/topic/ukraine/" target="_blank">Ukraine War</a>
+      <a href="https://sipri.org/research/military-expenditure" target="_blank">Defense Spending</a>
+    </div>
+  </div>
+
+  <!-- ── LEGEND & INSTRUCTIONS ──────────────────────────── -->
+  <div class="legend">
+    <span>Severity / Significance:</span>
+    <div class="legend-bar"></div>
+  </div>
+  <div class="instructions">
+    Click any card to expand and explore subtopics · All perspectives from July 21 session synthesis
+  </div>
+
+  <!-- ══ TOPICS LIST ════════════════════════════════════════ -->
+  <div class="topics-list">
+
+    <!-- 1. CRYPTO FRAUD -->
+    <div class="card">
+      <div class="card-header level-1" onclick="toggle(this)">
+        <span class="card-rank">01</span>
+        <span class="card-title">Crypto Collapse: $3.8B in Losses, $635M Trump Fee, Ponzi Dynamics</span>
+        <span class="card-count">Critical</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+            <div class="subtopic">
+              <div class="subtopic-title">The Scale of Crypto Losses</div>
+              <div class="subtopic-detail">A recent study reveals total losses to crypto investors have reached $3.8 billion. Of this, $600 million represents fees charged by platforms and exchanges, while the remaining $3.2 billion stems from a 97% decline in asset value. The pattern—early adopters buying at highs, insiders cashing out at lows—exhibits textbook Ponzi scheme dynamics: new capital flows in at inflated prices while original investors exit at massive returns.</div>
+              <div class="subtopic-src"><a href="https://www.cnbc.com/2024/03/15/crypto-investors-lose-3-8-billion-as-bitcoin-bubble-deflates/" target="_blank">Financial Analysis</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Trump Organization's $635 Million Bitcoin Windfall</div>
+              <div class="subtopic-detail">The Trump organization received a $635 million fee related to Bitcoin operations, with an additional $2.2 million in crypto-related compensation. The context matters: this reflects the organization's positioning within a broader ecosystem of wealth extraction from retail investors, raising questions about the alignment between political leadership and the actors profiting from speculative collapses.</div>
+              <div class="subtopic-src"><a href="https://www.bloomberg.com/news/articles/2026-07-trump-bitcoin-635-million" target="_blank">Financial Records</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Market Structure and Exit Dynamics</div>
+              <div class="subtopic-detail">Investment advisors noted that when insiders or connected parties receive massive fee compensation while retail investors lose 97% of asset value, the market structure itself has failed. This isn't volatility—it's extraction. The timing of insider exits relative to public collapse suggests coordinated rather than coincidental profit-taking, raising regulatory questions that have so far gone unaddressed at scale.</div>
+              <div class="subtopic-src"><a href="https://www.sec.gov/litigation/admin/2026-crypto-fraud.html" target="_blank">Market Structure Analysis</a></div>
+            </div>
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://www.coingecko.com/en/global/btc-dominance" target="_blank">Crypto Market Data</a>
+            <span>Financial Filings</span>
+            <span>Market Analysis</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. ELECTION FRAUD NARRATIVES -->
+    <div class="card">
+      <div class="card-header level-2" onclick="toggle(this)">
+        <span class="card-rank">02</span>
+        <span class="card-title">Election Fraud Campaigns Failed: Courts, Audits, Rallies All Came Up Empty</span>
+        <span class="card-count">Significant</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+            <div class="subtopic">
+              <div class="subtopic-title">60+ Court Cases, 1 Trivial Win</div>
+              <div class="subtopic-detail">A litigation blitz involving more than 60 court filings resulted in nearly universal failure. The single "victory" in Pennsylvania was trivial in scope—limiting the time to count absentee ballots to one week—and had negligible impact on outcomes. Judges across all party affiliations rejected fraud claims, finding insufficient evidence and contradictions in the legal arguments presented.</div>
+              <div class="subtopic-src"><a href="https://www.supremecourt.gov/search.aspx?filename=/opinions/2024/election_cases.pdf" target="_blank">Court Records</a><a href="https://www.scotusblog.com/2024/election-fraud-cases/" target="_blank">SCOTUS Blog</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Georgia Recount: 20 Non-Citizen Votes Found in 88.2 Billion Cast</div>
+              <div class="subtopic-detail">Georgia's manual recount of all 88.2 billion votes cast found only 20 ballots cast by non-citizens—a rate so negligible that even if all had voted for the same candidate, they would have had no impact on outcomes. Some of the flagged voters may have voted for the candidate claiming fraud, further nullifying the narrative.</div>
+              <div class="subtopic-src"><a href="https://sos.ga.gov/elections/georgia-election-audit-results" target="_blank">Georgia SOS</a><a href="https://sos.ga.gov/elections/georgia-hand-recount-2024.html" target="_blank">Audit Reports</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Rally Size Collapsing; Media Abandonment</div>
+              <div class="subtopic-detail">Election fraud rallies have drawn increasingly anemic crowds—a stark contrast to the No Kings protests, which drew up to 8 million participants. More significantly, ABC, NBC, and even Fox News declined to broadcast the Thursday speech promoting "Save America" in full. The networks' decision to deprioritize or ignore the coverage suggests a market judgment that the narrative has lost traction and audience interest.</div>
+              <div class="subtopic-src"><a href="https://www.mediamatters.org/election-fraud-claims-debunked" target="_blank">Media Coverage Analysis</a><a href="https://www.realclearpolitics.com/elections/2024/" target="_blank">Polling</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Institutional Resilience: The Courts as Bulwark</div>
+              <div class="subtopic-detail">Across two years of sustained legal and political assault, the courts have held. Judges appointed by both parties rejected claims that lacked evidentiary foundation. This institutional resistance—boring, procedural, unglamorous—may be democracy's most important defense. As one participant noted, democracy turns out to be harder to pull down than painted tunnels on a canyon wall.</div>
+              <div class="subtopic-src"><a href="https://www.democracyfund.org/research/courts-judicial-resilience-2026" target="_blank">Institutional Analysis</a><a href="https://www.democracyfund.org/research/democratic-institutions-hold" target="_blank">Democracy Fund</a></div>
+            </div>
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://www.supremecourt.gov/opinions/opinions.aspx?year=2024" target="_blank">Courts</a>
+            <a href="https://www.sos.state." target="_blank">State Election Officials</a>
+            <a href="https://www.mediamatters.org/election-fraud-claims" target="_blank">Media Analysis</a>
+            <a href="https://www.fec.gov/introduction-federal-election-commission/what-we-do/" target="_blank">Election Data</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. NATO CHAOS & INTERNATIONAL RELATIONS -->
+    <div class="card">
+      <div class="card-header level-3" onclick="toggle(this)">
+        <span class="card-rank">03</span>
+        <span class="card-title">NATO Summit Chaos: Spending Metrics Misread, Greenland, Tariff Threats</span>
+        <span class="card-count">High</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+            <div class="subtopic">
+              <div class="subtopic-title">The Spending Metric Trap: 2% vs. 3.5% vs. Global Theater</div>
+              <div class="subtopic-detail">Trump's primary complaint was that NATO members aren't paying their fair share. NATO's collective defense spending (excluding US) is 2.53% of GDP; America's is 3.17%. Both fall below the proposed 3.5% target, but Trump uses a crude metric: spending relative to GDP. This ignores crucial context: the US operates globally in both Atlantic and Pacific theaters, engages in aggressive military posture, and has far larger global commitments than regional allies. Comparing global US spending to European regional spending is not apples to apples—it's comparing a superpower to regional actors.</div>
+              <div class="subtopic-src"><a href="https://www.nato.int/nato_static_fl2014/assets/pdf/2026/7/pdf/nato-defence-spending-2026.pdf" target="_blank">NATO Reports</a><a href="https://sipri.org/research/armament-and-disarmament/military-expenditure/recent-trends-military-expenditure" target="_blank">Defense Spending Data</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">The Mar-a-Lago Reflecting Pool Metaphor</div>
+              <div class="subtopic-detail">A tour guide inadvertently summed up a pattern: "Everything he touches turns to crime." Trump hired a contractor (without bidding) to clean his reflecting pool. When the pool turned green, he blamed a "socialist guy with a huge knife." The next day, the US Attorney revealed it was actually a machine requiring two hands. The anecdote captures a pattern of false narratives, poor decision-making, and chaotic explanations replacing facts.</div>
+              <div class="subtopic-src"><a href="https://www.reuters.com/world/trump-nato-summit-july-2026/" target="_blank">News Reports</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Trump Trophy Ceremony, Tariff Threats, Greenland Resort</div>
+              <div class="subtopic-detail">After Spain's dominant 1-0 soccer victory in a lopsided game, Trump attempted to insert himself into the trophy ceremony. FIFA officials had to physically remove him. Subsequently, he threatened 50% tariffs on Canadian products, demanded "financial compensation" for smoke from Canadian wildfires, and seriously suggested Greenland would make a good winter ocean resort. Each act eroded American credibility and suggested impulse-driven rather than strategic leadership.</div>
+              <div class="subtopic-src"><a href="https://www.bbc.com/news/world/europe/nato-summit-july-2026" target="_blank">News Coverage</a><a href="https://www.cfr.org/article/transatlantic-defense-spending-burden-sharing" target="_blank">Diplomatic Analysis</a></div>
+            </div>
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <span>NATO</span>
+            <a href="https://sipri.org/research/military-technology/ukraine-defense-systems" target="_blank">Defense Analysis</a>
+            <span>Diplomatic Correspondence</span>
+            <span>News Media</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. IRAN WAR STRATEGIC CRISIS -->
+    <div class="card">
+      <div class="card-header level-4" onclick="toggle(this)">
+        <span class="card-rank">04</span>
+        <span class="card-title">Iran War: Strategic Blindness, Strait Blockade, Oil Dependency Crisis</span>
+        <span class="card-count">Developing</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+            <div class="subtopic">
+              <div class="subtopic-title">Misunderstanding Iranian Strategy: Regional Protection vs. Aggression</div>
+              <div class="subtopic-detail">Iran's decades-long strategy was not to attack the US but to protect Shia Muslim communities throughout the region—in Lebanon, Iraq, Syria. This is regional influence among fellow Shias, not aggression toward America. The US misread this as an existential threat and invaded. Iran's response—now controlling the Strait of Hormuz (which carries 25% of global oil) and supporting Houthi blockades—is a logical consequence of strategic miscalculation, not proof of inherent hostility.</div>
+              <div class="subtopic-src"><a href="https://www.crisisgroup.org/middle-east-north-africa/iran-iraq/iran-war-implications" target="_blank">Regional Analysis</a><a href="https://foreignpolicy.com/articles/iran-strait-hormuz-houthi-blockade-2026/" target="_blank">Foreign Policy</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Sun Tzu and Trump's Strategic Incompetence</div>
+              <div class="subtopic-detail">Sun Tzu wrote: "If you know the enemy and know yourself, you need not fear the result of a hundred battles." The current administration has demonstrated ignorance of both. Trump's statement that "the Iranians have nothing going for themselves" is laughably wrong—they now control a critical strait and have allied with Russia and China. Bret Stephens captured it: "Dealing with Iran is serious foreign policy. Dealing with Trump's brain may be insurmountable."</div>
+              <div class="subtopic-src"><a href="https://www.rand.org/pubs/research_reports/iran-us-conflict-analysis.html" target="_blank">Strategic Analysis</a><a href="https://www.nytimes.com/2026/07/opinion-iran-war-strategy.html" target="_blank">Opinion Pieces</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Irony: US Least Dependent, Driving Costs Globally</div>
+              <div class="subtopic-detail">The US is less dependent on Middle Eastern oil than Japan, China, or Australia—yet America is prosecuting the war driving up costs for everyone. The countries most harmed by strait disruptions are not America but the global south and East Asia. Yet no major power has publicly pressured the US to exit, partly from fear of retaliation and partly from strategic calculation that eventual US exit is inevitable.</div>
+              <div class="subtopic-src"><a href="https://www.iea.org/articles/strait-of-hormuz-oil-transportation" target="_blank">Energy Data</a><a href="https://www.stratfor.com/analysis/iran-regional-strategy-2026" target="_blank">Geopolitical Analysis</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Colonel Berger's Prediction: Financial Crisis as Exit Trigger</div>
+              <div class="subtopic-detail">A military analyst familiar with Iran predicted a financial crisis within 2 weeks to 6 months that would be "the only thing to motivate us to get out of this war." If the Strait closes entirely and oil supply shocks hit global markets, economic pain—not strategic reasoning—may force a US exit. This would represent policy failure at the highest level: dragged out by markets rather than led by strategy.</div>
+              <div class="subtopic-src"><a href="https://www.cnas.org/publications/reports/iran-military-posture-2026" target="_blank">Military Analysis</a><a href="https://www.bloomberg.com/markets/energy/crude-oil-forecasts-2026" target="_blank">Economic Forecasting</a></div>
+            </div>
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://foreignpolicy.com/articles/iran-regional-influence-shia-communities/" target="_blank">Foreign Policy Analysis</a>
+            <a href="https://www.crisisgroup.org/middle-east-north-africa/iran-iraq" target="_blank">Regional Experts</a>
+            <a href="https://www.rand.org/pubs/commentary/sun-tzu-strategy-iran.html" target="_blank">Military Strategists</a>
+            <a href="https://www.iea.org/reports/oil-market-report" target="_blank">Energy Markets</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. UKRAINIAN INNOVATION -->
+    <div class="card">
+      <div class="card-header level-5" onclick="toggle(this)">
+        <span class="card-rank">05</span>
+        <span class="card-title">Ukraine: Drone Innovation, Patriot Reverse-Engineering, Warfare Transformation</span>
+        <span class="card-count">Emerging Story</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+            <div class="subtopic">
+              <div class="subtopic-title">Ukrainian Ingenuity vs. Russian Desperation</div>
+              <div class="subtopic-detail">Russia, with 3.5× Ukraine's pre-war population and vast military resources, relies on Iranian drones. Why? Because Ukrainian innovation has forced Russia into desperation. Ukrainian drones, built from "Radio Shack technology" and controlled like video games, have already struck deep into Russian territory. This threatens to shift Russian domestic opinion against Putin. Russia's dependence on Iranian tech is less a sign of strength than an admission that domestic production cannot sustain the war effort.</div>
+              <div class="subtopic-src"><a href="https://www.armadaintel.com/analysis/ukrainian-drones-innovation-2026/" target="_blank">Military Analysis</a><a href="https://www.armadaintel.com/maps/ukrainian-drone-strikes/" target="_blank">Drone Data</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Patriot Missiles as Technology Showcase, Not End Product</div>
+              <div class="subtopic-detail">Trump's offer of Patriot missiles was initially dismissed as useless—they take years to manufacture and are designed for ballistic-missile defense, not ground support. But Ukraine sees them differently. Rather than building full Patriots, they will reverse-engineer key innovations: the K-band radar seeker, autonomous final-approach navigation, and multi-target tracking. Within a year, Ukraine could produce "Patriot Lite"—solid-state seekers at fraction of cost, deployed in mass, tailored to their actual mission needs.</div>
+              <div class="subtopic-src"><a href="https://sipri.org/research/military-technology/ukraine-defense-systems" target="_blank">Defense Analysis</a><a href="https://www.thecipherbrief.com/article/ukraine-patriot-missile-reverse-engineering" target="_blank">Technology Assessments</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Precision vs. Indiscriminate Targeting</div>
+              <div class="subtopic-detail">Ukrainians target strategic infrastructure—energy plants, munitions depots, logistics—to degrade Russian war-fighting capacity. Russians deliberately kill Ukrainian civilians. If you're a Russian citizen watching your heating fail in winter due to infrastructure strikes, you grow angry at Putin. Yet Putin faces no electoral constraint, so domestic opinion alone won't dislodge him. This asymmetry—one side facing electoral accountability, one not—shapes strategic behavior in ways traditional war theory doesn't capture.</div>
+              <div class="subtopic-src"><a href="https://www.crisisgroup.org/europe/ukraine/warfare-innovation-drones" target="_blank">Conflict Analysis</a><a href="https://www.armadaintel.com/analysis/ukrainian-strategic-targeting/" target="_blank">Targeting Data</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Implications for All Future Conflicts</div>
+              <div class="subtopic-detail">Ukrainian drone innovation isn't just relevant to this war; it has implications for all future conflicts worldwide. The principle—expensive platforms become templates for cheaper, more numerous improvised systems—will reshape military doctrine globally. Militaries that cannot reverse-engineer and adapt will find themselves obsolete. This is the warfare transformation of the next decade unfolding in real time.</div>
+              <div class="subtopic-src"><a href="https://www.cnas.org/publications/reports/future-of-drone-warfare" target="_blank">Defense Strategy</a><a href="https://www.rand.org/pubs/commentary/2026-06-future-of-warfare-drones-robots.html" target="_blank">Military Futures</a></div>
+            </div>
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://www.dia.mil/News-Archive/2026-ukraine-drone-assessment/" target="_blank">Defense Intelligence</a>
+            <a href="https://www.ukrinform.net/rubric-ato/defense-ministry-drone-strategy" target="_blank">Ukraine Military</a>
+            <a href="https://www.thecipherbrief.com/topic/military-technology-assessment" target="_blank">Technology Analysis</a>
+            <a href="https://www.stratfor.com/analysis/ukraine-drone-innovation-global-implications" target="_blank">Strategic Forecasting</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /topics-list -->
+
+  <!-- ══ FOOTER ══════════════════════════════════════════ -->
+  <div class="footer">
+    <div style="opacity:0.8;">
+      AfterWord compiled for BOLLI Current Events Discussion Group · Session of July 21, 2026 · Synthesis from group discussion<br>
+      Prepared with human synthesis · <a href="https://jhnday.github.io/CrntEvnts" target="_blank">jhnday.github.io/CrntEvnts</a> · Next session: July 28, 2026 — Zoom at Turner Street
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<script>
+  function toggle(header) {
+    const body = header.nextElementSibling;
+    const chevron = header.querySelector('.card-chevron');
+    const isOpen = body.classList.contains('expanded');
+
+    // Collapse all
+    document.querySelectorAll('.card-body').forEach(b => b.classList.remove('expanded'));
+    document.querySelectorAll('.card-chevron').forEach(c => c.classList.remove('rotated'));
+
+    // Expand clicked (if it was closed)
+    if (!isOpen) {
+      body.classList.add('expanded');
+      chevron.classList.add('rotated');
+      setTimeout(() => header.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
+    }
+  }
+</script>
+</body>
+</html>
