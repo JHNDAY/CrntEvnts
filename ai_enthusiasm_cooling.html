@@ -397,19 +397,27 @@
             <div class="legend-custom">
                 <div class="legend-item">
                     <span class="legend-color" style="background: #0f172a;"></span>
-                    Time to Meaningful ROI
+                    Cloud Computing (2006-2013)
                 </div>
                 <div class="legend-item">
                     <span class="legend-color" style="background: #10b981;"></span>
-                    Current Adoption %
+                    Mobile/Smartphones (2007-2012)
                 </div>
                 <div class="legend-item">
                     <span class="legend-color" style="background: #ef4444;"></span>
-                    Initial Hype vs Reality Gap
+                    AI/GenAI (2023-Present)
                 </div>
             </div>
             <div style="background: #eff6ff; border-left: 4px solid #3b82f6; border-radius: 8px; padding: 1rem; margin-top: 1.5rem; font-size: 0.9rem; color: #475569;">
-                <strong>Key Insight:</strong> AI adoption is compressing the timeline seen with cloud (7 years) and mobile (5 years), but expectations about ROI maturity are more aligned with cloud than the instant returns some executives anticipated. Historical data suggests we're 2-3 years into what will likely be a 5-7 year arc to full value realization.
+                <strong>Reading the Chart:</strong> Each metric shows how the three tech cycles compare at similar stages. <strong>The striking differences:</strong>
+                <ul style="margin-top: 0.75rem; margin-bottom: 0; padding-left: 1.5rem;">
+                    <li><strong>Adoption Speed:</strong> AI at 88% (vs Cloud 15%, Mobile 22%) - adoption is 4-5x faster</li>
+                    <li><strong>ROI Payback:</strong> AI at 35% (~3.5 years) is actually fastest, but still takes years</li>
+                    <li><strong>Hype Gap:</strong> AI at 95% has the widest reality gap - highest unfulfilled expectations</li>
+                    <li><strong>Maturity:</strong> AI at 35% is least mature (vs Cloud 92%, Mobile 95%) - we're early in the curve</li>
+                    <li><strong>Success Rate:</strong> AI at 5% is lowest - most companies haven't achieved meaningful ROI yet</li>
+                </ul>
+                <p style="margin-top: 0.75rem; margin-bottom: 0;"><em>Implication:</em> We're 2-3 years into what will likely be a 5-7 year maturation arc for AI, similar to cloud and mobile timelines.</p>
             </div>
         </div>
             <div class="sources-title">📚 Sources & Citations</div>
@@ -483,7 +491,7 @@
     <script>
         const colors = {
             enthusiasmDown: '#eb6834',
-            investmentUp: '#0f172a',
+            investmentUp: '#3b82f6',
             expected: 'rgba(59, 130, 246, 0.3)',
             expectedBorder: '#0f172a',
             reality: 'rgba(239, 68, 68, 0.7)',
@@ -655,38 +663,35 @@
             }
         });
 
-        // Chart 4: Historical Tech Cycle Comparison
+        // Chart 4: Historical Tech Cycle Comparison - Grouped Bar Chart
         new Chart(document.getElementById('techCycleChart'), {
-            type: 'radar',
+            type: 'bar',
             data: {
-                labels: ['Year 1-2\nAdoption %', 'ROI Timeline\n(Years)', 'Hype vs\nReality Gap', 'Current\nMaturity %', 'Success\nRate %'],
+                labels: ['Adoption\nSpeed %', 'Fast ROI\nPayback %', 'Hype vs\nReality Gap', 'Current\nMaturity %', 'Success\nRate %'],
                 datasets: [
                     {
                         label: 'Cloud Computing (2006-2013)',
-                        data: [15, 5, 85, 92, 68],
+                        data: [15, 50, 85, 92, 68],
+                        backgroundColor: '#0f172a',
                         borderColor: '#0f172a',
-                        backgroundColor: 'rgba(15, 23, 42, 0.1)',
-                        borderWidth: 2,
-                        pointRadius: 4,
-                        pointBackgroundColor: '#0f172a'
+                        borderWidth: 1.5,
+                        borderRadius: 4
                     },
                     {
                         label: 'Mobile/Smartphones (2007-2012)',
-                        data: [22, 4, 70, 95, 75],
+                        data: [22, 40, 70, 95, 75],
+                        backgroundColor: '#10b981',
                         borderColor: '#10b981',
-                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                        borderWidth: 2,
-                        pointRadius: 4,
-                        pointBackgroundColor: '#10b981'
+                        borderWidth: 1.5,
+                        borderRadius: 4
                     },
                     {
                         label: 'AI/GenAI (2023-Present)',
-                        data: [88, 3.5, 95, 35, 5],
+                        data: [88, 35, 95, 35, 5],
+                        backgroundColor: '#ef4444',
                         borderColor: '#ef4444',
-                        backgroundColor: 'rgba(239, 68, 68, 0.15)',
-                        borderWidth: 2.5,
-                        pointRadius: 5,
-                        pointBackgroundColor: '#ef4444'
+                        borderWidth: 1.5,
+                        borderRadius: 4
                     }
                 ]
             },
@@ -702,22 +707,57 @@
                             usePointStyle: true,
                             padding: 15
                         }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let label = context.dataset.label || '';
+                                if (label) {
+                                    label += ': ';
+                                }
+                                const value = context.parsed.y;
+                                const axisIndex = context.dataIndex;
+                                
+                                // Add context for ROI Timeline axis (index 1)
+                                if (axisIndex === 1) {
+                                    const years = value / 10; // Convert percentage back to years
+                                    label += value + '% (~' + years.toFixed(1) + ' years)';
+                                } else {
+                                    label += value + '%';
+                                }
+                                return label;
+                            }
+                        }
                     }
                 },
                 scales: {
-                    r: {
+                    y: {
                         beginAtZero: true,
                         max: 100,
                         ticks: {
                             color: colors.textSecondary,
-                            stepSize: 20
+                            stepSize: 20,
+                            callback: function(value) {
+                                return value + '%';
+                            }
                         },
                         grid: {
                             color: colors.grid
                         },
-                        pointLabels: {
-                            color: colors.text,
-                            font: { size: 11, weight: '500' }
+                        title: {
+                            display: true,
+                            text: 'Score (%)',
+                            color: colors.text
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            color: colors.textSecondary,
+                            font: { size: 11 }
+                        },
+                        grid: {
+                            display: false,
+                            drawBorder: false
                         }
                     }
                 }
