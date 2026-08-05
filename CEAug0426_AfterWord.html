@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AfterWord — BOLLI Current Events, August 4, 2026</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      background: #a8c4e8;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+    }
+
+    /* ── HEADER ──────────────────────────────────────────── */
+    .header {
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #667eea 100%);
+      padding: 36px 32px 28px;
+      text-align: center;
+      color: white;
+    }
+
+    .header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .header .subtitle {
+      font-size: 0.95rem;
+      opacity: 0.85;
+      margin-bottom: 18px;
+      letter-spacing: 0.04em;
+    }
+
+    .header .descriptor {
+      font-size: 0.85rem;
+      opacity: 0.75;
+      font-style: italic;
+      margin-bottom: 16px;
+    }
+
+    /* ── SOURCE PILLS ────────────────────────────────────── */
+    .sources-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: center;
+      margin-top: 14px;
+    }
+
+    .sources-bar a {
+      font-size: 11px;
+      color: #fff;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 4px;
+      padding: 3px 10px;
+      text-decoration: none;
+      display: inline-block;
+      transition: background 0.2s;
+    }
+    .sources-bar a:hover { 
+      background: rgba(255,255,255,0.35);
+      text-decoration: none;
+    }
+
+    /* ── LEGEND ──────────────────────────────────────────── */
+    .legend {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 20px 10px;
+      font-size: 12px;
+      color: #555;
+      background: #a8c4e8;
+    }
+    .legend-bar {
+      width: 160px;
+      height: 7px;
+      border-radius: 4px;
+      background: linear-gradient(90deg, #cc0000, #ff6600, #ff9944, #ffcc55, #2e9e5a);
+    }
+
+    /* ── INSTRUCTIONS ────────────────────────────────────── */
+    .instructions {
+      text-align: center;
+      font-size: 12px;
+      color: #888;
+      padding-bottom: 12px;
+      letter-spacing: 0.03em;
+      background: #a8c4e8;
+    }
+
+    /* ── TOPIC CARDS ─────────────────────────────────────── */
+    .topics-list {
+      padding: 0 20px 30px;
+      background: #a8c4e8;
+    }
+
+    .card {
+      margin-bottom: 12px;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      padding: 16px 20px;
+      cursor: pointer;
+      user-select: none;
+      color: white;
+      position: relative;
+      gap: 12px;
+      transition: filter 0.2s;
+    }
+    .card-header:hover { filter: brightness(1.08); }
+
+    .level-1 { background: linear-gradient(135deg, #cc0000 0%, #990000 100%); }
+    .level-2 { background: linear-gradient(135deg, #e63000 0%, #c02000 100%); }
+    .level-3 { background: linear-gradient(135deg, #e86a00 0%, #c05000 100%); }
+    .level-4 { background: linear-gradient(135deg, #d4a000 0%, #a07800 100%); }
+    .level-5 { background: linear-gradient(135deg, #2e9e5a 0%, #1a7040 100%); }
+
+    .card-rank {
+      font-size: 11px;
+      opacity: 0.7;
+      min-width: 22px;
+    }
+
+    .card-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      flex-grow: 1;
+      text-align: left;
+    }
+
+    .card-count {
+      font-size: 10px;
+      opacity: 0.7;
+      white-space: nowrap;
+      margin-right: 8px;
+    }
+
+    .card-chevron {
+      font-size: 12px;
+      opacity: 0.6;
+      transition: transform 0.3s;
+    }
+
+    .card-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+      background: white;
+    }
+
+    .card-body.expanded {
+      max-height: 3000px;
+      transition: max-height 0.4s ease-in;
+    }
+
+    .card-chevron.rotated {
+      transform: rotate(180deg);
+    }
+
+    .card-body-inner {
+      padding: 20px;
+    }
+
+    .news-item {
+      padding: 14px;
+      background: #f7f8fb;
+      border-left: 4px solid #a8c4e8;
+      border-radius: 4px;
+      margin-bottom: 14px;
+    }
+
+    .news-headline {
+      font-weight: 600;
+      font-size: 0.95rem;
+      color: #1e3c72;
+      margin-bottom: 8px;
+    }
+
+    .news-source {
+      font-size: 10px;
+      color: #999;
+      margin-bottom: 6px;
+      font-style: italic;
+    }
+
+    .news-summary {
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: #333;
+      margin-bottom: 8px;
+    }
+
+    .news-link {
+      display: inline-block;
+      color: #2a5298;
+      text-decoration: none;
+      border-bottom: 1px solid #2a5298;
+      font-size: 10px;
+      transition: color 0.2s;
+    }
+
+    .news-link:hover {
+      color: #667eea;
+      border-color: #667eea;
+    }
+
+    .context-note {
+      padding: 12px;
+      background: #fffacd;
+      border-left: 4px solid #ffcc00;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      line-height: 1.5;
+      color: #665500;
+      margin-bottom: 14px;
+    }
+
+    .context-note strong {
+      color: #333;
+    }
+
+    /* ── FOOTER ──────────────────────────────────────────── */
+    .footer {
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+      color: white;
+      text-align: center;
+      padding: 20px;
+      font-size: 12px;
+      line-height: 1.6;
+    }
+
+    .footer a {
+      color: #a8c4e8;
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="header">
+    <h1>AfterWord</h1>
+    <div class="subtitle">BOLLI Current Events Discussion Group — August 4, 2026</div>
+    <div class="descriptor">Context from press coverage, July—August 2026</div>
+    <div class="sources-bar">
+      <a href="#" onclick="return false;">Elections</a>
+      <a href="#" onclick="return false;">Geopolitics</a>
+      <a href="#" onclick="return false;">Science</a>
+      <a href="#" onclick="return false;">Policy</a>
+      <a href="#" onclick="return false;">Markets</a>
+    </div>
+  </div>
+
+  <div class="legend">
+    <span>Press Impact Level:</span>
+    <div class="legend-bar"></div>
+    <span style="font-size: 10px; opacity: 0.6;">Highest · High · Moderate · Developing · Emerging</span>
+  </div>
+
+  <div class="instructions">
+    Click any card to read recent press coverage contextualizing the discussion
+  </div>
+
+  <div class="topics-list">
+
+    <!-- 1. MICHIGAN DEMOCRATIC PRIMARY -->
+    <div class="card">
+      <div class="card-header level-1" onclick="toggle(this)">
+        <span class="card-rank">01</span>
+        <span class="card-title">Michigan Senate Primary: Progressive Momentum vs. Establishment Backing</span>
+        <span class="card-count">August 4</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="context-note">
+            <strong>What happened:</strong> On August 4, 2026, Michigan Democrats voted to replace retiring Senator Gary Peters. Progressive Dr. Abdul El-Sayed and moderate Rep. Haley Stevens ran a closely contested race with different party backing and different messaging on electability.
+          </div>
+
+          <div class="news-item">
+            <div class="news-headline">El-Sayed in Tight Race Against Stevens in Michigan Primary</div>
+            <div class="news-source">CNN, August 4, 2026</div>
+            <div class="news-summary">With over 91 days until the general election, the Democratic primary between progressive public health official Abdul El-Sayed and moderate Rep. Haley Stevens remained extremely competitive. Early projections showed El-Sayed with a lead, though final tallies from Detroit and Wayne County—where mail ballots had broken heavily for Stevens—created uncertainty about the final outcome. <cite index="3-1">Progressives have scored high-profile victories in recent years with the election of Zohran Mamdani as NYC mayor and several House seats where progressives defeated incumbents.</cite></div>
+            <a href="#" class="news-link" onclick="return false;">Read Coverage</a>
+          </div>
+
+          <div class="news-item">
+            <div class="news-headline">Michigan Democratic Primary Tests Electability Question for Progressives</div>
+            <div class="news-source">NPR, August 3, 2026</div>
+            <div class="news-summary"><cite index="4-1">Democratic primary elections in Michigan, Wisconsin, and Minnesota have made the Midwest a test case for whether progressive candidates can win in competitive states and what electability really means.</cite> El-Sayed's campaign slogan—"Money out of politics. Money in your pocket."—captures anti-establishment energy. <cite index="3-1">The United Democracy Project, backing Stevens, has spent more than $30 million since June against El-Sayed.</cite></div>
+            <a href="#" class="news-link" onclick="return false;">Read Coverage</a>
+          </div>
+
+          <div class="news-item">
+            <div class="news-headline">Stevens Attacks Fellow Democrats as Michigan Primary Gets Ugly</div>
+            <div class="news-source">Axios, January 2026 (Prescient Analysis)</div>
+            <div class="news-summary">Early in 2026, Stevens opened a two-front campaign against progressive rivals, criticizing El-Sayed for supporting the Green New Deal and calling it unsupported by Michigan auto workers. The race revealed Democratic anxiety about a divisive primary that could leave wounds heading into a general election where Mike Rogers—the Republican who narrowly lost to Elissa Slotkin in 2024—was leading in head-to-head matchups.</div>
+            <a href="#" class="news-link" onclick="return false;">Read Coverage</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. IRAN WAR ESCALATION -->
+    <div class="card">
+      <div class="card-header level-1" onclick="toggle(this)">
+        <span class="card-rank">02</span>
+        <span class="card-title">Iran War: Strait Blockade, Oil Shock, and Ceasefire Uncertainty</span>
+        <span class="card-count">Ongoing</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="context-note">
+            <strong>What happened:</strong> Since February 28, 2026, US-Israeli strikes on Iran have been met with Iranian control of the Strait of Hormuz—the world's most critical oil chokepoint—creating global energy uncertainty and repeated failed ceasefire attempts.
+          </div>
+
+          <div class="news-item">
+            <div class="news-headline">Iran Holds Strait of Hormuz: Threat to Global Oil Supply Persists After June Ceasefire</div>
+            <div class="news-source">Britannica & Congress.gov, August 2026</div>
+            <div class="news-summary"><cite index="10-1">Since February 28, 2026, the conflict initiated by the US and Israel has upended Middle East dynamics. A memorandum of understanding reached in June 2026 seeking to end the war has been repeatedly tested. Iran has repeatedly threatened and attacked ships passing through the Strait of Hormuz, hoping to coerce vessels into following Iranian-set protocols and collect fees. After ship attacks on July 6-7, Trump declared the truce over on July 7, then backtracked.</cite></div>
+            <a href="#" class="news-link" onclick="return false;">Read Analysis</a>
+          </div>
+
+          <div class="news-item">
+            <div class="news-headline">27% of World's Oil Flows Through Disputed Strait</div>
+            <div class="news-source">US Library of Congress, August 2026</div>
+            <div class="news-summary"><cite index="11-1">The Strait of Hormuz borders Iran and Oman and is key to maritime transit of oil, natural gas, helium, and fertilizers. Roughly 27% of the world's maritime trade in crude oil and petroleum products goes through the Strait. Beginning March 4, 2026, Iranian forces declared the Strait "closed," threatening and carrying out attacks on vessels. The UK Maritime Trade Operations Centre reported 10 attacks as of March 8, 2026, killing five crew members on two vessels.</cite></div>
+            <a href="#" class="news-link" onclick="return false;">Read Analysis</a>
+          </div>
+
+          <div class="news-item">
+            <div class="news-headline">Oil Markets React to Strait Crisis as Military Escalations Intensify</div>
+            <div class="news-source">Trading Economics, March 2026</div>
+            <div class="news-summary"><cite index="16-1">WTI crude futures climbed more than 3% to around $77/barrel as US-Iran hostilities escalated. Defense Secretary Pete Hegseth described a US submarine strike as "the first such attack on an enemy since World War II." The crisis has effectively halted commercial shipping through the Strait of Hormuz after IRGC warned it would "set ablaze" any vessel attempting transit.</cite> Trump offered risk insurance and naval escorts for commercial vessels.</div>
+            <a href="#" class="news-link" onclick="return false;">Read Analysis</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. HAITI TPS TERMINATION -->
+    <div class="card">
+      <div class="card-header level-2" onclick="toggle(this)">
+        <span class="card-rank">03</span>
+        <span class="card-title">Haiti TPS Ends July 27: 350,000 Lose Status After Supreme Court Ruling</span>
+        <span class="card-count">July 27, 2026</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="context-note">
+            <strong>What happened:</strong> On June 25, 2026, the Supreme Court ruled the Trump administration could end Temporary Protected Status for Haiti and Syria. Haiti's TPS designation was formally terminated July 27, 2026, ending work authorization for approximately 350,000 people.
+          </div>
+
+          <div class="news-item">
+            <div class="news-headline">Temporary Protected Status Expected to End Today for 300,000 Haitians in US</div>
+            <div class="news-source">NPR, July 27, 2026</div>
+            <div class="news-summary">After July 27, thousands of TPS holders faced loss of legal status and potential deportation. <cite index="32-1">The American Immigration Council noted that once TPS recipients lose status, they are at risk of arrest by ICE and may face immigration court proceedings. The economic impacts are likely significant in communities with high concentrations of TPS recipients.</cite> The administration encouraged TPS holders to return to Haiti.</div>
+            <a href="#" class="news-link" onclick="return false;">Read Coverage</a>
+          </div>
+
+          <div class="news-item">
+            <div class="news-headline">Supreme Court Permits Trump to End Haiti, Syria TPS; 350,000+ Face Uncertain Status</div>
+            <div class="news-source">National Immigration Forum & American Immigration Council, June-July 2026</div>
+            <div class="news-summary"><cite index="31-1">On June 25, 2026, the Supreme Court ruled in Mullin v. Doe that the Secretary of Homeland Security's decisions to terminate TPS for Syria and Haiti are not judicially reviewable, effectively permitting the Trump administration to end TPS for both countries. In total, federal courts had halted TPS terminations for 7 countries (Burma, Ethiopia, Haiti, Somalia, South Sudan, Syria, Yemen) via court order before the Supreme Court decision.</cite></div>
+            <a href="#" class="news-link" onclick="return false;">Read Coverage</a>
+          </div>
+
+          <div class="news-item">
+            <div class="news-headline">Economic Impact on Sectors Relying on Haitian Workers</div>
+            <div class="news-source">Labor & Immigration Data, 2026</div>
+            <div class="news-summary">With nearly half of the 350,000 Haitians concentrated in Florida and 19,000 in Massachusetts, the loss of TPS threatens specific labor sectors. Healthcare, hospitality, and domestic work—industries heavily reliant on this workforce—face disruption as employers navigate work authorization verification (Form I-9) requirements.</div>
+            <a href="#" class="news-link" onclick="return false;">Sector Analysis</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. VACCINE SCIENCE & FAUCI -->
+    <div class="card">
+      <div class="card-header level-5" onclick="toggle(this)">
+        <span class="card-rank">04</span>
+        <span class="card-title">Fauci's Role in mRNA Vaccine: Press Scrutiny and Scientific Legacy</span>
+        <span class="card-count">July-August 2026</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="context-note">
+            <strong>What happened:</strong> As congressional hearings on Fauci continue, investigative reporting has surfaced his financial connections to mRNA startups and detailed his institutional role in vaccine development during the pandemic.
+          </div>
+
+          <div class="news-item">
+            <div class="news-headline">Fauci Quietly Joined mRNA Vaccine Startup in 2023, Received $28M in Government Funding</div>
+            <div class="news-source">World Tribune, July 29, 2026 (Investigative Report)</div>
+            <div class="news-summary">Investigative journalist Natalie Winters revealed that Fauci in 2023 joined a stealth vaccine startup that was awarded over $28 million by the Biden administration to develop mRNA shots targeting pandemic-potential viruses. <cite index="18-1">In 2026, Eli Lilly agreed to buy the company for up to $1.55 billion. Whether Fauci stands to profit remains intentionally hidden.</cite> Fauci retired as NIAID director in December 2022.</div>
+            <a href="#" class="news-link" onclick="return false;">Read Report</a>
+          </div>
+
+          <div class="news-item">
+            <div class="news-headline">Fauci Receives Distinguished Scientist Award; Reflects on 50+ Years of Science Leadership</div>
+            <div class="news-source">American Academy of Allergy, Asthma & Immunology, January 2026</div>
+            <div class="news-summary"><cite index="19-1">In accepting the AAAAI Distinguished Scientist Award, Fauci emphasized contributions to basic and clinical science in autoimmunity, HIV/AIDS clinical work and PEPFAR, and COVID vaccine development as major achievements. He noted that independent organizations like the Vaccine Integrity Project and AAP are now stepping in given "the situation that is going on with the CDC, where vaccine recommendations are not based solely on scientific and public health considerations."</cite></div>
+            <a href="#" class="news-link" onclick="return false;">Read Coverage</a>
+          </div>
+
+          <div class="news-item">
+            <div class="news-headline">Behind Closed Doors: Weissman Raised Concerns to Fauci About mRNA Distribution in Body</div>
+            <div class="news-source">Children's Health Defense & Senate Records, August 2026</div>
+            <div class="news-summary">Newly released documents made public by Sen. Rand Paul reveal that <cite index="21-1">Nobel laureate Drew Weissman privately alerted Dr. Fauci to concerning findings from his laboratory about mRNA vaccine biodistribution. Weissman's findings triggered discussions among NIH senior vaccine scientists before eventually finding their way into Fauci's personal diary. Public messaging at the time assured the public that vaccine material remained at the injection site, while private NIH assessments indicated mRNA might reach the fetus.</cite></div>
+            <a href="#" class="news-link" onclick="return false;">Read Analysis</a>
+          </div>
+
+          <div class="news-item">
+            <div class="news-headline">Scientists Nominating Fauci for Prize Money Received Millions in NIAID Funding</div>
+            <div class="news-source">Washington Examiner, July 2026</div>
+            <div class="news-summary"><cite index="23-1">Scientists who nominated Fauci for award money themselves received millions in NIAID funding. Staff were instructed to "beef up the covid part" of nomination narratives. Fauci won an award in the "Public Health Present" category, prompting an aide to write "Congratulations…you're rich!" in an email thread.</cite></div>
+            <a href="#" class="news-link" onclick="return false;">Read Investigation</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. AI & DATA CENTER BOOM -->
+    <div class="card">
+      <div class="card-header level-3" onclick="toggle(this)">
+        <span class="card-rank">05</span>
+        <span class="card-title">AI Infrastructure Spending: Bubble or Boom? $1.7 Trillion Question</span>
+        <span class="card-count">August 2026</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="context-note">
+            <strong>What happened:</strong> Tech giants are deploying unprecedented capital into data centers and AI infrastructure. Debate continues over whether this is a sustainable growth phase or a dangerous bubble with disconnects between investment and revenue.
+          </div>
+
+          <div class="news-item">
+            <div class="news-headline">Big Tech's $670 Billion Data Center Spend in 2026 Raises Bubble Concerns</div>
+            <div class="news-source">Forbes, February-August 2026</div>
+            <div class="news-summary"><cite index="36-1">With at least $670 billion to be spent by Microsoft, Amazon, Meta, and Google in 2026 alone, the data center buildout exceeds the railroad expansion of the 1850s. Huge spending numbers and alarming predictions are sure signs of an inflating AI bubble. Industry forecasts project $1.7 trillion in worldwide data center spending by 2030.</cite></div>
+            <a href="#" class="news-link" onclick="return false;">Read Analysis</a>
+          </div>
+
+          <div class="news-item">
+            <div class="news-headline">The Investment-Revenue Gap: AI Infrastructure Spending Outpaces Software Returns</div>
+            <div class="news-source">Intellectia AI Market Analysis, August 2026</div>
+            <div class="news-summary"><cite index="34-1">The most pressing concern for AI investors in 2026 is the growing disconnect between infrastructure investment and monetization success. Big Tech companies are spending hundreds of billions on data centers, chips, and AI infrastructure, but the immediate software revenue generated by enterprise AI covers less than half of these investments. This creates a complex interdependency where Nvidia's valuation depends on customers' success at monetizing AI.</cite></div>
+            <a href="#" class="news-link" onclick="return false;">Read Analysis</a>
+          </div>
+
+          <div class="news-item">
+            <div class="news-headline">UBS Dismisses AI Bubble Concerns; Projects 20-25% Data Center Growth in 2026</div>
+            <div class="news-source">UBS Evidence Lab, August 5, 2026</div>
+            <div class="news-summary"><cite index="39-1,40-1">UBS's latest report asserts the global data center equipment market shows "no signs of cooling." With 25GW currently under construction and 105GW operational capacity, and record-low vacancy rates (1.8% North America, 3.6% Europe, 5.8% Asia-Pacific), UBS forecasts 20-25% market growth in 2026 following 25-30% expansion in 2025. GenAI adoption is growing exponentially, with early monetization generating $17 billion in annual recurring revenue.</cite></div>
+            <a href="#" class="news-link" onclick="return false;">Read Report</a>
+          </div>
+
+          <div class="news-item">
+            <div class="news-headline">Data Centers as Speculative Asset: Billion-Dollar Stake Sales and Debt Concentration</div>
+            <div class="news-source">The Deep Dive, August 2026</div>
+            <div class="news-summary"><cite index="35-1">Data center owners are pursuing billion-dollar stake sales as investors place growing value on development pipelines and expectations of sustained AI demand. Companies like EdgeCore—entering 2026 with 1.8GW capacity and $5.9B committed equity/debt—are identifying another $16.1B in planned investment for additional hyperscale campuses. A buyer would be purchasing both current revenue and anticipated future infrastructure.</cite></div>
+            <a href="#" class="news-link" onclick="return false;">Read Analysis</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. HOUSE RETIREMENTS RECORD -->
+    <div class="card">
+      <div class="card-header level-2" onclick="toggle(this)">
+        <span class="card-rank">06</span>
+        <span class="card-title">House Retirements Hit Record: 62+ Members Exit as Party Dysfunction Peaks</span>
+        <span class="card-count">Through August 2026</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="context-note">
+            <strong>What happened:</strong> As of August 2026, over 62 House members have announced they will not seek reelection, with 37 being Republicans. This exceeds the historical record of 65 set in 1992—with primaries still ongoing.
+          </div>
+
+          <div class="news-item">
+            <div class="news-headline">Three Dozen House Members Already Heading for the Exits Before 2026 Even Starts</div>
+            <div class="news-source">Punchbowl News, November 2025 (Early Warning)</div>
+            <div class="news-summary"><cite index="46-1">Some three dozen House members announced early departures, with six—all Democrats—retiring after long tenures in their 70s and 80s. But most departing members were seeking other offices. Four members including Rep. Don Bacon (R-Nebraska) retired relatively young, aged 43-62. Bacon said of serving in the House: "The thought of doing this for two more years is not appealing. I've got time in my life to do a third career."</cite></div>
+            <a href="#" class="news-link" onclick="return false;">Read Analysis</a>
+          </div>
+
+          <div class="news-item">
+            <div class="news-headline">House Retirements Forecast Potential Democratic Gains in 2026</div>
+            <div class="news-source">G. Elliott Morris/FiveThirtyEight, September 2025</div>
+            <div class="news-summary"><cite index="44-1">NPR tracking shows 10 senators and 27 House members announced non-reelection as of September 2025. Fifteen are retiring with others running for different offices: 11 for governor, 10 for Senate. More Republicans are exiting Washington (27) than Democrats (10), a signal handicappers watch closely as net retirements from the party in power forecast midterm performance.</cite></div>
+            <a href="#" class="news-link" onclick="return false;">Read Analysis</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /topics-list -->
+
+  <!-- ══ FOOTER ══════════════════════════════════════════ -->
+  <div class="footer">
+    <div style="opacity:0.9;">
+      <strong>AfterWord</strong> — Synthesis of press coverage July–August 2026<br>
+      Contextualizing the BOLLI Current Events Discussion Group session of August 4, 2026<br>
+      News sources: CNN, NPR, PBS, Britannica, Library of Congress, NPR, Immigration Council, Forbes, UBS, & investigative media<br>
+      <a href="https://jhnday.github.io/CrntEvnts" target="_blank">jhnday.github.io/CrntEvnts</a>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<script>
+  function toggle(header) {
+    const body = header.nextElementSibling;
+    const chevron = header.querySelector('.card-chevron');
+    const isOpen = body.classList.contains('expanded');
+
+    // Collapse all
+    document.querySelectorAll('.card-body').forEach(b => b.classList.remove('expanded'));
+    document.querySelectorAll('.card-chevron').forEach(c => c.classList.remove('rotated'));
+
+    // Expand clicked (if it was closed)
+    if (!isOpen) {
+      body.classList.add('expanded');
+      chevron.classList.add('rotated');
+      setTimeout(() => header.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
+    }
+  }
+</script>
+</body>
+</html>
