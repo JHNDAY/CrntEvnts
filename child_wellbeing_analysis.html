@@ -52,6 +52,23 @@
             opacity: 0.9;
         }
 
+        .source-link {
+            font-size: 12px;
+            margin-top: 8px;
+        }
+
+        .source-link a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            border-bottom: 1px dotted rgba(255, 255, 255, 0.5);
+            transition: all 0.2s ease;
+        }
+
+        .source-link a:hover {
+            color: white;
+            border-bottom-color: white;
+        }
+
         .header-nav {
             flex-shrink: 0;
         }
@@ -178,31 +195,79 @@
         }
 
         .legend h3 {
-            font-size: 14px;
-            font-weight: 600;
-            margin-bottom: 15px;
-            color: #333;
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: #222;
+            letter-spacing: 0.3px;
         }
 
         .legend-scale {
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             gap: 12px;
+            margin-bottom: 30px;
+            position: relative;
+        }
+
+        .legend-bar-wrapper {
+            flex: 1;
+            position: relative;
+        }
+
+        .legend-values-container {
+            position: absolute;
+            top: -38px;
+            left: 0;
+            right: 0;
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            z-index: 10;
+        }
+
+        .legend-value-label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+        }
+
+        .legend-value-number {
+            font-size: 13px;
+            font-weight: 700;
+            color: #222;
+            white-space: nowrap;
+        }
+
+        .legend-value-text {
+            font-size: 10px;
+            color: #888;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
         }
 
         .legend-bar {
             flex: 1;
-            height: 20px;
-            border-radius: 2px;
+            height: 40px;
+            border-radius: 4px;
             position: relative;
+            border: 2px solid #ddd;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            background-size: 100% 100%;
+            overflow: hidden;
+        }
+
+        .legend-bar svg {
+            display: block;
+            width: 100%;
+            height: 100%;
         }
 
         .legend-labels {
-            display: flex;
-            justify-content: space-between;
-            font-size: 11px;
-            color: #666;
-            margin-top: 4px;
+            display: none;
         }
 
         /* Data Table Styles */
@@ -396,6 +461,11 @@
             <div class="header-title">
                 <h1>US Child Well-Being Analysis</h1>
                 <p>Interactive geographic data and comprehensive metrics by state</p>
+                <div class="source-link">
+                    <a href="https://www.aecf.org/blog/new-kids-count-index-reveals-where-states-are-making-progress-for-children?gad_source=1&gad_campaignid=10228890624&gbraid=0AAAAAD3xzvFMlLIcfPg1gRZnGMssRVTSe&gclid=EAIaIQobChMIg9_y87qKlgMVj4bCCB0GpSWDEAAYASAAEgKt9_D_BwE" target="_blank" rel="noopener noreferrer">
+                        Source: Annie E. Casey Foundation - Kids Count Index
+                    </a>
+                </div>
             </div>
             <div class="header-nav">
                 <select id="view-select">
@@ -634,11 +704,8 @@
         }
 
         function getColorScale(valueType) {
-            if (valueType === 'score') {
-                return d3.scaleSequential(d3.interpolateBlues).domain([0, 1000]);
-            } else {
-                return d3.scaleDiverging(d3.interpolatePiYG).domain([-250, 0, 250]);
-            }
+            // Always use blue sequential scale for consistency
+            return d3.scaleSequential(d3.interpolateBlues).domain([0, 1000]);
         }
 
         function updateMap() {
@@ -654,12 +721,8 @@
                 const maxVal = Math.max(...values);
                 const colorScale = getColorScale(currentValueType);
                 
-                if (currentValueType === 'score') {
-                    colorScale.domain([minVal, maxVal]);
-                } else {
-                    const absMax = Math.max(Math.abs(minVal), Math.abs(maxVal));
-                    colorScale.domain([-absMax, 0, absMax]);
-                }
+                // Always use sequential scale from min to max
+                colorScale.domain([minVal, maxVal]);
 
                 d3.select('#map').html('');
                 const svg = d3.select('#map').append('svg')
@@ -677,7 +740,7 @@
                     .attr('fill', d => {
                         const stateName = stateNames[d.id];
                         const value = getValue(stateName, currentMetric, currentValueType);
-                        return value !== null ? colorScale(value) : '#ccc';
+                        return value !== null ? colorScale(value) : '#f0f0f0';
                     })
                     .on('mouseover', function(event, d) {
                         const stateName = stateNames[d.id];
@@ -709,31 +772,110 @@
             const legend = document.getElementById('legend');
             legend.innerHTML = '';
 
+            const metricNames = {
+                'overall': 'Overall Child Well-Being',
+                'economic': 'Economic Well-Being',
+                'education': 'Education',
+                'health': 'Health',
+                'family': 'Family and Community'
+            };
+
+            const valueTypeNames = {
+                'score': 'Score',
+                'change': 'Change',
+                'pct-change': 'Percentage Change (%)'
+            };
+
             const h3 = document.createElement('h3');
-            h3.textContent = 'Value Scale';
+            h3.textContent = `${metricNames[currentMetric]} — ${valueTypeNames[currentValueType]}`;
             legend.appendChild(h3);
 
             const scaleDiv = document.createElement('div');
             scaleDiv.className = 'legend-scale';
 
+            // Create wrapper for bar and values
+            const barWrapper = document.createElement('div');
+            barWrapper.className = 'legend-bar-wrapper';
+
+            // Create values container
+            const valuesContainer = document.createElement('div');
+            valuesContainer.className = 'legend-values-container';
+
+            const midVal = (minVal + maxVal) / 2;
+
+            // Low value
+            const lowLabel = document.createElement('div');
+            lowLabel.className = 'legend-value-label';
+            lowLabel.innerHTML = `
+                <div class="legend-value-number">${minVal.toFixed(currentValueType === 'pct-change' ? 1 : 0)}</div>
+                <div class="legend-value-text">Low</div>
+            `;
+            valuesContainer.appendChild(lowLabel);
+
+            // Mid value
+            const midLabel = document.createElement('div');
+            midLabel.className = 'legend-value-label';
+            midLabel.innerHTML = `
+                <div class="legend-value-number">${midVal.toFixed(currentValueType === 'pct-change' ? 1 : 0)}</div>
+                <div class="legend-value-text">Mid</div>
+            `;
+            valuesContainer.appendChild(midLabel);
+
+            // High value
+            const highLabel = document.createElement('div');
+            highLabel.className = 'legend-value-label';
+            highLabel.innerHTML = `
+                <div class="legend-value-number">${maxVal.toFixed(currentValueType === 'pct-change' ? 1 : 0)}</div>
+                <div class="legend-value-text">High</div>
+            `;
+            valuesContainer.appendChild(highLabel);
+
+            barWrapper.appendChild(valuesContainer);
+
+            // Create bar container
             const bar = document.createElement('div');
             bar.className = 'legend-bar';
-            bar.style.background = `linear-gradient(to right, ${
-                Array.from({length: 100}, (_, i) => colorScale(minVal + (maxVal - minVal) * (i / 100))).join(',')
-            })`;
 
-            scaleDiv.appendChild(bar);
+            // Create SVG for gradient bar
+            const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            svg.setAttribute('width', '100%');
+            svg.setAttribute('height', '100%');
+            svg.setAttribute('viewBox', '0 0 500 40');
+            svg.setAttribute('preserveAspectRatio', 'none');
+
+            // Define gradient
+            const defs = document.createElementNS('http://www.w3.org/2000/svg', 'defs');
+            const gradient = document.createElementNS('http://www.w3.org/2000/svg', 'linearGradient');
+            gradient.setAttribute('id', 'colorGradient');
+            gradient.setAttribute('x1', '0%');
+            gradient.setAttribute('y1', '0%');
+            gradient.setAttribute('x2', '100%');
+            gradient.setAttribute('y2', '0%');
+
+            // Add color stops - light blue (low) to dark blue (high)
+            for (let i = 0; i <= 100; i += 5) {
+                const stop = document.createElementNS('http://www.w3.org/2000/svg', 'stop');
+                const value = minVal + (maxVal - minVal) * (i / 100);
+                const color = colorScale(value);
+                stop.setAttribute('offset', `${i}%`);
+                stop.setAttribute('stop-color', color);
+                gradient.appendChild(stop);
+            }
+
+            defs.appendChild(gradient);
+            svg.appendChild(defs);
+
+            // Add rectangle with gradient
+            const rect = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+            rect.setAttribute('width', '500');
+            rect.setAttribute('height', '40');
+            rect.setAttribute('fill', 'url(#colorGradient)');
+            svg.appendChild(rect);
+
+            bar.appendChild(svg);
+            barWrapper.appendChild(bar);
+            scaleDiv.appendChild(barWrapper);
             legend.appendChild(scaleDiv);
-
-            const labels = document.createElement('div');
-            labels.className = 'legend-labels';
-            const minSpan = document.createElement('span');
-            minSpan.textContent = minVal.toFixed(currentValueType === 'pct-change' ? 1 : 0);
-            const maxSpan = document.createElement('span');
-            maxSpan.textContent = maxVal.toFixed(currentValueType === 'pct-change' ? 1 : 0);
-            labels.appendChild(minSpan);
-            labels.appendChild(maxSpan);
-            legend.appendChild(labels);
         }
 
         document.getElementById('metric-select').addEventListener('change', (e) => {
