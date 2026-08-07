@@ -127,6 +127,30 @@
             gap: 8px;
         }
 
+        .legend-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .legend-group label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #333;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .legend-bar-container {
+            display: flex;
+            align-items: flex-end;
+            gap: 12px;
+            position: relative;
+            height: auto;
+        }
+
         .control-group label {
             font-size: 12px;
             font-weight: 600;
@@ -187,43 +211,20 @@
         }
 
         .legend {
-            margin-top: 30px;
-            padding: 20px;
-            background-color: white;
-            border: 1px solid #e0e0e0;
-            border-radius: 4px;
-        }
-
-        .legend h3 {
-            font-size: 15px;
-            font-weight: 700;
-            margin-bottom: 20px;
-            color: #222;
-            letter-spacing: 0.3px;
+            display: none;
         }
 
         .legend-scale {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            margin-bottom: 30px;
-            position: relative;
+            display: none;
         }
 
         .legend-bar-wrapper {
-            flex: 1;
             position: relative;
-        }
-
-        .legend-values-container {
-            position: absolute;
-            top: -38px;
-            left: 0;
-            right: 0;
+            flex: 1;
+            min-width: 250px;
             display: flex;
-            justify-content: space-between;
-            width: 100%;
-            z-index: 10;
+            flex-direction: column;
+            gap: 8px;
         }
 
         .legend-value-label {
@@ -234,14 +235,14 @@
         }
 
         .legend-value-number {
-            font-size: 13px;
+            font-size: 18px;
             font-weight: 700;
             color: #222;
             white-space: nowrap;
         }
 
         .legend-value-text {
-            font-size: 10px;
+            font-size: 12px;
             color: #888;
             font-weight: 500;
             text-transform: uppercase;
@@ -250,8 +251,7 @@
         }
 
         .legend-bar {
-            flex: 1;
-            height: 40px;
+            height: 30px;
             border-radius: 4px;
             position: relative;
             border: 2px solid #ddd;
@@ -268,6 +268,14 @@
 
         .legend-labels {
             display: none;
+        }
+
+        .legend-values-container {
+            position: static;
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            gap: 0;
         }
 
         /* Data Table Styles */
@@ -434,6 +442,14 @@
                 min-width: 100%;
             }
 
+            .legend-group {
+                min-width: 100% !important;
+            }
+
+            .legend-bar-container {
+                height: 80px;
+            }
+
             table {
                 font-size: 11px;
             }
@@ -497,12 +513,15 @@
                         <option value="pct-change">Percentage Change</option>
                     </select>
                 </div>
+
+                <div class="legend-group">
+                    <div id="legend-inline" class="legend-bar-container"></div>
+                </div>
             </div>
 
             <div class="map-container">
                 <div id="map"></div>
                 <div class="tooltip" id="tooltip"></div>
-                <div class="legend" id="legend"></div>
             </div>
         </div>
 
@@ -769,70 +788,16 @@
         }
 
         function updateLegend(minVal, maxVal, colorScale) {
-            const legend = document.getElementById('legend');
-            legend.innerHTML = '';
+            const legendContainer = document.getElementById('legend-inline');
+            if (!legendContainer) return;
+            
+            legendContainer.innerHTML = '';
 
-            const metricNames = {
-                'overall': 'Overall Child Well-Being',
-                'economic': 'Economic Well-Being',
-                'education': 'Education',
-                'health': 'Health',
-                'family': 'Family and Community'
-            };
-
-            const valueTypeNames = {
-                'score': 'Score',
-                'change': 'Change',
-                'pct-change': 'Percentage Change (%)'
-            };
-
-            const h3 = document.createElement('h3');
-            h3.textContent = `${metricNames[currentMetric]} — ${valueTypeNames[currentValueType]}`;
-            legend.appendChild(h3);
-
-            const scaleDiv = document.createElement('div');
-            scaleDiv.className = 'legend-scale';
-
-            // Create wrapper for bar and values
+            // Create wrapper for bar and values using flexbox column
             const barWrapper = document.createElement('div');
             barWrapper.className = 'legend-bar-wrapper';
 
-            // Create values container
-            const valuesContainer = document.createElement('div');
-            valuesContainer.className = 'legend-values-container';
-
-            const midVal = (minVal + maxVal) / 2;
-
-            // Low value
-            const lowLabel = document.createElement('div');
-            lowLabel.className = 'legend-value-label';
-            lowLabel.innerHTML = `
-                <div class="legend-value-number">${minVal.toFixed(currentValueType === 'pct-change' ? 1 : 0)}</div>
-                <div class="legend-value-text">Low</div>
-            `;
-            valuesContainer.appendChild(lowLabel);
-
-            // Mid value
-            const midLabel = document.createElement('div');
-            midLabel.className = 'legend-value-label';
-            midLabel.innerHTML = `
-                <div class="legend-value-number">${midVal.toFixed(currentValueType === 'pct-change' ? 1 : 0)}</div>
-                <div class="legend-value-text">Mid</div>
-            `;
-            valuesContainer.appendChild(midLabel);
-
-            // High value
-            const highLabel = document.createElement('div');
-            highLabel.className = 'legend-value-label';
-            highLabel.innerHTML = `
-                <div class="legend-value-number">${maxVal.toFixed(currentValueType === 'pct-change' ? 1 : 0)}</div>
-                <div class="legend-value-text">High</div>
-            `;
-            valuesContainer.appendChild(highLabel);
-
-            barWrapper.appendChild(valuesContainer);
-
-            // Create bar container
+            // Create bar container first
             const bar = document.createElement('div');
             bar.className = 'legend-bar';
 
@@ -874,8 +839,42 @@
 
             bar.appendChild(svg);
             barWrapper.appendChild(bar);
-            scaleDiv.appendChild(barWrapper);
-            legend.appendChild(scaleDiv);
+
+            // Create values container AFTER the bar
+            const valuesContainer = document.createElement('div');
+            valuesContainer.className = 'legend-values-container';
+
+            const midVal = (minVal + maxVal) / 2;
+
+            // Low value
+            const lowLabel = document.createElement('div');
+            lowLabel.className = 'legend-value-label';
+            lowLabel.innerHTML = `
+                <div class="legend-value-number">${minVal.toFixed(currentValueType === 'pct-change' ? 1 : 0)}</div>
+                <div class="legend-value-text">Low</div>
+            `;
+            valuesContainer.appendChild(lowLabel);
+
+            // Mid value
+            const midLabel = document.createElement('div');
+            midLabel.className = 'legend-value-label';
+            midLabel.innerHTML = `
+                <div class="legend-value-number">${midVal.toFixed(currentValueType === 'pct-change' ? 1 : 0)}</div>
+                <div class="legend-value-text">Mid</div>
+            `;
+            valuesContainer.appendChild(midLabel);
+
+            // High value
+            const highLabel = document.createElement('div');
+            highLabel.className = 'legend-value-label';
+            highLabel.innerHTML = `
+                <div class="legend-value-number">${maxVal.toFixed(currentValueType === 'pct-change' ? 1 : 0)}</div>
+                <div class="legend-value-text">High</div>
+            `;
+            valuesContainer.appendChild(highLabel);
+
+            barWrapper.appendChild(valuesContainer);
+            legendContainer.appendChild(barWrapper);
         }
 
         document.getElementById('metric-select').addEventListener('change', (e) => {
