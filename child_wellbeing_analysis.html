@@ -209,6 +209,9 @@
             z-index: 1000;
             display: none;
             white-space: nowrap;
+            max-width: 300px;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .legend {
@@ -770,15 +773,13 @@
                             const tooltip = document.getElementById('tooltip');
                             tooltip.textContent = `${stateName}: ${value.toFixed(currentValueType === 'pct-change' ? 1 : 0)}`;
                             tooltip.style.display = 'block';
-                            tooltip.style.left = (event.pageX + 10) + 'px';
-                            tooltip.style.top = (event.pageY - 30) + 'px';
+                            updateTooltipPosition(event, tooltip);
                             d3.select(this).style('stroke-width', 1.5).style('stroke', '#333');
                         }
                     })
                     .on('mousemove', function(event) {
                         const tooltip = document.getElementById('tooltip');
-                        tooltip.style.left = (event.pageX + 10) + 'px';
-                        tooltip.style.top = (event.pageY - 30) + 'px';
+                        updateTooltipPosition(event, tooltip);
                     })
                     .on('mouseout', function() {
                         document.getElementById('tooltip').style.display = 'none';
@@ -874,6 +875,38 @@
             bar.appendChild(svg);
             barWrapper.appendChild(bar);
             legendContainer.appendChild(barWrapper);
+        }
+
+        function updateTooltipPosition(event, tooltip) {
+            const mapContainer = document.querySelector('.map-container');
+            const containerRect = mapContainer.getBoundingClientRect();
+            
+            // Use clientX/clientY for viewport-relative positioning
+            let left = event.clientX - containerRect.left + 10;
+            let top = event.clientY - containerRect.top - 30;
+            
+            // Get tooltip dimensions for boundary checking
+            tooltip.style.left = left + 'px';
+            tooltip.style.top = top + 'px';
+            
+            const tooltipRect = tooltip.getBoundingClientRect();
+            
+            // Check if tooltip goes off the right edge
+            if (tooltipRect.right > window.innerWidth - 10) {
+                left = Math.max(10, window.innerWidth - tooltipRect.width - containerRect.left - 10);
+                tooltip.style.left = left + 'px';
+            }
+            
+            // Check if tooltip goes off the bottom edge
+            if (tooltipRect.bottom > window.innerHeight - 10) {
+                top = event.clientY - containerRect.top + 10; // Position above cursor instead
+                tooltip.style.top = top + 'px';
+            }
+            
+            // Prevent tooltip from going off the left edge
+            if (tooltipRect.left < 10) {
+                tooltip.style.left = '10px';
+            }
         }
 
         document.getElementById('metric-select').addEventListener('change', (e) => {
