@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Directions to In Person Current Events</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+        
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+        
+        main {
+            padding: 40px 30px;
+        }
+        
+        section {
+            margin-bottom: 35px;
+        }
+        
+        section:last-child {
+            margin-bottom: 0;
+        }
+        
+        h2 {
+            color: #667eea;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #667eea;
+            display: inline-block;
+        }
+        
+        .venue-info {
+            background: #f8f9ff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .venue-info p {
+            margin: 10px 0;
+            font-size: 1.05em;
+        }
+        
+        .venue-info strong {
+            color: #667eea;
+        }
+        
+        .directions-list {
+            list-style: none;
+            counter-reset: step-counter;
+            margin-top: 15px;
+        }
+        
+        .directions-list li {
+            counter-increment: step-counter;
+            margin-bottom: 15px;
+            padding-left: 40px;
+            position: relative;
+            line-height: 1.8;
+        }
+        
+        .directions-list li::before {
+            content: counter(step-counter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            background: #667eea;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .info-box {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+        
+        .info-box strong {
+            color: #856404;
+        }
+        
+        .parking-info {
+            background: #e7f3ff;
+            border-left: 4px solid #0066cc;
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 4px;
+        }
+        
+        .facility-guide {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+        
+        .facility-step {
+            background: #f8f9ff;
+            border-radius: 8px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .facility-step h3 {
+            color: #667eea;
+            font-size: 1.1em;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        
+        .facility-image {
+            width: 100%;
+            height: auto;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .facility-image:hover {
+            transform: scale(1.02);
+        }
+        
+        .button-group {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            display: inline-block;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+        
+        .btn-secondary:hover {
+            background: #f8f9ff;
+        }
+        
+        footer {
+            background: #f8f9ff;
+            padding: 20px 30px;
+            text-align: center;
+            color: #666;
+            font-size: 0.95em;
+            border-top: 1px solid #e0e0e0;
+        }
+        
+        @media (max-width: 600px) {
+            header h1 {
+                font-size: 1.8em;
+            }
+            
+            main {
+                padding: 25px 20px;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📍 Directions</h1>
+            <p>In Person Current Events Discussion Group</p>
+        </header>
+        
+        <main>
+            <section>
+                <h2>Venue Location</h2>
+                <div class="venue-info">
+                    <p><strong>Meeting Place:</strong> Brandeis Osher Lifelong Learning Institute (BOLLI)</p>
+                    <p><strong>Address:</strong> 51 Sawyer Road, Waltham, MA 02454</p>
+                    <p><strong>Room:</strong> Charles River Conference Room : 201</p>
+                </div>
+            </section>
+            
+            <section>
+                <h2>Entering the Facility</h2>
+                <div class="facility-guide">
+                    <div class="facility-step">
+                        <h3>Enter through this door</h3>
+                        <img src="https://jhnday.github.io/JhndayRprts/SwyrSteet.jpg" alt="Facility entrance" class="facility-image">
+                    </div>
+                    
+                    <div class="facility-step">
+                        <h3>On entering the lobby take elevator to the second floor</h3>
+                        <img src="https://jhnday.github.io/JhndayRprts/Lobby.jpg" alt="Lobby and elevator" class="facility-image">
+                    </div>
+                    
+                    <div class="facility-step">
+                        <h3>Follow the signs</h3>
+                        <img src="https://jhnday.github.io/JhndayRprts/ScndFloor.jpg" alt="Second floor signs" class="facility-image">
+                    </div>
+                    
+                    <div class="facility-step">
+                        <h3>Conference Room</h3>
+                        <img src="https://jhnday.github.io/JhndayRprts/CnfrncRoom.jpg" alt="Conference room" class="facility-image">
+                    </div>
+                </div>
+            </section>
+            
+
+            
+            <section>
+                <h2>Before You Come</h2>
+                <div class="info-box">
+                    <strong>✓ Please Note:</strong><br>
+                    Arrive 10-15 minutes early to allow time for parking and walking to the meeting room. If this is your first time, check in at the front desk for directions to the specific room.
+                </div>
+            </section>
+            
+            <section>
+                <div class="button-group">
+                    <a href="https://www.google.com/maps/search/51+Sawyer+Road+Waltham+MA+02454" class="btn btn-primary" target="_blank">📍 Open in Google Maps</a>
+                </div>
+            </section>
+        </main>
+        
+        <footer>
+            <p>Current Events Discussion Group • BOLLI at Brandeis University<br>
+            Questions? Contact BOLLI at (781) 736-2400</p>
+        </footer>
+    </div>
+</body>
+</html>
