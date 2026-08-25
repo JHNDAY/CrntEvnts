@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Domination vs. Nondomination: Discussion Tool</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html, body {
+            height: 100%;
+            font-family: Georgia, 'Times New Roman', serif;
+            background: white;
+            color: #000;
+            line-height: 1.6;
+        }
+        
+        .header {
+            border-bottom: 3px solid #000;
+            padding: 16px 40px;
+            text-align: center;
+            background: white;
+        }
+        
+        .masthead {
+            font-size: 0.65em;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #666;
+            margin-bottom: 2px;
+        }
+        
+        .header h1 {
+            font-size: 2em;
+            font-weight: normal;
+            letter-spacing: 1px;
+            margin-bottom: 2px;
+            line-height: 1.1;
+        }
+        
+        .header p {
+            font-size: 0.8em;
+            color: #333;
+            font-style: italic;
+        }
+        
+        .main-container {
+            display: grid;
+            grid-template-columns: 500px 1fr;
+            gap: 25px;
+            padding: 20px 30px;
+            height: calc(100vh - 140px);
+        }
+        
+        /* LEFT PANEL - FRAMEWORK */
+        .framework-panel {
+            border-right: 1px solid #000;
+            padding-right: 20px;
+            overflow-y: auto;
+            font-size: 0.9em;
+            line-height: 1.6;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto auto auto auto auto;
+            gap: 6px 10px;
+        }
+        
+        .framework-panel h3 {
+            font-size: 1em;
+            font-weight: normal;
+            margin-bottom: 6px;
+            border-bottom: 1px solid #000;
+            padding-bottom: 3px;
+            letter-spacing: 0.5px;
+            grid-column: 1 / -1;
+            grid-row: 1;
+        }
+        
+        /* Position framework sections explicitly */
+        .framework-panel > .framework-section:nth-child(2) {
+            grid-column: 1;
+            grid-row: 2;
+        }
+        
+        .framework-panel > .framework-section:nth-child(3) {
+            grid-column: 1;
+            grid-row: 3;
+        }
+        
+        .framework-panel > .framework-section:nth-child(4) {
+            grid-column: 1;
+            grid-row: 4;
+        }
+        
+        .framework-panel > .framework-section:nth-child(5) {
+            grid-column: 2;
+            grid-row: 4;
+        }
+        
+        .framework-panel > .framework-section:nth-child(6) {
+            grid-column: 2;
+            grid-row: 2;
+        }
+        
+        .framework-panel > .framework-section:nth-child(7) {
+            grid-column: 1 / -1;
+            grid-row: 5;
+        }
+        
+        .framework-section {
+            margin-bottom: 0;
+        }
+        
+        .framework-section h4 {
+            font-size: 0.75em;
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: 3px;
+            letter-spacing: 1px;
+            color: #000;
+        }
+        
+        .framework-section p {
+            font-size: 0.85em;
+            line-height: 1.5;
+            color: #000;
+            margin-bottom: 0;
+        }
+        
+        .domination, .nondomination {
+            font-size: 0.75em;
+            padding: 2px 6px;
+            margin: 1px 0;
+            border-left: 2px solid;
+            padding-left: 8px;
+        }
+        
+        .domination {
+            border-left-color: #c00;
+            color: #333;
+        }
+        
+        .nondomination {
+            border-left-color: #060;
+            color: #333;
+        }
+        
+        /* RIGHT PANEL */
+        .right-panel {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        /* ISSUE LIST */
+        .issues-list {
+            border: 1px solid #000;
+            overflow-y: auto;
+            background: white;
+            flex: 1;
+        }
+        
+        .issues-list.hidden {
+            display: none;
+        }
+        
+        .issue-list-item {
+            display: grid;
+            grid-template-columns: 25px 1fr;
+            gap: 10px;
+            padding: 8px 10px;
+            border-bottom: 1px solid #e0e0e0;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.2s;
+        }
+        
+        .issue-list-item:last-child {
+            border-bottom: none;
+        }
+        
+        .issue-list-item:hover {
+            background: #f5f5f5;
+        }
+        
+        .issue-list-item.active {
+            background: #000;
+            color: white;
+            border-bottom-color: #000;
+        }
+        
+        .issue-list-item.active .issue-list-number {
+            color: white;
+        }
+        
+        .issue-list-number {
+            font-size: 0.8em;
+            color: #999;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .issue-list-title {
+            font-size: 0.8em;
+            line-height: 1.3;
+        }
+        
+        /* DETAIL VIEW */
+        .detail-panel {
+            flex: 1;
+            border: 1px solid #000;
+            padding: 16px;
+            overflow-y: auto;
+            background: white;
+        }
+        
+        .detail-panel.hidden {
+            display: none;
+        }
+        
+        .issue-number {
+            font-size: 0.7em;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 2px;
+        }
+        
+        .issue-title {
+            font-size: 1.4em;
+            color: #000;
+            margin-bottom: 10px;
+            font-weight: normal;
+            line-height: 1.3;
+        }
+        
+        .issue-description {
+            border-left: 1px solid #000;
+            padding-left: 16px;
+            margin-bottom: 16px;
+            line-height: 1.7;
+            color: #000;
+            font-size: 0.9em;
+        }
+        
+        .spectrum {
+            margin: 16px 0;
+            padding: 12px 0;
+            border-top: 1px solid #000;
+            border-bottom: 1px solid #000;
+        }
+        
+        .spectrum-label {
+            font-size: 0.75em;
+            font-weight: bold;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #000;
+        }
+        
+        .spectrum-bar {
+            display: flex;
+            margin-bottom: 8px;
+            height: 35px;
+            border: 1px solid #000;
+        }
+        
+        .spectrum-left {
+            flex: 1;
+            background: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-right: 1px solid #000;
+            font-weight: bold;
+            font-size: 0.65em;
+            text-align: center;
+            padding: 4px;
+            color: #000;
+        }
+        
+        .spectrum-right {
+            flex: 1;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.65em;
+            text-align: center;
+            padding: 4px;
+            color: #000;
+        }
+        
+        .discussion-prompts {
+            border: 1px solid #000;
+            padding: 10px;
+            margin: 12px 0;
+            background: white;
+        }
+        
+        .discussion-prompts h4 {
+            color: #000;
+            font-size: 0.75em;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            font-weight: bold;
+            letter-spacing: 1px;
+            border-bottom: 1px solid #000;
+            padding-bottom: 4px;
+        }
+        
+        .prompt-list {
+            list-style: none;
+            font-size: 0.8em;
+            line-height: 1.4;
+        }
+        
+        .prompt-list li {
+            margin-bottom: 3px;
+            padding-left: 10px;
+            position: relative;
+            color: #000;
+        }
+        
+        .prompt-list li:before {
+            content: "■";
+            position: absolute;
+            left: 0;
+            color: #000;
+            font-size: 0.4em;
+        }
+        
+        .note-section {
+            background: white;
+            border: 1px solid #000;
+            padding: 10px;
+            margin: 12px 0;
+        }
+        
+        .note-label {
+            font-size: 0.75em;
+            font-weight: bold;
+            color: #000;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 1px solid #000;
+            padding-bottom: 3px;
+        }
+        
+        .note-input {
+            width: 100%;
+            min-height: 50px;
+            padding: 6px;
+            border: 1px solid #000;
+            font-family: Georgia, serif;
+            font-size: 0.85em;
+            resize: vertical;
+            background: white;
+            color: #000;
+        }
+        
+        .note-input:focus {
+            outline: none;
+            background: #f9f9f9;
+        }
+        
+        @media (max-width: 1200px) {
+            .main-container {
+                grid-template-columns: 1fr;
+                gap: 15px;
+                height: auto;
+            }
+            
+            .framework-panel {
+                border-right: none;
+                border-bottom: 1px solid #000;
+                padding-right: 0;
+                padding-bottom: 15px;
+            }
+            
+            .right-panel {
+                gap: 10px;
+            }
+            
+            .issues-list {
+                max-height: 150px;
+            }
+        }
+        
+        button {
+            padding: 8px 12px;
+            font-size: 0.75em;
+            border: 1px solid #000;
+            background: white;
+            color: #000;
+            cursor: pointer;
+            font-weight: normal;
+            font-family: Georgia, serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        button:hover {
+            background: #f5f5f5;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="masthead">A Contemporary Issues Discussion</div>
+        <h1>Domination vs. Nondomination</h1>
+        <p>Explore ten contested policy domains using Acemoglu's framework</p>
+    </div>
+    
+    <div class="main-container">
+        <!-- LEFT PANEL: FRAMEWORK -->
+        <div class="framework-panel">
+            <h3>Acemoglu's Framework</h3>
+            
+            <div class="framework-section">
+                <h4>Core Principle</h4>
+                <p>A rule becomes <strong>domination</strong> when imposed without input from those affected. It supports <strong>nondomination</strong> when the community has voice in shaping it.</p>
+            </div>
+            
+            <div class="framework-section">
+                <h4>Responsiveness Test</h4>
+                <p>Does the rule reflect the views and priorities of the people bound by it?</p>
+            </div>
+            
+            <div class="framework-section">
+                <h4>Domination Occurs:</h4>
+                <div class="domination">✗ Imposed without voice</div>
+                <div class="domination">✗ Communities treated identically</div>
+                <div class="domination">✗ Elite imposes "what is right"</div>
+                <div class="domination">✗ Lost capacity to experiment</div>
+            </div>
+            
+            <div class="framework-section">
+                <h4>Nondomination Requires:</h4>
+                <div class="nondomination">✓ Participate in creation</div>
+                <div class="nondomination">✓ Responsive to local views</div>
+                <div class="nondomination">✓ Variation where conditions differ</div>
+                <div class="nondomination">✓ Capacity to adapt & experiment</div>
+            </div>
+            
+            <div class="framework-section">
+                <h4>The Tension</h4>
+                <p><em>Shared resources</em> (pandemics, climate, immigration) affect multiple communities. Can genuine self-government exist when issues are interconnected?</p>
+            </div>
+            
+            <div class="framework-section" style="margin-top: 24px; padding-top: 24px; border-top: 1px solid #000;">
+                <h4>Discussion Questions</h4>
+                <p style="font-size: 0.8em; margin-bottom: 10px;"><em>Ask these for every issue:</em></p>
+                <div class="prompt-list">
+                    <li>Who is dominated if nationally mandated?</li>
+                    <li>Who is dominated if locally decided?</li>
+                    <li>What's the shared resource problem?</li>
+                    <li>Can self-government exist given interconnections?</li>
+                    <li>What's the capture/elite engineering risk?</li>
+                </div>
+            </div>
+        </div>
+        
+        <!-- RIGHT PANEL -->
+        <div class="right-panel">
+            <!-- ISSUE LIST -->
+            <div class="issues-list" id="issuesList"></div>
+            
+            <!-- DETAIL VIEW -->
+            <div class="detail-panel hidden" id="detailPanel"></div>
+        </div>
+    </div>
+    
+    <script>
+        const issues = [
+            {
+                number: 1,
+                title: "COVID-19 Public Health Mandates",
+                description: "Mask requirements, vaccine mandates, gathering restrictions. Should these be uniform national policy or decided by states/municipalities based on local conditions and preferences?",
+                prompts: [
+                    "Who is dominated if this is nationally mandated? Which communities lose voice?",
+                    "Who is dominated if this is locally decided? Which vulnerable groups might be harmed?",
+                    "What's the shared resource problem? (Pandemics don't respect state lines)",
+                    "Can genuine self-government exist on this issue given interconnections?",
+                    "What's the risk of regulatory capture or elite social engineering at each level?"
+                ]
+            },
+            {
+                number: 2,
+                title: "Curriculum Standards & Critical Race Theory",
+                description: "What should be taught about race, history, and identity in public schools. Should this be determined by national standards or by local school boards reflecting community values?",
+                prompts: [
+                    "Who is dominated if curriculum is nationally mandated? Which regional/community perspectives are erased?",
+                    "Who is dominated if curriculum is locally decided? Which students/minorities might lack voice in their community?",
+                    "What's the shared resource problem? (Education affects future workforce, civic participation, national cohesion)",
+                    "Does a shared civic identity require shared historical narratives? Or does that itself become domination?",
+                    "How does this differ from, say, math or science standards?"
+                ]
+            },
+            {
+                number: 3,
+                title: "Climate Policy & Emissions Standards",
+                description: "Carbon taxes, renewable energy mandates, industrial emissions caps. Should these be uniform national requirements or allow regional variation based on local economies and energy infrastructure?",
+                prompts: [
+                    "Who is dominated if climate policy is nationally uniform? Which regional economies lose voice in the transition?",
+                    "Who is dominated if policy is locally decided? Which communities get polluted by externalities from other regions?",
+                    "What's the shared resource problem? (Atmosphere is global; carbon emitted anywhere affects everyone)",
+                    "Can genuine self-government exist when the commons are shared?",
+                    "What happens to energy-dependent regions if one-size-fits-all policy is imposed?"
+                ]
+            },
+            {
+                number: 4,
+                title: "Drug Legalization & Scheduling",
+                description: "Cannabis legalization, opioid policy, decriminalization of hard drugs. Should DEA classifications be nationally uniform or allow states/cities to set their own drug policies?",
+                prompts: [
+                    "Who is dominated if drug policy is nationally mandated? Which communities' local preferences are overridden?",
+                    "Who is dominated if policy is locally decided? Which individuals face unpredictable legal consequences across state lines?",
+                    "What's the shared resource problem? (Drug markets don't respect borders; addiction is a public health commons)",
+                    "Is regulatory capture more dangerous at the federal or local level on drugs?",
+                    "What happens to individual liberty when someone commits a crime in one jurisdiction but not another?"
+                ]
+            },
+            {
+                number: 5,
+                title: "Gender-Affirming Medical Care for Minors",
+                description: "Access to puberty blockers and surgical interventions for transgender youth. Should medical standards be nationally set or decided by state medical boards and families?",
+                prompts: [
+                    "Who is dominated if this is nationally mandated as available? Which communities' values about medicine and childhood are overridden?",
+                    "Who is dominated if this is locally banned? Which youth lose access to care their families want?",
+                    "What's the shared resource problem? (Medical ethics? Interstate medical licensing?)",
+                    "Is this even solvable by self-government, or does it require expert authority?",
+                    "How much weight should family autonomy have vs. state interest vs. community norms?"
+                ]
+            },
+            {
+                number: 6,
+                title: "Police Use-of-Force Standards & Qualified Immunity",
+                description: "Federal standards for police conduct, body cameras, de-escalation training. Should these be mandated nationally or determined by local departments and municipalities?",
+                prompts: [
+                    "Who is dominated if use-of-force standards are nationally mandated? Which communities lose control over their own policing?",
+                    "Who is dominated if standards are locally set? Which minorities lack protection when local politics is hostile to them?",
+                    "What's the shared resource problem? (Criminal networks cross jurisdictions; due process is a national value)",
+                    "How much variation can a constitutional right allow before it becomes unequal protection?",
+                    "Is local control over policing an expression of self-government, or a cover for dominating minorities?"
+                ]
+            },
+            {
+                number: 7,
+                title: "Minimum Wage Requirements",
+                description: "Wage floors that account for regional cost-of-living differences. Should there be a uniform national minimum or allow states/cities to set wages appropriate to local economies?",
+                prompts: [
+                    "Who is dominated if minimum wage is nationally uniform? Which lower-cost-of-living regions see job losses?",
+                    "Who is dominated if wage is locally set? Which workers lack bargaining power in low-wage states?",
+                    "What's the shared resource problem? (Labor markets are mobile; low wages in one place attract employers from another)",
+                    "Does 'self-government' for a state include the right to pay workers less?",
+                    "Where does individual worker autonomy fit in this framework?"
+                ]
+            },
+            {
+                number: 8,
+                title: "Immigration Enforcement & Border Policy",
+                description: "Who can enter/reside in the country, deportation standards. Should this be strictly federal or allow 'sanctuary' communities to set local immigration policies?",
+                prompts: [
+                    "Who is dominated if immigration is strictly federal? Which border communities lose say in who lives near them?",
+                    "Who is dominated if sanctuary cities set local policy? Which immigrants face unpredictable legal status based on zip code?",
+                    "What's the shared resource problem? (Immigration is inherently national; it affects labor markets, housing, services across all communities)",
+                    "Can one community's immigration policy destabilize another's? Or is that just normal competition?",
+                    "Is national sovereignty itself a form of dominance against outsiders?"
+                ]
+            },
+            {
+                number: 9,
+                title: "Zoning & Housing Density Requirements",
+                description: "Single-family zoning restrictions, affordable housing mandates, density regulations. Should housing policy be nationally mandated or controlled by local governments/communities?",
+                prompts: [
+                    "Who is dominated if zoning is nationally mandated for density? Which communities lose say in their neighborhood character?",
+                    "Who is dominated if zoning is locally controlled? Which low-income people and minorities are excluded by restrictive local rules?",
+                    "What's the shared resource problem? (Housing markets are regional; local zoning decisions affect regional homelessness and affordability)",
+                    "Is 'local control' over zoning a form of self-government or a form of dominating outsiders?",
+                    "Do property owners' rights to restrict zoning trump homeless people's access to shelter?"
+                ]
+            },
+            {
+                number: 10,
+                title: "Content Moderation & Free Speech on Social Media",
+                description: "Standards for what speech platforms must remove (hate speech, misinformation, etc.). Should these be set by federal regulation or determined by private platforms and local user communities?",
+                prompts: [
+                    "Who is dominated if content standards are federally mandated? Which speech communities lose their platforms' independence?",
+                    "Who is dominated if platforms self-regulate? Which marginalized voices are silenced by algorithm?",
+                    "What's the shared resource problem? (Social media platforms are de facto public squares; speech norms affect everyone)",
+                    "Can 'self-government' exist on platforms designed for algorithmic control, not democratic deliberation?",
+                    "Is this even about domination vs. nondomination, or is it about who owns the infrastructure?"
+                ]
+            }
+        ];
+        
+        let currentIssue = null;
+        const notes = {};
+        
+        function selectIssue(issueNum) {
+            if (currentIssue !== null) {
+                notes[currentIssue] = document.getElementById('groupNotes')?.value || '';
+            }
+            currentIssue = issueNum;
+            renderDetail();
+            showDetail();
+        }
+        
+        function renderIssuesList() {
+            const list = document.getElementById('issuesList');
+            list.innerHTML = '';
+            issues.forEach(issue => {
+                const item = document.createElement('div');
+                item.className = 'issue-list-item';
+                item.innerHTML = `
+                    <div class="issue-list-number">${issue.number}</div>
+                    <div class="issue-list-title">${issue.title}</div>
+                `;
+                item.onclick = () => selectIssue(issue.number);
+                list.appendChild(item);
+            });
+        }
+        
+        function renderDetail() {
+            const detail = document.getElementById('detailPanel');
+            const issue = issues.find(i => i.number === currentIssue);
+            
+            detail.innerHTML = `
+                <button class="back-button" onclick="backToList()" style="margin-bottom: 12px; padding: 6px 10px; font-size: 0.7em;">← Back to List</button>
+                
+                <div class="issue-number">Issue ${issue.number} of ${issues.length}</div>
+                <div class="issue-title">${issue.title}</div>
+                <div class="issue-description">${issue.description}</div>
+                
+                <div class="spectrum">
+                    <div class="spectrum-label">Where should this decision be made?</div>
+                    <div class="spectrum-bar">
+                        <div class="spectrum-left">NATIONAL MANDATE<br>(Domination)</div>
+                        <div class="spectrum-right">LOCAL DECISION<br>(Nondomination)</div>
+                    </div>
+                </div>
+                
+                <div class="discussion-prompts">
+                    <h4>Issue-Specific Questions</h4>
+                    <ul class="prompt-list">
+                        ${issue.prompts.map(p => `<li>${p}</li>`).join('')}
+                    </ul>
+                </div>
+                
+                <div class="note-section">
+                    <div class="note-label">Group Thinking / Position</div>
+                    <textarea class="note-input" id="groupNotes" placeholder="Where does your group land on this issue? What are the strongest arguments? What tensions do you see?">${notes[issue.number] || ''}</textarea>
+                </div>
+            `;
+        }
+        
+        function showDetail() {
+            document.getElementById('issuesList').classList.add('hidden');
+            document.getElementById('detailPanel').classList.remove('hidden');
+        }
+        
+        function backToList() {
+            if (currentIssue !== null) {
+                notes[currentIssue] = document.getElementById('groupNotes')?.value || '';
+            }
+            document.getElementById('detailPanel').classList.add('hidden');
+            document.getElementById('issuesList').classList.remove('hidden');
+        }
+        
+        
+        // Initialize with list view
+        renderIssuesList();
+    </script>
+</body>
+</html>
