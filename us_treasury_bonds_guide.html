@@ -1,0 +1,1806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Treasury Bond Market: A Broadsheet Guide</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background-color: #f5f3f0;
+            color: #2c2c2c;
+            line-height: 1.7;
+        }
+
+        .masthead {
+            background-color: #1a1a1a;
+            color: #f5f3f0;
+            padding: 1.5rem 2rem;
+            border-bottom: 3px solid #d4a574;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .masthead-left h1 {
+            font-size: 2rem;
+            font-weight: normal;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 0.25rem;
+        }
+
+        .masthead-left .date-line {
+            font-size: 0.85rem;
+            font-style: italic;
+            color: #a89968;
+            letter-spacing: 0.02em;
+        }
+
+        .nav-pills {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .nav-pills button {
+            background-color: #d4a574;
+            color: #1a1a1a;
+            border: none;
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+            cursor: pointer;
+            font-family: 'Georgia', serif;
+            font-weight: bold;
+            border-radius: 3px;
+            transition: background-color 0.3s;
+        }
+
+        .nav-pills button:hover {
+            background-color: #c99560;
+        }
+
+        .nav-pills button.active {
+            background-color: #c41e3a;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .hero-section {
+            background-color: #fff;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            border-top: 2px solid #2c2c2c;
+            border-bottom: 2px solid #2c2c2c;
+        }
+
+        .hero-section h2 {
+            font-size: 1.6rem;
+            margin-bottom: 1rem;
+            font-weight: normal;
+            color: #1a1a1a;
+        }
+
+        .hero-section p {
+            font-size: 0.95rem;
+            margin-bottom: 1rem;
+            text-align: justify;
+        }
+
+        .article {
+            background-color: #fff;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            border-left: 4px solid #d4a574;
+        }
+
+        .article h3 {
+            font-size: 1.5rem;
+            font-weight: normal;
+            margin-bottom: 1.5rem;
+            color: #1a1a1a;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .article p {
+            margin-bottom: 1rem;
+            text-align: justify;
+            font-size: 0.95rem;
+        }
+
+        .article ul, .article ol {
+            margin: 1rem 0 1rem 2rem;
+        }
+
+        .article li {
+            margin-bottom: 0.5rem;
+        }
+
+        .drilldown-item {
+            margin-bottom: 1.5rem;
+            border: 1px solid #d4a574;
+            background-color: #fffbf7;
+            padding: 0;
+            border-left: 4px solid #d4a574;
+        }
+
+        .drilldown-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .drilldown-header:hover {
+            background-color: #f9f7f4;
+        }
+
+        .drilldown-arrow {
+            font-size: 1.5rem;
+            color: #d4a574;
+            transition: transform 0.3s ease;
+            flex-shrink: 0;
+            margin-left: 1rem;
+        }
+
+        .drilldown-content {
+            padding: 0 1.5rem 1.5rem 1.5rem;
+            border-top: 1px solid #d4a574;
+        }
+
+        .drilldown-item.open .drilldown-arrow {
+            transform: rotate(180deg);
+        }
+
+        .chart-container {
+            background-color: #fff;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border-left: 4px solid #d4a574;
+            position: relative;
+            height: auto;
+        }
+
+        .chart-container h4 {
+            font-size: 1.1rem;
+            font-weight: normal;
+            margin-bottom: 1.5rem;
+            color: #1a1a1a;
+        }
+
+        canvas {
+            max-height: 300px;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .section-card {
+            background-color: #fff;
+            padding: 1.5rem;
+            border-left: 4px solid #d4a574;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .section-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .section-card h4 {
+            font-size: 1.1rem;
+            color: #1a1a1a;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .section-card p {
+            font-size: 0.9rem;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .section-card .section-number {
+            display: inline-block;
+            background-color: #d4a574;
+            color: #1a1a1a;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 28px;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            font-size: 0.85rem;
+        }
+
+        .view {
+            display: none;
+        }
+
+        .view.active {
+            display: block;
+        }
+
+        .back-to-dashboard {
+            background-color: #1a1a1a;
+            color: #f5f3f0;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            font-family: 'Georgia', serif;
+            cursor: pointer;
+            margin-bottom: 1.5rem;
+            border-radius: 3px;
+            font-size: 0.9rem;
+            transition: background-color 0.3s;
+        }
+
+        .back-to-dashboard:hover {
+            background-color: #3a3a3a;
+        }
+
+        .section-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .section-nav button {
+            background-color: #d4a574;
+            color: #1a1a1a;
+            border: none;
+            padding: 0.5rem 1.5rem;
+            cursor: pointer;
+            font-family: 'Georgia', serif;
+            border-radius: 3px;
+            transition: background-color 0.3s;
+        }
+
+        .section-nav button:hover {
+            background-color: #c99560;
+        }
+
+        .section-nav button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .breadcrumb {
+            font-size: 0.85rem;
+            color: #666;
+            margin-bottom: 1rem;
+        }
+
+        .key-term {
+            background-color: #f9f7f4;
+            border-left: 4px solid #c41e3a;
+            padding: 1rem;
+            margin: 1rem 0;
+        }
+
+        .highlight-box {
+            background-color: #f9f7f4;
+            border-left: 4px solid #c41e3a;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            font-style: italic;
+        }
+
+        .divider {
+            margin: 2rem 0;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        footer {
+            background-color: #1a1a1a;
+            color: #f5f3f0;
+            padding: 2rem;
+            margin-top: 3rem;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .citation {
+            color: #d4a574;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            border-bottom: 1px dotted #d4a574;
+        }
+
+        .citation:hover {
+            background-color: rgba(212, 165, 116, 0.1);
+        }
+
+        .sources-section {
+            background-color: #fff;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            border-left: 4px solid #d4a574;
+        }
+
+        .sources-section h3 {
+            font-size: 1.5rem;
+            font-weight: normal;
+            margin-bottom: 1.5rem;
+            color: #1a1a1a;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .source-item {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .source-item:last-child {
+            border-bottom: none;
+        }
+
+        .source-item p {
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .source-number {
+            display: inline-block;
+            background-color: #d4a574;
+            color: #1a1a1a;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 24px;
+            font-weight: bold;
+            font-size: 0.8rem;
+            margin-right: 0.5rem;
+        }
+
+        .source-link {
+            color: #d4a574;
+            text-decoration: none;
+            word-break: break-all;
+        }
+
+        .source-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<!-- MASTHEAD WITH NAVIGATION -->
+<div class="masthead">
+    <div class="masthead-left">
+        <h1>The Treasury Bond Market</h1>
+        <div class="date-line">A Broadsheet Guide | August 2026</div>
+    </div>
+    <div class="nav-pills">
+        <button class="nav-btn active" onclick="switchView('dashboard')">Dashboard</button>
+        <button class="nav-btn" onclick="switchView('section-1')">Read More</button>
+    </div>
+</div>
+
+<!-- ===== DASHBOARD VIEW ===== -->
+<div id="dashboard" class="view active">
+    <div class="container">
+        <div class="hero-section">
+            <h2>Understanding the U.S. Treasury Market</h2>
+            <p>
+                The Treasury bond market is the foundation of global finance. With $27 trillion in outstanding securities and unmatched liquidity, it sets the baseline for all other asset prices. But in August 2026, the market faces unusual structural challenges: massive peacetime deficits, a refinancing wall, rising foreign investor retreat, and sticky inflation keeping yields elevated.
+            </p>
+            <p>
+                <strong>This guide takes 15-20 minutes to explore fully.</strong> Start with the dashboard below to get oriented, then dive into any section that interests you. You can read cover-to-cover or jump between topics as you choose.
+            </p>
+        </div>
+
+        <h3 style="margin: 2rem 0 1.5rem 0; font-size: 1.3rem; font-weight: bold; color: #1a1a1a;">What You'll Learn</h3>
+
+        <div class="dashboard-grid">
+            <div class="section-card" onclick="switchView('section-1')">
+                <div class="section-number">1</div>
+                <h4>Treasury Bonds Basics</h4>
+                <p>What Treasury bonds are, the three main types (Bills, Notes, Bonds), how they work, and why they're considered the safest investment in the world.</p>
+                <p style="margin-top: 1rem;"><a href="#" onclick="switchView('section-1'); return false;" style="color: #d4a574; font-weight: bold; text-decoration: none;">→ Read Details</a></p>
+            </div>
+
+            <div class="section-card" onclick="switchView('section-2')">
+                <div class="section-number">2</div>
+                <h4>Yield Curves & Interest Rates</h4>
+                <p>How short-term and long-term rates differ, what the yield curve reveals about the economy, and why an inverted curve signals recession within 12-18 months.</p>
+                <p style="margin-top: 1rem;"><a href="#" onclick="switchView('section-2'); return false;" style="color: #d4a574; font-weight: bold; text-decoration: none;">→ Read Details</a></p>
+            </div>
+
+            <div class="section-card" onclick="switchView('section-3')">
+                <div class="section-number">3</div>
+                <h4>Bond Price Dynamics</h4>
+                <p>The inverse relationship between bond prices and yields, what drives prices up and down, and how the Treasury market connects to corporate bonds and stocks.</p>
+                <p style="margin-top: 1rem;"><a href="#" onclick="switchView('section-3'); return false;" style="color: #d4a574; font-weight: bold; text-decoration: none;">→ Read Details</a></p>
+            </div>
+
+            <div class="section-card" onclick="switchView('section-4')">
+                <div class="section-number">4</div>
+                <h4>Capital Competition</h4>
+                <p>How Treasury yields anchor all asset prices, why massive deficits create a "crowding out" effect, and the vicious cycle of government borrowing.</p>
+                <p style="margin-top: 1rem;"><a href="#" onclick="switchView('section-4'); return false;" style="color: #d4a574; font-weight: bold; text-decoration: none;">→ Read Details</a></p>
+            </div>
+
+            <div class="section-card" onclick="switchView('section-5')">
+                <div class="section-number">5</div>
+                <h4>August 2026: The Crisis Signals</h4>
+                <p>Why today's Treasury market is unusual, the refinancing wall looming in 2024-2028, foreign investor retreat, and four scenarios that could destabilize the market.</p>
+                <p style="margin-top: 1rem;"><a href="#" onclick="switchView('section-5'); return false;" style="color: #d4a574; font-weight: bold; text-decoration: none;">→ Read Details</a></p>
+            </div>
+
+            <div class="section-card" onclick="switchView('section-6')">
+                <div class="section-number">6</div>
+                <h4>The Ideal vs. Current State</h4>
+                <p>What a healthy Treasury market looks like, how 2010-2019 compares to today, and the seven key metrics showing fiscal deterioration.</p>
+                <p style="margin-top: 1rem;"><a href="#" onclick="switchView('section-6'); return false;" style="color: #d4a574; font-weight: bold; text-decoration: none;">→ Read Details</a></p>
+            </div>
+
+            <div class="section-card" onclick="switchView('section-7')">
+                <div class="section-number">7</div>
+                <h4>Why It Matters to You</h4>
+                <p>How Treasury bond yields affect mortgage rates, credit cards, investment returns, and economic opportunity—direct personal consequences of the bond market.</p>
+                <p style="margin-top: 1rem;"><a href="#" onclick="switchView('section-7'); return false;" style="color: #d4a574; font-weight: bold; text-decoration: none;">→ Read Details</a></p>
+            </div>
+
+            <div class="section-card" onclick="switchView('section-8')">
+                <div class="section-number">8</div>
+                <h4>The AI Footnote: Private Capital vs. Government Debt</h4>
+                <p>How the AI financing boom distorted Treasury markets, created an alternate growth narrative, and why the disappointment of that narrative is now creating a reckoning for government debt.</p>
+                <p style="margin-top: 1rem;"><a href="#" onclick="switchView('section-8'); return false;" style="color: #d4a574; font-weight: bold; text-decoration: none;">→ Read Details</a></p>
+            </div>
+        </div>
+
+        <div class="article">
+            <h3>Key Metrics: August 2026</h3>
+            <div class="two-column">
+                <div>
+                    <p><strong style="color: #c41e3a;">Annual Deficit:</strong> $1.7 trillion (6-7% of GDP)<span class="citation" onclick="scrollToSource(6)" title="OMB data">[6]</span></p>
+                    <p style="margin-top: 1rem;"><strong style="color: #c41e3a;">Interest Payments:</strong> 15% of federal revenue<span class="citation" onclick="scrollToSource(7)" title="CBO data">[7]</span></p>
+                    <p style="margin-top: 1rem;"><strong style="color: #c41e3a;">10-Year Treasury Yield:</strong> 4.0-4.5%<span class="citation" onclick="scrollToSource(1)" title="Federal Reserve">[1]</span></p>
+                    <p style="margin-top: 1rem;"><strong style="color: #c41e3a;">Debt-to-GDP:</strong> 120% (rising)<span class="citation" onclick="scrollToSource(8)" title="BEA data">[8]</span></p>
+                </div>
+                <div>
+                    <p><strong style="color: #d4a574;">Ideal Annual Deficit:</strong> 2-3% of GDP</p>
+                    <p style="margin-top: 1rem;"><strong style="color: #d4a574;">Ideal Interest Payments:</strong> 5-8% of revenue</p>
+                    <p style="margin-top: 1rem;"><strong style="color: #d4a574;">Ideal 10-Year Yield:</strong> 2-3%</p>
+                    <p style="margin-top: 1rem;"><strong style="color: #d4a574;">Ideal Debt-to-GDP:</strong> Stable or declining</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="chart-container">
+            <h4>Comparing Ideal vs. Current Reality</h4>
+            <canvas id="dashboardCompare"></canvas>
+        </div>
+
+        <div class="chart-container">
+            <h4>10-Year Treasury Yield Trend (2013-2026)</h4>
+            <canvas id="dashboardYields"></canvas>
+        </div>
+
+        <div class="article" style="background-color: #fffbf7; border-left-color: #c41e3a;">
+            <h3 style="color: #c41e3a;">The Core Question</h3>
+            <p>
+                The U.S. cannot indefinitely run $1.7 trillion annual deficits while paying 4%+ yields on new debt. Something must give: spending cuts, tax increases, accelerated growth, or inflation as debt erosion. This guide explores what's at stake and why every investor, borrower, and policymaker should care about Treasury bond market dynamics.
+            </p>
+        </div>
+
+        <div style="text-align: center; margin: 3rem 0;">
+            <p style="font-size: 0.95rem; color: #666;">Click on any section above to begin exploring. Estimated read time: 15-20 minutes.</p>
+        </div>
+    </div>
+</div>
+
+<!-- ===== SECTION 1: TREASURY BONDS BASICS ===== -->
+<div id="section-1" class="view">
+    <div class="container">
+        <button class="back-to-dashboard" onclick="switchView('dashboard')">← Back to Dashboard</button>
+        <div class="breadcrumb">Section 1 of 7 | Treasury Bonds Basics</div>
+
+        <div class="article">
+            <h3>What Are U.S. Treasury Bonds?</h3>
+            <p>
+                A Treasury bond is a debt security issued by the U.S. Department of the Treasury. When you buy a Treasury bond, you are lending money to the federal government. The government promises to pay you back with interest. Click on each topic below to explore the details.
+            </p>
+
+            <div style="margin: 2rem 0;">
+                <div class="drilldown-item">
+                    <div class="drilldown-header" onclick="toggleDrilldown(event)">
+                        <div>
+                            <strong style="font-size: 1.1rem; color: #1a1a1a;">The Basic Concept: A Formal IOU</strong>
+                            <div style="font-size: 0.95rem; color: #666; margin-top: 0.5rem;">
+                                How Treasury bonds work and why they're safe
+                            </div>
+                        </div>
+                        <div class="drilldown-arrow">▼</div>
+                    </div>
+                    <div class="drilldown-content" style="display: none;">
+                        <p>Think of a Treasury bond as a formal IOU. The government needs cash, so it borrows from investors. Those investors receive guaranteed payments, backed by the full faith and credit of the United States government.</p>
+                        <p style="margin-top: 1rem;"><strong>When you buy a Treasury bond, you receive:</strong></p>
+                        <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                            <li><strong>Regular interest payments</strong> (called coupon payments) during the life of the bond</li>
+                            <li><strong>Full principal repayment</strong> (the original amount you lent) on the maturity date</li>
+                            <li><strong>Guaranteed safety</strong> — backed by the U.S. government's ability to tax and print currency</li>
+                        </ul>
+                        <p style="margin-top: 1rem;"><strong>Why are Treasuries so safe?</strong> The U.S. government has never defaulted on its obligations in over 200 years. Default risk is virtually zero, as the government controls its own currency and can always pay what it owes. This makes Treasuries the safest investment in the world.</p>
+                    </div>
+                </div>
+
+                <div class="drilldown-item">
+                    <div class="drilldown-header" onclick="toggleDrilldown(event)">
+                        <div>
+                            <strong style="font-size: 1.1rem; color: #1a1a1a;">Three Main Types of U.S. Treasuries</strong>
+                            <div style="font-size: 0.95rem; color: #666; margin-top: 0.5rem;">
+                                T-Bills, T-Notes, and T-Bonds — what's the difference?
+                            </div>
+                        </div>
+                        <div class="drilldown-arrow">▼</div>
+                    </div>
+                    <div class="drilldown-content" style="display: none;">
+                        <p><strong>Treasury Bills (T-Bills)</strong></p>
+                        <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                            <li>Mature in less than one year (typically 4 weeks, 13 weeks, or 26 weeks)</li>
+                            <li>No coupon payments — you buy at a discount and receive full par value at maturity</li>
+                            <li>Lowest interest rates because they have shortest duration</li>
+                            <li>Most liquid Treasury instrument; used by money market funds</li>
+                        </ul>
+                        <p style="margin-top: 1.5rem;"><strong>Treasury Notes (T-Notes)</strong></p>
+                        <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                            <li>Mature in 2 to 10 years (most commonly 2, 5, and 10-year notes)</li>
+                            <li>Pay semi-annual coupon payments during the holding period</li>
+                            <li>Medium-range interest rates</li>
+                            <li>Most popular with individual investors; widely traded</li>
+                        </ul>
+                        <p style="margin-top: 1.5rem;"><strong>Treasury Bonds (T-Bonds)</strong></p>
+                        <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                            <li>Mature in 20 to 30 years (longest duration)</li>
+                            <li>Pay semi-annual coupon payments over the entire 20-30 year period</li>
+                            <li>Highest interest rates due to long duration risk</li>
+                            <li>Most volatile in price; attractive to long-term investors</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="drilldown-item">
+                    <div class="drilldown-header" onclick="toggleDrilldown(event)">
+                        <div>
+                            <strong style="font-size: 1.1rem; color: #1a1a1a;">Secondary Market & Market Size</strong>
+                            <div style="font-size: 0.95rem; color: #666; margin-top: 0.5rem;">
+                                Buying and selling before maturity
+                            </div>
+                        </div>
+                        <div class="drilldown-arrow">▼</div>
+                    </div>
+                    <div class="drilldown-content" style="display: none;">
+                        <p><strong>What is the Secondary Market?</strong> All three types of Treasury securities are traded in the secondary market after they're first issued. This means you don't have to hold a bond until maturity—existing bonds can be bought and sold before their maturity date.</p>
+                        <p style="margin-top: 1rem;"><strong>Key characteristics:</strong></p>
+                        <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                            <li>The Treasury market is the <strong>largest and most liquid debt market in the world</strong></li>
+                            <li>Over <strong>$27 trillion</strong><span class="citation" onclick="scrollToSource(2)" title="U.S. Treasury data">[2]</span> in outstanding Treasury securities</li>
+                            <li>Trades continuously—you can buy or sell any time the market is open</li>
+                            <li>Prices fluctuate based on supply/demand, interest rates, and economic conditions</li>
+                            <li>Bid-ask spreads are very tight (narrow profit margins for traders)</li>
+                        </ul>
+                        <p style="margin-top: 1rem;"><strong>Why does this matter?</strong> The secondary market allows investors to exit positions early if needed, lock in gains, or adjust portfolio allocations. The massive size and liquidity ensure that you can always find a buyer or seller.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="article">
+            <h3>How Bonds Work: The Mechanics</h3>
+            <p>
+                Bond mechanics are straightforward in principle but subtle in practice. When the Treasury issues a new bond, it specifies four key details. Click on each to learn more.
+            </p>
+
+            <div style="margin: 2rem 0;">
+                <div class="drilldown-item">
+                    <div class="drilldown-header" onclick="toggleDrilldown(event)">
+                        <div>
+                            <strong style="font-size: 1.1rem; color: #1a1a1a;">Par Value (Face Value)</strong>
+                            <div style="font-size: 0.95rem; color: #666; margin-top: 0.5rem;">
+                                The amount you get back at maturity
+                            </div>
+                        </div>
+                        <div class="drilldown-arrow">▼</div>
+                    </div>
+                    <div class="drilldown-content" style="display: none;">
+                        <p>The par value is the face value or principal of the bond—the amount the government promises to repay you on the maturity date.</p>
+                        <p style="margin-top: 1rem;"><strong>Typical par values:</strong> $100, $1,000, or $10,000 (varies by bond and investor type)</p>
+                        <p style="margin-top: 1rem;"><strong>Example:</strong> If you buy a Treasury bond with a par value of $1,000, the government will repay you exactly $1,000 at maturity, regardless of what you paid for the bond in the secondary market.</p>
+                        <p style="margin-top: 1rem;"><strong>Important note:</strong> A bond's market price can be higher or lower than par value (more on this later), but the government always repays the par value at maturity.</p>
+                    </div>
+                </div>
+
+                <div class="drilldown-item">
+                    <div class="drilldown-header" onclick="toggleDrilldown(event)">
+                        <div>
+                            <strong style="font-size: 1.1rem; color: #1a1a1a;">Coupon Rate</strong>
+                            <div style="font-size: 0.95rem; color: #666; margin-top: 0.5rem;">
+                                The annual interest rate paid on the bond
+                            </div>
+                        </div>
+                        <div class="drilldown-arrow">▼</div>
+                    </div>
+                    <div class="drilldown-content" style="display: none;">
+                        <p>The coupon rate is the annual interest rate the government pays on the bond, expressed as a percentage of par value.</p>
+                        <p style="margin-top: 1rem;"><strong>How it works:</strong></p>
+                        <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                            <li>A 4% coupon rate on a $1,000 par bond = $40 per year in interest</li>
+                            <li>Treasury Notes typically pay coupons semi-annually ($20 every 6 months, in this example)</li>
+                            <li>Treasury Bills pay no coupon; you profit from the discount instead</li>
+                            <li>Longer-duration bonds have higher coupon rates to compensate for duration risk</li>
+                        </ul>
+                        <p style="margin-top: 1rem;"><strong>Why does the coupon matter?</strong> It determines your annual income stream. If you hold the bond to maturity, you know exactly how much income you'll receive. If you sell before maturity, the coupon influences the bond's market value.</p>
+                    </div>
+                </div>
+
+                <div class="drilldown-item">
+                    <div class="drilldown-header" onclick="toggleDrilldown(event)">
+                        <div>
+                            <strong style="font-size: 1.1rem; color: #1a1a1a;">Maturity & Issue Dates</strong>
+                            <div style="font-size: 0.95rem; color: #666; margin-top: 0.5rem;">
+                                When the bond is issued and when it matures
+                            </div>
+                        </div>
+                        <div class="drilldown-arrow">▼</div>
+                    </div>
+                    <div class="drilldown-content" style="display: none;">
+                        <p><strong>Issue Date:</strong> The date the Treasury first sells the bond to the public. On this date, the coupon clock starts ticking.</p>
+                        <p style="margin-top: 1rem;"><strong>Maturity Date:</strong> The date the government repays the full principal (par value) plus the final coupon payment. After maturity, the bond ceases to exist.</p>
+                        <p style="margin-top: 1rem;"><strong>Duration:</strong> The time between issue and maturity. This determines which type of security it is:</p>
+                        <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                            <li>Less than 1 year = Treasury Bill</li>
+                            <li>2-10 years = Treasury Note</li>
+                            <li>20-30 years = Treasury Bond</li>
+                        </ul>
+                        <p style="margin-top: 1rem;"><strong>Why it matters:</strong> Duration determines interest rate sensitivity. Longer-maturity bonds are more sensitive to interest rate changes (their prices swing more wildly).</p>
+                    </div>
+                </div>
+
+                <div class="drilldown-item">
+                    <div class="drilldown-header" onclick="toggleDrilldown(event)">
+                        <div>
+                            <strong style="font-size: 1.1rem; color: #1a1a1a;">Bond Trading & Pricing Example</strong>
+                            <div style="font-size: 0.95rem; color: #666; margin-top: 0.5rem;">
+                                What happens when you buy/sell before maturity
+                            </div>
+                        </div>
+                        <div class="drilldown-arrow">▼</div>
+                    </div>
+                    <div class="drilldown-content" style="display: none;">
+                        <p><strong>A Concrete Example:</strong></p>
+                        <p style="margin-top: 1rem;">You buy a 10-year Treasury Note with:</p>
+                        <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                            <li>Par value: $1,000</li>
+                            <li>Coupon rate: 4%</li>
+                            <li>Semi-annual payments: $20 every 6 months</li>
+                        </ul>
+                        <p style="margin-top: 1rem;"><strong>If you hold to maturity:</strong> You receive $20 every 6 months for 10 years (20 payments total), plus the final $1,000 principal. Your math is simple and guaranteed.</p>
+                        <p style="margin-top: 1rem;"><strong>If you sell before maturity:</strong> The bond's market price changes based on:</p>
+                        <ul style="margin-left: 1.5rem; margin-top: 0.5rem;">
+                            <li>Interest rate movements (rates up → price down; rates down → price up)</li>
+                            <li>Time remaining to maturity</li>
+                            <li>Supply and demand in the secondary market</li>
+                            <li>Economic outlook and credit risk perceptions</li>
+                        </ul>
+                        <p style="margin-top: 1rem;"><strong>Key takeaway:</strong> Bonds are continuously traded, and their prices fluctuate. A bond's market price can be higher or lower than par value, but the government always repays par at maturity.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-nav">
+            <button onclick="switchView('dashboard')">← Back to Dashboard</button>
+            <span style="font-size: 0.9rem; color: #666;">1 of 7</span>
+            <button onclick="switchView('section-2')">Next Section →</button>
+        </div>
+    </div>
+</div>
+
+<!-- ===== SECTION 2: YIELD CURVES & INTEREST RATES ===== -->
+<div id="section-2" class="view">
+    <div class="container">
+        <button class="back-to-dashboard" onclick="switchView('dashboard')">← Back to Dashboard</button>
+        <div class="breadcrumb">Section 2 of 7 | Yield Curves & Interest Rates</div>
+
+        <div class="article">
+            <h3>Interest Rates: Short-Term vs. Long-Term</h3>
+            <p>
+                The Treasury market reveals two distinct interest rate environments operating simultaneously. <strong>Short-term rates</strong> (for T-Bills and short-dated notes) respond primarily to the Federal Reserve's current policy decisions and near-term economic expectations. <strong>Long-term rates</strong> (for 10-year and 30-year bonds) reflect investors' long-run economic outlook, inflation expectations, and risk premiums.
+            </p>
+
+            <p>
+                Normally, long-term rates are higher than short-term rates because investors demand additional compensation for lending money over a longer period. This creates an upward-sloping "yield curve." However, when economic uncertainty spikes or when the Fed raises rates aggressively to fight inflation, the curve can temporarily invert—meaning short-term rates exceed long-term rates. This inversion often signals recession fears.<span class="citation" onclick="scrollToSource(1)" title="Federal Reserve research on yield curve inversions as recession predictors">[1]</span>
+            </p>
+
+            <div class="highlight-box">
+                <strong>Key Insight:</strong> The yield curve is one of the most powerful forecasting tools in economics. When it inverts, recessions typically follow within 12-18 months.<span class="citation" onclick="scrollToSource(9)" title="Federal Reserve research on yield curve inversions">[9]</span>
+            </div>
+
+            <div class="chart-container">
+                <h4>Normal Yield Curve (Stable Growth)</h4>
+                <canvas id="normalYieldCurve"></canvas>
+            </div>
+
+            <div class="chart-container">
+                <h4>Inverted Yield Curve (Recession Signal)</h4>
+                <canvas id="invertedYieldCurve"></canvas>
+            </div>
+
+            <div class="chart-container">
+                <h4>10-Year Treasury Yield 2013-2026</h4>
+                <canvas id="historicalRates"></canvas>
+            </div>
+
+            <div class="article" style="background-color: #fffbf7; border-left-color: #d4a574;">
+                <h4 style="font-size: 1.1rem; color: #1a1a1a;">What Does the August 2026 Curve Actually Look Like?</h4>
+                <p>
+                    The three charts above show the idealized "normal" and "inverted" curves. But the actual August 2026 Treasury curve is more complex. It has a distinctive "hump" or "suppressed middle" shape:
+                </p>
+                <ul style="margin: 1rem 0 1rem 2rem;">
+                    <li><strong>Short-term (3M-1Y):</strong> 4.6-4.8% — Fed policy is restrictive, keeping short rates elevated</li>
+                    <li><strong>Medium-term (2Y-5Y):</strong> 4.7-5.0% — Market expects Fed rate cuts in the next 1-3 years, so these yields dip slightly</li>
+                    <li><strong>Long-term (10Y-30Y):</strong> 5.1-5.3% — Long-term inflation concerns and fiscal deficits push these yields back up</li>
+                </ul>
+                <p style="margin-top: 1rem;">
+                    This creates a "U-shaped" or "humped" curve rather than the simple upward slope shown in the normal curve. The dip in the middle reflects market expectations that the Fed will cut rates, but the rebound at the long end reflects concerns about structural fiscal deficits and long-term inflation. It's a curve that tells a story: short-term pain is expected to ease, but long-term structural problems persist.
+                </p>
+            </div>
+        </div>
+
+        <div class="section-nav">
+            <button onclick="switchView('section-1')">← Previous Section</button>
+            <span style="font-size: 0.9rem; color: #666;">2 of 7</span>
+            <button onclick="switchView('section-3')">Next Section →</button>
+        </div>
+    </div>
+</div>
+
+<!-- ===== SECTION 3: BOND PRICE DYNAMICS ===== -->
+<div id="section-3" class="view">
+    <div class="container">
+        <button class="back-to-dashboard" onclick="switchView('dashboard')">← Back to Dashboard</button>
+        <div class="breadcrumb">Section 3 of 7 | Bond Price Dynamics</div>
+
+        <div class="article">
+            <h3>What Causes Bond Prices to Increase?</h3>
+            <p>
+                The fundamental relationship: <strong>when Treasury yields fall, bond prices rise, and vice versa.</strong> This inverse relationship is the heartbeat of the bond market. Understanding it unlocks everything else.
+            </p>
+
+            <p>
+                Here's why: imagine you bought a 10-year Treasury Note with a 3% coupon rate (paying $30 per year). A few months later, the Fed raises rates and new 10-year Treasuries are issued at 4% coupons (paying $40 per year). Your old bond is now less attractive—if you want to sell it, you must discount the price so that the buyer's total return matches the new 4% market rate. Conversely, if rates fall to 2%, your 3% coupon becomes more valuable, and buyers will pay a premium to own it.
+            </p>
+
+            <div class="highlight-box">
+                <strong>The Math:</strong> Bond prices and yields move in opposite directions. When market yields rise, existing bond prices fall. When market yields fall, existing bond prices rise.
+            </div>
+
+            <div class="chart-container">
+                <h4>Bond Price vs. Yield Relationship</h4>
+                <canvas id="priceYieldChart"></canvas>
+            </div>
+
+            <div class="key-term">
+                <strong>What Drives Bond Prices Up?</strong>
+                <ul>
+                    <li><strong>Falling interest rates</strong> — existing bonds become more valuable</li>
+                    <li><strong>Falling inflation</strong> — the fixed coupon payments retain their purchasing power</li>
+                    <li><strong>"Flight to safety" events</strong> — crises drive capital toward Treasuries</li>
+                    <li><strong>Strong foreign demand</strong> — central banks buying Treasuries pushes prices up</li>
+                    <li><strong>Economic slowdown</strong> — recessions typically lower yields</li>
+                </ul>
+            </div>
+
+            <div class="key-term">
+                <strong>What Drives Bond Prices Down?</strong>
+                <ul>
+                    <li><strong>Rising interest rates</strong> — new bonds offer better returns</li>
+                    <li><strong>Rising inflation</strong> — fixed coupon payments lose purchasing power</li>
+                    <li><strong>Strong economic growth</strong> — investors rotate from bonds to stocks</li>
+                    <li><strong>Government supply surge</strong> — massive Treasury issuance pushes prices down</li>
+                    <li><strong>Foreign central bank selling</strong> — large sellers can depress prices</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section-nav">
+            <button onclick="switchView('section-2')">← Previous Section</button>
+            <span style="font-size: 0.9rem; color: #666;">3 of 7</span>
+            <button onclick="switchView('section-4')">Next Section →</button>
+        </div>
+    </div>
+</div>
+
+<!-- ===== SECTION 4: CAPITAL COMPETITION ===== -->
+<div id="section-4" class="view">
+    <div class="container">
+        <button class="back-to-dashboard" onclick="switchView('dashboard')">← Back to Dashboard</button>
+        <div class="breadcrumb">Section 4 of 7 | Capital Competition & the Crowding Out Effect</div>
+
+        <div class="article">
+            <h3>The Competition for Capital: Treasury Bonds vs. Commercial Markets</h3>
+            <p>
+                All asset prices derive from one fundamental principle: the Treasury yield is the baseline "risk-free" return. This creates a formula that governs global finance:
+            </p>
+
+            <div class="highlight-box">
+                <strong style="font-size: 1.1rem;">Any Asset's Expected Return = Treasury Yield + Risk Premium</strong>
+            </div>
+
+            <p>
+                When Treasury yields change, the entire financial system must recalibrate. Here's a concrete example:
+            </p>
+
+            <div class="key-term">
+                <strong>Scenario 1: Rising Treasury Yields (2022-2023)</strong>
+                <p style="margin-top: 0.5rem;">The Fed raised rates aggressively, pushing 10-year Treasury yields from 1.5% to 4.2%. Suddenly:</p>
+                <ul style="margin-top: 0.5rem;">
+                    <li>Tech stocks lost 50-70% of value (they need 8-10%+ returns to justify risk, but now compete against 4.2% risk-free Treasuries)</li>
+                    <li>Crypto crashed 60-80% (highly speculative, offers no cash flows, can't compete with safe 4.2% yields)</li>
+                    <li>Venture capital funding fell 70% (startups can't raise capital at previous valuations)</li>
+                    <li>IPO market froze (companies postponed public offerings)</li>
+                </ul>
+            </div>
+
+            <div class="key-term">
+                <strong>Scenario 2: Low Treasury Yields (2010-2020)</strong>
+                <p style="margin-top: 0.5rem;">The Fed held rates near 0%, making Treasury yields nearly 0%. Suddenly:</p>
+                <ul style="margin-top: 0.5rem;">
+                    <li>Investors forced to take risk to earn any return (forced risk-taking)</li>
+                    <li>Bitcoin rose from $1,000 to $69,000 (risky, but anything beats 0% Treasuries)</li>
+                    <li>Tech stocks boomed (valuations expanded on low discount rates)</li>
+                    <li>Real estate exploded (cheap money for mortgages)</li>
+                    <li>Private equity exploded (borrowed at 1-2%, deployed at high returns)</li>
+                </ul>
+            </div>
+
+            <div class="chart-container">
+                <h4>10-Year Yield vs. S&P 500 P/E Ratio (2010-2026)</h4>
+                <canvas id="competitionChart"></canvas>
+            </div>
+
+            <p style="margin-top: 1.5rem;">
+                <strong>The Crowding Out Effect:</strong> When the government borrows $1.7 trillion annually, that capital comes from the same savings pool available to private investment. There's a finite amount of capital in the economy. Every dollar the government borrows is a dollar that can't go to:
+            </p>
+            <ul style="margin: 1rem 0 1rem 2rem;">
+                <li>Business expansion and R&D</li>
+                <li>Startup funding and venture capital</li>
+                <li>Real estate and infrastructure investment</li>
+                <li>Stock purchases</li>
+                <li>Any private investment that drives economic growth</li>
+            </ul>
+
+            <div class="highlight-box">
+                <strong>The Vicious Cycle:</strong> Large deficits → need massive Treasury issuance → yields rise to attract buyers → higher yields crowd out private capital → lower private investment → slower growth → worse tax revenues → larger deficits → need even more Treasury issuance. This cycle, once started, becomes self-perpetuating.
+            </div>
+        </div>
+
+        <div class="section-nav">
+            <button onclick="switchView('section-3')">← Previous Section</button>
+            <span style="font-size: 0.9rem; color: #666;">4 of 7</span>
+            <button onclick="switchView('section-5')">Next Section →</button>
+        </div>
+    </div>
+</div>
+
+<!-- ===== SECTION 5: AUGUST 2026 CRISIS ===== -->
+<div id="section-5" class="view">
+    <div class="container">
+        <button class="back-to-dashboard" onclick="switchView('dashboard')">← Back to Dashboard</button>
+        <div class="breadcrumb">Section 5 of 7 | The Current Crisis Signals</div>
+
+        <div class="article">
+            <h3>The Current Bond Market: August 2026 and Why It's Concerning</h3>
+
+            <p>
+                The Treasury market faces an unusual confluence of structural challenges. Unlike past crises that were cyclical (recessions, Fed tightening), today's problems are <strong>structural</strong>—they exist even during economic expansion.
+            </p>
+
+            <div class="key-term">
+                <strong>The Structural Deficit Problem</strong>
+                <p style="margin-top: 0.5rem;"><strong>$1.7 trillion annual deficit (6-7% of GDP) during economic expansion.</strong> This is abnormal. In 2019 (pre-COVID), deficits were 4-5% during normal times. Unemployment is at historic lows, corporate profits are high, tax revenues are record-breaking—yet spending still exceeds revenue by $1.7T annually. This is fundamentally unsustainable.</p>
+            </div>
+
+            <div class="key-term">
+                <strong>The Refinancing Wall (2024-2028)</strong>
+                <p style="margin-top: 0.5rem;">Between 2024 and 2028, the government must refinance $7-8 trillion in debt issued during 2020-2021 at rock-bottom rates (0.5-1.5%). This debt is now rolling over at 4-4.5% rates—a 3% cost increase on trillions of dollars. Annual interest payments will soar by hundreds of billions, worsening the fiscal trajectory.</p>
+            </div>
+
+            <div class="key-term">
+                <strong>Foreign Investor Retreat</strong>
+                <p style="margin-top: 0.5rem;"><strong>China:</strong> reduced holdings from $1.3 trillion (2013 peak) to under $800 billion. <strong>Japan:</strong> historically a major buyer, now a net seller. <strong>Global reserves:</strong> central banks reduced dollar reserves from 65% to 58% of total reserves.</p>
+                <p style="margin-top: 0.5rem;">Why? Geopolitical tensions (fear of sanctions), attractive yields elsewhere, and deliberate reserve diversification. When foreigners stop buying, domestic investors must absorb the supply, crowding out private capital investment.</p>
+            </div>
+
+            <div class="key-term">
+                <strong>The "Higher For Longer" Trap</strong>
+                <p style="margin-top: 0.5rem;">The Fed is holding rates at 5.5% due to sticky inflation. Most forecasts now expect rates to remain elevated through 2025 and possibly beyond. In a normal recession, the Fed cuts rates sharply to stimulate the economy. But with massive deficits, a rate cut would trigger a fiscal-monetary crisis: lower rates would reduce bond yields, which would force the government to issue more debt to hit targets, which might re-ignite inflation.</p>
+                <p style="margin-top: 0.5rem;">The government is caught: rates stay high, keeping debt service costs elevated.</p>
+            </div>
+
+            <div class="chart-container">
+                <h4>Federal Deficit & National Debt (2000-2026)</h4>
+                <canvas id="deficitChart"></canvas>
+            </div>
+
+            <div class="chart-container">
+                <h4>Interest Payments as % of Federal Revenue (2000-2026)</h4>
+                <canvas id="interestPayments"></canvas>
+            </div>
+
+            <div class="key-term">
+                <strong style="color: #c41e3a;">Four Crisis Scenarios</strong>
+                <p style="margin-top: 0.5rem;"><strong>1. Geopolitical Shock:</strong> A major conflict escalates (Taiwan, Middle East, Ukraine). Foreign central banks dump dollars and Treasuries as a sanction shield. Yields spike to 6-7% overnight. Government interest costs become unsustainable.</p>
+                <p style="margin-top: 1rem;"><strong>2. Inflation Resurgence:</strong> Another supply shock (oil, food, manufacturing disruption). Inflation re-accelerates to 5%+. Fed forced to raise rates further. Long-term yields spike. Bond prices plummet. Retirement portfolios suffer massive losses.</p>
+                <p style="margin-top: 1rem;"><strong>3. Recession + Policy Contradiction:</strong> Economy enters recession. Normally, government cuts rates and runs deficit spending for stimulus. But with deficits already at $1.7T and rates likely to rise in this scenario, policy tools are constrained. Unemployment rises; unemployment insurance costs surge; revenues fall. Deficit explodes to $2.5T+.</p>
+                <p style="margin-top: 1rem;"><strong>4. Domestic Capital Crowding Out:</strong> Slowly, over years, the proportion of capital flowing to private investment declines. Companies invest less in R&D and expansion. Startups struggle to raise capital. Real estate investment slows. Productivity growth stalls. Economic dynamism diminishes.</p>
+            </div>
+        </div>
+
+        <div class="section-nav">
+            <button onclick="switchView('section-4')">← Previous Section</button>
+            <span style="font-size: 0.9rem; color: #666;">5 of 7</span>
+            <button onclick="switchView('section-6')">Next Section →</button>
+        </div>
+    </div>
+</div>
+
+<!-- ===== SECTION 6: IDEAL VS. CURRENT ===== -->
+<div id="section-6" class="view">
+    <div class="container">
+        <button class="back-to-dashboard" onclick="switchView('dashboard')">← Back to Dashboard</button>
+        <div class="breadcrumb">Section 6 of 7 | The Ideal vs. Current State</div>
+
+        <div class="article">
+            <h3>The Ideal Bond Market: What Healthy Capital Allocation Looks Like</h3>
+
+            <p>
+                What does a healthy Treasury market state look like? During 2010-2019, the U.S. came closest to an ideal scenario:
+            </p>
+
+            <div class="key-term">
+                <strong>Ideal State Characteristics</strong>
+                <ul>
+                    <li><strong>Sustainable deficits:</strong> 2-3% of GDP (not 6-7%)</li>
+                    <li><strong>Reasonable yields:</strong> 2-3% on 10-year Treasuries (based on real growth)</li>
+                    <li><strong>Proper risk premiums:</strong> Spreads between Treasuries and other assets stable and predictable</li>
+                    <li><strong>Interest costs manageable:</strong> 5-8% of federal revenue (not 15%)</li>
+                    <li><strong>Strong foreign participation:</strong> Voluntary buying by central banks and investors</li>
+                    <li><strong>Capital abundant for private investment:</strong> 85% of savings available for stocks, corporate bonds, real estate, VC</li>
+                </ul>
+            </div>
+
+            <p style="margin-top: 1.5rem;">
+                The 2010-2019 decade was the closest to this ideal: S&P 500 up 250%, unemployment fell from 10% to 3.5%, deficits were 2-4% of GDP, interest costs were 6-7% of revenue. Capital flowed naturally to productive private investment.
+            </p>
+
+            <div class="chart-container">
+                <h4>Capital Allocation: Ideal vs. Current</h4>
+                <canvas id="capitalAllocationChart"></canvas>
+            </div>
+
+            <p style="margin-top: 1.5rem;">
+                In an ideal scenario, capital allocation looks like this:
+            </p>
+            <ul style="margin: 1rem 0 1rem 2rem;">
+                <li><strong>Treasury bonds:</strong> 15% of capital (safe, government essential spending)</li>
+                <li><strong>Stocks:</strong> 35% (growth and innovation)</li>
+                <li><strong>Corporate bonds:</strong> 20% (business funding)</li>
+                <li><strong>Real estate:</strong> 20% (housing, commercial property)</li>
+                <li><strong>Other (VC, commodities, alternatives):</strong> 10%</li>
+            </ul>
+
+            <p style="margin-top: 1.5rem;">
+                <strong>Current allocation (August 2026):</strong> Treasuries have nearly doubled to 28% of capital—almost double the ideal. This crowds out private investment. Stock allocation is compressed to 30%. Corporate bonds and real estate investment squeeze down. The entire capital pyramid is distorted.
+            </p>
+
+            <div class="article" style="background-color: #fffbf7; border-left-color: #c41e3a; margin-top: 2rem;">
+                <h3 style="color: #c41e3a;">Comparing Ideal to Current: Seven Key Metrics</h3>
+
+                <div style="margin: 1.5rem 0;">
+                    <div class="drilldown-item">
+                        <div class="drilldown-header" onclick="toggleDrilldown(event)">
+                            <div>
+                                <strong style="font-size: 1.1rem; color: #1a1a1a;">Annual Deficits</strong>
+                                <div style="font-size: 0.95rem; color: #666; margin-top: 0.5rem;">
+                                    <span style="color: #d4a574;"><strong>Ideal:</strong> 2-3% of GDP</span> &nbsp;|&nbsp;
+                                    <span style="color: #c41e3a;"><strong>Current:</strong> 6-7% of GDP ($1.7T)</span>
+                                </div>
+                            </div>
+                            <div class="drilldown-arrow">▼</div>
+                        </div>
+                        <div class="drilldown-content" style="display: none;">
+                            <p><strong>What This Means:</strong> The U.S. is spending $1.7 trillion more than it collects annually.</p>
+                            <p style="margin-top: 1rem;"><strong>The Problem:</strong> This deficit occurs during economic expansion. Unemployment is low, corporate profits are high, tax revenues are at record levels—yet spending still exceeds revenue by 6-7% of GDP. This is structurally unsustainable.</p>
+                            <p style="margin-top: 1rem;"><strong>The Bottom Line:</strong> Large deficits force the Treasury to issue massive amounts of debt, absorbing capital that could go to private investment. They create refinancing risk—as debt rolls over at higher rates, interest costs explode.</p>
+                        </div>
+                    </div>
+
+                    <div class="drilldown-item">
+                        <div class="drilldown-header" onclick="toggleDrilldown(event)">
+                            <div>
+                                <strong style="font-size: 1.1rem; color: #1a1a1a;">Interest Payments</strong>
+                                <div style="font-size: 0.95rem; color: #666; margin-top: 0.5rem;">
+                                    <span style="color: #d4a574;"><strong>Ideal:</strong> 5-8% of revenue</span> &nbsp;|&nbsp;
+                                    <span style="color: #c41e3a;"><strong>Current:</strong> 15% of revenue</span>
+                                </div>
+                            </div>
+                            <div class="drilldown-arrow">▼</div>
+                        </div>
+                        <div class="drilldown-content" style="display: none;">
+                            <p><strong>What This Means:</strong> Of every dollar the government collects in taxes, 15 cents goes to paying interest on the national debt.</p>
+                            <p style="margin-top: 1rem;"><strong>The Trajectory:</strong> Interest payments have tripled as a share of revenue since 2010. By 2030, they could reach 20%+ of revenue.</p>
+                            <p style="margin-top: 1rem;"><strong>The Bottom Line:</strong> This 15% is money that cannot go to defense, infrastructure, Medicare, education, or any other government program. The vicious cycle accelerates: higher interest costs → worse deficits → more borrowing → higher yields → even higher interest costs.</p>
+                        </div>
+                    </div>
+
+                    <div class="drilldown-item">
+                        <div class="drilldown-header" onclick="toggleDrilldown(event)">
+                            <div>
+                                <strong style="font-size: 1.1rem; color: #1a1a1a;">10-Year Yields</strong>
+                                <div style="font-size: 0.95rem; color: #666; margin-top: 0.5rem;">
+                                    <span style="color: #d4a574;"><strong>Ideal:</strong> 2-3%</span> &nbsp;|&nbsp;
+                                    <span style="color: #c41e3a;"><strong>Current:</strong> 4.0-4.5%</span>
+                                </div>
+                            </div>
+                            <div class="drilldown-arrow">▼</div>
+                        </div>
+                        <div class="drilldown-content" style="display: none;">
+                            <p><strong>What This Means:</strong> Investors demand 4.0-4.5% annually to lend to the U.S. government for 10 years, up from 2% just a few years ago.</p>
+                            <p style="margin-top: 1rem;"><strong>The Refinancing Impact:</strong> Debt issued in 2020 at 0.5-1.5% matures and is refinanced at 4-4.5%. This instantly increases government interest costs by hundreds of billions annually.</p>
+                            <p style="margin-top: 1rem;"><strong>The Trap:</strong> High deficits prevent yields from falling. Low growth or recession would normally lower yields, but large deficits offset this, keeping yields elevated.</p>
+                        </div>
+                    </div>
+
+                    <div class="drilldown-item">
+                        <div class="drilldown-header" onclick="toggleDrilldown(event)">
+                            <div>
+                                <strong style="font-size: 1.1rem; color: #1a1a1a;">Foreign Participation</strong>
+                                <div style="font-size: 0.95rem; color: #666; margin-top: 0.5rem;">
+                                    <span style="color: #d4a574;"><strong>Ideal:</strong> Strong and voluntary</span> &nbsp;|&nbsp;
+                                    <span style="color: #c41e3a;"><strong>Current:</strong> Declining</span>
+                                </div>
+                            </div>
+                            <div class="drilldown-arrow">▼</div>
+                        </div>
+                        <div class="drilldown-content" style="display: none;">
+                            <p><strong>What This Means:</strong> Foreign governments and central banks are selling Treasuries and reducing dollar reserves.</p>
+                            <p style="margin-top: 1rem;"><strong>The Numbers:</strong> China held $1.3T in Treasuries at peak; now under $800B<span class="citation" onclick="scrollToSource(3)" title="Federal Reserve TIC data">[3]</span>. Japan is a net seller. Global dollar reserves fell from 65% to 58%<span class="citation" onclick="scrollToSource(4)" title="IMF COFER data">[4]</span> of total reserves.</p>
+                            <p style="margin-top: 1rem;"><strong>The Danger:</strong> U.S. domestic investors must absorb the supply foreigners no longer want. This crowds out capital from stocks and corporate bonds. If foreign selling accelerates in a crisis, yields could spike suddenly to 6-7%.</p>
+                        </div>
+                    </div>
+
+                    <div class="drilldown-item">
+                        <div class="drilldown-header" onclick="toggleDrilldown(event)">
+                            <div>
+                                <strong style="font-size: 1.1rem; color: #1a1a1a;">Private Capital Availability</strong>
+                                <div style="font-size: 0.95rem; color: #666; margin-top: 0.5rem;">
+                                    <span style="color: #d4a574;"><strong>Ideal:</strong> 85% of capital for private use</span> &nbsp;|&nbsp;
+                                    <span style="color: #c41e3a;"><strong>Current:</strong> 72% of capital</span>
+                                </div>
+                            </div>
+                            <div class="drilldown-arrow">▼</div>
+                        </div>
+                        <div class="drilldown-content" style="display: none;">
+                            <p><strong>What This Means:</strong> Capital that could flow to stocks, corporate bonds, and startups is instead absorbed by Treasury issuance.</p>
+                            <p style="margin-top: 1rem;"><strong>The Math:</strong> When government borrows $1.7T annually, that capital comes from the savings pool. In an ideal state, government takes 15% of available capital; private investment gets 85%. Currently, government takes 28%; private investment gets 72%.</p>
+                            <p style="margin-top: 1rem;"><strong>The Growth Impact:</strong> Companies have less capital for expansion, R&D, and hiring. Startups find venture funding scarce. This reduces productivity growth and long-term economic vitality.</p>
+                        </div>
+                    </div>
+
+                    <div class="drilldown-item">
+                        <div class="drilldown-header" onclick="toggleDrilldown(event)">
+                            <div>
+                                <strong style="font-size: 1.1rem; color: #1a1a1a;">Debt-to-GDP Ratio</strong>
+                                <div style="font-size: 0.95rem; color: #666; margin-top: 0.5rem;">
+                                    <span style="color: #d4a574;"><strong>Ideal:</strong> Stable or declining</span> &nbsp;|&nbsp;
+                                    <span style="color: #c41e3a;"><strong>Current:</strong> 120% and rising</span>
+                                </div>
+                            </div>
+                            <div class="drilldown-arrow">▼</div>
+                        </div>
+                        <div class="drilldown-content" style="display: none;">
+                            <p><strong>What This Means:</strong> The national debt ($34 trillion) equals 120% of annual GDP ($28 trillion). This ratio is rising, not falling.</p>
+                            <p style="margin-top: 1rem;"><strong>Historical Context:</strong> After WWII, U.S. debt was 119% of GDP. It took 25 years of growth and discipline to reduce it to 30% by 1975. We're now back at WWII levels, yet no major war justifies it.</p>
+                            <p style="margin-top: 1rem;"><strong>The Danger Zone:</strong> At 120% and rising, the debt is on an unsustainable path. Italy (140%), Spain (110%), and other European countries have experienced surging yields when investors lose confidence. A debt-to-GDP above 150% is critical danger territory.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-nav">
+            <button onclick="switchView('section-5')">← Previous Section</button>
+            <span style="font-size: 0.9rem; color: #666;">6 of 7</span>
+            <button onclick="switchView('section-7')">Next Section →</button>
+        </div>
+    </div>
+</div>
+
+<!-- ===== SECTION 7: WHY IT MATTERS ===== -->
+<div id="section-7" class="view">
+    <div class="container">
+        <button class="back-to-dashboard" onclick="switchView('dashboard')">← Back to Dashboard</button>
+        <div class="breadcrumb">Section 7 of 7 | Why This Matters</div>
+
+        <div class="article">
+            <h3>Why This Matters: The Treasury Market and You</h3>
+
+            <p>
+                Treasury bond market dynamics are not abstract economic theory—they affect your life directly and immediately.
+            </p>
+
+            <div class="key-term">
+                <strong>Your Mortgage Rate</strong>
+                <p style="margin-top: 0.5rem;">When 10-year Treasury yields are 4.5%, 30-year mortgage rates are typically 5.5-6.0%. When Treasury yields were 2%, mortgage rates were 3-3.5%. A 2% shift in mortgage rates changes whether home buying is affordable for millions of Americans. Rising Treasury yields during the 2022-2024 period priced millions out of the housing market.</p>
+            </div>
+
+            <div class="key-term">
+                <strong>Credit Card and Auto Loan Rates</strong>
+                <p style="margin-top: 0.5rem;">Your credit card APR and auto loan rate track Treasury yields. When the Fed raises rates to fight inflation, Treasury yields rise, and suddenly your credit card jumps from 18% to 22%, or your auto loan from 5% to 8%. Millions carry balances on credit cards; these rate changes affect household cash flow immediately.</p>
+            </div>
+
+            <div class="key-term">
+                <strong>Retirement Portfolio Returns</strong>
+                <p style="margin-top: 0.5rem;">If you hold bonds in your retirement account, rising Treasury yields mean falling bond prices. A $100,000 bond portfolio can lose $5,000-$10,000 in value when yields rise 2%. If you're retired and depend on bond income, lower bond prices mean lower returns when you roll over maturing securities.</p>
+            </div>
+
+            <div class="key-term">
+                <strong>Stock Market Volatility</strong>
+                <p style="margin-top: 0.5rem;">When Treasury yields are elevated (4.5%), stock valuations compress because their required return increases. High Treasury yields in 2022-2024 contributed to the 30%+ tech stock declines during that period. Your 401(k) felt it.</p>
+            </div>
+
+            <div class="key-term">
+                <strong>Economic Opportunity</strong>
+                <p style="margin-top: 0.5rem;">When government borrowing crowds out private investment, economic growth slows. Fewer startups are funded, which means fewer new jobs. Companies invest less in R&D, which means slower innovation and wage growth. Over decades, this compounds into lower living standards.</p>
+            </div>
+
+            <div class="highlight-box">
+                <strong>The Core Truth:</strong> Treasury yields are not just financial metrics—they're the heartbeat of the economy. Every business decision, every mortgage application, every investment choice traces back to the Treasury market. When the Treasury market is stressed or uncertain, the entire economy feels it.
+            </div>
+        </div>
+
+        <div class="article" style="background-color: #fffbf7; border-left-color: #c41e3a;">
+            <h3 style="color: #c41e3a;">The Uncomfortable Bottom Line</h3>
+
+            <p>
+                The U.S. cannot indefinitely run $1.7 trillion deficits at 4%+ yields. Something must give:
+            </p>
+
+            <ul style="margin: 1rem 0 1rem 2rem;">
+                <li><strong>Spending cuts:</strong> Politically difficult but arithmetically necessary</li>
+                <li><strong>Tax increases:</strong> Also politically difficult, but could reduce deficits</li>
+                <li><strong>Accelerated growth:</strong> Possible but uncertain; GDP growth alone won't solve this in a reasonable timeframe</li>
+                <li><strong>Inflation erosion:</strong> The "easy" path, but highly damaging to savers, retirees, and wage earners</li>
+            </ul>
+
+            <p style="margin-top: 1.5rem;">
+                The most likely path is slow fiscal deterioration: interest costs rise from 15% to 20% to 25% of revenue over the next 10-15 years. Debt-to-GDP climbs from 120% to 150%. At some point—possibly 2030s—the math becomes undeniable. Options then are much harder.
+            </p>
+
+            <p style="margin-top: 1.5rem;">
+                <strong>The silver lining:</strong> This is not inevitable. Policy can change. Spending can be constrained. Revenues can be enhanced through growth or reform. Inflation can be kept low. The next 5-10 years will be decisive in determining whether the U.S. returns to sustainable fiscal dynamics or continues down the unsustainable path.
+            </p>
+        </div>
+
+        <div class="section-nav">
+            <button onclick="switchView('section-6')">← Previous Section</button>
+            <span style="font-size: 0.9rem; color: #666;">7 of 8</span>
+            <button onclick="switchView('section-8')">Next Section →</button>
+        </div>
+    </div>
+</div>
+
+<!-- ===== SECTION 8: THE AI FOOTNOTE ===== -->
+<div id="section-8" class="view">
+    <div class="container">
+        <button class="back-to-dashboard" onclick="switchView('dashboard')">← Back to Dashboard</button>
+        <div class="breadcrumb">Section 8 of 8 | The AI Footnote: Private Capital vs. Government Debt</div>
+
+        <div class="article">
+            <h3>The AI Footnote: How Private Capital Competition Distorted the Treasury Market</h3>
+            
+            <p>
+                While the Treasury market was struggling with massive structural deficits, a parallel story unfolded that masked the problem: the AI boom. Between 2020 and 2023, a euphoric belief that artificial intelligence would deliver transformational economic growth attracted enormous venture capital, corporate spending, and investor enthusiasm. This narrative temporarily distorted Treasury markets in subtle but significant ways.
+            </p>
+
+            <div class="key-term">
+                <strong>The Alternative Growth Story</strong>
+                <p style="margin-top: 0.5rem;">When Treasury yields were near zero (2020-2023), institutional investors faced a choice: buy risk-free 0.5% Treasuries or fund AI startups and tech infrastructure with promises of 30%+ returns. The choice was obvious. Massive capital flowed into venture funding, and tech companies began issuing corporate bonds at 3-4% yields to finance data centers and GPU infrastructure. This created an alternate narrative: "Don't worry about government deficits—the future of growth is in private AI companies, not government spending." This narrative temporarily suppressed Treasury yields below where they would have been without it.</p>
+            </div>
+
+            <div style="margin: 2rem 0;">
+                <div class="drilldown-item">
+                    <div class="drilldown-header" onclick="toggleDrilldown(event)">
+                        <div>
+                            <strong style="font-size: 1.1rem; color: #1a1a1a;">Capital Competition at the Margin</strong>
+                            <div style="font-size: 0.95rem; color: #666; margin-top: 0.5rem;">
+                                How rising Treasury yields are reshuffling capital allocations
+                            </div>
+                        </div>
+                        <div class="drilldown-arrow">▼</div>
+                    </div>
+                    <div class="drilldown-content" style="display: none;">
+                        <p>In 2021-2023, when Treasuries yielded 0.5-1.5%, investors faced stark alternatives. A venture capitalist could either: (a) buy 1% Treasuries, or (b) fund AI startups with venture capital. The calculus was simple—AI upside was worth the risk.</p>
+                        <p style="margin-top: 1rem;">Now at 4.2% Treasury yields, that calculation has inverted. A risk-free 4.2% is suddenly competitive with venture capital expected returns. This is creating a funding cliff for AI startups and forcing repricing of existing AI valuations. Capital that was aggressively deployed into high-risk AI infrastructure is rotating back toward Treasuries.</p>
+                        <p style="margin-top: 1rem;"><strong>The Treasury market impact:</strong> This rotation creates two contradictory pressures. Selling pressure on AI equities (bad for tech valuations) but increased demand for Treasuries (supporting prices). However, if institutional investors are rotating from AI to Treasuries because AI returns disappointed, this signals economic weakness—less capex spending, slower growth, lower future tax revenues. The longer-term effect may be to push yields *higher*, not lower, because growth expectations fade.</p>
+                    </div>
+                </div>
+
+                <div class="drilldown-item">
+                    <div class="drilldown-header" onclick="toggleDrilldown(event)">
+                        <div>
+                            <strong style="font-size: 1.1rem; color: #1a1a1a;">Debt-Financed AI Infrastructure Crowding Bonds</strong>
+                            <div style="font-size: 0.95rem; color: #666; margin-top: 0.5rem;">
+                                How corporate bond issuance for AI capex competes with Treasuries
+                            </div>
+                        </div>
+                        <div class="drilldown-arrow">▼</div>
+                    </div>
+                    <div class="drilldown-content" style="display: none;">
+                        <p>Companies like Microsoft, Apple, Google, Meta, and Nvidia have issued record corporate bonds to finance massive AI infrastructure spending (data centers, GPU purchases, power infrastructure). In 2024-2026, corporate bond issuance for tech capex has surged to levels not seen since the post-2008 recovery.</p>
+                        <p style="margin-top: 1rem;"><strong>The crowding-out effect:</strong> These high-grade corporate bonds (rated AA or AAA) are directly competing with Treasuries for institutional capital. A pension fund now has to choose: 4.2% risk-free Treasuries from the U.S. government, or 5.8% corporate bonds from Microsoft with minimal credit risk. The spread has compressed from historical norms (200+ basis points) to 140-160 basis points, signaling that investors see corporate AI capex as quasi-essential and nearly as safe as government debt.</p>
+                        <p style="margin-top: 1rem;">This is distorting the Treasury market in two ways: (1) it's absorbing capital that might otherwise flow into Treasuries, keeping Treasury yields higher than they would be, and (2) it's signaling that investors believe private AI infrastructure spending is as economically important as government spending—which may be true, but it masks the fiscal problem by redirecting attention.</p>
+                    </div>
+                </div>
+
+                <div class="drilldown-item">
+                    <div class="drilldown-header" onclick="toggleDrilldown(event)">
+                        <div>
+                            <strong style="font-size: 1.1rem; color: #1a1a1a;">The VC Funding Cliff & Deflationary Implications</strong>
+                            <div style="font-size: 0.95rem; color: #666; margin-top: 0.5rem;">
+                                How AI startup underfunding may reduce inflationary pressure
+                            </div>
+                        </div>
+                        <div class="drilldown-arrow">▼</div>
+                    </div>
+                    <div class="drilldown-content" style="display: none;">
+                        <p>Venture capital funding for AI startups peaked at $60+ billion in 2023. By 2024-2025, it had collapsed to $35-40 billion, a 35-40% decline. This funding cliff has real economic consequences.</p>
+                        <p style="margin-top: 1rem;"><strong>The inflation story:</strong> During the boom, AI startups were bidding aggressively for GPUs, cloud infrastructure, and talent, driving prices up. This contributed to inflation pressures that kept the Fed from cutting rates. The VC funding collapse reverses this: fewer AI startups are getting funded, which means less demand for expensive GPUs and less wage pressure from competing for AI talent. This *reduces* inflationary pressure.</p>
+                        <p style="margin-top: 1rem;"><strong>The Treasury yield implication:</strong> Lower inflation expectations *should* allow the Fed to cut rates and should push Treasury yields lower. But the paradox is that lower growth expectations (from reduced AI capex and venture funding) might keep yields elevated because economic growth fears outweigh inflation relief. Treasury yields could whipsaw as the market weighs these contradictory signals.</p>
+                    </div>
+                </div>
+
+                <div class="drilldown-item">
+                    <div class="drilldown-header" onclick="toggleDrilldown(event)">
+                        <div>
+                            <strong style="font-size: 1.1rem; color: #1a1a1a;">The Magnificent Seven Masking Weakness</strong>
+                            <div style="font-size: 0.95rem; color: #666; margin-top: 0.5rem;">
+                                How AI concentration creates false equity valuations and drives Treasury demand
+                            </div>
+                        </div>
+                        <div class="drilldown-arrow">▼</div>
+                    </div>
+                    <div class="drilldown-content" style="display: none;">
+                        <p>Seven mega-cap companies (Nvidia, Microsoft, Apple, Alphabet, Amazon, Tesla, Meta) have captured almost all of the equity market's gains in 2023-2024. These are the primary AI beneficiaries. Meanwhile, the rest of the market has languished.</p>
+                        <p style="margin-top: 1rem;"><strong>The distortion:</strong> When investors get disappointed by the rest of the market (smaller tech, value stocks, international equities), they rotate capital into two places: (1) the Magnificent Seven themselves, driving valuations higher, or (2) Treasuries as "safe harbor." This second flow artificially suppresses Treasury yields because it's driven by disappointment elsewhere, not by genuine economic reasons to own Treasuries.</p>
+                        <p style="margin-top: 1rem;">This masking is dangerous because it hides the true state of the market. If the Magnificent Seven were truly delivering AI returns commensurate with their valuations, the rest of the market would be stronger. Instead, the Magnificent Seven are absorbing capital that would normally be diversified, and Treasury yields are being artificially supported by disappointed equity flows. When (not if) the Magnificent Seven disappoint, this flow reversal will be violent.</p>
+                    </div>
+                </div>
+
+                <div class="drilldown-item">
+                    <div class="drilldown-header" onclick="toggleDrilldown(event)">
+                        <div>
+                            <strong style="font-size: 1.1rem; color: #1a1a1a;">The Narrative Collapse & the Fiscal Reckoning</strong>
+                            <div style="font-size: 0.95rem; color: #666; margin-top: 0.5rem;">
+                                Why AI disappointment creates an opening for fiscal reality
+                            </div>
+                        </div>
+                        <div class="drilldown-arrow">▼</div>
+                    </div>
+                    <div class="drilldown-content" style="display: none;">
+                        <p><strong>The deepest distortion:</strong> The AI boom created an alternate narrative to fiscal reality. While the government has been running unsustainable $1.7 trillion annual deficits, the AI story told investors: "Don't worry about fiscal issues—the future is in private innovation and AI-driven growth." This narrative suppressed Treasury yields during 2020-2023 by offering investors an escape route (invest in AI instead of Treasuries).</p>
+                        <p style="margin-top: 1rem;">Now that the AI narrative is fragmenting—startup valuations disappointing, capex not delivering returns as fast as promised, venture funding collapsing—there's a reckoning. Investors can no longer ignore fiscal deficits by hiding in AI. They have to ask: where else are we going to put our capital?</p>
+                        <p style="margin-top: 1rem;"><strong>The consequences:</strong> Treasury yields are now pricing both: (1) structural deficit pressures (Treasuries must be issued in massive quantities, pushing yields up), and (2) disappointment of the AI supercycle narrative (growth expectations lower, which should push yields down, but the deficit floor overwhelms this). The net effect is that Treasury yields may remain elevated for years not because of current economic strength, but because of the dual weight of fiscal deficits *and* private sector underperformance.</p>
+                        <p style="margin-top: 1rem;">The AI boom did something dangerous: it delayed the fiscal reckoning by 3-4 years. Now that delay is ending, and investors are coming to terms with $1.7 trillion deficits again—but without the AI narrative to distract them.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-nav">
+            <button onclick="switchView('section-7')">← Previous Section</button>
+            <span style="font-size: 0.9rem; color: #666;">8 of 8</span>
+            <button onclick="switchView('dashboard')">Return to Dashboard</button>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <p>The Treasury Bond Market: A Broadsheet Guide | August 2026</p>
+    <p style="margin-top: 0.5rem; font-size: 0.8rem; opacity: 0.8;">Developed as an educational resource for BOLLI participants and beyond.</p>
+</footer>
+
+<!-- SOURCES SECTION -->
+<div class="container">
+    <div class="sources-section">
+        <h3>Sources & References</h3>
+
+        <div class="source-item">
+            <p><span class="source-number">1</span> <strong>Federal Reserve Historical Data</strong></p>
+            <p>10-Year Treasury Yield and interest rate historical data (2013-2026)</p>
+            <p><a href="https://fred.stlouisfed.org/series/GS10" class="source-link" target="_blank">FRED: 10-Year Treasury Constant Maturity Rate</a></p>
+        </div>
+
+        <div class="source-item">
+            <p><span class="source-number">2</span> <strong>U.S. Department of the Treasury</strong></p>
+            <p>Treasury debt outstanding and market size (current $27+ trillion)</p>
+            <p><a href="https://treasurydirect.gov/NP/debt/current" class="source-link" target="_blank">TreasuryDirect: National Debt to the Penny</a></p>
+        </div>
+
+        <div class="source-item">
+            <p><span class="source-number">3</span> <strong>Federal Reserve Treasury International Capital (TIC) Data</strong></p>
+            <p>Foreign holdings of U.S. Treasury securities by country (China, Japan, etc.) — shows decline from peak holdings</p>
+            <p><a href="https://www.treasury.gov/resource-center/data-chart-center/tic/Pages/index.aspx" class="source-link" target="_blank">Treasury International Capital System</a></p>
+        </div>
+
+        <div class="source-item">
+            <p><span class="source-number">4</span> <strong>International Monetary Fund (IMF) COFER Data</strong></p>
+            <p>Global central bank reserve composition — dollar reserves declining from 65% to 58% of total reserves</p>
+            <p><a href="https://www.imf.org/external/np/sta/cofer/eng/index.htm" class="source-link" target="_blank">IMF: Currency Composition of Official Foreign Exchange Reserves</a></p>
+        </div>
+
+        <div class="source-item">
+            <p><span class="source-number">5</span> <strong>U.S. Bureau of Labor Statistics (BLS)</strong></p>
+            <p>Unemployment rate data (2010-2026), showing decline from 10% to current levels</p>
+            <p><a href="https://www.bls.gov/data/" class="source-link" target="_blank">BLS Data Portal</a></p>
+        </div>
+
+        <div class="source-item">
+            <p><span class="source-number">6</span> <strong>Office of Management and Budget (OMB)</strong></p>
+            <p>Federal deficit data and projections (current $1.7 trillion, 6-7% of GDP)</p>
+            <p><a href="https://www.whitehouse.gov/omb/budget/" class="source-link" target="_blank">OMB: Budget Portal</a></p>
+        </div>
+
+        <div class="source-item">
+            <p><span class="source-number">7</span> <strong>Congressional Budget Office (CBO)</strong></p>
+            <p>Interest payments on national debt, fiscal projections, and deficit analysis</p>
+            <p><a href="https://www.cbo.gov/" class="source-link" target="_blank">CBO: The Budget and Economic Outlook</a></p>
+        </div>
+
+        <div class="source-item">
+            <p><span class="source-number">8</span> <strong>U.S. Bureau of Economic Analysis (BEA)</strong></p>
+            <p>GDP data and debt-to-GDP ratio (current 120%+)</p>
+            <p><a href="https://www.bea.gov/" class="source-link" target="_blank">BEA: Economic Accounts</a></p>
+        </div>
+
+        <div class="source-item">
+            <p><span class="source-number">9</span> <strong>Federal Reserve Economic Data & Research</strong></p>
+            <p>Yield curve inversion as recession predictor (typically precedes recession by 12-18 months)</p>
+            <p><a href="https://www.federalreserve.gov/datadownload/" class="source-link" target="_blank">Federal Reserve Data Download Program</a></p>
+        </div>
+
+        <div class="source-item">
+            <p><span class="source-number">10</span> <strong>S&P 500 Historical Returns</strong></p>
+            <p>Equity market performance data (2010-2019 and 2022-2026)</p>
+            <p><a href="https://www.spglobal.com/spdji/en/" class="source-link" target="_blank">S&P Global Market Intelligence</a></p>
+        </div>
+
+        <div class="source-item">
+            <p><span class="source-number">11</span> <strong>Federal Reserve Interest Rate Policy</strong></p>
+            <p>Historical Federal Funds Rate and policy decisions (2010-2026)</p>
+            <p><a href="https://www.federalreserve.gov/monetarypolicy/openmarket.htm" class="source-link" target="_blank">Federal Reserve Open Market Operations</a></p>
+        </div>
+
+        <div class="source-item">
+            <p><span class="source-number">12</span> <strong>Treasury Market Structure & Mechanics</strong></p>
+            <p>Information on Treasury Bills, Notes, Bonds, auction schedules, and market operations</p>
+            <p><a href="https://treasurydirect.gov" class="source-link" target="_blank">TreasuryDirect: Official U.S. Treasury Securities Source</a></p>
+        </div>
+
+        <div class="source-item" style="background-color: #fffbf7; padding: 1rem; border-left: 4px solid #c41e3a;">
+            <p style="font-style: italic; color: #666;"><strong>Note on Data:</strong> This guide uses actual Treasury, Federal Reserve, and economic data current as of August 2026. Some historical data points (e.g., 2010-2019 performance metrics) are based on published government sources and financial databases. Readers are encouraged to verify specific statistics through the official sources listed above, which are updated regularly.</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    // View switching
+    function switchView(viewId) {
+        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+        document.getElementById(viewId).classList.add('active');
+        window.scrollTo(0, 0);
+    }
+
+    // Citation scroll function
+    function scrollToSource(sourceNum) {
+        const sourceItems = document.querySelectorAll('.source-item');
+        if (sourceItems[sourceNum - 1]) {
+            sourceItems[sourceNum - 1].scrollIntoView({ behavior: 'smooth' });
+            sourceItems[sourceNum - 1].style.backgroundColor = 'rgba(212, 165, 116, 0.2)';
+            setTimeout(() => {
+                sourceItems[sourceNum - 1].style.backgroundColor = '';
+            }, 2000);
+        }
+    }
+
+    // Drilldown toggle
+    function toggleDrilldown(event) {
+        const header = event.currentTarget;
+        const item = header.closest('.drilldown-item');
+        const content = item.querySelector('.drilldown-content');
+        
+        if (content.style.display === 'none' || content.style.display === '') {
+            content.style.display = 'block';
+            item.classList.add('open');
+        } else {
+            content.style.display = 'none';
+            item.classList.remove('open');
+        }
+    }
+
+    // Chart 1: Normal Yield Curve
+    const ctx1 = document.getElementById('normalYieldCurve');
+    if (ctx1) {
+        new Chart(ctx1, {
+            type: 'line',
+            data: {
+                labels: ['3M', '6M', '1Y', '2Y', '5Y', '10Y', '20Y', '30Y'],
+                datasets: [{
+                    label: 'Yield (%)',
+                    data: [4.6, 4.7, 4.75, 4.85, 5.0, 5.1, 5.2, 5.3],
+                    borderColor: '#1a1a1a',
+                    backgroundColor: 'rgba(212, 165, 116, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.3,
+                    pointBackgroundColor: '#d4a574',
+                    pointRadius: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: {
+                        min: 4.4,
+                        max: 5.5,
+                        ticks: { callback: v => parseFloat(v.toFixed(2)) + '%' }
+                    }
+                }
+            }
+        });
+    }
+
+    // Chart 2: Inverted Yield Curve
+    const ctx2 = document.getElementById('invertedYieldCurve');
+    if (ctx2) {
+        new Chart(ctx2, {
+            type: 'line',
+            data: {
+                labels: ['3M', '6M', '1Y', '2Y', '5Y', '10Y', '20Y', '30Y'],
+                datasets: [{
+                    label: 'Yield',
+                    data: [5.2, 5.1, 5.0, 4.8, 4.5, 4.2, 4.1, 4.0],
+                    borderColor: '#c41e3a',
+                    backgroundColor: 'rgba(196, 30, 58, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: '#c41e3a',
+                    pointRadius: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: {
+                        min: 3.5,
+                        max: 5.5,
+                        ticks: { callback: v => parseFloat(v.toFixed(1)) + '%' }
+                    }
+                }
+            }
+        });
+    }
+
+    // Chart 3: Historical 10-Year Rates
+    const ctx3 = document.getElementById('historicalRates');
+    if (ctx3) {
+        new Chart(ctx3, {
+            type: 'line',
+            data: {
+                labels: ['2013', '2014', '2015', '2016', '2017', '2018', '2019', '2020', '2021', '2022', '2023', '2024', '2025', '2026'],
+                datasets: [{
+                    label: '10-Year Yield',
+                    data: [3.0, 2.2, 2.1, 1.8, 2.3, 2.7, 1.9, 0.9, 1.5, 3.9, 4.3, 4.2, 4.1, 4.0],
+                    borderColor: '#1a1a1a',
+                    backgroundColor: 'rgba(212, 165, 116, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.3,
+                    pointBackgroundColor: '#d4a574',
+                    pointRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: {
+                        ticks: { callback: v => parseFloat(v.toFixed(1)) + '%' }
+                    }
+                }
+            }
+        });
+    }
+
+    // Chart 4: Price vs Yield
+    const ctx4 = document.getElementById('priceYieldChart');
+    if (ctx4) {
+        new Chart(ctx4, {
+            type: 'line',
+            data: {
+                labels: ['1%', '2%', '3%', '4%', '5%', '6%', '7%'],
+                datasets: [{
+                    label: 'Bond Price',
+                    data: [135, 120, 107, 100, 93, 88, 83],
+                    borderColor: '#1a1a1a',
+                    backgroundColor: 'rgba(196, 30, 58, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4,
+                    pointBackgroundColor: '#c41e3a',
+                    pointRadius: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: {
+                        min: 75,
+                        max: 140,
+                        ticks: { callback: v => '$' + v }
+                    },
+                    x: { title: { display: true, text: 'Yield' } }
+                }
+            }
+        });
+    }
+
+    // Chart 5: Competition
+    const ctx5 = document.getElementById('competitionChart');
+    if (ctx5) {
+        new Chart(ctx5, {
+            type: 'line',
+            data: {
+                labels: ['2010', '2012', '2014', '2016', '2018', '2020', '2022', '2024', '2026'],
+                datasets: [
+                    {
+                        label: '10-Yr Yield',
+                        data: [3.3, 1.6, 2.5, 2.4, 2.6, 1.0, 3.9, 4.2, 4.0],
+                        borderColor: '#d4a574',
+                        yAxisID: 'y',
+                        borderWidth: 2,
+                        tension: 0.3
+                    },
+                    {
+                        label: 'S&P P/E Ratio',
+                        data: [15, 13, 17, 25, 22, 31, 18, 24, 23],
+                        borderColor: '#1a1a1a',
+                        yAxisID: 'y1',
+                        borderWidth: 2,
+                        tension: 0.3
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: true } },
+                scales: {
+                    y: {
+                        type: 'linear',
+                        position: 'left',
+                        title: { display: true, text: '10-Yr Yield (%)' },
+                        ticks: { callback: v => parseFloat(v.toFixed(1)) + '%' }
+                    },
+                    y1: {
+                        type: 'linear',
+                        position: 'right',
+                        title: { display: true, text: 'S&P P/E Ratio' },
+                        grid: { drawOnChartArea: false }
+                    }
+                }
+            }
+        });
+    }
+
+    // Chart 6: Deficit
+    const ctx6 = document.getElementById('deficitChart');
+    if (ctx6) {
+        new Chart(ctx6, {
+            type: 'bar',
+            data: {
+                labels: ['2000', '2005', '2008', '2010', '2015', '2019', '2021', '2023', '2026'],
+                datasets: [{
+                    label: 'Annual Deficit (% of GDP)',
+                    data: [3.1, 2.6, 3.2, 10.1, 2.2, 4.6, 14.7, 6.3, 6.7],
+                    backgroundColor: 'rgba(196, 30, 58, 0.7)',
+                    borderColor: '#c41e3a',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: {
+                        ticks: { callback: v => parseFloat(v.toFixed(1)) + '%' }
+                    }
+                }
+            }
+        });
+    }
+
+    // Chart 7: Interest Payments
+    const ctx7 = document.getElementById('interestPayments');
+    if (ctx7) {
+        new Chart(ctx7, {
+            type: 'line',
+            data: {
+                labels: ['2000', '2005', '2010', '2015', '2019', '2021', '2023', '2026'],
+                datasets: [{
+                    label: 'Interest as % of Revenue',
+                    data: [7, 7, 6, 6, 7, 7, 13, 15],
+                    borderColor: '#c41e3a',
+                    backgroundColor: 'rgba(196, 30, 58, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.3,
+                    pointBackgroundColor: '#c41e3a',
+                    pointRadius: 5
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: {
+                        ticks: { callback: v => parseFloat(v.toFixed(1)) + '%' }
+                    }
+                }
+            }
+        });
+    }
+
+    // Chart 8: Capital Allocation
+    const ctx8 = document.getElementById('capitalAllocationChart');
+    if (ctx8) {
+        new Chart(ctx8, {
+            type: 'doughnut',
+            data: {
+                labels: ['Treasuries (Ideal)', 'Stocks', 'Corporate Bonds', 'Real Estate', 'Other'],
+                datasets: [{
+                    data: [15, 35, 20, 20, 10],
+                    backgroundColor: ['#d4a574', '#1a1a1a', '#c41e3a', '#8b7355', '#a89968']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { position: 'bottom' } }
+            }
+        });
+    }
+
+    // Chart 9: Dashboard Comparison (Ideal vs Current)
+    const ctxD = document.getElementById('dashboardCompare');
+    if (ctxD) {
+        new Chart(ctxD, {
+            type: 'bar',
+            data: {
+                labels: ['Annual Deficit\n(% of GDP)', 'Interest Payments\n(% of Revenue)', '10-Yr Yield\n(%)', 'Debt-to-GDP\n(%)'],
+                datasets: [
+                    {
+                        label: 'Ideal State',
+                        data: [2.5, 6.5, 2.5, 60],
+                        backgroundColor: 'rgba(212, 165, 116, 0.7)',
+                        borderColor: '#d4a574',
+                        borderWidth: 1
+                    },
+                    {
+                        label: 'Current (Aug 2026)',
+                        data: [6.7, 15, 4.2, 120],
+                        backgroundColor: 'rgba(196, 30, 58, 0.7)',
+                        borderColor: '#c41e3a',
+                        borderWidth: 1
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: true } },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+
+    // Chart 10: Dashboard Yields
+    const ctxY = document.getElementById('dashboardYields');
+    if (ctxY) {
+        new Chart(ctxY, {
+            type: 'line',
+            data: {
+                labels: ['2013', '2015', '2017', '2019', '2020', '2021', '2022', '2023', '2024', '2026'],
+                datasets: [{
+                    label: '10-Year Treasury Yield',
+                    data: [3.0, 2.1, 2.3, 1.9, 0.9, 1.5, 3.9, 4.3, 4.2, 4.0],
+                    borderColor: '#1a1a1a',
+                    backgroundColor: 'rgba(212, 165, 116, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.3,
+                    pointBackgroundColor: '#d4a574',
+                    pointRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: { legend: { display: false } },
+                scales: {
+                    y: {
+                        ticks: { callback: v => parseFloat(v.toFixed(1)) + '%' }
+                    }
+                }
+            }
+        });
+    }
+</script>
+
+</body>
+</html>
