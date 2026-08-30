@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Trump and Roosevelt: A Study in Contrasts</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=EB+Garamond:ital,opsz,wght@0,8..144,400;0,8..144,500;1,8..144,400;1,8..144,500&family=Cinzel:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold:       #c9a84c;
+  --gold-light: #e8c97a;
+  --gold-dark:  #8b6914;
+  --cream:      #f5efe0;
+  --parchment:  #ede0c4;
+  --white:      #f9f5ed;
+  --ink:        #1a1208;
+  --mid:        #3a2a10;
+  --dim:        #7a6a50;
+  --rule:       rgba(201,168,76,0.18);
+  --rule-md:    rgba(201,168,76,0.32);
+  --shadow:     rgba(26,18,8,0.35);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background-color: #1a1208;
+  background-image:
+    radial-gradient(ellipse at 20% 20%, rgba(139,105,20,0.15) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 80%, rgba(139,26,26,0.12) 0%, transparent 60%);
+  min-height: 100vh;
+  font-family: 'EB Garamond', Georgia, serif;
+  color: var(--ink);
+  padding: 0 1rem 4rem;
+}
+
+.toggle-bar {
+  position: sticky; top: 0; z-index: 1000;
+  display: flex; justify-content: center;
+  padding: 0.8rem 1rem;
+  background: linear-gradient(to bottom, rgba(26,18,8,0.98) 0%, rgba(26,18,8,0.85) 100%);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(201,168,76,0.2);
+}
+
+.toggle-pill {
+  display: flex;
+  background: rgba(26,18,8,0.9);
+  border: 1px solid rgba(201,168,76,0.35);
+  border-radius: 100px;
+  padding: 3px; gap: 2px;
+  box-shadow: 0 2px 20px rgba(0,0,0,0.5), inset 0 1px 0 rgba(201,168,76,0.1);
+}
+
+.toggle-btn {
+  font-family: 'Cinzel', serif; font-size: 0.65rem; font-weight: 700;
+  letter-spacing: 0.18em; text-transform: uppercase;
+  padding: 0.45rem 1.4rem; border: none; border-radius: 100px;
+  cursor: pointer; transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+  color: rgba(201,168,76,0.5); background: transparent;
+}
+
+.toggle-btn.active {
+  background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold) 100%);
+  color: var(--ink);
+  box-shadow: 0 2px 12px rgba(201,168,76,0.4);
+}
+
+.toggle-btn:hover:not(.active) { color: var(--gold-light); }
+
+.view { padding-top: 2rem; }
+.view.hidden { display: none; }
+
+.view .page {
+  margin: 0 auto;
+  background: var(--cream);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  box-shadow: 0 0 80px rgba(201,168,76,0.25), 0 20px 60px var(--shadow), 0 0 0 1px rgba(201,168,76,0.3);
+  position: relative; overflow: hidden;
+  max-width: 900px;
+}
+
+.view .page::before {
+  content: ''; position: absolute; inset: 12px;
+  border: 1px solid var(--gold); pointer-events: none; z-index: 10;
+}
+
+.page-header {
+  padding: 3rem 2rem 2rem;
+  border-bottom: 2px solid var(--rule-md);
+  text-align: center;
+}
+
+.page-header h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.4rem; font-weight: 700;
+  letter-spacing: -0.015em; line-height: 1.2;
+  margin-bottom: 0.5rem; color: var(--ink);
+}
+
+.page-header .subtitle {
+  font-family: 'Cinzel', serif; font-size: 0.75rem;
+  letter-spacing: 0.22em; text-transform: uppercase;
+  color: var(--dim); margin-top: 1rem;
+}
+
+.page-content {
+  padding: 3rem 2.5rem;
+  position: relative; z-index: 2;
+}
+
+.section {
+  margin-bottom: 2.5rem; line-height: 1.75;
+}
+
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.45rem; font-weight: 700;
+  color: var(--ink); margin-bottom: 1.2rem;
+  border-bottom: 1px solid var(--rule-md); padding-bottom: 0.8rem;
+}
+
+.section p {
+  margin-bottom: 1rem; text-align: justify;
+  color: var(--ink); font-size: 0.95rem;
+}
+
+.section p strong { font-weight: 500; color: var(--mid); }
+.section em { font-style: italic; color: var(--dim); }
+
+.comparison-grid {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;
+  margin: 2rem 0;
+}
+
+.comparison-box {
+  background: rgba(201,168,76,0.05);
+  border: 1px solid rgba(201,168,76,0.2);
+  padding: 1.5rem;
+  border-radius: 4px;
+}
+
+.comparison-box h3 {
+  font-family: 'Cinzel', serif;
+  font-size: 1.1rem; font-weight: 700;
+  color: var(--mid); margin-bottom: 1rem;
+  text-align: center;
+}
+
+.comparison-box ul {
+  list-style: none;
+  font-size: 0.9rem;
+}
+
+.comparison-box li {
+  margin-bottom: 0.75rem;
+  padding-left: 1.2rem;
+  position: relative;
+}
+
+.comparison-box li::before {
+  content: '▪'; position: absolute;
+  left: 0; color: var(--gold); font-weight: bold;
+}
+
+.divider {
+  text-align: center; margin: 2rem 0; color: var(--gold);
+  font-size: 1.3rem; letter-spacing: 0.5em;
+}
+
+.pull-quote {
+  font-family: 'Playfair Display', serif;
+  font-size: 1.25rem; font-style: italic;
+  color: var(--mid); margin: 2rem 0;
+  padding: 1.5rem 2rem;
+  border-left: 3px solid var(--gold);
+  background: rgba(201,168,76,0.08);
+}
+
+.pull-quote cite {
+  display: block; margin-top: 1rem;
+  font-family: 'Cinzel', serif; font-size: 0.75rem;
+  font-style: normal; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--dim);
+}
+
+.closing {
+  text-align: center; padding-top: 2rem;
+  border-top: 2px solid var(--rule-md);
+}
+
+.ornament {
+  display: block; font-size: 1.8rem;
+  color: var(--gold); margin: 1rem 0;
+}
+
+.closing-text {
+  font-size: 0.9rem; color: var(--mid);
+  line-height: 1.8; margin: 1.5rem 0;
+}
+
+.closing-sig {
+  font-family: 'Cinzel', serif; font-size: 0.7rem;
+  letter-spacing: 0.15em; text-transform: uppercase;
+  color: var(--dim); margin-top: 2rem;
+}
+
+.glance-item {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.glance-item:last-child {
+  border-bottom: none;
+}
+
+.glance-label {
+  font-family: 'Cinzel', serif;
+  font-size: 0.8rem; font-weight: 700;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--dim); margin-bottom: 0.4rem;
+}
+
+.glance-content {
+  font-size: 0.95rem; color: var(--ink); line-height: 1.6;
+}
+
+</style>
+</head>
+<body>
+
+<div class="toggle-bar">
+  <div class="toggle-pill">
+    <button class="toggle-btn active" id="btn-glance" onclick="switchView('glance')">At A Glance</button>
+    <button class="toggle-btn" id="btn-depth" onclick="switchView('depth')">Full Analysis</button>
+  </div>
+</div>
+
+<div class="view" id="view-glance">
+  <div class="page">
+    <div class="page-header">
+      <h1>Trump and Roosevelt</h1>
+      <p class="subtitle">A Comparative Study in Governance and Character</p>
+    </div>
+    <div class="page-content">
+
+      <div class="section">
+        <div class="section-title">Surface Similarities</div>
+        <div class="glance-item">
+          <div class="glance-label">Origins</div>
+          <div class="glance-content">Both born into affluent New York City families; both educated at prestigious institutions</div>
+        </div>
+        <div class="glance-item">
+          <div class="glance-label">Temperament</div>
+          <div class="glance-content">Both possessed great charisma, self-absorption, and volatility; both had troubling views on race</div>
+        </div>
+        <div class="glance-item">
+          <div class="glance-label">Media Mastery</div>
+          <div class="glance-content">Teddy dominated the press of his era; Trump mastered reality TV and social media</div>
+        </div>
+      </div>
+
+      <div class="divider">✦</div>
+
+      <div class="section">
+        <div class="section-title">The Defining Divergence</div>
+        <p>Where the similarities end reveals everything. Roosevelt was <em>erudite, personally courageous, and devoted to reform</em>. He reined in the robber barons, addressed labor exploitation and public health, and created the national parks system. Trump is <em>devoid of idealism and devoted to self-aggrandizement</em>, viewing the gilded age—the excess Roosevelt opposed—as America's golden age.</p>
+      </div>
+
+      <div class="divider">✦</div>
+
+      <div class="section">
+        <div class="section-title">This Week's Bullying Campaign</div>
+        <div class="glance-item">
+          <div class="glance-label">Trade War</div>
+          <div class="glance-content">Escalated tariffs on Canada over demands to eliminate DEI and restrict French language use</div>
+        </div>
+        <div class="glance-item">
+          <div class="glance-label">Iran Impasse</div>
+          <div class="glance-content">Military stalemate met with economic threats; Iran unmoved by pressure</div>
+        </div>
+        <div class="glance-item">
+          <div class="glance-label">Democratic Erosion</div>
+          <div class="glance-content">USPS board stacked with election deniers; DOJ monitors facing accusations of overreach</div>
+        </div>
+        <div class="glance-item">
+          <div class="glance-label">Vanity Over Governance</div>
+          <div class="glance-content">Kennedy Center renovation threatened with demolition if not approved; Navy systems downgraded for aesthetic preferences</div>
+        </div>
+        <div class="glance-item">
+          <div class="glance-label">Institutional Decay</div>
+          <div class="glance-content">AG refuses independence pledge; Stars and Stripes staffers fired; antisemitism probes predetermined</div>
+        </div>
+      </div>
+
+      <div class="divider">✦ ✦ ✦</div>
+
+      <div class="section closing">
+        <span class="ornament">⚜</span>
+        <div class="pull-quote">
+          "Trump is devoid of any idealism and devoted to the self-aggrandizement of himself, his family and the ultra-rich."
+        </div>
+        <div class="closing-sig">Analysis · August 2026</div>
+        <span class="ornament" style="margin-top:1rem;">⚜</span>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<div class="view hidden" id="view-depth">
+  <div class="page">
+    <div class="page-header">
+      <h1>Trump and Roosevelt</h1>
+      <p class="subtitle">A Detailed Comparative Analysis</p>
+    </div>
+    <div class="page-content">
+
+      <div class="section">
+        <div class="section-title">The Biographical Framework</div>
+        <p>Born nearly ninety years apart, Theodore Roosevelt (1858–1919) and Donald Trump (born 1946) share remarkable surface similarities. Both were born into affluent New York City families. Teddy was educated at Harvard, while Trump attended the University of Pennsylvania for his junior and senior years. Both men possessed great charisma, though tempered by self-absorption and volatile temperaments. Both had troubling racial views, though Roosevelt's aberrations fit the context of his time in ways Trump's do not.</p>
+        <p>Both men were masters of the media of their respective eras. Teddy was a prolific public speaker and writer, adept at navigating the muckraker journalists of the progressive age. Trump cultivated a faux image as a businessman par excellence through reality television, played effectively to his base's discontent, and became a virtuoso of social media messaging.</p>
+      </div>
+
+      <div class="divider">✦</div>
+
+      <div class="section">
+        <div class="section-title">Where Similarity Ends</div>
+        <p>The divergence between these two figures is where their true character emerges. <strong>Roosevelt was erudite, personally courageous, and devoted to reform.</strong> He mastered the problem of the robber barons, addressing the appalling living conditions of workers, labor exploitation, and public health crises. His environmental legacy—the national parks system—stands as arguably the most enduring gift any president has given the nation.</p>
+        <p>In the international sphere, though Roosevelt favored the Japanese (whom he patronizingly called "honorary Caucasians"), he secured the Nobel Peace Prize for negotiating the end of the Russo-Japanese War, demonstrating diplomatic acumen in service of broader stability.</p>
+        <p><strong>Trump, by contrast, is devoid of any idealism and devoted entirely to self-aggrandizement.</strong> He has repeatedly referred to the Gilded Age—the era of excess and exploitation that Roosevelt fought—as America's "golden age." Where Roosevelt used the bully pulpit to reform society, Trump has weaponized it into an instrument of bullying.</p>
+      </div>
+
+      <div class="divider">✦</div>
+
+      <div class="section">
+        <div class="section-title">Canada Contretemps and Economic Bullying</div>
+        <p>Trump's negotiating team presented Canada with last-minute stipulations: Canada must not negotiate trade agreements with other countries, must curtail DEI programs, and must consider reducing the official use of the French language. When Canadian Trade Minister Mark Carney recalled his negotiating team in protest, Trump characterized the Canadians as pursuing "the benefits of being a 51st state, without being one."</p>
+        <p>The irony inverted: the Trump administration's negotiators offered Canada the <em>disadvantages</em> of statehood—subordination and cultural constraints—without any of the actual advantages. Trump subsequently imposed 50% tariffs on Canadian goods, effective at midnight, escalating a trade dispute into economic coercion.</p>
+      </div>
+
+      <div class="divider">✦</div>
+
+      <div class="section">
+        <div class="section-title">Iran War: Stalemate and Strategic Humiliation</div>
+        <p>The Iran conflict has devolved into military impasse with U.S. weapon stocks depleted. The administration has abandoned military escalation for dire economic threats. Trump warned of "TREMENDOUS economic consequences" while Treasury Secretary Bessent spoke of "the single greatest financial offensive ever marshalled against an adversary."</p>
+        <p>Iran's response was dismissal. Mohsen Rezaei, Head of the National Security Council, said "We will retaliate in an earthquake-like manner." The Governor of Iran's Central Bank, Abdolnaser Hemmati, delivered a pointed rebuke: "If one fifth of what is happening in your country happened in our country, we would not be able to govern."</p>
+        <p>The USS Abraham Lincoln departed the Middle East without a replacement in theater—a strategic vulnerability. The 60-day MOU negotiation window expired. Former State Department official Dennis Ross noted that Iran reads Trump "as not wanting to escalate militarily," undercutting any diplomatic credibility.</p>
+      </div>
+
+      <div class="divider">✦</div>
+
+      <div class="section">
+        <div class="section-title">Democracy Under Assault</div>
+        <p>Trump's preoccupation with the 2026 midterms has taken on authoritarian overtones. He nominated four new USPS Board members—all Republicans, three of whom are 2020 election deniers—to suppress mail-in voting. The administration continues to pursue timing constraints that would make it effectively impossible for many Americans to vote by mail.</p>
+        <p>DOJ election monitors, dispatched to 1,000 locations nationwide, have faced accusations of overreach. Wyoming Governor Mark Gordon complained their behavior was "aggressive," "irregular," and "exceeded the authority Congress had given them." In a related maneuver, DHS is reassigning immigration officers to search for voter fraud—a use of resources that appears politically motivated.</p>
+        <p>The administration's playbook appears to channel not just mafia tactics but the election logic attributed to Stalin: "It doesn't matter how many people vote, only who counts them."</p>
+      </div>
+
+      <div class="divider">✦</div>
+
+      <div class="section">
+        <div class="section-title">Vanity and Institutional Decay</div>
+        <p>Trump's fixation with remaking Washington in his image has turned governance into narcissism. DOJ lawyers involved in Kennedy Center litigation warned that if a planned $250 million renovation with Trump's name is blocked, the administration threatens to demolish the building—without congressional approval. In other words, if the lack of approval prevents Trump's vanity project, they will destroy a national cultural institution through executive fiat.</p>
+        <p>The Pentagon faces pressure to rename the next Ford-class aircraft carrier after Trump, displacing the name of Doris Miller, a Black WWII hero who manned anti-aircraft guns during Pearl Harbor and became the first Black sailor to receive the Navy Cross. Meanwhile, Trump has mandated replacing the modern electromagnetic aircraft launch system with legacy steam and hydraulic systems—a costly, time-consuming change that represents a whim masquerading as military strategy.</p>
+        <p>The White House Ballroom construction proceeds 20 hours daily, seven days a week, in defiance of court orders, driven by Trump's vision of the Reflecting Pool painted in American flag blue with his face superimposed upon it.</p>
+      </p>
+      </div>
+
+      <div class="divider">✦</div>
+
+      <div class="section">
+        <div class="section-title">The Unraveling of Alliances and Admiration for Autocrats</div>
+        <p>Throughout his second term, Trump has treated longtime U.S. allies with contempt. He dismissed President Zelensky in the Oval Office. He levied tariffs on Canada, Mexico, and Europe. He mocked NATO members. He threatened to annex Greenland and characterize Canada as a state. He curtailed military exercises with South Korea, citing his "very good relationship" with Kim Jong Un and calling North Korea "unthreatening and respectful."</p>
+        <p>Meanwhile, Trump openly admires autocrats: Xi Jinping, Putin, Erdogan, Viktor Orbán, and Mohammed bin Salman. CNN's Stephen Collinson observed that Trump views alliances not as force multipliers but as "rackets in which foreign nations must pay handsomely." Former Michigan Governor and Canadian Ambassador James Blanchard captured it succinctly: Trump "dumps on our friends and cozies up to our enemies."</p>
+      </div>
+
+      <div class="divider">✦</div>
+
+      <div class="section">
+        <div class="section-title">Broader Signs of Institutional Collapse</div>
+        <p>Acting Attorney General Todd Blanche refused to pledge independence from the White House on <em>Meet the Press</em> and spoke at a Trump campaign rally—likely violating the Hatch Act. Judge J. Robert Luttig called him "the symbol of Donald Trump's corruption of the rule of law in America."</p>
+        <p>A former DOJ attorney filed a whistleblower complaint alleging that antisemitism investigations at Brown, Columbia, and Harvard departed from investigative standards and that "enforcement outcomes had been predetermined."</p>
+        <p>The Pentagon fired the publisher, editor-in-chief, and a reporter at <em>Stars and Stripes</em>—a publication that maintained independence from the Pentagon since 1942—as part of Pete Hegseth's "anti-woke" purge. The USDA and Forest Service proposed rescinding the 2001 Roadless Area Conservation Rule, opening ten million acres of national forest to logging.</p>
+      </div>
+
+      <div class="divider">✦ ✦ ✦</div>
+
+      <div class="section closing">
+        <span class="ornament">⚜</span>
+        <div class="pull-quote">
+          "Trump dumps on our friends and cozies up to our enemies."
+          <cite>James Blanchard, Former Governor and U.S. Ambassador to Canada</cite>
+        </div>
+        <p class="closing-text">This week crystallized the contradictions of the second Trump administration: fiscal crisis met with indifference; institutional decay proceeding apace; alliances collapsing while authoritarian leaders are courted; vanity projects consuming resources and attention; and a foreign policy rooted in personal animus rather than strategic vision. Yet voters, when given the choice between qualified and unqualified candidates, have shown themselves capable of discernment. Whether that capacity survives the deluge of dark money, misinformation, and exhaustion in the months ahead remains the central question.</p>
+        <div class="closing-sig">Analysis · August 2026</div>
+        <span class="ornament" style="margin-top:1rem;">⚜</span>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+  function switchView(mode) {
+    const glance = document.getElementById('view-glance');
+    const depth  = document.getElementById('view-depth');
+    const btnG   = document.getElementById('btn-glance');
+    const btnD   = document.getElementById('btn-depth');
+    if (mode === 'glance') {
+      glance.classList.remove('hidden');
+      depth.classList.add('hidden');
+      btnG.classList.add('active');
+      btnD.classList.remove('active');
+    } else {
+      depth.classList.remove('hidden');
+      glance.classList.add('hidden');
+      btnD.classList.add('active');
+      btnG.classList.remove('active');
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+</script>
+
+</body>
+</html>
