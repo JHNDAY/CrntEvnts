@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AfterWord — BOLLI Current Events, September 1, 2026</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      background: #a8c4e8;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+    }
+
+    /* ── HEADER ──────────────────────────────────────────── */
+    .header {
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #667eea 100%);
+      padding: 36px 32px 28px;
+      text-align: center;
+      color: white;
+    }
+
+    .header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .header .subtitle {
+      font-size: 0.95rem;
+      opacity: 0.85;
+      margin-bottom: 18px;
+      letter-spacing: 0.04em;
+    }
+
+    /* ── SOURCE PILLS ────────────────────────────────────── */
+    .sources-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: center;
+      margin-top: 14px;
+    }
+
+    .sources-bar a {
+      font-size: 11px;
+      color: #fff;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 4px;
+      padding: 3px 10px;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .sources-bar a:hover { background: rgba(255,255,255,0.35); }
+
+    /* ── LEGEND ──────────────────────────────────────────── */
+    .legend {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 20px 10px;
+      font-size: 12px;
+      color: #555;
+      background: #a8c4e8;
+    }
+    .legend-bar {
+      width: 160px;
+      height: 7px;
+      border-radius: 4px;
+      background: linear-gradient(90deg, #cc0000, #ff6600, #ff9944, #ffcc55, #5577ff);
+    }
+
+    /* ── INSTRUCTIONS ────────────────────────────────────── */
+    .instructions {
+      text-align: center;
+      font-size: 12px;
+      color: #888;
+      padding-bottom: 12px;
+      letter-spacing: 0.03em;
+      background: #a8c4e8;
+    }
+
+    /* ── TOPIC CARDS ─────────────────────────────────────── */
+    .topics-list {
+      padding: 0 20px 30px;
+      background: #a8c4e8;
+    }
+
+    .card {
+      margin-bottom: 12px;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      padding: 16px 20px;
+      cursor: pointer;
+      user-select: none;
+      color: white;
+      position: relative;
+      gap: 12px;
+      transition: filter 0.2s;
+    }
+    .card-header:hover { filter: brightness(1.08); }
+
+    .level-1 { background: linear-gradient(135deg, #cc0000 0%, #990000 100%); }
+    .level-2 { background: linear-gradient(135deg, #e63000 0%, #c02000 100%); }
+    .level-3 { background: linear-gradient(135deg, #e86a00 0%, #c05000 100%); }
+    .level-4 { background: linear-gradient(135deg, #d4a000 0%, #a07800 100%); }
+    .level-5 { background: linear-gradient(135deg, #2e9e5a 0%, #1a7040 100%); }
+    .level-6 { background: linear-gradient(135deg, #2a7fcc 0%, #1a5a99 100%); }
+    .level-7 { background: linear-gradient(135deg, #1a5fa8 0%, #0e3d70 100%); }
+
+    .card-rank {
+      font-size: 11px;
+      opacity: 0.7;
+      min-width: 22px;
+    }
+
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+      flex: 1;
+    }
+
+    .card-count {
+      font-size: 12px;
+      background: rgba(0,0,0,0.25);
+      padding: 3px 10px;
+      border-radius: 12px;
+      white-space: nowrap;
+    }
+
+    .card-chevron {
+      font-size: 12px;
+      transition: transform 0.2s;
+      opacity: 0.6;
+    }
+    .card-chevron.rotated { transform: rotate(180deg); }
+
+    .card-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.3s ease-out;
+      background: #fff;
+    }
+    .card-body.expanded { max-height: 2000px; transition: max-height 0.4s ease-in; }
+
+    .card-body-inner {
+      padding: 20px;
+      line-height: 1.6;
+    }
+
+    /* ── SUBTOPICS GRID ──────────────────────────────────── */
+    .subtopics-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    @media (max-width: 600px) {
+      .subtopics-grid { grid-template-columns: 1fr; }
+    }
+
+    .subtopic {
+      padding: 14px;
+      background: #f9f9f9;
+      border-left: 3px solid #667eea;
+      border-radius: 6px;
+    }
+
+    .subtopic-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: #333;
+      margin-bottom: 6px;
+    }
+
+    .subtopic-detail {
+      font-size: 13px;
+      color: #555;
+      line-height: 1.5;
+      margin-bottom: 8px;
+    }
+
+    .subtopic-src {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      font-size: 11px;
+    }
+    .subtopic-src a {
+      color: #667eea;
+      text-decoration: none;
+      border-bottom: 1px dashed #667eea;
+      transition: color 0.2s;
+    }
+    .subtopic-src a:hover { color: #764ba2; }
+
+    /* ── SECTION SOURCES ─────────────────────────────────── */
+    .section-sources {
+      padding-top: 12px;
+      border-top: 1px solid #e0e0e0;
+      font-size: 11px;
+      color: #777;
+    }
+    .section-sources strong { color: #333; }
+    .section-sources a {
+      color: #667eea;
+      text-decoration: none;
+      margin-right: 8px;
+      border-bottom: 1px dashed #667eea;
+    }
+    .section-sources a:hover { color: #764ba2; }
+
+    /* ── FOOTER ──────────────────────────────────────────── */
+    .footer {
+      text-align: center;
+      padding: 20px;
+      background: #a8c4e8;
+      color: #666;
+      border-top: 1px solid rgba(0,0,0,0.1);
+    }
+    .footer a {
+      color: #667eea;
+      text-decoration: none;
+    }
+    .footer a:hover { text-decoration: underline; }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  
+  <!-- ══ HEADER ══════════════════════════════════════════ -->
+  <div class="header">
+    <h1>Populism, Presidential Legacies, and Economic Uncertainty</h1>
+    <div class="subtitle">A BOLLI Current Events Discussion</div>
+    <div class="sources-bar">
+      <a href="https://jhnday.github.io/CrntEvnts" target="_blank">jhnday.github.io/CrntEvnts</a>
+      <a href="https://jhnday.github.io/CrntEvnts/populism-article" target="_blank">Acemoglu OpEd</a>
+      <a href="https://www.bolli.org" target="_blank">BOLLI</a>
+    </div>
+  </div>
+
+  <!-- ══ LEGEND ══════════════════════════════════════════ -->
+  <div class="legend">
+    <span>Coverage Breadth:</span>
+    <div class="legend-bar"></div>
+  </div>
+
+  <!-- ══ INSTRUCTIONS ════════════════════════════════════ -->
+  <div class="instructions">
+    Click any topic to expand and explore subtopics &amp; discussion threads
+  </div>
+
+  <!-- ══ TOPIC CARDS ════════════════════════════════════ -->
+  <div class="topics-list">
+
+    <!-- 1. WEATHER -->
+    <div class="card">
+      <div class="card-header level-1" onclick="toggle(this)">
+        <span class="card-rank">01</span>
+        <span class="card-title">Summer Weather &amp; Seasons</span>
+        <span class="card-count">Opening</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+            <div class="subtopic">
+              <div class="subtopic-title">Northeast Faring Better Than Rest of Country</div>
+              <div class="subtopic-detail">The Northeast has experienced milder conditions and fewer extreme weather events compared to the rest of the nation. The summer was drier than normal with a couple weeks of hot weather, but overall quite enjoyable.</div>
+              <div class="subtopic-src"><a href="https://noaa.gov" target="_blank">NOAA</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Fall Season Approaching</div>
+              <div class="subtopic-detail">As the dog days of summer end, the group looks forward to fall weather. Forecasts suggest a reasonable autumn ahead, with no expectations of a brutal winter based on current projections.</div>
+              <div class="subtopic-src"><a href="https://weather.gov" target="_blank">National Weather Service</a></div>
+            </div>
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://noaa.gov" target="_blank">NOAA</a>
+            <a href="https://weather.gov" target="_blank">NWS</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. PRESIDENTS -->
+    <div class="card">
+      <div class="card-header level-2" onclick="toggle(this)">
+        <span class="card-rank">02</span>
+        <span class="card-title">Presidential Rankings &amp; Character</span>
+        <span class="card-count">Historical analysis</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+            <div class="subtopic">
+              <div class="subtopic-title">Trump vs. Buchanan: The Bottom of the Barrel</div>
+              <div class="subtopic-detail">Trump and James Buchanan are competing for the title of worst president in American history. Buchanan, despite having served as Secretary of State, Ambassador to England and Russia, and House member, had terrible character. Trump faces similar character questions alongside his presidential record.</div>
+              <div class="subtopic-src"><a href="https://nytimes.com/section/politics" target="_blank">NYT Politics</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">FDR and Trump: Same Advantages, Opposite Outcomes</div>
+              <div class="subtopic-detail">Both FDR and Trump started with similar aristocratic advantages. Yet FDR became one of America's best presidents while Trump is fighting it out with Buchanan and Andrew Johnson for the worst. Character failures appear to be the common thread.</div>
+              <div class="subtopic-src"><a href="https://history.org" target="_blank">Historical Records</a></div>
+            </div>
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://nytimes.com" target="_blank">NYT</a>
+            <a href="https://history.org" target="_blank">Historians</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. FEDERALISM -->
+    <div class="card">
+      <div class="card-header level-3" onclick="toggle(this)">
+        <span class="card-rank">03</span>
+        <span class="card-title">Federalism &amp; Local Governance</span>
+        <span class="card-count">Policy framework</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+            <div class="subtopic">
+              <div class="subtopic-title">FDR's Coalition: Compromise as Governance</div>
+              <div class="subtopic-detail">FDR held together a coalition including Southern Democrats who endorsed lynching of Black people. He couldn't pass a federal anti-lynching law, but he maintained coalition stability and achieved significantly positive results for the nation. This illustrates the tension between purity and pragmatism in federalism.</div>
+              <div class="subtopic-src"><a href="https://nytimes.com" target="_blank">NYT</a><a href="https://theatlantic.com" target="_blank">The Atlantic</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Federal Rules Protecting Disadvantaged Groups</div>
+              <div class="subtopic-detail">Federal mandates have historically been essential: women's voting rights, Black voting rights, and disability protections all required national enforcement when local jurisdictions refused to grant them. The challenge is determining which issues demand national standards vs. local control.</div>
+              <div class="subtopic-src"><a href="https://justice.gov" target="_blank">DOJ</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Acemoglu on Local Decision-Making</div>
+              <div class="subtopic-detail">The literature suggests that local government should make decisions on many issues, even if those decisions are initially wrong. Federalism requires surrendering centralized power, but it's more reliable and gives people ownership over outcomes.</div>
+              <div class="subtopic-src"><a href="https://jhnday.github.io/CrntEvnts/populism-article" target="_blank">Acemoglu OpEd</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Over-Regulation Stifles Implementation</div>
+              <div class="subtopic-detail">Democrats passed significant legislation but wrapped implementation with so many restrictions and red tape that projects sat idle. The Affordable Care Act worked, but public messaging failed. Biden's infrastructure bills couldn't get off the ground. Red tape defeats itself.</div>
+              <div class="subtopic-src"><a href="https://nytimes.com" target="_blank">NYT</a></div>
+            </div>
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://nytimes.com" target="_blank">NYT</a>
+            <a href="https://theatlantic.com" target="_blank">The Atlantic</a>
+            <a href="https://justice.gov" target="_blank">DOJ</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. NATIONAL VS. LOCAL AUTHORITY -->
+    <div class="card">
+      <div class="card-header level-4" onclick="toggle(this)">
+        <span class="card-rank">04</span>
+        <span class="card-title">National vs. Local Authority</span>
+        <span class="card-count">Exercise in federalism</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+            <div class="subtopic">
+              <div class="subtopic-title">Non-Negotiable National Standards</div>
+              <div class="subtopic-detail">You cannot allow a municipality to say no Muslims can live here. You cannot allow states to deny voting rights based on race or gender. Some issues are truly non-negotiable and demand national enforcement to protect human dignity and fundamental rights.</div>
+              <div class="subtopic-src"><a href="https://justice.gov" target="_blank">DOJ</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Issues Better Resolved Locally</div>
+              <div class="subtopic-detail">Many policy areas benefit from local experimentation and learning. School curriculum, local zoning, environmental management, and economic development often produce better outcomes through local governance. Progress may be slower but more reliable and legitimate.</div>
+              <div class="subtopic-src"><a href="https://brookings.edu" target="_blank">Brookings</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Lack of Democratic Party Platform</div>
+              <div class="subtopic-detail">The Democratic Party has struggled to articulate a coherent platform beyond opposition to Trump. Party platforms specify economic proposals and governing philosophy. Without one, voters lack clarity on what Democrats stand for—a significant weakness against organized opposition.</div>
+              <div class="subtopic-src"><a href="https://democrats.org" target="_blank">DNC</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Surrendering Centralized Power</div>
+              <div class="subtopic-detail">True federalism requires elites to surrender control and accept local outcomes they may not prefer. "I know what should be done—just listen to us" is the opposite of federalism. The challenge is accepting that communities will sometimes choose differently.</div>
+              <div class="subtopic-src"><a href="https://jhnday.github.io/CrntEvnts/populism-article" target="_blank">Acemoglu OpEd</a></div>
+            </div>
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://justice.gov" target="_blank">DOJ</a>
+            <a href="https://brookings.edu" target="_blank">Brookings</a>
+            <a href="https://democrats.org" target="_blank">DNC</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. ECONOMY -->
+    <div class="card">
+      <div class="card-header level-5" onclick="toggle(this)">
+        <span class="card-rank">05</span>
+        <span class="card-title">Economic Turmoil &amp; Bond Markets</span>
+        <span class="card-count">Market stress</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+            <div class="subtopic">
+              <div class="subtopic-title">Interest Rate Inversion and Treasury Crisis</div>
+              <div class="subtopic-detail">Long-term interest rates are now roughly equal to short-term Treasury yields—an inversion that signals economic trouble. The government must offer Treasury bonds at 4.5% to 5% to attract buyers. This high interest expense crowds out funding for vital programs.</div>
+              <div class="subtopic-src"><a href="https://treasurydirect.gov" target="_blank">Treasury</a><a href="https://cnbc.com" target="_blank">CNBC</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">AI Boom Creating Market Distortion</div>
+              <div class="subtopic-detail">AI investment has been highly competitive with U.S. Treasury bonds. Investors can get high returns in AI, so Treasury must match those rates. This artificially high rate environment is tied to AI speculation, not fundamentals. When the AI boom corrects, rates may reset.</div>
+              <div class="subtopic-src"><a href="https://cnbc.com" target="_blank">CNBC</a><a href="https://nytimes.com" target="_blank">NYT</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Economy is Extraordinarily Complex</div>
+              <div class="subtopic-detail">The stock market is doing fine based on speculation that AI will solve all problems—which it will not. A reckoning is coming. Like weather, the economy and its movements are best understood afterwards with historical perspective. Predicting outcomes in real time is nearly impossible.</div>
+              <div class="subtopic-src"><a href="https://nytimes.com" target="_blank">NYT</a><a href="https://wsj.com" target="_blank">WSJ</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Rough Economic Performance Ahead</div>
+              <div class="subtopic-detail">The market is in turmoil. With high interest rates, government expenses for servicing debt will consume resources that could go to programs. Rough economic performance is likely in the medium term, contingent on how the AI boom resolves.</div>
+              <div class="subtopic-src"><a href="https://moodysanalytics.com" target="_blank">Moody's Analytics</a></div>
+            </div>
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://treasurydirect.gov" target="_blank">U.S. Treasury</a>
+            <a href="https://cnbc.com" target="_blank">CNBC</a>
+            <a href="https://nytimes.com" target="_blank">NYT</a>
+            <a href="https://moodysanalytics.com" target="_blank">Moody's</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. ENERGY -->
+    <div class="card">
+      <div class="card-header level-6" onclick="toggle(this)">
+        <span class="card-rank">06</span>
+        <span class="card-title">Energy Costs &amp; Global Impact</span>
+        <span class="card-count">Supply chain risk</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+            <div class="subtopic">
+              <div class="subtopic-title">Iran War Costs: $1,000 Per Household</div>
+              <div class="subtopic-detail">Moody's Analytics has calculated that the Iran war, which affects energy prices globally, has already cost the U.S. economy approximately $1,000 per household in just the first six months of conflict. This impact cascades through fertilizer, food production, and supply chains.</div>
+              <div class="subtopic-src"><a href="https://moodysanalytics.com" target="_blank">Moody's</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Energy Price Cascades Through Food</div>
+              <div class="subtopic-detail">Rising energy prices directly affect fertilizer costs, which affect global crop production. Food prices from domestic and worldwide crops will rise. We're not isolated; we depend on world crops everywhere. The potential impact on the price of milk, grains, and other staples is enormous.</div>
+              <div class="subtopic-src"><a href="https://usda.gov" target="_blank">USDA</a><a href="https://fao.org" target="_blank">FAO</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Individual Preparation Uncertain</div>
+              <div class="subtopic-detail">The question for individuals becomes: do I need to stockpile rice now because it will be too expensive or unavailable later? The answer depends on how fast the supply chain breaks down. Preparation is uncertain in complex, interdependent systems.</div>
+              <div class="subtopic-src"><a href="https://usda.gov" target="_blank">USDA</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Masking Underlying Problems</div>
+              <div class="subtopic-detail">AI boom activity has been carrying the economy for a long time, masking these underlying energy and inflation problems. When that boom corrects, the full impact of geopolitical energy disruption becomes visible. Timing and severity are unpredictable.</div>
+              <div class="subtopic-src"><a href="https://nytimes.com" target="_blank">NYT</a></div>
+            </div>
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://moodysanalytics.com" target="_blank">Moody's</a>
+            <a href="https://usda.gov" target="_blank">USDA</a>
+            <a href="https://fao.org" target="_blank">FAO</a>
+            <a href="https://nytimes.com" target="_blank">NYT</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. BIG TENT POLITICS -->
+    <div class="card">
+      <div class="card-header level-7" onclick="toggle(this)">
+        <span class="card-rank">07</span>
+        <span class="card-title">Big Tent Coalition Politics</span>
+        <span class="card-count">Strategic analysis</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+            <div class="subtopic">
+              <div class="subtopic-title">Working-Class Voters Left Behind</div>
+              <div class="subtopic-detail">Acemoglu's <a href="https://jhnday.github.io/CrntEvnts/populism-article">OpEd in the NYT</a> argues for working-class liberalism. Working-class voters have been left behind by economic growth. People with college degrees have benefited from the shift toward technical expertise. This is why many voted for Trump—they felt ignored, even though Biden passed legislation that would have helped them.</div>
+              <div class="subtopic-src"><a href="https://jhnday.github.io/CrntEvnts/populism-article" target="_blank">Acemoglu OpEd</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Adversarial Populism Alienates the Middle</div>
+              <div class="subtopic-detail">Framing everything as oppressor versus oppressed alienates the middle class and prevents coalition building. The risk is that populism becomes an end in itself rather than a means to power. Slogans and grievance don't build sustainable coalitions.</div>
+              <div class="subtopic-src"><a href="https://jhnday.github.io/CrntEvnts/populism-article" target="_blank">Acemoglu OpEd</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">FDR Model: Shared Prosperity Agenda</div>
+              <div class="subtopic-detail">Historically, FDR united the New Deal Brain Trust, the labor movement, and conservative Southern Democrats through a shared prosperity agenda. Modern Democrats need a big tent including both traditional progressives and working-class voters. Shared goals beat ideological purity.</div>
+              <div class="subtopic-src"><a href="https://jhnday.github.io/CrntEvnts/populism-article" target="_blank">Acemoglu OpEd</a><a href="https://nytimes.com" target="_blank">NYT</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Feasible Policy + Progressive Vision</div>
+              <div class="subtopic-detail">Conservatives are right that governance requires feasible policy, not just slogans. Progressives are right that we need new ideas on inequality, opportunity, and corporate excess. Success requires both pragmatic implementation AND progressive vision working together.</div>
+              <div class="subtopic-src"><a href="https://jhnday.github.io/CrntEvnts/populism-article" target="_blank">Acemoglu OpEd</a></div>
+            </div>
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://jhnday.github.io/CrntEvnts/populism-article" target="_blank">Acemoglu OpEd</a>
+            <a href="https://nytimes.com" target="_blank">NYT</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /topics-list -->
+
+  <!-- ══ FOOTER ══════════════════════════════════════════ -->
+  <div class="footer">
+    <div style="opacity:0.6; font-size:10px;">
+      AfterWord compiled for BOLLI Current Events Discussion Group · Session of September 1, 2026 · 7 topics covered<br>
+      Prepared with Claude as collaborator · <a href="https://jhnday.github.io/CrntEvnts" target="_blank">jhnday.github.io/CrntEvnts</a> · Next session: September 15, 2026
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<script>
+  function toggle(header) {
+    const body = header.nextElementSibling;
+    const chevron = header.querySelector('.card-chevron');
+    const isOpen = body.classList.contains('expanded');
+
+    // Collapse all
+    document.querySelectorAll('.card-body').forEach(b => b.classList.remove('expanded'));
+    document.querySelectorAll('.card-chevron').forEach(c => c.classList.remove('rotated'));
+
+    // Expand clicked (if it was closed)
+    if (!isOpen) {
+      body.classList.add('expanded');
+      chevron.classList.add('rotated');
+      setTimeout(() => header.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
+    }
+  }
+</script>
+</body>
+</html>
