@@ -73,6 +73,28 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 8px;
+            transition: all 0.3s;
+            user-select: none;
+        }
+        
+        .phase-title:hover {
+            background: rgba(102, 126, 234, 0.1);
+            transform: translateX(5px);
+        }
+        
+        .phase-title::before {
+            content: "▼";
+            display: inline-block;
+            margin-right: 10px;
+            transition: transform 0.3s;
+            font-size: 0.8em;
+        }
+        
+        .phase-title.collapsed::before {
+            transform: rotate(-90deg);
         }
         
         .phase-number {
@@ -90,6 +112,16 @@
         
         .phase-content {
             margin-top: 15px;
+            max-height: 2000px;
+            overflow: hidden;
+            transition: max-height 0.3s ease, opacity 0.3s ease;
+            opacity: 1;
+        }
+        
+        .phase-content.collapsed {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
         }
         
         .argument {
@@ -469,58 +501,10 @@
                 </div>
             </div>
             
-            <!-- Phase 5 -->
+            <!-- Risk Hierarchy - now section 5 -->
             <div class="phase">
                 <div class="phase-title">
                     <span class="phase-number">5</span>
-                    The Fundamental Difference
-                </div>
-                <div class="phase-content">
-                    <p style="margin-bottom: 20px; font-size: 1.05em;"><strong>Why organic and digital intelligence are fundamentally different:</strong></p>
-                    
-                    <table class="comparison-table">
-                        <tr>
-                            <th>Dimension</th>
-                            <th>Digital Intelligence</th>
-                            <th>Organic Intelligence</th>
-                        </tr>
-                        <tr>
-                            <td><strong>Operation</strong></td>
-                            <td>Bit flipping, computation, pattern mining</td>
-                            <td>Association, evolutionary probing, embodied experience</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Data Source</strong></td>
-                            <td>Existing captured data (LLM training corpus)</td>
-                            <td>Direct interaction with undefined world</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Landscape Type</strong></td>
-                            <td>Can only explore defined landscapes</td>
-                            <td>Can step into undefined territories</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Discovery Type</strong></td>
-                            <td>Excellent at "regular science"—pattern recognition in existing knowledge</td>
-                            <td>Capable of paradigm-shifting discovery (Planck, Einstein, Maxwell)</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Evolutionary Basis</strong></td>
-                            <td>Human-designed optimization within constraints</td>
-                            <td>Million+ years of mutation and survival pressure in uncertainty</td>
-                        </tr>
-                    </table>
-                    
-                    <div class="key-insight">
-                        Digital systems can't reimagine the landscape itself—only navigate within it. They can't do what Planck did: look at data and realize the fundamental assumptions need to change. This structural difference may be the real answer to existential risk.
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Risk Hierarchy -->
-            <div class="phase">
-                <div class="phase-title">
-                    <span class="phase-number">6</span>
                     Risk Hierarchy: What to Worry About
                 </div>
                 <div class="phase-content">
@@ -596,6 +580,29 @@
                 content.style.maxHeight = '0px';
             }
         }
+        
+        // Toggle phase sections
+        document.addEventListener('DOMContentLoaded', function() {
+            const phaseTitles = document.querySelectorAll('.phase-title');
+            phaseTitles.forEach(title => {
+                title.addEventListener('click', function() {
+                    const phaseContent = this.nextElementSibling;
+                    if (phaseContent && phaseContent.classList.contains('phase-content')) {
+                        phaseContent.classList.toggle('collapsed');
+                        title.classList.toggle('collapsed');
+                    }
+                });
+            });
+            
+            // Start with all sections collapsed
+            phaseTitles.forEach(title => {
+                const phaseContent = title.nextElementSibling;
+                if (phaseContent && phaseContent.classList.contains('phase-content')) {
+                    phaseContent.classList.add('collapsed');
+                    title.classList.add('collapsed');
+                }
+            });
+        });
     </script>
 </body>
 </html>
