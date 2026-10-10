@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Keynes Bot — Presentation Guide</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital@0;1&family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #14213d;
+    --gold: #b8892b;
+    --gold-light: #e6cf94;
+    --cream: #f7f1e3;
+    --paper: #fffdf7;
+    --ink: #1d1d1b;
+    --muted: #5b5a52;
+    --warn: #8c2f2b;
+    --rule: #cfc4a6;
+    --teal: #2f6b6b;
+    --serif-display: "Playfair Display", Georgia, "Times New Roman", serif;
+    --serif-body: Georgia, "Times New Roman", serif;
+    --machine: "Courier Prime", "Courier New", monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --cream: #10182b;
+      --paper: #17213a;
+      --ink: #eee8d6;
+      --muted: #b4b09f;
+      --rule: #3a4668;
+      --navy: #e6cf94;
+      --gold: #e0b44f;
+      --warn: #f0928b;
+      --teal: #7fc4c0;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; scroll-padding-top: 4rem; }
+  body {
+    margin: 0;
+    background: var(--cream);
+    color: var(--ink);
+    font-family: var(--serif-body);
+    font-size: 1.18rem;
+    line-height: 1.65;
+  }
+  a { color: var(--navy); }
+  a:focus-visible, summary:focus-visible, button:focus-visible {
+    outline: 3px solid var(--gold);
+    outline-offset: 3px;
+  }
+  .wrap { max-width: 940px; margin: 0 auto; padding: 0 1.4rem; }
+
+  /* Masthead */
+  header.mast {
+    background: var(--navy);
+    color: var(--cream);
+    padding: 2.8rem 0 2.2rem;
+    border-bottom: 6px double var(--gold);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) header.mast { background: #0a1020; color: #eee8d6; }
+  }
+  header.mast .kicker { font-family: var(--machine); font-size: 0.9rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--gold-light); margin: 0 0 0.6rem; }
+  header.mast h1 {
+    font-family: var(--serif-display);
+    font-weight: 900;
+    font-size: clamp(2.1rem, 6vw, 3.7rem);
+    line-height: 1.08;
+    margin: 0 0 0.9rem;
+    letter-spacing: -0.01em;
+  }
+  header.mast .dek { font-style: italic; font-size: 1.3rem; max-width: 38em; color: var(--gold-light); margin: 0 0 1.2rem; }
+  header.mast .byline { font-size: 1rem; color: #d9d2bd; margin: 0; }
+  header.mast .source-link { margin: 0.9rem 0 0; font-size: 1.05rem; }
+  header.mast .source-link a { color: var(--gold-light); text-decoration-thickness: 2px; text-underline-offset: 4px; }
+  header.mast .source-link a:hover { color: #fff; }
+  header.mast .source-link a:focus-visible { outline-color: var(--gold-light); }
+
+  /* Jump nav */
+  nav.jump { background: var(--paper); border-bottom: 1px solid var(--rule); position: sticky; top: 0; z-index: 5; }
+  nav.jump ul { list-style: none; margin: 0 auto; padding: 0.5rem 1.4rem; max-width: 940px; display: flex; flex-wrap: wrap; gap: 0.3rem 1.1rem; font-size: 0.95rem; }
+  nav.jump a { text-decoration: none; color: var(--navy); font-family: var(--serif-display); font-weight: 700; }
+  nav.jump a b { display: inline-block; min-width: 1.4rem; text-align: center; margin-right: 0.25rem; background: var(--navy); color: var(--paper); border-radius: 3px; font-size: 0.85rem; line-height: 1.4rem; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) nav.jump a b { color: #10182b; } }
+  nav.jump a:hover { text-decoration: underline; text-decoration-color: var(--gold); text-decoration-thickness: 2px; }
+  nav.jump li.hint { margin-left: auto; font-family: var(--serif-body); font-size: 0.88rem; color: var(--muted); }
+  nav.jump kbd { font-family: var(--machine); font-size: 0.85rem; border: 1px solid var(--rule); border-bottom-width: 2px; border-radius: 3px; padding: 0 0.3rem; background: var(--cream); color: var(--ink); }
+  section[tabindex]:focus { outline: none; }
+
+  /* Opening strip */
+  .strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 2rem 0 0; }
+  .strip > div { background: var(--paper); border: 1px solid var(--rule); border-top: 5px solid var(--gold); padding: 0.9rem 1.1rem 0.4rem; }
+  .strip .lab { font-family: var(--machine); font-size: 0.85rem; letter-spacing: 0.05em; text-transform: uppercase; color: var(--gold); margin-bottom: 0.3rem; }
+  .strip p { font-size: 1.02rem; line-height: 1.5; margin: 0 0 0.7rem; }
+  @media (max-width: 760px) { .strip { grid-template-columns: 1fr; } }
+
+  /* Sections */
+  section { padding: 2.6rem 0 0.8rem; }
+  .num { font-family: var(--machine); font-size: 0.88rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gold); margin: 0 0 0.2rem; }
+  h2 { font-family: var(--serif-display); font-weight: 700; font-size: clamp(1.7rem, 4vw, 2.3rem); line-height: 1.2; color: var(--navy); margin: 0 0 0.4rem; }
+  h3.sub { font-family: var(--serif-display); font-size: 1.3rem; color: var(--navy); margin: 1.8rem 0 0.2rem; }
+  .rule { height: 3px; width: 72px; background: var(--gold); margin: 0.7rem 0 1.2rem; border: 0; }
+  p { margin: 0 0 1rem; max-width: 40em; }
+
+  /* Headline numbers + talking points */
+  .stat { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.2rem 1.2rem; margin: 0 0 0.9rem; }
+  .stat b { font-family: var(--serif-display); font-weight: 900; font-size: clamp(2.4rem, 7vw, 3.4rem); line-height: 1.05; color: var(--navy); }
+  .stat b.up { color: var(--teal); }
+  .stat b.down { color: var(--warn); }
+  .stat span { font-size: 1rem; color: var(--muted); flex-basis: 100%; max-width: 42em; }
+  ul.say { margin: 0 0 1rem; padding-left: 1.25rem; max-width: 42em; }
+  ul.say li { margin-bottom: 0.45rem; }
+  ul.say li::marker { color: var(--gold); }
+  .line { font-style: italic; border-left: 4px solid var(--navy); padding-left: 0.9rem; max-width: 40em; margin: 0.4rem 0 1rem; }
+
+  /* Machine voice */
+  .bot { font-family: var(--machine); font-size: 1.05rem; line-height: 1.65; }
+  .key {
+    font-size: 0.96rem; color: var(--muted);
+    border: 1px solid var(--rule); background: var(--paper);
+    padding: 0.6rem 1rem; max-width: 40em; margin: 0.8rem 0 1rem;
+  }
+
+  /* Timeline SVG */
+  figure { margin: 1.4rem 0; }
+  figure svg { width: 100%; height: auto; display: block; }
+  svg text { font-family: var(--serif-body); fill: var(--ink); }
+  svg .disp { font-family: var(--serif-display); font-weight: 700; }
+
+  /* Conversation arc */
+  .arc { list-style: none; margin: 1.3rem 0 0; padding: 0; counter-reset: step; }
+  .arc li { position: relative; padding: 0 0 1.3rem 3.6rem; border-left: 2px solid var(--rule); margin-left: 1.15rem; max-width: 44em; }
+  .arc li:last-child { border-left-color: transparent; padding-bottom: 0.4rem; }
+  .arc li::before {
+    counter-increment: step; content: counter(step);
+    position: absolute; left: -1.2rem; top: 0;
+    width: 2.3rem; height: 2.3rem; border-radius: 50%;
+    background: var(--navy); color: var(--paper);
+    font-family: var(--serif-display); font-weight: 700;
+    display: grid; place-items: center;
+  }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .arc li::before { color: #10182b; } }
+  .arc h3 { font-family: var(--serif-display); font-size: 1.22rem; margin: 0 0 0.15rem; color: var(--navy); }
+  .arc p { margin: 0; font-size: 1.05rem; }
+
+  /* Tabs */
+  .tabs { display: flex; gap: 0.6rem; flex-wrap: wrap; margin: 1rem 0 0; }
+  .tabs button {
+    font-size: 1.02rem; padding: 0.7rem 1.1rem;
+    border: 2px solid var(--navy); background: transparent; color: var(--navy);
+    cursor: pointer; font-family: var(--serif-display); font-weight: 700;
+  }
+  .tabs button[aria-selected="true"] { background: var(--navy); color: var(--paper); }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .tabs button[aria-selected="true"] { color: #10182b; } }
+  .panel { background: var(--paper); border: 1px solid var(--rule); border-top: 5px solid var(--gold); padding: 1.3rem 1.5rem 0.5rem; max-width: 44em; }
+  .panel[hidden] { display: none; }
+  .meters { display: grid; grid-template-columns: 6.2rem 1fr; gap: 0.5rem 1rem; align-items: center; margin-bottom: 1.1rem; font-size: 0.98rem; }
+  .meter { height: 14px; background: var(--rule); position: relative; }
+  .meter > span { position: absolute; inset: 0 auto 0 0; background: var(--navy); }
+  .meter > span.low { background: var(--warn); }
+
+  /* Layer stack */
+  .stack-tools { margin: 1rem 0 0; }
+  .stack-tools button {
+    font-size: 0.95rem; padding: 0.4rem 0.9rem; border: 1px solid var(--navy);
+    background: transparent; color: var(--navy); cursor: pointer; font-family: var(--serif-display); font-weight: 700;
+  }
+  .stack { margin: 0.8rem 0 0; display: grid; max-width: 46em; }
+  .stack details { border: 1px solid var(--rule); border-left-width: 8px; background: var(--paper); margin-top: -1px; }
+  .stack summary {
+    list-style: none; cursor: pointer; padding: 0.9rem 1.2rem;
+    display: grid; grid-template-columns: 1fr auto; gap: 1rem; align-items: center;
+    font-family: var(--serif-display); font-weight: 700; font-size: 1.12rem; color: var(--navy);
+  }
+  .stack summary::-webkit-details-marker { display: none; }
+  .stack summary::after { content: "+"; font-size: 1.5rem; line-height: 1; color: var(--gold); }
+  .stack details[open] summary::after { content: "–"; }
+  .stack .layer-body { padding: 0 1.2rem 0.9rem; font-size: 1.05rem; }
+  .stack .layer-body p { margin-bottom: 0.6rem; }
+  .stack .l1 { border-left-color: #14213d; }
+  .stack .l2 { border-left-color: #3d5a80; }
+  .stack .l3 { border-left-color: var(--gold); }
+  .stack .l4 { border-left-color: #c9a64f; }
+  .stack .l5 { border-left-color: var(--warn); }
+  .stack-note { font-size: 0.98rem; color: var(--muted); max-width: 40em; margin-top: 0.7rem; }
+
+  /* Compare */
+  .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem; margin: 1.4rem 0; max-width: 46em; }
+  .compare > div { background: var(--paper); border: 1px solid var(--rule); padding: 1rem 1.2rem; }
+  .compare h3 { font-family: var(--serif-display); font-size: 1.1rem; margin: 0 0 0.5rem; color: var(--navy); }
+  .compare p { font-size: 1rem; margin: 0 0 0.55rem; }
+  .compare .warnbox { border-top: 5px solid var(--warn); }
+  .compare .goldbox { border-top: 5px solid var(--gold); }
+  @media (max-width: 680px) { .compare { grid-template-columns: 1fr; } }
+
+  /* Exchanges */
+  .exchange { max-width: 46em; margin: 0 0 1.6rem; border-top: 2px solid var(--rule); padding-top: 1rem; }
+  .exchange h3 { font-family: var(--serif-display); font-size: 1.25rem; color: var(--navy); margin: 0 0 0.7rem; }
+  .turn { margin: 0 0 0.7rem; max-width: none; }
+  .turn .who { display: block; font-family: var(--serif-display); font-weight: 700; font-size: 0.98rem; color: var(--muted); margin-bottom: 0.15rem; }
+  .turn.machine { background: var(--paper); border-left: 5px solid var(--gold); padding: 0.8rem 1.1rem; }
+  .turn.machine p { margin: 0; font-family: var(--machine); font-size: 1.04rem; line-height: 1.6; }
+  .shows { font-size: 1rem; color: var(--muted); border-left: 3px solid var(--warn); padding-left: 0.9rem; margin: 0.8rem 0 0; }
+  .shows strong { color: var(--ink); }
+
+  /* Table */
+  table { border-collapse: collapse; width: 100%; max-width: 46em; font-size: 1rem; margin: 1rem 0; background: var(--paper); }
+  th, td { text-align: left; vertical-align: top; padding: 0.65rem 0.9rem; border: 1px solid var(--rule); }
+  th { font-family: var(--serif-display); color: var(--navy); background: var(--cream); }
+
+  /* Discussion prompts */
+  .prompt {
+    max-width: 44em; margin: 1.6rem 0 0.4rem; padding: 1rem 1.3rem 0.6rem;
+    background: var(--paper); border: 1px solid var(--rule); border-left: 6px solid var(--teal);
+  }
+  .prompt.ai { border-left-color: var(--gold); }
+  .prompt .tag {
+    display: inline-block; font-family: var(--machine); font-size: 0.85rem; letter-spacing: 0.04em;
+    text-transform: uppercase; color: var(--teal); margin-bottom: 0.3rem;
+  }
+  .prompt.ai .tag { color: var(--gold); }
+  .prompt .tag::before { content: "Discuss · "; }
+  .prompt p { font-size: 1.08rem; margin: 0 0 0.6rem; }
+
+  /* Final discussion */
+  .discuss { background: var(--navy); color: var(--cream); padding: 1.8rem 1.6rem 1.2rem; margin: 2.2rem 0 0; border-top: 5px solid var(--gold); }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .discuss { background: #0a1020; color: #eee8d6; } }
+  .discuss .num { color: var(--gold-light); }
+  .discuss h2 { color: var(--gold-light); font-size: 1.7rem; }
+  .discuss .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 1.6rem; margin-top: 1rem; }
+  .discuss h3 { font-family: var(--serif-display); font-size: 1.15rem; color: var(--gold-light); margin: 0 0 0.5rem; border-bottom: 1px solid var(--gold); padding-bottom: 0.3rem; }
+  .discuss ol { padding-left: 1.2rem; margin: 0; }
+  .discuss li { margin-bottom: 0.8rem; font-size: 1.05rem; }
+  .discuss li::marker { font-family: var(--machine); font-weight: 700; color: var(--gold-light); }
+  .discuss .start { font-size: 1rem; color: var(--gold-light); border-top: 1px solid var(--gold); padding-top: 0.8rem; margin: 0.4rem 0 0.4rem; max-width: none; }
+  @media (max-width: 720px) { .discuss .cols { grid-template-columns: 1fr; } }
+
+  footer { padding: 2rem 0 3rem; font-size: 0.92rem; color: var(--muted); }
+  footer p { max-width: 46em; }
+
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  @media print {
+    nav.jump { display: none; }
+    header.mast { background: none; color: #000; border-bottom: 2px solid #000; }
+    header.mast .dek, header.mast .byline, header.mast .kicker, header.mast .source-link a { color: #333; }
+    .discuss { background: none; color: #000; border: 1px solid #000; }
+    .discuss h2, .discuss h3, .discuss .num, .discuss .start { color: #000; }
+    .stack details, .prompt, .exchange, .strip > div { break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<header class="mast">
+  <div class="wrap">
+    <p class="kicker">Presentation guide &middot; Current Events</p>
+    <h1>What Would Keynes Say About A.I.? The Keynes Bot Told Us.</h1>
+    <p class="dek">A Princeton economist rebuilt John Maynard Keynes as an A.I. avatar and asked whether technology will finally free us from work.</p>
+    <p class="byline">New York Times Opinion &middot; Sept. 30, 2026 &middot; Markus Brunnermeier (Princeton), video by Sarah Kramer and Mehron Abdi</p>
+    <p class="source-link"><a href="https://www.nytimes.com/2026/09/30/opinion/john-maynard-keynes-ai-economist.html?unlocked_article_code=1.FlE.tEp5.Y7Q9UWmKYwKy&amp;smid=url-share" target="_blank" rel="noopener">Read the original article and watch the video at The New York Times</a></p>
+  </div>
+</header>
+
+<nav class="jump" aria-label="Talking points">
+  <ul>
+    <li><a href="#keynes-as-ai"><b>1</b>Keynes as A.I.</a></li>
+    <li><a href="#premise"><b>2</b>Premise</a></li>
+    <li><a href="#conversation"><b>3</b>Conversation</a></li>
+    <li><a href="#two-groups"><b>4</b>Two groups</a></li>
+    <li><a href="#exchanges"><b>5</b>Exchanges</a></li>
+    <li><a href="#who-speaks"><b>6</b>Who speaks?</a></li>
+    <li><a href="#discuss"><b>?</b>Discussion</a></li>
+    <li class="hint" title="On a Mac, Ctrl + arrows is taken by Mission Control, so use Option + arrows instead.">Next section: <kbd>Ctrl</kbd> <kbd>&rarr;</kbd> &nbsp;Back: <kbd>Ctrl</kbd> <kbd>&larr;</kbd></li>
+  </ul>
+</nav>
+
+<main class="wrap">
+
+  <div class="strip" aria-label="The whole case at a glance">
+    <div><div class="lab">The premise</div><p>In 1930, Keynes predicted technology would let rich countries work far less within a century.</p></div>
+    <div><div class="lab">The experiment</div><p>A Princeton economist trained a bot on Keynes's writings and interviewed it about A.I.</p></div>
+    <div><div class="lab">The question</div><p>Was Keynes right, and what changes when we hear the answer from an A.I. avatar?</p></div>
+  </div>
+
+  <!-- 1. Keynes as AI -->
+  <section id="keynes-as-ai">
+    <div class="num">Talking point 1</div>
+    <h2>How the author represented Keynes as an A.I. entity</h2>
+    <hr class="rule">
+    <div class="stat"><b>12,000+</b><b>5</b><span>pages of his work used for training &middot; layers of choice between Keynes and the finished video</span></div>
+    <ul class="say">
+      <li>The Keynes in the video is a stack of choices, some made by a language model and many by people.</li>
+      <li>The article is open about several of them and silent about others.</li>
+      <li>Open the layers below, then compare the signals of authenticity and artifice.</li>
+    </ul>
+
+    <div class="stack-tools"><button type="button" id="toggle-layers" aria-pressed="false">Open all layers</button></div>
+
+    <div class="stack">
+      <details class="l1">
+        <summary>Source: Keynes's own words</summary>
+        <div class="layer-body">
+          <p>The agent was trained on more than 12,000 pages of his writings and told to draw mainly on "Economic Possibilities for Our Grandchildren," the 1930 essay behind the conversation, so its answers orbit that essay.</p>
+        </div>
+      </details>
+      <details class="l2">
+        <summary>Generation: ChatGPT in a prescribed voice</summary>
+        <div class="layer-body">
+          <p>Brunnermeier and Ph.D. student Pablo Balsinde built the bot with ChatGPT, telling it to answer in the first person with early 20th-century British cadence and restrained wit. The sentences sound like Keynes but are not his.</p>
+        </div>
+      </details>
+      <details class="l3">
+        <summary>Human editing: rephrasing, quotes, cuts</summary>
+        <div class="layer-body">
+          <p>First drafts were long-winded. The team asked the model to rephrase, prompted it to use famous Keynes quotations, and cut parts of responses, so viewers hear a curated edit.</p>
+        </div>
+      </details>
+      <details class="l4">
+        <summary>Translation: modern English, shortened</summary>
+        <div class="layer-body">
+          <p>The narrator admits Keynes spoke more formally than we do, so the language was modernized and trimmed. What aired is an edited version of a longer interview.</p>
+        </div>
+      </details>
+      <details class="l5">
+        <summary>Embodiment: face, desk and voice</summary>
+        <div class="layer-body">
+          <p><strong>Face:</strong> a public-domain image of Keynes, with DeepSeek used to place him behind a desk.</p>
+          <p><strong>Voice:</strong> audio resembling Keynes, created with a BBC recording as reference.</p>
+          <p><strong>Greeting:</strong> the bot opens by remarking how unexpected it is to be revived as an A.I. so long after 1883, a self-aware line that tells viewers it knows it is a revival.</p>
+        </div>
+      </details>
+    </div>
+    <p class="stack-note">The deeper the layer, the more it is a person's or a model's construction rather than Keynes's record.</p>
+
+    <h3 class="sub">How the video frames the bot</h3>
+    <div class="compare">
+      <div class="goldbox">
+        <h3>Signals of authenticity</h3>
+        <p>The bot speaks as "I," in period cadence, and addresses viewers as the "grandchildren" Keynes wrote about.</p>
+        <p>Keynes's family members gave the go-ahead, and archival audio invites comparison with the synthetic voice.</p>
+      </div>
+      <div class="warnbox">
+        <h3>Signals of artifice</h3>
+        <p>The narrator interrupts, admits the language was modernized, and says they cannot know whether Keynes would approve.</p>
+        <p>A disclosure notes the Times has sued OpenAI and Microsoft, relevant since ChatGPT powers the bot.</p>
+      </div>
+    </div>
+
+    <h3 class="sub">What the article does not say</h3>
+    <table>
+      <thead><tr><th>Question</th><th>What the article tells us</th></tr></thead>
+      <tbody>
+        <tr><td>Which ChatGPT model, and what exact instructions?</td><td>Names ChatGPT and the style instruction only.</td></tr>
+        <tr><td>How many answers were discarded?</td><td>Says responses were edited and cut, not how heavily.</td></tr>
+        <tr><td>Were the bot's quotations verified?</td><td>The team prompted for famous quotes. Verification is not mentioned.</td></tr>
+        <tr><td>Could Keynes have anticipated A.I.?</td><td>The piece itself notes he never lived to see the A.I. age.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="prompt ai">
+      <span class="tag">A.I. as presenter</span>
+      <p>The sentences are the model's, in Keynes's manner. Is that a quotation, a dramatization, or something new?</p>
+      <p>Does the openness about editing and modernizing make you trust the bot more, or less?</p>
+    </div>
+  </section>
+
+  <!-- 2. Premise -->
+  <section id="premise">
+    <div class="num">Talking point 2</div>
+    <h2>The premise</h2>
+    <hr class="rule">
+    <div class="stat"><b class="up">8×</b><b class="down">15 hrs</b><span>richer per head, reached four years early &middot; the workweek Keynes predicted, which never arrived</span></div>
+    <ul class="say">
+      <li>Per the bot, the U.S. is about eight times richer per head than in 1930.</li>
+      <li>Today's A.I. boosters and critics are having much the same argument Keynes started.</li>
+      <li>Once the bot was built (point 1), Brunnermeier interviewed it, and Times Opinion distilled the conversation into a short video.</li>
+    </ul>
+
+    <figure>
+      <svg viewBox="0 0 840 250" role="img" aria-labelledby="tl-t tl-d">
+        <title id="tl-t">Keynes's forecast timeline</title>
+        <desc id="tl-d">A timeline from 1930 to 2030 marking Keynes's essay, 2026, and the 2030 forecast horizon, with the wealth prediction met and the 15-hour week not met.</desc>
+        <line x1="60" y1="110" x2="780" y2="110" stroke="var(--navy)" stroke-width="4"/>
+        <circle cx="60" cy="110" r="10" fill="var(--navy)"/>
+        <text x="60" y="80" text-anchor="middle" class="disp" font-size="22">1930</text>
+        <text x="60" y="150" text-anchor="middle" font-size="15">Keynes publishes</text>
+        <text x="60" y="169" text-anchor="middle" font-size="15">his essay</text>
+        <circle cx="636" cy="110" r="10" fill="var(--gold)"/>
+        <text x="636" y="80" text-anchor="middle" class="disp" font-size="22">2026</text>
+        <text x="636" y="150" text-anchor="middle" font-size="15">The interview</text>
+        <circle cx="780" cy="110" r="10" fill="var(--navy)"/>
+        <text x="780" y="80" text-anchor="middle" class="disp" font-size="22">2030</text>
+        <text x="780" y="150" text-anchor="middle" font-size="15">Forecast horizon</text>
+        <rect x="330" y="190" width="250" height="44" fill="var(--paper)" stroke="var(--gold)" stroke-width="2"/>
+        <text x="455" y="217" text-anchor="middle" font-size="15">Wealth: 8× per head, reached early</text>
+        <rect x="596" y="190" width="224" height="44" fill="var(--paper)" stroke="var(--warn)" stroke-width="2"/>
+        <text x="708" y="217" text-anchor="middle" font-size="15">15-hour week: not here</text>
+      </svg>
+    </figure>
+
+    <div class="prompt">
+      <span class="tag">Keynes's prediction</span>
+      <p>Think back over your own career. Did your workweek shrink, or did you work more than your parents did?</p>
+    </div>
+  </section>
+
+  <!-- 3. Conversation -->
+  <section id="conversation">
+    <div class="num">Talking point 3</div>
+    <h2>The conversation, step by step</h2>
+    <hr class="rule">
+    <div class="stat"><b>6</b><span>steps, from vindication to warning to a call for action</span></div>
+    <ol class="arc">
+      <li>
+        <h3>Prediction partly confirmed</h3>
+        <p>The bot says the wealth target was beaten, but the expected leisure has not followed.</p>
+      </li>
+      <li>
+        <h3>A.I. as a new complication</h3>
+        <p>Asked whether A.I. could finally deliver the 15-hour week, the bot fears a split: professionals with money but no time, and everyone else with time but no money.</p>
+      </li>
+      <li>
+        <h3>Expertise concentrates</h3>
+        <p>As A.I. absorbs harder tasks, expertise gathers in a few hands, and those few might end up managing much of the economy.</p>
+      </li>
+      <li>
+        <h3>The "nervous breakdown" returns</h3>
+        <p>Brunnermeier recalls Keynes's warning that people bred to fight scarcity may struggle once the fight is over. The bot says the strain would hit two groups differently.</p>
+      </li>
+      <li>
+        <h3>Not inevitable</h3>
+        <p>The technology does not fix the outcome. It depends on whether government has the courage to use laws and taxes so A.I. benefits everyone.</p>
+      </li>
+      <li>
+        <h3>The question handed back</h3>
+        <p>The bot returns Keynes's old question about what to do with growing powers of production and invention, and says the answer is up to us.</p>
+      </li>
+    </ol>
+
+    <div class="prompt">
+      <span class="tag">Keynes's prediction</span>
+      <p>Is retirement the leisure Keynes predicted, just taken at the end of a career instead of each week?</p>
+    </div>
+  </section>
+
+  <!-- 4. Two groups -->
+  <section id="two-groups">
+    <div class="num">Talking point 4</div>
+    <h2>Two groups, two kinds of breakdown</h2>
+    <hr class="rule">
+    <div class="stat"><b class="down">2</b><span>groups: money but no time, and time but no money</span></div>
+    <p class="line">The darkest turn: the bot says A.I. could split society in two. Choose a group.</p>
+
+    <div class="tabs" role="tablist" aria-label="Choose a group">
+      <button role="tab" id="tab-a" aria-selected="true" aria-controls="panel-a">The employed and dominant</button>
+      <button role="tab" id="tab-b" aria-selected="false" aria-controls="panel-b">The displaced</button>
+    </div>
+
+    <div class="panel" id="panel-a" role="tabpanel" aria-labelledby="tab-a">
+      <div class="meters" aria-label="Relative scale of money, time and purpose for this group">
+        <span>Money</span><div class="meter"><span style="width:88%"></span></div>
+        <span>Time</span><div class="meter"><span class="low" style="width:14%"></span></div>
+        <span>Purpose</span><div class="meter"><span style="width:60%"></span></div>
+      </div>
+      <p>These workers make labor their whole identity. When A.I. takes over part of it, they grind harder at whatever the machine cannot yet do, to prove they still matter. The result is burnout.</p>
+      <p class="key">The meters illustrate the bot's "money but no time" framing. They are not data from the article.</p>
+    </div>
+
+    <div class="panel" id="panel-b" role="tabpanel" aria-labelledby="tab-b" hidden>
+      <div class="meters" aria-label="Relative scale of money, time and purpose for this group">
+        <span>Money</span><div class="meter"><span class="low" style="width:14%"></span></div>
+        <span>Time</span><div class="meter"><span style="width:90%"></span></div>
+        <span>Purpose</span><div class="meter"><span class="low" style="width:18%"></span></div>
+      </div>
+      <p>The bot says this group worries it more. They lose something money cannot replace: the daily reassurance that someone needs them. A new purpose could take a generation, and if the gains are not shared, scarcity deepens. The bot also warns of strain on democracies and social bonds.</p>
+      <p class="key">The meters illustrate the bot's "time but no money" framing. They are not data from the article.</p>
+    </div>
+
+    <div class="prompt">
+      <span class="tag">Keynes's prediction</span>
+      <p>Which group do you see among family and friends today? And for those who have retired: where did your sense of purpose come from once work ended?</p>
+    </div>
+  </section>
+
+  <!-- 5. Exchanges -->
+  <section id="exchanges">
+    <div class="num">Talking point 5</div>
+    <h2>Five exchanges that show the experiment</h2>
+    <hr class="rule">
+    <div class="stat"><b>5</b><span>exchanges, paraphrased from the edited transcript rather than word for word. Each shows something different the experiment is doing.</span></div>
+
+    <div class="exchange">
+      <h3>1. The bot greets its own resurrection</h3>
+      <div class="turn"><span class="who">Brunnermeier</span>Welcomes Keynes to the conversation.</div>
+      <div class="turn machine"><span class="who">Keynes bot</span><p>Thanks him, and remarks that being brought back as an artificial intelligence, having been born in 1883, is an unexpected kind of afterlife.</p></div>
+      <p class="shows"><strong>What it shows:</strong> the persona knows it is a revival and says so with dry, period wit, the "restrained wit" the team asked for.</p>
+    </div>
+
+    <div class="exchange">
+      <h3>2. Scoring Keynes against 2026</h3>
+      <div class="turn"><span class="who">Brunnermeier</span>Reminds him the essay appeared as the Great Depression began, when most Americans were poor.</div>
+      <div class="turn machine"><span class="who">Keynes bot</span><p>Says he forecast America becoming up to eight times richer per head by 2030, and that it already has. The 15-hour week has not come to pass.</p></div>
+      <p class="shows"><strong>What it shows:</strong> the bot grades its own forecast with present-day facts. The article doesn't say how it knows 2026, so this is a feature of the setup, not Keynes's judgment.</p>
+    </div>
+
+    <div class="exchange">
+      <h3>3. Will A.I. finally deliver the leisure?</h3>
+      <div class="turn"><span class="who">Brunnermeier</span>Asks whether A.I. could fulfill the 15-hour week prediction.</div>
+      <div class="turn machine"><span class="who">Keynes bot</span><p>Answers with concern: skilled people with money but no time, everyone else with time but no money, and expertise pooling in a few hands.</p></div>
+      <p class="shows"><strong>What it shows:</strong> the bot reverses its master's optimism. This is the experiment's central move.</p>
+    </div>
+
+    <div class="exchange">
+      <h3>4. The "nervous breakdown," twice over</h3>
+      <div class="turn"><span class="who">Brunnermeier</span>Recalls Keynes's warning about people bred to fight scarcity, and asks if it still holds.</div>
+      <div class="turn machine"><span class="who">Keynes bot</span><p>Says yes, in two forms. The dominant burn out proving they are needed. The displaced lose the daily sense of being needed and may take a generation to find purpose. Democracies and social bonds are at risk too.</p></div>
+      <p class="shows"><strong>What it shows:</strong> the bot extends a 1930 idea into a new framework. The narrator flags that the tone is about to turn darker.</p>
+    </div>
+
+    <div class="exchange">
+      <h3>5. Is the bad future inevitable?</h3>
+      <div class="turn"><span class="who">Brunnermeier</span>Asks whether the terrible future is certain.</div>
+      <div class="turn machine"><span class="who">Keynes bot</span><p>Says not at all. Technology does not decide the outcome. Government does, through laws, tax systems and political courage. It hands the question back to us.</p></div>
+      <p class="shows"><strong>What it shows:</strong> the persona lands on a policy message, persuasive partly because it sounds like Keynes.</p>
+    </div>
+
+    <div class="prompt ai">
+      <span class="tag">A.I. as presenter</span>
+      <p>Would exchange 3 land differently from a living economist saying the same words? Why?</p>
+    </div>
+  </section>
+
+  <!-- 6. Who speaks -->
+  <section id="who-speaks">
+    <div class="num">Talking point 6</div>
+    <h2>Who is making the argument?</h2>
+    <hr class="rule">
+    <div class="stat"><b>2</b><span>voices that do not say quite the same thing</span></div>
+    <div class="compare">
+      <div class="goldbox">
+        <h3>The Keynes bot</h3>
+        <p class="bot">The outcome is not preordained. It depends on whether government has the political courage to use laws and taxes so A.I. benefits everyone. The choice is yours.</p>
+      </div>
+      <div class="warnbox">
+        <h3>The narrator</h3>
+        <p>Calls it obvious that A.I.'s power cannot end up with the few, and says ongoing regulation and government intervention are needed.</p>
+      </div>
+    </div>
+    <p class="line">The bot frames a choice and names levers. The narrator turns it into a firmer policy conclusion, with the persona lending borrowed authority.</p>
+  </section>
+
+  <!-- Discussion -->
+  <section id="discuss" style="padding-top:0.4rem">
+    <div class="discuss">
+      <div class="num">For discussion</div>
+      <h2>Questions for the group</h2>
+      <div class="cols">
+        <div>
+          <h3>Keynes's prediction</h3>
+          <ol>
+            <li>Looking back on your career, did you expect free time to grow? What happened to the hours?</li>
+            <li>Keynes got wealth right and leisure wrong. Did your generation choose more income over more time?</li>
+            <li>Is retirement the leisure he predicted, or does it bring the "nervous breakdown" he warned about?</li>
+            <li>What would you tell a grandchild about work, if A.I. splits people into "money, no time" and "time, no money"?</li>
+          </ol>
+        </div>
+        <div>
+          <h3>A.I. as presenter</h3>
+          <ol>
+            <li>When a model speaks as a historical figure, whose argument are we hearing: his, the model's, or the editors'?</li>
+            <li>The article discloses that the Times is suing OpenAI, whose tool powers the bot. Does disclosure settle that?</li>
+            <li>What would you want disclosed before trusting a bot like this: the prompt, the model, the cuts?</li>
+            <li>Which historical figure would you want to question about today's news, and what would worry you?</li>
+          </ol>
+        </div>
+      </div>
+      <p class="start">For a one-hour session, four or five questions is plenty. Good openers: Keynes 1 and 3, then A.I. 1.</p>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p>A visual companion to the New York Times Opinion video article by Markus Brunnermeier (Sept. 30, 2026). Summaries are paraphrased; see the original for the full conversation. The gaps table, "Who is making the argument?" and all discussion prompts are commentary added for this guide.</p>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var tabs = document.querySelectorAll('.tabs [role="tab"]');
+    tabs.forEach(function (tab) {
+      tab.addEventListener('click', function () {
+        tabs.forEach(function (t) {
+          var sel = t === tab;
+          t.setAttribute('aria-selected', sel ? 'true' : 'false');
+          document.getElementById(t.getAttribute('aria-controls')).hidden = !sel;
+        });
+      });
+      tab.addEventListener('keydown', function (e) {
+        if (e.ctrlKey || e.altKey || e.metaKey) return; // reserved for section jumping
+        if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+        var arr = Array.prototype.slice.call(tabs);
+        var i = arr.indexOf(tab);
+        var next = arr[(i + (e.key === 'ArrowRight' ? 1 : arr.length - 1)) % arr.length];
+        next.focus(); next.click();
+      });
+    });
+
+    // Ctrl + Right / Left (Option on a Mac) jumps to the top of the next / previous section
+    var sections = Array.prototype.slice.call(document.querySelectorAll('main > section'));
+    var navEl = document.querySelector('nav.jump');
+    function offset() { return navEl ? navEl.offsetHeight : 0; }
+    function syncPadding() { document.documentElement.style.scrollPaddingTop = offset() + 'px'; }
+    syncPadding();
+    window.addEventListener('resize', syncPadding);
+    function currentIndex() {
+      var idx = -1, line = offset() + 4;
+      sections.forEach(function (s, i) { if (s.getBoundingClientRect().top <= line) idx = i; });
+      return idx;
+    }
+    function goTo(i) {
+      var s = sections[i];
+      if (!s) return;
+      s.setAttribute('tabindex', '-1');
+      s.scrollIntoView({ block: 'start' });
+      s.focus({ preventScroll: true });
+    }
+    document.addEventListener('keydown', function (e) {
+      if (!(e.ctrlKey || e.altKey) || e.shiftKey || e.metaKey) return;
+      if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
+      e.preventDefault();
+      var i = currentIndex();
+      if (e.key === 'ArrowRight') {
+        goTo(Math.min(i + 1, sections.length - 1));
+      } else {
+        var atTop = i >= 0 && Math.abs(sections[i].getBoundingClientRect().top - offset()) < 8;
+        if (i < 0) window.scrollTo({ top: 0 });
+        else goTo(atTop ? i - 1 : i);
+        if (atTop && i === 0) window.scrollTo({ top: 0 });
+      }
+    });
+
+    var btn = document.getElementById('toggle-layers');
+    var layers = document.querySelectorAll('.stack details');
+    btn.addEventListener('click', function () {
+      var open = btn.getAttribute('aria-pressed') !== 'true';
+      layers.forEach(function (d) { d.open = open; });
+      btn.setAttribute('aria-pressed', open ? 'true' : 'false');
+      btn.textContent = open ? 'Close all layers' : 'Open all layers';
+    });
+  })();
+</script>
+</body>
+</html>
