@@ -1,0 +1,326 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Independence and Queens</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Courier+Prime:wght@400;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<style>
+/* Layout: a broadsheet front page — masthead, lede, two nameplates, then ten paired columns split by a center rule */
+:root{
+  --paper:#f5efe0; --ink:#1b2438; --navy:#14254a; --gold:#a8822c; --rule:#c9b98f; --muted:#5d6273; --tint:#ebe2cb;
+  --display:"Playfair Display",Georgia,"Times New Roman",serif;
+  --body:"Source Serif 4",Georgia,"Times New Roman",serif;
+  --mono:"Courier Prime","Courier New",Courier,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#0f1729; --ink:#ece4cf; --navy:#e9d9a8; --gold:#d1aa52; --rule:#3c4664; --muted:#a3a8b8; --tint:#18223a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#0f1729; --ink:#ece4cf; --navy:#e9d9a8; --gold:#d1aa52; --rule:#3c4664; --muted:#a3a8b8; --tint:#18223a; color-scheme:dark}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55}
+.sheet{max-width:1120px;margin:0 auto;padding-inline:20px;padding-block:28px 56px}
+.mono{font-family:var(--mono)}
+/* masthead */
+.flag{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--rule);padding-bottom:8px}
+.nameplate{text-align:center;padding-block:14px 10px;border-bottom:4px double var(--navy)}
+.nameplate h1{font-family:var(--display);font-weight:900;font-size:clamp(2.2rem,6.5vw,4.6rem);line-height:1;margin:0;color:var(--navy);letter-spacing:-.01em}
+.nameplate .sub{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-top:8px}
+.headline{text-align:center;padding-block:26px 8px}
+.headline h2{font-family:var(--display);font-weight:700;font-size:clamp(1.7rem,4.4vw,3rem);line-height:1.08;margin:0;text-wrap:balance}
+.headline h2 i{font-weight:400;color:var(--gold)}
+.dek{font-family:var(--display);font-style:italic;font-size:1.15rem;color:var(--muted);max-width:60ch;margin:12px auto 0;text-wrap:balance}
+.lede{max-width:68ch;margin:22px auto 0;font-size:1.05rem}
+.lede::first-letter{font-family:var(--display);font-weight:900;float:left;font-size:3.6em;line-height:.82;padding:6px 8px 0 0;color:var(--navy)}
+.legend{max-width:68ch;margin:14px auto 0;font-family:var(--mono);font-size:12.5px;color:var(--muted)}
+.h{font-family:var(--mono);font-size:10.5px;font-weight:700;color:var(--paper);background:var(--gold);padding:0 4px;border-radius:2px;vertical-align:2px;letter-spacing:.04em}
+/* nameplates */
+.pair{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--ink);border-bottom:1px solid var(--ink);margin-top:30px}
+.pair>*{min-width:0;padding:18px 22px}
+.pair>*:first-child{border-right:1px solid var(--rule)}
+.who h3{font-family:var(--display);font-weight:900;font-size:1.7rem;margin:0;color:var(--navy);line-height:1.1}
+.who .tag{font-family:var(--display);font-style:italic;color:var(--gold);font-size:1.05rem}
+.who dl{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;margin:12px 0 0;font-size:.95rem}
+.who dt{font-family:var(--mono);font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);padding-top:2px}
+.who dd{margin:0}
+/* numbers strip */
+.strip{display:grid;grid-template-columns:repeat(4,1fr);border-bottom:4px double var(--navy)}
+.strip>div{padding:16px 14px;border-right:1px solid var(--rule);min-width:0}
+.strip>div:last-child{border-right:0}
+.strip .k{font-family:var(--mono);font-size:11.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.strip .v{display:flex;justify-content:space-between;gap:8px;margin-top:6px;font-family:var(--display);font-weight:700;font-size:1.25rem;font-variant-numeric:tabular-nums}
+.strip .v span:last-child{color:var(--gold)}
+.strip .n{font-size:12.5px;color:var(--muted);margin-top:4px;line-height:1.35}
+/* issues */
+.issue{padding-top:34px}
+.issue-head{display:flex;align-items:center;gap:14px}
+.issue-head::before,.issue-head::after{content:"";flex:1;border-top:1px solid var(--rule)}
+.issue-head h4{font-family:var(--display);font-weight:700;font-size:1.55rem;margin:0;text-align:center;color:var(--navy)}
+.issue-head .no{font-family:var(--mono);font-size:12px;color:var(--gold);display:block;text-align:center;letter-spacing:.12em}
+.cols{display:grid;grid-template-columns:1fr 1fr;margin-top:14px}
+.cols>section{min-width:0;padding:0 24px}
+.cols>section:first-child{border-right:1px solid var(--rule);padding-left:0}
+.cols>section:last-child{padding-right:0}
+.colhead{font-family:var(--mono);font-size:11.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);margin:0 0 6px}
+.cols p{margin:0 0 10px;hyphens:auto}
+.pull{font-family:var(--display);font-style:italic;font-size:1.15rem;line-height:1.35;border-left:3px solid var(--gold);padding-left:12px;margin:12px 0;color:var(--navy)}
+.pull cite{display:block;font-family:var(--mono);font-style:normal;font-size:11.5px;color:var(--muted);margin-top:4px}
+.counter{font-size:.92rem;background:var(--tint);padding:10px 12px;margin-top:6px}
+.counter b{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:2px}
+/* closing */
+.closing{display:grid;grid-template-columns:3fr 2fr;gap:28px;margin-top:44px;border-top:4px double var(--navy);padding-top:22px}
+.closing>*{min-width:0}
+.closing h5{font-family:var(--display);font-weight:900;font-size:1.35rem;margin:0 0 10px;color:var(--navy)}
+.closing ol{margin:0;padding-left:1.3em}
+.closing li{margin-bottom:8px}
+.note{font-size:.9rem;color:var(--muted)}
+.note p{margin:0 0 8px}
+footer{margin-top:30px;border-top:1px solid var(--rule);padding-top:10px;font-family:var(--mono);font-size:11.5px;color:var(--muted);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px}
+@media (max-width:720px){
+  .pair,.cols,.closing{grid-template-columns:1fr}
+  .pair>*:first-child{border-right:0;border-bottom:1px solid var(--rule)}
+  .cols>section{padding:0}
+  .cols>section:first-child{border-right:0;border-bottom:1px dashed var(--rule);padding-bottom:12px;margin-bottom:14px}
+  .strip{grid-template-columns:1fr 1fr}
+  .strip>div:nth-child(2){border-right:0}
+  .strip>div:nth-child(-n+2){border-bottom:1px solid var(--rule)}
+}
+</style>
+
+<div class="sheet">
+  <div class="flag"><span>Monday, October 12, 2026</span><span>Current Events Discussion Group · BOLLI</span><span>Two Presidents, One Ledger</span></div>
+  <header class="nameplate">
+    <h1>The Presidential Ledger</h1>
+    <div class="sub">A side-by-side reading for discussion</div>
+  </header>
+
+  <div class="headline">
+    <h2>The Man From Independence <i>and</i> the Man From Queens</h2>
+    <p class="dek">A haberdasher who went broke and a developer who became a billionaire. Ten measures of two very different presidencies.</p>
+  </div>
+
+  <p class="lede">Harry S. Truman came to the presidency by accident in April 1945, unbriefed and largely unknown. Donald J. Trump came to it by design, twice, as the most famous businessman in the country. In Chapter Two of <em>The Fifties</em>, David Halberstam portrays Truman as a man whose plain virtues were underrated in his own time and vindicated by history. Trump's record is still being written; his second term runs to January 2029. What follows sets the two side by side on ten measures, drawing Truman's portrait largely from Halberstam and Trump's from the public record, with the case his supporters make set beside the case his critics make.</p>
+  <p class="legend"><span class="h">H</span> marks material drawn from Halberstam's <em>The Fifties</em>, Chapter Two (and the close of Chapter One). Shaded boxes give the strongest counterpoint to each column.</p>
+
+  <div class="pair">
+    <div class="who">
+      <h3>Harry S. Truman</h3>
+      <div class="tag">33rd President · Democrat</div>
+      <dl>
+        <dt>Born</dt><dd>May 8, 1884, Lamar, Missouri; raised in Independence</dd>
+        <dt>In office</dt><dd>April 12, 1945 – January 20, 1953</dd>
+        <dt>Before</dt><dd>Farmer, haberdasher, county judge, U.S. senator, vice president for 82 days</dd>
+        <dt>Died</dt><dd>December 26, 1972</dd>
+      </dl>
+    </div>
+    <div class="who">
+      <h3>Donald J. Trump</h3>
+      <div class="tag">45th and 47th President · Republican</div>
+      <dl>
+        <dt>Born</dt><dd>June 14, 1946, Queens, New York</dd>
+        <dt>In office</dt><dd>2017 – 2021; January 20, 2025 – present</dd>
+        <dt>Before</dt><dd>Real-estate developer, brand licensor, host of <em>The Apprentice</em>; no prior public office</dd>
+        <dt>Term ends</dt><dd>January 20, 2029</dd>
+      </dl>
+    </div>
+  </div>
+
+  <div class="strip" aria-label="By the numbers, Truman then Trump">
+    <div><div class="k">Age on taking office</div><div class="v"><span>60</span><span>70 · 78</span></div><div class="n">Trump: first and second inaugurations</div></div>
+    <div><div class="k">College degrees</div><div class="v"><span>0</span><span>1</span></div><div class="n">Trump: B.S. Economics, Wharton, 1968</div></div>
+    <div><div class="k">Military service</div><div class="v"><span>Combat</span><span>None</span></div><div class="n">Truman: artillery captain, France, 1918</div></div>
+    <div><div class="k">Approval near end of term</div><div class="v"><span>~32%</span><span>34%</span></div><div class="n">Gallup, Jan. 1953 and Jan. 2021 (Trump's first term)</div></div>
+  </div>
+
+  <!-- 1 -->
+  <article class="issue">
+    <div><span class="no">I</span><div class="issue-head"><h4>Personal Wealth</h4></div></div>
+    <div class="cols">
+      <section>
+        <p class="colhead">Truman</p>
+        <p>Truman had almost no personal income, and his family always lived modestly <span class="h">H</span>. His menswear store in Kansas City failed in the postwar slump of 1922, and he spent years paying off its debts rather than declaring bankruptcy.</p>
+        <p>He knew the price of things. Halberstam quotes his diary grumbling over a 55-cent hotel breakfast he judged worth a quarter <span class="h">H</span>. He left the White House with little beyond an Army pension; the Former Presidents Act of 1958, which first gave ex-presidents a pension, owed much to his circumstances.</p>
+      </section>
+      <section>
+        <p class="colhead">Trump</p>
+        <p>Trump built on his father Fred's Queens real-estate business into a Manhattan, casino, golf and licensing empire. His companies went through six corporate bankruptcies, mostly in Atlantic City; he never filed personally.</p>
+        <p>Forbes estimated his net worth rose from $4.3 billion in 2024 to $7.3 billion by September 2025, driven largely by crypto ventures (World Liberty Financial and a memecoin launched just before his 2025 inauguration) and his stake in Trump Media. Forbes put it near $6.5 billion in early 2026.</p>
+        <div class="counter"><b>Supporters' view</b>He made his fortune in the private sector and had no need of public office to get rich. <b style="margin-top:6px">Critics' view</b>Much of the recent gain flows from ventures that trade on the presidency itself.</div>
+      </section>
+    </div>
+  </article>
+
+  <!-- 2 -->
+  <article class="issue">
+    <div><span class="no">II</span><div class="issue-head"><h4>Education</h4></div></div>
+    <div class="cols">
+      <section>
+        <p class="colhead">Truman</p>
+        <p>Halberstam calls him the last American president who had not been to college <span class="h">H</span>. Strictly, he took some business-school courses and two years of night classes at the Kansas City School of Law in the 1920s, but he never earned a degree.</p>
+        <p>Poor eyesight kept him out of sports, so he read instead, and widely. Halberstam judges him perhaps the best-read president of modern times, and notes that his Ivy-educated aides were often surprised by his command of history <span class="h">H</span>.</p>
+      </section>
+      <section>
+        <p class="colhead">Trump</p>
+        <p>Trump attended the New York Military Academy, a private boarding school, then spent two years at Fordham University before transferring to the University of Pennsylvania's Wharton School, graduating in 1968 with a bachelor's degree in economics.</p>
+        <p>He often cites his Wharton degree and his uncle John Trump, an MIT professor, as evidence of his intelligence. He has described himself as preferring short, visual briefings and relying on instinct and common sense over extensive reading.</p>
+      </section>
+    </div>
+  </article>
+
+  <!-- 3 -->
+  <article class="issue">
+    <div><span class="no">III</span><div class="issue-head"><h4>Military Service</h4></div></div>
+    <div class="cols">
+      <section>
+        <p class="colhead">Truman</p>
+        <p>Truman joined the Missouri National Guard in 1905 and, though past draft age and nearly blind without his glasses, went to France in World War One. As captain of Battery D, 129th Field Artillery, he led an unruly unit through the Meuse-Argonne offensive. Halberstam says it was the first place he distinguished himself <span class="h">H</span>.</p>
+        <p>The experience made him wary of showy generals: he thought of MacArthur and Patton as "big-brass fancy hats" <span class="h">H</span>. He pushed hard, and unsuccessfully, for Universal Military Training as a citizens' army <span class="h">H</span>.</p>
+      </section>
+      <section>
+        <p class="colhead">Trump</p>
+        <p>Trump did not serve. During the Vietnam War he received five draft deferments: four for college and one in 1968 for a medical diagnosis of bone spurs in his heels.</p>
+        <p>As president he has made military strength a theme: a large army parade in Washington on June 14, 2025, a secondary name of "Department of War" for the Pentagon, and higher defense budgets. He has also clashed publicly with retired senior officers.</p>
+        <div class="counter"><b>The comparison in brief</b>Truman chose combat when he could have avoided it. Trump, like many of his generation, used the deferments the system allowed.</div>
+      </section>
+    </div>
+  </article>
+
+  <!-- 4 -->
+  <article class="issue">
+    <div><span class="no">IV</span><div class="issue-head"><h4>Public Servant Virtue</h4></div></div>
+    <div class="cols">
+      <section>
+        <p class="colhead">Truman</p>
+        <blockquote class="pull">"Three things ruin a man: power, money, and women."<cite>Truman, as quoted by Halberstam <span class="h">H</span></cite></blockquote>
+        <p>He kept THE BUCK STOPS HERE on his desk, took responsibility for hard calls, and was willing, Halberstam writes, to set aside short-term political advantage for what he thought right <span class="h">H</span>. After leaving office he turned down corporate board seats and endorsement offers, saying he would not trade on the presidency.</p>
+        <p>He gave and demanded loyalty, and stood by Acheson after the Alger Hiss remark: "Always be shot in front, never from behind" <span class="h">H</span>.</p>
+      </section>
+      <section>
+        <p class="colhead">Trump</p>
+        <p>Trump has donated his presidential salary in both terms. He kept ownership of the Trump Organization, handing day-to-day management to his sons rather than divesting, a break with the practice of recent presidents.</p>
+        <p>His supporters see an outsider who left a comfortable life to take on a system he calls corrupt, and who has endured impeachments, prosecutions and two assassination attempts to do it. His critics see an official who treats the office as an extension of his personal and family interests, and who prizes loyalty to himself over loyalty to institutions.</p>
+      </section>
+    </div>
+  </article>
+
+  <!-- 5 -->
+  <article class="issue">
+    <div><span class="no">V</span><div class="issue-head"><h4>Corruption</h4></div></div>
+    <div class="cols">
+      <section>
+        <p class="colhead">Truman</p>
+        <p>His personal record for honesty in Kansas City politics was clean <span class="h">H</span>. But he rose through Tom Pendergast's machine, the one taint on his early career, and he attended Pendergast's funeral after the boss had served prison time for tax evasion <span class="h">H</span>.</p>
+        <p>His administration had real scandals: "five percenters" selling access to federal contracts, favoritism at the Reconstruction Finance Corporation, and bribery in the Bureau of Internal Revenue that led to scores of firings in 1951–52. Aide Harry Vaughan's acceptance of gifts became a byword. Truman himself was never shown to have profited.</p>
+      </section>
+      <section>
+        <p class="colhead">Trump</p>
+        <p>In May 2024 a Manhattan jury convicted Trump on 34 felony counts of falsifying business records; he received an unconditional discharge in January 2025 and is appealing. A New York civil fraud case found him liable for inflating asset values; an appeals court upheld liability in August 2025 but threw out the roughly $500 million penalty. Earlier, Trump University settled fraud claims for $25 million, and the Trump Foundation was dissolved under a court order.</p>
+        <p>Ethics watchdogs point to foreign deals, the family's crypto ventures, and the acceptance of a Qatari jet in 2025 as conflicts of interest.</p>
+        <div class="counter"><b>Trump's response</b>He calls the prosecutions politically motivated "lawfare." The two federal criminal cases against him were dropped after the 2024 election.</div>
+      </section>
+    </div>
+  </article>
+
+  <!-- 6 -->
+  <article class="issue">
+    <div><span class="no">VI</span><div class="issue-head"><h4>Challenges Faced</h4></div></div>
+    <div class="cols">
+      <section>
+        <p class="colhead">Truman</p>
+        <p>He inherited the presidency barely briefed on foreign policy <span class="h">H</span>, then faced the end of the war and the atomic bomb, a demobilization so fast he called it a "disintegration" <span class="h">H</span>, and the Republican sweep of Congress in 1946.</p>
+        <p>In 1949 came the fall of China, the Hiss case, and in September the Soviet atomic test, "Joe One," which ended America's monopoly <span class="h">H</span>. In January 1950 he authorized the hydrogen bomb in a seven-minute meeting: "we have no choice. We'll go ahead" <span class="h">H</span>. Within days the Fuchs spy case broke, and McCarthyism and the Korean War followed.</p>
+      </section>
+      <section>
+        <p class="colhead">Trump</p>
+        <p>First term: the Russia investigation, two impeachments (over Ukraine in 2019 and the January 6 Capitol riot in 2021), both ending in Senate acquittal, and the COVID-19 pandemic.</p>
+        <p>Between terms: four criminal indictments and two assassination attempts in 2024. Second term: trade wars set off by sweeping tariffs, court battles over mass deportation and executive power, the wars in Ukraine and Gaza, U.S. strikes on Iran's nuclear sites in June 2025, and a record-length government shutdown in fall 2025.</p>
+      </section>
+    </div>
+  </article>
+
+  <!-- 7 -->
+  <article class="issue">
+    <div><span class="no">VII</span><div class="issue-head"><h4>Accomplishments</h4></div></div>
+    <div class="cols">
+      <section>
+        <p class="colhead">Truman</p>
+        <p>Truman kept his own scorecard <span class="h">H</span>: the Truman Doctrine for Greece and Turkey, good; the Berlin airlift, right again; the Marshall Plan, a "ten strike." Add NATO (1949), the founding of the United Nations, and Halberstam's judgment that he, more than any other politician, was responsible for the creation of Israel <span class="h">H</span>. In 1948 he ordered the desegregation of the armed forces, going far beyond Roosevelt on civil rights <span class="h">H</span>.</p>
+        <div class="counter"><b>His own regrets</b>The abrupt end of Lend-Lease he called "a blooper," and he wondered whether his deep defense cuts had been prudent <span class="h">H</span>.</div>
+      </section>
+      <section>
+        <p class="colhead">Trump</p>
+        <p>As his supporters list them: the 2017 tax cuts; three Supreme Court justices, who formed the majority that overturned <em>Roe v. Wade</em>; Operation Warp Speed's rapid vaccines; the Abraham Accords; the First Step Act on sentencing reform. In the second term: the 2025 "One Big Beautiful Bill" extending the tax cuts, a steep drop in border crossings, NATO allies' pledge to raise defense spending to 5% of GDP, and the October 2025 Gaza ceasefire and hostage release.</p>
+        <div class="counter"><b>Critics' view</b>Larger deficits, tariffs that raise prices, damage to alliances and the civil service, and the erosion of democratic norms, above all on January 6.</div>
+      </section>
+    </div>
+  </article>
+
+  <!-- 8 -->
+  <article class="issue">
+    <div><span class="no">VIII</span><div class="issue-head"><h4>Knowledge of History and World Affairs</h4></div></div>
+    <div class="cols">
+      <section>
+        <p class="colhead">Truman</p>
+        <p>An amateur historian of real depth, he read his way through his boyhood library <span class="h">H</span>. Yet he came to office green in foreign affairs, and leaned heavily on George Marshall and Dean Acheson. He saw 1948 through the lens of 1938: "exactly the same situation" Britain and France faced with Hitler <span class="h">H</span>.</p>
+        <p>He had blind spots. He told Oppenheimer the Soviets would "never" build a bomb, and as late as 1953 doubted they had one <span class="h">H</span>.</p>
+      </section>
+      <section>
+        <p class="colhead">Trump</p>
+        <p>Trump came to office with decades of international deal-making but no government experience. He favors personal diplomacy with heads of state, tariffs as leverage, and unpredictability as a tactic, and openly questions the post-1945 alliance system that Truman built.</p>
+        <p>He has said he reads little and decides with knowledge he already has plus common sense. Critics catalog historical misstatements; supporters note he started no new wars in his first term and argue his instincts read voters and adversaries better than experts did.</p>
+      </section>
+    </div>
+  </article>
+
+  <!-- 9 -->
+  <article class="issue">
+    <div><span class="no">IX</span><div class="issue-head"><h4>Personal Rectitude</h4></div></div>
+    <div class="cols">
+      <section>
+        <p class="colhead">Truman</p>
+        <p>Married to Bess Wallace for 53 years, devoted and faithful; his line about "the only woman in my life" was simply true <span class="h">H</span>. He would not allow off-color jokes at his poker table <span class="h">H</span>.</p>
+        <p>He had flaws Halberstam does not hide: crude racial slurs and anti-Jewish remarks in his early letters <span class="h">H</span>, and a temper, as when he threatened a music critic who panned his daughter's singing <span class="h">H</span>.</p>
+      </section>
+      <section>
+        <p class="colhead">Trump</p>
+        <p>Married three times, with affairs widely reported during his first two marriages. The 2016 <em>Access Hollywood</em> tape recorded crude boasts about women. In 2023 a federal civil jury found him liable for sexually abusing and defaming writer E. Jean Carroll, a verdict upheld on appeal; he denies it.</p>
+        <p>Supporters, including many religious conservatives, describe him as a flawed man with the right policies, and point to his loyalty to family and to the voters who elected him.</p>
+      </section>
+    </div>
+  </article>
+
+  <!-- 10 -->
+  <article class="issue">
+    <div><span class="no">X</span><div class="issue-head"><h4>Legacy</h4></div></div>
+    <div class="cols">
+      <section>
+        <p class="colhead">Truman</p>
+        <p>He left office deeply unpopular, his approval near 32% and once as low as 22%. Only afterward, Halberstam writes, did people come to appreciate the full measure of the man, the "common man as uncommon man" <span class="h">H</span>. History tended to vindicate his decisions, even the hardest ones like Korea <span class="h">H</span>.</p>
+        <p>Historians now place him in the top ten; C-SPAN's 2021 survey ranked him sixth.</p>
+      </section>
+      <section>
+        <p class="colhead">Trump</p>
+        <p>His legacy is unsettled; he is not yet two years into his second term. As of mid-September 2026, polling averages put his approval near 38–40%. Historians' surveys taken after his first term ranked him near the bottom (41st of 44 in C-SPAN's 2021 survey).</p>
+        <p>His supporters argue those surveys reflect academia's politics, and that he remade the Republican Party, won working-class voters across racial lines, and changed American trade and immigration policy for a generation.</p>
+      </section>
+    </div>
+  </article>
+
+  <div class="closing">
+    <div>
+      <h5>For Discussion</h5>
+      <ol>
+        <li>Halberstam says Truman's plainness worked against him in office and for him in memory. Could anything similar happen to Trump's reputation, in either direction?</li>
+        <li>Truman made the H-bomb decision in secret, in seven minutes, under political pressure. How does that compare with how big decisions get made, and announced, today?</li>
+        <li>Does personal wealth make a president more independent, or more conflicted?</li>
+        <li>Which of these ten measures matters most to you in judging a president, and why?</li>
+      </ol>
+    </div>
+    <div class="note">
+      <h5>A note on fairness</h5>
+      <p>This is an uneven comparison by nature. Truman's record has had seventy years of historians' scrutiny; Trump's is current and contested.</p>
+      <p>Halberstam writes admiringly, with hindsight. Trump's column draws on court records, polling averages, and Forbes estimates, with the case made by both his supporters and his critics. Figures are as of October 2026 and may change.</p>
+    </div>
+  </div>
+
+  <footer><span>Sources: Halberstam, <em>The Fifties</em> (1993), Ch. 1–2; Forbes; Gallup; Silver Bulletin; RealClearPolitics; C-SPAN Presidential Historians Survey 2021</span><span>John Day · BOLLI</span></footer>
+</div>
+
+</body></html>
