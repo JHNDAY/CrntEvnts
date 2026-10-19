@@ -52,6 +52,12 @@ body.detail .topbar-in{max-width:1120px}
 body.detail{background:#efe8d8}
 #detail{margin-inline:calc(-1 * max(16px,env(safe-area-inset-left,0px)))}
 .wrap{padding-top:22px}
+.seg-nav{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:24px;padding-top:14px;border-top:1px solid var(--rule)}
+.seg-nav button{font-family:var(--mono);font-size:14px;background:var(--surface);color:var(--navy);border:1px solid var(--rule);
+  border-radius:999px;padding:7px 16px;cursor:pointer}
+.seg-nav button.next{margin-left:auto;border-color:var(--navy)}
+.seg-nav button:hover{border-color:var(--gold)}
+.seg-nav button:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:21;background:var(--bg)}
 .agenda a.on{background:var(--navy);color:var(--bg);border-color:var(--navy)}
 @media (max-width:700px){.topbar-in{flex-wrap:wrap}.agenda{width:100%;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}.agenda li{flex:none}}
@@ -117,21 +123,6 @@ footer{margin-top:40px;border-top:2px solid var(--navy);padding-top:12px;font-fa
 
 <div id="discussion">
 <div class="wrap">
-
-<header>
-  <div class="eyebrow">Current Events Discussion · Zoom session · Talking points</div>
-  <h1>The Twilight of an Autocratic Age</h1>
-  <p class="sub">Is the strongman era peaking, or already ending? A facilitator's guide to David Ignatius's column.</p>
-  <div class="meta">
-    <span>Source: <a href="https://wapo.st/4yPu3hz" target="_blank" rel="noopener">Washington Post Opinion, Sept. 22, 2026</a></span>
-  </div>
-</header>
-
-
-<div class="thesis">
-  <div class="eyebrow">The column in one sentence</div>
-  <p>Trump, Xi and Putin look dominant, but each is aging, prone to costly mistakes, and has no successor, so the "age of the autocrats" may already be ending.</p>
-</div>
 
 <!-- 1 -->
 <section class="seg" id="open">
@@ -248,7 +239,7 @@ footer{margin-top:40px;border-top:2px solid var(--navy);padding-top:12px;font-fa
   </div>
 </section>
 
-<footer>Discussion notes summarize and paraphrase the column for group use. Read the full piece at the Washington Post link above.</footer>
+<footer>Discussion notes summarize and paraphrase the column for group use. Full column: <a href="https://wapo.st/4yPu3hz" target="_blank" rel="noopener" style="color:inherit">David Ignatius, Washington Post, Sept. 22, 2026</a>.</footer>
 </div>
 </div>
 
@@ -656,12 +647,24 @@ footer{margin-top:40px;border-top:2px solid var(--navy);padding-top:12px;font-fa
 (function(){
   var links=[].slice.call(document.querySelectorAll('.agenda a'));
   var secs=links.map(function(a){return document.querySelector(a.getAttribute('href'))});
-  function update(){
-    var y=window.scrollY+120, cur=0;
-    secs.forEach(function(sec,i){ if(sec && sec.offsetTop<=y) cur=i; });
-    links.forEach(function(a,i){a.classList.toggle('on',i===cur && window.scrollY>40)});
+  secs.forEach(function(sec,i){
+    var nav=document.createElement('div'); nav.className='seg-nav';
+    if(i>0){var p=document.createElement('button');p.type='button';p.textContent='\u2190 '+links[i-1].textContent.trim();
+      p.addEventListener('click',function(){go(i-1,true)});nav.appendChild(p);}
+    if(i<secs.length-1){var n=document.createElement('button');n.type='button';n.className='next';n.textContent='Next: '+links[i+1].textContent.trim()+' \u2192';
+      n.addEventListener('click',function(){go(i+1,true)});nav.appendChild(n);}
+    sec.appendChild(nav);
+  });
+  function go(i,scroll){
+    secs.forEach(function(sec,j){sec.hidden=j!==i});
+    links.forEach(function(a,j){a.classList.toggle('on',j===i);a.setAttribute('aria-current',j===i?'true':'false')});
+    try{localStorage.setItem('twilight-seg',String(i))}catch(e){}
+    if(scroll){var top=secs[i].getBoundingClientRect().top+window.scrollY-90;if(window.scrollY>top)window.scrollTo(0,Math.max(0,top));}
   }
-  window.addEventListener('scroll',update,{passive:true}); update();
+  links.forEach(function(a,i){a.addEventListener('click',function(e){e.preventDefault();go(i,true)})});
+  var start=0;try{start=parseInt(localStorage.getItem('twilight-seg'),10)||0}catch(e){}
+  if(start<0||start>=secs.length)start=0;
+  go(start,false);
 })();
 </script>
 
