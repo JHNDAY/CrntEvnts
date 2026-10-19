@@ -1,13 +1,260 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>The Twilight of an Autocratic Age</title>
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Twilight of the Autocrats</title>
+<meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,800;1,500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=Courier+Prime:wght@400;700&family=Spectral:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Barlow+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root{
+/* Layout: a facilitator's run sheet — timed segments down one column, each pairing "what the column says" with questions to put to the room */
+:root{
+  --bg:#f6f1e4;
+  --surface:#fffaf0;
+  --ink:#1a2238;
+  --ink-soft:#4b5268;
+  --rule:#d6ccb2;
+  --navy:#1f2f55;
+  --gold:#a07a26;
+  --gold-soft:#efe2bf;
+  --q-bg:#eef1f8;
+  --display:'Playfair Display',Georgia,serif;
+  --body:'Source Serif 4',Georgia,'Times New Roman',serif;
+  --mono:'Courier Prime','Courier New',monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#121827;--surface:#1a2235;--ink:#ece6d6;--ink-soft:#b3ad9c;--rule:#33405c;
+  --navy:#9fb4e6;--gold:#d8b158;--gold-soft:#3a3220;--q-bg:#1f2a44;color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121827;--surface:#1a2235;--ink:#ece6d6;--ink-soft:#b3ad9c;--rule:#33405c;
+  --navy:#9fb4e6;--gold:#d8b158;--gold-soft:#3a3220;--q-bg:#1f2a44;color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:19px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:860px;margin:0 auto;padding-block:0 64px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;color:var(--navy);margin:0}
+.eyebrow{font-family:var(--mono);font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
+
+header{border-bottom:2px solid var(--navy);padding-bottom:18px;margin-bottom:22px}
+header h1{font-size:clamp(34px,6vw,52px);font-weight:800;line-height:1.05;margin:.2em 0 .25em}
+header .sub{font-style:italic;color:var(--ink-soft);font-size:20px;margin:0 0 12px;max-width:58ch}
+.meta{display:flex;flex-wrap:wrap;gap:6px 18px;font-family:var(--mono);font-size:14px;color:var(--ink-soft)}
+.meta a{color:var(--navy)}
+
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:var(--bg);border-bottom:1px solid var(--rule);
+  margin-inline:calc(-1 * max(16px,env(safe-area-inset-left,0px)));padding-inline:max(16px,env(safe-area-inset-left,0px))}
+.topbar-in{max-width:860px;margin:0 auto;display:flex;align-items:center;gap:10px 16px;padding-block:10px;min-width:0}
+body.detail .topbar-in{max-width:1120px}
+.toggle{display:inline-flex;flex:none;border:1px solid var(--navy);border-radius:999px;overflow:hidden}
+.toggle button{font-family:var(--mono);font-size:13px;letter-spacing:.06em;text-transform:uppercase;background:transparent;
+  color:var(--navy);border:0;padding:7px 14px;cursor:pointer}
+.toggle button[aria-pressed="true"]{background:var(--navy);color:var(--bg)}
+.toggle button:focus-visible{outline:2px solid var(--gold);outline-offset:-2px}
+.agenda{display:flex;flex-wrap:wrap;gap:8px;margin:0;padding:0;list-style:none;min-width:0}
+body.detail{background:#efe8d8}
+#detail{margin-inline:calc(-1 * max(16px,env(safe-area-inset-left,0px)))}
+.wrap{padding-top:22px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:21;background:var(--bg)}
+.agenda a.on{background:var(--navy);color:var(--bg);border-color:var(--navy)}
+@media (max-width:700px){.topbar-in{flex-wrap:wrap}.agenda{width:100%;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}.agenda li{flex:none}}
+.agenda a{display:inline-flex;gap:8px;align-items:baseline;text-decoration:none;color:var(--ink);
+  background:var(--surface);border:1px solid var(--rule);border-radius:999px;padding:6px 14px;font-size:15px}
+.agenda a:hover,.agenda a:focus-visible{border-color:var(--gold);outline:none}
+.agenda .t{font-family:var(--mono);font-size:13px;color:var(--gold)}
+
+.thesis{background:var(--navy);color:var(--bg);padding:22px 24px;margin:0 0 32px}
+.thesis .eyebrow{color:var(--gold-soft)}
+.thesis p{font-family:var(--display);font-style:italic;font-size:clamp(21px,3vw,26px);line-height:1.35;margin:.35em 0 0}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .thesis{background:var(--surface);color:var(--ink);border-left:4px solid var(--gold)}}
+:root[data-theme="dark"] .thesis{background:var(--surface);color:var(--ink);border-left:4px solid var(--gold)}
+
+section.seg{border-top:1px solid var(--rule);padding-top:22px;margin-top:30px;scroll-margin-top:90px}
+.seg-head{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+.seg-head h2{font-size:clamp(26px,4vw,32px);font-weight:700}
+.clock{font-family:var(--mono);font-size:14px;color:var(--ink-soft);white-space:nowrap}
+.says{margin:0 0 14px}
+.says ul{margin:6px 0 0;padding-left:22px}
+.says li{margin-bottom:6px}
+.label{font-family:var(--mono);font-size:12.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft)}
+b.num{color:var(--navy);font-variant-numeric:tabular-nums}
+
+.qs{background:var(--q-bg);padding:14px 18px 6px;margin:12px 0}
+.q{display:flex;gap:12px;align-items:flex-start;margin-bottom:12px}
+.q p{margin:0;flex:1;min-width:0;font-weight:600;font-size:20px}
+.q p small{display:block;font-weight:400;font-style:italic;font-size:16px;color:var(--ink-soft);margin-top:2px}
+.copy{flex:none;font-family:var(--mono);font-size:12px;background:var(--surface);color:var(--navy);
+  border:1px solid var(--rule);padding:4px 9px;cursor:pointer;margin-top:3px}
+.copy:hover{border-color:var(--gold)}
+.copy:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+
+.push{border-left:3px solid var(--gold);padding:4px 0 4px 14px;margin:12px 0 0;font-size:17px}
+.push .label{color:var(--gold)}
+
+.poll{background:var(--surface);border:1px solid var(--rule);padding:16px 18px;margin:14px 0}
+.poll ol{margin:6px 0 0;padding-left:24px}
+
+.close{background:var(--gold-soft);padding:18px 22px;margin-top:14px}
+.close p{margin:.3em 0}
+footer{margin-top:40px;border-top:2px solid var(--navy);padding-top:12px;font-family:var(--mono);font-size:13px;color:var(--ink-soft)}
+
+@media (max-width:520px){body{font-size:17px}.q p{font-size:18px}}
+</style>
+
+<div class="topbar">
+  <div class="topbar-in">
+    <div class="toggle" role="group" aria-label="Choose view">
+      <button type="button" id="btn-discussion" aria-pressed="true">Discussion</button>
+      <button type="button" id="btn-detail" aria-pressed="false">Summary View</button>
+    </div>
+    <ul class="agenda" aria-label="Session agenda">
+  <li><a href="#open">Opening</a></li>
+  <li><a href="#errors">Costly errors</a></li>
+  <li><a href="#pushback">Pushback works</a></li>
+  <li><a href="#age">Age &amp; succession</a></li>
+  <li><a href="#next">What comes next</a></li>
+  <li><a href="#close">Wrap-up</a></li>
+</ul>
+  </div>
+</div>
+
+<div id="discussion">
+<div class="wrap">
+
+<header>
+  <div class="eyebrow">Current Events Discussion · Zoom session · Talking points</div>
+  <h1>The Twilight of an Autocratic Age</h1>
+  <p class="sub">Is the strongman era peaking, or already ending? A facilitator's guide to David Ignatius's column.</p>
+  <div class="meta">
+    <span>Source: <a href="https://wapo.st/4yPu3hz" target="_blank" rel="noopener">Washington Post Opinion, Sept. 22, 2026</a></span>
+  </div>
+</header>
+
+
+<div class="thesis">
+  <div class="eyebrow">The column in one sentence</div>
+  <p>Trump, Xi and Putin look dominant, but each is aging, prone to costly mistakes, and has no successor, so the "age of the autocrats" may already be ending.</p>
+</div>
+
+<!-- 1 -->
+<section class="seg" id="open">
+  <div class="seg-head"><h2>Opening: peak or decline?</h2></div>
+  <div class="says">
+    <div class="label">Set the scene</div>
+    <ul>
+      <li>Conventional wisdom holds that three strongmen now run the world. Ignatius notes that this week's U.N. General Assembly was treated as a footnote, while the real attention went to the Trump–Xi summit.</li>
+      <li>His contrarian claim is that we are watching these leaders decline rather than peak. Their power looks unshakable from outside, he argues, but the foundations underneath it are weakening in ways that are easy to miss.</li>
+      <li>Their ages: Trump <b class="num">80</b>, Xi <b class="num">73</b>, Putin <b class="num">73</b>. Xi has led China since 2012 and Putin has run Russia, as president or prime minister, since 1999. None has publicly named a successor.</li>
+    </ul>
+  </div>
+  <div class="poll">
+    <div class="label">Warm-up poll (hands up or chat a number)</div>
+    <ol>
+      <li>The strongman era is still rising.</li>
+      <li>It's at its peak.</li>
+      <li>It's already in decline.</li>
+      <li>Too soon to say.</li>
+    </ol>
+  </div>
+  <div class="push"><span class="label">Facilitator note</span> Record the split. We'll re-poll at the end to see if anyone moved.</div>
+</section>
+
+<!-- 2 -->
+<section class="seg" id="errors">
+  <div class="seg-head"><h2>"Autocrats' disease": costly unforced errors</h2></div>
+  <div class="says">
+    <div class="label">What Ignatius says</div>
+    <ul>
+      <li><strong>Putin:</strong> invaded Ukraine in February 2022 expecting Kyiv to fall within days. More than four years later the war goes on, and Ignatius cites about <b class="num">1.4 million</b> Russian dead and wounded.</li>
+      <li><strong>Trump:</strong> his February strike on Iran assumed the regime would fold quickly. Ignatius puts the cost at about <b class="num">$43 billion</b>, says it hurt Trump with his base, and calls him a poker player "on tilt."</li>
+      <li><strong>Xi:</strong> his errors are quieter. Since 2023 he has purged <b class="num">100+</b> senior officers, including 5 of 7 members of the Central Military Commission, which commands China's armed forces. He also cracked down on tech leaders, then partly reversed course.</li>
+    </ul>
+  </div>
+  <div class="qs">
+    <div class="q"><p>Is overconfidence a built-in flaw of one-man rule, or just bad luck in a few big bets?<small>Who in these systems is able to tell the leader "no"?</small></p></div>
+    <div class="q"><p>Is it fair to group Trump with Xi and Putin? He faces elections, courts and a free press.</p></div>
+    <div class="q"><p>Xi's purges: a sign of weakness and distrust, or of a leader firmly in control?</p></div>
+  </div>
+  <div class="push"><span class="label">The other side</span> Democracies make costly mistakes too (Iraq 2003, Afghanistan). Is "autocrats' disease" really specific to autocrats?</div>
+</section>
+
+<!-- 3 -->
+<section class="seg" id="pushback">
+  <div class="seg-head"><h2>Bullying smaller countries has backfired</h2></div>
+  <div class="says">
+    <div class="label">What Ignatius says</div>
+    <ul>
+      <li>In 2025 the late MI6 chief Alex Younger compared today's world to Yalta in 1945, when Roosevelt, Churchill and Stalin divided postwar Europe into spheres of influence. Ignatius argues the comparison doesn't fit what is actually happening.</li>
+      <li><strong>Greenland:</strong> Trump's threat to annex Greenland, a self-governing territory of Denmark, alarmed European allies and pulled them together in resistance. Ignatius says it ended not in annexation but in a compromise deal over U.S. Arctic bases.</li>
+      <li><strong>Japan &amp; the Philippines:</strong> China has applied heavy diplomatic and maritime pressure on both countries. Japan's Prime Minister Sanae Takaichi and Philippine President Ferdinand Marcos Jr. held firm, and Beijing did not get the retreat it wanted.</li>
+      <li><strong>Drones:</strong> cheap drones, which Ignatius calls "weapons of the weak," let Ukraine strike Russian ships, refineries and airbases, and shaped the fighting with Iran too. Inexpensive technology is offsetting much of the advantage that big militaries once enjoyed.</li>
+    </ul>
+  </div>
+  <div class="qs">
+    <div class="q"><p>Is the Yalta comparison useful, or misleading?<small>What made Yalta possible that is missing today?</small></p></div>
+    <div class="q"><p>Did Greenland end as a defeat for Trump, or did he get most of what he wanted?</p></div>
+    <div class="q"><p>Do cheap drones permanently shift power toward smaller nations, or will big powers adapt?</p></div>
+  </div>
+  <div class="push"><span class="label">The other side</span> Holding firm is not the same as winning. Russia still occupies Ukrainian territory; China's pressure on its neighbors continues.</div>
+</section>
+
+<!-- 4 -->
+<section class="seg" id="age">
+  <div class="seg-head"><h2>Father Time and the succession problem</h2></div>
+  <div class="says">
+    <div class="label">What Ignatius says</div>
+    <ul>
+      <li>Xi missed a banquet in New Delhi in September because of illness, a rare public absence. In China's tightly controlled system, even small signs about the leader's health draw intense attention from analysts and foreign governments.</li>
+      <li>Ignatius describes Putin as in denial about his advanced age. He says Trump, who was the oldest person ever inaugurated as president, is now visibly showing his years at 80 in public appearances.</li>
+      <li>None of the three has groomed a successor. Ignatius borrows a line from Warren Buffett's Berkshire Hathaway retirement announcement, "Father Time always wins," to argue that every strongman eventually runs into this problem.</li>
+    </ul>
+  </div>
+  <div class="qs">
+    <div class="q"><p>Why do strongmen so rarely name a successor?<small>Does naming one create a rival?</small></p></div>
+    <div class="q"><p>For the U.S., succession is set by the Constitution. Is the "no successor" problem the same for Trump as for Xi and Putin?</p></div>
+    <div class="q"><p>Historically, what happens when an aging autocrat dies without a plan? Think Stalin, Franco, Mao.</p></div>
+  </div>
+  <div class="push"><span class="label">Facilitator note</span> Keep this on leadership and institutions, not personal health speculation.</div>
+</section>
+
+<!-- 5 -->
+<section class="seg" id="next">
+  <div class="seg-head"><h2>Who rises instead?</h2></div>
+  <div class="says">
+    <div class="label">What Ignatius says</div>
+    <ul>
+      <li>Ignatius sees "middle powers" filling the space the big three leave. His main example is Canadian Prime Minister Mark Carney, who rallied resistance to Trump's tariffs and encouraged mid-sized democracies to stand together.</li>
+      <li>He hedges his own argument. These three leaders could stay dominant for years, he writes, and China's rise does not depend on Xi personally, so China's growing power would likely outlast him.</li>
+      <li>The great unknown, in his view, is artificial intelligence. Leadership in AI may bring large economic and military advantages, and no one yet knows whether it will strengthen autocrats or the democracies opposing them.</li>
+    </ul>
+  </div>
+  <div class="qs">
+    <div class="q"><p>Can middle powers really coordinate, or will they be picked off one by one?</p></div>
+    <div class="q"><p>Does AI favor autocrats (surveillance, control) or their challengers (cheap tools, open information)?</p></div>
+    <div class="q"><p>The column ran Sept. 22. What has happened in the four weeks since that supports or undercuts it?</p></div>
+  </div>
+</section>
+
+<!-- 6 -->
+<section class="seg" id="close">
+  <div class="seg-head"><h2>Wrap-up</h2></div>
+  <div class="poll">
+    <div class="label">Re-poll</div>
+    <p style="margin:.3em 0 0">Same four choices as the opening. Did anyone change their answer? Ask one person who moved to say why.</p>
+  </div>
+  <div class="qs">
+    <div class="q"><p>In one sentence: is Ignatius describing reality, or hoping for it?</p></div>
+  </div>
+  <div class="close">
+    <div class="label">Closing thought to read aloud</div>
+    <p>Ignatius ends with caution, not victory. Autocracies may be weaker than they look, but decline can take a long time, and a messy transition can be more dangerous than a stable strongman.</p>
+  </div>
+</section>
+
+<footer>Discussion notes summarize and paraphrase the column for group use. Read the full piece at the Washington Post link above.</footer>
+</div>
+</div>
+
+<div id="detail" hidden></div>
+<template id="orig"><style>
+  :host{display:block;
     --paper:#efe8d8;
     --paper-2:#e6ddc8;
     --ink:#201d17;
@@ -17,22 +264,19 @@
     --red:#7c2320;
     --gold:#8a6a2f;
     --max:1120px;
-    box-sizing:border-box;
-    padding-top:env(safe-area-inset-top,0px);
-    padding-bottom:env(safe-area-inset-bottom,0px);
   }
   *{box-sizing:border-box;}
-  html{scroll-padding-top:env(safe-area-inset-top,0px);}
-  body{
+  
+  .ob{position:relative;
     margin:0;
     background:var(--paper);
     color:var(--ink);
     font-family:'Spectral',Georgia,'Times New Roman',serif;
     -webkit-font-smoothing:antialiased;
   }
-  body::before{
+  .ob::before{
     content:"";
-    position:fixed;
+    position:absolute;
     inset:0;
     pointer-events:none;
     background-image:
@@ -177,7 +421,7 @@
     font-size:14px;
     padding:9px 14px;
   }
-  .glance-body{padding:14px 16px 6px;}
+  .glance-.ob{position:relative;padding:14px 16px 6px;}
   .glance-body h4{
     font-family:'Barlow Condensed',sans-serif;
     font-size:13px;
@@ -293,9 +537,7 @@
   }
 
   ::selection{background:var(--red);color:var(--paper);}
-</style>
-</head>
-<body>
+</style><div class="ob">
 <div class="wrap">
 
   <div class="masthead">
@@ -392,5 +634,35 @@
   </footer>
 
 </div>
-</body>
-</html>
+</div></template>
+
+<script>
+(function(){
+  var det=document.getElementById('detail'), dis=document.getElementById('discussion');
+  det.attachShadow({mode:'open'}).appendChild(document.getElementById('orig').content.cloneNode(true));
+  var bD=document.getElementById('btn-discussion'), bX=document.getElementById('btn-detail'), ag=document.querySelector('.agenda');
+  function show(v){
+    var d=v==='detail';
+    det.hidden=!d; dis.hidden=d; ag.hidden=d;
+    document.body.classList.toggle('detail',d);
+    bD.setAttribute('aria-pressed',String(!d)); bX.setAttribute('aria-pressed',String(d));
+    try{localStorage.setItem('twilight-view',v)}catch(e){}
+  }
+  bD.addEventListener('click',function(){show('discussion');window.scrollTo(0,0)});
+  bX.addEventListener('click',function(){show('detail');window.scrollTo(0,0)});
+  var saved='discussion'; try{saved=localStorage.getItem('twilight-view')||'discussion'}catch(e){}
+  show(saved);
+})();
+(function(){
+  var links=[].slice.call(document.querySelectorAll('.agenda a'));
+  var secs=links.map(function(a){return document.querySelector(a.getAttribute('href'))});
+  function update(){
+    var y=window.scrollY+120, cur=0;
+    secs.forEach(function(sec,i){ if(sec && sec.offsetTop<=y) cur=i; });
+    links.forEach(function(a,i){a.classList.toggle('on',i===cur && window.scrollY>40)});
+  }
+  window.addEventListener('scroll',update,{passive:true}); update();
+})();
+</script>
+
+</body></html>
