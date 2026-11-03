@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>The Rise of Legal Engineers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=Courier+Prime:wght@400;700&display=swap">
+<style>
+/* Companion to "The Billable Hour Under Pressure" — same broadsheet layout */
+:root{
+  color-scheme:light;
+  --paper:#f6f1e3; --ink:#1b2438; --navy:#14254a; --gold:#a8781f; --sage:#4f7a5c; --rule:#c9bfa6; --muted:#5b6274; --panel:#ece4cf; --bar-bg:#ddd3bb;
+  --display:"Playfair Display",Georgia,"Times New Roman",serif;
+  --body:"Source Serif 4",Georgia,serif;
+  --mono:"Courier Prime","Courier New",monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#11172a; --ink:#e7e1cf; --navy:#d9c48f; --gold:#e0b456; --sage:#8fbf9b; --rule:#38405a; --muted:#a3a8b8; --panel:#19213a; --bar-bg:#2b3350; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#11172a; --ink:#e7e1cf; --navy:#d9c48f; --gold:#e0b456; --sage:#8fbf9b; --rule:#38405a; --muted:#a3a8b8; --panel:#19213a; --bar-bg:#2b3350; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.6;padding:24px 16px 48px}
+.page{max-width:1120px;margin:0 auto}
+h1,h2,h3{font-family:var(--display);color:var(--navy);text-wrap:balance;margin:0}
+p{margin:0}
+
+/* Masthead */
+.masthead{text-align:center;border-bottom:3px double var(--ink);padding-bottom:10px}
+.meta{display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--rule);padding-bottom:6px}
+.srclink{color:var(--gold);font-weight:700;text-decoration:underline;text-underline-offset:3px}
+.srclink:hover,.srclink:focus-visible{color:var(--navy);outline-offset:2px}
+.nameplate{font-family:var(--display);font-weight:900;font-size:clamp(2rem,6vw,3.6rem);color:var(--navy);margin-top:10px;line-height:1.05}
+.tagline{font-family:var(--display);font-style:italic;color:var(--gold);font-size:1rem;margin-top:4px}
+
+/* Banner */
+.banner{padding-block:28px 18px;border-bottom:1px solid var(--rule);text-align:center}
+.kicker{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);font-weight:700}
+.banner h1{font-size:clamp(2rem,5.2vw,3.5rem);line-height:1.08;font-weight:900;margin-top:10px}
+.dek{font-family:var(--display);font-style:italic;font-size:clamp(1.05rem,2.2vw,1.3rem);color:var(--muted);max-width:780px;margin:14px auto 0}
+.byline{font-family:var(--mono);font-size:13px;color:var(--muted);margin-top:14px}
+
+/* Lead + glance */
+.lead{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:36px;padding-block:28px;border-bottom:3px double var(--ink)}
+.lead-story{min-width:0;display:flex;flex-direction:column;gap:16px}
+.lead-story p:first-child::first-letter{font-family:var(--display);font-weight:900;float:left;font-size:4.2em;line-height:.82;padding:6px 8px 0 0;color:var(--navy)}
+.equation{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px;font-family:var(--display);font-weight:700;font-size:clamp(1.05rem,2.6vw,1.4rem);color:var(--navy);padding:14px;border:1px dashed var(--rule);background:var(--panel)}
+.equation span.op{color:var(--gold);font-weight:900}
+.equation small{flex-basis:100%;text-align:center;font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);font-weight:400}
+.bigquote{border-top:2px solid var(--gold);border-bottom:2px solid var(--gold);padding-block:18px;margin-block:6px;text-align:center}
+.bigquote q{font-family:var(--display);font-style:italic;font-weight:700;font-size:clamp(1.5rem,3.4vw,2.1rem);line-height:1.2;color:var(--navy);quotes:"\201C" "\201D"}
+.bigquote cite{display:block;font-family:var(--mono);font-style:normal;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-top:10px}
+
+.glance{min-width:0;background:var(--panel);border:1px solid var(--rule);padding:20px 22px;align-self:start}
+.glance h2{font-size:1.5rem;border-bottom:2px solid var(--navy);padding-bottom:6px;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.glance h2 span{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--gold);font-weight:700}
+.stat{display:flex;flex-direction:column;gap:6px;padding-block:14px;border-bottom:1px dotted var(--rule)}
+.stat:last-of-type{border-bottom:0}
+.num{font-family:var(--display);font-weight:900;font-size:1.9rem;color:var(--gold);line-height:1;font-variant-numeric:tabular-nums;white-space:nowrap}
+.stat p{font-size:15px;line-height:1.45}
+.src{font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:10px;border-top:1px solid var(--rule);padding-top:8px}
+
+/* Charts */
+.charts{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:36px;padding-block:28px;border-bottom:1px solid var(--rule)}
+.chart{min-width:0}
+.chart h3{font-size:1.25rem}
+.chart .sub{font-size:14px;color:var(--muted);margin:4px 0 16px}
+.shift{display:flex;flex-direction:column;gap:12px}
+.row{display:grid;grid-template-columns:8rem minmax(0,1fr) 5.6rem;gap:10px;align-items:center;font-size:14px}
+.row .lbl{font-family:var(--mono);font-size:12px;color:var(--muted);line-height:1.25}
+.track{height:20px;background:var(--bar-bg);position:relative}
+.fill{position:absolute;top:0;bottom:0;background:var(--navy)}
+.fill.vendor{background:var(--gold)}
+.fill.inhouse{background:var(--sage)}
+.row .val{font-family:var(--mono);font-weight:700;font-variant-numeric:tabular-nums;text-align:right;font-size:12px}
+.axis{position:relative;height:16px;font-family:var(--mono);font-size:11px;color:var(--muted)}
+.axis span{position:absolute;transform:translateX(-50%)}
+.axis span:first-child{transform:none}
+.pair{display:flex;flex-direction:column;gap:6px;padding-bottom:12px;border-bottom:1px dotted var(--rule)}
+.pair:last-child{border-bottom:0}
+.pair .t{font-family:var(--display);font-weight:700;color:var(--navy)}
+.legend{display:flex;gap:16px;flex-wrap:wrap;font-family:var(--mono);font-size:12px;color:var(--muted);margin-top:12px}
+.legend i{display:inline-block;width:12px;height:12px;vertical-align:-1px;margin-right:6px}
+.note{font-family:var(--mono);font-size:11px;color:var(--muted);margin-top:10px}
+
+/* Departments */
+.dept-head{text-align:center;padding-block:26px 6px}
+.dept-head h2{font-size:1.9rem}
+.dept-head p{font-family:var(--mono);font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+.columns{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));padding-block:16px 28px;border-bottom:3px double var(--ink)}
+.col{min-width:0;padding-inline:22px;display:flex;flex-direction:column;gap:12px}
+.col+.col{border-left:1px solid var(--rule)}
+.col:first-child{padding-left:0}.col:last-child{padding-right:0}
+.col h3{font-size:1.35rem;line-height:1.2}
+.col .label{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--gold);font-weight:700}
+.col p{font-size:16px}
+.titles{display:flex;flex-wrap:wrap;gap:6px}
+.titles span{font-family:var(--mono);font-size:11px;border:1px solid var(--rule);padding:2px 7px;color:var(--navy);background:var(--panel)}
+.mini{font-family:var(--display);font-style:italic;font-size:1.1rem;color:var(--navy);border-left:3px solid var(--gold);padding-left:12px;line-height:1.35}
+.mini small{display:block;font-family:var(--mono);font-style:normal;font-size:11px;color:var(--muted);margin-top:4px;letter-spacing:.06em;text-transform:uppercase}
+
+/* Who's who */
+.cast{padding-block:24px}
+.cast h2{font-size:1.5rem;text-align:center;margin-bottom:14px}
+.cast-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:0 28px}
+.person{padding-block:10px;border-top:1px solid var(--rule)}
+.person b{font-family:var(--display);color:var(--navy);font-size:1.05rem}
+.person span{display:block;font-size:14px;color:var(--muted);line-height:1.4}
+
+.discuss{background:var(--panel);border:1px solid var(--rule);border-top:3px solid var(--navy);padding:24px clamp(16px,3vw,32px);margin-block:8px 24px}
+.discuss-head{text-align:center;margin-bottom:18px}
+.discuss-head h2{font-size:clamp(1.6rem,3.4vw,2.1rem);margin-top:6px}
+.q-list{list-style:none;counter-reset:q;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px 32px}
+.q-list li{counter-increment:q;display:grid;grid-template-columns:2.6rem minmax(0,1fr);column-gap:12px;padding-top:14px;border-top:1px solid var(--rule)}
+.q-list li::before{content:counter(q);grid-row:1 / span 2;font-family:var(--display);font-weight:900;font-size:2.4rem;line-height:1;color:var(--gold)}
+.q-list h3{font-size:1.2rem;line-height:1.25;margin-bottom:6px}
+.q-list p{font-size:16px}
+.foot{font-family:var(--mono);font-size:12px;color:var(--muted);text-align:center;border-top:3px double var(--ink);padding-top:12px;margin-top:8px}
+
+@media (max-width:860px){
+  .lead,.charts{grid-template-columns:1fr}
+  .columns{grid-template-columns:1fr}
+  .col{padding-inline:0;padding-block:16px}
+  .col+.col{border-left:0;border-top:1px solid var(--rule)}
+}
+@media (max-width:760px){.q-list{grid-template-columns:1fr}}
+@media (max-width:480px){
+  .row{grid-template-columns:6.2rem minmax(0,1fr) 4.8rem;gap:8px}
+  .row .val{font-size:11px}
+}
+</style>
+</head>
+<body>
+<div class="page">
+  <header class="masthead">
+    <div class="meta"><span>Saturday, October 31, 2026</span><span>Business · Law · Technology</span><span>Source: <a class="srclink" href="https://www.nytimes.com/2026/10/31/business/dealbook/legal-engineer-ai-law.html?unlocked_article_code=1.NlE.395r.66_iiIwWp6oI&amp;smid=url-share" target="_blank" rel="noopener">Read the NYT article ↗</a></span></div>
+    <div class="nameplate">The Legal Ledger</div>
+    <div class="tagline">A front-page reading of how AI is reshaping the law firm</div>
+  </header>
+
+  <section class="banner">
+    <div class="kicker">The Profession · Careers</div>
+    <h1>The Hottest Job in Law Doesn't Need a Law Degree</h1>
+    <p class="dek">Law firms, legal-tech vendors and corporate legal departments are racing to hire "legal engineers," people fluent enough in both law and AI to redesign how legal work gets done.</p>
+    <div class="byline">By Sarah Kessler · Visual summary of the DealBook report</div>
+  </section>
+
+  <section class="lead">
+    <article class="lead-story">
+      <p>When Daniel Himmel left law practice in 2018 for what would now be called legal engineering, it felt like a gamble with his career. Today he leads legal engineering for North America at Legora, where he hired roughly 70 people in the past year alone, part of a global team of about 200 the company has assembled since 2024. Vendors, rivals and clients are all hiring, he says; it has become a genuine profession.</p>
+      <p>The role sits where law meets technology. Legal engineers rewrite workflows around AI tools, run pilots, and teach lawyers to use the new systems. Stanford Law's Irene Liu sums it up as an equation:</p>
+      <div class="equation"><span>Law</span><span class="op">+</span><span>Technology</span><span class="op">+</span><span>Business Process</span><small>Irene Liu's definition, Stanford Law School AI initiative</small></div>
+      <p>The shift is reshaping how firms are built. Instead of a broad base of junior associates doing routine work, firms want people who can build and run the systems that now do much of it. Mary O'Carroll, a 20-year legal operations veteran, put it bluntly:</p>
+      <div class="bigquote"><q>You don't necessarily need a giant pyramid of lawyers anymore.</q><cite>Mary O'Carroll · CEO, LegalEng Consulting Group</cite></div>
+      <p>The backdrop is an industry in upheaval. The same week the story ran, the long-established firm Weil, Gotshal &amp; Manges collapsed, which the article cites as another sign of how fast the ground is moving.</p>
+    </article>
+
+    <aside class="glance" aria-label="At a Glance">
+      <h2>At a Glance <span>Key figures</span></h2>
+      <div class="stat"><div class="num">~200</div><p>legal engineers on Legora's global team, built since 2024</p></div>
+      <div class="stat"><div class="num">180 → 215</div><p>Harvey's legal-engineering team, grown in just two weeks; all are former practicing lawyers</p></div>
+      <div class="stat"><div class="num">100+</div><p>people working on AI initiatives at Latham &amp; Watkins</p></div>
+      <div class="stat"><div class="num">~50</div><p>lawyers who left the 200 largest U.S. firms for AI companies in the first half of 2026; 15 took legal-engineering titles</p></div>
+      <div class="stat"><div class="num">~1,400</div><p>senior leaders waiting to apply to Stanford's new Legal Engineering Academy</p></div>
+      <div class="stat"><div class="num">+29%</div><p>rise in LinkedIn postings for "marketing engineer," 2024 to 2025: the pattern is spreading beyond law</p></div>
+      <p class="src">Sources: Legora; Harvey; Latham &amp; Watkins; Firm Prospects; Stanford Law School; LinkedIn, as reported by DealBook</p>
+    </aside>
+  </section>
+
+  <section class="charts">
+    <div class="chart">
+      <h3>What the Job Pays</h3>
+      <p class="sub">Advertised salary ranges for legal-engineering roles, from job postings cited in the article</p>
+      <div class="shift">
+        <div class="row"><span class="lbl">Harvey</span><div class="track"><div class="fill vendor" style="left:48%;width:40%"></div></div><span class="val">$220–320K</span></div>
+        <div class="row"><span class="lbl">Gibson Dunn</span><div class="track"><div class="fill" style="left:60%;width:20%"></div></div><span class="val">$250–300K</span></div>
+        <div class="row"><span class="lbl">Microsoft</span><div class="track"><div class="fill inhouse" style="left:18.8%;width:52.6%"></div></div><span class="val">$147–279K</span></div>
+        <div class="row"><span class="lbl">Latham &amp; Watkins</span><div class="track"><div class="fill" style="left:48%;width:12%"></div></div><span class="val">$220–250K</span></div>
+        <div class="row"><span class="lbl">Kirkland &amp; Ellis</span><div class="track"><div class="fill" style="left:21.2%;width:26.8%"></div></div><span class="val">$153–220K</span></div>
+        <div class="row"><span class="lbl">Nvidia</span><div class="track"><div class="fill inhouse" style="left:9.6%;width:28.6%"></div></div><span class="val">$124–196K</span></div>
+        <div class="row" aria-hidden="true"><span></span><div class="axis"><span style="left:0">$100K</span><span style="left:40%">$200K</span><span style="left:80%">$300K</span></div><span></span></div>
+      </div>
+      <div class="legend"><span><i style="background:var(--navy)"></i>Law firm</span><span><i style="background:var(--gold)"></i>AI vendor</span><span><i style="background:var(--sage)"></i>In-house legal team</span></div>
+    </div>
+    <div class="chart">
+      <h3>Who Wants In</h3>
+      <p class="sub">Where the movement is coming from, by the numbers</p>
+      <div class="shift">
+        <div class="pair"><span class="t">Stanford Legal Engineering Academy waitlist (~1,400)</span>
+          <div class="row"><span class="lbl">In-house teams</span><div class="track"><div class="fill inhouse" style="left:0;width:50%"></div></div><span class="val">~50%</span></div>
+          <div class="row"><span class="lbl">Partners &amp; senior attorneys</span><div class="track"><div class="fill" style="left:0;width:20%"></div></div><span class="val">~20%</span></div>
+          <div class="row"><span class="lbl">Everyone else</span><div class="track"><div class="fill vendor" style="left:0;width:30%"></div></div><span class="val">~30%</span></div>
+        </div>
+        <div class="pair"><span class="t">Big Law lawyers who moved to AI companies, Jan–Jun 2026 (~50)</span>
+          <div class="row"><span class="lbl">Legal-engineer titles</span><div class="track"><div class="fill vendor" style="left:0;width:30%"></div></div><span class="val">15</span></div>
+          <div class="row"><span class="lbl">Other roles</span><div class="track"><div class="fill" style="left:0;width:70%"></div></div><span class="val">~35</span></div>
+        </div>
+      </div>
+      <p class="note">"Everyone else" and "other roles" are derived by subtraction from the reported totals.</p>
+    </div>
+  </section>
+
+  <div class="dept-head"><h2>Inside the Story</h2><p>Three questions about a new profession</p></div>
+  <section class="columns">
+    <div class="col">
+      <span class="label">I · What Is It?</span>
+      <h3>A Job Still Being Defined</h3>
+      <p>The title alone varies from employer to employer, and so does the work.</p>
+      <div class="titles"><span>Legal engineer</span><span>Knowledge &amp; innovation counsel</span><span>Innovation attorney</span><span>Legal applications engineer</span><span>Practice innovation attorney</span></div>
+      <p>At AI vendors, legal engineers mostly help clients fit the product into their workflows, run trials and train staff. At law firms the focus is wider: redesigning how the firm itself works and getting lawyers to adopt the new methods.</p>
+      <div class="mini">The name may sound invented, but the moment demands the role.<small>Paraphrasing Howard Glazer, Ropes &amp; Gray</small></div>
+    </div>
+    <div class="col">
+      <span class="label">II · Who Does It?</span>
+      <h3>Self-Taught, Mostly</h3>
+      <p>Almost no schools offer formal training yet, though some have added classes. Most legal engineers are former lawyers who learned AI on their own or on the job; others come from legal operations, paralegal work or consulting.</p>
+      <p>Rarest of all is the software engineer who went on to law school, whom one hiring manager called the unicorn. O'Carroll argues the key skill isn't a J.D. or coding but business-process redesign, the kind of thinking an M.B.A. teaches.</p>
+      <div class="mini">The move isn't leaving the law so much as joining a generational shift in it.<small>Paraphrasing Ankita Puri, Legora</small></div>
+    </div>
+    <div class="col">
+      <span class="label">III · Will It Last?</span>
+      <h3>Bridge or Destination?</h3>
+      <p>Glazer sees the role growing fast but wonders whether it is a transitional job, needed only while firms make the leap to AI.</p>
+      <p>O'Carroll disagrees: the technology keeps changing, so someone will always be needed to maintain systems and adapt workflows. Seyfarth Shaw's Byong Kim says it is too early to know how it all settles, though he has never been busier.</p>
+      <div class="mini">Expertise that designs AI systems is becoming its own job category, well beyond law.<small>Paraphrasing Kory Kantenga, LinkedIn</small></div>
+    </div>
+  </section>
+
+  <section class="cast">
+    <h2>Who's Quoted</h2>
+    <div class="cast-grid">
+      <div class="person"><b>Daniel Himmel</b><span>Head of legal engineering, North America, Legora</span></div>
+      <div class="person"><b>Ankita Puri</b><span>Senior legal engineer, Legora; former litigator and chief legal officer</span></div>
+      <div class="person"><b>Irene Liu</b><span>Executive director, AI initiative, Stanford Law School</span></div>
+      <div class="person"><b>Howard Glazer</b><span>Partner and head of practice AI, Ropes &amp; Gray</span></div>
+      <div class="person"><b>Mary O'Carroll</b><span>CEO, LegalEng Consulting Group; 13 years in legal ops at Google</span></div>
+      <div class="person"><b>Byong Kim</b><span>Chief data &amp; AI officer, Seyfarth Shaw</span></div>
+      <div class="person"><b>Kory Kantenga</b><span>Head of economics, LinkedIn</span></div>
+    </div>
+  </section>
+
+  <section class="discuss" aria-label="Questions for Discussion">
+    <div class="discuss-head"><span class="kicker">BOLLI Current Events Group</span><h2>Questions for Discussion</h2></div>
+    <ol class="q-list">
+      <li><h3>Jobs That Didn't Exist Yet</h3><p>Over your working life, did you see a new role appear at the seam between an old profession and a new technology, the way "computer person" once did in offices? What happened to that role a decade later?</p></li>
+      <li><h3>A Pyramid Without a Base</h3><p>If firms no longer need rows of junior lawyers doing routine work, where will tomorrow's senior partners come from? Read alongside our billable-hour discussion: who trains the next generation?</p></li>
+      <li><h3>Who Needs Credentials?</h3><p>Legal engineers shape how legal advice is produced, yet many don't need a law license. Should people who design these systems be held to the same professional standards as the lawyers who sign off on the work?</p></li>
+      <li><h3>Transition or Profession?</h3><p>Is the legal engineer a permanent career or a bridge that disappears once AI becomes routine? Would you advise a grandchild in law school to aim for this role?</p></li>
+    </ol>
+  </section>
+
+  <footer class="foot">Based on "The New Hot Job in Law Doesn't Require a J.D.," by Sarah Kessler, The New York Times DealBook, October 31, 2026 · Companion to "The Billable Hour Under Pressure"</footer>
+</div>
+</body>
+</html>
