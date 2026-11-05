@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Within Reach</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#111; --paper:#fff; --rule:#111; --hair:#bbb; --muted:#555;
+    --accent:#7a1414; --tint:#f4f4f2;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);
+    font-family:Georgia,"Times New Roman",serif;font-size:17px;line-height:1.55}
+  .wrap{max-width:1100px;margin:0 auto;padding:28px 20px 60px}
+  .label{font-family:Georgia,serif;text-transform:uppercase;letter-spacing:.14em;font-size:11.5px}
+  /* Masthead */
+  .mast{border-top:4px solid var(--rule);border-bottom:1px solid var(--rule);padding:14px 0 10px;text-align:center}
+  .mast .top{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;border-bottom:1px solid var(--rule);padding-bottom:6px;margin-bottom:10px}
+  .mast h1{font-family:"Playfair Display",Georgia,serif;font-weight:900;font-size:clamp(38px,7vw,72px);line-height:1;margin:6px 0 8px;letter-spacing:-.01em}
+  .mast .dek{font-family:"Playfair Display",Georgia,serif;font-weight:900;font-style:italic;
+    font-size:clamp(24px,3.6vw,36px);line-height:1.1;letter-spacing:.02em;margin:2px auto 10px;
+    display:flex;align-items:center;justify-content:center;gap:16px}
+  .mast .dek::before,.mast .dek::after{content:"";height:1px;background:var(--ink);flex:0 1 90px}
+  .dbl{border-bottom:3px double var(--rule);margin-top:4px}
+  /* Lede */
+  .lede{display:grid;grid-template-columns:2fr 1fr;gap:28px;padding:22px 0;border-bottom:1px solid var(--rule)}
+  .lede p{margin:0 0 12px}
+  .lede p:first-child::first-letter{font-family:"Playfair Display",serif;font-weight:900;float:left;font-size:58px;line-height:.85;padding:6px 8px 0 0}
+  .box{border:1px solid var(--rule);padding:14px 16px;background:var(--tint)}
+  .box h3{margin:0 0 8px}
+  .key{list-style:none;margin:0;padding:0;font-size:15px}
+  .key li{padding:7px 0;border-top:1px solid var(--hair)}
+  .key li:first-child{border-top:none}
+  .tag{display:inline-block;border:1px solid var(--ink);padding:1px 6px;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;margin-right:6px;vertical-align:2px;white-space:nowrap}
+  .tag.solid{background:var(--ink);color:var(--paper)}
+  .tag.half{background:repeating-linear-gradient(135deg,#111 0 2px,#fff 2px 5px);color:var(--ink);background-clip:padding-box}
+  .tag.half span{background:#fff;padding:0 2px}
+  /* Filters */
+  .filters{display:flex;flex-wrap:wrap;gap:18px;align-items:center;padding:14px 0;border-bottom:1px solid var(--rule)}
+  .fgroup{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+  .fgroup .label{margin-right:4px;color:var(--muted)}
+  button.f{font-family:Georgia,serif;font-size:12px;letter-spacing:.1em;text-transform:uppercase;
+    background:var(--paper);color:var(--ink);border:1px solid var(--ink);padding:5px 9px;cursor:pointer;border-radius:0}
+  button.f[aria-pressed="true"]{background:var(--ink);color:var(--paper)}
+  button.f:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+  .count{margin-left:auto;font-style:italic;color:var(--muted);font-size:14px}
+  /* Section heads */
+  h2.sec{font-family:"Playfair Display",Georgia,serif;font-weight:900;font-size:30px;margin:30px 0 4px}
+  .secline{border-top:1px solid var(--rule);border-bottom:1px solid var(--rule);height:4px;margin-bottom:16px}
+  /* Cards */
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:0;border-top:1px solid var(--rule)}
+  .card{padding:18px 20px 20px;border-bottom:1px solid var(--rule)}
+  .card:nth-child(odd){border-right:1px solid var(--rule)}
+  .grid.one-col .card{border-right:none}
+  .card .meta{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px}
+  .card .num{font-family:"Playfair Display",serif;font-weight:900;font-size:15px;color:var(--muted);margin-right:6px}
+  .card h3{font-family:"Playfair Display",Georgia,serif;font-weight:700;font-size:23px;line-height:1.15;margin:4px 0 8px}
+  .card .addr{font-size:14.5px;color:var(--muted);font-style:italic;margin:0 0 10px;border-left:2px solid var(--ink);padding-left:10px}
+  .card p{margin:0 0 10px}
+  details.move p{margin:2px 0 10px}
+  details.move + details{margin-top:0}
+  details{border-top:1px solid var(--hair);margin-top:10px}
+  summary{cursor:pointer;list-style:none;padding:9px 0 6px;color:var(--accent)}
+  summary::-webkit-details-marker{display:none}
+  summary::before{content:"\25B8  ";}
+  details[open] summary::before{content:"\25BE  ";}
+  .counter li{margin-bottom:7px}
+  .counter{margin:4px 0 8px;padding-left:20px;font-size:15.5px}
+  .reply{font-size:14.5px;border:1px dashed var(--hair);padding:8px 10px;margin-top:6px}
+  .reply b{font-variant:small-caps;letter-spacing:.04em}
+  .hidden{display:none !important}
+  /* Opposing views & sources */
+  .two{display:grid;grid-template-columns:1fr 1fr;gap:28px}
+  .two h3{font-family:"Playfair Display",serif;font-size:20px;margin:0 0 6px}
+  .opp p{margin:0 0 12px}
+  ol.src{font-size:14px;padding-left:20px;columns:2;column-gap:32px}
+  ol.src li{margin-bottom:6px;break-inside:avoid}
+  a{color:var(--ink)}
+  footer{border-top:4px solid var(--rule);margin-top:34px;padding-top:10px;font-size:13.5px;color:var(--muted)}
+  .expand-all{margin-left:6px}
+  .govintro{max-width:820px;margin:0 0 16px;font-size:16.5px}
+  .card.gov details + details{margin-top:0}
+  /* Article I pill + drill-down */
+  .pillrow{display:flex;justify-content:center;padding:16px 0 14px;border-bottom:1px solid var(--rule)}
+  .pill{display:inline-flex;align-items:center;gap:9px;font-family:Georgia,serif;font-size:13px;
+    letter-spacing:.12em;text-transform:uppercase;color:var(--ink);background:var(--paper);
+    border:1px solid var(--ink);border-radius:999px;padding:7px 16px 7px 12px;cursor:pointer}
+  .pill:hover,.pill[aria-expanded="true"]{background:var(--ink);color:var(--paper)}
+  .pill svg{width:16px;height:18px;flex:none}
+  .pill .chev{transition:transform .2s;font-size:11px}
+  .pill[aria-expanded="true"] .chev{transform:rotate(180deg)}
+  .pill:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+  #art1{border-bottom:1px solid var(--rule);padding:6px 0 18px}
+  #art1[hidden]{display:none}
+  #art1 .intro{font-style:italic;color:var(--muted);text-align:center;max-width:720px;margin:6px auto 14px;font-size:15.5px}
+  .secs{display:grid;grid-template-columns:repeat(2,1fr);border-top:1px solid var(--rule)}
+  .sx{padding:13px 18px 14px;border-bottom:1px solid var(--hair);display:grid;grid-template-columns:52px 1fr;gap:12px}
+  .sx:nth-child(odd){border-right:1px solid var(--hair)}
+  .sx .sn{font-family:"Playfair Display",serif;font-weight:900;font-size:28px;line-height:1}
+  .sx .sn small{display:block;font-family:Georgia,serif;font-weight:normal;font-size:10px;letter-spacing:.14em;color:var(--muted);margin-top:4px}
+  .sx h4{margin:0 0 4px;font-size:12px;letter-spacing:.14em;text-transform:uppercase}
+  .sx p{margin:0;font-size:15.5px;line-height:1.5}
+  .artref{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:0 0 6px}
+  .artref .label{color:var(--muted);margin-right:2px}
+  a.sref{font-family:"Playfair Display",Georgia,serif;font-weight:700;font-size:14px;text-decoration:none;
+    border:1px solid var(--ink);border-radius:999px;padding:0 9px;background:#f1e7b3;color:var(--ink)}
+  a.sref:hover,a.sref:focus-visible{background:var(--ink);color:var(--paper);outline:none}
+  .sref-x{font-size:12.5px;font-style:italic;color:var(--muted)}
+  .sx.flash{animation:flash 1.6s ease-out}
+  @keyframes flash{0%{background:#f1e7b3}100%{background:transparent}}
+  .sectip{position:absolute;z-index:50;max-width:320px;background:var(--paper);color:var(--ink);
+    border:1px solid var(--ink);box-shadow:3px 3px 0 var(--ink);padding:9px 12px 10px;font-size:14.5px;line-height:1.45;
+    pointer-events:none;opacity:0;transform:translateY(4px);transition:opacity .12s,transform .12s}
+  .sectip.on{opacity:1;transform:none}
+  .sectip .tl{font-size:11px;letter-spacing:.14em;text-transform:uppercase;border-bottom:1px solid var(--hair);padding-bottom:4px;margin-bottom:6px}
+  .sectip .tl b{font-family:"Playfair Display",Georgia,serif;font-size:15px;letter-spacing:0;margin-right:6px}
+  .sectip .ess{background:#f1e7b3;font-weight:bold;padding:0 2px;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+  mark{background:#f1e7b3;color:var(--ink);padding:0 2px;font-weight:bold;box-decoration-break:clone;-webkit-box-decoration-break:clone}
+  @media (max-width:780px){
+    .secs{grid-template-columns:1fr}
+    .sx:nth-child(odd){border-right:none}
+    .lede,.two{grid-template-columns:1fr}
+    .grid{grid-template-columns:1fr}
+    .card:nth-child(odd){border-right:none}
+    ol.src{columns:1}
+    .wrap{padding:18px 16px 40px}
+    .count{margin-left:0;width:100%}
+  }
+  @media print{
+    .filters{display:none}
+    details{display:block} details>*{display:block}
+    .card{break-inside:avoid}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="mast">
+  <div class="top label"><span>Discussion Materials</span><span>Prepared November 4, 2026</span><span>Liberal Democracy Series</span></div>
+  <h1>Within Reach</h1>
+  <p class="dek">The Article I Docket</p>
+  <div class="dbl"></div>
+</header>
+
+
+<section class="lede">
+  <div>
+    <p>Assume Democratic majorities in both chambers when the 120th Congress is sworn in on January 3, 2027. The President keeps the veto and the machinery of enforcement. The question: <em>what can Congress do without his signature or cooperation?</em></p>
+    <p>Each chamber can investigate, subpoena, set its own rules, and impeach (House) or block confirmations (Senate) on its own. New law needs a signature or a two-thirds override, so the strongest middle path is leverage: Congress writes the must-pass spending bills, and a President who vetoes them owns the shutdown.</p>
+    <p>Each action lists the conduct it addresses, Congress's move, the executive's likely countermoves, and the Article I sections it rests on. Findings of unlawful conduct are attributed to the court or agency that made them; "criminal" remains an allegation until a court rules.</p>
+  </div>
+  <aside class="box">
+    <h3 class="label">How to read the tags</h3>
+    <ul class="key">
+      <li><span class="tag solid">Unilateral</span> One chamber can act alone. No signature needed.</li>
+      <li><span class="tag">Both chambers</span> Requires House and Senate, but no presidential signature.</li>
+      <li><span class="tag half"><span>Leverage</span></span> Needs a signed law, but rides on a must-pass bill the President can block only by forcing a shutdown or losing a program.</li>
+      <li><span class="tag">House</span> <span class="tag">Senate</span> Which chamber holds the power.</li>
+    </ul>
+  </aside>
+</section>
+
+<div class="pillrow">
+  <button class="pill" id="art1Btn" aria-expanded="false" aria-controls="art1">
+    <svg viewBox="0 0 16 18" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true">
+      <path d="M2 1h8l4 4v12H2z"/><path d="M10 1v4h4"/><path d="M4.5 8.5h7M4.5 11h7M4.5 13.5h5"/>
+    </svg>
+    <span>Article I · The Ten Sections</span><span class="chev" aria-hidden="true">▾</span>
+  </button>
+</div>
+
+<section id="art1" hidden aria-label="Article I of the U.S. Constitution, section by section">
+  <p class="intro">Article I creates Congress. When something is called an "Article I issue," it turns on what these ten sections give Congress, require of it, or forbid. The highlighted phrase in each is its essence. The gold § tags on each action below link back here.</p>
+  <div class="secs">
+    <div class="sx" id="sec1"><div class="sn">1<small>§</small></div><div><h4>Legislative Power</h4>
+      <p>Vests <mark>"all legislative Powers herein granted" in a Congress</mark> made up of a Senate and a House of Representatives.</p></div></div>
+    <div class="sx" id="sec2"><div class="sn">2<small>§</small></div><div><h4>The House</h4>
+      <p>Two-year terms, seats apportioned by population through a census, and qualifications for members. It also gives the House <mark>the sole power of impeachment</mark>.</p></div></div>
+    <div class="sx" id="sec3"><div class="sn">3<small>§</small></div><div><h4>The Senate</h4>
+      <p>Six-year terms and qualifications, with the Vice President presiding. The Senate has <mark>the sole power to try impeachments, with two-thirds needed to convict</mark>; the penalty is limited to removal and disqualification from future office. Senators were originally chosen by state legislatures; the 17th Amendment changed that to popular election.</p></div></div>
+    <div class="sx" id="sec4"><div class="sn">4<small>§</small></div><div><h4>Elections</h4>
+      <p>States set the "times, places and manner" of congressional elections, <mark>subject to Congress's power to alter those rules</mark>.</p></div></div>
+    <div class="sx" id="sec5"><div class="sn">5<small>§</small></div><div><h4>Self-Governance</h4>
+      <p>Each chamber judges the elections and qualifications of its own members, <mark>makes its own rules</mark>, disciplines and expels members, and keeps a journal. A chamber can't adjourn more than three days without the other's consent, the basis for the pro forma sessions that block recess appointments.</p></div></div>
+    <div class="sx" id="sec6"><div class="sn">6<small>§</small></div><div><h4>Pay &amp; Privileges</h4>
+      <p>Includes the <mark>Speech or Debate Clause</mark>, which protects members from being "questioned in any other Place" for legislative acts. It also bars members from holding executive office at the same time.</p></div></div>
+    <div class="sx" id="sec7"><div class="sn">7<small>§</small></div><div><h4>Lawmaking</h4>
+      <p>Revenue bills must start in the House. <mark>Every bill goes to the President, who can sign or veto it; two-thirds of each chamber can override</mark>.</p></div></div>
+    <div class="sx" id="sec8"><div class="sn">8<small>§</small></div><div><h4>Enumerated Powers</h4>
+      <p>The core list of Congress's powers: <mark>taxing and spending</mark>, borrowing, regulating interstate and foreign commerce, naturalization, coining money, creating lower federal courts, <mark>declaring war</mark>, and raising and funding the army and navy. It ends with the <mark>Necessary and Proper Clause</mark>, letting Congress pass laws needed to carry out its own powers and those of the other branches.</p></div></div>
+    <div class="sx" id="sec9"><div class="sn">9<small>§</small></div><div><h4>Limits on Federal Power</h4>
+      <p>Protects habeas corpus except in rebellion or invasion; bans bills of attainder and ex post facto laws. States the core of the power of the purse: <mark>"No Money shall be drawn from the Treasury, but in Consequence of Appropriations made by Law."</mark> Also contains the Foreign Emoluments Clause, barring officials from accepting foreign gifts or payments "without the Consent of the Congress."</p></div></div>
+    <div class="sx" id="sec10"><div class="sn">10<small>§</small></div><div><h4>Limits on the States</h4>
+      <p><mark>States can't make treaties, coin money, pass ex post facto laws, or impair contracts</mark>, and they need congressional consent for certain actions such as interstate compacts.</p></div></div>
+  </div>
+</section>
+
+<nav class="filters" aria-label="Filter actions">
+  <div class="fgroup" role="group" aria-label="Category">
+    <span class="label">Category</span>
+    <button class="f" data-cat="all" aria-pressed="true">All</button>
+    <button class="f" data-cat="investigate" aria-pressed="false">Investigate</button>
+    <button class="f" data-cat="purse" aria-pressed="false">Power of the Purse</button>
+    <button class="f" data-cat="personnel" aria-pressed="false">Personnel</button>
+    <button class="f" data-cat="war" aria-pressed="false">War Powers</button>
+    <button class="f" data-cat="safeguard" aria-pressed="false">Safeguards</button>
+  </div>
+  <div class="fgroup" role="group" aria-label="Independence">
+    <span class="label">Independence</span>
+    <button class="f" data-ind="all" aria-pressed="true">All</button>
+    <button class="f" data-ind="unilateral" aria-pressed="false">Unilateral</button>
+    <button class="f" data-ind="both" aria-pressed="false">Both chambers</button>
+    <button class="f" data-ind="leverage" aria-pressed="false">Leverage</button>
+  </div>
+  <div class="fgroup">
+    <button class="f expand-all" id="expandAll" aria-pressed="false">Open all details</button>
+  </div>
+  <span class="count" id="count"></span>
+</nav>
+
+<h2 class="sec">The Actions</h2>
+<div class="secline"></div>
+
+<div class="grid" id="grid">
+
+  <!-- 1 -->
+  <article class="card" data-cat="investigate" data-ind="unilateral">
+    <div class="meta"><span class="num">No. 1</span><span class="tag solid">Unilateral</span><span class="tag">House</span><span class="tag">Senate</span></div>
+    <div class="artref"><span class="label">Article I</span><a class="sref" href="#sec1" data-sec="1">§1</a><a class="sref" href="#sec8" data-sec="8">§8</a></div>
+    <h3>Open a broad oversight campaign with compulsory subpoenas</h3>
+    <p class="addr">Addresses: the Trump family's business and cryptocurrency dealings, the Justice Department's handling of the Epstein files, ICE conduct, the Caribbean boat strikes, the East Wing ballroom and proposed arch.</p>
+    <details class="move"><summary>Congressional move</summary>
+      <p>Committee chairs can schedule hearings and issue subpoenas on their own authority. Democrats have already signaled the targets: the ranking Democrat on House Oversight has named Trump family business dealings, the Epstein investigation and ICE among his five priorities, and Foreign Affairs Democrats plan to examine the President's international dealings. Even when documents are withheld, sworn public testimony builds a record.</p>
+    </details>
+    <details><summary>Executive countermoves</summary>
+      <ul class="counter">
+        <li><strong>Blanket privilege claims.</strong> Assert executive privilege, or "absolute testimonial immunity" for senior aides, and order officials not to appear.</li>
+        <li><strong>Run out the clock.</strong> Negotiate endlessly over scope, produce heavily redacted documents, then force Congress into civil litigation that can outlast the 120th Congress.</li>
+        <li><strong>Delegitimize.</strong> Frame the inquiries as a partisan "revenge docket" and redirect attention to the investigators.</li>
+        <li><strong>Pre-emptive pardons</strong> for aides facing contempt or perjury exposure.</li>
+      </ul>
+      <div class="reply"><b>Congress's answer:</b> start with private parties (banks, crypto firms, contractors) who lack privilege claims; pair each refusal with a contempt vote (No. 2) and a funding consequence (No. 4).</div>
+    </details>
+  </article>
+
+  <!-- 2 -->
+  <article class="card" data-cat="investigate" data-ind="unilateral">
+    <div class="meta"><span class="num">No. 2</span><span class="tag solid">Unilateral</span><span class="tag">House</span></div>
+    <div class="artref"><span class="label">Article I</span><a class="sref" href="#sec1" data-sec="1">§1</a><a class="sref" href="#sec5" data-sec="5">§5</a></div>
+    <h3>Revive inherent contempt through a House rules change</h3>
+    <p class="addr">Addresses: defiance of congressional subpoenas, which has historically gone unpunished when the Justice Department declines to prosecute its own officials.</p>
+    <details class="move"><summary>Congressional move</summary>
+      <p>Criminal contempt depends on the Justice Department to prosecute, and civil enforcement depends on slow courts. Inherent contempt is Congress's own constitutional tool: the chamber tries and punishes the witness itself. It was used successfully in the 19th and early 20th centuries but abandoned after 1935 because floor trials were cumbersome. Democrats on the Judiciary Committee have previously drafted a modernized version that would impose escalating personal fines on officials who defy subpoenas, adopted by House rule at the start of the Congress.</p>
+    </details>
+    <details><summary>Executive countermoves</summary>
+      <ul class="counter">
+        <li><strong>Legal opinion as shield.</strong> The Office of Legal Counsel has long held that inherent contempt cannot be used against senior officials asserting privilege; the administration will cite it and instruct officials to ignore fines.</li>
+        <li><strong>Court challenge</strong> to the fine procedure on due-process grounds, putting enforcement on hold.</li>
+        <li><strong>Pardon the contemnor</strong>, testing whether the pardon power reaches a legislative (non-criminal) sanction.</li>
+        <li><strong>Indemnify</strong> officials for any fines through allies or legal-defense funds.</li>
+      </ul>
+      <div class="reply"><b>Congress's answer:</b> fines that accrue daily and are recoverable later create a personal liability that survives the administration; a test case against a lower-level official is less vulnerable than one against a Cabinet member.</div>
+    </details>
+  </article>
+
+  <!-- 3 -->
+  <article class="card" data-cat="purse" data-ind="both">
+    <div class="meta"><span class="num">No. 3</span><span class="tag">Both chambers</span><span class="tag solid">Unilateral (GAO)</span></div>
+    <div class="artref"><span class="label">Article I</span><a class="sref" href="#sec8" data-sec="8">§8</a><a class="sref" href="#sec9" data-sec="9">§9</a></div>
+    <h3>Enforce the Impoundment Control Act through Congress's own auditor</h3>
+    <p class="addr">Addresses: freezing and cancelling appropriated funds. GAO found violations in the withholding of EV-charging money, Institute of Museum and Library Services grants, and roughly 1,800 NIH research grants; it also ruled the August 2025 "pocket rescission" of $4.9 billion in foreign aid unlawful.</p>
+    <details class="move"><summary>Congressional move</summary>
+      <p>The Government Accountability Office is a legislative-branch agency, and the 1974 Act lets the Comptroller General sue the executive to release impounded funds, a power GAO has never used. A Democratic Congress can direct and fund GAO to finish its backlog of impoundment cases, publish findings quickly, and file suit, while committees hold hearings with each affected agency.</p>
+    </details>
+    <details><summary>Executive countermoves</summary>
+      <ul class="counter">
+        <li><strong>Attack the statute.</strong> The OMB director and the President have said they consider the Impoundment Control Act unconstitutional and want a court to strike it down; a GAO lawsuit gives them that vehicle.</li>
+        <li><strong>Shape GAO itself.</strong> The Comptroller General is appointed by the President from a list proposed by a congressional commission; a new leadership could be less aggressive.</li>
+        <li><strong>Timing games.</strong> Repeat pocket rescissions in the last 45 days of each fiscal year so funds lapse before courts can act.</li>
+        <li><strong>Slow-walk instead of freeze</strong>: "review" grants indefinitely, which is harder to label an impoundment.</li>
+      </ul>
+      <div class="reply"><b>Congress's answer:</b> write "must obligate by" dates and automatic apportionment rules into the next spending bills (No. 4), so the burden flips to the executive.</div>
+    </details>
+  </article>
+
+  <!-- 4 -->
+  <article class="card" data-cat="purse" data-ind="leverage">
+    <div class="meta"><span class="num">No. 4</span><span class="tag half"><span>Leverage</span></span><span class="tag">Both chambers</span></div>
+    <div class="artref"><span class="label">Article I</span><a class="sref" href="#sec7" data-sec="7">§7</a><a class="sref" href="#sec8" data-sec="8">§8</a><a class="sref" href="#sec9" data-sec="9">§9</a></div>
+    <h3>Write binding limits into the must-pass spending bills</h3>
+    <p class="addr">Addresses: impoundment, unauthorized military strikes, ICE practices, unauthorized construction such as the ballroom and arch, and retaliation against agencies.</p>
+    <details class="move"><summary>Congressional move</summary>
+      <p>The Constitution says no money leaves the Treasury without an appropriation. A Democratic Congress controls what those bills say. Riders can prohibit spending on specified actions, require obligation deadlines, fund watchdogs directly, and impose ICE guardrails that Homeland Security Democrats have proposed: no masks, required body cameras, and visible badge numbers. The President can veto, but then must accept a shutdown he would be seen as causing.</p>
+    </details>
+    <details><summary>Executive countermoves</summary>
+      <ul class="counter">
+        <li><strong>Veto and blame.</strong> Veto the bill, accept a shutdown, and use the bully pulpit to blame Congress.</li>
+        <li><strong>Sign and ignore.</strong> Accept the money, then claim riders unconstitutionally intrude on Article II powers, especially on military and immigration matters.</li>
+        <li><strong>Route around annual bills.</strong> Draw on multi-year and mandatory money already enacted in the 2025 reconciliation law, which reduces how much ICE and defense depend on new appropriations.</li>
+        <li><strong>Reprogram and transfer</strong> funds between accounts, as with prior border-wall financing.</li>
+      </ul>
+      <div class="reply"><b>Congress's answer:</b> pair riders with GAO audit triggers and narrow transfer authority; prioritize limits that matter most to the public so the shutdown fight is politically favorable.</div>
+    </details>
+  </article>
+
+  <!-- 5 -->
+  <article class="card" data-cat="personnel" data-ind="unilateral">
+    <div class="meta"><span class="num">No. 5</span><span class="tag solid">Unilateral</span><span class="tag">Senate</span></div>
+    <div class="artref"><span class="label">Article I</span><a class="sref" href="#sec5" data-sec="5">§5</a><span class="sref-x">+ Art. II §2 (advice &amp; consent)</span></div>
+    <h3>Withhold confirmation and block recess appointments</h3>
+    <p class="addr">Addresses: placement of loyalists in law enforcement, intelligence, and watchdog posts; the 2025 firing of 17 inspectors general without the 30-day notice the law requires, which a federal judge found violated the Inspector General Act.</p>
+    <details class="move"><summary>Congressional move</summary>
+      <p>A Senate majority controls the floor and committees. It can decline to schedule hearings, reject nominees, condition confirmation on written commitments (to answer subpoenas, to follow court orders), and hold "pro forma" sessions every three days so the President cannot make recess appointments.</p>
+    </details>
+    <details><summary>Executive countermoves</summary>
+      <ul class="counter">
+        <li><strong>Government by "acting."</strong> Fill posts with acting officials under the Vacancies Act, chain acting designations, or "dual-hat" one loyalist across several offices.</li>
+        <li><strong>Fire the confirmed.</strong> Remove Senate-confirmed officials who resist, relying on recent Supreme Court decisions expanding presidential removal power.</li>
+        <li><strong>Threaten forced adjournment.</strong> Invoke the never-used Article II power to adjourn Congress if the chambers disagree on adjournment, to open a recess window.</li>
+      </ul>
+      <div class="reply"><b>Congress's answer:</b> challenge invalid acting appointments in court (actions taken by them can be voided) and cut pay for officials serving beyond Vacancies Act limits through appropriations.</div>
+    </details>
+  </article>
+
+  <!-- 6 -->
+  <article class="card" data-cat="personnel" data-ind="unilateral">
+    <div class="meta"><span class="num">No. 6</span><span class="tag solid">Unilateral</span><span class="tag">House</span><span class="tag">Senate trial</span></div>
+    <div class="artref"><span class="label">Article I</span><a class="sref" href="#sec2" data-sec="2">§2</a><a class="sref" href="#sec3" data-sec="3">§3</a></div>
+    <h3>Impeach officials, and possibly the President</h3>
+    <p class="addr">Addresses: defiance of court orders (an AP review found judges ruled the administration violated orders in at least 31 lawsuits in its first 15 months), the boat strikes, and alleged self-dealing.</p>
+    <details class="move"><summary>Congressional move</summary>
+      <p>Impeachment needs only a House majority. Democrats have floated impeaching the Secretary of Defense (styled "Secretary of War"), and impeachment of the President is described as "an option." Conviction requires two-thirds of the Senate, so removal is unlikely without Republican votes. The practical value is a formal record, compelled attention, and, for officials, the possibility of disqualification from future office.</p>
+    </details>
+    <details><summary>Executive countermoves</summary>
+      <ul class="counter">
+        <li><strong>Boycott.</strong> Refuse to participate, call the process illegitimate, and block witnesses.</li>
+        <li><strong>Count to 34.</strong> Rely on Senate Republicans for acquittal and present acquittal as vindication.</li>
+        <li><strong>Resign and reappoint.</strong> Let an impeached official resign, then return as an "acting" or White House adviser.</li>
+        <li><strong>Nationalize it</strong> as a 2028 campaign issue about Democratic overreach.</li>
+      </ul>
+      <div class="reply"><b>Congress's answer:</b> impeach where the evidentiary record is strongest and narrowest (court-order defiance is documented in judges' own rulings) rather than on broad charges.</div>
+    </details>
+  </article>
+
+  <!-- 7 -->
+  <article class="card" data-cat="war" data-ind="both">
+    <div class="meta"><span class="num">No. 7</span><span class="tag">Both chambers</span><span class="tag half"><span>Leverage</span></span></div>
+    <div class="artref"><span class="label">Article I</span><a class="sref" href="#sec7" data-sec="7">§7</a><a class="sref" href="#sec8" data-sec="8">§8</a><a class="sref" href="#sec9" data-sec="9">§9</a></div>
+    <h3>Force war-powers votes and cut off funds for unauthorized strikes</h3>
+    <p class="addr">Addresses: the lethal strikes on vessels in the Caribbean and eastern Pacific since September 2025, conducted without congressional authorization; the administration told Congress the War Powers Resolution does not apply because the strikes are not "hostilities."</p>
+    <details class="move"><summary>Congressional move</summary>
+      <p>War-powers resolutions are privileged, so a majority can force prompt floor votes. Every prior attempt failed under Republican control; with Democratic majorities, a joint resolution would pass, though it faces a veto. The binding step is a funding prohibition in the defense appropriations bill or the National Defense Authorization Act. Armed Services and Intelligence committees can also subpoena the legal memos and strike video the Pentagon has declined to release.</p>
+    </details>
+    <details><summary>Executive countermoves</summary>
+      <ul class="counter">
+        <li><strong>Veto</strong> any joint resolution of disapproval.</li>
+        <li><strong>Redefine the mission</strong> (e.g., shift to "partner-nation" operations or covert authorities) to escape the funding prohibition's wording.</li>
+        <li><strong>Classify.</strong> Claim the legal basis and evidence are classified and brief only a handful of members.</li>
+        <li><strong>Commander-in-chief claim</strong> that funding limits unconstitutionally restrict tactical decisions.</li>
+      </ul>
+      <div class="reply"><b>Congress's answer:</b> draft the funding bar by geography and activity, not by mission label; Members can read classified material into the record under Speech or Debate protection if they judge it warranted.</div>
+    </details>
+  </article>
+
+  <!-- 8 -->
+  <article class="card" data-cat="investigate" data-ind="unilateral">
+    <div class="meta"><span class="num">No. 8</span><span class="tag solid">Unilateral</span><span class="tag">House</span></div>
+    <div class="artref"><span class="label">Article I</span><a class="sref" href="#sec1" data-sec="1">§1</a><a class="sref" href="#sec5" data-sec="5">§5</a></div>
+    <h3>Create a select committee on the rule of law</h3>
+    <p class="addr">Addresses: the pattern of noncompliance with federal court orders, including deportations carried out despite judicial orders and, in one district alone, nearly 100 orders a chief judge said ICE violated in a single month.</p>
+    <details class="move"><summary>Congressional move</summary>
+      <p>A House resolution can establish a select committee with its own staff, subpoena power, and a mandate to produce a public report, modeled on the January 6 committee. Its value is synthesis: one authoritative record of court-order defiance, drawn largely from judges' own findings, that later prosecutors, courts, and voters can rely on.</p>
+    </details>
+    <details><summary>Executive countermoves</summary>
+      <ul class="counter">
+        <li><strong>Non-cooperation</strong> across the board, with officials citing privilege and ongoing litigation.</li>
+        <li><strong>Attack membership and staff</strong> as biased; demand minority-party seats be filled by allies.</li>
+        <li><strong>Litigate the committee's validity</strong> to delay subpoena enforcement.</li>
+      </ul>
+      <div class="reply"><b>Congress's answer:</b> the public court record is already extensive; the committee can build much of its report without executive cooperation.</div>
+    </details>
+  </article>
+
+  <!-- 9 -->
+  <article class="card" data-cat="safeguard" data-ind="unilateral">
+    <div class="meta"><span class="num">No. 9</span><span class="tag solid">Unilateral</span><span class="tag">House</span><span class="tag">Senate</span></div>
+    <div class="artref"><span class="label">Article I</span><a class="sref" href="#sec1" data-sec="1">§1</a><a class="sref" href="#sec8" data-sec="8">§8</a></div>
+    <h3>Preserve evidence for accountability after January 2029</h3>
+    <p class="addr">Addresses: potential destruction of records and the expiration of the five-year statute of limitations on most federal crimes.</p>
+    <details class="move"><summary>Congressional move</summary>
+      <p>House Democrats have said they want 2029 to be the year of reckoning for officials who broke the law. Committees can issue formal preservation demands to agencies, carriers, and messaging-app providers; take sworn depositions now (false testimony to Congress is itself a crime with its own clock); and archive everything in a form a future Justice Department can use.</p>
+    </details>
+    <details><summary>Executive countermoves</summary>
+      <ul class="counter">
+        <li><strong>Auto-deleting apps</strong> and personal devices for official business, putting records beyond reach.</li>
+        <li><strong>Blanket pardons</strong> before January 20, 2029, possibly including pre-emptive pardons for unnamed conduct.</li>
+        <li><strong>Records "reorganization"</strong> at the National Archives or reclassification to limit access.</li>
+      </ul>
+      <div class="reply"><b>Congress's answer:</b> a pardon does not erase a public record; and depositions taken now preserve testimony even if witnesses later become unavailable.</div>
+    </details>
+  </article>
+
+  <!-- 10 -->
+  <article class="card" data-cat="investigate" data-ind="unilateral">
+    <div class="meta"><span class="num">No. 10</span><span class="tag solid">Unilateral</span><span class="tag">House</span><span class="tag">Senate</span></div>
+    <div class="artref"><span class="label">Article I</span><a class="sref" href="#sec9" data-sec="9">§9</a></div>
+    <h3>Document foreign payments under the Emoluments Clause</h3>
+    <p class="addr">Addresses: foreign governments and connected investors buying Trump-affiliated cryptocurrency or doing business with family ventures, and gifts from foreign states.</p>
+    <details class="move"><summary>Congressional move</summary>
+      <p>The Constitution forbids federal officers from accepting foreign emoluments "without the Consent of the Congress." Each chamber can investigate, compile a public ledger of foreign-linked payments, and vote formally that it has not consented. Democrats have specifically flagged foreign attempts to influence the administration through Trump-linked digital assets.</p>
+    </details>
+    <details><summary>Executive countermoves</summary>
+      <ul class="counter">
+        <li><strong>Definitional defense.</strong> Argue market transactions and crypto purchases are not "emoluments."</li>
+        <li><strong>Opacity.</strong> Ownership through trusts, LLCs and pseudonymous wallets that are hard to trace.</li>
+        <li><strong>Standing barrier.</strong> Courts have been reluctant to let members of Congress sue on emoluments.</li>
+      </ul>
+      <div class="reply"><b>Congress's answer:</b> subpoena exchanges, banks, and token issuers, which are private and lack privilege defenses.</div>
+    </details>
+  </article>
+
+  <!-- 11 -->
+  <article class="card" data-cat="safeguard" data-ind="leverage">
+    <div class="meta"><span class="num">No. 11</span><span class="tag half"><span>Leverage</span></span><span class="tag">Both chambers</span></div>
+    <div class="artref"><span class="label">Article I</span><a class="sref" href="#sec8" data-sec="8">§8</a><a class="sref" href="#sec9" data-sec="9">§9</a></div>
+    <h3>Rebuild and fund the watchdogs</h3>
+    <p class="addr">Addresses: the mass firing of inspectors general and the weakening of internal oversight across agencies.</p>
+    <details class="move"><summary>Congressional move</summary>
+      <p>Spending bills can give inspector-general offices their own protected line items, fund the IG council directly, and expand GAO's investigative capacity. Committees can also give former IGs a public platform to finish the reviews that were cut short.</p>
+    </details>
+    <details><summary>Executive countermoves</summary>
+      <ul class="counter">
+        <li><strong>Fire the replacements</strong>, this time with the 30-day notice, which a judge noted would cure the legal defect.</li>
+        <li><strong>Starve access</strong> by denying IGs documents and systems, regardless of their budgets.</li>
+        <li><strong>Install loyal IGs</strong> through acting appointments.</li>
+      </ul>
+      <div class="reply"><b>Congress's answer:</b> statutory access rights already exist; Congress can require agency heads to certify compliance and tie their office budgets to it.</div>
+    </details>
+  </article>
+
+  <!-- 12 -->
+  <article class="card" data-cat="safeguard" data-ind="unilateral">
+    <div class="meta"><span class="num">No. 12</span><span class="tag solid">Unilateral</span><span class="tag">House</span></div>
+    <div class="artref"><span class="label">Article I</span><a class="sref" href="#sec8" data-sec="8">§8</a><a class="sref" href="#sec9" data-sec="9">§9</a></div>
+    <h3>Defend the courts and litigants directly</h3>
+    <p class="addr">Addresses: open attacks on federal judges and noncompliance with their orders.</p>
+    <details class="move"><summary>Congressional move</summary>
+      <p>The House, through its General Counsel, can file amicus briefs in cases challenging executive actions and, where the House's own institutional interests are injured (as with appropriations), consider suing in its own name. Hearings can give judges' findings a public airing and press for funding of judicial security.</p>
+    </details>
+    <details><summary>Executive countermoves</summary>
+      <ul class="counter">
+        <li><strong>Standing objections.</strong> Courts often hold that one chamber cannot sue the executive over institutional injuries.</li>
+        <li><strong>Supreme Court emergency docket.</strong> Seek quick stays from a Court that has frequently granted the administration emergency relief.</li>
+        <li><strong>Control of the Marshals.</strong> The U.S. Marshals, who enforce court orders and protect judges, sit within the Justice Department.</li>
+      </ul>
+      <div class="reply"><b>Congress's answer:</b> spending-bill language moving judicial-security funding under the judiciary's control (a leverage item) would reduce that dependence.</div>
+    </details>
+  </article>
+
+  <!-- 13 -->
+  <article class="card" data-cat="safeguard" data-ind="unilateral">
+    <div class="meta"><span class="num">No. 13</span><span class="tag solid">Unilateral</span><span class="tag">House</span><span class="tag">Senate</span></div>
+    <div class="artref"><span class="label">Article I</span><a class="sref" href="#sec6" data-sec="6">§6</a></div>
+    <h3>Put suppressed documents on the public record</h3>
+    <p class="addr">Addresses: withheld material such as Epstein-investigation files and strike legal opinions.</p>
+    <details class="move"><summary>Congressional move</summary>
+      <p>Under the Speech or Debate Clause, what Members say and publish in official proceedings cannot be prosecuted (the Pentagon Papers precedent, <em>Gravel v. United States</em>). Documents obtained by subpoena, or provided by whistleblowers, can be entered into the hearing record. This is a powerful but blunt tool to be used with care for privacy and security.</p>
+    </details>
+    <details><summary>Executive countermoves</summary>
+      <ul class="counter">
+        <li><strong>Classification</strong> after the fact, and threats against staff who handle material outside the protected legislative sphere.</li>
+        <li><strong>Prosecute the sources</strong>: whistleblowers and leakers lack the protection Members have.</li>
+        <li><strong>Counter-release</strong> selected documents to shape the narrative first.</li>
+      </ul>
+      <div class="reply"><b>Congress's answer:</b> strengthen whistleblower channels into committees and keep handling within protected legislative acts.</div>
+    </details>
+  </article>
+
+  <!-- 14 -->
+  <article class="card" data-cat="safeguard" data-ind="unilateral">
+    <div class="meta"><span class="num">No. 14</span><span class="tag solid">Unilateral</span><span class="tag">House</span><span class="tag">Senate</span></div>
+    <div class="artref"><span class="label">Article I</span><a class="sref" href="#sec4" data-sec="4">§4</a><a class="sref" href="#sec5" data-sec="5">§5</a></div>
+    <h3>Oversee election administration ahead of 2028</h3>
+    <p class="addr">Addresses: civil-liberties groups' charges of federal interference in the 2026 midterms, including demands for state voter data.</p>
+    <details class="move"><summary>Congressional move</summary>
+      <p>Committees can investigate federal demands on state election offices, protect election officials through hearings and funding requests, and make clear in advance how each chamber will exercise its constitutional power to judge the elections and qualifications of its own members.</p>
+    </details>
+    <details><summary>Executive countermoves</summary>
+      <ul class="counter">
+        <li><strong>Fraud narrative</strong> to justify further federal action on voter rolls.</li>
+        <li><strong>Litigation by the Justice Department</strong> against states over voter data and procedures.</li>
+        <li><strong>Defund election-security work</strong> at the Cybersecurity and Infrastructure Security Agency and similar offices.</li>
+      </ul>
+      <div class="reply"><b>Congress's answer:</b> fund state election grants through the Election Assistance Commission in must-pass bills (leverage), and build bipartisan alliances with state secretaries of state.</div>
+    </details>
+  </article>
+
+</div>
+
+<h2 class="sec">Governing While Overseeing</h2>
+<div class="secline"></div>
+<p class="govintro">Holding the administration to account is half the job. A majority also has to answer the questions voters raise most: prices, health coverage, America's standing with its allies, and the cost of tariffs. These four cards show where each issue stands as of early November 2026, what Congress can do on its own, and what needs a presidential signature.</p>
+<div class="grid govgrid">
+  <article class="card gov">
+    <div class="meta"><span class="num">G1</span><span class="tag">Governing</span></div>
+    <div class="artref"><span class="label">Article I</span><a class="sref" href="#sec7" data-sec="7">§7</a><a class="sref" href="#sec8" data-sec="8">§8</a></div>
+    <h3>Affordability and inflation</h3>
+    <p class="addr"><span class="label" style="font-style:normal">Where it stands · </span>Headline inflation was 3.7% over the 12 months to September 2026, pushed up by gasoline; core inflation (excluding food and energy) was 2.6%. The October report is due November 10.</p>
+    <details><summary>What Congress can do on its own</summary>
+      <ul class="counter">
+        <li><strong>Hearings on prices.</strong> Committees and the Joint Economic Committee can put tariff pass-through, energy costs, and housing on the record, with testimony from businesses and economists.</li>
+        <li><strong>Adopt a budget resolution.</strong> A budget resolution passes both chambers and never goes to the President. It sets spending priorities and can open the door to a reconciliation bill that needs only a simple Senate majority.</li>
+        <li><strong>Price-gouging and market investigations</strong> of concentrated industries (groceries, rent-setting software, pharmacy middlemen) by subpoena.</li>
+      </ul>
+    </details>
+    <details><summary>What needs a signature</summary>
+      <ul class="counter">
+        <li><strong>Tax relief and cost-cutting laws</strong>, such as expanded family or housing credits, and any reconciliation bill.</li>
+        <li><strong>Leverage path:</strong> attach cost-of-living measures to must-pass appropriations, so a veto puts both the shutdown and the measure on the President.</li>
+      </ul>
+    </details>
+  </article>
+  <article class="card gov">
+    <div class="meta"><span class="num">G2</span><span class="tag">Governing</span></div>
+    <div class="artref"><span class="label">Article I</span><a class="sref" href="#sec7" data-sec="7">§7</a><a class="sref" href="#sec8" data-sec="8">§8</a></div>
+    <h3>Restore the ACA premium credits</h3>
+    <p class="addr"><span class="label" style="font-style:normal">Where it stands · </span>The enhanced premium tax credits expired January 1, 2026. The House passed a three-year extension (H.R. 1834) on January 8, 2026, by 230–196 after a discharge petition, but it stalled in the Senate. KFF projected enrollment falling from about 22.3 million to about 17.5 million, with average premium payments up 58%.</p>
+    <details><summary>What Congress can do on its own</summary>
+      <ul class="counter">
+        <li><strong>Pass an extension in both chambers.</strong> With Democratic majorities, the bill can reach the President's desk early in the session.</li>
+        <li><strong>Oversee CMS</strong> on marketplace rules, enrollment windows, and outreach funding that affect who signs up.</li>
+        <li><strong>Document the damage</strong> with state insurance commissioners and hospitals on coverage losses and uncompensated care.</li>
+      </ul>
+    </details>
+    <details><summary>What needs a signature</summary>
+      <ul class="counter">
+        <li><strong>The extension itself</strong> is a tax law that needs a signature or a two-thirds override.</li>
+        <li><strong>Leverage path:</strong> attach the credits to the first must-pass spending bill. Timing matters, because 2027 coverage enrollment is already under way.</li>
+      </ul>
+    </details>
+  </article>
+  <article class="card gov">
+    <div class="meta"><span class="num">G3</span><span class="tag">Governing</span></div>
+    <div class="artref"><span class="label">Article I</span><a class="sref" href="#sec8" data-sec="8">§8</a><span class="sref-x">+ Art. II §2 (treaties)</span></div>
+    <h3>Rejuvenate the alliances</h3>
+    <p class="addr"><span class="label" style="font-style:normal">Where it stands · </span>A 2023 law (the FY2024 NDAA) bars withdrawing from NATO without Senate consent or an act of Congress. In April 2026 the President said he was "absolutely" considering an exit and that he didn't need Congress. The FY2026 NDAA forbids cutting U.S. forces below 76,000 in Europe and 28,500 in South Korea. Strains with allies have grown over the war with Iran.</p>
+    <details><summary>What Congress can do on its own</summary>
+      <ul class="counter">
+        <li><strong>Senate resolutions</strong> reaffirming Article 5 and the NATO withdrawal bar, plus visits by congressional delegations to allied capitals.</li>
+        <li><strong>Enforce the troop floors</strong> through Armed Services hearings and required certifications.</li>
+        <li><strong>Senate treaty power:</strong> give advice and consent to treaties and agreements with allies, and refuse it for deals that undercut them.</li>
+      </ul>
+    </details>
+    <details><summary>What needs a signature</summary>
+      <ul class="counter">
+        <li><strong>The NDAA and defense appropriations</strong> carry the troop floors, Ukraine and allied aid, and limits on moving NATO command roles. They need a signature, but they're must-pass bills.</li>
+        <li><strong>New statutory guardrails</strong>, such as extending the NATO withdrawal bar to other treaty alliances.</li>
+      </ul>
+    </details>
+  </article>
+  <article class="card gov">
+    <div class="meta"><span class="num">G4</span><span class="tag">Governing</span></div>
+    <div class="artref"><span class="label">Article I</span><a class="sref" href="#sec1" data-sec="1">§1</a><a class="sref" href="#sec8" data-sec="8">§8</a></div>
+    <h3>Reduce tariffs and reclaim trade power</h3>
+    <p class="addr"><span class="label" style="font-style:normal">Where it stands · </span>On February 20, 2026, the Supreme Court ruled 6–3 in <em>Learning Resources v. Trump</em> that the emergency-powers law does not authorize tariffs, and refunds were ordered. The administration replaced them with a temporary 10% global tariff (Section 122), which expired July 24. That same day, new Section 301 "forced labor" tariffs of 10–12.5% took effect on goods from 60 economies, alongside Section 232 tariffs and Section 338 tariffs on Canada.</p>
+    <details><summary>What Congress can do on its own</summary>
+      <ul class="counter">
+        <li><strong>Article I §8 gives Congress the tariff power.</strong> Ways and Means and Senate Finance can hold hearings on who pays, where prices rose, and whether the Section 301 findings stand up.</li>
+        <li><strong>Oversee refunds</strong> of the struck-down tariffs so importers, and in turn consumers, are actually repaid.</li>
+        <li><strong>Force votes</strong> on resolutions disapproving specific tariffs, putting each member on record.</li>
+      </ul>
+    </details>
+    <details><summary>What needs a signature</summary>
+      <ul class="counter">
+        <li><strong>Rewrite the delegations.</strong> Amending Sections 232, 301, and 338 to require congressional approval for new tariffs needs a signature or a two-thirds override.</li>
+        <li><strong>Leverage path:</strong> appropriations riders limiting enforcement of particular tariffs, with the shutdown risk that comes with them.</li>
+      </ul>
+    </details>
+  </article>
+</div>
+
+<h2 class="sec">The Other Side of the Ledger</h2>
+<div class="secline"></div>
+<section class="two opp">
+  <div>
+    <h3>How the administration and its defenders see it</h3>
+    <p>Defenders argue the President is enforcing the mandate he won. On spending, the OMB director maintains the Impoundment Control Act itself is unconstitutional and that presidents have historically had authority not to spend. On the boat strikes, the Justice Department's position is that the operations are not "hostilities" under the War Powers Resolution and fall within the commander-in-chief's power against narco-trafficking groups.</p>
+    <p>Republicans on Homeland Security contend that tighter rules on ICE officers would erode national-security gains. More broadly, critics call the Democratic oversight plan a partisan "revenge docket," and some Republicans predict impeachment will become the majority's top priority, crowding out legislation.</p>
+  </div>
+  <div>
+    <h3>Questions and disputes worth weighing</h3>
+    <p>Some contested points remain unsettled in law: whether inherent contempt can lawfully reach senior officials, how far Congress may limit presidential removal power after recent Supreme Court rulings, and whether courts will even hear disputes between the branches. Several district-court findings against the administration were narrowed or stayed on appeal.</p>
+    <p>There are also strategic risks for Democrats: shutdown fights can backfire; an impeachment that ends in acquittal may strengthen the President; and aggressive oversight could set precedents a future Republican Congress uses against a Democratic president. Reasonable people disagree on how hard to push.</p>
+  </div>
+</section>
+
+<h2 class="sec">Sources</h2>
+<div class="secline"></div>
+<ol class="src">
+  <li><a href="https://www.pbs.org/newshour/amp/politics/house-democrats-plan-vast-oversight-of-trump-administration-impeachment-is-an-option">AP / PBS: House Democrats plan vast oversight; impeachment is an option (Sept. 2026)</a></li>
+  <li><a href="https://www.coloradopolitics.com/2026/10/29/who-and-what-democrats-will-go-after-if-they-win/">Colorado Politics: Who and what Democrats will go after if they win (Oct. 2026)</a></li>
+  <li><a href="https://www.semafor.com/article/11/04/2025/democrats-gear-up-for-oversight-onslaught-against-trump-if-they-win-midterms">Semafor: Democrats gear up for oversight onslaught</a></li>
+  <li><a href="https://www.govexec.com/oversight/2025/08/trump-illegally-froze-1800-nih-medical-research-grants-congress-watchdog-says/407296/">Government Executive: GAO finds NIH grant freeze violated the ICA</a></li>
+  <li><a href="https://federalnewsnetwork.com/agency-oversight/2025/06/gao-finds-trump-administrations-second-violation-of-federal-spending-law/">Federal News Network: GAO's second impoundment violation finding</a></li>
+  <li><a href="https://www.govexec.com/management/2025/08/trump-moves-unilaterally-withhold-funds-drawing-bipartisan-calls-illegality/407793">Government Executive: $4.9B pocket rescission</a></li>
+  <li><a href="https://talkingpointsmemo.com/?p=1534724">TPM: GAO's impoundment role and leadership change</a></li>
+  <li><a href="https://www.clickorlando.com/news/national/2026/05/02/takeaways-from-ap-report-on-trump-administrations-defiance-of-lower-court-orders/">AP: Takeaways on defiance of lower-court orders (May 2026)</a></li>
+  <li><a href="https://reason.com/2026/01/29/federal-judge-slams-ice-for-violating-nearly-100-court-orders-ice-is-not-a-law-unto-itself">Reason: Minnesota chief judge lists ICE order violations</a></li>
+  <li><a href="https://en.wikipedia.org/wiki/2025_dismissals_of_U.S._inspectors_general">2025 dismissals of U.S. inspectors general</a></li>
+  <li><a href="https://www.news4jax.com/news/politics/2025/09/24/federal-judge-refuses-to-reinstate-eight-former-inspectors-general-fired-by-trump-administration/">AP: Judge finds IG firings unlawful but declines reinstatement</a></li>
+  <li><a href="https://democrats-homeland.house.gov/news/press-releases/ranking-members-meeks-smith-himes-and-thompson-introduce-war-powers-resolution-to-end-trumps-illegal-boat-strikes">House Democrats: War Powers Resolution on boat strikes (Sept. 2026)</a></li>
+  <li><a href="https://groundnews.lakegeneva.lib.wi.us/article/trump-administration-tells-congress-war-law-doesnt-apply-to-cartel-strikes">Administration says War Powers Resolution doesn't apply to strikes</a></li>
+  <li><a href="https://www.everycrsreport.com/reports/RL34097.html">CRS: Congress's Contempt Power and Enforcement of Subpoenas</a></li>
+  <li><a href="https://digital-release.thehill.com/?p=485959">The Hill (op-ed): Diversify Congress's subpoena enforcement arsenal</a></li>
+  <li><a href="https://neguse.house.gov/media/in-the-news/house-dems-propose-strengthening-congress-contempt-power-break-administration">House Democrats' inherent contempt rule proposal</a></li>
+  <li><a href="https://www.wjbc.com/2025/10/15/dems-have-plan-to-rein-in-ice-if-win-midterms">Newsweek via WJBC: Democrats' plan for ICE guardrails</a></li>
+  <li><a href="https://www.securities.io/u-s-cpi-rises-0-6-in-september-as-gasoline-lifts-annual-rate-to-3-7/">Securities.io: September 2026 CPI up 3.7% as gasoline lifts annual rate</a></li>
+  <li><a href="https://www.astho.org/communications/blog/2026/aca-enhanced-premium-tax-credits-legislative-developments-2025-2026/">ASTHO: ACA enhanced premium tax credits, 2025–2026</a></li>
+  <li><a href="https://pbs.org/newshour/health/affordable-care-act-enrollment-projected-to-plunge-by-5-million-as-costs-spike-analysis-shows">AP / PBS: ACA enrollment projected to drop by 5 million (May 2026)</a></li>
+  <li><a href="https://www.cbsnews.com/news/trump-withdraw-nato-require-congress-approval">CBS News: NATO withdrawal requires Congress</a></li>
+  <li><a href="https://foreignpolicy.com/2025/12/08/ndaa-congress-defense-bill-trump-aumf-troops-europe-hegseth/">Foreign Policy: NDAA troop floors in Europe and Korea</a></li>
+  <li><a href="https://www.withersworldwide.com/en-gb/insight/read/update-on-ieepa-tariff-refunds">Withers: Learning Resources ruling and IEEPA tariff refunds</a></li>
+  <li><a href="https://www.clearygottlieb.com/news-and-insights/publication-listing/trump-administration-imposes-new-section-301-tariffs-on-60-trading-partners">Cleary Gottlieb: New Section 301 tariffs on 60 trading partners</a></li>
+</ol>
+
+<footer>
+  <p>Prepared as discussion material. Descriptions of conduct as unlawful are attributed to the court or agency that made the finding; characterizations as criminal are allegations unless adjudicated. Legal questions noted here are contested and evolving. Facts current to early November 2026.</p>
+</footer>
+
+</div>
+
+<script>
+(function(){
+  var cat='all', ind='all';
+  var cards=[].slice.call(document.querySelectorAll('#grid .card'));
+  var count=document.getElementById('count');
+  function apply(){
+    var n=0;
+    cards.forEach(function(c){
+      var okC = cat==='all' || c.dataset.cat===cat;
+      var okI = ind==='all' || c.dataset.ind===ind ||
+                (ind==='leverage' && c.querySelector('.tag.half')) ||
+                (ind==='unilateral' && c.querySelector('.tag.solid'));
+      var show = okC && okI;
+      c.classList.toggle('hidden', !show);
+      if(show) n++;
+    });
+    count.textContent = n + ' of ' + cards.length + ' actions shown';
+    // fix borders when odd counts
+    var visible = cards.filter(function(c){return !c.classList.contains('hidden');});
+    visible.forEach(function(c,i){ c.style.borderRight = (i%2===0 && window.innerWidth>780) ? '1px solid #111' : 'none'; });
+  }
+  function wire(attr, setter){
+    var btns=[].slice.call(document.querySelectorAll('button[data-'+attr+']'));
+    btns.forEach(function(b){
+      b.addEventListener('click', function(){
+        btns.forEach(function(x){x.setAttribute('aria-pressed','false');});
+        b.setAttribute('aria-pressed','true');
+        setter(b.getAttribute('data-'+attr)); apply();
+      });
+    });
+  }
+  wire('cat', function(v){cat=v;});
+  wire('ind', function(v){ind=v;});
+  var ea=document.getElementById('expandAll');
+  ea.addEventListener('click', function(){
+    var open = ea.getAttribute('aria-pressed')!=='true';
+    ea.setAttribute('aria-pressed', open?'true':'false');
+    ea.textContent = open ? 'Close all details' : 'Open all details';
+    document.querySelectorAll('details').forEach(function(d){ d.open = open; });
+  });
+  var ab=document.getElementById('art1Btn'), ap=document.getElementById('art1');
+  ab.addEventListener('click', function(){
+    var open = ab.getAttribute('aria-expanded')!=='true';
+    ab.setAttribute('aria-expanded', open?'true':'false');
+    ap.hidden = !open;
+  });
+  document.querySelectorAll('a.sref').forEach(function(a){
+    a.addEventListener('click', function(e){
+      e.preventDefault();
+      ab.setAttribute('aria-expanded','true'); ap.hidden=false;
+      var t=document.getElementById('sec'+a.dataset.sec);
+      t.scrollIntoView({behavior:'smooth',block:'center'});
+      t.classList.remove('flash'); void t.offsetWidth; t.classList.add('flash');
+    });
+  });
+  var tip=document.createElement('div'); tip.className='sectip'; tip.setAttribute('role','tooltip'); tip.id='sectip';
+  document.body.appendChild(tip);
+  function showTip(a){
+    var sec=document.getElementById('sec'+a.dataset.sec);
+    var title=sec.querySelector('h4').textContent;
+    var ess=[].map.call(sec.querySelectorAll('mark'),function(m){return '<span class="ess">'+m.innerHTML+'</span>';}).join(' &middot; ');
+    tip.innerHTML='<div class="tl"><b>&sect;'+a.dataset.sec+'</b>'+title+'</div>'+ess;
+    var r=a.getBoundingClientRect();
+    tip.classList.add('on');
+    var w=tip.offsetWidth, h=tip.offsetHeight;
+    var left=Math.min(Math.max(8, r.left+window.scrollX), window.scrollX+document.documentElement.clientWidth-w-8);
+    var top=r.top+window.scrollY-h-10;
+    if(r.top-h-10<0) top=r.bottom+window.scrollY+10;
+    tip.style.left=left+'px'; tip.style.top=top+'px';
+    a.setAttribute('aria-describedby','sectip');
+  }
+  function hideTip(a){ tip.classList.remove('on'); if(a) a.removeAttribute('aria-describedby'); }
+  document.querySelectorAll('a.sref').forEach(function(a){
+    a.addEventListener('mouseenter',function(){showTip(a);});
+    a.addEventListener('focus',function(){showTip(a);});
+    a.addEventListener('mouseleave',function(){hideTip(a);});
+    a.addEventListener('blur',function(){hideTip(a);});
+    a.addEventListener('click',function(){hideTip(a);});
+  });
+  window.addEventListener('scroll',function(){hideTip();},{passive:true});
+  window.addEventListener('resize', apply);
+  apply();
+})();
+</script>
+</body>
+</html>
