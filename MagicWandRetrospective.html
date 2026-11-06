@@ -1,0 +1,545 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Magic Wand Retrospective</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=Courier+Prime:wght@400;700&display=swap">
+<style>
+/* Layout: broadsheet front page → scoreboard → dated dispatches down a single column → threads connecting to Nov 2026 → sources */
+:root{
+  --paper:#f6f1e4; --paper-2:#ede5d0; --ink:#1b2333; --ink-soft:#4a5266;
+  --navy:#16284a; --gold:#a8781c; --gold-soft:#e9d9ad; --rule:#c9bc9a;
+  --yes:#2f6b3f; --no:#9b3b2e; --quote-bg:#efe7d2;
+  --display:"Playfair Display", Georgia, "Times New Roman", serif;
+  --body:"Source Serif 4", Georgia, "Times New Roman", serif;
+  --mono:"Courier Prime", "Courier New", monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#0f1729; --paper-2:#17213a; --ink:#ece4cf; --ink-soft:#b5ad98;
+  --navy:#e3cf98; --gold:#d9ad55; --gold-soft:#3a3220; --rule:#3b4560;
+  --yes:#7fc293; --no:#e48b7c; --quote-bg:#1b2742; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --paper:#0f1729; --paper-2:#17213a; --ink:#ece4cf; --ink-soft:#b5ad98;
+  --navy:#e3cf98; --gold:#d9ad55; --gold-soft:#3a3220; --rule:#3b4560;
+  --yes:#7fc293; --no:#e48b7c; --quote-bg:#1b2742; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:1.05rem;line-height:1.62;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:28px 60px}
+.wrap{max-width:880px;margin:0 auto}
+a{color:var(--navy);text-decoration-color:var(--gold);text-underline-offset:3px}
+a:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+h1,h2,h3,h4{font-family:var(--display);color:var(--navy);text-wrap:balance;margin:0}
+p{margin:0}
+.mono{font-family:var(--mono)}
+/* masthead */
+.mast{border-top:4px double var(--ink);border-bottom:1px solid var(--ink);padding-block:10px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  font-family:var(--mono);font-size:.8rem;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-soft)}
+.hero{padding-block:28px 22px;border-bottom:1px solid var(--rule);display:grid;gap:14px}
+.kicker{font-family:var(--mono);font-size:.82rem;letter-spacing:.12em;text-transform:uppercase;color:var(--gold)}
+.hero h1{font-size:clamp(2.2rem,6vw,3.6rem);font-weight:900;line-height:1.05}
+.hero h1 em{font-style:italic;font-weight:500;color:var(--gold)}
+.dek{font-size:1.2rem;color:var(--ink-soft);max-width:62ch}
+/* scoreboard */
+.board{margin-block:26px;border:1px solid var(--ink);background:var(--paper-2)}
+.board-head{padding:12px 18px;border-bottom:1px solid var(--ink);display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:baseline}
+.board-head h2{font-size:1.25rem}
+.board-head span{font-family:var(--mono);font-size:.8rem;color:var(--ink-soft)}
+.branches{display:grid;grid-template-columns:repeat(3,1fr)}
+.branch{padding:18px;border-right:1px solid var(--rule);display:grid;gap:6px;align-content:start}
+.branch:last-child{border-right:0}
+.branch .lbl{font-family:var(--mono);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft)}
+.branch .verdict{font-family:var(--display);font-size:1.6rem;font-weight:700;line-height:1.1}
+.branch.yes .verdict{color:var(--yes)} .branch.no .verdict{color:var(--no)}
+.branch p{font-size:.92rem;color:var(--ink-soft)}
+.board-foot{padding:12px 18px;border-top:1px solid var(--rule);font-size:.95rem}
+@media (max-width:640px){.branches{grid-template-columns:1fr}.branch{border-right:0;border-bottom:1px solid var(--rule)}.branch:last-child{border-bottom:0}}
+/* section headers */
+.part{margin-top:46px;display:grid;gap:6px;border-top:3px solid var(--ink);padding-top:10px}
+.part h2{font-size:clamp(1.6rem,4vw,2.1rem);font-weight:900}
+.part p{color:var(--ink-soft);max-width:65ch}
+/* dispatches */
+.dispatch{display:grid;grid-template-columns:118px 1fr;gap:20px;padding-block:24px;border-bottom:1px solid var(--rule)}
+.date{font-family:var(--mono);font-size:.85rem;color:var(--gold);line-height:1.35;border-right:2px solid var(--gold-soft);padding-right:12px}
+.date b{display:block;font-size:1.15rem;color:var(--navy)}
+.date small{display:block;color:var(--ink-soft);margin-top:4px}
+.body{min-width:0;display:grid;gap:12px}
+.body h3{font-size:1.45rem}
+.src{font-family:var(--mono);font-size:.8rem;color:var(--ink-soft)}
+.body h4{font-size:1.05rem;margin-top:6px;font-family:var(--body);font-weight:600;color:var(--ink);letter-spacing:.01em}
+ul.pts{margin:0;padding-left:1.15em;display:grid;gap:4px}
+ul.pts li::marker{color:var(--gold)}
+blockquote{margin:0;padding:12px 16px;background:var(--quote-bg);border-left:3px solid var(--gold);font-style:italic}
+blockquote cite{display:block;margin-top:6px;font-style:normal;font-family:var(--mono);font-size:.8rem;color:var(--ink-soft)}
+.cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.box{border:1px solid var(--rule);padding:12px 14px;display:grid;gap:6px;align-content:start}
+.box h4{margin:0}
+.box p,.box li{font-size:.94rem}
+@media (max-width:640px){.dispatch{grid-template-columns:1fr;gap:8px}.date{border-right:0;border-bottom:2px solid var(--gold-soft);padding:0 0 6px}.cols{grid-template-columns:1fr}}
+.tbl{overflow-x:auto;border:1px solid var(--rule)}
+table{border-collapse:collapse;width:100%;font-size:.92rem;min-width:520px}
+th,td{padding:8px 10px;border-bottom:1px solid var(--rule);text-align:left;vertical-align:top}
+th{font-family:var(--mono);font-size:.78rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);background:var(--paper-2)}
+.note{font-size:.9rem;color:var(--ink-soft);border-top:1px dotted var(--rule);padding-top:8px}
+/* threads */
+.thread{padding-block:22px;border-bottom:1px solid var(--rule);display:grid;gap:10px}
+.thread h3{font-size:1.35rem}
+.pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0;border:1px solid var(--rule)}
+.pair>div{padding:12px 14px;display:grid;gap:6px;align-content:start}
+.pair>div:first-child{border-right:1px solid var(--rule)}
+.pair .lbl{font-family:var(--mono);font-size:.75rem;letter-spacing:.1em;text-transform:uppercase;color:var(--gold)}
+.pair p{font-size:.96rem}
+@media (max-width:640px){.pair{grid-template-columns:1fr}.pair>div:first-child{border-right:0;border-bottom:1px solid var(--rule)}}
+.sources ol{padding-left:1.3em;display:grid;gap:6px;font-size:.93rem}
+.sources h3{font-size:1.1rem;margin-top:18px}
+/* view switch */
+.switch{display:inline-flex;margin-top:22px;border:1px solid var(--ink);font-family:var(--mono);font-size:.85rem;letter-spacing:.08em;text-transform:uppercase}
+.switch button{font:inherit;letter-spacing:inherit;text-transform:inherit;background:transparent;color:var(--ink);border:0;padding:10px 18px;cursor:pointer}
+.switch button+button{border-left:1px solid var(--ink)}
+.switch button[aria-selected="true"]{background:var(--navy);color:var(--paper)}
+.switch button:focus-visible,.linkish:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.glance-block{margin-top:34px;display:grid;gap:16px}
+.g-title{font-size:1.5rem;border-top:3px solid var(--ink);padding-top:10px}
+.rail{list-style:none;margin:0;padding:0;display:grid}
+.rail li{display:grid;grid-template-columns:130px 1fr;gap:18px;padding:14px 0 14px 0;border-bottom:1px solid var(--rule);position:relative}
+.rail li>div{min-width:0;display:grid;gap:3px;padding-left:18px;border-left:4px solid var(--c)}
+.rail h3{font-size:1.2rem}
+.rail p{font-size:.97rem;color:var(--ink-soft)}
+.g-date{font-family:var(--mono);font-size:.9rem;color:var(--c);font-weight:700;padding-top:3px}
+.ph-talk{--c:var(--navy)} .ph-camp{--c:var(--gold)} .ph-result{--c:var(--yes)}
+.ph-result h3{font-size:1.45rem;color:var(--yes)}
+.legend{display:flex;flex-wrap:wrap;gap:16px;font-family:var(--mono);font-size:.78rem;color:var(--ink-soft)}
+.k::before{content:"";display:inline-block;width:12px;height:12px;margin-right:6px;vertical-align:-1px}
+.k-talk::before{background:var(--navy)} .k-camp::before{background:var(--gold)} .k-result::before{background:var(--yes)}
+.takeaways{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0;border:1px solid var(--ink)}
+.tk{padding:16px 18px;display:grid;gap:6px;align-content:start;border-bottom:1px solid var(--rule)}
+.tk:nth-child(odd){border-right:1px solid var(--rule)}
+.tk:nth-last-child(-n+2){border-bottom:0}
+.tk h3{font-size:1.2rem}
+.tk p{font-size:.96rem}
+.more{margin-top:18px}
+.linkish{font:inherit;font-family:var(--mono);font-size:.9rem;background:none;border:0;padding:0;color:var(--navy);text-decoration:underline;text-decoration-color:var(--gold);text-underline-offset:3px;cursor:pointer}
+@media (max-width:640px){.rail li{grid-template-columns:1fr;gap:4px}.takeaways{grid-template-columns:1fr}.tk:nth-child(odd){border-right:0}.tk:nth-last-child(-n+2){border-bottom:1px solid var(--rule)}.tk:last-child{border-bottom:0}}
+/* detail pop-ups */
+.pop-btn{justify-self:start;margin-top:6px;font-family:var(--mono);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;background:transparent;color:var(--navy);border:1px solid var(--gold);padding:5px 10px;cursor:pointer}
+.pop-btn:hover{background:var(--gold-soft)}
+.pop-btn:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+dialog.pop{width:min(780px,calc(100% - 32px));max-height:86vh;padding:0;border:1px solid var(--ink);background:var(--paper);color:var(--ink);box-shadow:0 18px 50px rgba(0,0,0,.35)}
+dialog.pop::backdrop{background:rgba(10,15,30,.55)}
+.pop-head{position:sticky;top:0;z-index:1;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 18px;background:var(--paper-2);border-bottom:1px solid var(--ink)}
+.pop-head h2{font-size:1.2rem}
+.pop-head button{font-family:var(--mono);font-size:.8rem;text-transform:uppercase;letter-spacing:.08em;background:var(--navy);color:var(--paper);border:0;padding:7px 12px;cursor:pointer}
+.pop-body{padding:4px 18px 18px;overflow-y:auto}
+.pop-body .dispatch{grid-template-columns:1fr;gap:8px}
+.pop-body .date{border-right:0;border-bottom:2px solid var(--gold-soft);padding:0 0 6px}
+.pop-foot{padding:12px 18px;border-top:1px solid var(--rule)}
+footer{margin-top:40px;border-top:4px double var(--ink);padding-top:10px;font-family:var(--mono);font-size:.8rem;color:var(--ink-soft)}
+</style>
+
+<div class="wrap">
+  <div class="mast"><span>Current Events Discussion Group · BOLLI</span><span>Retrospective · Nov 6, 2026</span></div>
+
+  <header class="hero">
+    <div class="kicker">Sep 30, 2025 → Nov 3, 2026</div>
+    <h1>"You have the magic wand. <em>What do you do with it?</em>"</h1>
+    <p class="dek">A look back at every discussion of the Magic Wand Challenge and the arrival of James Talarico in the group's 2025 sessions and readings, and how both connect to the November 3, 2026 midterm results.</p>
+  </header>
+
+  <div class="switch" role="tablist" aria-label="Choose view">
+    <button type="button" id="tab-glance" role="tab" aria-selected="true" aria-controls="view-glance" data-view="glance">At a Glance</button>
+    <button type="button" id="tab-depth" role="tab" aria-selected="false" aria-controls="view-depth" data-view="depth">In Depth</button>
+  </div>
+
+  <div id="view-glance" role="tabpanel" aria-labelledby="tab-glance">
+
+  <section class="board" aria-label="Magic wand scoreboard">
+    <div class="board-head"><h2>The wand, as of Nov 6, 2026</h2><span>Results still being counted</span></div>
+    <div class="branches">
+      <div class="branch yes"><span class="lbl">House</span><span class="verdict">Won</span><p>Democrats projected to control more than 250 seats (CNN, CBS, NBC projections), the largest House majority since 2008.</p></div>
+      <div class="branch yes"><span class="lbl">Senate</span><span class="verdict">Won</span><p>Democrats projected at 54 or more seats after flipping seven, including Texas (CNN, CBS, NBC projections).</p></div>
+      <div class="branch no"><span class="lbl">White House</span><span class="verdict">Not on the ballot</span><p>President Trump's term runs to January 2029. The executive half of the wand waits for 2028.</p></div>
+    </div>
+    <p class="board-foot">The challenge as Alan Nemeth framed it on Oct 14, 2025 assumed Democrats "won everything." The midterms delivered the legislative branch only. Congress can now block legislation, reject nominees and investigate the administration, but cannot override a veto without Republican votes.</p>
+  </section>
+
+  <section class="glance-block">
+    <h2 class="g-title">Seven moments, Sep 2025 to Nov 2026</h2>
+    <ol class="rail">
+      <li class="ph-talk"><span class="g-date">Sep 30, 2025</span><div><h3>The question is asked</h3><p>The session closes on "You have the magic wand, what do you do with it?"</p></div></li>
+      <li class="ph-talk"><span class="g-date">Oct 6, 2025</span><div><h3>First deep dive</h3><p>Off-cycle session on Acemoglu's working-class liberalism and government guardrails. Alan's wife suggests aiming at the 2026 midterms, not 2028.</p></div></li>
+      <li class="ph-talk"><span class="g-date">Oct 14, 2025</span><div><h3>Full group takes up the challenge</h3><p>Alan: "If Democrats won everything... what do they do with it?" Discussion of Project 2029, healthcare as a right, and holding firm in the shutdown.</p></div></li>
+      <li class="ph-talk"><span class="g-date">Oct 28, 2025</span><div><h3>Talarico enters the conversation</h3><p>The group sees the Texas seminarian as a model of working-class liberalism.</p></div></li>
+      <li class="ph-camp"><span class="g-date">Mar 3, 2026</span><div><h3>Talarico wins the primary</h3><p>He beats Jasmine Crockett in a race framed as base mobilization versus wider appeal.</p></div></li>
+      <li class="ph-camp"><span class="g-date">May 26, 2026</span><div><h3>Paxton ousts Cornyn</h3><p>Ken Paxton wins the Republican runoff, setting up the November matchup.</p></div></li>
+      <li class="ph-result"><span class="g-date">Nov 3, 2026</span><div><h3>The wave</h3><p>Democrats win the House and Senate. Talarico becomes the first Democrat elected to the Senate from Texas since 1988.</p></div></li>
+    </ol>
+    <div class="legend"><span class="k k-talk">Group discussions</span><span class="k k-camp">Campaign</span><span class="k k-result">Result</span></div>
+  </section>
+
+  <section class="glance-block">
+    <h2 class="g-title">What it adds up to</h2>
+    <div class="takeaways">
+      <div class="tk"><h3>Half the wand</h3><p>Congress, yes. The White House, not until 2028. The challenge now has a near-term half (what Congress can do facing a veto) and a long-term half.</p></div>
+      <div class="tk"><h3>The 2026 reframe was right</h3><p>The Oct 6 suggestion to aim at the midterms rather than 2028 pointed at the election that delivered.</p></div>
+      <div class="tk"><h3>Texas tested the theory</h3><p>The group's working-class liberalism model won a state no Democrat had carried statewide since 1994.</p></div>
+      <div class="tk"><h3>Still open</h3><p>How to codify guardrails, whether to rebuild or reimagine agencies, and what the "day after" plan is.</p></div>
+    </div>
+    <p class="more"><button type="button" class="linkish" data-view="depth">Read the full record in In Depth →</button></p>
+  </section>
+
+  </div>
+
+  <div id="view-depth" role="tabpanel" aria-labelledby="tab-depth" hidden>
+
+  <!-- PART I -->
+  <div class="part">
+    <h2>Part I · The discussions, in order</h2>
+    <p>Each entry below draws on one session summary, Afterwords page or reading from the group's portal, with its key content kept as recorded. Participant names and spellings follow the original summaries.</p>
+  </div>
+
+  <article class="dispatch">
+    <div class="date"><b>Sep 30</b>2025<small>Regular session · 80 min</small></div>
+    <div class="body">
+      <h3>The question is first asked</h3>
+      <p class="src">Source: Session Flow visualization (CESep3025)</p>
+      <p>The session closed with a "Forward Planning" segment (75:15–80:27). Its tone was recorded as "forward-looking, constructive."</p>
+      <ul class="pts">
+        <li>Alan's question: "How to unwind the mess?"</li>
+        <li>Democratic strategy in a post-2028 scenario</li>
+        <li>Need for a coherent Democratic philosophy</li>
+        <li>Moving beyond being "anti-Trump"</li>
+        <li>John announced the new "afterword" summary feature</li>
+      </ul>
+      <p class="note">Other segments that day: social opening, immigration, the new Trending Topics portal demo (Alan suggested adding a Healthcare category), violence and social isolation, gun culture, Al Capp and Li'l Abner, and the Kimmel reinstatement.</p>
+    </div>
+  </article>
+
+  <article class="dispatch">
+    <div class="date"><b>Sep 30</b>2025<small>Afterwords · events Sep 13–27</small></div>
+    <div class="body">
+      <h3>Looking Ahead: How to "Unwind the Mess"</h3>
+      <p class="src">Source: Afterwords (AfterwordSep3025)</p>
+      <p>The question as recorded: assuming Democrats win Congress in the 2026 midterms and the presidency in 2028, how should they use that power to restore democratic norms and repair damage from the Trump administration?</p>
+      <h4>Challenges identified</h4>
+      <ul class="pts">
+        <li>The party lacks a coherent unifying philosophy beyond opposing Trump</li>
+        <li>Internal divisions between progressive and centrist factions</li>
+        <li>Supreme Court composition limits policy options for years</li>
+        <li>Trump's changes were carried out with long-term strategic planning</li>
+        <li>Damage may take generations to repair</li>
+        <li>Need to avoid repeating past mistakes</li>
+      </ul>
+      <blockquote>"It came from a plan that had been obviously thought through over a long period of time, and putting in place folks like Supreme Court justices to enable it. The question is, what do we start to do? How do we start to get things back to a better world that we would like?"<cite>Discussion participant</cite></blockquote>
+      <p>The group agreed to continue, asking members to consider: <strong>"You have the magic wand, what do you do with it?"</strong> The framing was meant to steer toward positive policy goals rather than criticism.</p>
+    </div>
+  </article>
+
+  <article class="dispatch">
+    <div class="date"><b>Oct 6</b>2025<small>Off-cycle session · 48 min</small></div>
+    <div class="body">
+      <h3>Between the Lines: the first Magic Wand deep dive</h3>
+      <p class="src">Source: Political Discourse Meeting Summary (PDOct0625) · John Day, Alan Nemeth, "Ed Murrow" AI avatar</p>
+      <div class="cols">
+        <div class="box"><h4>1 · Historical "Deals"</h4><p>Square Deal (T. Roosevelt), New Deal (FDR, a 60-year coalition), Fair Deal (Truman), and John's editorial "Bum Deal" for Project 2025's attempt to dismantle the New Deal. Alan countered that Lincoln also pursued progressive economics (railroad, land-grant universities).</p></div>
+        <div class="box"><h4>2 · Political realignment</h4><p>Drawing on Daron Acemoglu (2024 Nobel): the 1920s coalition (Democrats as the party of manual labor) flipped after technology created an "education premium" and automation devalued manual work.</p></div>
+        <div class="box"><h4>3 · Working-class liberalism</h4><p>Democrats should stop assuming everyone shares the same aspirations and avoid an elitist face. Alan observed that conservatives operate in a zero-sum mindset, which liberalism rejects.</p></div>
+        <div class="box"><h4>4 · Government guardrails</h4><p>John: "I take away from Trump's success that we've overdone it." The task is to streamline process while keeping essential safeguards and codifying norms into law. Alan proposed two axes: operational (how) and goal-oriented (what).</p></div>
+      </div>
+      <blockquote>"We have to get rid of the idea that everybody in the country has the same aspirations that we do... That's one of the fundamental ways that the Democrats keep losing elections that they should really win."<cite>John Day</cite></blockquote>
+      <h4>Ed Murrow avatar</h4>
+      <p>A ChatGPT voice-mode avatar, loaded with Acemoglu's lecture and a Project 2025 summary, served as a "reference librarian." Alan asked it for historical evidence on reducing guardrails; it discussed post-Watergate reforms and, when pushed, searched for articles on legislative entrenchment.</p>
+      <h4>Follow-up items recorded</h4>
+      <ul class="pts">
+        <li>Research Project 2029</li>
+        <li>Examine post-Watergate reforms and their erosion</li>
+        <li>Explore codifying norms without excess bureaucracy</li>
+        <li><strong>Reframe the challenge around the 2026 midterms rather than 2028</strong> (suggested by Alan's wife)</li>
+        <li>Elections noted: Spanberger (Virginia) and Sherrill (New Jersey) governor races</li>
+      </ul>
+      <blockquote>"If we're lucky, as Ben Franklin told us so many years ago, we'll be able to keep our democracy, but... at the moment, it's definitely being challenged... to the very roots."<cite>John Day</cite></blockquote>
+    </div>
+  </article>
+
+  <article class="dispatch">
+    <div class="date"><b>Oct</b>2025<small>Portal card · reading packet</small></div>
+    <div class="body">
+      <h3>The Magic Wand Challenge readings</h3>
+      <p class="src">Sources: GovPolicyDeals · PoliticalRealignment · LiberalismBlueprint · Project2029</p>
+      <div class="box"><h4>Evolution of Government Relationship to Citizenry</h4>
+        <p>Traces precursors from Lincoln to McKinley (Homestead Act, Interstate Commerce Act, Sherman Antitrust Act, civil service reform), then rates "government support level" by era: Square Deal 70%, New Deal 95%, Fair Deal 75%, "Bum Deal" (2025+) 25%. Charts the counter-movement from the American Liberty League through Reagan, Gingrich, the Tea Party and Project 2025. Cumulative impact listed: union membership 35% (1950s) to 10% (2020s); wealth inequality highest since the 1920s.</p>
+        <p><em>Lesson drawn:</em> "Transformative change rarely happens overnight."</p></div>
+      <div class="box"><h4>The Great Political Realignment</h4>
+        <p>Acemoglu's causal chain: technology → economic impact → social divergence → political realignment. College-educated share of the population rose from 10% (1940) to 50% today; 85%+ say "politicians don't speak for people like me." What working-class voters want, per the piece: minimum wage increases, stronger unions, job protections, job training, trade protection, and respect for community values, rather than tax-and-redistribute or cultural focus.</p></div>
+      <div class="box"><h4>Remaking Liberalism</h4>
+        <p>Liberalism's three promises: <strong>sharing</strong>, <strong>public services</strong>, and <strong>voice</strong>. An eight-part blueprint for "working-class liberalism": return to community, focus on job creation, pro-worker technology, self-government, cultural economics, business leadership, targeted regulation, and policy realignment. Closing line: "It takes an idea to beat an idea."</p></div>
+      <div class="box"><h4>Project 2029 (NYT, Shane Goldmacher, Jun 30, 2025)</h4>
+        <p>A plan for a Democratic policy agenda modeled on Project 2025, released in quarterly installments through <em>Democracy: A Journal of Ideas</em>. Advisory board includes Jake Sullivan, Neera Tanden, Anne-Marie Slaughter, Justin Wolfers, Felicia Wong and Jim Kessler. Central debate: is the party's problem its ideas or its messaging? Two competing visions: the "abundance" agenda (Ezra Klein, Derek Thompson) and the populist wing (Bernie Sanders). Project 2025 polled 15% support vs. 63% opposed (NYT/Siena, Sept 2024).</p>
+        <blockquote>"The oldest truism in politics is you can't beat something with nothing."<cite>Andrei Cherny, Project 2029 organizer</cite></blockquote></div>
+    </div>
+  </article>
+
+  <article class="dispatch">
+    <div class="date"><b>Oct 14</b>2025<small>Regular session · 83 min</small></div>
+    <div class="body">
+      <h3>The Magic Wand Challenge comes to the full group</h3>
+      <p class="src">Source: Session summary (CEOct14) · John Day, Alan Nemeth, Geoffrey &amp; Hilary Kent, Sally Fleschner, Larry, Beth Davis, Francesca Nannetti</p>
+      <blockquote>"If Democrats won everything you can imagine in the elections, what do they do with it? How do we unwind the mess Trump has created?"<cite>Alan Nemeth, introducing the challenge</cite></blockquote>
+      <h4>Strategic framework</h4>
+      <ul class="pts">
+        <li>Set aside <em>how</em> Democrats get power; focus on <em>what</em> they would do with it</li>
+        <li>Learn from Trump's actions: identify real system faults he exposed (permitting had gotten out of hand, though his methods are not the answer)</li>
+        <li>Rebuild old institutions or reimagine their missions? (Department of Education as example)</li>
+      </ul>
+      <div class="cols">
+        <div class="box"><h4>Project 2029</h4><ul class="pts"><li>Centrist response to Project 2025</li><li>Jake Sullivan, Neera Tanden among leaders</li><li>Progressive critique: "not ambitious enough"</li></ul></div>
+        <div class="box"><h4>Healthcare</h4><ul class="pts"><li>"Medicare for All" carries baggage; Geoffrey proposed "Medical Care for All"</li><li>Separate the care system from the payment system</li><li>Alan: "Healthcare is a human right," a possible point of Republican agreement</li></ul></div>
+        <div class="box"><h4>Common ground</h4><p>The Pete Buttigieg approach: find bipartisan wins such as removing phones from schools.</p></div>
+        <div class="box"><h4>Guns</h4><p>Pick winnable battles. The previous assault-weapons ban did not cut overall gun murders but did reduce mass shootings; most gun deaths are suicides.</p></div>
+      </div>
+      <h4>Working-class liberalism</h4>
+      <ul class="pts">
+        <li>Acemoglu's proposal discussed; cultural mistakes cited: the "deplorables" comment, transgender issues, undervaluing trades and farming</li>
+        <li>Josh Shapiro dropped the bachelor's degree requirement for Pennsylvania state jobs on his first day</li>
+        <li>Alan on Norway and Finland: about half of graduates go academic, half vocational, "both viewed as equal status in the society"</li>
+      </ul>
+      <h4>Shutdown strategy</h4>
+      <p>Hilary asked: "How long will it go on, and should the Democrats cave?" Alan: "Democrats are starting to win the argument," as premium bills arrive (a Massachusetts plan went from $0 to $59/month). The group's poll: hold firm, "for a while."</p>
+      <div class="box"><h4>Group agreement points</h4><ul class="pts">
+        <li><strong>Cultural understanding:</strong> not everyone shares Northeast liberal values</li>
+        <li><strong>Simple messaging:</strong> the Bill Clinton model, direct impact on people's lives</li>
+        <li><strong>Unity:</strong> cross-aisle agreement has power</li>
+        <li><strong>Overreach:</strong> Trump will overplay his hand</li></ul></div>
+      <blockquote>"Progressive government faces a fundamental problem: many important issues are long-term, but Democrats must secure votes with immediate, tangible benefits."<cite>John Day, core message (paraphrased in summary)</cite></blockquote>
+      <p class="note">Francesca: "If there's unity, you can accomplish a lot." Beth: "When you find unity, we should advertise it."</p>
+    </div>
+  </article>
+
+  <article class="dispatch">
+    <div class="date"><b>Oct 14</b>2025<small>Afterwords · events Oct 4–11</small></div>
+    <div class="body">
+      <h3>Project 2029: Democratic Policy Vision</h3>
+      <p class="src">Source: Afterwords (CEOct14AftrWrds)</p>
+      <div class="cols">
+        <div class="box"><h4>Centrist alternative</h4><p>Detailed recommendations across healthcare, economy, foreign policy, education and environment.</p></div>
+        <div class="box"><h4>Healthcare as a right</h4><p>Universal-coverage framing that avoids the "Medicare for All" label.</p></div>
+        <div class="box"><h4>Working-class liberalism</h4><p>Acemoglu's agenda; the Shapiro degree-requirement example; vocational training as equal to academic paths.</p></div>
+        <div class="box"><h4>Democracy defense</h4><p>Democracy 2025 coalition of 650+ organizations coordinating legal challenges; cross-partisan issues such as school phone bans.</p></div>
+      </div>
+      <p><strong>Messaging lessons:</strong> simple language about individual impact; avoid culturally alienating positions; answer real problems Trump identified (regulatory overreach, permit delays) with better solutions than demolition.</p>
+    </div>
+  </article>
+
+  <article class="dispatch">
+    <div class="date"><b>Oct 28</b>2025<small>Regular session · 83 min</small></div>
+    <div class="body">
+      <h3>James Talarico enters the conversation</h3>
+      <p class="src">Source: Session summary (CEOct28Smmry) · John Day, Hal, George Model, Sally Fleschner, Geoffrey Kent, Francesca Nannetti, Beth Davis</p>
+      <div class="cols">
+        <div class="box"><h4>Who he is (as recorded)</h4><ul class="pts">
+          <li>36 years old, Texas Senate candidate</li>
+          <li>Subject of a favorable NYT profile about a week earlier</li>
+          <li>Presbyterian seminarian, Austin Presbyterian Theological Seminary</li>
+          <li>Raised in hardship by a single parent; experienced homelessness as a child</li></ul></div>
+        <div class="box"><h4>Platform and style</h4><ul class="pts">
+          <li>Working-class focus</li><li>Balanced immigration approach</li>
+          <li>Reclaiming faith and patriotism from Republicans</li>
+          <li>Skilled on TikTok and social media; draws large crowds</li></ul></div>
+      </div>
+      <blockquote>"The only reason I'm a part of the Democratic Party is because I believe it is the best vehicle to organize working people to win political power and make their lives better. And if it's not doing those things, then it needs to change."<cite>James Talarico, quoted in session</cite></blockquote>
+      <p><strong>On religion:</strong> faith-based but not a "Bible thumper"; denounced white Christian nationalism as "bad for the country, bad for Christians"; no preference for one religion over another.</p>
+      <div class="box"><h4>John's assessment</h4><p>A new voice for progressives, well read in philosophy, speaking from a working-class liberalism perspective, with possible appeal to right-leaning Texas voters.</p></div>
+      <blockquote>"I think the progressive movement has to disabuse itself of the idea that everybody wants to be like us... Some people want to work on farms, some people want to lay cable, and it's important to get their vote in order to avoid this minority rule that we're suffering."<cite>John Day</cite></blockquote>
+      <ul class="pts">
+        <li><strong>Francesca:</strong> young Democrats are moving in this working-class direction (Sanders, AOC, Talarico)</li>
+        <li><strong>John:</strong> Democrats governed with pro-worker policies but failed at communication; recalled FDR building a coalition that included the South</li>
+        <li><strong>George:</strong> how does Talarico compare to Mamdani? Talarico hews to the center; Mamdani is a democratic socialist</li>
+        <li><strong>John, on the NYC race:</strong> "We're in a period of transition for the democratic and progressive movement"; don't stay with the familiar just because it is familiar</li>
+      </ul>
+      <p class="note">The summary's key-themes section lists "James Tallarico represents model of 'working class liberalism'" under Democratic messaging problems. The session also discussed "day-after" planning (Francesca: "There doesn't seem to be the day-after plan"), a theme that applies to the wand itself.</p>
+    </div>
+  </article>
+
+  <article class="dispatch">
+    <div class="date"><b>Oct 28</b>2025<small>Afterwords · events Oct 12–25</small></div>
+    <div class="body">
+      <h3>James Talarico: Texas Senate Campaign</h3>
+      <p class="src">Source: Afterwords (CEOct25Aftrwrds) · cites NYT profile, Texas Tribune, Austin Presbyterian Theological Seminary</p>
+      <ul class="pts">
+        <li><strong>Background:</strong> seminarian from a poor, single-parent household; experienced homelessness</li>
+        <li><strong>Working-class platform:</strong> the "best vehicle to organize working people" quote</li>
+        <li><strong>Faith:</strong> denunciation of white Christian nationalism; respect for all religions</li>
+        <li><strong>Strategic positioning:</strong> reclaiming faith and patriotism; social-media fluency; crossover potential</li>
+        <li><strong>Strategy implications:</strong> a new "working-class liberalism" voice that respects non-academic careers</li>
+      </ul>
+    </div>
+  </article>
+
+  <article class="dispatch">
+    <div class="date"><b>Jan 23</b>2026<small>Portal reading</small></div>
+    <div class="body">
+      <h3>Crockett or Talarico: a fork in the road</h3>
+      <p class="src">Source: Crockett vs. Talarico comparison (crockett_talarico_comparison), based on NYT "A Senate Primary in Texas Tests the Future of Democratic Politics"</p>
+      <div class="tbl"><table>
+        <thead><tr><th></th><th>Jasmine Crockett</th><th>James Talarico</th></tr></thead>
+        <tbody>
+          <tr><td>Age / office</td><td>44 · U.S. Rep., Dallas</td><td>36 · Texas state Rep., Austin suburbs (since 2018)</td></tr>
+          <tr><td>Theory of victory</td><td>Expand the electorate; mobilize low-propensity voters</td><td>Energize the base and widen appeal to independents and disaffected Republicans</td></tr>
+          <tr><td>Core message</td><td>"Time for minority rule to stop in Texas"</td><td>"Love God, love thy neighbor" economic populism</td></tr>
+          <tr><td>Strengths</td><td>Near-universal name ID; 80–89% of Black voters</td><td>$13M+ raised; led white and Latino voters; flipped a Trump district in 2018</td></tr>
+          <tr><td>Polling then</td><td>Internal +13; Texas Southern +8</td><td>Emerson +9</td></tr>
+          <tr><td>Media</td><td>Jimmy Kimmel Live; viral clashes</td><td>Joe Rogan podcast</td></tr>
+          <tr><td>Main worry</td><td>Appeal beyond the base</td><td>Whether a "love" message is too soft</td></tr>
+        </tbody></table></div>
+      <p>At the Jan 25 AFL-CIO debate the two agreed on nearly every issue (ICE overhaul, impeachment, openness to court expansion, taxing billionaires, AI worker protections). Talarico favored ending the filibuster; Crockett suggested targeted carve-outs.</p>
+      <blockquote>"I haven't voted for a Democrat since the 1970s, but I would back Talarico. I like his moderation."<cite>Howard Harrison, 70, Air Force veteran</cite></blockquote>
+      <p class="note">The piece called the primary a "high octane referendum" on whether Democrats should court disaffected Republicans or focus on mobilizing their base.</p>
+    </div>
+  </article>
+
+  <!-- PART II -->
+  <div class="part">
+    <h2>Part II · Connecting the threads to November 2026</h2>
+    <p>What the group discussed in 2025, set beside what happened. Election figures are network projections and the AP's Texas race call as of Nov 4–5, 2026; counts continue.</p>
+  </div>
+
+  <section class="thread">
+    <h3>1 · The wand was meant for 2029. Half of it arrived in 2026.</h3>
+    <div class="pair">
+      <div><span class="lbl">Then</span><p>Sep 30: "assuming Democrats win Congress in 2026 and the presidency in 2028." Oct 6: Alan's wife suggested reframing the challenge around the 2026 midterms rather than 2028.</p></div>
+      <div><span class="lbl">Now</span><p>Democrats won both chambers in a wave election. CBS reports more than 40 House flips; NBC reports Senate flips in Kansas, Iowa, Texas, Ohio, Maine, North Carolina and South Carolina; CNBC reports Republicans flipped no seats. Trump remains president until January 2029.</p></div>
+    </div>
+    <p>The 2026 reframe proved the timely one. The group's question now splits in two: what a Democratic Congress can do facing a presidential veto (block, confirm or reject nominees, investigate, fund or defund), and what a full wand would do after 2028.</p>
+  </section>
+
+  <section class="thread">
+    <h3>2 · Talarico: from a New York Times profile to the U.S. Senate</h3>
+    <div class="pair">
+      <div><span class="lbl">Then</span><p>Oct 28: John called him a new voice speaking from working-class liberalism, with possible appeal to right-leaning Texans. Jan 2026: the primary framed as a test between mobilizing the base and widening the appeal.</p></div>
+      <div><span class="lbl">Now</span><p>Talarico won the Mar 3 primary over Crockett (CNN projection). Ken Paxton beat Sen. John Cornyn in the May 26 GOP runoff. On Nov 3 the AP called the race for Talarico, the first Democrat elected to the Senate from Texas since 1988 and the first to win any statewide race there since 1994.</p></div>
+    </div>
+    <p class="note">Correction to the Oct 28 record: the summary describes Talarico as running "against Ted Cruz." The 2026 seat was Cornyn's; Cruz is not up until 2030. The summaries also spell the name "Tallarico"; the correct spelling is Talarico.</p>
+  </section>
+
+  <section class="thread">
+    <h3>3 · Working-class liberalism, tested at the ballot box</h3>
+    <div class="pair">
+      <div><span class="lbl">Then</span><p>Acemoglu's blueprint, the Shapiro degree example, and John's "everybody wants to be like us" argument. The readings listed what working-class voters say they want: wages, unions, job protections, training.</p></div>
+      <div><span class="lbl">Now</span><p>CBS exit data: 89% of voters called cost of living a major or crucial factor. In Texas, Democrats also defeated Gov. Greg Abbott and won the Texas House for the first time in more than two decades (CNBC).</p></div>
+    </div>
+    <p>The results are consistent with the group's view that economic, kitchen-table messaging matters. They do not by themselves settle the Crockett-versus-Talarico strategy debate: a national wave with a 38% presidential approval rating (CBS) lifted candidates of many styles.</p>
+  </section>
+
+  <section class="thread">
+    <h3>4 · Healthcare: from shutdown premiums to a governing lever</h3>
+    <div class="pair">
+      <div><span class="lbl">Then</span><p>Oct 14: the group polled to hold firm on ACA premium subsidies; Alan said Democrats were "starting to win the argument"; healthcare as a "human right" as possible common ground.</p></div>
+      <div><span class="lbl">Now</span><p>NBC reports that with both chambers, Democrats gain leverage to restore enhanced ACA subsidies and reverse Medicaid cuts. Any bill still needs the president's signature or a veto-proof margin.</p></div>
+    </div>
+  </section>
+
+  <section class="thread">
+    <h3>5 · "He will overplay his hand"</h3>
+    <div class="pair">
+      <div><span class="lbl">Then</span><p>Oct 14 agreement point: Trump will overplay his hand and face political consequences. Oct 28: Republicans such as Hawley and Greene breaking ranks when constituents are hurt.</p></div>
+      <div><span class="lbl">Now</span><p>Coverage widely describes the result as a backlash against the president (Variety, NBC). CBS puts his approval at 38%, historically low for a midterm.</p></div>
+    </div>
+  </section>
+
+  <section class="thread">
+    <h3>6 · The questions still open</h3>
+    <ul class="pts">
+      <li><strong>Plan, not just win.</strong> The Sep 30 worry was that Republicans won with decades of planning. Project 2029's quarterly papers are the closest Democratic equivalent; whether they shape the new Congress is unknown.</li>
+      <li><strong>Guardrails.</strong> John's Oct 6 question remains: how to codify norms so future officials cannot ignore them, without adding "so much gunk in the machine that it can't operate"?</li>
+      <li><strong>Rebuild or reimagine.</strong> Alan's Oct 14 example: restore the Department of Education as it was, or rethink its mission?</li>
+      <li><strong>The day after.</strong> Francesca's Oct 28 point about missing day-after plans now applies to Democrats themselves.</li>
+      <li><strong>The Mamdani question.</strong> Hal and George worried in Oct 2025 that Republicans would use Mamdani against Democrats nationally. He won the NYC mayoralty in Nov 2025, and Democrats still swept in 2026.</li>
+    </ul>
+  </section>
+
+  <section class="part sources">
+    <h2>Sources</h2>
+    <h3>Group summaries and readings</h3>
+    <ol>
+      <li><a href="https://jhnday.github.io/CrntEvnts/CESep3025" target="_blank" rel="noopener">Session Flow, Sep 30, 2025</a></li>
+      <li><a href="https://jhnday.github.io/CrntEvnts/AfterwordSep3025" target="_blank" rel="noopener">Afterwords, Sep 13–27, 2025</a></li>
+      <li><a href="https://jhnday.github.io/CrntEvnts/PDOct0625.html" target="_blank" rel="noopener">Political Discourse Meeting (Between the Lines), Oct 6, 2025</a></li>
+      <li><a href="https://jhnday.github.io/CrntEvnts/GovPolicyDeals" target="_blank" rel="noopener">Evolution of Government Relationship to Citizenry</a></li>
+      <li><a href="https://jhnday.github.io/CrntEvnts/PoliticalRealignment" target="_blank" rel="noopener">The Great Political Realignment</a></li>
+      <li><a href="https://jhnday.github.io/CrntEvnts/LiberalismBlueprint" target="_blank" rel="noopener">Remaking Liberalism</a></li>
+      <li><a href="https://jhnday.github.io/CrntEvnts/Project2029" target="_blank" rel="noopener">Project 2029 (NYT summary)</a></li>
+      <li><a href="https://jhnday.github.io/CrntEvnts/CEOct14" target="_blank" rel="noopener">Session Summary, Oct 14, 2025</a></li>
+      <li><a href="https://jhnday.github.io/CrntEvnts/CEOct14AftrWrds" target="_blank" rel="noopener">Afterwords, Oct 4–11, 2025</a></li>
+      <li><a href="https://jhnday.github.io/CrntEvnts/CEOct28Smmry" target="_blank" rel="noopener">Session Summary, Oct 28, 2025</a></li>
+      <li><a href="https://jhnday.github.io/CrntEvnts/CEOct25Aftrwrds" target="_blank" rel="noopener">Afterwords, Oct 12–25, 2025</a></li>
+      <li><a href="https://jhnday.github.io/CrntEvnts/crockett_talarico_comparison" target="_blank" rel="noopener">Crockett vs. Talarico, Jan 2026</a></li>
+    </ol>
+    <h3>November 2026 results</h3>
+    <ol>
+      <li><a href="https://www.npr.org/2026/11/03/g-s1-148943/texas-senate-race-james-talarico" target="_blank" rel="noopener">NPR: Democrat James Talarico wins Texas Senate seat</a></li>
+      <li><a href="https://www.texastribune.org/2026/11/03/texas-ken-paxton-james-talarico-us-senate-elections-2026/" target="_blank" rel="noopener">Texas Tribune: Talarico defeats Paxton</a></li>
+      <li><a href="https://time.com/article/2026/11/04/talarico-wins-texas-senate-race-first-democrat-to-win-statewide-in-more-than-30-years/" target="_blank" rel="noopener">TIME: First Democrat to win statewide in Texas in 30+ years</a></li>
+      <li><a href="https://www.nbcnews.com/politics/2026-election/live-blog/midterm-election-results-2026-news-trump-live-updates-rcna605763" target="_blank" rel="noopener">NBC News: Democrats win control of Congress</a></li>
+      <li><a href="https://www.cbsnews.com/live-updates/midterm-election-results-2026-democrats-house-senate-trump/" target="_blank" rel="noopener">CBS News: Democrats flip 40+ House seats</a></li>
+      <li><a href="https://www.cbsnews.com/live-updates/house-election-results-2026/" target="_blank" rel="noopener">CBS News: House results, approval and cost-of-living data</a></li>
+      <li><a href="https://edition.cnn.com/2026/11/05/politics/live-news/midterm-election-congress" target="_blank" rel="noopener">CNN: Democrats pass 250 House seats</a></li>
+      <li><a href="https://www.cnbc.com/2026/11/04/democrats-2026-midterm-election-results.html" target="_blank" rel="noopener">CNBC: Republicans haven't flipped a single seat</a></li>
+      <li><a href="https://www.nbcwashington.com/elections/election-day-after-2026-midterms-congress-results-live-updates/4177248/" target="_blank" rel="noopener">NBC Washington: Senate flips and healthcare leverage</a></li>
+      <li><a href="https://variety.com/2026/politics/news/midterm-election-results-democrats-win-house-senate-1236938473/" target="_blank" rel="noopener">Variety: Democrats win House and Senate</a></li>
+      <li><a href="https://abc17news.com/?p=1600319" target="_blank" rel="noopener">CNN via ABC17: Talarico defeats Crockett in primary</a></li>
+    </ol>
+  </section>
+
+  <p class="more"><button type="button" class="linkish" data-view="glance">← Back to At a Glance</button></p>
+  </div>
+
+  <footer>Prepared for the BOLLI Current Events Discussion Group · Chamber totals are network projections as of Nov 5–6, 2026 and may change as counting finishes.</footer>
+</div>
+<script>
+(function(){
+  var views={glance:document.getElementById('view-glance'),depth:document.getElementById('view-depth')};
+  var tabs={glance:document.getElementById('tab-glance'),depth:document.getElementById('tab-depth')};
+  function show(v,scroll){
+    if(!views[v]) v='glance';
+    Object.keys(views).forEach(function(k){views[k].hidden=(k!==v);tabs[k].setAttribute('aria-selected',k===v?'true':'false');});
+    try{localStorage.setItem('mw-view',v);}catch(e){}
+    if(scroll) tabs[v].scrollIntoView({block:'start',behavior:'smooth'});
+  }
+  document.querySelectorAll('[data-view]').forEach(function(b){
+    b.addEventListener('click',function(){show(b.getAttribute('data-view'),b.classList.contains('linkish'));});
+  });
+  /* pop-ups: map each glance item to its In Depth sections */
+  var D=document.querySelectorAll('#view-depth .dispatch');
+  var T=document.querySelectorAll('#view-depth .thread');
+  var railMap=[[D[0],D[1]],[D[2],D[3]],[D[4],D[5]],[D[6],D[7]],[D[8],T[1]],[T[1]],[T[0],T[4],T[2],T[3]]];
+  var tkMap=[[T[0]],[D[2],T[0]],[D[6],D[8],T[1],T[2]],[T[5]]];
+  var dlg=document.createElement('dialog');dlg.className='pop';dlg.setAttribute('aria-labelledby','pop-title');
+  dlg.innerHTML='<div class="pop-head"><h2 id="pop-title"></h2><button type="button" id="pop-close">Close</button></div><div class="pop-body" id="pop-body"></div><div class="pop-foot"><button type="button" class="linkish" id="pop-depth">Open in the In Depth view →</button></div>';
+  document.body.appendChild(dlg);
+  var popTarget=null;
+  function openPop(title,nodes){
+    document.getElementById('pop-title').textContent=title;
+    var body=document.getElementById('pop-body');body.innerHTML='';
+    nodes.forEach(function(n){if(!n)return;var c=n.cloneNode(true);c.querySelectorAll('[id]').forEach(function(e){e.removeAttribute('id');});body.appendChild(c);});
+    popTarget=nodes[0];
+    if(dlg.showModal){dlg.showModal();}else{dlg.setAttribute('open','');}
+    body.scrollTop=0;
+  }
+  function closePop(){if(dlg.close){dlg.close();}else{dlg.removeAttribute('open');}}
+  document.getElementById('pop-close').addEventListener('click',closePop);
+  dlg.addEventListener('click',function(e){if(e.target===dlg)closePop();});
+  document.getElementById('pop-depth').addEventListener('click',function(){closePop();show('depth',false);if(popTarget)popTarget.scrollIntoView({block:'start',behavior:'smooth'});});
+  function addBtn(container,title,nodes){
+    var b=document.createElement('button');b.type='button';b.className='pop-btn';b.textContent='Details';
+    b.setAttribute('aria-label','Details: '+title);
+    b.addEventListener('click',function(){openPop(title,nodes);});
+    container.appendChild(b);
+  }
+  document.querySelectorAll('.rail li').forEach(function(li,i){var d=li.querySelector('div');addBtn(d,li.querySelector('.g-date').textContent+' · '+li.querySelector('h3').textContent,railMap[i]||[]);});
+  document.querySelectorAll('.tk').forEach(function(tk,i){addBtn(tk,tk.querySelector('h3').textContent,tkMap[i]||[]);});
+  var start='glance';
+  if(location.hash==='#depth') start='depth';
+  else { try{ if(localStorage.getItem('mw-view')==='depth') start='depth'; }catch(e){} }
+  show(start,false);
+})();
+</script>
+
+</body></html>
