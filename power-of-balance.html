@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Power of Balance</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;0,900;1,500&family=Courier+Prime:wght@400;700&family=Source+Serif+4:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#14284b;--navy2:#26416f;--gold:#b8892b;--goldlt:#ecd9a8;--cream:#faf5e8;--paper:#fffdf6;--ink:#20242c;--muted:#5a5f6b;--rule:#d8cfb8;--red:#9c3b2f;--blue:#2f5f9c}
+*{box-sizing:border-box}
+html{font-size:19px}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:'Source Serif 4',Georgia,serif;line-height:1.6}
+.sheet{max-width:1040px;margin:0 auto;padding:28px 40px 48px;background:var(--paper);border-left:1px solid var(--rule);border-right:1px solid var(--rule)}
+.kicker,.label{font-family:'Courier Prime',monospace;letter-spacing:.06em;text-transform:uppercase;font-size:.78rem}
+.topline{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;border-bottom:1px solid var(--navy);padding-bottom:6px;color:var(--navy)}
+h1,h2,h3{font-family:'Playfair Display',Georgia,serif;color:var(--navy);line-height:1.15;margin:0}
+h1{font-size:clamp(2.7rem,8vw,4.7rem);font-weight:900;text-align:center;margin:18px 0 6px}
+.deck{font-family:'Playfair Display',Georgia,serif;font-style:italic;font-size:1.3rem;text-align:center;max-width:760px;margin:0 auto 16px;color:var(--navy2);line-height:1.35}
+.basis{border-top:3px double var(--navy);border-bottom:3px double var(--navy);padding:8px 0;text-align:center;color:var(--navy);font-family:'Courier Prime',monospace;font-size:.82rem}
+section{margin-top:40px}
+h2{font-size:1.95rem;margin-bottom:6px}
+h2+.sub{color:var(--muted);margin:0 0 18px}
+.lead{columns:2;column-gap:36px;margin-top:24px}
+.lead p{margin:0 0 14px}
+.lead p:first-child::first-letter{font-family:'Playfair Display',serif;font-weight:900;font-size:3.6rem;float:left;line-height:.85;padding:6px 8px 0 0;color:var(--gold)}
+.three{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:2px solid var(--navy);border-bottom:1px solid var(--rule)}
+.three>div{padding:16px 20px}
+.three>div+div{border-left:1px solid var(--rule)}
+.three .n{font-family:'Playfair Display',serif;font-weight:900;font-size:2.2rem;color:var(--gold);line-height:1}
+.three h3{font-size:1.2rem;margin:6px 0}
+.three p{margin:0;font-size:.95rem}
+.mapwrap{display:grid;grid-template-columns:1.25fr 1fr;gap:26px;align-items:start}
+svg{display:block;width:100%;height:auto}
+.pt{cursor:pointer;outline:none}
+.pt circle{transition:r .15s}
+.pt:hover circle,.pt:focus circle,.pt.on circle{stroke:var(--gold);stroke-width:4}
+.pt text{font-family:'Courier Prime',monospace;font-size:14px;font-weight:700;fill:var(--navy)}
+.axis{font-family:'Courier Prime',monospace;font-size:13px;fill:var(--muted)}
+.panel{background:var(--cream);border-top:3px solid var(--gold);padding:16px 18px;min-height:210px}
+.panel h3{font-size:1.3rem;margin-bottom:6px}
+.panel p{margin:0}
+.note{font-size:.86rem;color:var(--muted);margin-top:10px}
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+button{font:inherit;cursor:pointer}
+.tab{font-family:'Courier Prime',monospace;font-size:.92rem;font-weight:700;padding:10px 16px;background:var(--paper);color:var(--navy);border:1.5px solid var(--navy)}
+.tab[aria-selected=true]{background:var(--navy);color:#fff}
+.tab:focus-visible,.weight:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.scale{background:var(--navy);padding:16px 18px 10px}
+#beam,.pan{transition:transform .55s cubic-bezier(.3,1.3,.5,1)}
+#beam{transform-origin:400px 46px}
+.weights{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}
+.weight{text-align:left;padding:14px 16px;background:var(--paper);border:1.5px solid var(--rule);border-top:5px solid var(--gold);color:var(--ink);line-height:1.4}
+.weight small{display:block;font-family:'Courier Prime',monospace;font-size:.76rem;text-transform:uppercase;letter-spacing:.04em;color:var(--navy);margin-bottom:4px;font-weight:700}
+.weight[aria-pressed=false]{opacity:.5;border-top-color:var(--rule);background:var(--cream)}
+.weight .act{display:block;margin-top:6px;font-family:'Courier Prime',monospace;font-size:.76rem;color:var(--muted)}
+#verdict{background:var(--goldlt);padding:12px 16px;font-weight:600;color:var(--navy);margin-bottom:14px}
+.issue-body{display:grid;grid-template-columns:1fr 1fr;gap:26px}
+.issue-body h3{font-size:1.15rem;margin-bottom:4px}
+.issue-body p{margin:0 0 12px}
+.objection{border-left:4px solid var(--red);padding-left:14px}
+.objection h3{color:var(--red)}
+.bars{display:grid;grid-template-columns:1fr 1fr;gap:26px 36px}
+.bar h3{font-size:1.08rem;margin-bottom:8px}
+.track{display:flex;height:34px;background:var(--cream);margin-bottom:6px;font-family:'Courier Prime',monospace;font-weight:700;font-size:.82rem}
+.track span{display:flex;align-items:center;justify-content:center;color:#fff;white-space:nowrap}
+.c1{background:var(--navy)}.c2{background:var(--gold)}.c3{background:#a9a493}
+.key,.src{font-size:.82rem;color:var(--muted)}
+.key{margin:0}
+.limit{background:var(--navy);color:#f6efdc;padding:24px 28px}
+.limit h2{color:var(--goldlt)}
+.limit p{margin:0 0 10px}
+.limit p:last-child{margin:0}
+.trip{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:2px solid var(--navy)}
+.trip>div{padding:14px 20px}
+.trip>div+div{border-left:1px solid var(--rule)}
+.trip h3{font-size:1.2rem;margin-bottom:8px}
+.trip p{font-size:.95rem;margin:0 0 10px}
+.caveat{margin-top:18px;background:var(--cream);padding:16px 20px;border-left:4px solid var(--gold)}
+.caveat p{margin:0}
+ol.q{margin:0;padding-left:1.4em}
+ol.q li{margin-bottom:10px}
+footer{margin-top:40px;border-top:3px double var(--navy);padding-top:12px}
+footer ul{margin:6px 0 0;padding-left:1.1em}
+footer li{font-size:.84rem;margin-bottom:3px}
+a{color:var(--navy2)}
+@media(max-width:760px){
+ html{font-size:18px}
+ .sheet{padding:18px 16px 36px}
+ .lead{columns:1}
+ .three,.trip,.mapwrap,.issue-body,.bars,.weights{grid-template-columns:1fr}
+ .three>div+div,.trip>div+div{border-left:0;border-top:1px solid var(--rule)}
+ .panel{min-height:0}
+}
+.views{display:flex;justify-content:center;gap:0;margin:18px 0 0}
+.vbtn{font-family:'Courier Prime',monospace;font-weight:700;font-size:1rem;padding:12px 28px;background:var(--paper);color:var(--navy);border:1.5px solid var(--navy)}
+.vbtn+.vbtn{border-left:0}
+.vbtn[aria-pressed=true]{background:var(--navy);color:#fff}
+.bottom{margin:24px 0;background:var(--navy);color:#f6efdc;padding:20px 26px}
+.bottom .label{color:var(--goldlt);margin-bottom:6px}
+.bottom p{font-family:'Playfair Display',Georgia,serif;font-size:1.32rem;line-height:1.35;margin:0}
+.gl-grid{display:grid;grid-template-columns:repeat(3,1fr);border-top:2px solid var(--navy)}
+.gl{display:flex;flex-direction:column;align-items:flex-start;padding:16px 20px 18px;border-bottom:1px solid var(--rule)}
+.gl:not(:nth-child(3n+1)){border-left:1px solid var(--rule)}
+.gl h3{font-size:1.25rem;margin-bottom:6px}
+.gl p{margin:0 0 12px;font-size:.97rem}
+.more{margin-top:auto;font-family:'Courier Prime',monospace;font-weight:700;font-size:.86rem;padding:9px 13px;background:var(--paper);color:var(--navy);border:1.5px solid var(--gold)}
+.more:hover,.iss:hover{background:var(--goldlt)}
+.stats{display:flex;gap:18px;margin-bottom:12px}
+.stats b{display:block;font-family:'Playfair Display',serif;font-weight:900;font-size:1.75rem;color:var(--gold);line-height:1.1}
+.stats span{font-size:.8rem;line-height:1.25;display:block;color:var(--muted)}
+.gl-issues{margin-top:28px}
+.gl-issues h2{font-size:1.5rem;margin-bottom:10px}
+.isswrap{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.iss{text-align:left;padding:12px 13px;background:var(--cream);border:1.5px solid var(--rule);border-top:4px solid var(--gold);color:var(--ink);line-height:1.3;font-size:.92rem}
+.iss strong{display:block;font-family:'Playfair Display',serif;color:var(--navy);font-size:1.1rem;margin-bottom:4px}
+.vbtn:focus-visible,.more:focus-visible,.iss:focus-visible,.dbar button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+dialog{width:min(960px,calc(100% - 32px));max-height:90vh;padding:0;border:0;border-top:5px solid var(--gold);background:var(--paper);color:var(--ink);overflow:auto}
+dialog::backdrop{background:rgba(20,40,75,.72)}
+.dbar{position:sticky;top:0;z-index:2;display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 20px;background:var(--cream);border-bottom:1px solid var(--rule)}
+.dbar button{font-family:'Courier Prime',monospace;font-weight:700;font-size:.88rem;padding:9px 13px;background:var(--paper);color:var(--navy);border:1.5px solid var(--navy)}
+.dbar #dClose{background:var(--navy);color:#fff}
+.dbody{padding:22px 26px 28px}
+.dbody>*{margin-top:0}
+.dbody>*+*{margin-top:28px}
+@media(max-width:760px){
+ .gl-grid{grid-template-columns:1fr}
+ .gl:not(:nth-child(3n+1)){border-left:0}
+ .isswrap{grid-template-columns:1fr 1fr}
+ .vbtn{padding:12px 18px}
+ .dbody{padding:16px}
+}
+[hidden]{display:none!important}
+@media(prefers-reduced-motion:reduce){#beam,.pan{transition:none}}
+</style>
+</head>
+<body>
+<main class="sheet">
+  <div class="topline kicker"><span>After the Midterms</span><span>November 9, 2026</span></div>
+  <h1>The Power of Balance</h1>
+  <p class="deck">How 2026's winning Democrats paired left-leaning economics with moderate cultural positions, and whether that pairing explains their victories</p>
+  <div class="basis">A reader's guide to an opinion piece: <a href="https://www.nytimes.com/2026/11/09/opinion/democrats-midterms-populism.html?unlocked_article_code=1.PFE.x7sZ.vWFLauSrsrFG&amp;smid=url-share" target="_blank" rel="noopener">"This Winning Combination Is the Future of American Politics,"</a> The New York Times Editorial Board</div>
+
+  <div class="views" role="group" aria-label="Choose a view">
+    <button class="vbtn" id="vGlance" aria-pressed="true">At a Glance</button>
+    <button class="vbtn" id="vDepth" aria-pressed="false">In Depth</button>
+  </div>
+
+  <div id="glance">
+    <div class="bottom">
+      <div class="label">The argument in brief</div>
+      <p>Winning Democrats ran as economic populists and cultural moderates. The Times board calls that a road map. Skeptics credit Trump's unpopularity and Republicans who stayed home.</p>
+    </div>
+    <div class="gl-grid">
+      <article class="gl"><h3>The Formula</h3><p>Lean left on wages, taxes and health costs. Lean toward the center on the border, policing and voter ID.</p><button class="more" data-open="lead,axes" data-title="The Formula">See the details ›</button></article>
+      <article class="gl"><h3>Three Kinds of Balance</h3><p>Balance across issues, within a single issue, and against one's own party.</p><button class="more" data-open="kinds" data-title="Three Kinds of Balance">See the details ›</button></article>
+      <article class="gl"><h3>The Numbers</h3><div class="stats"><div><b>83%</b><span>favor voter photo ID</span></div><div><b>59%</b><span>want inequality reduced</span></div><div><b>75%</b><span>dissatisfied with U.S. direction</span></div></div><button class="more" data-open="numbers" data-title="The Numbers">See the details ›</button></article>
+      <article class="gl"><h3>Not the Midpoint</h3><p>The board wants bold economic action, and says Democrats still lack a full agenda on it.</p><button class="more" data-open="midpoint" data-title="Not the Midpoint">See the details ›</button></article>
+      <article class="gl"><h3>Is It Proven?</h3><p>The left credits economics, analysts credit turnout, and the right calls it a vote against Trump.</p><button class="more" data-open="testing" data-title="Is It Proven?">See the details ›</button></article>
+      <article class="gl"><h3>For Discussion</h3><p>When a candidate balances, who pays? Four questions for the group.</p><button class="more" data-open="discuss" data-title="For Discussion">See the details ›</button></article>
+    </div>
+    <div class="gl-issues">
+      <h2>Five Issues on the Scale</h2>
+      <div class="isswrap">
+        <button class="iss" data-issue="0"><strong>Immigration</strong>Secure border, humane enforcement, path to citizenship</button>
+        <button class="iss" data-issue="1"><strong>Crime</strong>Funded police, accountable officers</button>
+        <button class="iss" data-issue="2"><strong>Voter ID</strong>Required, but free and easy to get</button>
+        <button class="iss" data-issue="3"><strong>Energy</strong>Oil and gas jobs plus clean power</button>
+        <button class="iss" data-issue="4"><strong>Gender</strong>Opposed trans girls in girls' sports, and vilification of trans people</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="depth" hidden>
+  <div class="lead" id="lead">
+    <p>The Times editorial board grants that President Trump's unpopularity was the main engine of the Democratic sweep. Its question is narrower: how did Democrats persuade voters in places like Kansas, Ohio, South Carolina and Texas who had long ruled the party out?</p>
+    <p>The board's answer is a combination. Winners ran as economic populists and cultural moderates, a mix it says matches a public that leans center-left on economics and center-right on social issues.</p>
+    <p>Read closely, the argument describes more than a position on a left-right line. Its candidates balanced in three distinct ways, and the board insists that one common idea of balance, always splitting the difference, is a mistake.</p>
+    <p>This guide examines that claim, then tests it against those who read the same election differently.</p>
+  </div>
+
+  <section id="kinds">
+    <h2>Three Kinds of Balance</h2>
+    <p class="sub">The editorial's examples sort into three separate moves.</p>
+    <div class="three">
+      <div><div class="n">1</div><h3>Across issues</h3><p>Lean left where the public leans left, on wages, taxes and health costs. Move toward the center where the public sits there, on the border, policing and voter ID.</p></div>
+      <div><div class="n">2</div><h3>Within an issue</h3><p>Name what each side got wrong in the same breath. A candidate faults Biden's border record and Trump's enforcement tactics, then offers a third position.</p></div>
+      <div><div class="n">3</div><h3>Against one's own party</h3><p>Both parties sit near 40% favorability, so distance is an asset. Iowa's Josh Turek advertised his hundreds of votes with Republicans and styled himself a "common-sense prairie populist."</p></div>
+    </div>
+  </section>
+
+  <section id="axes">
+    <h2>Two Axes, Not One</h2>
+    <p class="sub">A single left-right line hides the move. Select a point to see what the board says about it.</p>
+    <div class="mapwrap">
+      <svg viewBox="0 0 620 480" role="group" aria-label="Schematic map of political positions on economic and cultural axes">
+        <rect x="40" y="20" width="560" height="420" fill="#faf5e8" stroke="#d8cfb8"/>
+        <line x1="320" y1="20" x2="320" y2="440" stroke="#b9b09a" stroke-dasharray="4 5"/>
+        <line x1="40" y1="230" x2="600" y2="230" stroke="#b9b09a" stroke-dasharray="4 5"/>
+        <text class="axis" x="40" y="462">More government action</text>
+        <text class="axis" x="600" y="462" text-anchor="end">More market</text>
+        <text class="axis" x="320" y="478" text-anchor="middle">ECONOMICS</text>
+        <text class="axis" transform="translate(18 230) rotate(-90)" text-anchor="middle">CULTURE</text>
+        <text class="axis" x="50" y="38">Progressive</text>
+        <text class="axis" x="50" y="432">Traditional</text>
+        <ellipse cx="225" cy="285" rx="96" ry="62" fill="#ecd9a8" opacity=".65"/>
+        <g class="pt" tabindex="0" role="button" data-p="public"><circle cx="255" cy="300" r="13" fill="#b8892b"/><text x="274" y="322">Public opinion</text></g>
+        <g class="pt" tabindex="0" role="button" data-p="winners"><circle cx="195" cy="272" r="16" fill="#14284b"/><text x="125" y="256">2026 winners</text></g>
+        <g class="pt" tabindex="0" role="button" data-p="prog"><circle cx="130" cy="90" r="13" fill="#2f5f9c"/><text x="150" y="95">2010s progressives</text></g>
+        <g class="pt" tabindex="0" role="button" data-p="third"><circle cx="400" cy="185" r="13" fill="#6f7f9c"/><text x="420" y="190">Earlier moderates</text></g>
+        <g class="pt" tabindex="0" role="button" data-p="gop"><circle cx="470" cy="385" r="13" fill="#9c3b2f"/><text x="415" y="365">Republican Party</text></g>
+      </svg>
+      <div>
+        <div class="panel" id="panel" aria-live="polite"></div>
+        <p class="note">Placements are this guide's sketch of the board's descriptions. They are not measured data.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="issues">
+    <h2>Five Issues on the Scale</h2>
+    <p class="sub">Pick an issue, then remove a weight to see what happens to the message.</p>
+    <div class="tabs" role="tablist" id="tabs"></div>
+    <div class="scale">
+      <svg viewBox="0 0 800 190" aria-hidden="true">
+        <polygon points="400,46 374,172 426,172" fill="#b8892b"/>
+        <rect x="340" y="172" width="120" height="8" fill="#ecd9a8"/>
+        <g id="beam"><rect x="130" y="42" width="540" height="8" rx="4" fill="#ecd9a8"/><circle cx="400" cy="46" r="11" fill="#b8892b"/></g>
+        <g class="pan" id="panL"><line x1="130" y1="46" x2="85" y2="112" stroke="#ecd9a8" stroke-width="2"/><line x1="130" y1="46" x2="175" y2="112" stroke="#ecd9a8" stroke-width="2"/><path d="M75 112 H185 Q175 142 130 142 Q85 142 75 112Z" fill="#ecd9a8"/><rect id="wL" x="108" y="78" width="44" height="34" fill="#2f5f9c"/></g>
+        <g class="pan" id="panR"><line x1="670" y1="46" x2="625" y2="112" stroke="#ecd9a8" stroke-width="2"/><line x1="670" y1="46" x2="715" y2="112" stroke="#ecd9a8" stroke-width="2"/><path d="M615 112 H725 Q715 142 670 142 Q625 142 615 112Z" fill="#ecd9a8"/><rect id="wR" x="648" y="78" width="44" height="34" fill="#c0564a"/></g>
+      </svg>
+    </div>
+    <div class="weights">
+      <button class="weight" id="btnL" aria-pressed="true"></button>
+      <button class="weight" id="btnR" aria-pressed="true"></button>
+    </div>
+    <div id="verdict" aria-live="polite"></div>
+    <div class="issue-body">
+      <div><h3>The position at the fulcrum</h3><p id="pos"></p><h3>Who took it</h3><p id="who"></p></div>
+      <div class="objection"><h3>The objection</h3><p id="obj"></p></div>
+    </div>
+  </section>
+
+  <section id="numbers">
+    <h2>The Numbers Behind the Bet</h2>
+    <p class="sub">Polling the editorial uses to argue that balance fits the electorate.</p>
+    <div class="bars">
+      <div class="bar"><h3>Satisfied with the direction of the U.S.?</h3><div class="track"><span class="c1" style="width:75%">Dissatisfied 75%</span><span class="c2" style="width:23%">23%</span></div><p class="src">Gallup, Oct. 2026</p></div>
+      <div class="bar"><h3>Require government photo ID to vote</h3><div class="track"><span class="c1" style="width:83%">Favor 83%</span><span class="c2" style="width:16%">16%</span></div><p class="src">Pew, Aug. 2025</p></div>
+      <div class="bar"><h3>Democratic Party seen as "too liberal"</h3><div class="track"><span class="c3" style="width:39%">2008: 39%</span></div><div class="track"><span class="c1" style="width:46%">2026: 46%</span></div><p class="src">Gallup, Oct. 2026</p></div>
+      <div class="bar"><h3>Republican Party seen as "too conservative"</h3><div class="track"><span class="c3" style="width:43%">2008: 43%</span></div><div class="track"><span class="c1" style="width:50%">2026: 50%</span></div><p class="src">Gallup, Oct. 2026</p></div>
+      <div class="bar"><h3>Government should try to reduce wealth inequality</h3><div class="track"><span class="c1" style="width:59%">Should 59%</span><span class="c2" style="width:21%">21%</span><span class="c3" style="width:20%">20%</span></div><p class="src">YouGov, 2026. Should / should not / not sure</p></div>
+      <div class="bar"><h3>People with $100 billion or more…</h3><div class="track"><span class="c1" style="width:53%">Take more 53%</span><span class="c2" style="width:24%">24%</span><span class="c3" style="width:23%">23%</span></div><p class="src">YouGov, 2026. Take more / contribute more / not sure</p></div>
+    </div>
+  </section>
+
+  <section class="limit" id="midpoint">
+    <h2>Balance Is Not the Midpoint</h2>
+    <p>The board parts company with centrists who assume the right answer always lies halfway between the parties. On the economy, it wants bold action: winning candidates proposed higher taxes on the wealthy, a higher minimum wage, broader Medicare and more breakup of health-care conglomerates.</p>
+    <p>It also names what remains unbalanced. Democrats, it says, still lack a comprehensive economic agenda, are too timid about building homes, and have no plan for the federal debt.</p>
+    <p>And it treats the two parties as unequal: in its view, one supports democracy and the other has enabled autocratic behavior. For the board, balance is a strategy for beating that party. Republicans would reject that description outright.</p>
+  </section>
+
+  <section id="testing">
+    <h2>Testing the Claim</h2>
+    <p class="sub">The same election, read three other ways.</p>
+    <div class="trip">
+      <div>
+        <h3>From the Left</h3>
+        <p><strong>It was the economics.</strong> A Data for Progress post-election report found voters tied Democrats to economic populism, while centrist messages registered far less.</p>
+        <p><strong>Moderation may add little.</strong> Answering a similar Times editorial last year, political scientist Adam Bonica argued the data showed no extra seats from running more moderates.</p>
+      </div>
+      <div>
+        <h3>From Analysts</h3>
+        <p><strong>Turnout, not persuasion.</strong> Brookings finds the sweep owed less to Republicans switching sides than to discontented Republicans staying home.</p>
+        <p><strong>Both wings won.</strong> Brookings adds that progressives and moderates both prevailed, leaving 2028 open. ODI cautions against reading this as moderation defeating populism.</p>
+      </div>
+      <div>
+        <h3>From the Right</h3>
+        <p><strong>A vote against Trump.</strong> Republican strategist Dick Wadhams called the result anti-Trump, not pro-Democratic. Rep. Don Bacon pointed to Trump's unpopularity and weak Senate nominees.</p>
+        <p><strong>A normal midterm, badly run.</strong> Writing in the Daily Wire, Ryan Girdusky blamed flawed candidates and a turnout gap. Republican insiders remain split on referendum versus turnout.</p>
+      </div>
+    </div>
+    <div class="caveat"><p><strong>A note on the evidence.</strong> The editorial draws its lessons almost entirely from candidates who won. To show that balance caused those wins, one would also need Democrats who ran the same way and lost, and comparable candidates who ran differently. Two races it cites, Alaska and Mississippi, were also still awaiting final counts when it was written.</p></div>
+  </section>
+
+  <section id="discuss">
+    <h2>For Discussion</h2>
+    <ol class="q">
+      <li>When a candidate balances, who pays? Is giving ground on trans athletes a fair trade-off, or a sacrifice of a small and vulnerable group for electoral gain?</li>
+      <li>Can a party sustain this balance once it must vote on bills, or does it work only in campaign ads?</li>
+      <li>If Republicans stayed home rather than switched sides, what has balance actually proven?</li>
+      <li>Is there an issue on which you would refuse to balance? What distinguishes it from those where you would?</li>
+    </ol>
+  </section>
+
+  </div>
+
+  <footer>
+    <div class="label">Sources</div>
+    <ul>
+      <li>The New York Times Editorial Board, <a href="https://www.nytimes.com/2026/11/09/opinion/democrats-midterms-populism.html?unlocked_article_code=1.PFE.x7sZ.vWFLauSrsrFG&amp;smid=url-share" target="_blank" rel="noopener">"This Winning Combination Is the Future of American Politics"</a> (source of the polling figures and candidate positions)</li>
+      <li><a href="https://www.brookings.edu/articles/how-democrats-won-big-and-why-2028-remains-an-open-question/">Brookings: How Democrats won big, and why 2028 remains an open question</a></li>
+      <li><a href="https://www.commondreams.org/news/democrats-midterms">Common Dreams: on the Data for Progress post-election report</a></li>
+      <li><a href="https://odi.org/en/insights/beyond-the-blue-wave-what-the-2026-us-midterms-say-about-populism-and-political-change-in-2028/">ODI: Beyond the blue wave</a></li>
+      <li><a href="https://data4democracy.substack.com/p/the-new-york-times-argues-moving">Adam Bonica: response to the Times's 2025 editorial on moving to the center</a></li>
+      <li><a href="https://www.boston.com/news/politics/2026/11/04/after-midterm-drubbing-trump-and-republicans-start-pointing-fingers/">Boston.com: After midterm drubbing, Trump and Republicans start pointing fingers</a></li>
+      <li><a href="https://www.dailywire.com/news/the-2026-trump-collapse-anatomy-of-a-republican-disaster">Daily Wire: The 2026 Trump Collapse</a></li>
+      <li><a href="https://www.dailysignal.com/2026/11/04/referendum-or-turnout-problem-gop-insiders-split-over-whos-to-blame-for-midterm-losses/">Daily Signal: Referendum or Turnout Problem?</a></li>
+    </ul>
+  </footer>
+</main>
+
+<dialog id="dlg" aria-labelledby="dTitle">
+  <div class="dbar"><span class="label" id="dTitle"></span><span><button id="dGo">Open in In Depth</button> <button id="dClose">Close ✕</button></span></div>
+  <div class="dbody" id="dBody"></div>
+</dialog>
+
+<script>
+const points={
+ public:["Public opinion","The board places Americans center-left on many economic issues and center-right on many social ones. That lower-left zone, shaded gold, is the target."],
+ winners:["2026 winners","Economic populists and cultural moderates. On the board's account, they moved to where voters already were, and away from both party brands."],
+ prog:["2010s progressives","The board says this wing shaped the party in the 2010s and early 2020s, and that its ideas on immigration, policing, energy, gender and voter ID alienated many working-class voters."],
+ third:["Earlier moderates","The triangulating Democrats of a previous generation, who championed Wall Street and free trade. The 2026 winners did not sound like them."],
+ gop:["Republican Party","The board faults it for extremism, autocratic behavior and policies it says raised costs. Half of Americans now call it too conservative, up from 43% in 2008."]
+};
+const panel=document.getElementById('panel'),pts=[...document.querySelectorAll('.pt')];
+function showPoint(k){const[a,b]=points[k];panel.innerHTML='<h3>'+a+'</h3><p>'+b+'</p>';pts.forEach(p=>p.classList.toggle('on',p.dataset.p===k));}
+pts.forEach(p=>{p.addEventListener('click',()=>showPoint(p.dataset.p));p.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();showPoint(p.dataset.p);}});});
+showPoint('winners');
+
+const issues=[
+{n:"Immigration",l:"Biden's border record, which candidates called a failure",r:"Trump's enforcement tactics, which the board calls brutal and lawless",
+ pos:"A secure border, humane enforcement, clear rules for legal immigration, and a path to citizenship conditioned on fines, back taxes and learning English.",
+ who:"Hamilton (Kansas), Cognetti (Pennsylvania), Pappas (New Hampshire), Talarico and Hinojosa (Texas). Even progressive Abdul El-Sayed of Michigan conceded his party erred.",
+ obj:"Restrictionists see any path to citizenship as amnesty. Immigrant advocates object to crediting Trump's border policy at all."},
+{n:"Crime",l:"Anti-police sentiment on the left, including \"defund\"",r:"Abuses of authority by police and prosecutors, a limit the board adds itself",
+ pos:"Well-funded police departments, with officers and prosecutors held accountable when they abuse their power. The candidates cited stressed the funding and toughness; the accountability half is the board's.",
+ who:"Cooper (North Carolina), Shah (Arizona), Colom (Mississippi, leading when the editorial ran).",
+ obj:"Reform advocates argue that funding without structural change leaves abuses in place. Conservatives question whether converts to law-and-order will hold firm in office."},
+{n:"Voter ID",l:"Resistance to an ID rule most Americans support",r:"False claims that voter fraud is a major problem",
+ pos:"Accept ID requirements, and insist that IDs be free and easy to obtain.",
+ who:"Acton (Ohio, where an ID amendment passed with 65%), Colom, Talarico. Ossoff and Shapiro spoke favorably of voter ID.",
+ obj:"Voting-rights groups say even free ID burdens some eligible voters, and that conceding it accepts a premise the board itself calls false."},
+{n:"Energy",l:"Activist opposition to oil and natural gas",r:"Trump's restrictions on clean energy, which the board says raise costs",
+ pos:"An all-of-the-above strategy meant to hold down costs and limit carbon emissions, defending fossil-fuel jobs while expanding clean power.",
+ who:"Talarico and Pulido (Texas), Peltola (Alaska, leading when the editorial ran), Hamilton (Kansas).",
+ obj:"Climate advocates warn that continued fossil-fuel development locks in emissions. Industry allies doubt the support will survive a Democratic Congress."},
+{n:"Gender",l:"Treating concern about girls' sports as bigotry, or avoiding the subject",r:"Trump's vilification of trans Americans",
+ pos:"Oppose trans girls and women in female sports while opposing discrimination and vilification. Nevada's Aaron Ford is the board's model.",
+ who:"Ford (Nevada), Andrews (South Carolina), Sand and Turek (Iowa), Acton and Kaptur (Ohio). The board faulted some Democrats for harsh, inaccurate language.",
+ obj:"Trans-rights advocates say this balance is paid for entirely by a small, vulnerable group, and many dispute how the evidence on athletic advantage applies to youth sports."}
+];
+const tabs=document.getElementById('tabs'),btnL=document.getElementById('btnL'),btnR=document.getElementById('btnR');
+let cur=0,L=true,R=true;
+issues.forEach((it,i)=>{const b=document.createElement('button');b.className='tab';b.role='tab';b.textContent=it.n;b.onclick=()=>{cur=i;L=R=true;render();};tabs.appendChild(b);});
+function render(){
+ const it=issues[cur];
+ [...tabs.children].forEach((b,i)=>b.setAttribute('aria-selected',i===cur));
+ btnL.innerHTML='<small>Weight 1: faults the left</small>'+it.l+'<span class="act">'+(L?'Select to remove':'Removed. Select to restore')+'</span>';
+ btnR.innerHTML='<small>Weight 2: faults the right</small>'+it.r+'<span class="act">'+(R?'Select to remove':'Removed. Select to restore')+'</span>';
+ btnL.setAttribute('aria-pressed',L);btnR.setAttribute('aria-pressed',R);
+ document.getElementById('pos').textContent=it.pos;
+ document.getElementById('who').textContent=it.who;
+ document.getElementById('obj').textContent=it.obj;
+ document.getElementById('wL').style.display=L?'':'none';
+ document.getElementById('wR').style.display=R?'':'none';
+ const tilt=(L===R)?0:(R?1:-1), a=8*tilt, d=38*tilt;
+ document.getElementById('beam').style.transform='rotate('+a+'deg)';
+ document.getElementById('panL').style.transform='translateY('+(-d)+'px)';
+ document.getElementById('panR').style.transform='translateY('+d+'px)';
+ document.getElementById('verdict').textContent=
+  L&&R?"Level: the candidate criticizes both sides, then stakes out a position of their own.":
+  !L&&R?"Tilted: with only Republicans at fault, this is a standard party message, from a brand 46% of Americans call too liberal.":
+  L&&!R?"Tilted: with only the left at fault, the candidate echoes the opposition and gives their own voters little reason to turn out.":
+  "Empty: the candidate changes the subject. The board argues voters can often sense when politicians do this.";
+}
+btnL.onclick=()=>{L=!L;render();};
+btnR.onclick=()=>{R=!R;render();};
+render();
+
+const dlg=document.getElementById('dlg'),dBody=document.getElementById('dBody'),gl=document.getElementById('glance'),dp=document.getElementById('depth'),vG=document.getElementById('vGlance'),vD=document.getElementById('vDepth');
+let moved=[];
+function setView(depth){dp.hidden=!depth;gl.hidden=depth;vD.setAttribute('aria-pressed',depth);vG.setAttribute('aria-pressed',!depth);}
+function restore(){moved.forEach(([n,m])=>{m.replaceWith(n);});moved=[];document.documentElement.style.overflow='';}
+function openPop(ids,title){
+ restore();
+ ids.split(',').forEach(id=>{const n=document.getElementById(id),m=document.createComment('');n.replaceWith(m);moved.push([n,m]);dBody.appendChild(n);});
+ document.getElementById('dTitle').textContent=title;
+ document.documentElement.style.overflow='hidden';
+ dlg.showModal();dlg.scrollTop=0;
+}
+document.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>openPop(b.dataset.open,b.dataset.title));
+document.querySelectorAll('[data-issue]').forEach(b=>b.onclick=()=>{cur=+b.dataset.issue;L=R=true;render();openPop('issues',issues[cur].n);});
+vG.onclick=()=>setView(false);
+vD.onclick=()=>setView(true);
+dlg.addEventListener('close',restore);
+dlg.addEventListener('click',e=>{if(e.target===dlg)dlg.close();});
+document.getElementById('dClose').onclick=()=>dlg.close();
+document.getElementById('dGo').onclick=()=>{const t=moved[0]&&moved[0][0];dlg.close();restore();setView(true);if(t)t.scrollIntoView();};
+</script>
+<!-- VIZ-TRACKING:START -->
+<script>
+(function () {
+  var ENDPOINT = 'https://script.google.com/macros/s/AKfycbyCgndleqbDkjn1CWYFXflq0fegQRHkHE1S7gmlvnny8lA_rGsWZEqtz4shNoJ1ZanI6A/exec';
+  if (location.protocol === 'file:') return;
+  function send(where) {
+    try {
+      fetch(ENDPOINT, {
+        method: 'POST', mode: 'no-cors', keepalive: true,
+        body: new URLSearchParams({ viz: document.title || location.pathname, location: where })
+      }).catch(function () {});
+    } catch (e) {}
+  }
+  function fallback() {
+    try { return Intl.DateTimeFormat().resolvedOptions().timeZone || 'Unknown'; } catch (e) { return 'Unknown'; }
+  }
+  fetch('https://ipapi.co/json/')
+    .then(function (r) { return r.json(); })
+    .then(function (d) {
+      var place = [d.city, d.region, d.country_name].filter(Boolean).join(', ');
+      send(place || fallback());
+    })
+    .catch(function () { send(fallback()); });
+})();
+</script>
+<!-- VIZ-TRACKING:END -->
+</body>
+</html>
