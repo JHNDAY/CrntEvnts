@@ -278,4 +278,30 @@ function show(i){const a=ADM[i];ADM.forEach((b,j)=>{b.rect.style.stroke=j===i?'v
 show(10);
 </script>
 
+<!-- VIZ-TRACKING:START -->
+<script>
+(function () {
+  var ENDPOINT = 'https://script.google.com/macros/s/AKfycbyCgndleqbDkjn1CWYFXflq0fegQRHkHE1S7gmlvnny8lA_rGsWZEqtz4shNoJ1ZanI6A/exec';
+  if (location.protocol === 'file:') return;
+  function send(where) {
+    try {
+      fetch(ENDPOINT, {
+        method: 'POST', mode: 'no-cors', keepalive: true,
+        body: new URLSearchParams({ viz: document.title || location.pathname, location: where })
+      }).catch(function () {});
+    } catch (e) {}
+  }
+  function fallback() {
+    try { return Intl.DateTimeFormat().resolvedOptions().timeZone || 'Unknown'; } catch (e) { return 'Unknown'; }
+  }
+  fetch('https://ipapi.co/json/')
+    .then(function (r) { return r.json(); })
+    .then(function (d) {
+      var place = [d.city, d.region, d.country_name].filter(Boolean).join(', ');
+      send(place || fallback());
+    })
+    .catch(function () { send(fallback()); });
+})();
+</script>
+<!-- VIZ-TRACKING:END -->
 </body></html>
