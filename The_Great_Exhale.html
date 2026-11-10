@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Great Exhale</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=Courier+Prime:wght@400;700&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#14233f; --navy-2:#22365e; --gold:#b8913a; --gold-soft:#e8d6a6;
+    --cream:#faf5e8; --paper:#fffdf6; --ink:#1d1d1d; --muted:#5f5a50;
+    --blue:#2a4f8c; --red:#8c2a2a; --rule:#cbbf9f;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--cream);color:var(--ink);
+       font-family:"Source Serif 4",Georgia,serif;font-size:20px;line-height:1.6}
+
+  /* Masthead */
+  header.mast{background:var(--navy);color:var(--cream);text-align:center;
+       padding:34px 16px 26px;border-bottom:6px double var(--gold)}
+  .kicker{font-family:"Courier Prime",monospace;letter-spacing:.2em;text-transform:uppercase;
+       font-size:.72rem;color:var(--gold-soft)}
+  h1{font-family:"Playfair Display",serif;font-weight:900;font-size:clamp(2.6rem,8vw,4.8rem);
+       margin:.15em 0 .05em;line-height:1.02}
+  h1 em{color:var(--gold);font-style:italic}
+  .dek{font-family:"Playfair Display",serif;font-style:italic;font-size:clamp(1.05rem,2.6vw,1.35rem);
+       max-width:760px;margin:.5em auto 0;color:#e9e3d2}
+  .dateline{display:flex;justify-content:center;flex-wrap:wrap;gap:6px 22px;margin-top:18px;
+       font-family:"Courier Prime",monospace;font-size:.78rem;color:var(--gold-soft);
+       border-top:1px solid rgba(184,145,58,.5);border-bottom:1px solid rgba(184,145,58,.5);
+       padding:7px 0;max-width:760px;margin-left:auto;margin-right:auto}
+
+  /* Breathing pacer */
+  .breathe{max-width:760px;margin:30px auto 8px;padding:0 16px;text-align:center}
+  .breathe h2{font-family:"Playfair Display",serif;font-size:1.5rem;margin:0 0 4px;color:var(--navy)}
+  .breathe p{margin:0 0 14px;color:var(--muted);font-style:italic;font-size:1rem}
+  .lungs{width:190px;height:190px;margin:10px auto 6px;position:relative;display:grid;place-items:center}
+  .orb{position:absolute;inset:0;border-radius:50%;
+       background:radial-gradient(circle at 40% 35%,#5b82c4,var(--blue) 60%,var(--navy-2));
+       box-shadow:0 0 0 6px var(--gold-soft),0 10px 40px rgba(42,79,140,.35);
+       animation:breathe 10s ease-in-out infinite;transform:scale(.55)}
+  .orb-label{position:relative;font-family:"Courier Prime",monospace;font-weight:700;color:#fff;
+       font-size:1rem;letter-spacing:.12em;text-transform:uppercase}
+  @keyframes breathe{0%,100%{transform:scale(.55)}45%,55%{transform:scale(1)}}
+  .paused .orb{animation-play-state:paused}
+  .btn{font-family:"Courier Prime",monospace;font-size:.85rem;background:var(--paper);color:var(--navy);
+       border:1.5px solid var(--navy);border-radius:4px;padding:6px 14px;cursor:pointer;margin-top:6px}
+  .btn:hover{background:var(--navy);color:var(--cream)}
+
+  /* Editor's note */
+  .note{max-width:760px;margin:26px auto 0;padding:16px 20px;background:var(--paper);
+       border-left:5px solid var(--gold);font-size:1rem;color:var(--muted)}
+  .note strong{color:var(--navy);font-family:"Courier Prime",monospace;letter-spacing:.08em;
+       text-transform:uppercase;font-size:.8rem;display:block;margin-bottom:2px}
+
+  /* Limerick grid */
+  main{max-width:1100px;margin:30px auto 0;padding:0 16px;
+       display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:22px}
+  article{background:var(--paper);border:1px solid var(--rule);border-top:5px solid var(--navy);
+       padding:20px 22px 18px;position:relative;box-shadow:0 2px 0 var(--rule)}
+  article:nth-child(even){border-top-color:var(--gold)}
+  .num{position:absolute;top:12px;right:16px;font-family:"Playfair Display",serif;font-weight:900;
+       font-size:2.1rem;color:var(--gold-soft);line-height:1}
+  .desk{font-family:"Courier Prime",monospace;font-size:.72rem;letter-spacing:.16em;
+       text-transform:uppercase;color:var(--gold)}
+  h3{font-family:"Playfair Display",serif;font-size:1.35rem;margin:.15em 0 .5em;color:var(--navy);
+       line-height:1.2;padding-right:40px}
+  .verse{margin:0;font-size:1.08rem}
+  .verse span{display:block}
+  .verse .in{padding-left:1.6em}
+  .verse span:last-child{font-weight:600}
+  .aside{margin:12px 0 0;padding-top:8px;border-top:1px dotted var(--rule);
+       font-size:.88rem;font-style:italic;color:var(--muted)}
+
+  footer{text-align:center;margin:44px 0 0;padding:26px 16px 34px;background:var(--navy);
+       color:var(--gold-soft);font-family:"Courier Prime",monospace;font-size:.82rem;
+       border-top:6px double var(--gold)}
+  footer .big{font-family:"Playfair Display",serif;font-style:italic;font-size:1.4rem;color:var(--cream);
+       display:block;margin-bottom:6px}
+
+  @media (max-width:520px){
+    body{font-size:18px}
+    main{grid-template-columns:1fr}
+    .lungs{width:160px;height:160px}
+  }
+  @media (prefers-reduced-motion:reduce){.orb{animation:none;transform:scale(.8)}}
+</style>
+</head>
+<body>
+
+<header class="mast">
+  <div class="kicker">Special Post-Election Edition · Read Aloud, Preferably With Feeling</div>
+  <h1>The Great <em>Exhale</em></h1>
+  <div class="dek">Ten limericks for the morning after, in which a nation lets out the breath it had been holding since roughly 2015</div>
+  <div class="dateline">
+    <span>Midterms · November 3, 2026</span>
+    <span>Forecast: Blue, with scattered sulking</span>
+    <span>Price: One deep breath</span>
+  </div>
+</header>
+
+<section class="breathe" id="breathe">
+  <h2>Before We Begin: A Communal Breath</h2>
+  <p>Follow the circle. In through the nose, out through the grin.</p>
+  <div class="lungs"><div class="orb"></div><div class="orb-label" id="orbLabel">Breathe in</div></div>
+  <button class="btn" id="pauseBtn" type="button">Hold that breath</button>
+</section>
+
+<div class="note">
+  <strong>Editor's Note</strong>
+  The following verse has been fact-checked against the vibe in the room. Rhymes are final. Recounts will not be entertained.
+</div>
+
+<main>
+
+  <article>
+    <div class="num">I</div>
+    <div class="desk">Domestic Affairs</div>
+    <h3>Trouble at Home</h3>
+    <p class="verse">
+      <span>Although he'll complain, moan, and grouse,</span>
+      <span>he won't be consoled by his spouse.</span>
+      <span class="in">We now know it's true</span>
+      <span class="in">that Trump lost her too,</span>
+      <span>along with the Senate and House.</span>
+    </p>
+    <p class="aside">A clean sweep, as they say. All three chambers.</p>
+  </article>
+
+  <article>
+    <div class="num">II</div>
+    <div class="desk">The Endorsement Effect</div>
+    <h3>Kiss of Death, Delivered</h3>
+    <p class="verse">
+      <span>November sent candidates packing</span>
+      <span>because they had Donald Trump's backing.</span>
+      <span class="in">This past mid-term season</span>
+      <span class="in">daft Trump was the reason</span>
+      <span>Republicans got a shellacking.</span>
+    </p>
+    <p class="aside">Sought after in the primaries; returned unopened in November.</p>
+  </article>
+
+  <article>
+    <div class="num">III</div>
+    <div class="desk">Vox Populi</div>
+    <h3>The Voters Have Spoken (With Gestures)</h3>
+    <p class="verse">
+      <span>Due to promises constantly broken</span>
+      <span>lots of anger at Trump had awoken.</span>
+      <span class="in">On November the third,</span>
+      <span class="in">when we flipped him the bird,</span>
+      <span>the American voters had spoken.</span>
+    </p>
+    <p class="aside">Sign language is still language.</p>
+  </article>
+
+  <article>
+    <div class="num">IV</div>
+    <div class="desk">Weather Desk</div>
+    <h3>Rallying Against the Forecast</h3>
+    <p class="verse">
+      <span>The month of October he spent</span>
+      <span>at rallies he hoped would prevent</span>
+      <span class="in">a forecasted storm</span>
+      <span class="in">that later would form</span>
+      <span>a Maga extinction event.</span>
+    </p>
+    <p class="aside">Paleontologists report the asteroid was, in fact, his own idea.</p>
+  </article>
+
+  <article>
+    <div class="num">V</div>
+    <div class="desk">Ballot Notes</div>
+    <h3>Write-In Wishful Thinking</h3>
+    <p class="verse">
+      <span>His transgressions were too big to mend,</span>
+      <span>yet he told voters "You should pretend</span>
+      <span class="in">that my name's on your ballot,"</span>
+      <span class="in">but too few had a palate</span>
+      <span>for the bullshit he spews with no end.</span>
+    </p>
+    <p class="aside">Voters pretended. Just not in the direction requested.</p>
+  </article>
+
+  <article>
+    <div class="num">VI</div>
+    <div class="desk">Lone Star Upset</div>
+    <h3>A Unique Talent</h3>
+    <p class="verse">
+      <span>Old Trump isn't like me or you.</span>
+      <span>He does things no other could do.</span>
+      <span class="in">For years people tried,</span>
+      <span class="in">and all were denied,</span>
+      <span>till Donald Trump turned Texas blue.</span>
+    </p>
+    <p class="aside">Democrats have spent decades on this. Turns out they only needed him.</p>
+  </article>
+
+  <article>
+    <div class="num">VII</div>
+    <div class="desk">Forecasting Desk</div>
+    <h3>Nobody Saw It Coming</h3>
+    <p class="verse">
+      <span>Not even the soothsaying swamis</span>
+      <span>felt people that Trump had called commies</span>
+      <span class="in">could win such a haul,</span>
+      <span class="in">which pundits might call</span>
+      <span>the mother of all blue tsunamis.</span>
+    </p>
+    <p class="aside">Comrades, the swamis would like a word about their accuracy ratings.</p>
+  </article>
+
+  <article>
+    <div class="num">VIII</div>
+    <div class="desk">Consumer Confidence</div>
+    <h3>No Refunds, No Returns</h3>
+    <p class="verse">
+      <span>He broke ev'ry promise, of course,</span>
+      <span>so mid-terms brought folks out in force.</span>
+      <span class="in">Since Donald's inflation</span>
+      <span class="in">and war gripped our nation,</span>
+      <span>his voters felt buyer's remorse.</span>
+    </p>
+    <p class="aside">Store policy: exchanges accepted every two years.</p>
+  </article>
+
+  <article>
+    <div class="num">IX</div>
+    <div class="desk">Rule of Law</div>
+    <h3>The Pharaoh's Subpoena Season</h3>
+    <p class="verse">
+      <span>For two years he ruled like a pharaoh,</span>
+      <span>Corruption was free as a sparrow.</span>
+      <span class="in">But Donald's rejections</span>
+      <span class="in">in mid-term elections</span>
+      <span>mean law-breaking options will narrow.</span>
+    </p>
+    <p class="aside">Coming soon to a committee room near you: oversight.</p>
+  </article>
+
+  <article>
+    <div class="num">X</div>
+    <div class="desk">Department of Loyalty</div>
+    <h3>All That Kneeling, For What?</h3>
+    <p class="verse">
+      <span>For years we saw candidates suck up</span>
+      <span>to Trump, the spectacular fuck-up.</span>
+      <span class="in">Though fealty was vast</span>
+      <span class="in">their fun couldn't last,</span>
+      <span>since mid-term elections had snuck up.</span>
+    </p>
+    <p class="aside">Knee pads may be returned at the loading dock.</p>
+  </article>
+
+</main>
+
+<footer>
+  <span class="big">And… exhale.</span>
+  Please exhale responsibly. Gloating is permitted in moderation; the next election is only two years away.
+</footer>
+
+<script>
+(function(){
+  var label=document.getElementById('orbLabel');
+  var sec=document.getElementById('breathe');
+  var btn=document.getElementById('pauseBtn');
+  var paused=false, phase=0, t;
+  var steps=[['Breathe in',4500],['Savor it',1000],['Breathe out',4500]];
+  function tick(){
+    if(paused) return;
+    label.textContent=steps[phase][0];
+    t=setTimeout(function(){phase=(phase+1)%steps.length;tick();},steps[phase][1]);
+  }
+  btn.addEventListener('click',function(){
+    paused=!paused;
+    sec.classList.toggle('paused',paused);
+    if(paused){clearTimeout(t);label.textContent='Holding…';btn.textContent='Let it out';}
+    else{btn.textContent='Hold that breath';phase=0;
+      var o=document.querySelector('.orb');o.style.animation='none';void o.offsetWidth;o.style.animation='';tick();}
+  });
+  tick();
+})();
+</script>
+<!-- VIZ-TRACKING:START -->
+<script>
+(function () {
+  var ENDPOINT = 'https://script.google.com/macros/s/AKfycbyCgndleqbDkjn1CWYFXflq0fegQRHkHE1S7gmlvnny8lA_rGsWZEqtz4shNoJ1ZanI6A/exec';
+  if (location.protocol === 'file:') return;
+  function send(where) {
+    try {
+      fetch(ENDPOINT, {
+        method: 'POST', mode: 'no-cors', keepalive: true,
+        body: new URLSearchParams({ viz: document.title || location.pathname, location: where })
+      }).catch(function () {});
+    } catch (e) {}
+  }
+  function fallback() {
+    try { return Intl.DateTimeFormat().resolvedOptions().timeZone || 'Unknown'; } catch (e) { return 'Unknown'; }
+  }
+  fetch('https://ipapi.co/json/')
+    .then(function (r) { return r.json(); })
+    .then(function (d) {
+      var place = [d.city, d.region, d.country_name].filter(Boolean).join(', ');
+      send(place || fallback());
+    })
+    .catch(function () { send(fallback()); });
+})();
+</script>
+<!-- VIZ-TRACKING:END -->
+</body>
+</html>
