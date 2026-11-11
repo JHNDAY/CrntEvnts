@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AfterWord — BOLLI Current Events, November 10, 2026</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      background: #a8c4e8;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+    }
+
+    /* ── HEADER ──────────────────────────────────────────── */
+    .header {
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #667eea 100%);
+      padding: 36px 32px 28px;
+      text-align: center;
+      color: white;
+    }
+
+    .header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .header .subtitle {
+      font-size: 0.95rem;
+      opacity: 0.85;
+      margin-bottom: 18px;
+      letter-spacing: 0.04em;
+    }
+
+    /* ── SOURCE PILLS ────────────────────────────────────── */
+    .sources-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: center;
+      margin-top: 14px;
+    }
+
+    .sources-bar a {
+      font-size: 11px;
+      color: #fff;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 4px;
+      padding: 3px 10px;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .sources-bar a:hover { background: rgba(255,255,255,0.35); }
+
+    /* ── LEGEND ──────────────────────────────────────────── */
+    .legend {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 20px 10px;
+      font-size: 12px;
+      color: #555;
+      background: #a8c4e8;
+    }
+    .legend-bar {
+      width: 160px;
+      height: 7px;
+      border-radius: 4px;
+      background: linear-gradient(90deg, #cc0000, #ff6600, #ff9944, #ffcc55, #5577ff);
+    }
+
+    /* ── INSTRUCTIONS ────────────────────────────────────── */
+    .instructions {
+      text-align: center;
+      font-size: 12px;
+      color: #888;
+      padding-bottom: 12px;
+      letter-spacing: 0.03em;
+      background: #a8c4e8;
+    }
+
+    /* ── TOPIC CARDS ─────────────────────────────────────── */
+    .topics-list {
+      padding: 0 20px 30px;
+      background: #a8c4e8;
+    }
+
+    .card {
+      margin-bottom: 12px;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      padding: 16px 20px;
+      cursor: pointer;
+      user-select: none;
+      color: white;
+      position: relative;
+      gap: 12px;
+      transition: filter 0.2s;
+    }
+    .card-header:hover { filter: brightness(1.08); }
+
+    .level-1 { background: linear-gradient(135deg, #cc0000 0%, #990000 100%); }
+    .level-2 { background: linear-gradient(135deg, #e63000 0%, #c02000 100%); }
+    .level-3 { background: linear-gradient(135deg, #e86a00 0%, #c05000 100%); }
+    .level-4 { background: linear-gradient(135deg, #d4a000 0%, #a07800 100%); }
+    .level-5 { background: linear-gradient(135deg, #2e9e5a 0%, #1a7040 100%); }
+    .level-6 { background: linear-gradient(135deg, #2a7fcc 0%, #1a5a99 100%); }
+    .level-7 { background: linear-gradient(135deg, #1a5fa8 0%, #0e3d70 100%); }
+    .level-8 { background: linear-gradient(135deg, #5533aa 0%, #3a1f77 100%); }
+
+    .card-rank {
+      font-size: 11px;
+      opacity: 0.7;
+      min-width: 22px;
+    }
+
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+      flex: 1;
+    }
+
+    .card-count {
+      font-size: 12px;
+      background: rgba(0,0,0,0.25);
+      padding: 3px 10px;
+      border-radius: 12px;
+      white-space: nowrap;
+    }
+
+    .card-chevron {
+      font-size: 16px;
+      opacity: 0.8;
+      transition: transform 0.3s ease;
+    }
+    .card-chevron.rotated { transform: rotate(180deg); }
+
+    /* ── CARD BODY ───────────────────────────────────────── */
+    .card-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease-in-out;
+      background: #b8ccec;
+    }
+    .card-body.expanded { max-height: 2400px; }
+
+    .card-body-inner {
+      padding: 18px 20px 20px;
+      border-top: 2px solid rgba(102,126,234,0.25);
+    }
+
+    /* ── SUBTOPIC CARDS ──────────────────────────────────── */
+    .subtopics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .subtopic {
+      background: white;
+      border-left: 3px solid #667eea;
+      border-radius: 6px;
+      padding: 11px 14px;
+      box-shadow: 0 2px 6px rgba(102,126,234,0.12);
+    }
+
+    .subtopic-src {
+      margin-top: 8px;
+      padding-top: 6px;
+      border-top: 1px solid rgba(102,126,234,0.2);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+    .subtopic-src a {
+      font-size: 10px;
+      color: #2a5298;
+      background: #eef2ff;
+      border: 1px solid #c7d2fe;
+      border-radius: 3px;
+      padding: 2px 7px;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .subtopic-src a:hover {
+      background: #667eea;
+      color: white;
+      border-color: #667eea;
+    }
+
+    .subtopic-title {
+      font-weight: 600;
+      color: #1e3c72;
+      font-size: 0.875rem;
+      margin-bottom: 5px;
+    }
+
+    .subtopic-detail {
+      font-size: 0.78rem;
+      color: #555;
+      line-height: 1.55;
+    }
+
+    /* ── SECTION SOURCES ─────────────────────────────────── */
+    .section-sources {
+      font-size: 11px;
+      color: #888;
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+    }
+    .section-sources strong { color: #555; }
+    .section-sources a {
+      color: #2a5298;
+      text-decoration: none;
+      background: #eef2ff;
+      padding: 2px 8px;
+      border-radius: 3px;
+    }
+    .section-sources a:hover {
+      background: #667eea;
+      color: white;
+    }
+
+    /* ── FOOTER ──────────────────────────────────────────── */
+    .footer {
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+      color: rgba(255,255,255,0.8);
+      text-align: center;
+      padding: 22px 20px;
+      font-size: 11px;
+      line-height: 1.8;
+    }
+    .footer a {
+      color: #a8c4ff;
+      text-decoration: none;
+    }
+    .footer a:hover { text-decoration: underline; color: #fff; }
+
+    @media (max-width: 600px) {
+      .subtopics-grid { grid-template-columns: 1fr; }
+      .header h1 { font-size: 1.4rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- ══ HEADER ══════════════════════════════════════════ -->
+  <div class="header">
+    <h1>📰 AfterWord · BOLLI Current Events · November 10, 2026</h1>
+    <div class="subtitle">8 Coverage Areas &nbsp;·&nbsp; What the Press Was Saying the Week After the Midterms &nbsp;·&nbsp; 16 Sources</div>
+
+    <div class="sources-bar">
+      <a href="https://nytimes.com" target="_blank">New York Times</a>
+      <a href="https://washingtonpost.com" target="_blank">Washington Post</a>
+      <a href="https://apnews.com" target="_blank">Associated Press</a>
+      <a href="https://nbcnews.com" target="_blank">NBC News</a>
+      <a href="https://cnn.com" target="_blank">CNN</a>
+      <a href="https://axios.com" target="_blank">Axios</a>
+      <a href="https://politico.com" target="_blank">Politico</a>
+      <a href="https://pewresearch.org" target="_blank">Pew Research</a>
+      <a href="https://newsweek.com" target="_blank">Newsweek</a>
+      <a href="https://ncsl.org" target="_blank">NCSL</a>
+      <a href="https://scotusblog.com" target="_blank">SCOTUSblog</a>
+      <a href="https://mississippitoday.org" target="_blank">Mississippi Today</a>
+      <a href="https://alaskabeacon.com" target="_blank">Alaska Beacon</a>
+      <a href="https://michiganadvance.com" target="_blank">Michigan Advance</a>
+      <a href="https://aljazeera.com" target="_blank">Al Jazeera</a>
+      <a href="https://ynetnews.com" target="_blank">Ynet</a>
+    </div>
+  </div>
+
+  <div class="legend">
+    <span>High coverage</span>
+    <div class="legend-bar"></div>
+    <span>Emerging story</span>
+  </div>
+  <div class="instructions">Click any topic to expand · One section open at a time</div>
+
+  <!-- ══ CARDS ══════════════════════════════════════════ -->
+  <div class="topics-list">
+
+    <!-- 1. THE WAVE -->
+    <div class="card">
+      <div class="card-header level-1" onclick="toggle(this)">
+        <span class="card-rank">01</span>
+        <span class="card-title">The Blue Tsunami: Democrats Take Both Chambers, Seven Senate Flips</span>
+        <span class="card-count">High coverage</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+            <div class="subtopic">
+              <div class="subtopic-title">"Relief Is on the Way"</div>
+              <div class="subtopic-detail">AP and NBC reported that Democrats flipped seven Senate seats (Kansas, Iowa, Texas, Ohio, Maine, North Carolina and South Carolina) for a 54–44 majority with Mississippi and Alaska still open. Schumer called it a generational remake of the Senate map and summed it up in five words: "Relief is on the way." Coverage noted the result may be the largest popular-vote win for either party since 1976.</div>
+              <div class="subtopic-src"><a href="https://www.nbcwashington.com/elections/election-day-after-2026-midterms-congress-results-live-updates/4177248/" target="_blank">NBC</a><a href="https://www.boston25news.com/news/trending/election-2026-democrats-capture-both-houses-congress/5ILOWTVABVDPZFYP7VBBCX4EWE/?outputType=amp" target="_blank">AP / NYT via Boston 25</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Biggest House Majority Since 2008</div>
+              <div class="subtopic-detail">The Times projected Democrats on pace for their largest House majority since 2008's 257 seats, the same benchmark George cited. Speaker Mike Johnson conceded that holding the House meant defying more than a century of midterm history. Record turnout topped 124 million ballots, passing the 2018 midterm record, per the University of Florida Election Lab.</div>
+              <div class="subtopic-src"><a href="https://www.boston25news.com/news/trending/election-2026-democrats-capture-both-houses-congress/5ILOWTVABVDPZFYP7VBBCX4EWE/?outputType=amp" target="_blank">NYT / AP</a><a href="https://www.live5news.com/2026/11/04/midterm-election-results-three-things-know/?outputType=amp" target="_blank">Gray DC</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Texas and Iowa: Results Few Predicted</div>
+              <div class="subtopic-detail">The Washington Examiner's takeaways highlighted Gina Hinojosa ousting three-term Gov. Greg Abbott and James Talarico beating Ken Paxton, while Josh Turek's win of more than four points in Iowa pushed Democrats past 50 Senate seats. Both Texans celebrated with a stop at Whataburger.</div>
+              <div class="subtopic-src"><a href="https://www.washingtonexaminer.com/news/campaigns/4791815/takeaways-2026-midterm-elections/" target="_blank">Washington Examiner</a><a href="https://www.nbcwashington.com/elections/election-day-after-2026-midterms-congress-results-live-updates/4177248/" target="_blank">NBC</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Statehouses: The Howard Dean Map, Reversed</div>
+              <div class="subtopic-detail">Stateline reported Democrats flipped at least 12 legislative chambers, the most since 2008, ending Republican dominance of state government that began in 2010. New trifectas came in Michigan, Minnesota, Nevada, Pennsylvania and Wisconsin, where Democrats flipped both chambers for the first time in nearly two decades. NCSL called it a wave that upended GOP control of legislatures.</div>
+              <div class="subtopic-src"><a href="https://www.newsfromthestates.com/node/436838" target="_blank">Stateline</a><a href="https://www.ncsl.org/news/details/democratic-wave-upends-republican-dominance-of-state-legislatures" target="_blank">NCSL</a><a href="https://www.goodmorningamerica.com/news/story/democrats-flip-statehouses-midterm-wave-137924342" target="_blank">ABC</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Trump: "IN A LANDSLIDE!" and a VETO Hat</div>
+              <div class="subtopic-detail">On Truth Social, Trump posted that he wasn't on the ballot and Republicans would otherwise have won in a landslide, the line George quoted. He also posted an image of a red "VETO" hat, attacked Fox News and Gov. Abbott, and told Fox the Iran war had made for an unpleasant election night.</div>
+              <div class="subtopic-src"><a href="https://www.ibtimes.co.uk/trump-blames-fox-news-abbott-2026-midterms-1830075" target="_blank">IBTimes</a><a href="https://thegrio.com/2026/11/04/trump-threatens-veto-black-voters-deliver-major-losses-to-republicans/" target="_blank">TheGrio</a><a href="https://www.nbclosangeles.com/elections/election-day-after-2026-midterms-congress-results-live-updates/3965534/" target="_blank">NBC</a></div>
+            </div>
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://apnews.com" target="_blank">AP</a>
+            <a href="https://nytimes.com" target="_blank">NYT</a>
+            <a href="https://nbcnews.com" target="_blank">NBC</a>
+            <a href="https://ncsl.org" target="_blank">NCSL</a>
+            <a href="https://stateline.org" target="_blank">Stateline</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. NVIDIA -->
+    <div class="card">
+      <div class="card-header level-2" onclick="toggle(this)">
+        <span class="card-rank">02</span>
+        <span class="card-title">NVIDIA's Huang, an Alleged Chinese Spy, and Rubio's Unheeded Memo</span>
+        <span class="card-count">High coverage</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+            <div class="subtopic">
+              <div class="subtopic-title">Huang Admits the Affair; Board Opens a Probe</div>
+              <div class="subtopic-detail">In a message to employees on November 8, Jensen Huang acknowledged an affair and apologized to his family and staff; the Washington Post published his letter. NVIDIA's board said independent directors with outside counsel would investigate whether a foreign intelligence operation had targeted him.</div>
+              <div class="subtopic-src"><a href="https://trtworld.com/article/d2e806250f07" target="_blank">TRT World</a><a href="https://www.bostonglobe.com/2026/11/08/nation/nvidia-leader-admits-relationship-with-woman-alleged-by-us-be-chinese-spy/" target="_blank">Boston Globe</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Who Is Alice Huang?</div>
+              <div class="subtopic-detail">Answering Fran's question: she is a Chinese citizen and senior executive at Megaspeed, a Singapore-based company that bought NVIDIA's advanced AI chips. U.S. intelligence, based on electronic surveillance, concluded she had been recruited by China's Ministry of State Security.</div>
+              <div class="subtopic-src"><a href="https://www.bostonglobe.com/2026/11/08/nation/nvidia-leader-admits-relationship-with-woman-alleged-by-us-be-chinese-spy/" target="_blank">Boston Globe / NYT</a><a href="https://ground.news/article/894305a5-521f-4b9e-b59a-6c10e8df0b1f" target="_blank">Ground News</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Rubio's Classified Memo, Then Silence</div>
+              <div class="subtopic-detail">The Times reported that Rubio oversaw a highly classified memo this spring warning senior officials, ahead of Trump's May visit to Beijing, about Huang's ties to her. Hal's account matches the reporting: Trump had been briefed about a year earlier and took no action, and Raw Story summarized that the warnings fell on deaf ears.</div>
+              <div class="subtopic-src"><a href="https://dnyuz.com/2026/11/08/rubio-warned-officials-about-nvidia-chiefs-entanglement-with-chinese-spy/" target="_blank">NYT (via DNYUZ)</a><a href="https://www.rawstory.com/trump-jensen-huang/" target="_blank">Raw Story</a><a href="https://taiwannews.com.tw/en/news/6473713" target="_blank">Taiwan News</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Trump: Huang Is "a Fine Person"</div>
+              <div class="subtopic-detail">Per Bloomberg, Trump defended Huang on Sunday as a "fine person" who should remain CEO, and told reporters he did not regret his own inaction. NVIDIA pushed back on the Times reporting, saying allegations about Megaspeed had been investigated and debunked last year. Congressional reaction was described as hostile.</div>
+              <div class="subtopic-src"><a href="https://taiwannews.com.tw/en/news/6473713" target="_blank">Taiwan News / Bloomberg</a><a href="https://www.tweaktown.com/rss/click/news/114387/?c=news-mf" target="_blank">TweakTown</a><a href="https://www.latintimes.com/nvidia-probe-jensen-huang-alleged-chinese-operative-601044" target="_blank">Latin Times</a></div>
+            </div>
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://nytimes.com" target="_blank">NYT</a>
+            <a href="https://washingtonpost.com" target="_blank">WaPo</a>
+            <a href="https://bostonglobe.com" target="_blank">Boston Globe</a>
+            <a href="https://bloomberg.com" target="_blank">Bloomberg</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. POLLS -->
+    <div class="card">
+      <div class="card-header level-3" onclick="toggle(this)">
+        <span class="card-rank">03</span>
+        <span class="card-title">The Polls Got the Winner Right and the Size Wrong</span>
+        <span class="card-count">High coverage</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+            <div class="subtopic">
+              <div class="subtopic-title">A Bigger Miss Than 2016, in Reverse</div>
+              <div class="subtopic-detail">Axios reported that surveys correctly anticipated a blue wave but missed its force, underestimating Democrats by roughly 4 points, a gap comparable to the 2020 miss and larger than the average errors of 2016 and 2024.</div>
+              <div class="subtopic-src"><a href="https://www.axios.com/2026/11/04/polling-midterms-accuracy-atlasintel" target="_blank">Axios</a><a href="https://politicalwire.com/2026/11/05/the-polls-found-a-new-way-to-be-wrong/" target="_blank">Political Wire</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">House Vote: About 9 Projected, About 13 Delivered</div>
+              <div class="subtopic-detail">Straight Arrow News, like George, put the final polls at about Democrats +9 on the national House vote and the count at about +13. In Texas's governor's race and South Carolina's Senate race, the averages favored Republicans and Democrats won both.</div>
+              <div class="subtopic-src"><a href="https://san.com/cc/why-polls-and-markets-got-the-midterm-winners-right-but-the-margins-wrong/" target="_blank">Straight Arrow News</a><a href="https://www.pewresearch.org/short-reads/2026/11/06/a-first-look-at-polling-performance-in-2026/" target="_blank">Pew Research</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">14 of 15 Senate Races Underestimated</div>
+              <div class="subtopic-detail">AllSides compiled analysis finding Democrats underestimated in 14 of 15 key Senate races, with an average error of 4.4 points. One explanation offered: pollsters scarred by 2016, 2020 and 2024 were willing to miss low on Democrats rather than repeat those errors.</div>
+              <div class="subtopic-src"><a href="https://www.allsides.com/blog/what-polls-missed-about-midterms" target="_blank">AllSides</a><a href="https://www.newsweek.com/biggest-polling-misses-2026-midterm-elections-12666486" target="_blank">Newsweek</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Pew: Direction Right, Margin Understated</div>
+              <div class="subtopic-detail">Pew's first look, drawing on RealClearPolitics, Silver Bulletin and FiftyPlusOne averages, found pre-election polls captured the direction of the election while generally understating Democrats' advantage, in a year Pew had flagged as uniquely difficult to poll.</div>
+              <div class="subtopic-src"><a href="https://www.pewresearch.org/short-reads/2026/11/06/a-first-look-at-polling-performance-in-2026/" target="_blank">Pew Research</a><a href="https://www.realclearpolling.com/stories/analysis/how-polls-undercounted-democratic-support-on-tuesday" target="_blank">RealClearPolling</a></div>
+            </div>
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://axios.com" target="_blank">Axios</a>
+            <a href="https://pewresearch.org" target="_blank">Pew</a>
+            <a href="https://newsweek.com" target="_blank">Newsweek</a>
+            <a href="https://allsides.com" target="_blank">AllSides</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. STILL COUNTING -->
+    <div class="card">
+      <div class="card-header level-4" onclick="toggle(this)">
+        <span class="card-rank">04</span>
+        <span class="card-title">Still Counting: Colom's Lead Nears 3,000; Alaska's Two Sullivans</span>
+        <span class="card-count">Developing story</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div style="background:white;border-radius:8px;padding:14px 16px 10px;margin-bottom:14px;box-shadow:0 2px 6px rgba(102,126,234,0.12);">
+            <div style="font-weight:600;color:#1e3c72;font-size:0.95rem;margin-bottom:2px;">Colom's Lead Over Hyde-Smith, Election Week</div>
+            <div style="font-size:0.75rem;color:#666;margin-bottom:8px;">Each dot is a reported count update; hover for the time. The lead dipped by 38 votes on Nov 9, then rose to 2,990 by late Nov 10 (AP), with about 98% counted. Race not yet called.</div>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 280" role="img" aria-label="Line chart: Colom lead over Hyde-Smith grew from 65 votes on Nov 4 to 2,990 by Nov 11" style="width:100%;height:auto;display:block;font-family:Segoe UI,Tahoma,sans-serif">
+<rect x="267.5" y="24" width="141.0" height="208" fill="#1e3c72" opacity="0.06"/>
+<text x="338.0" y="56" text-anchor="middle" font-size="10" fill="#556">Weekend: no new counts</text>
+<line x1="56" x2="620" y1="232.0" y2="232.0" stroke="#c7d2fe" stroke-width="1"/>
+<text x="48" y="236.0" text-anchor="end" font-size="11" fill="#556">0</text>
+<line x1="56" x2="620" y1="199.5" y2="199.5" stroke="#c7d2fe" stroke-width="1"/>
+<text x="48" y="203.5" text-anchor="end" font-size="11" fill="#556">500</text>
+<line x1="56" x2="620" y1="167.0" y2="167.0" stroke="#c7d2fe" stroke-width="1"/>
+<text x="48" y="171.0" text-anchor="end" font-size="11" fill="#556">1,000</text>
+<line x1="56" x2="620" y1="134.5" y2="134.5" stroke="#c7d2fe" stroke-width="1"/>
+<text x="48" y="138.5" text-anchor="end" font-size="11" fill="#556">1,500</text>
+<line x1="56" x2="620" y1="102.0" y2="102.0" stroke="#c7d2fe" stroke-width="1"/>
+<text x="48" y="106.0" text-anchor="end" font-size="11" fill="#556">2,000</text>
+<line x1="56" x2="620" y1="69.5" y2="69.5" stroke="#c7d2fe" stroke-width="1"/>
+<text x="48" y="73.5" text-anchor="end" font-size="11" fill="#556">2,500</text>
+<line x1="56" x2="620" y1="37.0" y2="37.0" stroke="#c7d2fe" stroke-width="1"/>
+<text x="48" y="41.0" text-anchor="end" font-size="11" fill="#556">3,000</text>
+<text x="91.2" y="250" text-anchor="middle" font-size="11" fill="#556">Nov 4</text>
+<line x1="56.0" x2="56.0" y1="232" y2="237" stroke="#99a"/>
+<text x="161.8" y="250" text-anchor="middle" font-size="11" fill="#556">Nov 5</text>
+<line x1="126.5" x2="126.5" y1="232" y2="237" stroke="#99a"/>
+<text x="232.2" y="250" text-anchor="middle" font-size="11" fill="#556">Nov 6</text>
+<line x1="197.0" x2="197.0" y1="232" y2="237" stroke="#99a"/>
+<text x="302.8" y="250" text-anchor="middle" font-size="11" fill="#556">Nov 7</text>
+<line x1="267.5" x2="267.5" y1="232" y2="237" stroke="#99a"/>
+<text x="373.2" y="250" text-anchor="middle" font-size="11" fill="#556">Nov 8</text>
+<line x1="338.0" x2="338.0" y1="232" y2="237" stroke="#99a"/>
+<text x="443.8" y="250" text-anchor="middle" font-size="11" fill="#556">Nov 9</text>
+<line x1="408.5" x2="408.5" y1="232" y2="237" stroke="#99a"/>
+<text x="514.2" y="250" text-anchor="middle" font-size="11" fill="#556">Nov 10</text>
+<line x1="479.0" x2="479.0" y1="232" y2="237" stroke="#99a"/>
+<text x="584.8" y="250" text-anchor="middle" font-size="11" fill="#556">Nov 11</text>
+<line x1="549.5" x2="549.5" y1="232" y2="237" stroke="#99a"/>
+<text x="338.0" y="274" text-anchor="middle" font-size="11" fill="#556">Date of count update (2026)</text>
+<text x="14" y="128.0" transform="rotate(-90 14 128.0)" text-anchor="middle" font-size="11" fill="#556">Colom lead (votes)</text>
+<path d="M104.1,227.8 L107.4,158.0 L165.2,117.3 L180.7,109.7 L231.5,101.3 L247.2,64.7 L439.5,67.2 L526.0,62.7 L546.6,37.7 L572.5,37.7 L572.5,232.0 L104.1,232.0 Z" fill="#667eea" opacity="0.15"/>
+<polyline fill="none" stroke="#2a5298" stroke-width="2.5" stroke-linejoin="round" points="104.1,227.8 107.4,158.0 165.2,117.3 180.7,109.7 231.5,101.3 247.2,64.7 439.5,67.2 526.0,62.7 546.6,37.7 572.5,37.7"/>
+<circle cx="104.1" cy="227.8" r="4" fill="#fff" stroke="#2a5298" stroke-width="2"><title>2026-11-04 16:23: 65 votes</title></circle>
+<text x="114.1" y="219.8" text-anchor="start" font-size="11" font-weight="600" fill="#1e3c72">65</text>
+<circle cx="107.4" cy="158.0" r="4" fill="#fff" stroke="#2a5298" stroke-width="2"><title>2026-11-04 17:30: 1,138 votes</title></circle>
+<text x="99.4" y="150.0" text-anchor="end" font-size="11" font-weight="600" fill="#1e3c72">1,138</text>
+<circle cx="165.2" cy="117.3" r="4" fill="#fff" stroke="#2a5298" stroke-width="2"><title>2026-11-05 13:11: 1,764 votes</title></circle>
+<circle cx="180.7" cy="109.7" r="4" fill="#fff" stroke="#2a5298" stroke-width="2"><title>2026-11-05 18:28: 1,882 votes</title></circle>
+<text x="180.7" y="99.7" text-anchor="middle" font-size="11" font-weight="600" fill="#1e3c72">1,882</text>
+<circle cx="231.5" cy="101.3" r="4" fill="#fff" stroke="#2a5298" stroke-width="2"><title>2026-11-06 11:45: 2,010 votes</title></circle>
+<circle cx="247.2" cy="64.7" r="4" fill="#fff" stroke="#2a5298" stroke-width="2"><title>2026-11-06 17:05: 2,574 votes</title></circle>
+<text x="247.2" y="54.7" text-anchor="middle" font-size="11" font-weight="600" fill="#1e3c72">2,574</text>
+<circle cx="439.5" cy="67.2" r="4" fill="#fff" stroke="#2a5298" stroke-width="2"><title>2026-11-09 10:33: 2,536 votes</title></circle>
+<text x="439.5" y="83.2" text-anchor="middle" font-size="11" font-weight="600" fill="#1e3c72">2,536</text>
+<circle cx="526.0" cy="62.7" r="4" fill="#fff" stroke="#2a5298" stroke-width="2"><title>2026-11-10 16:00: 2,604 votes</title></circle>
+<circle cx="546.6" cy="37.7" r="4" fill="#fff" stroke="#2a5298" stroke-width="2"><title>2026-11-10 23:00: 2,990 votes</title></circle>
+<circle cx="572.5" cy="37.7" r="4" fill="#fff" stroke="#2a5298" stroke-width="2"><title>2026-11-11 07:50: 2,990 votes</title></circle>
+<text x="572.5" y="27.7" text-anchor="middle" font-size="11" font-weight="600" fill="#1e3c72">2,990</text>
+</svg>
+            <div class="subtopic-src" style="border-top:none;margin-top:4px;"><a href="https://www.mississippifreepress.org/liveblog-mississippis-2026-u-s-senate-election-results/" target="_blank">Mississippi Free Press liveblog</a><a href="https://www.democracydocket.com/news-alerts/live-mississippi-senate-ballot-fight-heats-up/" target="_blank">Democracy Docket</a><a href="https://mississippitoday.org/2026/11/10/colom-hyde-smith-mississippi-senate-hinds-county/" target="_blank">Mississippi Today / AP</a><a href="https://www.wlbt.com/2026/11/11/coloms-lead-grows-just-under-3000-votes-mississippi-senate-count-continues/" target="_blank">WLBT</a></div>
+          </div>
+          <div class="subtopics-grid">
+            <div class="subtopic">
+              <div class="subtopic-title">Mississippi: From 65 Votes to Nearly 3,000</div>
+              <div class="subtopic-detail">Scott Colom's lead over Sen. Cindy Hyde-Smith has widened almost every day since Election Day, when it stood at just 65 votes. It reached about 2,500 by Friday and 2,604 on Tuesday afternoon. Late Tuesday, AP put it at 2,990 with about 98% counted, though it still had not called the race. Counties must certify by Friday, November 13, and Colom expects the final Hinds County tally to settle it. Hyde-Smith says she remains confident. Republicans have asked that affidavit ballots be preserved, and Mississippi has no automatic recount.</div>
+              <div class="subtopic-src"><a href="https://mississippitoday.org/2026/11/10/colom-hyde-smith-mississippi-senate-hinds-county/" target="_blank">Mississippi Today</a><a href="https://www.wlbt.com/2026/11/11/coloms-lead-grows-just-under-3000-votes-mississippi-senate-count-continues/" target="_blank">WLBT</a><a href="https://www.yahoo.com/news/politics/article/mississippi-senate-latest-scott-coloms-lead-over-cindy-hyde-smith-tops-2500-votes-as-key-deadlines-loom-183943706.html" target="_blank">Yahoo News</a><a href="https://www.democracydocket.com/news-alerts/live-mississippi-senate-ballot-fight-heats-up/" target="_blank">Democracy Docket</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">The Judgeship That Created a Candidate</div>
+              <div class="subtopic-detail">John's anecdote is well documented: Hyde-Smith blocked Biden's 2023 nomination of Colom to a federal judgeship, while Sen. Roger Wicker returned his blue slip without objection. Semafor observed that had she not objected, Colom would be on the bench for life and she would likely lack a real opponent. If he wins, he would be Mississippi's first Black senator since Reconstruction.</div>
+              <div class="subtopic-src"><a href="https://www.semafor.com/article/03/09/2026/how-one-red-state-senate-race-is-very-personal" target="_blank">Semafor</a><a href="https://www.electoral-vote.com/evp2026/Items/Mar12-8.html" target="_blank">Electoral-Vote</a><a href="https://mississippitoday.org/2026/11/04/who-won-mississippis-midterm-senate-race-we-may-not-know-for-a-while/" target="_blank">Mississippi Today</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Alaska: Ranked-Choice Count on November 18</div>
+              <div class="subtopic-detail">With 74% counted, Mary Peltola led Sen. Dan Sullivan by fewer than 700 first-choice votes, and neither had 50%. Overseas ballots are accepted for 15 days, with ranked-choice tabulation set for November 18. Both campaigns projected victory. Peltola would be the first Alaska Native in the Senate.</div>
+              <div class="subtopic-src"><a href="https://www.atlantanewsfirst.com/2026/11/07/alaska-senate-race-remains-undecided-days-after-election-day/" target="_blank">Gray DC</a><a href="https://www.alaskasnewssource.com/2026/11/06/peltola-sullivan-campaigns-project-wins-while-quarter-ballots-are-outstanding/" target="_blank">Alaska's News Source</a><a href="https://alaskapublic.org/news/politics/elections/2026-11-03/peltola-takes-early-lead-in-alaskas-u-s-senate-race" target="_blank">Alaska Public Media</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">The Other Dan Sullivan, and Peltola's Odds</div>
+              <div class="subtopic-detail">The coverage is less sure than George was. A Petersburg man named Daniel J. Sullivan drew about 3,600 votes, more of whose voters ranked Peltola next. But an Alaska Beacon analysis and a Newsweek estimate found that second choices from the other eliminated candidates could tip the final round narrowly to the senator. Alaskans also voted on repealing ranked-choice voting.</div>
+              <div class="subtopic-src"><a href="https://newsweek.com/ranked-choice-twist-other-dan-sullivan-numbers-win-alaska-12674904" target="_blank">Newsweek</a><a href="https://www.newsfromthestates.com/node/436916" target="_blank">Alaska Beacon</a><a href="https://fairvote.org/results-and-analysis-from-alaskas-2026-elections/" target="_blank">FairVote</a></div>
+            </div>
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://mississippitoday.org" target="_blank">Mississippi Today</a>
+            <a href="https://semafor.com" target="_blank">Semafor</a>
+            <a href="https://alaskabeacon.com" target="_blank">Alaska Beacon</a>
+            <a href="https://newsweek.com" target="_blank">Newsweek</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. WHAT NEXT -->
+    <div class="card">
+      <div class="card-header level-5" onclick="toggle(this)">
+        <span class="card-rank">05</span>
+        <span class="card-title">Affordability or Accountability? The Mandate, Hegseth, and Who Leads</span>
+        <span class="card-count">Sustained coverage</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+            <div class="subtopic">
+              <div class="subtopic-title">"That Is the Mandate"</div>
+              <div class="subtopic-detail">Fran, Hal and Michael's argument echoed across coverage. Rep. Jared Moskowitz of Florida told NBC that Democrats must deliver on getting costs down. Before the vote, Jeffries had built the House message on an affordability agenda covering healthcare, groceries, gas and housing, and told CNN that impeachment rarely came up with voters.</div>
+              <div class="subtopic-src"><a href="https://www.nbclosangeles.com/elections/election-day-after-2026-midterms-congress-results-live-updates/3965534/" target="_blank">NBC</a><a href="https://kvia.com/politics/cnn-us-politics/2026/01/20/inside-democrats-dilemma-over-how-to-battle-trump-in-fight-to-control-congress/" target="_blank">CNN</a><a href="https://www.salon.com/2026/09/24/the-democratic-playbook-for-taking-on-trump-after-the-midterms/" target="_blank">Salon</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Oversight Is Coming; Hegseth Is First in Line</div>
+              <div class="subtopic-detail">AP reported Democrats plan vast oversight, with impeachment of Cabinet members more likely than a third Trump impeachment. Hilary's point holds: Hegseth already faces articles filed by a Republican, Rep. Thomas Massie, over his management of the Pentagon and the Iran war. Rep. Pat Ryan told Politico Hegseth should "lawyer up."</div>
+              <div class="subtopic-src"><a href="https://www.pbs.org/newshour/amp/politics/house-democrats-plan-vast-oversight-of-trump-administration-impeachment-is-an-option" target="_blank">AP / PBS</a><a href="https://www.thedailybeast.com/pentagon-pete-hegseth-faces-his-worst-nightmare-after-election-day/" target="_blank">Daily Beast</a><a href="https://fortune.com/2026/09/26/democrats-oversight-agenda-trump-administration-midterms-elections-impeachment-pete-hegseth/" target="_blank">Fortune</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Make Him Veto It</div>
+              <div class="subtopic-detail">Geoff's veto strategy has a public version. A Salon playbook urged Democrats to stop cowering from veto threats and dare Trump to veto popular legislation. Trump has already signaled he will veto Democratic bills.</div>
+              <div class="subtopic-src"><a href="https://www.salon.com/2026/09/24/the-democratic-playbook-for-taking-on-trump-after-the-midterms/" target="_blank">Salon</a><a href="https://www.washingtonexaminer.com/news/campaigns/4791815/takeaways-2026-midterm-elections/" target="_blank">Washington Examiner</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Schumer vs. a Van Hollen Push</div>
+              <div class="subtopic-detail">Schumer told The Daily he expects no challenge and remains the favorite, needing only a majority of his caucus. But Politico reported a movement to elevate Chris Van Hollen is gaining steam, and Van Hollen told the Post Schumer should not automatically keep the job. Several incoming freshmen have withheld support. Sen. Mark Kelly said Schumer earned another term.</div>
+              <div class="subtopic-src"><a href="https://www.rawstory.com/chuck-schumer-2678340561/" target="_blank">Politico (via Raw Story)</a><a href="https://kvia.com/?p=1506081" target="_blank">CNN</a><a href="https://foxnews.com/politics/schumers-grip-power-slips-dems-begin-revolt-against-him-eye-new-leadership" target="_blank">Fox News</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Jeffries Looks Secure</div>
+              <div class="subtopic-detail">As the Kents predicted, the House side is calmer: Nancy Pelosi endorsed Jeffries after the victory, and he is in line to succeed Mike Johnson as Speaker.</div>
+              <div class="subtopic-src"><a href="https://www.live5news.com/2026/11/04/midterm-election-results-three-things-know/?outputType=amp" target="_blank">Gray DC</a><a href="https://www.washingtonexaminer.com/news/campaigns/4791815/takeaways-2026-midterm-elections/" target="_blank">Washington Examiner</a></div>
+            </div>
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://apnews.com" target="_blank">AP</a>
+            <a href="https://politico.com" target="_blank">Politico</a>
+            <a href="https://cnn.com" target="_blank">CNN</a>
+            <a href="https://nbcnews.com" target="_blank">NBC</a>
+            <a href="https://salon.com" target="_blank">Salon</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. SPEECHES & FIRSTS -->
+    <div class="card">
+      <div class="card-header level-6" onclick="toggle(this)">
+        <span class="card-rank">06</span>
+        <span class="card-title">Slingshots and Firsts: Talarico, El-Sayed, and a Record for Women Governors</span>
+        <span class="card-count">Sustained coverage</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+            <div class="subtopic">
+              <div class="subtopic-title">Talarico: "You Were My Slingshot"</div>
+              <div class="subtopic-detail">The speech John played was widely reported. Talarico cast the race against three Goliaths: the richest man, the most powerful man, and the Washington establishment. He credited Texans as his slingshot, called his campaign a politics of love, and closed with Jesus overturning the tables in the Temple. He is the first Texas Democrat elected to the Senate since Lloyd Bentsen in 1988.</div>
+              <div class="subtopic-src"><a href="https://www.ksat.com/news/local/2026/11/04/full-speech-talarico-vows-a-politics-of-love-in-speech-after-historic-senate-win/" target="_blank">KSAT</a><a href="https://www.beliefnet.com/columnists/news/?p=33335" target="_blank">Beliefnet</a><a href="https://www.ibtimes.co.uk/james-talarico-defeats-ken-paxton-texas-senate-1830220" target="_blank">IBTimes</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">The Seminarian Who Translates Scripture</div>
+              <div class="subtopic-detail">Fox profiles stressed that Talarico is a former middle-school teacher and Presbyterian seminarian who carried Tarrant, Collin and Denton counties, all Trump counties in 2024. The full transcript is available for comparison with Lincoln's Second Inaugural.</div>
+              <div class="subtopic-src"><a href="https://www.fox5ny.com/news/who-is-james-talarico-texas-us-senate" target="_blank">Fox 5</a><a href="https://singjupost.com/transcript-james-talaricos-victory-speech-after-historic-texas-senate-flip/" target="_blank">Full Transcript</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">El-Sayed: "Call Me Senator"</div>
+              <div class="subtopic-detail">The line Sally and George quoted was reported verbatim: El-Sayed told Trump that after JD Vance swears him in, he can just call him senator, and he called Vance's constitutional duty to swear him in a "delicious irony." He will be the first Muslim U.S. senator. National Review called the speech defiant, offering Republicans no olive branch.</div>
+              <div class="subtopic-src"><a href="https://michiganadvance.com/?p=115406" target="_blank">Michigan Advance</a><a href="https://www.complex.com/life/a/tracewilliamcowen/abdul-el-sayed-senate-win" target="_blank">Complex</a><a href="https://www.nationalreview.com/news/el-sayed-strikes-defiant-tone-mocks-republicans-after-capping-off-blue-wave-in-michigan/amp/" target="_blank">National Review</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Larry Was Right About Governors</div>
+              <div class="subtopic-detail">Seventeen women will serve as governor in 2027, beating the record of 14, according to Rutgers' Center for American Women and Politics. Keisha Lance Bottoms becomes Georgia's first Black and first woman governor, Deb Haaland the first Native American governor, and Peggy Flanagan the first Native American woman senator.</div>
+              <div class="subtopic-src"><a href="https://floridaphoenix.com/?p=245474" target="_blank">Florida Phoenix</a><a href="https://www.newsfromthestates.com/node/436874" target="_blank">Stateline</a><a href="https://abc7news.com/story/women-make-history-governor-congressional-races-2026-midterms/20015679/" target="_blank">ABC</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Congress: The Count Is Disputed</div>
+              <div class="subtopic-detail">On women in Congress the press disagrees, as George and Larry did. ABC cited CAWP projecting 139 women, down from 152, while Newsweek projected at least 155, a new record. Axios reported a record for Democratic women in the House. Expect the figure to settle as late races are called.</div>
+              <div class="subtopic-src"><a href="https://abc30.com/story/women-make-history-governor-congressional-races-2026-midterms/20015679/" target="_blank">ABC / CAWP</a><a href="https://newsweek.com/women-were-among-the-biggest-winners-in-the-midterm-what-happens-next-12682474" target="_blank">Newsweek</a><a href="https://www.axios.com/2026/11/04/women-midterm-blue-wave-historic-gains" target="_blank">Axios</a></div>
+            </div>
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://ksat.com" target="_blank">KSAT</a>
+            <a href="https://michiganadvance.com" target="_blank">Michigan Advance</a>
+            <a href="https://cawp.rutgers.edu" target="_blank">CAWP</a>
+            <a href="https://axios.com" target="_blank">Axios</a>
+            <a href="https://newsweek.com" target="_blank">Newsweek</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. COURTS -->
+    <div class="card">
+      <div class="card-header level-7" onclick="toggle(this)">
+        <span class="card-rank">07</span>
+        <span class="card-title">Court Reform: Hearings Now, Laws Later</span>
+        <span class="card-count">Emerging story</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+            <div class="subtopic">
+              <div class="subtopic-title">SCOTUSblog: Power to Debate, Not to Pass</div>
+              <div class="subtopic-detail">SCOTUSblog assessed that the new Congress can ensure reform proposals, from ethics rules to term limits to expansion, get a hearing, but the filibuster and Trump's veto put the ambitious ones out of reach for now. It also tracked the rumors about Alito's retirement, which George raised.</div>
+              <div class="subtopic-src"><a href="https://scotusblog.com/2026/11/democrats-won-control-of-congress-what-might-that-mean-for-the-supreme-court/" target="_blank">SCOTUSblog</a><a href="https://www.alternet.org/supreme-court-overhaul/" target="_blank">AlterNet</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Term Limits: The Popular Option</div>
+              <div class="subtopic-detail">Fran's preference has broad support. A Marquette Law poll found 73% of Republicans, 71% of independents and 87% of Democrats favor Supreme Court term limits, and expansion draws far more resistance. Sen. Sheldon Whitehouse's 2026 bill would set 18-year terms with an appointment every two years.</div>
+              <div class="subtopic-src"><a href="https://www.washingtontimes.com/news/2026/jun/16/democrats-weigh-options-rigging-supreme-court/" target="_blank">Washington Times</a><a href="https://lasvegassun.com/news/2026/may/29/supreme-court-reform-will-test-democrats/" target="_blank">Las Vegas Sun</a><a href="https://puck.news/washington/2026/10/the-dems-court-reform-tug-of-war" target="_blank">Puck</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Narrowing the Docket, as George Suggested</div>
+              <div class="subtopic-detail">Stateline noted that, beyond expansion and term limits, reformers have discussed narrowing the kinds of cases the Court can consider. Renewed pressure followed the Court's April ruling weakening Voting Rights Act protections for majority-Black districts.</div>
+              <div class="subtopic-src"><a href="https://www.newsfromthestates.com/node/405205" target="_blank">Stateline</a><a href="https://cbsnews.com/news/democrats-house-senate-supreme-court-reforms" target="_blank">CBS News</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">The Comparative Case Sally Made</div>
+              <div class="subtopic-detail">Reform advocates echo Sally's point about other democracies: every democracy younger than ours has term or age limits for its top court, and 49 of 50 states use term limits, age limits or retention elections for their highest courts.</div>
+              <div class="subtopic-src"><a href="https://www.newsfromthestates.com/node/425357" target="_blank">Stateline</a><a href="https://news.bgov.com/us-law-week/campaigning-democrats-amplify-calls-to-overhaul-supreme-court" target="_blank">Bloomberg Law</a></div>
+            </div>
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://scotusblog.com" target="_blank">SCOTUSblog</a>
+            <a href="https://cbsnews.com" target="_blank">CBS</a>
+            <a href="https://stateline.org" target="_blank">Stateline</a>
+            <a href="https://puck.news" target="_blank">Puck</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 8. WORLD -->
+    <div class="card">
+      <div class="card-header level-8" onclick="toggle(this)">
+        <span class="card-rank">08</span>
+        <span class="card-title">Abroad: Israel's Arab Kingmakers and the ANC's Worst Night</span>
+        <span class="card-count">Developing story</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+            <div class="subtopic">
+              <div class="subtopic-title">Israel: Record 19 Arab Seats, No Majority</div>
+              <div class="subtopic-detail">Michael's 19 seats match the reporting. Ra'am and the Joint List won a record total amid turnout reported near 80% in the Arab community. Ynet's partial results put Netanyahu's bloc at 54, seven short of 61, while Eisenkot's bloc plus the Arab parties reached 66.</div>
+              <div class="subtopic-src"><a href="https://ynetnews.com/article/hjnatbkaml" target="_blank">Ynet</a><a href="https://english.ahram.org.eg/News/581127.aspx" target="_blank">Ahram Online</a><a href="https://jewishinsider.com/2026/10/israeli-election-change-bloc-netanyahu-eisenkot-coalition-arab-parties/" target="_blank">Jewish Insider</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Eisenkot's Arab-Party Dilemma</div>
+              <div class="subtopic-detail">Al Jazeera reported the Arab parties have offered to back Eisenkot, but he and other opposition leaders had ruled out such a coalition. Their conditions included accepting Israel as a Jewish state, backing conscription and denouncing Hamas. Yair Golan was the first opposition leader to call for the alliance. Protesters have gathered outside Eisenkot's home on both sides of the question.</div>
+              <div class="subtopic-src"><a href="https://www.aljazeera.com/news/2026/11/2/arab-parties-back-eisenkot-whats-the-latest-in-israels-coalition-talks" target="_blank">Al Jazeera</a><a href="https://www.al-monitor.com/originals/2026/10/israeli-arab-parties-hold-key-netanyahu-falls-short-majority" target="_blank">Al-Monitor</a><a href="https://www.scmp.com/news/world/middle-east/article/3373175/israel-arab-lawmakers-key-unseating-netanyahu-amid-divided-opposition" target="_blank">SCMP</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Netanyahu Cries "Stolen"</div>
+              <div class="subtopic-detail">Supporting Sally's bet that he will survive somehow, AP reported Netanyahu and Likud amplified unsubstantiated claims that Arab-led parties "stole" the election, while Israeli officials said the results stand. The new Knesset was due to be sworn in on November 10, the day of our session.</div>
+              <div class="subtopic-src"><a href="https://www.arabnews.pk/middle-east/record-19-seats-put-israels-arab-parties-at-the-center-of-coalition-talks-3005743" target="_blank">AP via Arab News</a><a href="https://www.aljazeera.com/news/2026/11/2/arab-parties-back-eisenkot-whats-the-latest-in-israels-coalition-talks" target="_blank">Al Jazeera</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">South Africa: The ANC at 31%</div>
+              <div class="subtopic-detail">Michael's figure is confirmed. With 99% counted, the ANC took 31% in the November 4 municipal elections, its worst result ever, down from 45.6% in 2021, amid anger over water and power outages. It lost outright control of more than a hundred municipalities. Zuma's MK party placed third, and Ramaphosa called the decline concerning.</div>
+              <div class="subtopic-src"><a href="https://www.aljazeera.com/news/2026/11/8/south-africas-anc-suffers-setback-in-local-elections" target="_blank">Al Jazeera</a><a href="https://ewn.co.za/2026/11/09/anc-loses-significant-ground-in-2026-local-govt-elections" target="_blank">EWN</a><a href="https://www.dailysabah.com/world/africa/south-africas-anc-suffers-fresh-vote-blow-as-support-falls-to-31/amp" target="_blank">Reuters / AFP via Daily Sabah</a></div>
+            </div>
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://ynetnews.com" target="_blank">Ynet</a>
+            <a href="https://aljazeera.com" target="_blank">Al Jazeera</a>
+            <a href="https://apnews.com" target="_blank">AP</a>
+            <a href="https://ewn.co.za" target="_blank">EWN</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /topics-list -->
+
+  <!-- ══ FOOTER ══════════════════════════════════════════ -->
+  <div class="footer">
+    <div style="opacity:0.6; font-size:10px;">
+      AfterWord compiled for BOLLI Current Events Discussion Group · Session of November 10, 2026 · Coverage from November 3–11, 2026; some races still uncalled<br>
+      Prepared with Claude as collaborator · <a href="https://jhnday.github.io/CrntEvnts" target="_blank">jhnday.github.io/CrntEvnts</a> · Next session: November 24, 2026 — In person
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+
+<script>
+  function toggle(header) {
+    const body = header.nextElementSibling;
+    const chevron = header.querySelector('.card-chevron');
+    const isOpen = body.classList.contains('expanded');
+
+    // Collapse all
+    document.querySelectorAll('.card-body').forEach(b => b.classList.remove('expanded'));
+    document.querySelectorAll('.card-chevron').forEach(c => c.classList.remove('rotated'));
+
+    // Expand clicked (if it was closed)
+    if (!isOpen) {
+      body.classList.add('expanded');
+      chevron.classList.add('rotated');
+      setTimeout(() => header.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
+    }
+  }
+</script>
+</body>
+</html>
