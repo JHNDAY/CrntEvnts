@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Needle in the Code Haystack</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<style>
+/* VOICE: a broadsheet explainer for curious retired learners, calm and clear
+   IDEA: a farm-field plate in a newspaper: haystacks sized by lines of code
+   PICTURE: a large canvas haystack of straws hiding one steel needle, clickable
+   COLOUR and TYPE: navy ink, cream paper, straw gold, one red search mark; Playfair Display + Source Serif
+   LAYOUT: title, system picker, big haystack, search line, figures, scale ladder, notes */
+:root{color-scheme:light dark;
+--bg:light-dark(#f7f1e3,#0f1626);--paper:light-dark(#fffaf0,#162035);
+--ink:light-dark(#14213d,#efe6d2);--soft:light-dark(#4a5672,#b8b2a2);
+--rule:light-dark(#d8ccb0,#2c3854);--gold:light-dark(#b8860b,#e3b04b);
+--red:light-dark(#b3261e,#ff6b5e);--navy:light-dark(#14213d,#e3b04b);--onnavy:light-dark(#fffaf0,#0f1626)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 "Source Serif 4",Georgia,serif;overflow-x:clip}
+.wrap{max-width:1100px;margin:0 auto;padding:clamp(24px,4vw,56px) max(5vw,16px)}
+h1{font:700 clamp(32px,5vw,50px)/1.05 "Playfair Display",Georgia,serif;margin:0 0 10px;text-wrap:balance}
+h2{font:700 24px/1.2 "Playfair Display",Georgia,serif;margin:0 0 12px}
+.dek{font-size:19px;color:var(--soft);max-width:62ch;margin:0 0 22px}
+.top{border-top:3px double var(--ink);border-bottom:1px solid var(--ink);padding:6px 0;margin-bottom:20px;font-size:14px;display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;color:var(--soft)}
+.picker{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+button{font:600 16px "Source Serif 4",Georgia,serif;min-height:44px;padding:8px 16px;border-radius:6px;border:1px solid var(--ink);background:transparent;color:var(--ink);cursor:pointer}
+button:hover{background:var(--rule)}
+button:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.picker button[aria-pressed=true]{background:var(--navy);color:var(--onnavy);border-color:var(--navy)}
+.fig{position:relative;height:clamp(300px,42vw,440px);background:var(--paper);border:1px solid var(--rule);border-radius:6px;overflow:hidden}
+.fig canvas{position:absolute;inset:0;width:100%;height:100%;cursor:crosshair}
+.bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:12px 0 26px}
+#msg{flex:1 1 300px;font-size:17px}
+#msg b{color:var(--red)}
+.figs{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(190px,100%),1fr));gap:0;border-top:2px solid var(--ink);border-bottom:1px solid var(--ink);margin-bottom:34px}
+.f{padding:14px 14px 14px 0;border-right:1px solid var(--rule)}
+.f:last-child{border-right:0}
+.f .l{font-size:14px;color:var(--soft)}
+.f .v{font:700 clamp(22px,3vw,28px)/1.15 "Playfair Display",Georgia,serif;margin:2px 0;white-space:nowrap}
+.f .s{font-size:14px;color:var(--soft)}
+.ladder{margin-bottom:34px}
+.row{display:grid;grid-template-columns:minmax(0,11em) minmax(0,1fr) minmax(0,8em);gap:10px;align-items:center;padding:6px 0;border-bottom:1px solid var(--rule);font-size:15px}
+.track{height:16px;background:var(--rule);border-radius:3px;overflow:hidden}
+.fill{height:100%;background:var(--gold)}
+.row .n{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+.row.on{font-weight:600}.row.on .fill{background:var(--navy)}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:28px}
+.cols p{margin:0 0 12px}
+.note{font-size:14px;color:var(--soft);border-top:1px solid var(--rule);padding-top:12px;margin-top:28px}
+@media(max-width:600px){.row{grid-template-columns:minmax(0,1fr) minmax(0,7em)}.row .track{grid-column:1/-1;grid-row:2}.f{border-right:0;border-bottom:1px solid var(--rule)}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="top"><span>AI Literacy · Software at scale</span><span>Each straw = 10,000 lines of code</span></div>
+<h1>Finding one bad line in millions</h1>
+<p class="dek">Big software is a haystack. A single faulty line, the needle, can hide anywhere in it. Pick a system, then click the haystack to search.</p>
+
+<div class="picker" id="picker" role="group" aria-label="Choose a system"></div>
+<div class="fig"><canvas id="cv" aria-label="Haystack of straws hiding one needle. Click to search."></canvas></div>
+<div class="bar">
+<span id="msg" aria-live="polite">Click the haystack to search for the needle.</span>
+<button id="reveal">Reveal needle</button>
+<button id="reset">Hide a new needle</button>
+</div>
+
+<div class="figs">
+<div class="f"><div class="l">Lines of code</div><div class="v" id="loc"></div><div class="s" id="locs"></div></div>
+<div class="f"><div class="l">Printed out</div><div class="v" id="pg"></div><div class="s">at 50 lines a page</div></div>
+<div class="f"><div class="l">Paper stack</div><div class="v" id="ht"></div><div class="s" id="hts"></div></div>
+<div class="f"><div class="l">One careful reader</div><div class="v" id="yr"></div><div class="s">at 200 lines an hour, full time</div></div>
+<div class="f"><div class="l">Likely hidden bugs</div><div class="v" id="bg"></div><div class="s">at 0.5 to 1 per 1,000 lines</div></div>
+</div>
+
+<h2>The haystacks side by side</h2>
+<p style="margin:0 0 10px;color:var(--soft);font-size:15px">Bar lengths use a log scale: each step of the scale is ten times the last. On an ordinary scale, every bar but Google's would be almost invisible.</p>
+<div class="ladder" id="ladder"></div>
+
+<div class="cols">
+<div>
+<h2>Why no one reads it all</h2>
+<p>Even a large team can only review the parts that change. Most of the haystack goes unread for years, and some of it is decades old.</p>
+<p>Well-tested commercial code still keeps an estimated half a bug to one bug per thousand lines. Most are harmless. The real danger is the few that are security holes.</p>
+</div>
+<div>
+<h2>How the needles get found</h2>
+<p>Bug hunters rarely look straw by straw. Scanning tools check code for risky patterns, and "fuzzers" feed programs millions of random inputs to see what breaks.</p>
+<p>More recently, AI models read code at machine speed. They work like a metal detector swept over the haystack: they still miss things, but they cover ground no person could.</p>
+</div>
+</div>
+
+<p class="note">Figures are rough estimates. Windows is put at 50 million lines (Windows XP was reported at about 45 million). Zoom has published no figure, so its size is a guess. Social Security has said it runs over 60 million lines of COBOL. Google's figure of about 2 billion lines, from a 2015 Google talk, covers its whole shared codebase, including Gmail. Page, stack and reading figures assume 50 lines a page, 0.1 mm a sheet and 200 lines an hour of careful review. At true scale, the needle would be 1/10,000th the size of one straw.</p>
+</div>
+
+<script>
+{
+const D=[
+{k:'Space Shuttle',n:4e5,locs:'flight software, for reference',ht:'0.8 m',hts:'about waist high',yr:'1 year',bg:'200–400'},
+{k:'Zoom',n:1e7,locs:'rough estimate',ht:'20 m',hts:'a six-story building',yr:'25 years',bg:'5,000–10,000'},
+{k:'Windows',n:5e7,locs:'Windows 10/11 estimate',ht:'100 m',hts:'taller than the Statue of Liberty',yr:'125 years',bg:'25,000–50,000'},
+{k:'Social Security',n:6e7,locs:'mostly decades-old COBOL',ht:'120 m',hts:'nearly twice Bunker Hill Monument',yr:'150 years',bg:'30,000–60,000'},
+{k:'Google (incl. Gmail)',n:2e9,locs:'one shared codebase',ht:'4 km',hts:'twice the height of Mount Washington',yr:'5,000 years',bg:'1–2 million'}];
+const cv=document.getElementById('cv'),ctx=cv.getContext('2d'),fig=cv.parentElement;
+const $=id=>document.getElementById(id);
+let W=0,H=0,cur=2,needle=null,shown=false,tries=0,found=false,straws=[],A=20,marks=[];
+const fmt=n=>n>=1e9?(n/1e9)+' billion':n>=1e6?(n/1e6)+' million':(n/1e3)+',000';
+const R=14;
+$('picker').innerHTML=D.map((d,i)=>`<button data-i="${i}" aria-pressed="false">${d.k}</button>`).join('');
+$('picker').addEventListener('click',e=>{const b=e.target.closest('button');if(b){cur=+b.dataset.i;build()}});
+const lmin=Math.log10(1e5),lmax=Math.log10(2e9);
+function ladder(){$('ladder').innerHTML=D.map((d,i)=>`<div class="row${i===cur?' on':''}"><span>${d.k}</span><div class="track"><div class="fill" style="width:${((Math.log10(d.n)-lmin)/(lmax-lmin)*100).toFixed(1)}%"></div></div><span class="n">${fmt(d.n)}</span></div>`).join('')}
+function size(){const p=devicePixelRatio||1;W=fig.clientWidth;H=fig.clientHeight;cv.width=W*p;cv.height=H*p;ctx.setTransform(p,0,0,p,0,0)}
+function inDome(x,y,cx,w,h){const dx=(x-cx)/(w/2),dy=(H-8-y)/h;return dy>=0&&dx*dx+dy*dy<=1}
+function msg(t){$('msg').innerHTML=t}
+function build(){
+size();
+[...$('picker').children].forEach((b,i)=>b.setAttribute('aria-pressed',i===cur));
+ladder();
+const d=D[cur],n=d.n/1e4,maxW=Math.min(W*0.86,(H-24)/0.55);
+A=0.432*maxW*maxW/6000;
+let w=Math.sqrt(n*A/0.432),h=0.55*w,cx=W/2,full=false,over=1;
+straws=[];marks=[];
+if(w>W||h>H-12){full=true;const cnt=Math.round(W*(H-8)/A);over=n/cnt;for(let i=0;i<cnt;i++)straws.push([Math.random()*W,6+Math.random()*(H-12)])}
+else{let c=0;while(c<n){const x=cx-w/2+Math.random()*w,y=H-8-Math.random()*h;if(inDome(x,y,cx,w,h)){straws.push([x,y]);c++}}}
+straws.forEach(s=>s.push((Math.random()-.5)*1.4,8+Math.random()*8,Math.floor(Math.random()*4)));
+const pk=straws[Math.floor(Math.random()*straws.length)];
+needle={x:pk[0],y:pk[1],a:Math.random()*Math.PI};
+shown=false;tries=0;found=false;
+$('loc').textContent=fmt(d.n);$('locs').textContent=d.locs;
+$('pg').textContent=Math.round(d.n/50).toLocaleString()+' pages';
+$('ht').textContent=d.ht;$('hts').textContent=d.hts;$('yr').textContent=d.yr;$('bg').textContent=d.bg;
+msg(full?`This haystack overflows the frame. You are seeing only about 1/${Math.round(over)} of it. Click to search.`:'Click the haystack to search for the needle.');
+draw()}
+const cols=['#e0a22e','#f3cd7a','#b8801a','#8a5a12'];
+function draw(){
+ctx.clearRect(0,0,W,H);ctx.lineCap='round';ctx.lineWidth=1.4;
+const g=getComputedStyle(document.documentElement);
+ctx.strokeStyle=g.getPropertyValue('--rule');ctx.beginPath();ctx.moveTo(0,H-7);ctx.lineTo(W,H-7);ctx.stroke();
+for(const s of straws){ctx.strokeStyle=cols[s[4]];const dx=Math.cos(s[2])*s[3]/2,dy=Math.sin(s[2])*s[3]/2;ctx.beginPath();ctx.moveTo(s[0]-dx,s[1]-dy);ctx.lineTo(s[0]+dx,s[1]+dy);ctx.stroke()}
+const nx=Math.cos(needle.a)*8,ny=Math.sin(needle.a)*8;
+ctx.strokeStyle='#9aa3b5';ctx.lineWidth=1.8;ctx.beginPath();ctx.moveTo(needle.x-nx,needle.y-ny);ctx.lineTo(needle.x+nx,needle.y+ny);ctx.stroke();
+const red=g.getPropertyValue('--red').trim()||'#b3261e';
+ctx.lineWidth=1.2;ctx.strokeStyle='#3b6fb6';
+for(const m of marks){ctx.beginPath();ctx.arc(m[0],m[1],R,0,7);ctx.stroke()}
+if(shown||found){ctx.strokeStyle='#d33';ctx.lineWidth=2.5;ctx.beginPath();ctx.arc(needle.x,needle.y,20,0,7);ctx.stroke()}}
+cv.addEventListener('click',e=>{
+if(found)return;const r=cv.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;tries++;
+if(Math.hypot(x-needle.x,y-needle.y)<R){found=true;draw();msg(`<b>Found it in ${tries} tr${tries===1?'y':'ies'}.</b> Real code holds thousands of needles, and none of them shine.`)}
+else{marks.push([x,y]);draw();
+const lines=Math.round(Math.PI*R*R/A)*1e4;
+msg(`Search ${tries}: not here. Each click covers about ${lines.toLocaleString()} lines of ${fmt(D[cur].n)}.`)}});
+$('reveal').onclick=()=>{shown=true;draw();msg('There it is. Spotting it by eye is the hard part.')};
+$('reset').onclick=build;
+let t;const ro=new ResizeObserver(()=>{clearTimeout(t);t=setTimeout(()=>{if(fig.clientWidth!==W||fig.clientHeight!==H)build()},150)});ro.observe(fig);
+build();
+}
+</script>
+</body>
+</html>
