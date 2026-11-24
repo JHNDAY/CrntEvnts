@@ -41,7 +41,7 @@ svg{display:block;width:100%;height:auto}
 .panel h3{font-size:1.3rem;margin-bottom:6px}
 .panel p{margin:0}
 .note{font-size:.86rem;color:var(--muted);margin-top:10px}
-.tabs{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px}
+.tabs{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 0}
 button{font:inherit;cursor:pointer}
 .tab{font-family:'Courier Prime',monospace;font-size:.92rem;font-weight:700;padding:10px 16px;background:var(--paper);color:var(--navy);border:1.5px solid var(--navy)}
 .tab[aria-selected=true]{background:var(--navy);color:#fff}
@@ -109,7 +109,7 @@ a{color:var(--navy2)}
 .stats{display:flex;gap:18px;margin-bottom:12px}
 .stats b{display:block;font-family:'Playfair Display',serif;font-weight:900;font-size:1.75rem;color:var(--gold);line-height:1.1}
 .stats span{font-size:.8rem;line-height:1.25;display:block;color:var(--muted)}
-.gl-issues{margin-top:28px}
+.gl-issues{margin-top:12px}
 .gl-issues h2{font-size:1.5rem;margin-bottom:10px}
 .isswrap{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
 .iss{text-align:left;padding:12px 13px;background:var(--cream);border:1.5px solid var(--rule);border-top:4px solid var(--gold);color:var(--ink);line-height:1.3;font-size:.92rem}
@@ -159,16 +159,7 @@ dialog::backdrop{background:rgba(20,40,75,.72)}
       <article class="gl"><h3>Is It Proven?</h3><p>The left credits economics, analysts credit turnout, and the right calls it a vote against Trump.</p><button class="more" data-open="testing" data-title="Is It Proven?">See the details ›</button></article>
       <article class="gl"><h3>For Discussion</h3><p>When a candidate balances, who pays? Four questions for the group.</p><button class="more" data-open="discuss" data-title="For Discussion">See the details ›</button></article>
     </div>
-    <div class="gl-issues">
-      <h2>Five Issues on the Scale</h2>
-      <div class="isswrap">
-        <button class="iss" data-issue="0"><strong>Immigration</strong>Secure border, humane enforcement, path to citizenship</button>
-        <button class="iss" data-issue="1"><strong>Crime</strong>Funded police, accountable officers</button>
-        <button class="iss" data-issue="2"><strong>Voter ID</strong>Required, but free and easy to get</button>
-        <button class="iss" data-issue="3"><strong>Energy</strong>Oil and gas jobs plus clean power</button>
-        <button class="iss" data-issue="4"><strong>Gender</strong>Opposed trans girls in girls' sports, and vilification of trans people</button>
-      </div>
-    </div>
+    <div class="gl-issues" id="slotG"></div>
   </div>
 
   <div id="depth" hidden>
@@ -217,10 +208,10 @@ dialog::backdrop{background:rgba(20,40,75,.72)}
     </div>
   </section>
 
+  <div id="slotD"></div>
   <section id="issues">
     <h2>Five Issues on the Scale</h2>
-    <p class="sub">Pick an issue, then remove a weight to see what happens to the message.</p>
-    <div class="tabs" role="tablist" id="tabs"></div>
+    <p class="sub">Pick an issue below the scale. Click a weight box to remove it and watch the message tip.</p>
     <div class="scale">
       <svg viewBox="0 0 800 190" aria-hidden="true">
         <polygon points="400,46 374,172 426,172" fill="#b8892b"/>
@@ -230,6 +221,7 @@ dialog::backdrop{background:rgba(20,40,75,.72)}
         <g class="pan" id="panR"><line x1="670" y1="46" x2="625" y2="112" stroke="#ecd9a8" stroke-width="2"/><line x1="670" y1="46" x2="715" y2="112" stroke="#ecd9a8" stroke-width="2"/><path d="M615 112 H725 Q715 142 670 142 Q625 142 615 112Z" fill="#ecd9a8"/><rect id="wR" x="648" y="78" width="44" height="34" fill="#c0564a"/></g>
       </svg>
     </div>
+    <div class="tabs" role="tablist" id="tabs" aria-label="Issues"></div>
     <div class="weights">
       <button class="weight" id="btnL" aria-pressed="true"></button>
       <button class="weight" id="btnR" aria-pressed="true"></button>
@@ -381,7 +373,7 @@ render();
 
 const dlg=document.getElementById('dlg'),dBody=document.getElementById('dBody'),gl=document.getElementById('glance'),dp=document.getElementById('depth'),vG=document.getElementById('vGlance'),vD=document.getElementById('vDepth');
 let moved=[];
-function setView(depth){dp.hidden=!depth;gl.hidden=depth;vD.setAttribute('aria-pressed',depth);vG.setAttribute('aria-pressed',!depth);}
+function setView(depth){document.getElementById(depth?'slotD':'slotG').after(document.getElementById('issues'));dp.hidden=!depth;gl.hidden=depth;vD.setAttribute('aria-pressed',depth);vG.setAttribute('aria-pressed',!depth);}
 function restore(){moved.forEach(([n,m])=>{m.replaceWith(n);});moved=[];document.documentElement.style.overflow='';}
 function openPop(ids,title){
  restore();
@@ -391,8 +383,8 @@ function openPop(ids,title){
  dlg.showModal();dlg.scrollTop=0;
 }
 document.querySelectorAll('[data-open]').forEach(b=>b.onclick=()=>openPop(b.dataset.open,b.dataset.title));
-document.querySelectorAll('[data-issue]').forEach(b=>b.onclick=()=>{cur=+b.dataset.issue;L=R=true;render();openPop('issues',issues[cur].n);});
 vG.onclick=()=>setView(false);
+setView(false);
 vD.onclick=()=>setView(true);
 dlg.addEventListener('close',restore);
 dlg.addEventListener('click',e=>{if(e.target===dlg)dlg.close();});
