@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AfterWord — BOLLI Current Events, November 24, 2026</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 860px;
+      margin: 0 auto;
+      background: #a8c4e8;
+      border-radius: 20px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+    }
+
+    /* ── HEADER ──────────────────────────────────────────── */
+    .header {
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 50%, #667eea 100%);
+      padding: 36px 32px 28px;
+      text-align: center;
+      color: white;
+    }
+
+    .header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .header .subtitle {
+      font-size: 0.95rem;
+      opacity: 0.85;
+      margin-bottom: 18px;
+      letter-spacing: 0.04em;
+    }
+
+    /* ── SOURCE PILLS ────────────────────────────────────── */
+    .sources-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: center;
+      margin-top: 14px;
+    }
+
+    .sources-bar a {
+      font-size: 11px;
+      color: #fff;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 4px;
+      padding: 3px 10px;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    .sources-bar a:hover { background: rgba(255,255,255,0.35); }
+
+    /* ── LEGEND ──────────────────────────────────────────── */
+    .legend {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 20px 10px;
+      font-size: 12px;
+      color: #555;
+      background: #a8c4e8;
+    }
+    .legend-bar {
+      width: 160px;
+      height: 7px;
+      border-radius: 4px;
+      background: linear-gradient(90deg, #cc0000, #ff6600, #ff9944, #ffcc55, #5577ff);
+    }
+
+    /* ── INSTRUCTIONS ────────────────────────────────────── */
+    .instructions {
+      text-align: center;
+      font-size: 12px;
+      color: #888;
+      padding-bottom: 12px;
+      letter-spacing: 0.03em;
+      background: #a8c4e8;
+    }
+
+    /* ── TOPIC CARDS ─────────────────────────────────────── */
+    .topics-list {
+      padding: 0 20px 30px;
+      background: #a8c4e8;
+    }
+
+    .card {
+      margin-bottom: 12px;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      padding: 16px 20px;
+      cursor: pointer;
+      user-select: none;
+      color: white;
+      position: relative;
+      gap: 12px;
+      transition: filter 0.2s;
+    }
+    .card-header:hover { filter: brightness(1.08); }
+
+    .level-1 { background: linear-gradient(135deg, #cc0000 0%, #990000 100%); }
+    .level-2 { background: linear-gradient(135deg, #e63000 0%, #c02000 100%); }
+    .level-3 { background: linear-gradient(135deg, #e86a00 0%, #c05000 100%); }
+    .level-4 { background: linear-gradient(135deg, #d4a000 0%, #a07800 100%); }
+    .level-5 { background: linear-gradient(135deg, #2e9e5a 0%, #1a7040 100%); }
+    .level-6 { background: linear-gradient(135deg, #2a7fcc 0%, #1a5a99 100%); }
+    .level-7 { background: linear-gradient(135deg, #1a5fa8 0%, #0e3d70 100%); }
+    .level-8 { background: linear-gradient(135deg, #5533aa 0%, #3a1f77 100%); }
+
+    .card-rank {
+      font-size: 11px;
+      opacity: 0.7;
+      min-width: 22px;
+    }
+
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+      flex: 1;
+    }
+
+    .card-count {
+      font-size: 12px;
+      background: rgba(0,0,0,0.25);
+      padding: 3px 10px;
+      border-radius: 12px;
+      white-space: nowrap;
+    }
+
+    .card-chevron {
+      font-size: 16px;
+      opacity: 0.8;
+      transition: transform 0.3s ease;
+    }
+    .card-chevron.rotated { transform: rotate(180deg); }
+
+    /* ── CARD BODY ───────────────────────────────────────── */
+    .card-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease-in-out;
+      background: #b8ccec;
+    }
+    .card-body.expanded { max-height: 2400px; }
+
+    .card-body-inner {
+      padding: 18px 20px 20px;
+      border-top: 2px solid rgba(102,126,234,0.25);
+    }
+
+    /* ── SUBTOPIC CARDS ──────────────────────────────────── */
+    .subtopics-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 10px;
+      margin-bottom: 14px;
+    }
+
+    .subtopic {
+      background: white;
+      border-left: 3px solid #667eea;
+      border-radius: 6px;
+      padding: 11px 14px;
+      box-shadow: 0 2px 6px rgba(102,126,234,0.12);
+    }
+
+    .subtopic-src {
+      margin-top: 8px;
+      padding-top: 6px;
+      border-top: 1px solid rgba(102,126,234,0.2);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+    .subtopic-src a {
+      font-size: 10px;
+      color: #2a5298;
+      background: #eef2ff;
+      border: 1px solid #c7d2fe;
+      border-radius: 3px;
+      padding: 2px 7px;
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .subtopic-src a:hover {
+      background: #667eea;
+      color: white;
+      border-color: #667eea;
+    }
+
+    .subtopic-title {
+      font-weight: 600;
+      color: #1e3c72;
+      font-size: 0.875rem;
+      margin-bottom: 5px;
+    }
+
+    .subtopic-detail {
+      font-size: 0.78rem;
+      color: #555;
+      line-height: 1.55;
+    }
+
+    /* ── SECTION SOURCES ─────────────────────────────────── */
+    .section-sources {
+      font-size: 11px;
+      color: #888;
+      margin-top: 10px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+    }
+    .section-sources strong { color: #555; }
+    .section-sources a {
+      color: #2a5298;
+      text-decoration: none;
+      background: #eef2ff;
+      padding: 2px 8px;
+      border-radius: 3px;
+    }
+    .section-sources a:hover {
+      background: #667eea;
+      color: white;
+    }
+
+    /* ── FOOTER ──────────────────────────────────────────── */
+    .footer {
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+      color: rgba(255,255,255,0.8);
+      text-align: center;
+      padding: 22px 20px;
+      font-size: 11px;
+      line-height: 1.8;
+    }
+    .footer a {
+      color: #a8c4ff;
+      text-decoration: none;
+    }
+    .footer a:hover { text-decoration: underline; color: #fff; }
+
+    @media (max-width: 600px) {
+      .subtopics-grid { grid-template-columns: 1fr; }
+      .header h1 { font-size: 1.4rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- ══ HEADER ══════════════════════════════════════════ -->
+  <div class="header">
+    <h1>📰 AfterWord · BOLLI Current Events · November 24, 2026</h1>
+    <div class="subtitle">8 Coverage Areas &nbsp;·&nbsp; What the Mainstream Press Was Saying &nbsp;·&nbsp; 14 Sources</div>
+
+    <div class="sources-bar">
+      <a href="https://apnews.com" target="_blank">Associated Press</a>
+      <a href="https://npr.org" target="_blank">NPR</a>
+      <a href="https://reuters.com" target="_blank">Reuters</a>
+      <a href="https://nytimes.com" target="_blank">New York Times</a>
+      <a href="https://wsj.com" target="_blank">Wall Street Journal</a>
+      <a href="https://nbcnews.com" target="_blank">NBC News</a>
+      <a href="https://abcnews.go.com" target="_blank">ABC News</a>
+      <a href="https://newsweek.com" target="_blank">Newsweek</a>
+      <a href="https://axios.com" target="_blank">Axios</a>
+      <a href="https://pbs.org/newshour" target="_blank">PBS NewsHour</a>
+      <a href="https://aljazeera.com" target="_blank">Al Jazeera</a>
+      <a href="https://scmp.com" target="_blank">South China Morning Post</a>
+      <a href="https://theintercept.com" target="_blank">The Intercept</a>
+      <a href="https://brookings.edu" target="_blank">Brookings</a>
+    </div>
+  </div>
+
+  <div class="legend">
+    <span>High coverage</span>
+    <div class="legend-bar"></div>
+    <span>Emerging story</span>
+  </div>
+  <div class="instructions">Click any topic to expand · One section open at a time</div>
+
+  <!-- ══ CARDS ══════════════════════════════════════════ -->
+  <div class="topics-list">
+
+    <!-- 1. NVIDIA -->
+    <div class="card">
+      <div class="card-header level-1" onclick="toggle(this)">
+        <span class="card-rank">01</span>
+        <span class="card-title">NVIDIA: Resignation, Rebuff, Reinstatement in Eleven Days</span>
+        <span class="card-count">High coverage</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+            <div class="subtopic">
+              <div class="subtopic-title">Huang Resigns over Two Affairs, One with a Suspected Spy</div>
+              <div class="subtopic-detail">Huang stepped down as CEO on November 12 after reports of two extramarital affairs. One involved Alice Huang, a former Megaspeed executive whom U.S. officials suspect of spying for China; Beijing denies she is a spy. The other reportedly involved an NVIDIA executive.</div>
+              <div class="subtopic-src"><a href="https://thenextweb.com/news/trump-backs-jensen-huangs-return-as-nvidia-board-reportedly-says-no" target="_blank">The Next Web</a><a href="https://www.wusf.org/2026-11-17/nvidia-board-says-it-does-not-intend-to-reinstate-jensen-huang-as-ceo" target="_blank">NPR</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Trump: "He Learned a Big Lesson"</div>
+              <div class="subtopic-detail">Leaving for Asia on November 16, Trump told reporters he would not mind seeing Huang reinstated. AP framed it as a split inside the administration: the day before, Treasury Secretary Scott Bessent had called for a wholesale cleanup at NVIDIA while investigators looked into whether banned chips reached China.</div>
+              <div class="subtopic-src"><a href="https://www.euronews.com/2026/11/16/president-trump-says-he-wouldnt-mind-jensen-huang-being-reinstated-as-nvidia-ceo" target="_blank">Euronews</a><a href="https://www.thenationalherald.com/?p=600341" target="_blank">AP</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">The Board Says No; Congress and DOJ Move In</div>
+              <div class="subtopic-detail">On its November 17 earnings call, NVIDIA's chairman said the board had unanimously accepted the resignation and did not intend to reinstate Huang, even as quarterly sales doubled to a record $115.8 billion. Huang agreed to transcribed interviews with three House committees, the Justice Department opened a criminal probe of Megaspeed, and Commerce closed a remote-access loophole for advanced chips.</div>
+              <div class="subtopic-src"><a href="https://www.nhpr.org/2026-11-17/nvidia-board-says-it-does-not-intend-to-reinstate-jensen-huang-as-ceo" target="_blank">NPR</a><a href="https://www.wcax.com/2026/11/17/former-nvidia-ceo-jensen-huang-appear-before-congress-national-security-questions-intensify/?outputType=amp" target="_blank">AP</a><a href="https://www.bostonglobe.com/2026/11/17/business/nvidia-earning-surpass-expecations/" target="_blank">Boston Globe</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">November 23: The Board Reverses Itself</div>
+              <div class="subtopic-detail">Six days later, NVIDIA's board unanimously reinstated Huang as president, CEO and director. Its SEC filing says the board received input from senior levels of the U.S. government and, on that basis, is confident his return poses no national security risk. That detail bears directly on the group's debate over whether Trump pressured the company.</div>
+              <div class="subtopic-src"><a href="https://www.sec.gov/Archives/edgar/data/0001045810/000104581026000090/nov23pressrelease.htm" target="_blank">NVIDIA 8-K (SEC)</a></div>
+            </div>
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://www.sec.gov/Archives/edgar/data/0001045810/000104581026000090/nov23pressrelease.htm" target="_blank">SEC</a>
+            <a href="https://www.nhpr.org/2026-11-17/nvidia-board-says-it-does-not-intend-to-reinstate-jensen-huang-as-ceo" target="_blank">NPR</a>
+            <a href="https://www.wcax.com/2026/11/17/former-nvidia-ceo-jensen-huang-appear-before-congress-national-security-questions-intensify/?outputType=amp" target="_blank">AP</a>
+            <a href="https://www.euronews.com/2026/11/16/president-trump-says-he-wouldnt-mind-jensen-huang-being-reinstated-as-nvidia-ceo" target="_blank">Euronews</a>
+            <a href="https://thenextweb.com/news/trump-backs-jensen-huangs-return-as-nvidia-board-reportedly-says-no" target="_blank">The Next Web</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. ELECTION -->
+    <div class="card">
+      <div class="card-header level-2" onclick="toggle(this)">
+        <span class="card-rank">02</span>
+        <span class="card-title">The Midterms: Largest Win for Either Party in 50 Years</span>
+        <span class="card-count">High coverage</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+            <div class="subtopic">
+              <div class="subtopic-title">A 14-Point House Margin, the Biggest Since Watergate</div>
+              <div class="subtopic-detail">NPR's final tally had about 56% of House votes going to Democrats and 42% to Republicans, a spread no party has matched since 1974. Newsweek put the Democratic share at 56.1%, above the 2018 wave's 53.4%. George's "over 14%" figure matches.</div>
+              <div class="subtopic-src"><a href="https://www.hawaiipublicradio.org/national-international/2026-11-19/the-midterms-were-the-largest-win-for-either-party-in-50-years" target="_blank">NPR</a><a href="https://newsweek.com/democrats-win-biggest-midterm-vote-share-since-watergate-12715915" target="_blank">Newsweek</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">A Record Raw-Vote Lead and 260 Seats</div>
+              <div class="subtopic-detail">NBC News reported Democrats' House vote lead topping 8.8 million, breaking the 1974 midterm record of 8.7 million. If Democrats hold every race they lead, they will have 260 seats, the most since the 1991–93 Congress.</div>
+              <div class="subtopic-src"><a href="https://www.nbcnews.com/politics/elections/democrats-smash-watergate-record-house-popular-vote-midterms-n940116" target="_blank">NBC News</a><a href="https://www.wunc.org/2026-11-19/the-midterms-were-the-largest-win-for-either-party-in-50-years" target="_blank">NPR</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">What Drove It: Trump and the Economy</div>
+              <div class="subtopic-detail">ABC News Voter Polls found that seven in ten House voters think the economic system favors the wealthy, and they backed Democrats about three to one. Voters who identify with neither party, about a third of the electorate, went Democratic 58% to 38%.</div>
+              <div class="subtopic-src"><a href="https://abc7news.com/20015855/" target="_blank">ABC News</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Mississippi Elects Scott Colom</div>
+              <div class="subtopic-detail">After a week of counting, Colom unseated Cindy Hyde-Smith, becoming Mississippi's first Black senator since Reconstruction and its first Democratic senator in four decades. Coverage widely noted the turnabout John raised two weeks ago: in 2023, Hyde-Smith blocked his nomination to the federal bench.</div>
+              <div class="subtopic-src"><a href="https://www.ajc.com/news/2026/11/black-voters-view-scott-coloms-historic-us-senate-win-through-lens-of-mississippis-racial-legacy/" target="_blank">AP</a><a href="https://newsone.com/6876005/scott-colom-wins-mississippi-senate-race/" target="_blank">NewsOne</a><a href="https://www.mississippifreepress.org/?p=365303" target="_blank">Mississippi Free Press</a></div>
+            </div>
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://www.opb.org/article/2026/11/19/democrats-house-win-was-the-largest-in-50-years/" target="_blank">NPR</a>
+            <a href="https://www.nbcnews.com/politics/elections/democrats-smash-watergate-record-house-popular-vote-midterms-n940116" target="_blank">NBC News</a>
+            <a href="https://newsweek.com/democrats-win-biggest-midterm-vote-share-since-watergate-12715915" target="_blank">Newsweek</a>
+            <a href="https://abc7news.com/20015855/" target="_blank">ABC News</a>
+            <a href="https://www.ajc.com/news/2026/11/black-voters-view-scott-coloms-historic-us-senate-win-through-lens-of-mississippis-racial-legacy/" target="_blank">AP</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. SHENZHEN -->
+    <div class="card">
+      <div class="card-header level-3" onclick="toggle(this)">
+        <span class="card-rank">03</span>
+        <span class="card-title">The Three Amigos in Shenzhen: A Win for Xi, a Photo for Trump</span>
+        <span class="card-count">High coverage</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+            <div class="subtopic">
+              <div class="subtopic-title">First-Ever Three-Way Summit, Mostly Xi's Show</div>
+              <div class="subtopic-detail">Trump, Xi and Putin met for about an hour and 20 minutes at a lakeside villa on the sidelines of APEC on November 19. AP judged the event largely a victory for Xi, who used it to showcase China as a convener of global powers while both rivals eye a future without Trump.</div>
+              <div class="subtopic-src"><a href="https://www.adn.com/nation-world/2026/11/19/at-historic-summit-xi-and-putin-share-global-stage-with-weakened-trump/" target="_blank">AP</a><a href="https://www.al-monitor.com/originals/2026/11/trump-says-summit-xi-putin-making-history" target="_blank">AFP</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">The Image Was the Deliverable</div>
+              <div class="subtopic-detail">NPR concluded the summit's main product was arguably the picture itself: an American president gathered with the leaders of China and Russia for the first time in history. Critics worried the three would carve the world into spheres of influence, close to George's "regional hegemons" reading.</div>
+              <div class="subtopic-src"><a href="https://nhpr.org/2026-11-19/trump-xi-and-putin-meet-as-global-alliances-hang-in-the-balance" target="_blank">NPR</a><a href="https://www.michiganpublic.org/2026-11-19/trump-xi-and-putin-meet-as-global-alliances-hang-in-the-balance" target="_blank">NPR</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">What Came Out: UN Reform, Fuel, Nuclear Talk</div>
+              <div class="subtopic-detail">China and Russia said the three agreed on UN reforms, boosting fuel supplies and dialogue on nuclear arms, which tracks closely with George's list of outcomes. Xi urged the powers to avoid conflict and keep energy markets stable. Arms-control advocates said far more than diplomatic theater was needed.</div>
+              <div class="subtopic-src"><a href="https://abc13.com/story/nuclear-arms-ending-wars-iran-ukraine-set-top-agenda-trump-xi-putin-meeting/20054435/" target="_blank">AP</a><a href="https://scmp.com/news/china/diplomacy/article/3375055/xi-trump-and-putin-meet-landmark-trilateral-talks-apec" target="_blank">SCMP</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Schumer: "Like a Cheap Violin"</div>
+              <div class="subtopic-detail">Senate Democratic leader Chuck Schumer said Xi and Putin were playing Trump "like a cheap violin." A second three-way meeting is possible if Putin attends the G20 at Trump's Doral resort in December.</div>
+              <div class="subtopic-src"><a href="https://www.al-monitor.com/originals/2026/11/trump-says-summit-xi-putin-making-history" target="_blank">AFP</a><a href="https://gulftoday.ae/news/2026/11/19/nuclear-arms-ending-wars-will-top-the-agenda-at-trump-xi-putin-meeting" target="_blank">AP</a></div>
+            </div>
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://www.adn.com/nation-world/2026/11/19/at-historic-summit-xi-and-putin-share-global-stage-with-weakened-trump/" target="_blank">AP</a>
+            <a href="https://nhpr.org/2026-11-19/trump-xi-and-putin-meet-as-global-alliances-hang-in-the-balance" target="_blank">NPR</a>
+            <a href="https://www.al-monitor.com/originals/2026/11/trump-says-summit-xi-putin-making-history" target="_blank">AFP / Al-Monitor</a>
+            <a href="https://scmp.com/news/china/diplomacy/article/3375055/xi-trump-and-putin-meet-landmark-trilateral-talks-apec" target="_blank">SCMP</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. OUTAGES -->
+    <div class="card">
+      <div class="card-header level-4" onclick="toggle(this)">
+        <span class="card-rank">04</span>
+        <span class="card-title">The Ground Stop and the Patch Wave: Outages Without Hackers</span>
+        <span class="card-count">High coverage</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+            <div class="subtopic">
+              <div class="subtopic-title">A Historic Nationwide Ground Stop</div>
+              <div class="subtopic-detail">The FAA halted departures nationwide on November 13 with about 3,500 flights in the air, citing intermittent telecommunications outages; thousands of flights were canceled or delayed. Duffy blamed old hardware, and Homeland Security Secretary Markwayne Mullin said there was no sign of an attack.</div>
+              <div class="subtopic-src"><a href="https://www.foxweather.com/weather-news/flights-canceled-delayed-us-ground-stop-november-2026" target="_blank">Fox Weather</a><a href="https://fox5ny.com/news/faa-issues-nationwide-ground-stop-due-to-extraordinary-circumstances" target="_blank">Fox 5 NY</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">The Cause: A Wiring Upgrade That Cascaded</div>
+              <div class="subtopic-detail">Duffy later explained that a contractor replaced copper wire with fiber at a radio site in El Dorado, Arkansas; when the router came back on, a problem surfaced at a radar site in Amarillo and cascaded into the shutdown. That is the "slapdash" wiring change John described. The administration is pressing Congress for $30 billion more in upgrades.</div>
+              <div class="subtopic-src"><a href="https://www.spotlightpa.org/news/2026/11/light-ground-stop-cancellations-delays-federal-government/" target="_blank">AP via Spotlight PA</a><a href="https://www.bastillepost.com/global/article/6360416-why-a-problem-on-the-ground-can-affect-flights-thousands-of-miles-away-among-other-issues" target="_blank">AP Explainer</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Six Outages in Six Days, Blamed on Patches</div>
+              <div class="subtopic-detail">The FAA, United, Apple, Microsoft, major banks and even the NSA's classified network went down in the same stretch. Reuters reported experts pointing to rushed software fixes as AI finds flaws faster than systems can be tested, and officials told Congress there was no coordinated cyberattack.</div>
+              <div class="subtopic-src"><a href="https://bdnews24.com/technology/1du64gb0h1" target="_blank">Reuters</a><a href="https://siliconangle.com/?p=854940" target="_blank">SiliconANGLE</a><a href="https://www.entrepreneur.com/business-news/a-wave-of-tech-outages-hit-450-million-people-in-6-days-whos-to-blame" target="_blank">Entrepreneur</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Microsoft's 1,400 Flaws, Up from 170</div>
+              <div class="subtopic-detail">The Wall Street Journal reported that Microsoft's October update fixed about 1,400 security flaws, a record, compared with roughly 170 a year earlier. That is the 1,400-bug figure on John's slide. Security writers argued the fear of AI-found flaws, more than any attack, drove the self-inflicted damage.</div>
+              <div class="subtopic-src"><a href="https://www.tovima.com/wsj/whats-behind-the-string-of-tech-outages-disrupting-business-and-travel/" target="_blank">WSJ</a><a href="https://www.bankinfosecurity.com/how-recent-outages-expose-risks-ai-driven-patch-rush-a-33434" target="_blank">BankInfoSecurity</a></div>
+            </div>
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://www.spotlightpa.org/news/2026/11/light-ground-stop-cancellations-delays-federal-government/" target="_blank">AP</a>
+            <a href="https://bdnews24.com/technology/1du64gb0h1" target="_blank">Reuters</a>
+            <a href="https://www.tovima.com/wsj/whats-behind-the-string-of-tech-outages-disrupting-business-and-travel/" target="_blank">WSJ</a>
+            <a href="https://www.foxweather.com/weather-news/flights-canceled-delayed-us-ground-stop-november-2026" target="_blank">Fox Weather</a>
+            <a href="https://siliconangle.com/?p=854940" target="_blank">SiliconANGLE</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. SERBIA -->
+    <div class="card">
+      <div class="card-header level-5" onclick="toggle(this)">
+        <span class="card-rank">05</span>
+        <span class="card-title">Serbia: The Students Beat Vučić</span>
+        <span class="card-count">Sustained coverage</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+            <div class="subtopic">
+              <div class="subtopic-title">"The Students' List Has Won"</div>
+              <div class="subtopic-detail">Vučić conceded the October 25 parliamentary election, projecting 135 to 140 seats for the student-backed list against about 105 for his party in the 250-seat parliament. He blamed independent media, unnamed European countries and an "American deep state" for the loss.</div>
+              <div class="subtopic-src"><a href="https://www.ctvnews.ca/world/article/serbias-strongman-leader-vucic-concedes-defeat-to-student-led-movement-in-seismic-political-shift/" target="_blank">AP via CTV</a><a href="https://pbs.org/newshour/world/serbias-strongman-leader-vucic-concedes-defeat-to-student-led-movement-in-seismic-political-shift" target="_blank">PBS NewsHour</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">An Upset the Polls Missed</div>
+              <div class="subtopic-detail">An Ipsos poll published days before the vote had Vučić's party ahead 47% to 40%. The movement began after the November 2024 canopy collapse at Novi Sad's train station killed 16 people and set off nearly two years of anti-corruption protests.</div>
+              <div class="subtopic-src"><a href="https://www.kyivpost.com/post/88097" target="_blank">Reuters via Kyiv Post</a><a href="https://english.ahram.org.eg/News/580695.aspx" target="_blank">AP via Ahram</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Experts, Not Students, on the Ballot</div>
+              <div class="subtopic-detail">AP noted that no students actually appeared on the list; its candidates were little-known experts, athletes and others. That fits Sally's report of a parliament full of professors.</div>
+              <div class="subtopic-src"><a href="https://www.ctvnews.ca/world/article/serbias-strongman-leader-vucic-concedes-defeat-to-student-led-movement-in-seismic-political-shift/" target="_blank">AP via CTV</a><a href="https://www.aljazeera.com/news/2026/10/22/from-the-streets-to-the-ballot-box-serbias-students-hope-for-election-win" target="_blank">Al Jazeera</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Sally Was Right About the Coverage Gap</div>
+              <div class="subtopic-detail">Wire services covered the result, but our searches for this AfterWord found little mainstream American reporting on the diaspora voters who traveled overnight to vote in Los Angeles, Chicago and elsewhere. Michael's explanation, that no U.S. constituency follows Serbia closely, fits what the search turned up.</div>
+              <div class="subtopic-src"><a href="https://aljazeera.com/news/2026/10/25/serbia-votes-in-election-pitting-longtime-leader-against-student-movement" target="_blank">Al Jazeera</a></div>
+            </div>
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://www.ctvnews.ca/world/article/serbias-strongman-leader-vucic-concedes-defeat-to-student-led-movement-in-seismic-political-shift/" target="_blank">AP</a>
+            <a href="https://pbs.org/newshour/world/serbias-strongman-leader-vucic-concedes-defeat-to-student-led-movement-in-seismic-political-shift" target="_blank">PBS</a>
+            <a href="https://www.kyivpost.com/post/88097" target="_blank">Reuters</a>
+            <a href="https://aljazeera.com/news/2026/10/25/serbia-votes-in-election-pitting-longtime-leader-against-student-movement" target="_blank">Al Jazeera</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. BALANCE -->
+    <div class="card">
+      <div class="card-header level-6" onclick="toggle(this)">
+        <span class="card-rank">06</span>
+        <span class="card-title">The Power of Balance: The <i>Times</i> Editorial and Its Critics</span>
+        <span class="card-count">Sustained coverage</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+            <div class="subtopic">
+              <div class="subtopic-title">The Board's Thesis</div>
+              <div class="subtopic-detail">The <i>New York Times</i> editorial board's November 9 piece, the one John presented, argued that Democrats won in Trump country by running as "economic populists and cultural moderates." It added that many voters outside battleground states may not have noticed how far the party leaned toward social moderation.</div>
+              <div class="subtopic-src"><a href="https://dnyuz.com/2026/11/09/this-winning-combination-is-the-future-of-american-politics/" target="_blank">NYT Editorial (mirror)</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">The Board's Own Reservation</div>
+              <div class="subtopic-detail">The editorial also said the board disagreed with some Democratic messages and regretted that the party had not laid out more of an affirmative agenda for raising living standards. That echoes the group's earlier argument for a written platform.</div>
+              <div class="subtopic-src"><a href="https://dnyuz.com/?p=325955" target="_blank">NYT Editorial (mirror)</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Pushback from the Left</div>
+              <div class="subtopic-detail">Critics on the left read the editorial as turning a repudiation of Trump into a call for moderation and fiscal austerity. A Portside piece noted that even centrist analyst Ruy Teixeira called affordability-focused populism a successful formula this cycle, while warning it could lose force after the election.</div>
+              <div class="subtopic-src"><a href="https://www.wsws.org/en/articles/2026/11/10/azup-n10.html" target="_blank">WSWS</a><a href="https://portside.org/node/40939" target="_blank">Portside</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Brookings: Economics, Not Ideology</div>
+              <div class="subtopic-detail">A Brookings analysis of the 2026 primaries found the real divide was insurgent versus establishment rather than left versus center. Winners were defined by working-class populism, and Democratic voters backed progressive economics while pulling back on "woke" cultural positions, the same pattern Hilary and Sally described.</div>
+              <div class="subtopic-src"><a href="https://www.brookings.edu/articles/democratic-insurgents-are-winning-on-economics-not-culture/" target="_blank">Brookings</a></div>
+            </div>
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://dnyuz.com/2026/11/09/this-winning-combination-is-the-future-of-american-politics/" target="_blank">NYT</a>
+            <a href="https://www.brookings.edu/articles/democratic-insurgents-are-winning-on-economics-not-culture/" target="_blank">Brookings</a>
+            <a href="https://portside.org/node/40939" target="_blank">Portside</a>
+            <a href="https://www.wsws.org/en/articles/2026/11/10/azup-n10.html" target="_blank">WSWS</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. SCHUMER & HEGSETH -->
+    <div class="card">
+      <div class="card-header level-7" onclick="toggle(this)">
+        <span class="card-rank">07</span>
+        <span class="card-title">After the Wave: Schumer's Future and Hegseth's Impeachment</span>
+        <span class="card-count">Developing story</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+            <div class="subtopic">
+              <div class="subtopic-title">Freshmen Won't Commit to Schumer</div>
+              <div class="subtopic-detail">Al Jazeera counted at least seven incoming Democratic senators who would not commit to backing Schumer in December's leadership vote. Minnesota's Peggy Flanagan said, "It is time for new leadership."</div>
+              <div class="subtopic-src"><a href="https://aljazeera.com/news/2026/11/5/division-among-us-democrats-over-schumers-leadership-role" target="_blank">Al Jazeera</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Van Hollen Wants Conditions; Indivisible Wants a Contest</div>
+              <div class="subtopic-detail">Van Hollen said Democrats should not commit to Schumer without promises of a bold agenda, and Indivisible circulated a memo demanding a contested leadership election. Before the vote, AP reported speculation centered on Van Hollen, Chris Murphy and Brian Schatz. Coverage also credited Schumer's pragmatic recruiting, the point John and George made.</div>
+              <div class="subtopic-src"><a href="https://www.aljazeera.com/amp/news/2026/11/5/division-among-us-democrats-over-schumers-leadership-role" target="_blank">Al Jazeera</a><a href="https://www.pbs.org/newshour/politics/chuck-schumer-has-broad-support-from-his-caucus-but-the-midterms-could-decide-his-future-as-leader" target="_blank">AP via PBS</a><a href="https://www.denvergazette.com/?p=606636" target="_blank">Denver Gazette</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Massie Reads Eight Articles Against Hegseth</div>
+              <div class="subtopic-detail">Republican Rep. Thomas Massie began impeachment proceedings on November 9, reading eight articles on the House floor; Hilary noted last session that a Republican started it. Hegseth answered at his first Pentagon briefing in six months that the push reflects policy disagreements, not high crimes.</div>
+              <div class="subtopic-src"><a href="https://www.stripes.com/theaters/us/2026-11-09/pete-hegseth-impeachment-effort-begins-23414161.html" target="_blank">Stars and Stripes</a><a href="https://www.kbtx.com/2026/11/10/hegseth-is-set-his-first-pentagon-news-briefing-since-may-he-faces-possible-impeachment/" target="_blank">AP</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Miller Moves Up</div>
+              <div class="subtopic-detail">The Intercept reported that chief of staff Susie Wiles stepped down and was replaced by Stephen Miller, strengthening Hegseth's hand. That is the move George flagged when he said Trump "brought in Stephen Miller."</div>
+              <div class="subtopic-src"><a href="https://theintercept.com/2026/11/09/impeachment-vote-looms-hegseth/" target="_blank">The Intercept</a></div>
+            </div>
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://aljazeera.com/news/2026/11/5/division-among-us-democrats-over-schumers-leadership-role" target="_blank">Al Jazeera</a>
+            <a href="https://www.pbs.org/newshour/politics/chuck-schumer-has-broad-support-from-his-caucus-but-the-midterms-could-decide-his-future-as-leader" target="_blank">AP</a>
+            <a href="https://www.stripes.com/theaters/us/2026-11-09/pete-hegseth-impeachment-effort-begins-23414161.html" target="_blank">Stars and Stripes</a>
+            <a href="https://theintercept.com/2026/11/09/impeachment-vote-looms-hegseth/" target="_blank">The Intercept</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 8. BANK OF AI -->
+    <div class="card">
+      <div class="card-header level-8" onclick="toggle(this)">
+        <span class="card-rank">08</span>
+        <span class="card-title">The Bank of AI: Circular Financing and the Capex Boom</span>
+        <span class="card-count">Emerging story</span>
+        <span class="card-chevron">▼</span>
+      </div>
+      <div class="card-body">
+        <div class="card-body-inner">
+          <div class="subtopics-grid">
+            <div class="subtopic">
+              <div class="subtopic-title">Hyperscalers Head Past $1 Trillion</div>
+              <div class="subtopic-detail">Axios reported that Alphabet, Amazon, Meta, Microsoft and Oracle are expected to spend roughly $800 billion this year and over $1 trillion in 2027. Other projections put 2027 above $1.3 trillion, in line with John's slide.</div>
+              <div class="subtopic-src"><a href="https://axios.com/2026/08/12/nvidia-ai-financing-blackrock-goldman" target="_blank">Axios</a><a href="https://techblog.comsoc.org/category/ai-investments/" target="_blank">IEEE ComSoc</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">NVIDIA as Lender to Its Own Customers</div>
+              <div class="subtopic-detail">NVIDIA lined up six Wall Street firms to create more than $500 billion in capital pools to finance its customers' projects. UBS analysts said the move raises further questions about circular financing, where suppliers help fund purchases of their own products: George's "bank of AI."</div>
+              <div class="subtopic-src"><a href="https://axios.com/2026/08/12/nvidia-ai-financing-blackrock-goldman" target="_blank">Axios</a><a href="https://npr.org/2026/08/02/nx-s1-5913352/nvidia-is-about-to-spend-750-billion-on-ai-critics-are-calling-it-a-bubble" target="_blank">NPR</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Echoes of the Telecom Bust</div>
+              <div class="subtopic-detail">Fortune noted that in past tech bubbles, revenue round-tripping and companies financing their own customers made the eventual damage worse. Analysts have compared NVIDIA's strategy to the vendor financing that preceded the early-2000s telecom collapse, the kind of correction John expects.</div>
+              <div class="subtopic-src"><a href="https://fortune.com/2025/09/28/nvidia-openai-circular-financing-ai-bubble/" target="_blank">Fortune</a><a href="https://tomtunguz.com/nvidia_nortel_vendor_financing_comparison/index.md" target="_blank">Tomasz Tunguz</a></div>
+            </div>
+            <div class="subtopic">
+              <div class="subtopic-title">Concentration Risk</div>
+              <div class="subtopic-detail">A Nasdaq analysis found 54% of NVIDIA's revenue tied to just three hyperscaler clients. Acting as a financial backstop for customers secures demand, it said, but becomes fragile if end demand weakens.</div>
+              <div class="subtopic-src"><a href="https://www.nasdaq.com/articles/nvidias-openai-backstop-puts-ai-financing-risk-focus" target="_blank">Nasdaq</a></div>
+            </div>
+          </div>
+          <div class="section-sources">
+            <strong>Sources:</strong>
+            <a href="https://axios.com/2026/08/12/nvidia-ai-financing-blackrock-goldman" target="_blank">Axios</a>
+            <a href="https://npr.org/2026/08/02/nx-s1-5913352/nvidia-is-about-to-spend-750-billion-on-ai-critics-are-calling-it-a-bubble" target="_blank">NPR</a>
+            <a href="https://fortune.com/2025/09/28/nvidia-openai-circular-financing-ai-bubble/" target="_blank">Fortune</a>
+            <a href="https://www.nasdaq.com/articles/nvidias-openai-backstop-puts-ai-financing-risk-focus" target="_blank">Nasdaq</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /topics-list -->
+
+  <!-- ══ FOOTER ══════════════════════════════════════════ -->
+  <div class="footer">
+    <div style="opacity:0.6; font-size:10px;">
+      AfterWord compiled for BOLLI Current Events Discussion Group · Session of November 24, 2026 · Coverage synthesized across 14 outlets<br>
+      Prepared with Claude as collaborator · <a href="https://jhnday.github.io/CrntEvnts" target="_blank">jhnday.github.io/CrntEvnts</a> · Next session: December 8, 2026, 4 p.m. — in person, Charles River Room
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<script>
+  function toggle(header) {
+    const body = header.nextElementSibling;
+    const chevron = header.querySelector('.card-chevron');
+    const isOpen = body.classList.contains('expanded');
+
+    // Collapse all
+    document.querySelectorAll('.card-body').forEach(b => b.classList.remove('expanded'));
+    document.querySelectorAll('.card-chevron').forEach(c => c.classList.remove('rotated'));
+
+    // Expand clicked (if it was closed)
+    if (!isOpen) {
+      body.classList.add('expanded');
+      chevron.classList.add('rotated');
+      setTimeout(() => header.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
+    }
+  }
+</script>
+<!-- VIZ-TRACKING:START -->
+<script>
+(function () {
+  var ENDPOINT = 'https://script.google.com/macros/s/AKfycbyCgndleqbDkjn1CWYFXflq0fegQRHkHE1S7gmlvnny8lA_rGsWZEqtz4shNoJ1ZanI6A/exec';
+  if (location.protocol === 'file:') return;
+  function send(where) {
+    try {
+      fetch(ENDPOINT, {
+        method: 'POST', mode: 'no-cors', keepalive: true,
+        body: new URLSearchParams({ viz: document.title || location.pathname, location: where })
+      }).catch(function () {});
+    } catch (e) {}
+  }
+  function fallback() {
+    try { return Intl.DateTimeFormat().resolvedOptions().timeZone || 'Unknown'; } catch (e) { return 'Unknown'; }
+  }
+  fetch('https://ipapi.co/json/')
+    .then(function (r) { return r.json(); })
+    .then(function (d) {
+      var place = [d.city, d.region, d.country_name].filter(Boolean).join(', ');
+      send(place || fallback());
+    })
+    .catch(function () { send(fallback()); });
+})();
+</script>
+<!-- VIZ-TRACKING:END -->
+</body>
+</html>
